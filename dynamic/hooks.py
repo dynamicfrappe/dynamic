@@ -17,13 +17,13 @@ app_logo_url = "/assets/dynamic/images/erp-icon.svg"
 
 # include js, css files in header of desk.html
 app_include_css = "/assets/dynamic/css/redtheme_app.css"
-# app_include_js = "/assets/redtheme_v13b/js/redtheme_v13b.js"
+# app_include_js = "/assets/dynamic/js/dynamic.js"
 
 # include js, css files in header of web template
 web_include_js = "/assets/dynamic/js/dynamic.js"
 
 # include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "redtheme_v13b/public/scss/website"
+# website_theme_scss = "dynamic/public/scss/website"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
@@ -58,14 +58,14 @@ web_include_js = "/assets/dynamic/js/dynamic.js"
 # Installation
 # ------------
 
-# before_install = "redtheme_v13b.install.before_install"
-# after_install = "redtheme_v13b.install.after_install"
+# before_install = "dynamic.install.before_install"
+after_install = "dynamic.install.after_install"
 
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-# notification_config = "redtheme_v13b.notifications.get_notification_config"
+# notification_config = "dynamic.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -104,39 +104,39 @@ web_include_js = "/assets/dynamic/js/dynamic.js"
 
 # scheduler_events = {
 # 	"all": [
-# 		"redtheme_v13b.tasks.all"
+# 		"dynamic.tasks.all"
 # 	],
 # 	"daily": [
-# 		"redtheme_v13b.tasks.daily"
+# 		"dynamic.tasks.daily"
 # 	],
 # 	"hourly": [
-# 		"redtheme_v13b.tasks.hourly"
+# 		"dynamic.tasks.hourly"
 # 	],
 # 	"weekly": [
-# 		"redtheme_v13b.tasks.weekly"
+# 		"dynamic.tasks.weekly"
 # 	]
 # 	"monthly": [
-# 		"redtheme_v13b.tasks.monthly"
+# 		"dynamic.tasks.monthly"
 # 	]
 # }
 
 # Testing
 # -------
 
-# before_tests = "redtheme_v13b.install.before_tests"
+# before_tests = "dynamic.install.before_tests"
 
 # Overriding Methods
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "redtheme_v13b.event.get_events"
+# 	"frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
 # }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-# 	"Task": "redtheme_v13b.task.get_dashboard_data"
+# 	"Task": "dynamic.task.get_dashboard_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled
