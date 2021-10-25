@@ -9,9 +9,9 @@ def after_install():
 		frappe.db.commit()
 		frappe.db.sql("""delete from `tabModule Def` where name='Loan Management'""")
 		frappe.db.commit()
-		frappe.db.sql("""delete from tabDocType where module='Payroll'""")
-		frappe.db.commit()
-		frappe.db.sql("""delete from `tabModule Def` where name='Payroll'""")
+		# frappe.db.sql("""delete from tabDocType where module='Payroll'""")
+		# frappe.db.commit()
+		frappe.db.sql("""delete from tabDocType where module="Payroll" and name!='Salary Component'""")
 		frappe.db.commit()
 
 		print("+del module.text")
@@ -21,8 +21,7 @@ def after_install():
 		a_file.close()
 		new_file = open("../apps/erpnext/erpnext/modules.txt", "w")
 		for line in lines:
-			print("lines",line)
-			if line.strip("\n") not in ("Loan Management","Payroll"):
+			if line.strip("\n") !="Loan Management":
 				new_file.write(line)
 		new_file.close()
 	except Exception as e:
