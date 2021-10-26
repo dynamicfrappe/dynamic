@@ -60,7 +60,7 @@ web_include_js = "/assets/dynamic/js/dynamic.js"
 
 # before_install = "dynamic.install.before_install"
 after_install = "dynamic.install.after_install"
-
+after_migrate = "dynamic.install.after_install"
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
