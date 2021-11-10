@@ -3,7 +3,7 @@ import os
 def after_install():
 	print("+dynamic")
 	try:
-		frappe.db.sql("""delete from tabWorkspace where name in ("HR","Loans","Payroll")""")
+		frappe.db.sql("""delete from tabWorkspace where name in ("HR","Loans","Payroll","Quality","Projects","Support")""")
 		frappe.db.commit()
 		frappe.db.sql("""delete from tabDocType where module='Loan Management'""")
 		frappe.db.commit()
