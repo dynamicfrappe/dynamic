@@ -14,6 +14,10 @@ a {
     font-weight: 600;
 	font-size: 11.5px;
 }
+.dropdown-help {
+    display :none !important
+}
+
 
 /* Navigation Bar */
 .navbar-expand .navbar-nav>li>a{
@@ -24,7 +28,8 @@ a {
 }
 
 .navbar-expand{
-    background-color: #0e4194 !important;
+    /* background-color: #0e4194 !important; */
+    background:linear-gradient(#0e4194,#2490ef) !important;
 }
 /* Widgets */
 .widget {
@@ -44,11 +49,25 @@ a {
 .desk-container .desk-sidebar .sidebar-item {
     font-size: 13px;
     font-weight: 600;
-	color: #444;
+	color: #2490ef;
 }
-.desk-container .desk-sidebar .sidebar-item.selected, .desk-container .desk-sidebar .sidebar-item:hover {
+.desk-container .desk-sidebar .sidebar-item .selected, .desk-container .desk-sidebar .sidebar-item:hover {
+    /* color: white;
+    font-weight: 800;
+    background: linear-gradient(to right, #0e4194, #2490ef) !important; */
+}
+.disabled{
     color: white;
-    background: linear-gradient(to right, #691551, #bf5ea4bf);
+}
+.selected{
+    color: white;
+    font-weight: 800;
+    background: linear-gradient(to right, #0e4194, #2490ef) !important; 
+}
+.selected:hover{
+    color: white;
+    font-weight: 800;
+    background: linear-gradient(to right, #0e4194, #2490ef) !important; 
 }
 .layout-side-section {
     font-size: 14px;
@@ -78,34 +97,53 @@ a {
 	color: #0b336c;
 	font-size: 22px;
 }
+#icon-notification{
+    color:#fff;
+    font-weight: 700;
+}
+.icon{
+    color: #2490ef !important;
+}
+.widget-shadow {
+background-color: #ebeef0;
+
+}
 
 /*Main Section */
 .layout-main-section {
     border: 1px solid #e4e4e4;
     background-color: white;
+    /* padding: 20px; */
+}
+.widget-group {
+    border: 1px solid #e4e4e4;
+    background-color: white;
+    padding: 20px;
 }
 .list-row-head {
-    background-color: #f3f6f9;
-    border-bottom: 1px solid #e4e4e4 !important;
+    background-color:#2490ef !important;
+    color: #ffff !important;
+    font-weight:600;
+    border-bottom: 1px solid #2490ef !important;
 }
 
 /* Buttons */
 .btn-primary {
-    background-color: #8d2a71;
-    border-color: #8d2a71;
+    background-color: #0e4194;
+    border-color: #0e4194;
 }
 .control-label, .grid-heading-row {
     font-size:13px;
 }
 .btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-    background-color: #6a1552;
-    border-color:#6a1552;
+    background-color: #0e4194;
+    border-color:#0e4194;
 }
 .indicator-right.blue:after, .indicator.blue:before {
-    background: #ac3c8d;
+    background: #0e4194;
 }
 
 /*Other Components*/
 input[type=checkbox]:checked:before {
-    color: #ae3c8e;
+    color: #0e4194;
 }

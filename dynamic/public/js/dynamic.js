@@ -1,19 +1,23 @@
-localStorage.setItem("container_fullwidth","true")
-obj={
-        "Let's Set Up the Payroll Module. ":"2021-10-25 12:45:48",
-        "Let's Set Up Your Accounts and Taxes.":"2021-10-25 12:50:14",
-        "Let's Set Up the Human Resource Module.":"2021-10-25 12:50:14",
-        "Let's Set Up the Assets Module.":"2021-10-25 12:50:14",
-        "Let's Set Up the Buying Module.":"2021-10-25 12:50:14",
-        "Let's Set Up Your CRM.":"2021-10-25 12:50:14",
-        "Let's Set Up the Education Module.":"2021-10-25 12:50:14",
-        "Let's Set Up the Healthcare Module.":"2021-10-25 12:50:14",
-        "Let's Set Up the Manufacturing Module.":"2021-10-25 12:50:14",
-        "Let's Set Up the Selling Module.":"2021-10-25 12:50:14",
-        "Let's Set Up the Stock Module.":"2021-10-25 12:50:14"
-    }
+// localStorage.setItem("container_fullwidth","true")
 
-localStorage.setItem(
-				"dismissed-onboarding",
-				JSON.stringify(obj)
-			);
+$(window).on("load", function () {
+    $(".dropdown-help").attr("style", "display: none !important");
+    // localStorage.setItem("container_fullwidth","true")
+//   frappe.after_ajax(function () {
+//     // $('.dropdown-help').css('display','block');
+//     $(".dropdown-help").attr("style", "display: none !important");
+
+//     // if (frappe.boot.whitelabel_setting.logo_width) {
+//     //     $('.app-logo').css('width',frappe.boot.whitelabel_setting.logo_width+'px');
+//     // }
+//     // if (frappe.boot.whitelabel_setting.logo_height) {
+//     //     $('.app-logo').css('height',frappe.boot.whitelabel_setting.logo_height+'px');
+//     // }
+//     // if (frappe.boot.whitelabel_setting.navbar_background_color) {
+//     //     $('.navbar').css('background-color',frappe.boot.whitelabel_setting.navbar_background_color)
+//     // }
+//     // if (frappe.boot.whitelabel_setting.custom_navbar_title_style && frappe.boot.whitelabel_setting.custom_navbar_title) {
+//     //     $(`<span style=${frappe.boot.whitelabel_setting.custom_navbar_title_style.replace('\n','')} class="hidden-xs hidden-sm">${frappe.boot.whitelabel_setting.custom_navbar_title}</span>`).insertAfter("#navbar-breadcrumbs")
+//     // }
+//   });
+});

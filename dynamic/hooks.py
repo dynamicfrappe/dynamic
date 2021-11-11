@@ -18,7 +18,7 @@ app_logo_url = "/assets/dynamic/images/dynamic-logo.png"
 # include js, css files in header of desk.html
 # app_include_css = "/assets/dynamic/css/redtheme_app.css"
 app_include_css = "/assets/dynamic/css/dynamic.css"
-# app_include_js = "/assets/dynamic/js/dynamic.js"
+app_include_js = "/assets/dynamic/js/dynamic.js"
 
 # include js, css files in header of web template
 # web_include_js = "/assets/dynamic/js/dynamic.js"
