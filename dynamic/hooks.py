@@ -7,20 +7,23 @@ app_title = "Dynamic"
 app_publisher = "Dynamic"
 app_description = "Dynamic"
 app_icon = "octicon octicon-file-directory"
-app_color = "grey"
+app_color = "#0e4194"
 app_email = "hashirabdulla@gmail.com"
 app_license = "MIT"
-app_logo_url = "/assets/dynamic/images/erp-icon.svg"
+app_logo_url = "/assets/dynamic/images/dynamic-logo.png"
 
 # Includes in <head>
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = "/assets/dynamic/css/redtheme_app.css"
+# app_include_css = "/assets/dynamic/css/redtheme_app.css"
+app_include_css = "/assets/dynamic/css/dynamic.css"
 # app_include_js = "/assets/dynamic/js/dynamic.js"
 
 # include js, css files in header of web template
-web_include_js = "/assets/dynamic/js/dynamic.js"
+# web_include_js = "/assets/dynamic/js/dynamic.js"
+# web_include_css = "/assets/dynamic/css/redtheme_web.css"
+
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "dynamic/public/scss/website"
@@ -33,7 +36,8 @@ web_include_js = "/assets/dynamic/js/dynamic.js"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+# doctype_js = {"Sales Invoice" : "public/js/sales_invoice.js"}
+
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

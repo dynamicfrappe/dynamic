@@ -16,20 +16,16 @@ a {
 }
 
 /* Navigation Bar */
-.navbar-default {
-    background: linear-gradient(to right, #691551, #af3d8f);
-    border: none;
-}
-.navbar-default .navbar-nav>li>a{
+.navbar-expand .navbar-nav>li>a{
 	color:#fff;
 }
-.navbar-default .navbar-nav>li>a:hover{
-	color:#ddd;
-}
-.navbar-default .navbar-brand:hover {
+.navbar-expand .navbar-nav>li>a:hover{
 	color:#ddd;
 }
 
+.navbar-expand{
+    background-color: #0e4194 !important;
+}
 /* Widgets */
 .widget {
     background-color: white;
@@ -38,7 +34,7 @@ a {
 }
 .widget .widget-head .widget-title {
     font-size: 14px;
-	color: #a5488a;
+	color: #2050bb;
 }
 .widget.shortcut-widget-box .widget-head .widget-title i {
     color: #a5488a;
@@ -60,6 +56,11 @@ a {
 .uppercase {
     color:#a5488a;
 }
+.navbar .navbar-home img {
+    width: 100px !important;
+    margin-right: 0;
+    margin-top: -3px;
+}
 
 /* Dropdowns */
 .dropdown-menu>li>a {
@@ -74,7 +75,7 @@ a {
     box-shadow: 0 1px 10px 1px rgba(115, 108, 203, 0.1);
 }
 .page-title .title-text {
-	color: #ac3c8d;
+	color: #0b336c;
 	font-size: 22px;
 }
 
