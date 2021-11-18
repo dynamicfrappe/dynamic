@@ -69,6 +69,18 @@ after_migrate = "dynamic.install.after_install"
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
+
+doctype_js = {
+	"Customer" : "e_invoice/doctype/customer/customer.js",
+	"Sales Invoice" : "e_invoice/doctype/sales_invoice/sales_invoice.js",
+	"Item":"e_invoice/doctype/item/item.js",
+}
+doc_events = {
+
+        "Sales Invoice":{
+            "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname"
+        },
+}
 # notification_config = "dynamic.notifications.get_notification_config"
 
 # Permissions
@@ -146,4 +158,9 @@ after_migrate = "dynamic.install.after_install"
 # exempt linked doctypes from being automatically cancelled
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
+
+
+domains = {
+	'E Invoice':'dynamic.domains.e_invoice'
+}
 
