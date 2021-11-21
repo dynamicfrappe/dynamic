@@ -1,0 +1,210 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2021-11-21 17:56:12.664139",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "comparison_type",
+  "column_break_2",
+  "customer",
+  "customer_name",
+  "contractor",
+  "contractor_name",
+  "date_section",
+  "start_date",
+  "column_break_7",
+  "end_date",
+  "main_section_section",
+  "comparison_number",
+  "total",
+  "column_break_11",
+  "insurance_method",
+  "column_break_15",
+  "insurance_value_rate",
+  "delevery_insurance_value_rate_",
+  "bank_guarantee",
+  "data_19",
+  "item",
+  "tax_section",
+  "purchase_taxes_and_charges_template",
+  "taxes",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "comparison_type",
+   "fieldtype": "Select",
+   "label": "Comparison Type",
+   "options": "Direct\nFrom Contractor"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "depends_on": "eval:doc.comparison_type =='From Contractor' ",
+   "fieldname": "contractor",
+   "fieldtype": "Link",
+   "label": "Contractor",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "date_section",
+   "fieldtype": "Section Break",
+   "label": "Date "
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "main_section_section",
+   "fieldtype": "Section Break",
+   "label": "Main Section"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total "
+  },
+  {
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "insurance_value_rate",
+   "fieldtype": "Percent",
+   "label": "Insurance value Rate(%)"
+  },
+  {
+   "fieldname": "delevery_insurance_value_rate_",
+   "fieldtype": "Percent",
+   "label": "Delevery Insurance value Rate (%)"
+  },
+  {
+   "fieldname": "insurance_method",
+   "fieldtype": "Select",
+   "label": "Insurance Method ",
+   "options": "Bank Guarantee\nCash"
+  },
+  {
+   "depends_on": "eval :doc.insurance_method =='Bank Guarantee'",
+   "fieldname": "bank_guarantee",
+   "fieldtype": "Link",
+   "label": "Bank Guarantee",
+   "options": "Bank Guarantee"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "contractor.customer_name",
+   "fieldname": "contractor_name",
+   "fieldtype": "Data",
+   "label": "Contractor Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "data_19",
+   "fieldtype": "Section Break",
+   "label": "Items"
+  },
+  {
+   "fieldname": "comparison_number",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Comparison Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Table",
+   "label": "Item",
+   "options": "Clearance Items"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Comparison",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "tax_section",
+   "fieldtype": "Section Break",
+   "label": "Tax"
+  },
+  {
+   "fieldname": "purchase_taxes_and_charges_template",
+   "fieldtype": "Link",
+   "label": "Purchase Taxes and Charges Template",
+   "options": "Purchase Taxes and Charges Template"
+  },
+  {
+   "fieldname": "taxes",
+   "fieldtype": "Table",
+   "label": "Taxes",
+   "options": "Purchase Taxes and Charges Clearances"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-11-21 18:10:56.323806",
+ "modified_by": "Administrator",
+ "module": "Contracting",
+ "name": "Comparison",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

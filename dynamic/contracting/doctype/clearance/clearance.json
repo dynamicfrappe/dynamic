@@ -1,0 +1,287 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2021-11-21 14:00:39.074981",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "clearance_name",
+  "clearance_number",
+  "column_break_3",
+  "clearance_date",
+  "clearance_type",
+  "column_break_6",
+  "the_total_value_of_the_work_statement_of_the_current_extract",
+  "down_payment_insurance_amount",
+  "payment_insurance",
+  "total_payed_amount",
+  "section_break_8",
+  "purchase_order",
+  "supplier",
+  "supplier_name",
+  "sales_order",
+  "customer",
+  "customer_name",
+  "column_break_12",
+  "purchase_order_date",
+  "required_by",
+  "section_break_15",
+  "down_payment_insurance_rate_",
+  "payment_of_insurance_copy_of_operation_and_initial_delivery",
+  "clearance_items_section",
+  "items",
+  "taxes_section",
+  "purchase_taxes_and_charges_template",
+  "item_tax",
+  "total_after_tax",
+  "deductions_section_section",
+  "deductions",
+  "total_deductions",
+  "notes_section",
+  "user_notes",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "clearance_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Clearance Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "clearance_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Clearance Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "clearance_type",
+   "fieldtype": "Select",
+   "label": "Clearance Type",
+   "options": "incoming\nOutcoming"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "depends_on": "eval:doc.clearance_type == 'incoming'",
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "Purchase Order",
+   "options": "Purchase Order"
+  },
+  {
+   "depends_on": "eval:doc.clearance_type == 'incoming'",
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": " Supplier",
+   "options": "Supplier"
+  },
+  {
+   "depends_on": "eval:doc.clearance_type == 'incoming'",
+   "fetch_from": "supplier.supplier_name",
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "label": " Supplier Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "purchase_order.schedule_date",
+   "fieldname": "purchase_order_date",
+   "fieldtype": "Date",
+   "label": "Purchase Order Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_15",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "clearance_number",
+   "fieldtype": "Data",
+   "label": "Clearance Number",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "required_by",
+   "fieldtype": "Date",
+   "label": "Required By"
+  },
+  {
+   "fetch_from": "purchase_order.down_payment_insurance_rate",
+   "fieldname": "down_payment_insurance_rate_",
+   "fieldtype": "Percent",
+   "label": "Down payment insurance rate (%)"
+  },
+  {
+   "fetch_from": "purchase_order.payment_of_insurance_copy",
+   "fieldname": "payment_of_insurance_copy_of_operation_and_initial_delivery",
+   "fieldtype": "Percent",
+   "label": "Payment of insurance copy of operation and initial delivery(%)"
+  },
+  {
+   "fieldname": "clearance_items_section",
+   "fieldtype": "Section Break",
+   "label": "Clearance Items"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Clearance Items"
+  },
+  {
+   "fieldname": "taxes_section",
+   "fieldtype": "Section Break",
+   "label": "Taxes"
+  },
+  {
+   "fieldname": "purchase_taxes_and_charges_template",
+   "fieldtype": "Link",
+   "label": "Purchase Taxes and Charges Template",
+   "options": "Purchase Taxes and Charges Template"
+  },
+  {
+   "fieldname": "item_tax",
+   "fieldtype": "Table",
+   "label": "Item Tax",
+   "no_copy": 1,
+   "options": "Purchase Taxes and Charges Clearances",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Clearance",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_after_tax",
+   "fieldtype": "Currency",
+   "label": "Total After Tax"
+  },
+  {
+   "fieldname": "deductions_section_section",
+   "fieldtype": "Section Break",
+   "label": "Deductions Section"
+  },
+  {
+   "fieldname": "deductions",
+   "fieldtype": "Table",
+   "label": "Deductions",
+   "options": "Deductions clearence Table"
+  },
+  {
+   "fieldname": "total_deductions",
+   "fieldtype": "Currency",
+   "label": "Total Deductions"
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "user_notes",
+   "fieldtype": "Text Editor",
+   "label": "User Notes"
+  },
+  {
+   "fieldname": "the_total_value_of_the_work_statement_of_the_current_extract",
+   "fieldtype": "Currency",
+   "label": "The total value of the work statement of the current extract",
+   "read_only": 1
+  },
+  {
+   "fieldname": "down_payment_insurance_amount",
+   "fieldtype": "Currency",
+   "label": "Down payment insurance amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "payment_insurance",
+   "fieldtype": "Currency",
+   "label": "The value of the operation and initial delivery payment insurance"
+  },
+  {
+   "fieldname": "total_payed_amount",
+   "fieldtype": "Currency",
+   "label": "Total payed Amount"
+  },
+  {
+   "depends_on": "eval:doc.clearance_type != 'incoming'",
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order"
+  },
+  {
+   "depends_on": "eval:doc.clearance_type != 'incoming'",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-11-21 17:14:19.424096",
+ "modified_by": "Administrator",
+ "module": "Contracting",
+ "name": "Clearance",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_seen": 1
+}

@@ -161,6 +161,7 @@ doc_events = {
 
 
 domains = {
-	'E Invoice':'dynamic.domains.e_invoice'
+	'E Invoice':'dynamic.domains.e_invoice' ,
+	'Contracting':'dynamic.domains.contracting'
 }
 
