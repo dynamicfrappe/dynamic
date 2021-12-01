@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "comparison_type",
+  "project",
   "column_break_2",
   "customer",
   "customer_name",
@@ -21,15 +22,24 @@
   "total",
   "column_break_11",
   "insurance_method",
+  "bank_guarantee",
   "column_break_15",
   "insurance_value_rate",
   "delevery_insurance_value_rate_",
-  "bank_guarantee",
   "data_19",
   "item",
   "tax_section",
   "purchase_taxes_and_charges_template",
   "taxes",
+  "totals_section",
+  "total_qty",
+  "total_price",
+  "tax_total",
+  "grand_total",
+  "section_break_31",
+  "delivery_insurance_value",
+  "insurance_value",
+  "total_insurance",
   "amended_from"
  ],
  "fields": [
@@ -54,6 +64,7 @@
    "fieldname": "contractor",
    "fieldtype": "Link",
    "label": "Contractor",
+   "mandatory_depends_on": "eval:doc.comparison_type =='From Contractor' ",
    "options": "Customer"
   },
   {
@@ -110,7 +121,7 @@
    "options": "Bank Guarantee\nCash"
   },
   {
-   "depends_on": "eval :doc.insurance_method =='Bank Guarantee'",
+   "depends_on": "eval:doc.insurance_method =='Bank Guarantee'",
    "fieldname": "bank_guarantee",
    "fieldtype": "Link",
    "label": "Bank Guarantee",
@@ -156,15 +167,6 @@
    "options": "Clearance Items"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Comparison",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "tax_section",
    "fieldtype": "Section Break",
    "label": "Tax"
@@ -180,12 +182,72 @@
    "fieldtype": "Table",
    "label": "Taxes",
    "options": "Purchase Taxes and Charges Clearances"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "fieldname": "total_qty",
+   "fieldtype": "Read Only",
+   "label": "Total QTY"
+  },
+  {
+   "fieldname": "total_price",
+   "fieldtype": "Read Only",
+   "label": "Total Price"
+  },
+  {
+   "fieldname": "tax_total",
+   "fieldtype": "Read Only",
+   "label": "Tax Total"
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Read Only",
+   "label": "Grand Total"
+  },
+  {
+   "fieldname": "section_break_31",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delivery_insurance_value",
+   "fieldtype": "Read Only",
+   "label": "Delivery Insurance Value"
+  },
+  {
+   "fieldname": "insurance_value",
+   "fieldtype": "Read Only",
+   "label": "Insurance Value"
+  },
+  {
+   "fieldname": "total_insurance",
+   "fieldtype": "Read Only",
+   "label": "Total Insurance"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Comparison",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-21 18:10:56.323806",
+ "modified": "2021-12-01 14:00:41.642106",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",
