@@ -16,6 +16,7 @@
   "customer_name",
   "contractor",
   "contractor_name",
+  "allow_material_over_price",
   "date_section",
   "start_date",
   "column_break_7",
@@ -266,12 +267,18 @@
    "fieldname": "tender_status",
    "fieldtype": "Read Only",
    "label": "Tender Status"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_material_over_price",
+   "fieldtype": "Check",
+   "label": "Allow Material Issue with Rate more than Item Price"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-02 16:18:02.889199",
+ "modified": "2021-12-02 16:59:18.050275",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",
