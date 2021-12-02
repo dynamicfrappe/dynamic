@@ -16,5 +16,37 @@ frappe.ui.form.on('Clearance', {
 					}
 				}
 			})
+	},
+	calc_deductions:(frm)=>{
+		let totals = 0
+		let deduct_table = frm.doc.deductions
+		for(let i=0;i<deduct_table.length;i++){
+			totals += deduct_table[0].amount
+		}
+		frm.set_value("total_deductions",totals)
+		frm.refresh_field("total_deductions")
+	},
+	calc_total:(frm,cdt,cdn)=>{
+		let row = locals[cdt][cdn]
+		let total_price = row.current_qty * row.price
+		row.total_price = !isNaN(total_price) ? total_price : 0
+		frm.refresh_fields("items")
 	}
 });
+frappe.ui.form.on('Deductions clearence Table', {
+	amount:(frm,cdt,cdn)=>{
+		frm.events.calc_deductions(frm);
+
+	},
+	deductions_remove:(frm,cdt,cdn)=>{
+		frm.events.calc_deductions(frm);
+	}
+})
+frappe.ui.form.on('Clearance Items', {
+	current_qty:(frm,cdt,cdn)=>{
+		frm.events.calc_total(frm,cdt,cdn)
+	},
+	price:(frm,cdt,cdn)=>{
+		frm.events.calc_total(frm,cdt,cdn)
+	}
+})

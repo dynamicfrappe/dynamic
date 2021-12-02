@@ -25,10 +25,11 @@
   "sales_order",
   "customer",
   "customer_name",
-  "project",
   "column_break_12",
   "purchase_order_date",
   "required_by",
+  "tender",
+  "project",
   "section_break_15",
   "down_payment_insurance_rate_",
   "payment_of_insurance_copy_of_operation_and_initial_delivery",
@@ -204,7 +205,8 @@
   {
    "fieldname": "total_deductions",
    "fieldtype": "Currency",
-   "label": "Total Deductions"
+   "label": "Total Deductions",
+   "read_only": 1
   },
   {
    "fieldname": "notes_section",
@@ -264,18 +266,24 @@
    "fieldtype": "Link",
    "label": "Comparison",
    "options": "Comparison"
-  },{
+  },
+  {
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
    "options": "Project"
-
+  },
+  {
+   "fieldname": "tender",
+   "fieldtype": "Link",
+   "label": "Tender",
+   "options": "Tender"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-02 10:33:17.786625",
+ "modified": "2021-12-02 14:02:29.347378",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",

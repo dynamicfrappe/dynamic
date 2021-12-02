@@ -13,10 +13,10 @@
   "column_break_4",
   "uom",
   "qty",
+  "current_qty",
   "price",
   "total_price",
   "current",
-  "current_qty",
   "current_percent",
   "column_break_12",
   "current_amount",
@@ -73,7 +73,6 @@
   {
    "fieldname": "qty",
    "fieldtype": "Float",
-   "in_list_view": 1,
    "label": "Qty"
   },
   {
@@ -120,11 +119,13 @@
    "label": "Previous"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "previous_qty",
    "fieldtype": "Data",
    "label": "Previous Qty"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "previous_percent",
    "fieldtype": "Percent",
    "label": "Previous Percent"
@@ -144,6 +145,7 @@
    "label": "Completed"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "completed_qty",
    "fieldtype": "Float",
    "label": "Completed \u064eQty"
@@ -158,21 +160,25 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "completed_amount",
    "fieldtype": "Data",
    "label": "Completed Amount"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "remaining_section",
    "fieldtype": "Section Break",
    "label": "Remaining"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "remaining_qty",
    "fieldtype": "Float",
    "label": "Remaining Qty"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "remaining_percent",
    "fieldtype": "Percent",
    "label": "Remaining Percent"
@@ -182,6 +188,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "remaining_amount",
    "fieldtype": "Float",
    "label": "Remaining Amount"
@@ -197,7 +204,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-12-02 10:19:52.534933",
+ "modified": "2021-12-02 14:57:01.014455",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance Items",
