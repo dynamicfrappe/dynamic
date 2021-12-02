@@ -168,7 +168,7 @@
    "fieldname": "item",
    "fieldtype": "Table",
    "label": "Item",
-   "options": "Clearance Items"
+   "options": "Comparison Item"
   },
   {
    "fieldname": "tax_section",
@@ -271,7 +271,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-02 13:03:22.424870",
+ "modified": "2021-12-02 16:18:02.889199",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",

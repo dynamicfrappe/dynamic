@@ -235,7 +235,8 @@ data = {
             "field_name": "tax_id",
             "property": "label",
             "property_type": "Data",
-            "value": "ID"
+            "value": "ID",
+            "doctype_or_field":"DocField",
             }
         ],
     
