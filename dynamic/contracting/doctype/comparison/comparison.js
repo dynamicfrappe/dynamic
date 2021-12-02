@@ -87,19 +87,20 @@ frappe.ui.form.on('Comparison', {
         let total_tax = 0
         let tax_table = []
         for(let i=0 ; i< items.length ; i++){
-            totals += items[i].total_price
-            total_qty += items[i].qty
+            totals += parseFloat(items[i].total_price || 0)
+            total_qty += parseInt(items[i].qty || 0)
         }
 
-
+        let tax_v = parseFloat(totals || 0)
         for(let i=0;i<taxes.length;i++){
             total_tax_rate += taxes[i].rate
             taxes[i].tax_amount = (taxes[i].rate  / 100) *  totals
-            taxes[i].total = (taxes[i].rate  / 100) *  totals + totals
+            tax_v +=parseFloat(taxes[i].tax_amount)
+            //taxes[i].total = (taxes[i].rate  / 100) *  totals + totals
             if(i==0) {
-                taxes[i].total = (taxes[i].rate  / 100) * totals + totals
+                taxes[i].total =tax_v //(taxes[i].rate  / 100) * totals + totals
             }else{
-                taxes[i].total = (taxes[i-1].total || totals) + taxes[i].tax_amount
+                taxes[i].total = tax_v//(taxes[i-1].total || totals) + taxes[i].tax_amount
             }
             tax_table.push(taxes[i])
         }
