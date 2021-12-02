@@ -122,13 +122,15 @@
    "allow_on_submit": 1,
    "fieldname": "previous_qty",
    "fieldtype": "Data",
-   "label": "Previous Qty"
+   "label": "Previous Qty",
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
    "fieldname": "previous_percent",
    "fieldtype": "Percent",
-   "label": "Previous Percent"
+   "label": "Previous Percent",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_17",
@@ -137,7 +139,8 @@
   {
    "fieldname": "previous_amount",
    "fieldtype": "Currency",
-   "label": "Previous Amount"
+   "label": "Previous Amount",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_19",
@@ -148,7 +151,8 @@
    "allow_on_submit": 1,
    "fieldname": "completed_qty",
    "fieldtype": "Float",
-   "label": "Completed \u064eQty"
+   "label": "Completed \u064eQty",
+   "read_only": 1
   },
   {
    "fieldname": "completed_percent",
@@ -163,7 +167,8 @@
    "allow_on_submit": 1,
    "fieldname": "completed_amount",
    "fieldtype": "Data",
-   "label": "Completed Amount"
+   "label": "Completed Amount",
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
@@ -175,13 +180,15 @@
    "allow_on_submit": 1,
    "fieldname": "remaining_qty",
    "fieldtype": "Float",
-   "label": "Remaining Qty"
+   "label": "Remaining Qty",
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
    "fieldname": "remaining_percent",
    "fieldtype": "Percent",
-   "label": "Remaining Percent"
+   "label": "Remaining Percent",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_27",
@@ -191,7 +198,8 @@
    "allow_on_submit": 1,
    "fieldname": "remaining_amount",
    "fieldtype": "Float",
-   "label": "Remaining Amount"
+   "label": "Remaining Amount",
+   "read_only": 1
   },
   {
    "fieldname": "cost_center",
@@ -204,7 +212,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-12-02 14:57:01.014455",
+ "modified": "2021-12-02 15:33:57.294529",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance Items",
