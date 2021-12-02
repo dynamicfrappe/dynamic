@@ -137,21 +137,13 @@ data = {
                             "insert_after": "advance_version_account_payable_break",
                             "label": "Payment of insurance copy of operation and initial delivery(%)",
 
-                        },
-                        {
-                            "fieldname": "comparison",
-                            "fieldtype": "Link",
-                            "options":"Comparison",
-                            "insert_after": "skip_delivery_note",
-                            "label": "Comparison",
-
-                        },
+                        }
 
 
                     ]
 
 
-      }
+      },
 
-
+    'on_setup': 'dynamic.contracting.add_client_Sccript.add_sales_order_script'
     }
