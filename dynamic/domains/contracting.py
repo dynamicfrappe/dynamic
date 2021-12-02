@@ -140,8 +140,27 @@ data = {
                         }
 
 
-                    ]
+                    ] ,
+        'Stock Entry' :
+                    [
+                        {
+                            "fieldname": "against_comparison",
+                            "fieldtype": "Check",
+                            "insert_after": "stock_entry_type",
+                            "depends_on":"eval:doc.stock_entry_type=='Material Issue'",
+                            "label": "Against Comparison",
 
+                        },
+                        {
+                            "fieldname": "against_comparison",
+                            "fieldtype": "Check",
+                            "insert_after": "against_comparison",
+                            "depends_on":"eval:doc.against_comparison == 1",
+                            "mandatory_depends_on":"eval:doc.against_comparison == 1",
+                            "label": "Comparison",
+
+                        }
+                    ]
 
       },
 
