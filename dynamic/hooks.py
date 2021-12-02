@@ -36,7 +36,7 @@ app_include_css = "/assets/dynamic/css/dynamic.css"
 
 # include js in doctype views
 # doctype_js = {"Sales Invoice" : "public/js/sales_invoice.js"}
-
+# doctype_js = {"Sales Order" : "public/js/sales_order.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -73,6 +73,7 @@ doctype_js = {
 	"Customer" : "e_invoice/doctype/customer/customer.js",
 	"Sales Invoice" : "e_invoice/doctype/sales_invoice/sales_invoice.js",
 	"Item":"e_invoice/doctype/item/item.js",
+	"Sales Order" : "public/js/sales_order.js"
 }
 doc_events = {
 

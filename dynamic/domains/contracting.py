@@ -54,6 +54,15 @@ data = {
                     ] ,
          'Purchase Order':[
                         {
+                            "fieldname": "is_contracting",
+                            "fieldtype": "Check",
+                            "insert_after": "schedule_date",
+                            "label": "Has Clearence",
+
+                        },
+
+                        {
+                            "depends_on": "eval:doc.is_contracting==\"1\"",
                             "fieldname": "contracting",
                             "fieldtype": "Section Break",
                             "insert_after": "ignore_pricing_rule",
@@ -84,7 +93,25 @@ data = {
 
                     ],
         'Sales Order':[
+                         {
+                            "fieldname": "is_contracting",
+                            "fieldtype": "Check",
+                            "insert_after": "delivery_date",
+                            "label": "Has Clearence",
+
+                        },
                         {
+                             "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "comparison",
+                            "fieldtype": "Link",
+                            "insert_after": "is_contracting",
+                            "label": "Comparison",
+                            "options":"Comparison"
+
+                        },
+                        
+                        {
+                             "depends_on": "eval:doc.is_contracting==\"1\"",
                             "fieldname": "contracting",
                             "fieldtype": "Section Break",
                             "insert_after": "ignore_pricing_rule",

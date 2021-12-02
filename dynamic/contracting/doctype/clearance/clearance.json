@@ -25,6 +25,7 @@
   "sales_order",
   "customer",
   "customer_name",
+  "project",
   "column_break_12",
   "purchase_order_date",
   "required_by",
@@ -263,6 +264,12 @@
    "fieldtype": "Link",
    "label": "Comparison",
    "options": "Comparison"
+  },{
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+
   }
  ],
  "index_web_pages_for_search": 1,
