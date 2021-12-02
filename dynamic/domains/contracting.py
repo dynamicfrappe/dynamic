@@ -152,13 +152,36 @@ data = {
 
                         },
                         {
-                            "fieldname": "against_comparison",
-                            "fieldtype": "Check",
+                            "fieldname": "comparison",
+                            "fieldtype": "Link",
                             "insert_after": "against_comparison",
+                            "options" : "Comparison",
                             "depends_on":"eval:doc.against_comparison == 1",
                             "mandatory_depends_on":"eval:doc.against_comparison == 1",
                             "label": "Comparison",
 
+                        }
+                    ],
+
+
+
+        'Stock Entry Detail' :
+                    [
+
+                        {
+                            "fieldname": "comparison_item",
+                            "fieldtype": "Link",
+                            "insert_after": "item_name",
+                            "options" : "Item",
+                            "label": "Against Item",
+                        },
+                        {
+                            "fieldname": "comparison_item_name",
+                            "fieldtype": "Data",
+                            "read_only" : 1 ,
+                            "insert_after": "comparison_item",
+                            "fetch_from" : "comparison_item.item_name",
+                            "label": "Against Item Name",
                         }
                     ]
 
