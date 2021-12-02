@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:COM-{DD}-{MM}-{YY}-{####}",
  "creation": "2021-11-21 17:56:12.664139",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -105,6 +106,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "insurance_value_rate",
    "fieldtype": "Percent",
    "label": "Insurance value Rate(%)"
@@ -190,7 +192,6 @@
    "options": "Project"
   },
   {
-   "collapsible": 1,
    "fieldname": "totals_section",
    "fieldtype": "Section Break",
    "label": "Totals"
@@ -220,16 +221,19 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "delivery_insurance_value",
    "fieldtype": "Read Only",
    "label": "Delivery Insurance Value"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "insurance_value",
    "fieldtype": "Read Only",
    "label": "Insurance Value"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_insurance",
    "fieldtype": "Read Only",
    "label": "Total Insurance"
@@ -247,7 +251,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-01 14:00:41.642106",
+ "modified": "2021-12-02 11:36:46.851175",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",

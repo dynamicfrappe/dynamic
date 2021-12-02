@@ -18,7 +18,8 @@
   "status_section",
   "current_status",
   "notes_section",
-  "user_notes"
+  "user_notes",
+  "amended_from"
  ],
  "fields": [
   {
@@ -54,16 +55,22 @@
    "label": "User Notes"
   },
   {
+   "fetch_from": "comparison.grand_total",
+   "fetch_if_empty": 1,
    "fieldname": "total_amount",
    "fieldtype": "Currency",
-   "label": "Total Amount"
+   "label": "Total Amount",
+   "read_only": 1
   },
   {
+   "fetch_from": "comparison.insurance_value_rate",
+   "fetch_if_empty": 1,
    "fieldname": "insurance_rate",
    "fieldtype": "Percent",
-   "label": "Insurance Rate(%%)"
+   "label": "Insurance Rate(%)"
   },
   {
+   "fetch_from": "comparison.insurance_value",
    "fieldname": "insurance_amount",
    "fieldtype": "Data",
    "label": "Insurance Amount"
@@ -85,11 +92,21 @@
    "fieldtype": "Link",
    "label": "Compnay",
    "options": "Company"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Tender",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2021-11-21 18:17:24.181855",
+ "modified": "2021-12-02 11:19:57.527832",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Tender",

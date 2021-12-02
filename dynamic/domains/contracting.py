@@ -138,6 +138,14 @@ data = {
                             "label": "Payment of insurance copy of operation and initial delivery(%)",
 
                         },
+                        {
+                            "fieldname": "comparison",
+                            "fieldtype": "Link",
+                            "options":"Comparison",
+                            "insert_after": "skip_delivery_note",
+                            "label": "Comparison",
+
+                        },
 
 
                     ]
