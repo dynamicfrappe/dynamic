@@ -141,7 +141,7 @@ frappe.ui.form.on('Comparison', {
 
     },
     validate:(frm)=>{
-        if(frm.doc.bank_guarantee !="") {
+        if(frm.doc.bank_guarantee !=null&& frm.doc.insurance_method=="Bank Guarantee") {
             frappe.call({
                 method: "frappe.client.get",
                 args: {

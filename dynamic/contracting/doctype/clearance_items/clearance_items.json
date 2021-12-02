@@ -9,6 +9,7 @@
   "clearance_item",
   "clearance_item_name",
   "clearance_item_description",
+  "cost_center",
   "column_break_4",
   "uom",
   "qty",
@@ -184,12 +185,19 @@
    "fieldname": "remaining_amount",
    "fieldtype": "Float",
    "label": "Remaining Amount"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-11-21 15:01:16.153186",
+ "modified": "2021-12-02 10:19:52.534933",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance Items",
