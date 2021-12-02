@@ -189,7 +189,7 @@ frappe.ui.form.on('Comparison', {
     }
 });
 
-frappe.ui.form.on('Clearance Items', {
+frappe.ui.form.on('Comparison Item', {
         clearance_item:(frm,cdt,cdn)=>{
             var  local = locals[cdt][cdn]
             if(local.clearance_item !=null ){
