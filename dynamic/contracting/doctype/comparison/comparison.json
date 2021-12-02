@@ -9,6 +9,8 @@
  "field_order": [
   "comparison_type",
   "project",
+  "tender",
+  "tender_status",
   "column_break_2",
   "customer",
   "customer_name",
@@ -203,18 +205,21 @@
   },
   {
    "fieldname": "total_price",
-   "fieldtype": "Read Only",
-   "label": "Total Price"
+   "fieldtype": "Currency",
+   "label": "Total Price",
+   "read_only": 1
   },
   {
    "fieldname": "tax_total",
-   "fieldtype": "Read Only",
-   "label": "Tax Total"
+   "fieldtype": "Currency",
+   "label": "Tax Total",
+   "read_only": 1
   },
   {
    "fieldname": "grand_total",
-   "fieldtype": "Read Only",
-   "label": "Grand Total"
+   "fieldtype": "Currency",
+   "label": "Grand Total",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_31",
@@ -223,20 +228,23 @@
   {
    "allow_on_submit": 1,
    "fieldname": "delivery_insurance_value",
-   "fieldtype": "Read Only",
-   "label": "Delivery Insurance Value"
+   "fieldtype": "Currency",
+   "label": "Delivery Insurance Value",
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
    "fieldname": "insurance_value",
-   "fieldtype": "Read Only",
-   "label": "Insurance Value"
+   "fieldtype": "Currency",
+   "label": "Insurance Value",
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
    "fieldname": "total_insurance",
-   "fieldtype": "Read Only",
-   "label": "Total Insurance"
+   "fieldtype": "Currency",
+   "label": "Total Insurance",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -246,12 +254,24 @@
    "options": "Comparison",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "tender",
+   "fieldtype": "Link",
+   "label": "Tender",
+   "options": "Tender"
+  },
+  {
+   "fetch_from": "tender.current_status",
+   "fieldname": "tender_status",
+   "fieldtype": "Read Only",
+   "label": "Tender Status"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-02 11:36:46.851175",
+ "modified": "2021-12-02 13:03:22.424870",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",

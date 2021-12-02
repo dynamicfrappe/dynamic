@@ -11,12 +11,21 @@ class Tender(Document):
 		if self.current_status == "Pending":
 			frappe.throw("Cannot Submit Please Approve Or Reject")
 		elif self.current_status == "Approved" and self.comparison:
+			print("from el if")
 			try:
 				doc = frappe.get_doc("Comparison",self.comparison)
+				t = (doc.insurance_value) +  (doc.delivery_insurance_value)
 				if doc.insurance_value_rate != self.insurance_rate:
+					print("from if ttttttttttttt",t)
 					doc.insurance_value_rate = self.insurance_rate
 					doc.insurance_value = self.insurance_amount
-					doc.save()
+					doc.docstatus = 1
+					doc.total_insurance = (doc.insurance_value) +  (doc.delivery_insurance_value)
+					doc.tender = self.name
+					doc.tender_status = self.current_status
+					self.total_insurance = (doc.insurance_value) +  (doc.delivery_insurance_value)
+					doc.save(ignore_permissions=True)
+				# doc.submit(ignore_permissions=True)
 			except:
 				print("error")
 				pass

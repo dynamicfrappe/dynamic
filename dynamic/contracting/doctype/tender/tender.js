@@ -18,6 +18,7 @@ frappe.ui.form.on('Tender', {
                     if (r.message) {
                        let obj =r.message
                         frm.set_value("insurance_rate",obj.insurance_value_rate)
+                        frm.set_value("insurance_amount",obj.insurance_value)
                         frm.refresh_field("insurance_rate")
                     }
                 },
