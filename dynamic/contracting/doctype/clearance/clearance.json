@@ -24,6 +24,7 @@
   "sales_order",
   "customer",
   "customer_name",
+  "project",
   "column_break_12",
   "purchase_order_date",
   "required_by",
@@ -256,12 +257,18 @@
    "fieldtype": "Data",
    "label": "Customer Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-21 17:14:19.424096",
+ "modified": "2021-12-01 13:43:41.194929",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",
