@@ -49,6 +49,12 @@ frappe.ui.form.on('Comparison', {
             frappe.throw("End Date Must be After Start Date")
         }
     },
+    allow_material_over_price (frm){
+        frm.doc.item.forEach((row)=>{
+            row.allow_material_over_price = frm.doc.allow_material_over_price
+        })
+        frm.refresh_field("item")
+    },
     end_date:function(frm){
         let start_date = new Date(frm.doc.start_date)
         let end_date = new Date(frm.doc.end_date)

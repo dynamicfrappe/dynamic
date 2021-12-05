@@ -9,6 +9,7 @@
   "clearance_item",
   "clearance_item_name",
   "clearance_item_description",
+  "allow_material_over_price",
   "cost_center",
   "column_break_4",
   "uom",
@@ -210,6 +211,12 @@
    "fieldtype": "Float",
    "label": "Remaining Amount",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_material_over_price",
+   "fieldtype": "Check",
+   "label": "Allow Material Issue with Rate more than Item Price"
   }
  ],
  "index_web_pages_for_search": 1,
