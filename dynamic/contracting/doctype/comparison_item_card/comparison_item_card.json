@@ -13,6 +13,7 @@
   "column_break_3",
   "tender",
   "comparison",
+  "qty",
   "stock_item_section",
   "items",
   "total_item_price",
@@ -158,7 +159,8 @@
   {
    "fieldname": "analycis_edited_by",
    "fieldtype": "Data",
-   "label": "Analycis Edited By"
+   "label": "Analycis Edited By",
+   "reqd": 1
   },
   {
    "fieldname": "item_comparison_number",
@@ -170,12 +172,19 @@
    "fieldtype": "Link",
    "label": "Item Code",
    "options": "Item"
+  },
+  {
+   "default": "1",
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "label": "Qty",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-05 15:47:59.756392",
+ "modified": "2021-12-05 16:37:38.717003",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison Item Card",

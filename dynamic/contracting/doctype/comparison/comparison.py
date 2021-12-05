@@ -73,10 +73,12 @@ def make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 @frappe.whitelist()
 def create_item_cart(items,comparison,tender=None):
 	items = json.loads(items).get('items')
-	print("from ifffffffffffff",items)
-	print("comparison",comparison)
+	# print("from ifffffffffffff",items)
+	# print("comparison",comparison)
 	for item in items:
 		doc = frappe.new_doc("Comparison Item Card")
+		doc.item_comparison_number = item.get("idx")
+		doc.qty = 1
 		doc.item_code  = item.get("item_code")
 		doc.comparison = comparison
 		doc.tender	   = tender
