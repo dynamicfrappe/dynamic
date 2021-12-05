@@ -10,11 +10,16 @@ def get_data():
 			'Tender': 'comparison',
 			'Clearance': 'comparison',
 			'Sales Order': 'comparison',
+			'Purchase Order':'comparison'
 		},
 		'transactions': [
 			{
-				'label': _('Fulfillment'),
+				'label': _('Selling'),
 				'items': ['Tender', 'Clearance', 'Sales Order']
+			},
+			{
+				'label': _('Purchasing'),
+				'items': ['Purchase Order']
 			},
 		]
 	}

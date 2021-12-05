@@ -2,6 +2,17 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Comparison', {
+    refresh:(frm)=>{
+        if(!frm.doc.__islocal) {
+            frm.add_custom_button(__("Create Sales Order"), function () {
+                //console.log("fom s order")
+                frappe.model.open_mapped_doc({
+                method: "dynamic.contracting.doctype.comparison.comparison.make_sales_order",
+                frm:frm //this.frm
+		        })
+            })
+        }
+    },
     validate_customer:(frm)=>{
         let customer   = frm.doc.customer
         let contractor = frm.doc.contractor

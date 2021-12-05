@@ -89,7 +89,15 @@ data = {
                             "label": "Payment of insurance copy of operation and initial delivery(%)",
 
                         },
+                        {
+                             "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "comparison",
+                            "fieldtype": "Link",
+                            "insert_after": "payment_of_insurance_copy",
+                            "label": "Comparison",
+                            "options":"Comparison"
 
+                        },
 
                     ],
         'Sales Order':[
