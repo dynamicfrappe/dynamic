@@ -6,6 +6,29 @@ from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 import json
 class Comparison(Document):
+	def validate(self):
+		self.calc_taxes_and_totals()
+	def calc_taxes_and_totals(self):
+		total_items = 0
+		total_tax  = 0
+		#### calc total items
+		for item in self.item:
+			total_items += float(item.qty or 0) * float(item.price or 0)
+		for t in self.taxes:
+			t.tax_amount = float(total_items or 0) * (t.rate /100)
+			total_tax += float(t.tax_amount or 0)
+			t.total =  total_items +total_tax
+		grand_total = total_items + total_tax
+		ins_value          = grand_total * (self.insurance_value_rate / 100)
+		delivery_ins_value = grand_total * (self.delevery_insurance_value_rate_ / 100)
+		self.total_price = total_items
+		self.tax_total   = total_tax
+		self.delivery_insurance_value = delivery_ins_value
+		self.insurance_value = ins_value
+		self.total_insurance = ins_value + delivery_ins_value
+		self.grand_total = grand_total
+		self.total = grand_total
+
 	@frappe.whitelist()
 	def get_items(self, for_raw_material_request=0):
 		items = []
@@ -82,5 +105,6 @@ def create_item_cart(items,comparison,tender=None):
 		doc.item_code  = item.get("item_code")
 		doc.comparison = comparison
 		doc.tender	   = tender
+		doc.flags.ignore_mandatory = 1
 		doc.save()
 	return True

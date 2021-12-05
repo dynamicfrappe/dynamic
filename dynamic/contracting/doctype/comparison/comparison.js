@@ -212,6 +212,7 @@ frappe.ui.form.on('Comparison', {
               let row = cur_frm.add_child("taxes")
               row.charge_type = tax_table[i].charge_type
               row.account_head = tax_table[i].account_head
+              row.cost_center  = tax_table[i].cost_center
               row.rate = tax_table[i].rate
               row.tax_amount = tax_table[i].tax_amount
               row.total = tax_table[i].total
@@ -240,7 +241,7 @@ frappe.ui.form.on('Comparison', {
 
     },
     validate:(frm)=>{
-        frm.events.clac_taxes(frm)
+        //frm.events.clac_taxes(frm)
         if(frm.doc.bank_guarantee !=null&& frm.doc.insurance_method=="Bank Guarantee") {
             frappe.call({
                 method: "frappe.client.get",
