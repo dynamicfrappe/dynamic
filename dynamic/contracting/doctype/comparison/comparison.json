@@ -103,7 +103,8 @@
   {
    "fieldname": "total",
    "fieldtype": "Currency",
-   "label": "Total "
+   "label": "Total ",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_11",
@@ -279,7 +280,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-05 13:27:58.910188",
+ "modified": "2021-12-05 13:46:13.137006",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",

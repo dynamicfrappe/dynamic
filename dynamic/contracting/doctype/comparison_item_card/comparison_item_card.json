@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "item_comparison_number",
+  "item_code",
   "item_name",
   "item_description",
   "column_break_3",
@@ -32,6 +33,7 @@
  ],
  "fields": [
   {
+   "fetch_from": "item_code.item_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
    "label": "Item Name"
@@ -83,7 +85,8 @@
   {
    "fieldname": "total_item_price",
    "fieldtype": "Currency",
-   "label": "Total Item Price"
+   "label": "Total Item Price",
+   "read_only": 1
   },
   {
    "fieldname": "service_item_section",
@@ -99,7 +102,8 @@
   {
    "fieldname": "total_service_cost",
    "fieldtype": "Currency",
-   "label": "Total Service Cost"
+   "label": "Total Service Cost",
+   "read_only": 1
   },
   {
    "fieldname": "over_cost_item_section",
@@ -115,7 +119,8 @@
   {
    "fieldname": "total_cost",
    "fieldtype": "Data",
-   "label": "Total Cost"
+   "label": "Total Cost",
+   "read_only": 1
   },
   {
    "fieldname": "total_section_section",
@@ -125,17 +130,20 @@
   {
    "fieldname": "item_cost",
    "fieldtype": "Currency",
-   "label": "Item Cost"
+   "label": "Item Cost",
+   "read_only": 1
   },
   {
    "fieldname": "serivce_cost",
    "fieldtype": "Currency",
-   "label": "Serivce Cost"
+   "label": "Serivce Cost",
+   "read_only": 1
   },
   {
    "fieldname": "other_cost",
    "fieldtype": "Currency",
-   "label": "Other Cost"
+   "label": "Other Cost",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_20",
@@ -144,7 +152,8 @@
   {
    "fieldname": "total_item_cost",
    "fieldtype": "Currency",
-   "label": "Total Item Cost"
+   "label": "Total Item Cost",
+   "read_only": 1
   },
   {
    "fieldname": "analycis_edited_by",
@@ -155,12 +164,18 @@
    "fieldname": "item_comparison_number",
    "fieldtype": "Data",
    "label": "Item Comparison Number"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-02 17:25:48.337105",
+ "modified": "2021-12-05 15:47:59.756392",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison Item Card",
