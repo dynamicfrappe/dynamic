@@ -11,6 +11,7 @@
   "clearance_item_description",
   "cost_center",
   "comparison_item_card",
+  "allow_material_over_price",
   "column_break_4",
   "uom",
   "qty",
@@ -81,13 +82,12 @@
   {
    "fieldname": "qty",
    "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Qty",
-   "reqd": 1
+   "label": "Qty"
   },
   {
    "fieldname": "current_qty",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Current Qty"
   },
   {
@@ -125,7 +125,6 @@
   {
    "fieldname": "previous_section",
    "fieldtype": "Section Break",
-   "hidden": 1,
    "label": "Previous"
   },
   {
@@ -145,11 +144,9 @@
    "fieldtype": "Column Break"
   },
   {
-   "allow_on_submit": 1,
    "fieldname": "previous_amount",
    "fieldtype": "Currency",
-   "label": "Previous Amount",
-   "read_only": 1
+   "label": "Previous Amount"
   },
   {
    "fieldname": "section_break_19",
@@ -160,15 +157,12 @@
    "allow_on_submit": 1,
    "fieldname": "completed_qty",
    "fieldtype": "Float",
-   "label": "Completed \u064eQty",
-   "read_only": 1
+   "label": "Completed \u064eQty"
   },
   {
-   "allow_on_submit": 1,
    "fieldname": "completed_percent",
    "fieldtype": "Percent",
-   "label": "Completed Percent",
-   "read_only": 1
+   "label": "Completed Percent"
   },
   {
    "fieldname": "column_break_22",
@@ -178,8 +172,7 @@
    "allow_on_submit": 1,
    "fieldname": "completed_amount",
    "fieldtype": "Data",
-   "label": "Completed Amount",
-   "read_only": 1
+   "label": "Completed Amount"
   },
   {
    "allow_on_submit": 1,
@@ -191,15 +184,13 @@
    "allow_on_submit": 1,
    "fieldname": "remaining_qty",
    "fieldtype": "Float",
-   "label": "Remaining Qty",
-   "read_only": 1
+   "label": "Remaining Qty"
   },
   {
    "allow_on_submit": 1,
    "fieldname": "remaining_percent",
    "fieldtype": "Percent",
-   "label": "Remaining Percent",
-   "read_only": 1
+   "label": "Remaining Percent"
   },
   {
    "fieldname": "column_break_27",
@@ -209,8 +200,7 @@
    "allow_on_submit": 1,
    "fieldname": "remaining_amount",
    "fieldtype": "Float",
-   "label": "Remaining Amount",
-   "read_only": 1
+   "label": "Remaining Amount"
   },
   {
    "fieldname": "comparison_item_card",
