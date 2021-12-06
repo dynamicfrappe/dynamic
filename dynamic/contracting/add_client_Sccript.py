@@ -43,46 +43,47 @@ def add_sales_order_script():
 		doc.view = "Form"
 		doc.enabled = 1
 		doc.script = """
-			  frappe.ui.form.on('Stock Entry', {
-						refresh(frm) {
-							// your code here
+			frappe.ui.form.on('Stock Entry', {
+	refresh(frm) {
+		// your code here
+		
+		frm.events.set_child_table_fields(frm)
+	    frm.events.comparison(frm)
+		
+	} ,
+	set_child_table_fields(frm) {
+	    frm.doc.items.forEach((e)=>{
+	         var df = frappe.meta.get_docfield("Stock Entry Detail","comparison_item", e.name);
+            df.hidden =  !frm.doc.against_comparison;
+            df.reqd = frm.doc.against_comparison;
+	    })
+	     
+            frm.refresh_field("items")
+	} ,
+	against_comparison (frm) {
+	    frm.events.set_child_table_fields(frm)
+	},
+	comparison (frm) {
+	    
+	    frm.doc.items.forEach((e)=>{
+	         var df = frappe.meta.get_docfield("Stock Entry Detail","comparison_item", e.name);
+	         df.get_query = function() {
+						var filters = {
+							comparison: frm.doc.comparison || ''
+						};
+
+						return {
+							query: "dynamic.contracting.doctype.stock_entry.stock_entry.get_item_query",
+							filters: filters
+						};
+					}
 	
-							frm.events.set_child_table_fields(frm)
+
+	    })
+
+	},
 	
-						} ,
-						set_child_table_fields(frm) {
-							frm.doc.items.forEach((e)=>{
-								var df = frappe.meta.get_docfield("Stock Entry Detail","comparison_item", e.name);
-								df.hidden =  !frm.doc.against_comparison;
-								df.reqd = frm.doc.against_comparison;
-							})
-	
-								frm.refresh_field("items")
-						} ,
-						against_comparison (frm) {
-							frm.events.set_child_table_fields(frm)
-						},
-						comparison (frm) {
-	
-							frm.doc.items.forEach((e)=>{
-								var df = frappe.meta.get_docfield("Stock Entry Detail","comparison_item", e.name);
-								df.get_query = function() {
-											var filters = {
-												comparison: frm.doc.comparison || ''
-											};
-	
-											return {
-												query: "dynamic.contracting.doctype.stock_entry.stock_entry.get_item_query",
-												filters: filters
-											};
-										}
-	
-	
-							})
-	
-						},
-	
-				})  
+})
 		"""
 		doc.save()
 	except:
