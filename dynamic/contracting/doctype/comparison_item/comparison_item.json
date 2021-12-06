@@ -9,8 +9,8 @@
   "clearance_item",
   "clearance_item_name",
   "clearance_item_description",
-  "allow_material_over_price",
   "cost_center",
+  "comparison_item_card",
   "column_break_4",
   "uom",
   "qty",
@@ -213,16 +213,17 @@
    "read_only": 1
   },
   {
-   "default": "0",
-   "fieldname": "allow_material_over_price",
-   "fieldtype": "Check",
-   "label": "Allow Material Issue with Rate more than Item Price"
+   "fieldname": "comparison_item_card",
+   "fieldtype": "Link",
+   "label": " Comparison Item Card",
+   "options": "Comparison Item Card",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-12-02 17:03:07.821238",
+ "modified": "2021-12-06 17:06:59.499204",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison Item",
