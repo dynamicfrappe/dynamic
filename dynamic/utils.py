@@ -2,7 +2,7 @@
 import copy
 import frappe
 from frappe.utils import get_site_url
-from frappe.utils.data import get_url
+from frappe.utils.data import get_host_name_from_request, get_url
 from frappe.utils.jinja import render_template
 from frappe.utils.pdf import get_pdf
 
@@ -22,8 +22,9 @@ def get_invoice_tax_data(doc):
 	total_discount_amount = sum([(x.discount_amount or 0) for x in doc.items])
 	total_tax_amount = sum([(x.tax_amount or 0) for x in doc.items])
 	# server_url = frappe.local.conf.host_name or frappe.local.conf.hostname
-	server_url = get_url()
-	# frappe.msgprint(server_url)
+	server_url = get_host_name_from_request()
+	
+	# frappe.msgprint(get_host_name_from_request())
 
 	return {
 		"total_discount_amount" : total_discount_amount ,
