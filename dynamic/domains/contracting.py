@@ -95,11 +95,55 @@ data = {
                             "fieldtype": "Link",
                             "insert_after": "payment_of_insurance_copy",
                             "label": "Comparison",
-                            "options":"Comparison"
+                            "options":"Comparison",
+                            "mandatory_depends_on": "eval:doc.is_contracting==\"1\"",
+
 
                         },
 
                     ],
+        
+        
+        'Purchase Order Item':[
+                       
+                        {
+                            "fieldname": "comparison_details",
+                            "fieldtype": "Section Break",
+                            "insert_after": "cost_center",
+                            "label": "Comparison Details"
+
+                        },
+                        {
+                            "fieldname": "comparison",
+                            "fieldtype": "Link",
+                            "insert_after": "comparison_details",
+                            "label": "Comparison",
+                            "options":"Comparison",
+                            "read_only":1 
+
+                        },
+                         {
+                            "fieldname": "comparison_column",
+                            "fieldtype": "Column Break",
+                            "insert_after": "comparison",
+
+                        },
+                        {
+                            "fieldname": "comparison_item",
+                            "fieldtype": "Link",
+                            "insert_after": "comparison_column",
+                            "label": "Comparison Item",
+                            "options":"Comparison Item",
+                            "read_only":1 
+
+                        },
+
+                    ],
+        
+        
+        
+        
+        
         'Sales Order':[
                          {
                             "fieldname": "is_contracting",
@@ -110,6 +154,7 @@ data = {
                         },
                         {
                              "depends_on": "eval:doc.is_contracting==\"1\"",
+                             "mandatory_depends_on": "eval:doc.is_contracting==\"1\"",
                             "fieldname": "comparison",
                             "fieldtype": "Link",
                             "insert_after": "is_contracting",
@@ -149,6 +194,9 @@ data = {
 
 
                     ] ,
+
+        
+        
         'Stock Entry' :
                     [
                         {

@@ -1,10 +1,15 @@
 # Copyright (c) 2021, Dynamic and contributors
 # For license information, please see license.txt
 
+from dynamic.contracting.doctype.sales_order.sales_order import set_delivery_date
+from erpnext.selling.doctype.sales_order.sales_order import is_product_bundle
 import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 import json
+
+from frappe.utils.data import flt
+from six import string_types
 class Comparison(Document):
 	def validate(self):
 		self.calc_taxes_and_totals()
@@ -93,6 +98,114 @@ def make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 	}, target_doc,postprocess, ignore_permissions=ignore_permissions)
 
 	return doclist
+
+# @frappe.whitelist()
+# def make_purchase_order(source_name, target_doc=None,selected_items=None, ignore_permissions=False):
+# 	if not selected_items: return
+
+# 	if isinstance(selected_items, string_types):
+# 		selected_items = json.loads(selected_items)
+
+# 	def postprocess(source, target):
+# 		set_missing_values(source, target)
+
+# 	def set_missing_values(source, target):
+# 		target.ignore_pricing_rule = 1
+# 		target.flags.ignore_permissions = True
+# 		target.run_method("set_missing_values")
+# 		target.run_method("calculate_taxes_and_totals")
+# 		target.update({'supplier': ""})
+
+# 	doclist = get_mapped_doc("Comparison", source_name, {
+# 		"Comparison": {
+# 			"doctype": "Purchase Order",
+
+# 		},
+# 		"Comparison Item": {
+# 			"doctype": "Purchase Order Item",
+# 			"field_map": {
+# 				"name": "purchase_order_item",
+# 				"parent": "purchase_order",
+# 				"price":"rate",
+# 				"clearance_item":"item_code"
+# 			},
+# 			"add_if_empty": True
+# 		},
+# 		"Purchase Taxes and Charges Clearances": {
+# 			"doctype": "Purchase Taxes and Charges",
+# 			"field_map": {
+# 				"name": "taxes",
+# 				"parent": "purchase_order"
+# 			},
+# 			"add_if_empty": True
+# 		},
+# 	}, target_doc,postprocess, ignore_permissions=ignore_permissions)
+
+# 	return doclist
+@frappe.whitelist()
+def make_purchase_order(source_name, selected_items=None, target_doc=None , ignore_permissions=False):
+	if not selected_items: return
+
+	if isinstance(selected_items, string_types):
+		selected_items = json.loads(selected_items)
+
+	items_to_map = [item.get('item_code') for item in selected_items if item.get('item_code') and item.get('item_code')]
+	items_to_map = list(set(items_to_map))
+
+	def set_missing_values(source, target):
+		target.supplier = ""
+		target.is_contracting = 1
+		target.comparison = source.name
+		target.apply_discount_on = ""
+		target.additional_discount_percentage = 0.0
+		target.discount_amount = 0.0
+		target.inter_company_order_reference = ""
+		target.customer = ""
+		target.customer_name = ""
+		target.run_method("set_missing_values")
+		target.run_method("calculate_taxes_and_totals")
+
+	def update_item(source, target, source_parent):
+		target.schedule_date = source_parent.end_date
+		target.qty = flt(source.qty) - flt(source.purchased_qty)
+		target.comparison = source_parent.name 
+		target.comparison_item = source.name 
+
+
+	doc = get_mapped_doc("Comparison", source_name, {
+		"Comparison": {
+			"doctype": "Purchase Order",
+			"validation": {
+				"docstatus": ["=", 1]
+			}
+		},
+		"Comparison Item": {
+			"doctype": "Purchase Order Item",
+			"field_map": {
+				"name": "purchase_order_item",
+				"parent": "purchase_order",
+				"price":"rate",
+				"clearance_item":"item_code"
+			},
+			"add_if_empty": True,
+			"postprocess": update_item,
+			"condition": lambda doc: doc.purchased_qty < doc.qty and doc.clearance_item in items_to_map and not is_product_bundle(doc.clearance_item)
+		},
+		"Purchase Taxes and Charges Clearances": {
+			"doctype": "Purchase Taxes and Charges",
+			"field_map": {
+				"name": "taxes",
+				"parent": "purchase_order"
+			},
+			"add_if_empty": True
+		},
+	
+	}, target_doc, set_missing_values)
+
+	set_delivery_date(doc.items, source_name)
+
+	return doc
+
 @frappe.whitelist()
 def create_item_cart(items,comparison,tender=None):
 	items = json.loads(items).get('items')

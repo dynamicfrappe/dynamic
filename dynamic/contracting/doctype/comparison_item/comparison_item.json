@@ -35,7 +35,11 @@
   "remaining_qty",
   "remaining_percent",
   "column_break_27",
-  "remaining_amount"
+  "remaining_amount",
+  "purchase_details_section",
+  "purchased_qty",
+  "column_break_33",
+  "remaining_purchased_qty"
  ],
  "fields": [
   {
@@ -206,12 +210,37 @@
    "fieldname": "allow_material_over_price",
    "fieldtype": "Check",
    "label": "Allow Material Issue with Rate more than Item Price"
+  },
+  {
+   "fieldname": "purchase_details_section",
+   "fieldtype": "Section Break",
+   "label": "Purchase Details"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "purchased_qty",
+   "fieldtype": "Float",
+   "label": "Ordered Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_33",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "remaining_purchased_qty",
+   "fieldtype": "Float",
+   "label": "Remaining Qty",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-12-05 11:13:06.512566",
+ "modified": "2021-12-06 16:57:54.966634",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison Item",
