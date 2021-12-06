@@ -236,7 +236,8 @@
   {
    "fieldname": "total_payed_amount",
    "fieldtype": "Currency",
-   "label": "Total payed Amount"
+   "label": "Total payed Amount",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.clearance_type != 'incoming'",
@@ -325,7 +326,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-06 17:33:49.399943",
+ "modified": "2021-12-06 17:50:37.271800",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",
