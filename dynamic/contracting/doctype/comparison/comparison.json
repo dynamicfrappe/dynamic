@@ -61,7 +61,8 @@
    "fieldname": "customer",
    "fieldtype": "Link",
    "label": "Customer",
-   "options": "Customer"
+   "options": "Customer",
+   "reqd": 1
   },
   {
    "depends_on": "eval:doc.comparison_type =='From Contractor' ",
@@ -102,7 +103,8 @@
   {
    "fieldname": "total",
    "fieldtype": "Currency",
-   "label": "Total "
+   "label": "Total ",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_11",
@@ -278,7 +280,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-02 16:59:18.050275",
+ "modified": "2021-12-05 13:46:13.137006",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",

@@ -2,6 +2,99 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Comparison', {
+    refresh:(frm)=>{
+        if(frm.doc.docstatus == 1) {
+            frm.add_custom_button(__("Create Sales Order"), function () {
+                //console.log("fom s order")
+                frappe.model.open_mapped_doc({
+                method: "dynamic.contracting.doctype.comparison.comparison.make_sales_order",
+                frm:frm //this.frm
+		        })
+            })
+        }
+        if(!frm.doc.__islocal) {
+            frm.add_custom_button(__("Create item Cart"), function () {
+                //console.log("fom s order")
+                //var me = this;
+		 frm.call({
+			doc: frm.doc,
+			method: 'get_items',
+			callback: function(r) {
+				if(!r.message) {
+					frappe.msgprint({
+						title: __('Items Cart not created'),
+						message: __('No Items with Bill of Materials to Manufacture'),
+						indicator: 'orange'
+					});
+					return;
+				}
+				else {
+					const fields = [{
+						label: 'Items',
+						fieldtype: 'Table',
+						fieldname: 'items',
+						description: __('Create Item Cart'),
+						fields: [{
+							fieldtype: 'Read Only',
+							fieldname: 'item_code',
+							label: __('Item Code'),
+							in_list_view: 1
+						}, {
+							fieldtype: 'Read Only',
+							fieldname: 'qty',
+							label: __('Qty'),
+							in_list_view: 1
+						}, {
+							fieldtype: 'Read Only',
+							fieldname: 'price',
+							reqd: 1,
+							label: __('Price'),
+							in_list_view: 1
+						}, {
+							fieldtype: 'Read Only',
+							fieldname: 'total',
+							reqd: 1,
+							label: __('Total'),
+							in_list_view: 1
+						},],
+						data: r.message,
+						get_data: () => {
+							return r.message
+						}
+					}]
+					var d = new frappe.ui.Dialog({
+						title: __('Select Items'),
+						fields: fields,
+						primary_action: function() {
+							var data = {items: d.fields_dict.items.grid.get_selected_children()};
+							 frm.call({
+								method: 'create_item_cart',
+								args: {
+									items      : data,
+                                    comparison : frm.docname,
+                                    tender      : frm.doc.tender
+								},
+								freeze: true,
+								callback: function(r) {
+									if(r.message) {
+										frappe.msgprint({
+											message: __("Created Successfully"),
+											indicator: 'green'
+										})
+									}
+									d.hide();
+								}
+							});
+						},
+						primary_action_label: __('Create')
+					});
+					d.show();
+				}
+			}
+		});
+            })
+        }
+    },
     validate_customer:(frm)=>{
         let customer   = frm.doc.customer
         let contractor = frm.doc.contractor
@@ -119,6 +212,7 @@ frappe.ui.form.on('Comparison', {
               let row = cur_frm.add_child("taxes")
               row.charge_type = tax_table[i].charge_type
               row.account_head = tax_table[i].account_head
+              row.cost_center  = tax_table[i].cost_center
               row.rate = tax_table[i].rate
               row.tax_amount = tax_table[i].tax_amount
               row.total = tax_table[i].total
@@ -147,6 +241,7 @@ frappe.ui.form.on('Comparison', {
 
     },
     validate:(frm)=>{
+        //frm.events.clac_taxes(frm)
         if(frm.doc.bank_guarantee !=null&& frm.doc.insurance_method=="Bank Guarantee") {
             frappe.call({
                 method: "frappe.client.get",

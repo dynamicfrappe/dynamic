@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:CLR-{DD}-{MM}-{YY}-{####}",
  "creation": "2021-11-21 14:00:39.074981",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -44,7 +45,12 @@
   "total_deductions",
   "notes_section",
   "user_notes",
-  "amended_from"
+  "totals_section",
+  "total_qty",
+  "total_price",
+  "column_break_42",
+  "tax_total",
+  "grand_total"
  ],
  "fields": [
   {
@@ -178,15 +184,6 @@
    "print_hide": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Clearance",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "total_after_tax",
    "fieldtype": "Currency",
    "label": "Total After Tax"
@@ -271,19 +268,52 @@
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
-   "options": "Project"
+   "options": "Project",
+   "read_only": 1
   },
   {
    "fieldname": "tender",
    "fieldtype": "Link",
    "label": "Tender",
-   "options": "Tender"
+   "options": "Tender",
+   "read_only": 1
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "fieldname": "total_qty",
+   "fieldtype": "Read Only",
+   "label": "Total QTY"
+  },
+  {
+   "fieldname": "total_price",
+   "fieldtype": "Currency",
+   "label": "Total Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_42",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tax_total",
+   "fieldtype": "Currency",
+   "label": "Tax Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-02 14:02:29.347378",
+ "modified": "2021-12-05 14:06:57.707699",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",

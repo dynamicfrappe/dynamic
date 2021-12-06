@@ -2,6 +2,9 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Clearance', {
+	validate:(frm)=>{
+		frm.events.clac_taxes(frm)
+	},
 	sales_order: function(frm) {
 			frappe.call({
 				"method" :"dynamic.contracting.global_data.get_sales_order_data", 
@@ -17,6 +20,37 @@ frappe.ui.form.on('Clearance', {
 				}
 			})
 	},
+	purchase_taxes_and_charges_template:(frm)=>{
+		console.log("frmmmmmm",frm.doc.purchase_taxes_and_charges_template)
+        let tax_temp = frm.doc.purchase_taxes_and_charges_template
+        if(tax_temp !=null){
+            frappe.call({
+                method: "frappe.client.get",
+                args: {
+                  doctype: "Purchase Taxes and Charges Template",
+                  name: tax_temp,
+                },
+                callback: function (r) {
+                  if (r.message) {
+                    let taxes = r.message["taxes"]
+                      //console.log("rrrrrrrrrr",taxes)
+                      for(let i=0 ; i<taxes.length ; i++){
+                          let row = cur_frm.add_child("item_tax")
+                          row.charge_type = taxes[i].charge_type
+                          row.account_head = taxes[i].account_head
+                          row.rate = taxes[i].rate
+                          row.tax_amount = ((taxes[i].rate/100) * frm.doc.total_price) || 0
+                          row.total = (((taxes[i].rate/100) * frm.doc.total_price) + frm.doc.grand_total) || 0
+                          row.description = taxes[i].description
+                      }
+                      cur_frm.refresh_fields("item_tax");
+                      frm.events.clac_taxes(frm);
+                  }
+                },
+              });
+        }
+
+    },
 	calc_deductions:(frm)=>{
 		let totals = 0
 		let deduct_table = frm.doc.deductions
@@ -29,9 +63,72 @@ frappe.ui.form.on('Clearance', {
 	calc_total:(frm,cdt,cdn)=>{
 		let row = locals[cdt][cdn]
 		let total_price = row.current_qty * row.price
-		row.total_price = !isNaN(total_price) ? total_price : 0
+		let current_percent   = (row.current_qty / row.qty) * 100
+		let current_amount    = row.current_qty * row.price
+		let completed_qty	  = row.current_qty || 0 + row.previous_qty || 0
+		row.total_price 	  = !isNaN(total_price) ? total_price : 0
+		row.current_percent   = !isNaN(current_percent) ? current_percent : 0
+		row.current_amount    = !isNaN(current_amount) ? current_amount : 0
+		row.completed_qty     = !isNaN(completed_qty) ? completed_qty : 0
+		row.completed_percent = (row.completed_qty / row.qty) * 100
+		// calc complated
+
 		frm.refresh_fields("items")
-	}
+	},
+	 clac_taxes:(frm)=>{
+        let items  = frm.doc.items || []
+        let taxes = frm.doc.item_tax || []
+        let totals = 0
+        let total_qty = 0
+        let totals_after_tax = 0
+        let total_tax_rate = 0
+        let total_tax = 0
+        let tax_table = []
+
+        for(let i=0 ; i< items.length ; i++){
+            totals += parseFloat(items[i].total_price || 0)
+            total_qty += parseInt(items[i].current_qty || 0)
+        }
+
+        let tax_v = parseFloat(totals || 0)
+        for(let i=0;i<taxes.length;i++){
+            total_tax_rate += taxes[i].rate
+            taxes[i].tax_amount = (taxes[i].rate  / 100) *  totals
+            tax_v +=parseFloat(taxes[i].tax_amount)
+            if(i==0) {
+                taxes[i].total =tax_v
+            }else{
+                taxes[i].total = tax_v
+            }
+            tax_table.push(taxes[i])
+        }
+
+        total_tax = (totals * (total_tax_rate/100))
+          totals_after_tax = parseFloat(totals) + parseFloat(total_tax)
+         //////  clear child table and add row from scratch to update amount value
+         cur_frm.clear_table("item_tax")
+         for(let i=0 ; i<tax_table.length ; i++){
+              let row = cur_frm.add_child("item_tax")
+              row.charge_type = tax_table[i].charge_type
+              row.account_head = tax_table[i].account_head
+              row.rate = tax_table[i].rate
+              row.tax_amount = tax_table[i].tax_amount
+              row.total = tax_table[i].total
+         }
+
+         ////// calc insurance
+         frm.refresh_fields("item_tax")
+         frm.set_value("total_qty",parseFloat(total_qty))
+         frm.set_value("total_price",parseFloat(totals))
+         frm.set_value("tax_total",parseFloat(total_tax))
+         frm.set_value("grand_total",parseFloat(totals_after_tax))
+         frm.refresh_field("total_qty")
+         frm.refresh_field("total_price")
+         frm.refresh_field("tax_total")
+         frm.refresh_field("grand_total")
+
+
+    },
 });
 frappe.ui.form.on('Deductions clearence Table', {
 	amount:(frm,cdt,cdn)=>{
@@ -45,8 +142,24 @@ frappe.ui.form.on('Deductions clearence Table', {
 frappe.ui.form.on('Clearance Items', {
 	current_qty:(frm,cdt,cdn)=>{
 		frm.events.calc_total(frm,cdt,cdn)
+		frm.events.clac_taxes(frm)
 	},
 	price:(frm,cdt,cdn)=>{
 		frm.events.calc_total(frm,cdt,cdn)
+		frm.events.clac_taxes(frm)
 	}
+})
+frappe.ui.form.on('Purchase Taxes and Charges Clearances', {
+	rate:(frm,cdt,cdn)=>{
+        frm.events.clac_taxes(frm);
+    },
+    taxes_remove:(frm,cdt,cdn)=>{
+        frm.events.clac_taxes(frm);
+    },
+    taxes_add:(frm,cdt,cdn)=>{
+        var row = locals[cdt][cdn]
+        if(row.rate) {
+            frm.events.clac_taxes(frm);
+        }
+    }
 })

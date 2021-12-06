@@ -1,5 +1,5 @@
 {
- "cards_label": "",
+ "cards_label": "Mian Data",
  "category": "Modules",
  "charts": [],
  "creation": "2021-11-21 18:19:26.803532",
@@ -49,9 +49,18 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Card",
+   "link_to": "Comparison Item Card",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2021-11-21 18:25:13.731691",
+ "modified": "2021-12-02 17:21:03.630675",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Contracting",
@@ -75,6 +84,12 @@
    "doc_view": "List",
    "label": "Clearance",
    "link_to": "Clearance",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Item Card",
+   "link_to": "Comparison Item Card",
    "type": "DocType"
   }
  ]
