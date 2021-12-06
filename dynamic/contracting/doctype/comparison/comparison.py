@@ -70,6 +70,7 @@ def make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 		target.run_method("set_missing_values")
 		target.run_method("calculate_taxes_and_totals")
 		target.update({'customer': source.customer})
+		target.update({'is_contracting': 1})
 
 	doclist = get_mapped_doc("Comparison", source_name, {
 		"Comparison": {

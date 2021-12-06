@@ -5,6 +5,26 @@ frappe.ui.form.on('Clearance', {
 	validate:(frm)=>{
 		frm.events.clac_taxes(frm)
 	},
+    comparison:(frm)=> {
+        let comparison = frm.doc.comparison
+        if (comparison) {
+        frappe.call({
+            method: "frappe.client.get",
+            args: {
+                doctype: "Comparison",
+                name: comparison,
+            },
+            callback: function (r) {
+                if (r.message) {
+                    frm.set_value("down_payment_insurance_rate_",r.message.insurance_value_rate)
+                    frm.set_value("payment_of_insurance_copy_of_operation_and_initial_delivery",r.message.delevery_insurance_value_rate_)
+                    frm.refresh_field("down_payment_insurance_rate_")
+                    frm.refresh_field("payment_of_insurance_copy_of_operation_and_initial_delivery")
+                }
+            },
+        });
+    }
+    },
 	sales_order: function(frm) {
 			frappe.call({
 				"method" :"dynamic.contracting.global_data.get_sales_order_data", 
