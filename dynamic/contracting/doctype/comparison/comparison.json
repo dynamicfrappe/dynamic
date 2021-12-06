@@ -202,9 +202,11 @@
    "label": "Totals"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_qty",
-   "fieldtype": "Read Only",
-   "label": "Total QTY"
+   "fieldtype": "Data",
+   "label": "Total QTY",
+   "read_only": 1
   },
   {
    "fieldname": "total_price",
@@ -280,7 +282,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-05 13:46:13.137006",
+ "modified": "2021-12-06 16:58:58.950513",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",

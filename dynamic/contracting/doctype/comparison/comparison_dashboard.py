@@ -10,7 +10,8 @@ def get_data():
 			'Tender': 'comparison',
 			'Clearance': 'comparison',
 			'Sales Order': 'comparison',
-			'Purchase Order':'comparison'
+			'Purchase Order':'comparison',
+			'Comparison Item Card':'comparison'
 		},
 		'transactions': [
 			{
@@ -20,6 +21,10 @@ def get_data():
 			{
 				'label': _('Purchasing'),
 				'items': ['Purchase Order']
+			},
+			{
+				'label': _('Stock'),
+				'items': ['Comparison Item Card']
 			},
 		]
 	}

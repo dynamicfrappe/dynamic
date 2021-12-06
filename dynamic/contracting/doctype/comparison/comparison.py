@@ -38,13 +38,14 @@ class Comparison(Document):
 	def get_items(self, for_raw_material_request=0):
 		items = []
 		for i in self.item:
-			items.append(dict(
-				name=i.name,
-				item_code=i.clearance_item,
-				qty=i.qty,
-				price=i.price,
-				total=i.total_price
-			))
+			if not i.comparison_item_card:
+				items.append(dict(
+					name=i.name,
+					item_code=i.clearance_item,
+					qty=i.qty,
+					price=i.price,
+					total=i.total_price
+				))
 		return items
 @frappe.whitelist()
 def get_item_price(item_code):
@@ -211,6 +212,7 @@ def create_item_cart(items,comparison,tender=None):
 	items = json.loads(items).get('items')
 	# print("from ifffffffffffff",items)
 	# print("comparison",comparison)
+	name_list = []
 	for item in items:
 		doc = frappe.new_doc("Comparison Item Card")
 		doc.item_comparison_number = item.get("idx")
@@ -220,4 +222,15 @@ def create_item_cart(items,comparison,tender=None):
 		doc.tender	   = tender
 		doc.flags.ignore_mandatory = 1
 		doc.save()
+		name_list.append({
+			"item_cart":doc.name,
+			"row_id" :item.get("idx")
+		})
+	if name_list:
+		c_doc = frappe.get_doc("Comparison",comparison)
+		for n in name_list:
+			for item in c_doc.item:
+				if n.get("row_id") == item.get("idx"):
+					item.comparison_item_card = n.get("item_cart")
+		c_doc.save()
 	return True

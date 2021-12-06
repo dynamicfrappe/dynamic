@@ -50,7 +50,8 @@
   "total_price",
   "column_break_42",
   "tax_total",
-  "grand_total"
+  "grand_total",
+  "amended_from"
  ],
  "fields": [
   {
@@ -284,9 +285,11 @@
    "label": "Totals"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_qty",
    "fieldtype": "Read Only",
-   "label": "Total QTY"
+   "label": "Total QTY",
+   "read_only": 1
   },
   {
    "fieldname": "total_price",
@@ -308,12 +311,21 @@
    "fieldname": "grand_total",
    "fieldtype": "Currency",
    "label": "Grand Total"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Clearance",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-05 14:06:57.707699",
+ "modified": "2021-12-06 16:59:23.406015",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",
