@@ -72,27 +72,106 @@ data = {
                 # "reqd":1
             },
             {
-                "fieldname": "regionCity",
+                "fieldname": "regioncity",
                 "fieldtype": "Data",
                 "insert_after": "e_invoice_column_break",
                 "label": "Region City",
-                "name": "Customer-regionCity",
+                "name": "Customer-regioncity",
                 "reqd":1
             },
             {
                 "fieldname": "street",
                 "fieldtype": "Data",
-                "insert_after": "regionCity",
+                "insert_after": "regioncity",
                 "label": "Street",
                 "name": "Customer-street",
                 "reqd":1
             },
             {
-                "fieldname": "buildingNumber",
+                "fieldname": "buildingnumber",
                 "fieldtype": "Data",
                 "insert_after": "street",
                 "label": "Building Number",
-                "name": "Customer-buildingNumber",
+                "name": "Customer-buildingnumber",
+                "reqd":1
+            },
+
+        ] ,
+        'Company':[
+            {
+                "fieldname": "e_invoice_section_break",
+                "fieldtype": "Section Break",
+                "insert_after": "parent_company",
+                "label": "E Invoice Address",
+                "name": "Company-e_invoice_section_break",
+            },
+            {
+                "fieldname": "issuer_type",
+                "fieldtype": "Select",
+                "insert_after": "e_invoice_section_break",
+                "options":"P\nB\nF",
+                "default":"P",
+                "label": "Issuer Type",
+                "name": "Company-issuer_type",
+                
+                "reqd":1
+            },
+            {
+                "fieldname": "issuer_id",
+                "fieldtype": "Data",
+                "insert_after": "issuer_type",
+                "label": "Issuer ID",
+                "name": "Company-issuer_id",
+                "mandatory_depends_on":"eval:doc.issuer_type=='P'"
+                # "reqd":1
+            },
+            {
+                "fieldname": "country_code",
+                "fieldtype": "Link",
+                "insert_after": "issuer_id",
+                "label": "Country Code",
+                "options":"Country Code",
+                "name": "Company-country_code",
+                "reqd":1
+            },
+            {
+                "fieldname": "governate",
+                "fieldtype": "Data",
+                "insert_after": "country_code",
+                "label": "Governate",
+                "name": "Company-governate",
+                "reqd":1
+            },
+            {
+                "fieldname": "e_invoice_column_break",
+                "fieldtype": "Column Break",
+                "insert_after": "governate",
+                "label": "",
+                "name": "Company-e_invoice_column_break",
+                # "reqd":1
+            },
+            {
+                "fieldname": "regioncity",
+                "fieldtype": "Data",
+                "insert_after": "e_invoice_column_break",
+                "label": "Region City",
+                "name": "Company-regioncity",
+                "reqd":1
+            },
+            {
+                "fieldname": "street",
+                "fieldtype": "Data",
+                "insert_after": "regioncity",
+                "label": "Street",
+                "name": "Company-street",
+                "reqd":1
+            },
+            {
+                "fieldname": "buildingnumber",
+                "fieldtype": "Data",
+                "insert_after": "street",
+                "label": "Building Number",
+                "name": "Company-buildingnumber",
                 "reqd":1
             },
 

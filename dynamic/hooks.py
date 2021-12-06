@@ -80,6 +80,9 @@ doc_events = {
         "Sales Invoice":{
             "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname"
         },
+		"Stock Entry" : {
+			"on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
+		}
 }
 # notification_config = "dynamic.notifications.get_notification_config"
 
@@ -164,5 +167,17 @@ domains = {
 	'Dynamic Accounts':'dynamic.domains.dynamic_accounts' ,
 	'E Invoice':'dynamic.domains.e_invoice' ,
 	'Contracting':'dynamic.domains.contracting'
+}
+
+
+
+
+
+
+jenv = {
+    "methods": [
+        "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data"
+    ],
+	"filters":[]
 }
 
