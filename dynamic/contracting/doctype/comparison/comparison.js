@@ -23,7 +23,7 @@ frappe.ui.form.on('Comparison', {
 				if(!r.message) {
 					frappe.msgprint({
 						title: __('Items Cart not created'),
-						message: __('No Items with Bill of Materials to Manufacture'),
+						message: __('No Items'),
 						indicator: 'orange'
 					});
 					return;
