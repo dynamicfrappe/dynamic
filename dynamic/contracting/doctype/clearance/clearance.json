@@ -146,13 +146,15 @@
    "fetch_from": "comparison.insurance_value_rate",
    "fieldname": "down_payment_insurance_rate_",
    "fieldtype": "Percent",
-   "label": "Down payment insurance rate (%)"
+   "label": "Down payment insurance rate (%)",
+   "read_only": 1
   },
   {
    "fetch_from": "purchase_order.payment_of_insurance_copy",
    "fieldname": "payment_of_insurance_copy_of_operation_and_initial_delivery",
    "fieldtype": "Percent",
-   "label": "Payment of insurance copy of operation and initial delivery(%)"
+   "label": "Payment of insurance copy of operation and initial delivery(%)",
+   "read_only": 1
   },
   {
    "fieldname": "clearance_items_section",
@@ -326,7 +328,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-06 17:50:37.271800",
+ "modified": "2021-12-06 17:51:46.432740",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",
