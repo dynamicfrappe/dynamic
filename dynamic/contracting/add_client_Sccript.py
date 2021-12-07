@@ -3,10 +3,18 @@ from frappe.model.mapper import get_mapped_doc
 
 @frappe.whitelist()
 def add_sales_order_script():
+	add_properties()
 	try :
+		name = "Purchase Order-Form"
+		if frappe.db.exists("Client Script",name) :
+			doc = frappe.get_doc("Client Script",name)
+		else :
+
+			doc = frappe.new_doc("Client Script")
+		print("+ from add script")
 		print("+ from add script")
 
-		doc = frappe.new_doc("Client Script")
+		# doc = frappe.new_doc("Client Script")
 		doc.dt      = "Purchase Order"
 		doc.view    = "Form"
 		doc.enabled = 1
@@ -40,9 +48,15 @@ def add_sales_order_script():
 
 
 	try :
+		name = "Sales Order-Form"
+		if frappe.db.exists("Client Script",name) :
+			doc = frappe.get_doc("Client Script",name)
+		else :
+
+			doc = frappe.new_doc("Client Script")
 		print("+ from add script")
 
-		doc = frappe.new_doc("Client Script")
+		# doc = frappe.new_doc("Client Script")
 		doc.dt      = "Sales Order"
 		doc.view    = "Form"
 		doc.enabled = 1
@@ -78,8 +92,16 @@ def add_sales_order_script():
 
 
 	try:
+		name = "Stock Entry-Form"
+		if frappe.db.exists("Client Script",name) :
+			doc = frappe.get_doc("Client Script",name)
+		else :
+
+			doc = frappe.new_doc("Client Script")
+		
+
 		print("+ from add script")
-		doc = frappe.new_doc("Client Script")
+		# doc = frappe.new_doc("Client Script")
 		doc.dt = "Stock Entry"
 		doc.view = "Form"
 		doc.enabled = 1
@@ -129,6 +151,31 @@ def add_sales_order_script():
 		doc.save()
 	except:
 		pass
+
+
+
+
+def add_properties():
+	try:
+		name = "Journal Entry Account-reference_type-options"
+		if frappe.db.exists("Property Setter",name) :
+			doc = frappe.get_doc("Property Setter",name)
+		else :
+
+			doc = frappe.new_doc("Property Setter")
+
+		doc.doc_type  = "Journal Entry Account"
+		doc.doctype_or_field = "DocField"
+		doc.field_name = "reference_type"
+		doc.name = name
+		doc.property = "options"
+		doc.property_type = "Text"
+		doc.value = "\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document\nComparison\nClearance"
+
+		doc.save()
+	except:
+		pass
+
 
 
 @frappe.whitelist()
