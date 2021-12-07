@@ -30,6 +30,15 @@
   "column_break_15",
   "insurance_value_rate",
   "delevery_insurance_value_rate_",
+  "terms_sheet_section_section",
+  "terms_sheet_amount",
+  "project_account",
+  "terms_sheet_cost_center",
+  "column_break_28",
+  "mode_of_payment",
+  "payment_account",
+  "reference_no",
+  "reference_date",
   "data_19",
   "item",
   "tax_section",
@@ -277,12 +286,69 @@
    "fieldname": "allow_material_over_price",
    "fieldtype": "Check",
    "label": "Allow Material Issue with Rate more than Item Price"
+  },
+  {
+   "fieldname": "terms_sheet_section_section",
+   "fieldtype": "Section Break",
+   "label": "Terms Sheet Section"
+  },
+  {
+   "default": "0",
+   "fieldname": "terms_sheet_amount",
+   "fieldtype": "Currency",
+   "label": "Terms Sheet Amount"
+  },
+  {
+   "fieldname": "project_account",
+   "fieldtype": "Link",
+   "label": "Project Account",
+   "mandatory_depends_on": "eval:doc.terms_sheet_amount > 0",
+   "options": "Account"
+  },
+  {
+   "fieldname": "terms_sheet_cost_center",
+   "fieldtype": "Link",
+   "label": "Terms Cost Center",
+   "mandatory_depends_on": "eval:doc.terms_sheet_amount > 0",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "column_break_28",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Mode Of Payment",
+   "mandatory_depends_on": "eval:doc.terms_sheet_amount > 0",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "payment_account",
+   "fieldtype": "Link",
+   "label": "Payment Account",
+   "options": "Account",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.mode_of_payment != \"Cash\" && doc.mode_of_payment",
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "label": "Cheque/Reference No",
+   "mandatory_depends_on": "eval:doc.mode_of_payment != \"Cash\" && doc.mode_of_payment"
+  },
+  {
+   "depends_on": "eval:doc.mode_of_payment != \"Cash\" && doc.mode_of_payment",
+   "fieldname": "reference_date",
+   "fieldtype": "Date",
+   "label": "Cheque/Reference Date",
+   "mandatory_depends_on": "eval:doc.mode_of_payment != \"Cash\" && doc.mode_of_payment"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-06 16:58:58.950513",
+ "modified": "2021-12-07 14:08:23.702176",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",
