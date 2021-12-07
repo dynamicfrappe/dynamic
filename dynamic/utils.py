@@ -23,8 +23,8 @@ def get_invoice_tax_data(doc):
 	total_tax_amount = sum([(x.tax_amount or 0) for x in doc.items])
 	# server_url = frappe.local.conf.host_name or frappe.local.conf.hostname
 	server_url = get_url(full_address=True)
-	port = frappe.conf.nginx_port or frappe.conf.webserver_port
-	if not url_contains_port(server_url) and port :
+	port = frappe.conf.nginx_port or frappe.conf.http_port or frappe.conf.webserver_port
+	if not url_contains_port(server_url) and port and str(port) != "80":
 		server_url = server_url + ':' + str(port)
 
 	return {

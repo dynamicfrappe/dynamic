@@ -24,8 +24,8 @@ class Comparison(Document):
 			total_tax += float(t.tax_amount or 0)
 			t.total =  total_items +total_tax
 		grand_total = total_items + total_tax
-		ins_value          = grand_total * (self.insurance_value_rate / 100) if self.insurance_value_rate else 0
-		delivery_ins_value = grand_total * (self.delevery_insurance_value_rate_ / 100) if self.delevery_insurance_value_rate_ else 0
+		ins_value          = grand_total * (self.insurance_value_rate / 100)
+		delivery_ins_value = grand_total * (self.delevery_insurance_value_rate_ / 100)
 		self.total_price = total_items
 		self.tax_total   = total_tax
 		self.delivery_insurance_value = delivery_ins_value
@@ -116,7 +116,9 @@ def make_purchase_order(source_name, selected_items=None, target_doc=None , igno
 		target.supplier = ""
 		target.is_contracting = 1
 		target.comparison = source.name
-		target.apply_discount_on = ""
+		target.down_payment_insurance_rate = source.insurance_value_rate
+		target.payment_of_insurance_copy = source.delevery_insurance_value_rate_
+		target.apply_discount_on = ""	
 		target.additional_discount_percentage = 0.0
 		target.discount_amount = 0.0
 		target.inter_company_order_reference = ""
@@ -124,6 +126,7 @@ def make_purchase_order(source_name, selected_items=None, target_doc=None , igno
 		target.customer_name = ""
 		target.run_method("set_missing_values")
 		target.run_method("calculate_taxes_and_totals")
+        
 
 	def update_item(source, target, source_parent):
 		target.schedule_date = source_parent.end_date
@@ -179,7 +182,6 @@ def create_item_cart(items,comparison,tender=None):
 		doc.item_code  = item.get("item_code")
 		doc.comparison = comparison
 		doc.tender	   = tender
-		doc.qty_from_comparison  = item.get("qty")
 		doc.flags.ignore_mandatory = 1
 		doc.save()
 		name_list.append({

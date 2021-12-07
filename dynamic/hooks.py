@@ -112,8 +112,8 @@ doc_events = {
 
 doc_events = {
 	"Purchase Order": {
-		"on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.on_submit",
-		"on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.on_cancel",
+		"on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
+		"on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
 		# "on_update": "method",
 		# "on_cancel": "method",
 		# "on_trash": "method"
