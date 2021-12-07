@@ -71,13 +71,23 @@ frappe.ui.form.on('Clearance', {
 
     },
 	calc_deductions:(frm)=>{
+        console.log("frm ded action")
 		let totals = 0
 		let deduct_table = frm.doc.deductions
+        let items = frm.doc.items
+        let total_items = 0
+        let total_paid_amount = 0
 		for(let i=0;i<deduct_table.length;i++){
-			totals += deduct_table[0].amount
+			totals += deduct_table[i].amount
 		}
+        for(let i=0;i<items.length;i++){
+			total_items += (items[i].total_price || 0)
+		}
+        total_paid_amount = total_items - totals
 		frm.set_value("total_deductions",totals)
+        frm.set_value("total_payed_amount",total_paid_amount)
 		frm.refresh_field("total_deductions")
+        frm.refresh_field("total_payed_amount")
 	},
 	calc_total:(frm,cdt,cdn)=>{
 		let row = locals[cdt][cdn]
@@ -103,7 +113,7 @@ frappe.ui.form.on('Clearance', {
         let total_tax_rate = 0
         let total_tax = 0
         let tax_table = []
-
+        let total_paid_amount = 0
         for(let i=0 ; i< items.length ; i++){
             totals += parseFloat(items[i].total_price || 0)
             total_qty += parseInt(items[i].current_qty || 0)
@@ -122,8 +132,9 @@ frappe.ui.form.on('Clearance', {
             tax_table.push(taxes[i])
         }
 
-        total_tax = (totals * (total_tax_rate/100))
+          total_tax = (totals * (total_tax_rate/100))
           totals_after_tax = parseFloat(totals) + parseFloat(total_tax)
+         total_paid_amount = totals_after_tax - (frm.doc.total_deductions || 0)
          //////  clear child table and add row from scratch to update amount value
          cur_frm.clear_table("item_tax")
          for(let i=0 ; i<tax_table.length ; i++){
@@ -134,19 +145,25 @@ frappe.ui.form.on('Clearance', {
               row.tax_amount = tax_table[i].tax_amount
               row.total = tax_table[i].total
          }
+         //////////////// update down payment and payment insurance
+         let down_payment_insurance = totals_after_tax * (frm.doc.down_payment_insurance_rate_ /100)
+         let payment_ins = totals_after_tax * ( frm.doc.payment_of_insurance_copy_of_operation_and_initial_delivery / 100)
 
-         ////// calc insurance
          frm.refresh_fields("item_tax")
          frm.set_value("total_qty",parseFloat(total_qty))
          frm.set_value("total_price",parseFloat(totals))
          frm.set_value("tax_total",parseFloat(total_tax))
          frm.set_value("grand_total",parseFloat(totals_after_tax))
+         frm.set_value("total_payed_amount",total_paid_amount)
+         frm.set_value("down_payment_insurance_amount",down_payment_insurance)
+         frm.set_value("payment_insurance",payment_ins)
          frm.refresh_field("total_qty")
          frm.refresh_field("total_price")
          frm.refresh_field("tax_total")
          frm.refresh_field("grand_total")
-
-
+         frm.refresh_field("total_payed_amount")
+         frm.refresh_field("down_payment_insurance_amount")
+         frm.refresh_field("payment_insurance")
     },
 });
 frappe.ui.form.on('Deductions clearence Table', {

@@ -233,7 +233,8 @@
   {
    "fieldname": "payment_insurance",
    "fieldtype": "Currency",
-   "label": "The value of the operation and initial delivery payment insurance"
+   "label": "The value of the operation and initial delivery payment insurance",
+   "read_only": 1
   },
   {
    "fieldname": "total_payed_amount",
@@ -313,7 +314,8 @@
   {
    "fieldname": "grand_total",
    "fieldtype": "Currency",
-   "label": "Grand Total"
+   "label": "Grand Total",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -328,7 +330,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-06 17:51:46.432740",
+ "modified": "2021-12-07 10:21:30.444262",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",
