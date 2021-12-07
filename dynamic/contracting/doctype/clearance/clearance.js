@@ -2,6 +2,16 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Clearance", {
+  refresh:(frm)=>{
+    if(frm.doc.docstatus == 1) {
+      frm.add_custom_button(__('Create Payment'), function () {
+        frappe.call({
+          method: "create_payment_entry",
+          doc:frm.doc
+        })
+      });
+    }
+  },
   onload(frm) {
     (frm.doc.items || []).forEach((row) => {
       frm.events.calc_total(frm, row.doctype, row.name);
