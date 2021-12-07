@@ -3,20 +3,20 @@
 
 frappe.ui.form.on("Comparison", {
   refresh: (frm) => {
-    frm.set_query("terms_sheet_cost_center", function() {
-			return {
-				filters: {
-					is_group: 0
-				}
-			}
-		});
-    frm.set_query("project_account", function() {
-			return {
-				filters: {
-					is_group: 0
-				}
-			}
-		});
+    frm.set_query("terms_sheet_cost_center", function () {
+      return {
+        filters: {
+          is_group: 0,
+        },
+      };
+    });
+    frm.set_query("project_account", function () {
+      return {
+        filters: {
+          is_group: 0,
+        },
+      };
+    });
     if (frm.doc.docstatus == 1) {
       frm.add_custom_button(
         __("Sales Order"),
@@ -37,7 +37,10 @@ frappe.ui.form.on("Comparison", {
         },
         __("Create")
       );
-      if (frm.doc.terms_sheet_amount > 0) {
+      if (
+        frm.doc.terms_sheet_amount > 0 &&
+        frm.doc.tender_Status == "Approved"
+      ) {
         frm.add_custom_button(
           __("Terms Sheet Journal Entry"),
           function () {
