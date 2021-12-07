@@ -143,6 +143,7 @@
    "label": "Required By"
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "comparison.insurance_value_rate",
    "fieldname": "down_payment_insurance_rate_",
    "fieldtype": "Percent",
@@ -150,6 +151,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "purchase_order.payment_of_insurance_copy",
    "fieldname": "payment_of_insurance_copy_of_operation_and_initial_delivery",
    "fieldtype": "Percent",
@@ -225,18 +227,21 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "down_payment_insurance_amount",
    "fieldtype": "Currency",
    "label": "Down payment insurance amount",
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "payment_insurance",
    "fieldtype": "Currency",
    "label": "The value of the operation and initial delivery payment insurance",
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_payed_amount",
    "fieldtype": "Currency",
    "label": "Total payed Amount",
@@ -270,6 +275,7 @@
    "options": "Comparison"
   },
   {
+   "fetch_from": "comparison.project",
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
@@ -277,6 +283,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "comparison.tender",
    "fieldname": "tender",
    "fieldtype": "Link",
    "label": "Tender",
@@ -330,7 +337,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-07 10:21:30.444262",
+ "modified": "2021-12-07 14:11:33.080203",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",

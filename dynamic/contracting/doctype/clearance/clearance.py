@@ -3,6 +3,17 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import (
+	DATE_FORMAT,
+	add_days,
+	add_to_date,
+	cint,
+	comma_and,
+	date_diff,
+	flt,
+	getdate,
+    nowdate
+)
 
 class Clearance(Document):
 	def on_submit(self):
@@ -19,13 +30,13 @@ class Clearance(Document):
 						## set previous qty and completed qty in clearence
 						clearence_item.previous_qty       = comparison_item.completed_qty
 						clearence_item.completed_qty      = clearence_item.current_qty + clearence_item.previous_qty
-						clearence_item.completed_percent  = (float(clearence_item.completed_qty) / float(clearence_item.qty)) *100 
-						clearence_item.previous_percent   = (float(clearence_item.previous_qty) / float(clearence_item.qty)) *100
+						clearence_item.completed_percent  = (float(clearence_item.completed_qty) / float(clearence_item.qty)) *100 if clearence_item.qty else 0
+						clearence_item.previous_percent   = (float(clearence_item.previous_qty) / float(clearence_item.qty)) *100 if clearence_item.qty else 0
 						clearence_item.previous_amount	  = float(clearence_item.previous_qty) * float(clearence_item.price)
 
 						### update comparison
 						comparison_item.completed_qty    += clearence_item.current_qty
-						comparison_item.completed_percent = ( comparison_item.completed_qty / clearence_item.qty) *100
+						comparison_item.completed_percent = ( comparison_item.completed_qty / clearence_item.qty) *100 if clearence_item.qty else 0
 						comparison_item.remaining_qty	  = clearence_item.qty - comparison_item.completed_qty
 						comparison_item.remaining_percent = (comparison_item.remaining_qty / comparison_item.qty) * 100
 						comparison_item.remaining_amount  = float(comparison_item.remaining_qty) * float(clearence_item.price)
@@ -39,7 +50,50 @@ class Clearance(Document):
 			doc.save()
 		else:
 			pass
-	
+	@frappe.whitelist()
+	def create_payment_entry(self):
+		if not self.customer:
+			return "Please Set Customer"
+		print("self.grand_totalself.grand_tota00000000000000000l",self.grand_total)
+		company         = frappe.db.get_value("Global Defaults", None, "default_company")
+		company_doc     = frappe.get_doc("Company", company)
+		cash_account    = company_doc.default_cash_account
+		project_account = company_doc.capital_work_in_progress_account
+		recivable_account= company_doc.default_receivable_account
+		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
+
+		journal_entry = frappe.new_doc('Journal Entry')
+		journal_entry.company = company
+		journal_entry.posting_date = nowdate()
+		credit_row = journal_entry.append("accounts", {})
+		credit_row.party_type = "Customer"
+		credit_row.account     = recivable_account
+		credit_row.party	   = self.customer
+		credit_row.credit_in_account_currency	   = flt(self.grand_total, precision)
+		debit_row = journal_entry.append("accounts", {})
+		debit_row.account	   = project_account
+		debit_row.debit_in_account_currency		   = flt(self.grand_total, precision)
+		journal_entry.save()
+		journal_entry.submit()
+		frappe.msgprint("Journal Entry %s Create Successfully"%journal_entry.name)
+
+		# second journal
+		s_journal_entry = frappe.new_doc('Journal Entry')
+		s_journal_entry.company = company
+		s_journal_entry.posting_date = nowdate()
+		s_credit_row = s_journal_entry.append("accounts", {})
+		s_credit_row.account = cash_account
+		s_credit_row.credit_in_account_currency = flt(self.grand_total, precision)
+
+		s_debit_row = s_journal_entry.append("accounts", {})
+		s_debit_row.account    = recivable_account
+		s_debit_row.party_type = "Customer"
+		s_debit_row.party = self.customer
+		s_debit_row.debit_in_account_currency = flt(self.grand_total, precision)
+		s_journal_entry.save()
+		frappe.msgprint("Journal Entry %s Create Successfully" %s_journal_entry.name)
+
+
 
 
 
