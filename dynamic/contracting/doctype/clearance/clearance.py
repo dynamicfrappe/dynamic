@@ -7,6 +7,9 @@ from frappe.model.document import Document
 class Clearance(Document):
 	def on_submit(self):
 		self.update_comparison()
+		self.update_purchase_order()
+	def on_cancel(self):
+		self.update_purchase_order(cancel=1)
 	def update_comparison(self):
 		if self.comparison and self.items and self.clearance_type == "Outcoming":
 			doc = frappe.get_doc("Comparison",self.comparison)
@@ -36,3 +39,49 @@ class Clearance(Document):
 			doc.save()
 		else:
 			pass
+	
+
+
+
+
+
+
+
+
+
+	def update_purchase_order(self,cancel = False):
+		if self.purchase_order and self.items and self.clearance_type == "incoming":
+			for item in self.items :
+				try : 
+					purchase_order_item = frappe.get_doc("Purchase Order Item",item.purchase_order_item)
+					if cancel :
+						purchase_order_item.completed_qty -= item.qty
+					else :
+						purchase_order_item.completed_qty += item.qty
+
+					purchase_order_item.completed_percent  = (float(purchase_order_item.completed_qty) / float(purchase_order_item.qty)) *100
+					purchase_order_item.completed_amount  = (float(purchase_order_item.rate) * float(purchase_order_item.completed_qty))
+
+					if cancel :
+						purchase_order_item.remaining_qty = max(item.qty,item.qty - purchase_order_item.completed_qty)
+					else:
+						purchase_order_item.remaining_qty = min(0,item.qty - purchase_order_item.completed_qty)
+
+					purchase_order_item.remaining_percent  = (float(purchase_order_item.remaining_qty) / float(purchase_order_item.qty)) *100
+					purchase_order_item.remaining_amount  = (float(purchase_order_item.rate) * float(purchase_order_item.remaining_qty))
+					purchase_order_item.save()
+				except :
+					pass
+
+				
+
+
+
+
+
+
+
+
+
+
+

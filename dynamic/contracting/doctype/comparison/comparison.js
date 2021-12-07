@@ -561,3 +561,5 @@ frappe.ui.form.on("Purchase Taxes and Charges Clearances", {
     }
   },
 });
+
+
