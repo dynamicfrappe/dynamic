@@ -9,11 +9,12 @@ def on_submit (self,fun=''):
 
     for item in self.items :
         if getattr(item,"comparison" , None) and getattr(item,"comparison_item" , None):
-            frappe.db.sql(f"""
-            update `tabComparison Item` set purchased_qty = LEAST(qty,purchased_qty + {item.qty}) , remaining_purchased_qty = qty - LEAST(qty,purchased_qty + {item.qty})
-            where name = '{item.comparison_item}'
-            """)
-        frappe.db.commit()
+            comparison_item = frappe.get_doc("Comparison Item",item.comparison_item)
+            comparison_item.purchased_qty = (comparison_item.purchased_qty or 0 ) + item.qty
+            comparison_item.remaining_purchased_qty = max(0,(comparison_item.qty or 0 ) - comparison_item.purchased_qty)
+            comparison_item.save()
+
+
 
 
 
@@ -32,9 +33,8 @@ def on_cancel (self,fun=''):
     if 'Contracting' not in frappe.get_active_domains():
         return
     for item in self.items :
-        if getattr(item,"comparison" , None) and getattr(item,"comparison_item" , None):
-            frappe.db.sql(f"""
-            update `tabComparison Item` set purchased_qty = GREATEST(0,purchased_qty - {item.qty}) , remaining_purchased_qty = qty - GREATEST(0,purchased_qty - {item.qty})
-            where name = '{item.comparison_item}'
-            """)
-        frappe.db.commit()
+        
+            comparison_item = frappe.get_doc("Comparison Item",item.comparison_item)
+            comparison_item.purchased_qty = min(0,(comparison_item.purchased_qty or 0 ) - item.qty)
+            comparison_item.remaining_purchased_qty = max(comparison_item.qty,(comparison_item.qty or 0 ) - comparison_item.purchased_qty)
+            comparison_item.save()
