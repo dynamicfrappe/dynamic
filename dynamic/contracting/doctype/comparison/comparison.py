@@ -24,8 +24,8 @@ class Comparison(Document):
 			total_tax += float(t.tax_amount or 0)
 			t.total =  total_items +total_tax
 		grand_total = total_items + total_tax
-		ins_value          = grand_total * (self.insurance_value_rate / 100)
-		delivery_ins_value = grand_total * (self.delevery_insurance_value_rate_ / 100)
+		ins_value          = grand_total * (self.insurance_value_rate / 100) if self.insurance_value_rate else 0
+		delivery_ins_value = grand_total * (self.delevery_insurance_value_rate_ / 100) if self.delevery_insurance_value_rate_ else 0
 		self.total_price = total_items
 		self.tax_total   = total_tax
 		self.delivery_insurance_value = delivery_ins_value
@@ -221,6 +221,7 @@ def create_item_cart(items,comparison,tender=None):
 		doc.item_code  = item.get("item_code")
 		doc.comparison = comparison
 		doc.tender	   = tender
+		doc.qty_from_comparison  = item.get("qty")
 		doc.flags.ignore_mandatory = 1
 		doc.save()
 		name_list.append({

@@ -16,7 +16,7 @@ class Clearance(Document):
 						## set previous qty and completed qty in clearence
 						clearence_item.previous_qty       = comparison_item.completed_qty
 						clearence_item.completed_qty      = clearence_item.current_qty + clearence_item.previous_qty
-						clearence_item.completed_percent  = (float(clearence_item.completed_qty) / float(clearence_item.qty)) *100
+						clearence_item.completed_percent  = (float(clearence_item.completed_qty) / float(clearence_item.qty)) *100 
 						clearence_item.previous_percent   = (float(clearence_item.previous_qty) / float(clearence_item.qty)) *100
 						clearence_item.previous_amount	  = float(clearence_item.previous_qty) * float(clearence_item.price)
 

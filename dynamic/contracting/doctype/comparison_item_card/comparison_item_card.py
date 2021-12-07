@@ -14,4 +14,12 @@ class ComparisonItemCard(Document):
 					item.price = self.result
 					item.total_price = self.result * item.qty
 			doc.save()
+	def validate(self):
+		self.validate_qty()
+	def validate_qty(self):
+		if not self.qty:
+			self.qty = 1
+		if self.qty > self.qty_from_comparison:
+			frappe.throw("""You Cant Select QTY More Than %s"""%self.qty_from_comparison)
+
 

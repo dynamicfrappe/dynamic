@@ -5,6 +5,13 @@ frappe.ui.form.on('Comparison Item Card', {
 	// refresh: function(frm) {
 
 	// }
+    qty:(frm,cdt,cdn)=>{
+      let qty =frm.doc.qty
+      if(qty > frm.doc.qty_from_comparison){
+          frm.set_value("qty",1)
+          frappe.throw(`You cant Select QTY More Than ${frm.doc.qty_from_comparison}`)
+      }
+    },
     calc_stock_items_toals:(frm,cdt,cdn)=>{
          let total = 0
         let all_cost = 0
