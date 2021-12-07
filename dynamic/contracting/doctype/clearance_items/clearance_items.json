@@ -81,13 +81,13 @@
   },
   {
    "fieldname": "price",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Price"
   },
   {
    "fieldname": "total_price",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Total Price"
   },
@@ -125,7 +125,7 @@
   {
    "allow_on_submit": 1,
    "fieldname": "previous_qty",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Previous Qty",
    "read_only": 1
   },
@@ -173,7 +173,7 @@
   {
    "allow_on_submit": 1,
    "fieldname": "completed_amount",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "label": "Completed Amount",
    "read_only": 1
   },
@@ -204,7 +204,7 @@
   {
    "allow_on_submit": 1,
    "fieldname": "remaining_amount",
-   "fieldtype": "Float",
+   "fieldtype": "Currency",
    "label": "Remaining Amount",
    "read_only": 1
   },
@@ -243,7 +243,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-12-07 11:54:37.623222",
+ "modified": "2021-12-07 16:06:35.805388",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance Items",
