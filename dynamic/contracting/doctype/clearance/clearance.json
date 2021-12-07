@@ -51,6 +51,7 @@
   "column_break_42",
   "tax_total",
   "grand_total",
+  "paid",
   "amended_from"
  ],
  "fields": [
@@ -332,12 +333,20 @@
    "options": "Clearance",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "paid",
+   "fieldtype": "Check",
+   "label": "Paid",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-07 14:11:33.080203",
+ "modified": "2021-12-07 16:21:36.600388",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",

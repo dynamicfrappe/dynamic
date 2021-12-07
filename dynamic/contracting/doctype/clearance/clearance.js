@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Clearance", {
   refresh:(frm)=>{
-    if(frm.doc.docstatus == 1) {
+    if(frm.doc.docstatus == 1 && frm.doc.paid == 0) {
       frm.add_custom_button(__('Create Payment'), function () {
         frappe.call({
           method: "create_payment_entry",
