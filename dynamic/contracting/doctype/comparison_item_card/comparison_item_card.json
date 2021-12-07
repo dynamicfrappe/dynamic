@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:CARD-{DD}-{MM}-{YY}-{####}",
  "creation": "2021-12-02 16:56:28.678857",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -39,6 +40,7 @@
    "fetch_from": "item_code.item_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Item Name"
   },
   {
@@ -199,7 +201,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-07 11:01:21.112407",
+ "modified": "2021-12-07 16:47:32.061827",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison Item Card",
