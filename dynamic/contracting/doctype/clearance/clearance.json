@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:CLR-{DD}-{MM}-{YY}-{####}",
  "creation": "2021-11-21 14:00:39.074981",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -12,6 +13,7 @@
   "column_break_3",
   "clearance_date",
   "clearance_type",
+  "comparison",
   "column_break_6",
   "the_total_value_of_the_work_statement_of_the_current_extract",
   "down_payment_insurance_amount",
@@ -27,6 +29,8 @@
   "column_break_12",
   "purchase_order_date",
   "required_by",
+  "tender",
+  "project",
   "section_break_15",
   "down_payment_insurance_rate_",
   "payment_of_insurance_copy_of_operation_and_initial_delivery",
@@ -41,6 +45,12 @@
   "total_deductions",
   "notes_section",
   "user_notes",
+  "totals_section",
+  "total_qty",
+  "total_price",
+  "column_break_42",
+  "tax_total",
+  "grand_total",
   "amended_from"
  ],
  "fields": [
@@ -133,16 +143,18 @@
    "label": "Required By"
   },
   {
-   "fetch_from": "purchase_order.down_payment_insurance_rate",
+   "fetch_from": "comparison.insurance_value_rate",
    "fieldname": "down_payment_insurance_rate_",
    "fieldtype": "Percent",
-   "label": "Down payment insurance rate (%)"
+   "label": "Down payment insurance rate (%)",
+   "read_only": 1
   },
   {
    "fetch_from": "purchase_order.payment_of_insurance_copy",
    "fieldname": "payment_of_insurance_copy_of_operation_and_initial_delivery",
    "fieldtype": "Percent",
-   "label": "Payment of insurance copy of operation and initial delivery(%)"
+   "label": "Payment of insurance copy of operation and initial delivery(%)",
+   "read_only": 1
   },
   {
    "fieldname": "clearance_items_section",
@@ -175,15 +187,6 @@
    "print_hide": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Clearance",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "total_after_tax",
    "fieldtype": "Currency",
    "label": "Total After Tax"
@@ -202,7 +205,8 @@
   {
    "fieldname": "total_deductions",
    "fieldtype": "Currency",
-   "label": "Total Deductions"
+   "label": "Total Deductions",
+   "read_only": 1
   },
   {
    "fieldname": "notes_section",
@@ -229,12 +233,14 @@
   {
    "fieldname": "payment_insurance",
    "fieldtype": "Currency",
-   "label": "The value of the operation and initial delivery payment insurance"
+   "label": "The value of the operation and initial delivery payment insurance",
+   "read_only": 1
   },
   {
    "fieldname": "total_payed_amount",
    "fieldtype": "Currency",
-   "label": "Total payed Amount"
+   "label": "Total payed Amount",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.clearance_type != 'incoming'",
@@ -256,12 +262,75 @@
    "fieldtype": "Data",
    "label": "Customer Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "comparison",
+   "fieldtype": "Link",
+   "label": "Comparison",
+   "options": "Comparison"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tender",
+   "fieldtype": "Link",
+   "label": "Tender",
+   "options": "Tender",
+   "read_only": 1
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_qty",
+   "fieldtype": "Read Only",
+   "label": "Total QTY",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_price",
+   "fieldtype": "Currency",
+   "label": "Total Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_42",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tax_total",
+   "fieldtype": "Currency",
+   "label": "Tax Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Clearance",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-21 17:14:19.424096",
+ "modified": "2021-12-07 10:21:30.444262",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",

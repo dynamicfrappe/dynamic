@@ -1,0 +1,224 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2021-12-02 16:56:28.678857",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_comparison_number",
+  "item_code",
+  "item_name",
+  "item_description",
+  "column_break_3",
+  "tender",
+  "comparison",
+  "qty",
+  "stock_item_section",
+  "items",
+  "total_item_price",
+  "amended_from",
+  "service_item_section",
+  "services",
+  "total_service_cost",
+  "over_cost_item_section",
+  "cost",
+  "total_cost",
+  "total_section_section",
+  "item_cost",
+  "serivce_cost",
+  "other_cost",
+  "column_break_20",
+  "total_item_cost",
+  "analycis_edited_by",
+  "result",
+  "qty_from_comparison"
+ ],
+ "fields": [
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "item_description",
+   "fieldtype": "Text",
+   "label": "Item Description "
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tender",
+   "fieldtype": "Link",
+   "label": " Tender",
+   "options": "Tender"
+  },
+  {
+   "fieldname": "comparison",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": " Comparison",
+   "options": "Comparison",
+   "reqd": 1
+  },
+  {
+   "collapsible_depends_on": "eval :doc.comparison != 'None' ;",
+   "fieldname": "stock_item_section",
+   "fieldtype": "Section Break",
+   "label": "Stock Item "
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Comparison Item Card Stock Item"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Comparison Item Card",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_item_price",
+   "fieldtype": "Currency",
+   "label": "Total Item Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_item_section",
+   "fieldtype": "Section Break",
+   "label": "Service Item "
+  },
+  {
+   "fieldname": "services",
+   "fieldtype": "Table",
+   "label": "Services",
+   "options": "Comparison Item Card Service Item"
+  },
+  {
+   "fieldname": "total_service_cost",
+   "fieldtype": "Currency",
+   "label": "Total Service Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "over_cost_item_section",
+   "fieldtype": "Section Break",
+   "label": "Over Cost Item  "
+  },
+  {
+   "fieldname": "cost",
+   "fieldtype": "Table",
+   "label": "Cost",
+   "options": "Over Cost Item"
+  },
+  {
+   "fieldname": "total_cost",
+   "fieldtype": "Data",
+   "label": "Total Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_section_section",
+   "fieldtype": "Section Break",
+   "label": "Total Section "
+  },
+  {
+   "fieldname": "item_cost",
+   "fieldtype": "Currency",
+   "label": "Item Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "serivce_cost",
+   "fieldtype": "Currency",
+   "label": "Serivce Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "other_cost",
+   "fieldtype": "Currency",
+   "label": "Other Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_20",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_item_cost",
+   "fieldtype": "Currency",
+   "label": "Total Item Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "analycis_edited_by",
+   "fieldtype": "Data",
+   "label": "Analycis Edited By",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_comparison_number",
+   "fieldtype": "Data",
+   "label": "Item Comparison Number"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "default": "1",
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "label": "Qty"
+  },
+  {
+   "fieldname": "result",
+   "fieldtype": "Currency",
+   "label": "Result",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty_from_comparison",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Qty From Comparison",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-12-07 11:01:21.112407",
+ "modified_by": "Administrator",
+ "module": "Contracting",
+ "name": "Comparison Item Card",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

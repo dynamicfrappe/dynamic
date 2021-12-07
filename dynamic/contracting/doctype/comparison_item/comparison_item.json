@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2021-11-21 14:42:37.067007",
+ "creation": "2021-12-02 16:17:36.759778",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -10,6 +10,8 @@
   "clearance_item_name",
   "clearance_item_description",
   "cost_center",
+  "comparison_item_card",
+  "allow_material_over_price",
   "column_break_4",
   "uom",
   "qty",
@@ -35,10 +37,10 @@
   "remaining_percent",
   "column_break_27",
   "remaining_amount",
-  "purchase_order_reference_section",
-  "purchase_order",
-  "column_break_32",
-  "purchase_order_item"
+  "purchase_details_section",
+  "purchased_qty",
+  "column_break_33",
+  "remaining_purchased_qty"
  ],
  "fields": [
   {
@@ -63,6 +65,13 @@
    "read_only": 1
   },
   {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
+  },
+  {
    "fieldname": "column_break_4",
    "fieldtype": "Column Break"
   },
@@ -77,7 +86,13 @@
   {
    "fieldname": "qty",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Qty"
+  },
+  {
+   "fieldname": "current_qty",
+   "fieldtype": "Float",
+   "label": "Current Qty"
   },
   {
    "fieldname": "price",
@@ -96,12 +111,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "current_qty",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Current Qty"
-  },
-  {
+   "allow_on_submit": 1,
    "fieldname": "current_percent",
    "fieldtype": "Percent",
    "label": "Current Percent",
@@ -112,6 +122,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "current_amount",
    "fieldtype": "Currency",
    "label": "Current Amount",
@@ -125,7 +136,7 @@
   {
    "allow_on_submit": 1,
    "fieldname": "previous_qty",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Previous Qty",
    "read_only": 1
   },
@@ -173,7 +184,7 @@
   {
    "allow_on_submit": 1,
    "fieldname": "completed_amount",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "label": "Completed Amount",
    "read_only": 1
   },
@@ -204,49 +215,57 @@
   {
    "allow_on_submit": 1,
    "fieldname": "remaining_amount",
-   "fieldtype": "Float",
+   "fieldtype": "Currency",
    "label": "Remaining Amount",
    "read_only": 1
   },
   {
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "label": "Cost Center",
-   "options": "Cost Center",
-   "reqd": 1
+   "default": "0",
+   "fieldname": "allow_material_over_price",
+   "fieldtype": "Check",
+   "label": "Allow Material Issue with Rate more than Item Price"
   },
   {
-   "fieldname": "purchase_order_reference_section",
+   "fieldname": "purchase_details_section",
    "fieldtype": "Section Break",
-   "label": "Purchase Order Reference "
+   "label": "Purchase Details"
   },
   {
    "allow_on_submit": 1,
-   "fieldname": "purchase_order",
-   "fieldtype": "Link",
-   "label": "Purchase Order",
-   "options": "Purchase Order",
+   "default": "0",
+   "fieldname": "purchased_qty",
+   "fieldtype": "Float",
+   "label": "Ordered Qty",
    "read_only": 1
   },
   {
-   "fieldname": "column_break_32",
+   "fieldname": "column_break_33",
    "fieldtype": "Column Break"
   },
   {
    "allow_on_submit": 1,
-   "fieldname": "purchase_order_item",
-   "fieldtype": "Data",
-   "label": "Purchase Order Item",
+   "default": "0",
+   "fieldname": "remaining_purchased_qty",
+   "fieldtype": "Float",
+   "label": "Remaining Qty",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "comparison_item_card",
+   "fieldtype": "Link",
+   "label": " Comparison Item Card",
+   "options": "Comparison Item Card",
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-12-07 11:54:37.623222",
+ "modified": "2021-12-07 10:20:55.444516",
  "modified_by": "Administrator",
  "module": "Contracting",
- "name": "Clearance Items",
+ "name": "Comparison Item",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

@@ -36,7 +36,7 @@ app_include_css = "/assets/dynamic/css/dynamic.css"
 
 # include js in doctype views
 # doctype_js = {"Sales Invoice" : "public/js/sales_invoice.js"}
-
+# doctype_js = {"Sales Order" : "public/js/sales_order.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -69,17 +69,21 @@ after_migrate = "dynamic.install.after_install"
 # See frappe.core.notifications.get_notification_config
 
 
-#doctype_js = {
-#	"Customer" : "e_invoice/doctype/customer/customer.js",
-#	"Sales Invoice" : "e_invoice/doctype/sales_invoice/sales_invoice.js",
-#	"Item":"e_invoice/doctype/item/item.js",
-#}
-#doc_events = {
+doctype_js = {
+	"Customer" : "e_invoice/doctype/customer/customer.js",
+	"Sales Invoice" : "e_invoice/doctype/sales_invoice/sales_invoice.js",
+	"Item":"e_invoice/doctype/item/item.js",
+	"Sales Order" : "public/js/sales_order.js"
+}
+doc_events = {
 
-#        "Sales Invoice":{
-#            "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname"
-#        },
-#}
+        "Sales Invoice":{
+            "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname"
+        },
+		"Stock Entry" : {
+			"on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
+		}
+}
 # notification_config = "dynamic.notifications.get_notification_config"
 
 # Permissions
@@ -106,13 +110,15 @@ after_migrate = "dynamic.install.after_install"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Purchase Order": {
+		"on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
+		"on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
+		# "on_update": "method",
+		# "on_cancel": "method",
+		# "on_trash": "method"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
@@ -160,7 +166,20 @@ after_migrate = "dynamic.install.after_install"
 
 
 domains = {
+	'Dynamic Accounts':'dynamic.domains.dynamic_accounts' ,
 	'E Invoice':'dynamic.domains.e_invoice' ,
 	'Contracting':'dynamic.domains.contracting'
+}
+
+
+
+
+
+
+jenv = {
+    "methods": [
+        "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data"
+    ],
+	"filters":[]
 }
 
