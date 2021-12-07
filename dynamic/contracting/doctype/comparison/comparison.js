@@ -289,6 +289,72 @@ frappe.ui.form.on("Comparison", {
       frm.events.validate_customer(frm);
     }
   },
+
+  clac_taxes: (frm) => {
+    let items = frm.doc.item || [];
+    let taxes = frm.doc.taxes || [];
+    let totals = 0;
+    let total_qty = 0;
+    let totals_after_tax = 0;
+    let total_tax_rate = 0;
+    let total_tax = 0;
+    let tax_table = [];
+    for (let i = 0; i < items.length; i++) {
+      totals += parseFloat(items[i].total_price || 0);
+      total_qty += parseInt(items[i].qty || 0);
+    }
+
+    let tax_v = parseFloat(totals || 0);
+    for (let i = 0; i < taxes.length; i++) {
+      total_tax_rate += taxes[i].rate;
+      taxes[i].tax_amount = (taxes[i].rate / 100) * totals;
+      tax_v += parseFloat(taxes[i].tax_amount);
+      //taxes[i].total = (taxes[i].rate  / 100) *  totals + totals
+      if (i == 0) {
+        taxes[i].total = tax_v; //(taxes[i].rate  / 100) * totals + totals
+      } else {
+        taxes[i].total = tax_v; //(taxes[i-1].total || totals) + taxes[i].tax_amount
+      }
+      tax_table.push(taxes[i]);
+    }
+
+    total_tax = totals * (total_tax_rate / 100);
+    totals_after_tax = parseFloat(totals) + parseFloat(total_tax);
+    //////  clear child table and add row from scratch to update amount value
+    cur_frm.clear_table("taxes");
+    for (let i = 0; i < tax_table.length; i++) {
+      let row = cur_frm.add_child("taxes");
+      row.charge_type = tax_table[i].charge_type;
+      row.account_head = tax_table[i].account_head;
+      row.cost_center = tax_table[i].cost_center;
+      row.rate = tax_table[i].rate;
+      row.tax_amount = tax_table[i].tax_amount;
+      row.total = tax_table[i].total;
+    }
+
+    ////// calc insurance
+    let insurance_value =
+      (totals_after_tax * frm.doc.insurance_value_rate) / 100;
+    let delivery_value =
+      (totals_after_tax * frm.doc.delevery_insurance_value_rate_) / 100;
+    let total_ins = insurance_value + delivery_value;
+    frm.set_value("total_insurance", parseFloat(total_ins));
+    frm.set_value("insurance_value", parseFloat(insurance_value));
+    frm.set_value("delivery_insurance_value", parseFloat(delivery_value));
+    frm.refresh_fields("taxes");
+    frm.set_value("total_qty", parseFloat(total_qty));
+    frm.set_value("total_price", parseFloat(totals));
+    frm.set_value("tax_total", parseFloat(total_tax));
+    frm.set_value("total", parseFloat(totals_after_tax));
+    frm.set_value("grand_total", parseFloat(totals_after_tax));
+    frm.refresh_field("total_qty");
+    frm.refresh_field("total_price");
+    frm.refresh_field("tax_total");
+    frm.refresh_field("grand_total");
+    frm.refresh_field("total");
+    frm.refresh_field("total_insurance");
+  },
+
   start_date: function (frm) {
     let start_date = new Date(frm.doc.start_date);
     let end_date = new Date(frm.doc.end_date);
@@ -465,6 +531,8 @@ frappe.ui.form.on("Comparison Item", {
     let local = locals[cdt][cdn];
     if (local.qty && local.price) {
       local.total_price = local.qty * local.price;
+      local.purchased_qty = 0;
+      local.remaining_purchased_qty = local.qty || 0;
       frm.events.clac_taxes(frm);
       frm.refresh_fields("item");
     }

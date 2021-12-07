@@ -110,13 +110,15 @@ doc_events = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Purchase Order": {
+		"on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.on_submit",
+		"on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.on_cancel",
+		# "on_update": "method",
+		# "on_cancel": "method",
+		# "on_trash": "method"
+	}
+}
 
 # Scheduled Tasks
 # ---------------

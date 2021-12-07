@@ -1,260 +1,274 @@
 {
-  "actions": [],
-  "allow_rename": 1,
-  "creation": "2021-12-02 16:17:36.759778",
-  "doctype": "DocType",
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "field_order": [
-    "clearance_item",
-    "clearance_item_name",
-    "clearance_item_description",
-    "cost_center",
-    "comparison_item_card",
-    "allow_material_over_price",
-    "column_break_4",
-    "uom",
-    "qty",
-    "current_qty",
-    "price",
-    "total_price",
-    "current",
-    "current_percent",
-    "column_break_12",
-    "current_amount",
-    "previous_section",
-    "previous_qty",
-    "previous_percent",
-    "column_break_17",
-    "previous_amount",
-    "section_break_19",
-    "completed_qty",
-    "completed_percent",
-    "column_break_22",
-    "completed_amount",
-    "remaining_section",
-    "remaining_qty",
-    "remaining_percent",
-    "column_break_27",
-    "remaining_amount",
-    "purchase_details_section",
-    "purchased_qty",
-    "column_break_33",
-    "remaining_purchased_qty"
-  ],
-  "fields": [
-    {
-      "fieldname": "clearance_item",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Clearance Item",
-      "options": "Item"
-    },
-    {
-      "fetch_from": "clearance_item.item_name",
-      "fieldname": "clearance_item_name",
-      "fieldtype": "Data",
-      "label": "Clearance Item Name",
-      "read_only": 1
-    },
-    {
-      "fetch_from": "clearance_item.description",
-      "fieldname": "clearance_item_description",
-      "fieldtype": "Text Editor",
-      "label": "Clearance Item Description ",
-      "read_only": 1
-    },
-    {
-      "fieldname": "cost_center",
-      "fieldtype": "Link",
-      "label": "Cost Center",
-      "options": "Cost Center",
-      "reqd": 1
-    },
-    {
-      "fieldname": "column_break_4",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fetch_from": "clearance_item.stock_uom",
-      "fieldname": "uom",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "UOM",
-      "options": "UOM"
-    },
-    {
-      "fieldname": "qty",
-      "fieldtype": "Float",
-      "label": "Qty"
-    },
-    {
-      "fieldname": "current_qty",
-      "fieldtype": "Float",
-      "in_list_view": 1,
-      "label": "Current Qty"
-    },
-    {
-      "fieldname": "price",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "Price"
-    },
-    {
-      "fieldname": "total_price",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "Total Price"
-    },
-    {
-      "fieldname": "current",
-      "fieldtype": "Section Break"
-    },
-    {
-      "fieldname": "current_percent",
-      "fieldtype": "Percent",
-      "label": "Current Percent",
-      "read_only": 1
-    },
-    {
-      "fieldname": "column_break_12",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "current_amount",
-      "fieldtype": "Currency",
-      "label": "Current Amount",
-      "read_only": 1
-    },
-    {
-      "fieldname": "previous_section",
-      "fieldtype": "Section Break",
-      "label": "Previous"
-    },
-    {
-      "allow_on_submit": 1,
-      "fieldname": "previous_qty",
-      "fieldtype": "Data",
-      "label": "Previous Qty"
-    },
-    {
-      "allow_on_submit": 1,
-      "fieldname": "previous_percent",
-      "fieldtype": "Percent",
-      "label": "Previous Percent"
-    },
-    {
-      "fieldname": "column_break_17",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "previous_amount",
-      "fieldtype": "Currency",
-      "label": "Previous Amount"
-    },
-    {
-      "fieldname": "section_break_19",
-      "fieldtype": "Section Break",
-      "label": "Completed"
-    },
-    {
-      "allow_on_submit": 1,
-      "fieldname": "completed_qty",
-      "fieldtype": "Float",
-      "label": "Completed \u064eQty"
-    },
-    {
-      "fieldname": "completed_percent",
-      "fieldtype": "Percent",
-      "label": "Completed Percent"
-    },
-    {
-      "fieldname": "column_break_22",
-      "fieldtype": "Column Break"
-    },
-    {
-      "allow_on_submit": 1,
-      "fieldname": "completed_amount",
-      "fieldtype": "Data",
-      "label": "Completed Amount"
-    },
-    {
-      "allow_on_submit": 1,
-      "fieldname": "remaining_section",
-      "fieldtype": "Section Break",
-      "label": "Remaining"
-    },
-    {
-      "allow_on_submit": 1,
-      "fieldname": "remaining_qty",
-      "fieldtype": "Float",
-      "label": "Remaining Qty"
-    },
-    {
-      "allow_on_submit": 1,
-      "fieldname": "remaining_percent",
-      "fieldtype": "Percent",
-      "label": "Remaining Percent"
-    },
-    {
-      "fieldname": "column_break_27",
-      "fieldtype": "Column Break"
-    },
-    {
-      "allow_on_submit": 1,
-      "fieldname": "remaining_amount",
-      "fieldtype": "Float",
-      "label": "Remaining Amount"
-    },
-    {
-      "default": "0",
-      "fieldname": "allow_material_over_price",
-      "fieldtype": "Check",
-      "label": "Allow Material Issue with Rate more than Item Price"
-    },
-    {
-      "fieldname": "purchase_details_section",
-      "fieldtype": "Section Break",
-      "label": "Purchase Details"
-    },
-    {
-      "allow_on_submit": 1,
-      "default": "0",
-      "fieldname": "purchased_qty",
-      "fieldtype": "Float",
-      "label": "Ordered Qty",
-      "read_only": 1
-    },
-    {
-      "fieldname": "column_break_33",
-      "fieldtype": "Column Break"
-    },
-    {
-      "allow_on_submit": 1,
-      "default": "0",
-      "fieldname": "remaining_purchased_qty",
-      "fieldtype": "Float",
-      "label": "Remaining Qty",
-      "read_only": 1
-    },
-    {
-      "fieldname": "comparison_item_card",
-      "fieldtype": "Link",
-      "label": " Comparison Item Card",
-      "options": "Comparison Item Card",
-      "read_only": 1
-    }
-  ],
-  "index_web_pages_for_search": 1,
-  "istable": 1,
-  "links": [],
-  "modified": "2021-12-06 16:57:54.966634",
-  "modified_by": "Administrator",
-  "module": "Contracting",
-  "name": "Comparison Item",
-  "owner": "Administrator",
-  "permissions": [],
-  "sort_field": "modified",
-  "sort_order": "DESC",
-  "track_changes": 1
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2021-12-02 16:17:36.759778",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "clearance_item",
+  "clearance_item_name",
+  "clearance_item_description",
+  "cost_center",
+  "comparison_item_card",
+  "allow_material_over_price",
+  "column_break_4",
+  "uom",
+  "qty",
+  "current_qty",
+  "price",
+  "total_price",
+  "current",
+  "current_percent",
+  "column_break_12",
+  "current_amount",
+  "previous_section",
+  "previous_qty",
+  "previous_percent",
+  "column_break_17",
+  "previous_amount",
+  "section_break_19",
+  "completed_qty",
+  "completed_percent",
+  "column_break_22",
+  "completed_amount",
+  "remaining_section",
+  "remaining_qty",
+  "remaining_percent",
+  "column_break_27",
+  "remaining_amount",
+  "purchase_details_section",
+  "purchased_qty",
+  "column_break_33",
+  "remaining_purchased_qty"
+ ],
+ "fields": [
+  {
+   "fieldname": "clearance_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Clearance Item",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "clearance_item.item_name",
+   "fieldname": "clearance_item_name",
+   "fieldtype": "Data",
+   "label": "Clearance Item Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "clearance_item.description",
+   "fieldname": "clearance_item_description",
+   "fieldtype": "Text Editor",
+   "label": "Clearance Item Description ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "clearance_item.stock_uom",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Qty"
+  },
+  {
+   "fieldname": "current_qty",
+   "fieldtype": "Float",
+   "label": "Current Qty"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Price"
+  },
+  {
+   "fieldname": "total_price",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Total Price"
+  },
+  {
+   "fieldname": "current",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "current_percent",
+   "fieldtype": "Percent",
+   "label": "Current Percent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "current_amount",
+   "fieldtype": "Currency",
+   "label": "Current Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "previous_section",
+   "fieldtype": "Section Break",
+   "label": "Previous"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "previous_qty",
+   "fieldtype": "Float",
+   "label": "Previous Qty",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "previous_percent",
+   "fieldtype": "Percent",
+   "label": "Previous Percent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_17",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "previous_amount",
+   "fieldtype": "Currency",
+   "label": "Previous Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_19",
+   "fieldtype": "Section Break",
+   "label": "Completed"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "completed_qty",
+   "fieldtype": "Float",
+   "label": "Completed \u064eQty",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "completed_percent",
+   "fieldtype": "Percent",
+   "label": "Completed Percent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_22",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "completed_amount",
+   "fieldtype": "Currency",
+   "label": "Completed Amount",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "remaining_section",
+   "fieldtype": "Section Break",
+   "label": "Remaining"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "remaining_qty",
+   "fieldtype": "Float",
+   "label": "Remaining Qty",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "remaining_percent",
+   "fieldtype": "Percent",
+   "label": "Remaining Percent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_27",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "remaining_amount",
+   "fieldtype": "Currency",
+   "label": "Remaining Amount",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_material_over_price",
+   "fieldtype": "Check",
+   "label": "Allow Material Issue with Rate more than Item Price"
+  },
+  {
+   "fieldname": "purchase_details_section",
+   "fieldtype": "Section Break",
+   "label": "Purchase Details"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "purchased_qty",
+   "fieldtype": "Float",
+   "label": "Ordered Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_33",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "remaining_purchased_qty",
+   "fieldtype": "Float",
+   "label": "Remaining Qty",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "comparison_item_card",
+   "fieldtype": "Link",
+   "label": " Comparison Item Card",
+   "options": "Comparison Item Card",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-12-07 10:20:55.444516",
+ "modified_by": "Administrator",
+ "module": "Contracting",
+ "name": "Comparison Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
 }
