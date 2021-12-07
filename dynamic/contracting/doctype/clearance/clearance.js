@@ -41,7 +41,6 @@ frappe.ui.form.on('Clearance', {
 			})
 	},
 	purchase_taxes_and_charges_template:(frm)=>{
-		console.log("frmmmmmm",frm.doc.purchase_taxes_and_charges_template)
         let tax_temp = frm.doc.purchase_taxes_and_charges_template
         if(tax_temp !=null){
             frappe.call({
