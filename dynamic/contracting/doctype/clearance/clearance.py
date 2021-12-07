@@ -12,7 +12,8 @@ from frappe.utils import (
 	date_diff,
 	flt,
 	getdate,
-    nowdate
+    nowdate,
+get_link_to_form
 )
 
 class Clearance(Document):
@@ -54,7 +55,6 @@ class Clearance(Document):
 	def create_payment_entry(self):
 		if not self.customer:
 			return "Please Set Customer"
-		print("self.grand_totalself.grand_tota00000000000000000l",self.grand_total)
 		company         = frappe.db.get_value("Global Defaults", None, "default_company")
 		company_doc     = frappe.get_doc("Company", company)
 		cash_account    = company_doc.default_cash_account
@@ -65,33 +65,48 @@ class Clearance(Document):
 		journal_entry = frappe.new_doc('Journal Entry')
 		journal_entry.company = company
 		journal_entry.posting_date = nowdate()
+		# credit
 		credit_row = journal_entry.append("accounts", {})
 		credit_row.party_type = "Customer"
 		credit_row.account     = recivable_account
 		credit_row.party	   = self.customer
 		credit_row.credit_in_account_currency	   = flt(self.grand_total, precision)
+		# credit_row.reference_type = self.doctype
+		# credit_row.reference_name = self.name
+		# debit
 		debit_row = journal_entry.append("accounts", {})
 		debit_row.account	   = project_account
 		debit_row.debit_in_account_currency		   = flt(self.grand_total, precision)
+		# debit_row.reference_type = self.doctype
+		# debit_row.reference_name = self.name
 		journal_entry.save()
 		journal_entry.submit()
-		frappe.msgprint("Journal Entry %s Create Successfully"%journal_entry.name)
+		form_link = get_link_to_form(journal_entry.doctype,journal_entry.name)
+		frappe.msgprint("Journal Entry %s Create Successfully"%form_link)
 
 		# second journal
 		s_journal_entry = frappe.new_doc('Journal Entry')
 		s_journal_entry.company = company
 		s_journal_entry.posting_date = nowdate()
+		# credit
 		s_credit_row = s_journal_entry.append("accounts", {})
 		s_credit_row.account = cash_account
 		s_credit_row.credit_in_account_currency = flt(self.grand_total, precision)
-
+		# s_credit_row.reference_type = self.doctype
+		# s_credit_row.reference_name = self.name
+		# debit
 		s_debit_row = s_journal_entry.append("accounts", {})
 		s_debit_row.account    = recivable_account
 		s_debit_row.party_type = "Customer"
 		s_debit_row.party = self.customer
 		s_debit_row.debit_in_account_currency = flt(self.grand_total, precision)
+		# s_debit_row.reference_type = self.doctype
+		# s_debit_row.reference_name = self.name
 		s_journal_entry.save()
-		frappe.msgprint("Journal Entry %s Create Successfully" %s_journal_entry.name)
+		form_link = get_link_to_form(journal_entry.doctype, journal_entry.name)
+		frappe.msgprint("Journal Entry %s Create Successfully" %form_link)
+		self.paid=1
+		self.save()
 
 
 
