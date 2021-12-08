@@ -19,6 +19,7 @@ def add_sales_order_script():
 		doc.view    = "Form"
 		doc.enabled = 1
 		doc.script = """
+		
 					  
 			frappe.ui.form.on("Purchase Order", {
 			refresh(frm) {
@@ -32,13 +33,15 @@ def add_sales_order_script():
 				if (frm.doc.docstatus == 1 && frm.doc.is_contracting) {
 				frm.add_custom_button(__("Clearence"), function () {
 					frappe.model.open_mapped_doc({
-					method: "dynamic.contracting.doctype.purchase_order.purchase_order.make_clearence",
+					method: "dynamic.contracting.doctype.purchase_order.purchase_order.make_clearence_doc",
 					frm: frm, //this.frm
 					});
 				},__("Create"));
 				}
 			},
 			});
+	
+		
 	
 		"""
 		doc.save()

@@ -339,6 +339,7 @@ data = {
 
 
       },
+      
 
     'on_setup': 'dynamic.contracting.add_client_Sccript.add_sales_order_script'
     }

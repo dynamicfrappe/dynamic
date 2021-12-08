@@ -126,17 +126,17 @@ class Clearance(Document):
 				try : 
 					purchase_order_item = frappe.get_doc("Purchase Order Item",item.purchase_order_item)
 					if cancel :
-						purchase_order_item.completed_qty -= item.qty
+						purchase_order_item.completed_qty -= item.current_qty
 					else :
-						purchase_order_item.completed_qty += item.qty
+						purchase_order_item.completed_qty += item.current_qty
 
 					purchase_order_item.completed_percent  = (float(purchase_order_item.completed_qty) / float(purchase_order_item.qty)) *100
 					purchase_order_item.completed_amount  = (float(purchase_order_item.rate) * float(purchase_order_item.completed_qty))
 
 					if cancel :
-						purchase_order_item.remaining_qty = max(item.qty,item.qty - purchase_order_item.completed_qty)
+						purchase_order_item.remaining_qty = max(purchase_order_item.qty,purchase_order_item.qty - purchase_order_item.completed_qty)
 					else:
-						purchase_order_item.remaining_qty = min(0,item.qty - purchase_order_item.completed_qty)
+						purchase_order_item.remaining_qty = min(0,purchase_order_item.qty - purchase_order_item.completed_qty)
 
 					purchase_order_item.remaining_percent  = (float(purchase_order_item.remaining_qty) / float(purchase_order_item.qty)) *100
 					purchase_order_item.remaining_amount  = (float(purchase_order_item.rate) * float(purchase_order_item.remaining_qty))
