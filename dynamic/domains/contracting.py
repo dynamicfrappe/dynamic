@@ -50,6 +50,15 @@ data = {
                       
                         },
 
+                         {
+                            "fieldname": "terms_sheet_account",
+                            "fieldtype": "Link",
+                            "insert_after": "insurance_account_for_others_from_us",
+                            "label": "Terms Sheet Account",
+                            "options" :"Account"
+                      
+                        },
+
 
                     ] ,
          'Purchase Order':[
