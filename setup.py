@@ -10,7 +10,7 @@ from dynamic import __version__ as version
 setup(
 	name='dynamic',
 	version=version,
-	description='Red Theme for Frappe v13b',
+	description='Dynamic',
 	author='Dynamic',
 	author_email='dynamic@gmail.com',
 	packages=find_packages(),

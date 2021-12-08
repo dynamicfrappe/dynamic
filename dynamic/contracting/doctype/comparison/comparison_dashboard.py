@@ -10,11 +10,27 @@ def get_data():
 			'Tender': 'comparison',
 			'Clearance': 'comparison',
 			'Sales Order': 'comparison',
+			'Purchase Order':'comparison',
+			'Comparison Item Card':'comparison',
+			'Journal Entry': 'reference_name',
 		},
+
 		'transactions': [
 			{
-				'label': _('Fulfillment'),
+				'label': _('Selling'),
 				'items': ['Tender', 'Clearance', 'Sales Order']
+			},
+			{
+				'label': _('Purchasing'),
+				'items': ['Purchase Order']
+			},
+			{
+				'label': _('Stock'),
+				'items': ['Comparison Item Card']
+			},
+			{
+				'label': _('Journal Entry'),
+				'items': ['Journal Entry']
 			},
 		]
 	}

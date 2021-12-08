@@ -60,7 +60,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-12-05 12:32:03.022201",
+ "modified": "2021-12-06 10:02:33.052517",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Contracting",
@@ -98,5 +98,6 @@
    "link_to": "Project",
    "type": "DocType"
   }
- ]
+ ],
+ "shortcuts_label": ""
 }

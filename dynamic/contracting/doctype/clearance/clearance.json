@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:CLR-{DD}-{MM}-{YY}-{####}",
  "creation": "2021-11-21 14:00:39.074981",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -44,6 +45,13 @@
   "total_deductions",
   "notes_section",
   "user_notes",
+  "totals_section",
+  "total_qty",
+  "total_price",
+  "column_break_42",
+  "tax_total",
+  "grand_total",
+  "paid",
   "amended_from"
  ],
  "fields": [
@@ -136,16 +144,20 @@
    "label": "Required By"
   },
   {
-   "fetch_from": "purchase_order.down_payment_insurance_rate",
+   "allow_on_submit": 1,
+   "fetch_from": "comparison.insurance_value_rate",
    "fieldname": "down_payment_insurance_rate_",
    "fieldtype": "Percent",
-   "label": "Down payment insurance rate (%)"
+   "label": "Down payment insurance rate (%)",
+   "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "purchase_order.payment_of_insurance_copy",
    "fieldname": "payment_of_insurance_copy_of_operation_and_initial_delivery",
    "fieldtype": "Percent",
-   "label": "Payment of insurance copy of operation and initial delivery(%)"
+   "label": "Payment of insurance copy of operation and initial delivery(%)",
+   "read_only": 1
   },
   {
    "fieldname": "clearance_items_section",
@@ -176,15 +188,6 @@
    "no_copy": 1,
    "options": "Purchase Taxes and Charges Clearances",
    "print_hide": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Clearance",
-   "print_hide": 1,
-   "read_only": 1
   },
   {
    "fieldname": "total_after_tax",
@@ -225,20 +228,25 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "down_payment_insurance_amount",
    "fieldtype": "Currency",
    "label": "Down payment insurance amount",
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "payment_insurance",
    "fieldtype": "Currency",
-   "label": "The value of the operation and initial delivery payment insurance"
+   "label": "The value of the operation and initial delivery payment insurance",
+   "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_payed_amount",
    "fieldtype": "Currency",
-   "label": "Total payed Amount"
+   "label": "Total payed Amount",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.clearance_type != 'incoming'",
@@ -268,22 +276,77 @@
    "options": "Comparison"
   },
   {
+   "fetch_from": "comparison.project",
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
-   "options": "Project"
+   "options": "Project",
+   "read_only": 1
   },
   {
+   "fetch_from": "comparison.tender",
    "fieldname": "tender",
    "fieldtype": "Link",
    "label": "Tender",
-   "options": "Tender"
+   "options": "Tender",
+   "read_only": 1
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_qty",
+   "fieldtype": "Read Only",
+   "label": "Total QTY",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_price",
+   "fieldtype": "Currency",
+   "label": "Total Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_42",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tax_total",
+   "fieldtype": "Currency",
+   "label": "Tax Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Clearance",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "paid",
+   "fieldtype": "Check",
+   "label": "Paid",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-02 14:02:29.347378",
+ "modified": "2021-12-07 16:21:36.600388",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",

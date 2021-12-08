@@ -7,7 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "item_name",
-  "total_amount"
+  "total_amount",
+  "cost_center",
+  "account"
  ],
  "fields": [
   {
@@ -21,12 +23,26 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Total Amount"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
+  },
+  {
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "label": "Account",
+   "options": "Account",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-12-02 17:22:05.617550",
+ "modified": "2021-12-05 16:27:06.469680",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Over Cost Item",
