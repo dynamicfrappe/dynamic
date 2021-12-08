@@ -13,10 +13,13 @@ frappe.ui.form.on("Clearance", {
     }
   },
   onload(frm) {
-    (frm.doc.items || []).forEach((row) => {
-      frm.events.calc_total(frm, row.doctype, row.name);
-    });
-    frm.events.clac_taxes(frm);
+    if (frm.is_new()) {
+      (frm.doc.items || []).forEach((row) => {
+        frm.events.calc_total(frm, row.doctype, row.name);
+      });
+      frm.events.clac_taxes(frm);
+    }
+   
   },
   validate: (frm) => {
     frm.events.clac_taxes(frm);

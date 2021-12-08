@@ -3,7 +3,6 @@
 
 frappe.ui.form.on("Comparison", {
   refresh: (frm) => {
-    
     if (frm.doc.docstatus == 1) {
       frm.add_custom_button(
         __("Sales Order"),
@@ -24,7 +23,6 @@ frappe.ui.form.on("Comparison", {
         },
         __("Create")
       );
-     
     }
     if (frm.doc.docstatus == 0) {
       frm.add_custom_button(
@@ -512,7 +510,7 @@ frappe.ui.form.on("Comparison", {
 frappe.ui.form.on("Comparison Item", {
   clearance_item: (frm, cdt, cdn) => {
     var local = locals[cdt][cdn];
-    if (local.clearance_item != null) {
+    if (local.clearance_item) {
       frappe.call({
         method:
           "dynamic.contracting.doctype.comparison.comparison.get_item_price",
@@ -525,6 +523,20 @@ frappe.ui.form.on("Comparison Item", {
             if (local.qty) {
               local.total_price = local.qty * r.message;
             }
+            frm.refresh_fields("item");
+          }
+        },
+      });
+
+      frappe.call({
+        method: "get_cost_center",
+        doc: frm.doc,
+        args: {
+          item_code: local.clearance_item,
+        },
+        callback(r) {
+          if (r.message) {
+            local.cost_center = r.message;
             frm.refresh_fields("item");
           }
         },
@@ -560,8 +572,22 @@ frappe.ui.form.on("Purchase Taxes and Charges Clearances", {
   },
   taxes_add: (frm, cdt, cdn) => {
     var row = locals[cdt][cdn];
+
     if (row.rate) {
       frm.events.clac_taxes(frm);
     }
+    frappe.call({
+      method: "get_cost_center",
+      doc: frm.doc,
+      args: {
+        item_code: "",
+      },
+      callback(r) {
+        if (r.message) {
+          row.cost_center = r.message;
+          frm.refresh_fields("taxes");
+        }
+      },
+    });
   },
 });

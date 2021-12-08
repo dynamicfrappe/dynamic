@@ -20,6 +20,8 @@ def add_sales_order_script():
 		doc.enabled = 1
 		doc.script = """
 		
+			
+		
 					  
 			frappe.ui.form.on("Purchase Order", {
 			refresh(frm) {
@@ -40,6 +42,10 @@ def add_sales_order_script():
 				}
 			},
 			});
+	
+		
+	
+		
 	
 		
 	

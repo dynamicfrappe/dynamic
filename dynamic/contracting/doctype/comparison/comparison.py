@@ -2,8 +2,9 @@
 # For license information, please see license.txt
 
 from dynamic.contracting.doctype.sales_order.sales_order import set_delivery_date
-from erpnext import get_default_company
+from erpnext import get_default_company, get_default_cost_center
 from erpnext.selling.doctype.sales_order.sales_order import is_product_bundle
+from erpnext.stock.doctype.item.item import get_item_defaults
 import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
@@ -14,6 +15,21 @@ from frappe.utils.data import flt, get_link_to_form, nowdate
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from six import string_types
 class Comparison(Document):
+	@frappe.whitelist()
+	def get_cost_center(self,item_code):
+		cost_center = None
+		company = get_default_company()
+		if self.project :
+			cost_center =  frappe.db.get_value("Project", self.project, "cost_center")
+		if not cost_center and item_code :
+			item = get_item_defaults(item_code,company )
+
+			cost_center	= item.get("selling_cost_center")
+		
+		if not cost_center :
+			cost_center = get_default_cost_center(company)
+		return cost_center or ""
+
 	def validate(self):
 		self.calc_taxes_and_totals()
 
@@ -67,6 +83,7 @@ class Comparison(Document):
 def get_item_price(item_code):
 	try :
 		if item_code:
+			
 			price_list = frappe.db.sql(f"""select * from `tabItem Price` where item_code='{item_code}' and selling=1""",as_dict=1)
 			print("price_list",price_list)
 			if len(price_list) > 0:
@@ -74,6 +91,8 @@ def get_item_price(item_code):
 			return 0
 	except:
 		pass
+
+
 
 @frappe.whitelist()
 def make_sales_order(source_name, target_doc=None, ignore_permissions=False):
