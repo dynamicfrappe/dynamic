@@ -60,7 +60,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-12-02 17:21:03.630675",
+ "modified": "2021-12-05 12:32:03.022201",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Contracting",
@@ -90,6 +90,12 @@
    "doc_view": "List",
    "label": "Item Card",
    "link_to": "Comparison Item Card",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Project",
+   "link_to": "Project",
    "type": "DocType"
   }
  ]
