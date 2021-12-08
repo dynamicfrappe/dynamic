@@ -91,6 +91,12 @@
    "label": "Item Card",
    "link_to": "Comparison Item Card",
    "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Project",
+   "link_to": "Project",
+   "type": "DocType"
   }
  ],
  "shortcuts_label": ""
