@@ -3,20 +3,7 @@
 
 frappe.ui.form.on("Comparison", {
   refresh: (frm) => {
-    frm.set_query("terms_sheet_cost_center", function () {
-      return {
-        filters: {
-          is_group: 0,
-        },
-      };
-    });
-    frm.set_query("project_account", function () {
-      return {
-        filters: {
-          is_group: 0,
-        },
-      };
-    });
+    
     if (frm.doc.docstatus == 1) {
       frm.add_custom_button(
         __("Sales Order"),
@@ -37,24 +24,7 @@ frappe.ui.form.on("Comparison", {
         },
         __("Create")
       );
-      if (
-        frm.doc.terms_sheet_amount > 0 &&
-        frm.doc.tender_Status == "Approved"
-      ) {
-        frm.add_custom_button(
-          __("Terms Sheet Journal Entry"),
-          function () {
-            frappe.call({
-              method: "create_terms_journal_entries",
-              doc: frm.doc,
-              callback: function (r) {
-                frm.refresh();
-              },
-            });
-          },
-          __("Create")
-        );
-      }
+     
     }
     if (frm.doc.docstatus == 0) {
       frm.add_custom_button(
@@ -151,15 +121,7 @@ frappe.ui.form.on("Comparison", {
       );
     }
   },
-  mode_of_payment(frm) {
-    frappe.call({
-      method: "get_payment_account",
-      doc: frm.doc,
-      callback: function (r) {
-        frm.refresh_field("payment_account");
-      },
-    });
-  },
+
   make_purchase_order: function (frm) {
     let pending_items = (frm.doc.item || []).some((item) => {
       let pending_qty = flt(item.qty) - flt(item.purchased_qty || 0);
