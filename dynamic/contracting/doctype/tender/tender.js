@@ -4,47 +4,45 @@
 frappe.ui.form.on("Tender", {
   setup(frm) {
     frm.set_query("project_account", function (doc) {
-        // alert(doc.company)
-        console.log('doc' , doc)
-        return {
-          filters: {
-            is_group: 0,
-            company: doc.company,
-          },
-        };
-      });
-      frm.set_query("terms_sheet_cost_center", function (doc) {
-        return {
-          filters: {
-            is_group: 0,
-            company: doc.company,
-          },
-        };
-      });
+      // alert(doc.company)
+      console.log("doc", doc);
+      return {
+        filters: {
+          is_group: 0,
+          company: doc.company,
+        },
+      };
+    });
+    frm.set_query("terms_sheet_cost_center", function (doc) {
+      return {
+        filters: {
+          is_group: 0,
+          company: doc.company,
+        },
+      };
+    });
   },
-  company(frm) {
-  },
+  company(frm) {},
   refresh: function (frm) {
-    
-    if (frm.doc.docstatus == 1) {
-      if (
-        frm.doc.terms_sheet_amount > 0 &&
-        frm.doc.current_status == "Approved"
-      ) {
-        frm.add_custom_button(
-          __("Terms Sheet Payment"),
-          function () {
-            frappe.call({
-              method: "create_terms_journal_entries",
-              doc: frm.doc,
-              callback: function (r) {
-                frm.refresh();
-              },
-            });
-          },
-          __("Create")
-        );
-      }
+    if (frm.doc.docstatus == 0 && !frm.__islocal && frm.doc.terms_paid == 0&& frm.doc.terms_sheet_amount > 0) {
+      //   if (
+      //     frm.doc.terms_sheet_amount > 0 &&
+      //     frm.doc.current_status == "Approved"
+      //   ) {
+      frm.add_custom_button(
+        __("Terms Sheet Payment"),
+        function () {
+          frappe.call({
+            method: "create_terms_payment",
+            doc: frm.doc,
+            callback: function (r) {
+              frm.refresh();
+            },
+          });
+        },
+        __("Create")
+      );
+      //   }
     }
   },
   mode_of_payment(frm) {

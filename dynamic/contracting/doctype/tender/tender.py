@@ -38,7 +38,7 @@ class Tender(Document):
 
 
 		je.append("accounts", {
-		"account": self.project_account  ,
+		"account": projects_account  ,
 		"credit_in_account_currency": flt(self.terms_sheet_amount),
 		"reference_type" : self.doctype,
 		"reference_name" : self.name,
@@ -48,7 +48,7 @@ class Tender(Document):
 
 
 		je.append("accounts", {
-		"account":  projects_account  ,
+		"account":   self.project_account  ,
 		"debit_in_account_currency": flt(self.terms_sheet_amount),
 		"reference_type" : self.doctype,
 		"reference_name" : self.name
@@ -59,6 +59,19 @@ class Tender(Document):
 		je.submit()
 
 
+
+		lnk = get_link_to_form(je.doctype,je.name)
+		frappe.msgprint(_("Journal Entry {} was created").format(lnk))
+		
+	@frappe.whitelist()
+	def create_terms_payment(self):
+		company = frappe.get_doc("Company" , self.company)
+		projects_account = company.capital_work_in_progress_account
+		if not projects_account :
+			frappe.throw("Please set Capital Work in Progress Account in Company Settings")
+		
+
+		
 
 
 		payment_je = frappe.new_doc("Journal Entry")
@@ -80,20 +93,22 @@ class Tender(Document):
 		})
 
 		payment_je.append("accounts", {
-		"account": self.project_account  ,
+		"account": projects_account  ,
 		"debit_in_account_currency": flt(self.terms_sheet_amount),
 		"reference_type" : self.doctype,
 		"reference_name" : self.name
 		})
 
 		payment_je.submit()
-		lnk = get_link_to_form(je.doctype,je.name)
 		payment_lnk = get_link_to_form(payment_je.doctype,payment_je.name)
-		frappe.msgprint(_("Journal Entry {},{} was created").format(lnk,payment_lnk))
-		
-
+		self.terms_paid=1
+		self.save()
+		frappe.msgprint(_("Journal Entry {} was created").format(payment_lnk))
+	
 	def on_submit(self):
 		self.validate_status()
+		if self.terms_paid and self.terms_sheet_amount > 0 and self.current_status == "Approved" :
+			self.create_terms_journal_entries()
 	def validate_status(self):
 		if self.current_status == "Pending":
 			frappe.throw("Cannot Submit Please Approve Or Reject")
