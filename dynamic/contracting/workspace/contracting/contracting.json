@@ -60,13 +60,14 @@
    "type": "Link"
   }
  ],
- "modified": "2021-12-06 10:02:33.052517",
+ "modified": "2021-12-08 15:23:06.379879",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Contracting",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 1,
+ "restrict_to_domain": "Contracting",
  "shortcuts": [
   {
    "doc_view": "List",
@@ -90,12 +91,6 @@
    "doc_view": "List",
    "label": "Item Card",
    "link_to": "Comparison Item Card",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "List",
-   "label": "Project",
-   "link_to": "Project",
    "type": "DocType"
   }
  ],
