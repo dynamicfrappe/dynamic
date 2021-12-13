@@ -95,6 +95,14 @@ data = {
                 "name": "Customer-buildingnumber",
                 "reqd":1
             },
+            {
+                "fieldname": "branchid",
+                "fieldtype": "Data",
+                "insert_after": "buildingnumber",
+                "label": "Branch ID",
+                "name": "Branch ID",
+                "reqd": 1
+            },
 
         ] ,
         'Company':[
