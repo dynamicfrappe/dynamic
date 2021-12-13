@@ -23,9 +23,9 @@ class Tender(Document):
 	@frappe.whitelist()
 	def create_terms_journal_entries(self):
 		company = frappe.get_doc("Company" , self.company)
-		projects_account = company.capital_work_in_progress_account
+		projects_account = company.terms_sheet_account
 		if not projects_account :
-			frappe.throw("Please set Capital Work in Progress Account in Company Settings")
+			frappe.throw("Please set Terms Sheet Account in Company Settings")
 		
 
 		je = frappe.new_doc("Journal Entry")
@@ -66,11 +66,10 @@ class Tender(Document):
 	@frappe.whitelist()
 	def create_terms_payment(self):
 		company = frappe.get_doc("Company" , self.company)
-		projects_account = company.capital_work_in_progress_account
+		projects_account = company.terms_sheet_account
 		if not projects_account :
-			frappe.throw("Please set Capital Work in Progress Account in Company Settings")
-		
-
+			frappe.throw("Please set Terms Sheet Account in Company Settings")
+	
 		
 
 
@@ -121,13 +120,13 @@ class Tender(Document):
 					print("from if ttttttttttttt",t)
 					doc.insurance_value_rate = self.insurance_rate
 					doc.insurance_value = self.insurance_amount
-					doc.docstatus = 1
 					doc.total_insurance = (doc.insurance_value) +  (doc.delivery_insurance_value)
-					doc.tender = self.name
-					doc.tender_status = self.current_status
 					self.total_insurance = (doc.insurance_value) +  (doc.delivery_insurance_value)
-					doc.save(ignore_permissions=True)
-				# doc.submit(ignore_permissions=True)
+				doc.docstatus = 1
+				doc.tender = self.name
+				doc.tender_status = self.current_status
+				doc.save(ignore_permissions=True)
+				doc.submit()
 			except:
 				print("error")
 				pass

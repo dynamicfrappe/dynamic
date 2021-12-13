@@ -21,6 +21,13 @@ frappe.ui.form.on("Tender", {
         },
       };
     });
+    frm.set_query("comparison", function (doc) {
+        return {
+          filters: {
+            docstatus: 0,
+          },
+        };
+      });
   },
   company(frm) {},
   refresh: function (frm) {
