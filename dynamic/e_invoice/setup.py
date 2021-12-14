@@ -8,16 +8,19 @@ import json
 
 MasterDataPath = "../apps/dynamic/dynamic/MasterData/"
 def install_e_invoice():
-    try:
-        install_uom()
-    except :
-        pass
-    try :
-        install_Country()
-    except Exception as e : 
-        pass
-        # frappe.msgprint(str(e))
-
+	try:
+		install_uom()
+	except :
+		pass
+	try :
+		install_Country()
+	except Exception as e:
+		pass
+		# frappe.msgprint(str(e))
+	try:
+		sales_invoice_script()
+	except:
+		pass
 
 
 
@@ -62,6 +65,37 @@ def install_Country():
 				# pass
 				# print (str(e))
 
+def sales_invoice_script():
+	name = "Sales Invoice-Form"
+	if frappe.db.exists("Client Script", name):
+		pass
+	else:
+
+		doc = frappe.new_doc("Client Script")
+		print("+ from add script")
+		doc.dt = "Sales Invoice"
+		doc.view = "Form"
+		doc.enabled = 1
+		doc.script = """
+
+				frappe.ui.form.on('Sales Invoice', {
+				refresh(frm) {
+					if(frm.doc.docstatus==1 && frm.doc.is_send == 0){
+								frm.add_custom_button(__("POST"), function() {
+									frappe.call({
+										method:"dynamic.e_invoice.sales_invoice_fun.post_sales_invoice",
+										args:{
+											"invoice_name":frm.doc.name
+										}
+									})
+								})
+								}
+			
+				}
+			})
+
+				"""
+		doc.save()
 
 
 
