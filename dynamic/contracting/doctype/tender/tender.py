@@ -14,6 +14,18 @@ from frappe.utils.data import flt, get_link_to_form, nowdate
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from six import string_types
 class Tender(Document):
+
+	
+	@frappe.whitelist()
+	def insert(self, ignore_permissions=None, ignore_links=None, ignore_if_duplicate=False, ignore_mandatory=None, set_name=None, set_child_names=True):
+		self.terms_paid = 0
+		self.insurance_paid=0
+		return super().insert(ignore_permissions=ignore_permissions, ignore_links=ignore_links, ignore_if_duplicate=ignore_if_duplicate, ignore_mandatory=ignore_mandatory, set_name=set_name, set_child_names=set_child_names)
+	
+	
+	
+	
+	
 	@frappe.whitelist()
 	def get_payment_account(self):
 		self.payment_account = ""
@@ -108,6 +120,9 @@ class Tender(Document):
 		self.validate_status()
 		if self.terms_paid and self.terms_sheet_amount > 0 and self.current_status == "Approved" :
 			self.create_terms_journal_entries()
+		if self.insurance_amount > 0 and self.current_status == "Approved" :
+			self.create_insurance_journal_entries()
+	
 	def validate_status(self):
 		if self.current_status == "Pending":
 			frappe.throw("Cannot Submit Please Approve Or Reject")
@@ -130,3 +145,103 @@ class Tender(Document):
 			except:
 				print("error")
 				pass
+
+
+
+
+
+
+
+	@frappe.whitelist()
+	def create_insurance_journal_entries(self):
+		company = frappe.get_doc("Company" , self.company)
+		insurance_account = company.insurance_account_for_others_from_us
+		if not insurance_account :
+			frappe.throw("Please set Insurance Account for others from us Account in Company Settings")
+		
+
+		je = frappe.new_doc("Journal Entry")
+		je.posting_date = nowdate()
+		je.voucher_type = 'Journal Entry'
+		je.company = company.name
+		# je.cheque_no = self.reference_no
+		# je.cheque_date = self.reference_date
+		je.remark = f'Journal Entry against Insurance for {self.doctype} : {self.name}'
+
+
+		je.append("accounts", {
+		"account": insurance_account  ,
+		"credit_in_account_currency": flt(self.insurance_amount),
+		"reference_type" : self.doctype,
+		"reference_name" : self.name,
+		"project": self.project,
+		})
+
+
+		je.append("accounts", {
+		"account":   self.project_account  ,
+		"debit_in_account_currency": flt(self.insurance_amount),
+		"reference_type" : self.doctype,
+		"reference_name" : self.name
+		})
+		
+		# for i in je.accounts :
+		# 	frappe.msgprint(f"account : {i.account} | account_currency : {i.account_currency} | debit_in_account_currency : {i.debit_in_account_currency} | credit_in_account_currency : {i.credit_in_account_currency}")
+		je.submit()
+		# self.insurance_paid = 1
+
+
+
+		lnk = get_link_to_form(je.doctype,je.name)
+		frappe.msgprint(_("Journal Entry {} was created").format(lnk))
+	
+
+
+
+
+
+
+	@frappe.whitelist()
+	def create_insurance_payment(self):
+		company = frappe.get_doc("Company" , self.company)
+		insurance_account = company.insurance_account_for_others_from_us
+		if not insurance_account :
+			frappe.throw("Please set Insurance Account for others from us Account in Company Settings")
+		
+
+		je = frappe.new_doc("Journal Entry")
+		je.posting_date = nowdate()
+		je.voucher_type = 'Journal Entry'
+		je.company = company.name
+		je.cheque_no = self.reference_no
+		je.cheque_date = self.reference_date
+		je.remark = f'Journal Entry against Insurance Payment for {self.doctype} : {self.name}'
+
+
+		je.append("accounts", {
+		"account": self.payment_account  ,
+		"credit_in_account_currency": flt(self.insurance_amount),
+		"reference_type" : self.doctype,
+		"reference_name" : self.name,
+		"project": self.project,
+		})
+
+
+		je.append("accounts", {
+		"account":   insurance_account ,
+		"debit_in_account_currency": flt(self.insurance_amount),
+		"reference_type" : self.doctype,
+		"reference_name" : self.name
+		})
+		
+		# for i in je.accounts :
+		# 	frappe.msgprint(f"account : {i.account} | account_currency : {i.account_currency} | debit_in_account_currency : {i.debit_in_account_currency} | credit_in_account_currency : {i.credit_in_account_currency}")
+		je.submit()
+		self.insurance_paid = 1
+		self.save()
+
+
+
+		lnk = get_link_to_form(je.doctype,je.name)
+		frappe.msgprint(_("Journal Entry {} was created").format(lnk))
+		

@@ -22,16 +22,21 @@ frappe.ui.form.on("Tender", {
       };
     });
     frm.set_query("comparison", function (doc) {
-        return {
-          filters: {
-            docstatus: 0,
-          },
-        };
-      });
+      return {
+        filters: {
+          docstatus: 0,
+        },
+      };
+    });
   },
   company(frm) {},
   refresh: function (frm) {
-    if (frm.doc.docstatus == 0 && !frm.__islocal && frm.doc.terms_paid == 0&& frm.doc.terms_sheet_amount > 0) {
+    if (
+      frm.doc.docstatus == 0 &&
+      !frm.__islocal &&
+      frm.doc.terms_paid == 0 &&
+      frm.doc.terms_sheet_amount > 0
+    ) {
       //   if (
       //     frm.doc.terms_sheet_amount > 0 &&
       //     frm.doc.current_status == "Approved"
@@ -41,6 +46,28 @@ frappe.ui.form.on("Tender", {
         function () {
           frappe.call({
             method: "create_terms_payment",
+            doc: frm.doc,
+            callback: function (r) {
+              frm.refresh();
+            },
+          });
+        },
+        __("Create")
+      );
+      //   }
+    }
+
+    if (
+      frm.doc.docstatus == 1 &&
+      frm.doc.insurance_paid == 0 &&
+      frm.doc.insurance_amount > 0 &&
+      frm.doc.current_status == "Approved"
+    ) {
+      frm.add_custom_button(
+        __("Insurance Payment"),
+        function () {
+          frappe.call({
+            method: "create_insurance_payment",
             doc: frm.doc,
             callback: function (r) {
               frm.refresh();
