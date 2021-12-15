@@ -2,6 +2,43 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Comparison", {
+  setup(frm) {
+    frm.set_query("account_head", "taxes", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+          [
+            "account_type",
+            "in",
+            [
+              "Tax",
+              "Chargeable",
+              "Income Account",
+              "Expenses Included In Valuation",
+            ],
+          ],
+        ],
+      };
+    });
+ 
+    frm.set_query("cost_center", "taxes", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0]
+        ],
+      };
+    });
+    frm.set_query("cost_center", "item", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0]
+        ],
+      };
+    });
+  },
   refresh: (frm) => {
     if (frm.doc.docstatus == 1) {
       frm.add_custom_button(

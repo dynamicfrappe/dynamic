@@ -1,8 +1,14 @@
 # Copyright (c) 2021, Dynamic and contributors
 # For license information, please see license.txt
 
+from shutil import ignore_patterns
+from erpnext.accounts.doctype.account.account import get_account_currency
+from erpnext.accounts.party import get_party_account
 import frappe
+from frappe import _
 from frappe.model.document import Document
+from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_invoice
+from erpnext.selling.doctype.sales_order.sales_order import SalesOrder, make_sales_invoice
 from frappe.utils import (
 	DATE_FORMAT,
 	add_days,
@@ -20,6 +26,7 @@ class Clearance(Document):
 	def on_submit(self):
 		self.update_comparison()
 		self.update_purchase_order()
+		self.create_deduction_je()
 	def on_cancel(self):
 		self.update_purchase_order(cancel=1)
 	def update_comparison(self):
@@ -110,9 +117,90 @@ class Clearance(Document):
 		frappe.db.sql("""update tabClearance set paid=1 where name='%s'"""%self.name)
 		frappe.db.commit()
 
+	@frappe.whitelist()
+	def can_create_invoice(self,doctype):
+		invoice = frappe.db.get_value(doctype , {"clearance":self.name , "docstatus":["<" , 2]},'name')
+		return 0 if invoice else 1
+
+	def create_deduction_je(self):
+		if getattr(self,'deductions') and self.total_deductions:
+			if self.clearance_type == "incoming" :
+				if not self.purchase_order :
+					frappe.throw(_("Please set Purchase Order"))
+				if not self.supplier :
+					frappe.throw(_("Please set Supplier"))
+				self.create_deduction_supplier_je()
+			if self.clearance_type == "Outcoming" :
+				if not self.sales_order :
+					frappe.throw(_("Please set Sales Order"))
+				if not self.customer :
+					frappe.throw(_("Please set Customer"))
+				self.create_deduction_customer_je()
+
+	
+	
+	def create_deduction_supplier_je(self):
+		je = frappe.new_doc("Journal Entry")
+		je.posting_date = nowdate()
+		je.voucher_type = 'Journal Entry'
+		je.company = self.company
+		je.remark = f'Deduction against  Supplier {self.supplier} Deduction: ' + self.doctype +" " + self.name
+		supplier_account = get_party_account("Supplier", self.supplier, self.company)
+		if not supplier_account :
+			frappe.throw(_("Please Account for supplier {}").format(self.supplier))
+		
+		je.append("accounts", {
+		"account": supplier_account  ,
+		"account_currency": get_account_currency(supplier_account),
+		"debit_in_account_currency": flt(self.total_deductions or 0),
+		"party_type":"Supplier",
+		"party":self.supplier,
+		"reference_type" : self.doctype,
+		"reference_name" : self.name
+		})
+		for row in self.deductions :
+			je.append("accounts", {
+			"account": row.account  ,
+			"account_currency": get_account_currency(row.account),
+			"credit_in_account_currency": row.amount,
+			"cost_center": row.cost_center,
+			"project": self.project,
+			"reference_type" : self.doctype,
+			"reference_name" : self.name
+			})
+		je.submit()
 
 
-
+	def create_deduction_customer_je(self):
+		je = frappe.new_doc("Journal Entry")
+		je.posting_date = nowdate()
+		je.voucher_type = 'Journal Entry'
+		je.company = self.company
+		je.remark = f'Deduction against  Customer {self.customer} Deduction: ' + self.doctype +" " + self.name
+		customer_account = get_party_account("Customer", self.customer, self.company)
+		if not customer_account :
+			frappe.throw(_("Please Account for Customer {}").format(self.customer))
+		
+		je.append("accounts", {
+		"account": customer_account  ,
+		"account_currency": get_account_currency(customer_account),
+		"credit_in_account_currency": flt(self.total_deductions or 0),
+		"party_type":"Customer",
+		"party":self.customer,
+		"project": self.project,
+		"reference_type" : self.doctype,
+		"reference_name" : self.name
+		})
+		for row in self.deductions :
+			je.append("accounts", {
+			"account": row.account  ,
+			"account_currency": get_account_currency(row.account),
+			"debit_in_account_currency": row.amount,
+			"project": self.project,
+			"reference_type" : self.doctype,
+			"reference_name" : self.name
+			})
+		je.submit()
 
 
 
@@ -145,6 +233,66 @@ class Clearance(Document):
 					pass
 
 				
+@frappe.whitelist()
+def clearance_make_purchase_invoice (source_name , target_doc=None) :
+	doc = frappe.get_doc("Clearance",source_name)
+	invoice = make_purchase_invoice(doc.purchase_order)
+	invoice.set_missing_values()
+	invoice.is_contracting = 1
+	invoice.clearance = doc.name
+	invoice.comparison = doc.comparison
+	# invoice.set("items",[])
+	for row in doc.items :
+		invoice_item = [x for x in invoice.items if x.po_detail == row.purchase_order_item]
+		if len(invoice_item) > 0 :
+			invoice_item = invoice_item [0]
+			invoice_item.qty = row.current_qty
+		
+
+
+	try :
+		invoice.save(ignore_permissions=1)
+	except Exception as e:
+		frappe.throw(str(e))	
+	# invoice.submit()	
+	# doc.purchase_invoice = pi.name
+	# doc.save()
+	return invoice
+				
+@frappe.whitelist()
+def clearance_make_sales_invoice (source_name , target_doc=None) :
+	doc = frappe.get_doc("Clearance",source_name)
+	invoice = make_sales_invoice(doc.sales_order)
+	invoice.set_missing_values()
+	invoice.is_contracting = 1
+	invoice.clearance = doc.name
+	invoice.comparison = doc.comparison
+	for row in doc.items :
+		invoice_item = [x for x in invoice.items if x.item_code == row.clearance_item]
+		if len(invoice_item) > 0 :
+			invoice_item = invoice_item [0]
+			invoice_item.qty = row.current_qty
+	try :
+		invoice.save(ignore_permissions=1)
+	except Exception as e:
+		frappe.throw(str(e))
+	# doc.purchase_invoice = pi.name
+	# doc.save()
+	return invoice
+
+
+
+# def make_purchase_invoice(source_name, target_doc=None):
+# @frappe.whitelist()
+# def make_purchase_invoice(source_name, target_doc=None):
+# 	return get_mapped_purchase_invoice(source_name, target_doc)
+
+
+
+
+
+
+
 
 
 

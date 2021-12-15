@@ -241,8 +241,106 @@ data = {
 
                     ],
         
-        
-        
+        'Purchase Invoice':[
+                        
+
+                        {
+                            "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "contracting",
+                            "fieldtype": "Section Break",
+                            "insert_after": "ignore_pricing_rule",
+                            "label": "Clearance",
+
+                        },
+
+                        {
+                            "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "comparison",
+                            "fieldtype": "Link",
+                            "insert_after": "contracting",
+                            "label": "Comparison",
+                            "options":"Comparison",
+                            "read_only":1
+
+
+                        },
+                        {
+                            "fieldname": "is_contracting",
+                            "fieldtype": "Check",
+                            "insert_after": "comparison",
+                            "label": "Has Clearence",
+                            "read_only":1
+
+                        },
+                        {
+                             "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "comparison_column_break",
+                            "fieldtype": "Column Break",
+                            "insert_after": "comparison",
+                        },
+
+                        {
+                             "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "clearance",
+                            "fieldtype": "Link",
+                            "insert_after": "comparison_column_break",
+                            "label": "Clearance",
+                            "options":"Clearance",
+                            "read_only":1
+                        },
+
+                    ],
+  
+        'Sales Invoice':[
+                        
+
+                        {
+                            "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "contracting",
+                            "fieldtype": "Section Break",
+                            "insert_after": "ignore_pricing_rule",
+                            "label": "Clearance",
+
+                        },
+
+                        {
+                            "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "comparison",
+                            "fieldtype": "Link",
+                            "insert_after": "contracting",
+                            "label": "Comparison",
+                            "options":"Comparison",
+                            "read_only":1
+
+
+                        },
+                        {
+                            "fieldname": "is_contracting",
+                            "fieldtype": "Check",
+                            "insert_after": "comparison",
+                            "label": "Has Clearence",
+                            "read_only":1
+
+                        },
+                        {
+                             "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "comparison_column_break",
+                            "fieldtype": "Column Break",
+                            "insert_after": "comparison",
+                        },
+
+                        {
+                             "depends_on": "eval:doc.is_contracting==\"1\"",
+                            "fieldname": "clearance",
+                            "fieldtype": "Link",
+                            "insert_after": "comparison_column_break",
+                            "label": "Clearance",
+                            "options":"Clearance",
+                            "read_only":1
+                        },
+
+                    ],
+  
         
         
         'Sales Order':[

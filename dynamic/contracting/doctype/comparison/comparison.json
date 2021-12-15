@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "comparison_type",
+  "company",
   "project",
   "tender",
   "tender_status",
@@ -283,12 +284,19 @@
    "fieldname": "terms_sheet_section_section",
    "fieldtype": "Section Break",
    "label": "Terms Sheet Section"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-08 10:20:55.257018",
+ "modified": "2021-12-14 10:48:36.002460",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",

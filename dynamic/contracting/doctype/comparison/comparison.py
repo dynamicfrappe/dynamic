@@ -18,22 +18,34 @@ class Comparison(Document):
 	@frappe.whitelist()
 	def get_cost_center(self,item_code):
 		cost_center = None
-		company = get_default_company()
+		# company = get_default_company()
 		if self.project :
 			cost_center =  frappe.db.get_value("Project", self.project, "cost_center")
 		if not cost_center and item_code :
-			item = get_item_defaults(item_code,company )
+			item = get_item_defaults(item_code,self.company )
 
 			cost_center	= item.get("selling_cost_center")
 		
 		if not cost_center :
-			cost_center = get_default_cost_center(company)
+			cost_center = get_default_cost_center(self.company)
 		return cost_center or ""
 
 	def validate(self):
+		self.validate_cost_centers()
 		self.calc_taxes_and_totals()
 
+	def validate_cost_centers (self):
+		for item in (getattr(self,"item" , []) + getattr(self,"taxes" , [])) :
+			is_group, company = frappe.get_cached_value('Cost Center',
+			item.cost_center, ['is_group', 'company'])
 
+			if company != self.company:
+				frappe.throw(_("Cost Center {0} does not belong to Company {1} at row {2} in {3}")
+					.format(item.cost_center, self.company , item.idx , "Items" if item.doctype=="Comparison Item" else "Taxes"))
+			if is_group :
+				frappe.throw(_("Cost Center {0} is Group at row {2} in {3}")
+					.format(item.cost_center, item.idx , "Items" if item.doctype=="Comparison Item" else "Taxes"))
+			
 
 	def calc_taxes_and_totals(self):
 		total_items = 0
@@ -231,8 +243,6 @@ def create_item_cart(items,comparison,tender=None):
 					item.comparison_item_card = n.get("item_cart")
 		c_doc.save()
 	return True
-
-
 
 
 

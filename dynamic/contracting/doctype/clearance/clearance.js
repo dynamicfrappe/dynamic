@@ -2,14 +2,123 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Clearance", {
-  refresh:(frm)=>{
-    if(frm.doc.docstatus == 1 && frm.doc.paid == 0) {
-      frm.add_custom_button(__('Create Payment'), function () {
-        frappe.call({
-          method: "create_payment_entry",
-          doc:frm.doc
-        })
-      });
+  setup(frm) {
+    frm.set_query("account_head", "item_tax", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+          [
+            "account_type",
+            "in",
+            [
+              "Tax",
+              "Chargeable",
+              "Income Account",
+              "Expenses Included In Valuation",
+            ],
+          ],
+        ],
+      };
+    });
+    frm.set_query("cost_center", "item_tax", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+        ],
+      };
+    });
+    frm.set_query("account", "deductions", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+        ],
+      };
+    });
+
+    frm.set_query("cost_center", "deductions", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+        ],
+      };
+    });
+
+    frm.set_query("cost_center", "items", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+        ],
+      };
+    });
+  },
+  refresh: (frm) => {
+    if (frm.doc.docstatus == 1) {
+      if (!frm.doc.paid) {
+        frm.add_custom_button(
+          __("Payment Entry"),
+          function () {
+            frappe.call({
+              method: "create_payment_entry",
+              doc: frm.doc,
+            });
+          },
+          __("Create")
+        );
+      }
+
+      if (frm.doc.clearance_type == "incoming") {
+        frm.call({
+          method: "can_create_invoice",
+          doc: frm.doc,
+          args: {
+            doctype: "Purchase Invoice",
+          },
+          callback: function (r) {
+            if (r.message) {
+              frm.add_custom_button(
+                __("Purchase Invoice"),
+                function () {
+                  frappe.model.open_mapped_doc({
+                    method:
+                      "dynamic.contracting.doctype.clearance.clearance.clearance_make_purchase_invoice",
+                    frm: frm,
+                  });
+                },
+                __("Create")
+              );
+            }
+          },
+        });
+      }
+      if (frm.doc.clearance_type == "Outcoming") {
+        frm.call({
+          method: "can_create_invoice",
+          doc: frm.doc,
+          args: {
+            doctype: "Purchase Invoice",
+          },
+          callback: function (r) {
+            if (r.message) {
+              frm.add_custom_button(
+                __("Sales Invoice"),
+                function () {
+                  frappe.model.open_mapped_doc({
+                    method:
+                      "dynamic.contracting.doctype.clearance.clearance.clearance_make_sales_invoice",
+                    frm: frm,
+                  });
+                },
+                __("Create")
+              );
+            }
+          },
+        });
+      }
     }
   },
   onload(frm) {
@@ -19,7 +128,6 @@ frappe.ui.form.on("Clearance", {
       });
       frm.events.clac_taxes(frm);
     }
-   
   },
   validate: (frm) => {
     frm.events.clac_taxes(frm);

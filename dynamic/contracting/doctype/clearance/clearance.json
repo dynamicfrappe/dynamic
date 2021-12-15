@@ -59,7 +59,8 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   },
   {
    "fieldname": "clearance_name",
@@ -346,7 +347,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-07 16:21:36.600388",
+ "modified": "2021-12-14 11:17:29.824748",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance",
