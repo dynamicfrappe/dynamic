@@ -100,7 +100,7 @@ frappe.ui.form.on("Clearance", {
           method: "can_create_invoice",
           doc: frm.doc,
           args: {
-            doctype: "Purchase Invoice",
+            doctype: "Sales Invoice",
           },
           callback: function (r) {
             if (r.message) {
