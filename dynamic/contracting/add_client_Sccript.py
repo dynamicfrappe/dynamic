@@ -3,14 +3,25 @@ from frappe.model.mapper import get_mapped_doc
 
 @frappe.whitelist()
 def add_sales_order_script():
+	add_properties()
 	try :
+		name = "Purchase Order-Form"
+		if frappe.db.exists("Client Script",name) :
+			doc = frappe.get_doc("Client Script",name)
+		else :
+
+			doc = frappe.new_doc("Client Script")
+		print("+ from add script")
 		print("+ from add script")
 
-		doc = frappe.new_doc("Client Script")
+		# doc = frappe.new_doc("Client Script")
 		doc.dt      = "Purchase Order"
 		doc.view    = "Form"
 		doc.enabled = 1
 		doc.script = """
+		
+			
+		
 					  
 			frappe.ui.form.on("Purchase Order", {
 			refresh(frm) {
@@ -24,13 +35,19 @@ def add_sales_order_script():
 				if (frm.doc.docstatus == 1 && frm.doc.is_contracting) {
 				frm.add_custom_button(__("Clearence"), function () {
 					frappe.model.open_mapped_doc({
-					method: "dynamic.contracting.doctype.purchase_order.purchase_order.make_clearence",
+					method: "dynamic.contracting.doctype.purchase_order.purchase_order.make_clearence_doc",
 					frm: frm, //this.frm
 					});
 				},__("Create"));
 				}
 			},
 			});
+	
+		
+	
+		
+	
+		
 	
 		"""
 		doc.save()
@@ -40,36 +57,40 @@ def add_sales_order_script():
 
 
 	try :
-		print("+ from add script")
+		name = "Sales Order-Form"
+		if frappe.db.exists("Client Script",name) :
+			doc = frappe.get_doc("Client Script",name)
+		else :
 
-		doc = frappe.new_doc("Client Script")
-		doc.dt      = "Sales Order"
-		doc.view    = "Form"
-		doc.enabled = 1
-		doc.script = """
-					  
-				frappe.ui.form.on('Sales Order', {
-				refresh(frm) {
-					frm.set_query("comparison", function(){
-						return {
-							filters : {
-								"tender_status": ["in", ["Approved"]]
-							}
-						};
-					});
-					if(frm.doc.docstatus==1){
-					frm.add_custom_button(__("create Clearence"), function() {
-						frappe.model.open_mapped_doc({
-					method: "dynamic.contracting.add_client_Sccript.make_clearence",
-					frm:frm //this.frm
-					})
-					})
+			doc = frappe.new_doc("Client Script")
+			print("+ from add script")
+			doc.dt      = "Sales Order"
+			doc.view    = "Form"
+			doc.enabled = 1
+			doc.script = """
+						  
+					frappe.ui.form.on('Sales Order', {
+					refresh(frm) {
+						frm.set_query("comparison", function(){
+							return {
+								filters : {
+									"tender_status": ["in", ["Approved"]]
+								}
+							};
+						});
+						if(frm.doc.docstatus==1){
+						frm.add_custom_button(__("create Clearence"), function() {
+							frappe.model.open_mapped_doc({
+						method: "dynamic.contracting.add_client_Sccript.make_clearence",
+						frm:frm //this.frm
+						})
+						})
+						}
 					}
-				}
-			})
-	
-		"""
-		doc.save()
+				})
+		
+			"""
+			doc.save()
 	except :
 		pass
 
@@ -78,8 +99,16 @@ def add_sales_order_script():
 
 
 	try:
+		name = "Stock Entry-Form"
+		if frappe.db.exists("Client Script",name) :
+			doc = frappe.get_doc("Client Script",name)
+		else :
+
+			doc = frappe.new_doc("Client Script")
+		
+
 		print("+ from add script")
-		doc = frappe.new_doc("Client Script")
+		# doc = frappe.new_doc("Client Script")
 		doc.dt = "Stock Entry"
 		doc.view = "Form"
 		doc.enabled = 1
@@ -129,6 +158,31 @@ def add_sales_order_script():
 		doc.save()
 	except:
 		pass
+
+
+
+
+def add_properties():
+	try:
+		name = "Journal Entry Account-reference_type-options"
+		if frappe.db.exists("Property Setter",name) :
+			doc = frappe.get_doc("Property Setter",name)
+		else :
+
+			doc = frappe.new_doc("Property Setter")
+
+		doc.doc_type  = "Journal Entry Account"
+		doc.doctype_or_field = "DocField"
+		doc.field_name = "reference_type"
+		doc.name = name
+		doc.property = "options"
+		doc.property_type = "Text"
+		doc.value = "\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document\nComparison\nClearance\nTender"
+
+		doc.save()
+	except:
+		pass
+
 
 
 @frappe.whitelist()

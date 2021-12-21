@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "comparison_type",
+  "company",
   "project",
   "tender",
   "tender_status",
@@ -30,6 +31,7 @@
   "column_break_15",
   "insurance_value_rate",
   "delevery_insurance_value_rate_",
+  "terms_sheet_section_section",
   "data_19",
   "item",
   "tax_section",
@@ -277,12 +279,24 @@
    "fieldname": "allow_material_over_price",
    "fieldtype": "Check",
    "label": "Allow Material Issue with Rate more than Item Price"
+  },
+  {
+   "fieldname": "terms_sheet_section_section",
+   "fieldtype": "Section Break",
+   "label": "Terms Sheet Section"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-06 16:58:58.950513",
+ "modified": "2021-12-14 10:48:36.002460",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",

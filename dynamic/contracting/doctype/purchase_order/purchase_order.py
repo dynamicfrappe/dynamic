@@ -1,3 +1,4 @@
+from erpnext.selling.doctype.sales_order.sales_order import is_product_bundle
 import frappe
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils.data import flt, now_datetime, nowdate
@@ -42,6 +43,9 @@ def make_clearence_doc(source_name, target_doc=None, ignore_permissions=False):
 
 
     def update_item(source, target, source_parent):
+        target.qty =  source.qty - source.completed_qty
+        target.current_qty  = target.qty
+        target.total_price =  target.qty * source.rate
         target.purchase_order = source_parent.name
         target.purchase_order_item = source.name
 
@@ -57,13 +61,14 @@ def make_clearence_doc(source_name, target_doc=None, ignore_permissions=False):
             "field_map": {
                 "item_code":"clearance_item",
                 "rate":"price",
-                "qty":"qty",
-                "qty":"current_qty",
-                "amount":"total_price",
+                # "qty":"qty",
+                # "qty":"current_qty",
+                # "amount":"total_price",
                 "uom":"uom"
             },
             "add_if_empty": True,
-            "postprocess":update_item
+            "postprocess":update_item,
+			"condition": lambda doc: doc.completed_qty < doc.qty  and not is_product_bundle(doc.item_code)
         },
         "Purchase Taxes and Charges": {
             "doctype": "Purchase Taxes and Charges Clearances",

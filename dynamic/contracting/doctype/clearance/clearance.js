@@ -2,11 +2,132 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Clearance", {
-  onload(frm) {
-    (frm.doc.items || []).forEach((row) => {
-      frm.events.calc_total(frm, row.doctype, row.name);
+  setup(frm) {
+    frm.set_query("account_head", "item_tax", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+          [
+            "account_type",
+            "in",
+            [
+              "Tax",
+              "Chargeable",
+              "Income Account",
+              "Expenses Included In Valuation",
+            ],
+          ],
+        ],
+      };
     });
-    frm.events.clac_taxes(frm);
+    frm.set_query("cost_center", "item_tax", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+        ],
+      };
+    });
+    frm.set_query("account", "deductions", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+        ],
+      };
+    });
+
+    frm.set_query("cost_center", "deductions", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+        ],
+      };
+    });
+
+    frm.set_query("cost_center", "items", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+        ],
+      };
+    });
+  },
+  refresh: (frm) => {
+    if (frm.doc.docstatus == 1) {
+      if (!frm.doc.paid) {
+        frm.add_custom_button(
+          __("Payment Entry"),
+          function () {
+            frappe.call({
+              method: "create_payment_entry",
+              doc: frm.doc,
+            });
+          },
+          __("Create")
+        );
+      }
+
+      if (frm.doc.clearance_type == "incoming") {
+        frm.call({
+          method: "can_create_invoice",
+          doc: frm.doc,
+          args: {
+            doctype: "Purchase Invoice",
+          },
+          callback: function (r) {
+            if (r.message) {
+              frm.add_custom_button(
+                __("Purchase Invoice"),
+                function () {
+                  frappe.model.open_mapped_doc({
+                    method:
+                      "dynamic.contracting.doctype.clearance.clearance.clearance_make_purchase_invoice",
+                    frm: frm,
+                  });
+                },
+                __("Create")
+              );
+            }
+          },
+        });
+      }
+      if (frm.doc.clearance_type == "Outcoming") {
+        frm.call({
+          method: "can_create_invoice",
+          doc: frm.doc,
+          args: {
+            doctype: "Sales Invoice",
+          },
+          callback: function (r) {
+            if (r.message) {
+              frm.add_custom_button(
+                __("Sales Invoice"),
+                function () {
+                  frappe.model.open_mapped_doc({
+                    method:
+                      "dynamic.contracting.doctype.clearance.clearance.clearance_make_sales_invoice",
+                    frm: frm,
+                  });
+                },
+                __("Create")
+              );
+            }
+          },
+        });
+      }
+    }
+  },
+  onload(frm) {
+    if (frm.is_new()) {
+      (frm.doc.items || []).forEach((row) => {
+        frm.events.calc_total(frm, row.doctype, row.name);
+      });
+      frm.events.clac_taxes(frm);
+    }
   },
   validate: (frm) => {
     frm.events.clac_taxes(frm);
@@ -103,6 +224,7 @@ frappe.ui.form.on("Clearance", {
     frm.set_value("total_payed_amount", total_paid_amount);
     frm.refresh_field("total_deductions");
     frm.refresh_field("total_payed_amount");
+    frm.events.clac_taxes(frm)
   },
   calc_total: (frm, cdt, cdn) => {
     let row = locals[cdt][cdn];
@@ -118,6 +240,7 @@ frappe.ui.form.on("Clearance", {
     // calc complated
 
     frm.refresh_fields("items");
+
   },
   clac_taxes: (frm) => {
     let items = frm.doc.items || [];
@@ -170,9 +293,9 @@ frappe.ui.form.on("Clearance", {
 
     frm.refresh_fields("item_tax");
     frm.set_value("total_qty", parseFloat(total_qty));
-    frm.set_value("total_price", parseFloat(totals));
+    frm.set_value("total_price", parseFloat(totals - (frm.doc.total_deductions || 0)));
     frm.set_value("tax_total", parseFloat(total_tax));
-    frm.set_value("grand_total", parseFloat(totals_after_tax));
+    frm.set_value("grand_total", parseFloat(total_paid_amount));
     frm.set_value("total_payed_amount", total_paid_amount);
     frm.set_value("down_payment_insurance_amount", down_payment_insurance);
     frm.set_value("payment_insurance", payment_ins);

@@ -11,19 +11,19 @@ data = {
                         "name": "Journal Entry Account-reference_type-options",
                         "property": "options",
                         "property_type": "Text",
-                        "value": "\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document"
+                        "value": ["Sales Invoice","Purchase Invoice","Journal Entry","Sales Order","Purchase Order","Expense Claim","Asset","Loan","Payroll Entry","Employee Advance","Exchange Rate Revaluation","Invoice Discounting","Fees","Pay and Receipt Document"]
                         }
                 ],
      "property_setters": [
-                                    {
-                                    "doc_type": "Journal Entry Account",
-                                    "doctype_or_field": "DocField",
-                                    "field_name": "reference_type",
-                                    "name": "Journal Entry Account-reference_type-options",
-                                    "property": "options",
-                                    "property_type": "Text",
-                                    "value": "\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document"
-                                    }
+        {
+        "doc_type": "Journal Entry Account",
+        "doctype_or_field": "DocField",
+        "field_name": "reference_type",
+        "name": "Journal Entry Account-reference_type-options",
+        "property": "options",
+        "property_type": "Text",
+        "value": ["Sales Invoice","Purchase Invoice","Journal Entry","Sales Order","Purchase Order","Expense Claim","Asset","Loan","Payroll Entry","Employee Advance","Exchange Rate Revaluation","Invoice Discounting","Fees","Pay and Receipt Document"]
+        }
                         ],
     'on_setup': 'dynamic.dynamic_accounts.setup.install_dynamic_accounts'
 }

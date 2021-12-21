@@ -2,6 +2,43 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Comparison", {
+  setup(frm) {
+    frm.set_query("account_head", "taxes", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+          [
+            "account_type",
+            "in",
+            [
+              "Tax",
+              "Chargeable",
+              "Income Account",
+              "Expenses Included In Valuation",
+            ],
+          ],
+        ],
+      };
+    });
+ 
+    frm.set_query("cost_center", "taxes", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0]
+        ],
+      };
+    });
+    frm.set_query("cost_center", "item", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0]
+        ],
+      };
+    });
+  },
   refresh: (frm) => {
     if (frm.doc.docstatus == 1) {
       frm.add_custom_button(
@@ -119,6 +156,7 @@ frappe.ui.form.on("Comparison", {
       );
     }
   },
+
   make_purchase_order: function (frm) {
     let pending_items = (frm.doc.item || []).some((item) => {
       let pending_qty = flt(item.qty) - flt(item.purchased_qty || 0);
@@ -489,6 +527,7 @@ frappe.ui.form.on("Comparison", {
       });
     }
   },
+
   insurance_value_rate: (frm) => {
     let insurance_value_rate = frm.doc.insurance_value_rate;
     let ins_value = frm.doc.grand_total * (insurance_value_rate / 100);
@@ -508,7 +547,7 @@ frappe.ui.form.on("Comparison", {
 frappe.ui.form.on("Comparison Item", {
   clearance_item: (frm, cdt, cdn) => {
     var local = locals[cdt][cdn];
-    if (local.clearance_item != null) {
+    if (local.clearance_item) {
       frappe.call({
         method:
           "dynamic.contracting.doctype.comparison.comparison.get_item_price",
@@ -521,6 +560,20 @@ frappe.ui.form.on("Comparison Item", {
             if (local.qty) {
               local.total_price = local.qty * r.message;
             }
+            frm.refresh_fields("item");
+          }
+        },
+      });
+
+      frappe.call({
+        method: "get_cost_center",
+        doc: frm.doc,
+        args: {
+          item_code: local.clearance_item,
+        },
+        callback(r) {
+          if (r.message) {
+            local.cost_center = r.message;
             frm.refresh_fields("item");
           }
         },
@@ -556,10 +609,22 @@ frappe.ui.form.on("Purchase Taxes and Charges Clearances", {
   },
   taxes_add: (frm, cdt, cdn) => {
     var row = locals[cdt][cdn];
+
     if (row.rate) {
       frm.events.clac_taxes(frm);
     }
+    frappe.call({
+      method: "get_cost_center",
+      doc: frm.doc,
+      args: {
+        item_code: "",
+      },
+      callback(r) {
+        if (r.message) {
+          row.cost_center = r.message;
+          frm.refresh_fields("taxes");
+        }
+      },
+    });
   },
 });
-
-
