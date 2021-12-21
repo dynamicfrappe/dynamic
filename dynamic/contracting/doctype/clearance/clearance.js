@@ -224,6 +224,7 @@ frappe.ui.form.on("Clearance", {
     frm.set_value("total_payed_amount", total_paid_amount);
     frm.refresh_field("total_deductions");
     frm.refresh_field("total_payed_amount");
+    frm.events.clac_taxes(frm)
   },
   calc_total: (frm, cdt, cdn) => {
     let row = locals[cdt][cdn];
@@ -239,6 +240,7 @@ frappe.ui.form.on("Clearance", {
     // calc complated
 
     frm.refresh_fields("items");
+
   },
   clac_taxes: (frm) => {
     let items = frm.doc.items || [];
@@ -291,9 +293,9 @@ frappe.ui.form.on("Clearance", {
 
     frm.refresh_fields("item_tax");
     frm.set_value("total_qty", parseFloat(total_qty));
-    frm.set_value("total_price", parseFloat(totals));
+    frm.set_value("total_price", parseFloat(totals - (frm.doc.total_deductions || 0)));
     frm.set_value("tax_total", parseFloat(total_tax));
-    frm.set_value("grand_total", parseFloat(totals_after_tax));
+    frm.set_value("grand_total", parseFloat(total_paid_amount));
     frm.set_value("total_payed_amount", total_paid_amount);
     frm.set_value("down_payment_insurance_amount", down_payment_insurance);
     frm.set_value("payment_insurance", payment_ins);
