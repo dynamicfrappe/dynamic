@@ -178,7 +178,8 @@ domains = {
 
 jenv = {
     "methods": [
-        "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data"
+        "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
+		"encode_invoice_data:dynamic.api.encode_invoice_data"
     ],
 	"filters":[]
 }
