@@ -1,4 +1,4 @@
-{% set print_data = get_invoice_tax_data(doc.name) %} {% set total_amount =
+<!-- {% set print_data = get_invoice_tax_data(doc.name) %} {% set total_amount =
 doc.grand_total or doc.rounded_total %} {% set total_discount =
 print_data.total_discount_amount %} {% set total_tax =
 print_data.total_tax_amount %} {% set total_taxable_amount = total_amount %} {%
@@ -253,7 +253,7 @@ print_data.server_url or "" -%}
       text-align: center !important;
     }
   </style> -->
-
+<!-- 
 
 </head>
 <body
@@ -303,6 +303,7 @@ print_data.server_url or "" -%}
       </div>
       <div class="col-xs-4">
         <!-- Qr Code-->
+<!--         
         {%- set url =
         base_url+"/api/method/dynamic.utils.download_pdf?name="+doc.name -%}
         <img
@@ -558,4 +559,4 @@ print_data.server_url or "" -%}
       </div>
     </div>
   </div>
-</body>
+</body> --> --> -->
