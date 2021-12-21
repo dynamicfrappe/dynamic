@@ -47,7 +47,7 @@ def encode_invoice_data(doc):
 
         total_hex_str = str(tagNumber + value_len+value)
 
-        hexa_tag = total_hex_str.encode("utf-8")
+        # hexa_tag = total_hex_str.encode("utf-8")
         total_hex += total_hex_str
         print ("**********************************************")
         print (row["value"])

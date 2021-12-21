@@ -9,7 +9,7 @@ print_data.server_url or "" -%}
 
 {%- set qr_code_data =  encode_invoice_data(doc.name) -%}
 
-
+{%- set company_address = get_company_address(doc.company-%}
 
 <head>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
