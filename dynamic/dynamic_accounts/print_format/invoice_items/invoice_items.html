@@ -3,19 +3,22 @@
 {% set print_data = get_invoice_tax_data(doc.name) %}
 
 <!-- {{ get_invoice_tax_data(doc.name)}} -->
-{% set total_amount = doc.grand_total or doc.rounded_total %} {% set
-total_discount = print_data.total_discount_amount %} {% set total_tax =
-print_data.total_tax_amount %} {% set total_taxable_amount = total_amount %} {%
-set net_after_tax = total_amount + total_tax %} {%- set customer =
-frappe.get_doc("Customer", doc.customer) -%} {%- set company =
+{% set total_amount = doc.total %} 
+{% set total_discount = doc.discount_amount %} 
+{% set total_tax = doc.total_taxes_and_charges %} 
+{% set total_taxable_amount = total_amount %} 
+{%set net_after_tax = doc.rounded_total or doc.grand_total %} 
+
+
+
+{%- set customer = frappe.get_doc("Customer", doc.customer) -%} {%- set company =
 frappe.get_doc("Company", doc.company) -%} {%- set base_url =
 print_data.server_url or "" -%} {%- set company_address =
 get_company_address(doc.company)-%} {%- set customer_balance =
 get_balance_on(date=doc.posting_date , party_type= 'Customer' , party=
-doc.customer)-%}
-{%- set qr_code_data =  encode_invoice_data(doc.name) -%}
+doc.customer)-%} {%- set qr_code_data = encode_invoice_data(doc.name) -%}
 
-<div style="margin-top: 3cm;">
+<div style="margin-top: 3cm">
   <div class="row margin-bottom">
     <div class="col-xs-8">
       <table>
@@ -31,21 +34,21 @@ doc.customer)-%}
         </tr>
 
         <tr>
-            <td style="text-align: right !important">
-              <strong>{{_('Invocie No')}}: </strong>
-            </td>
-  
-            <td style="text-align: left !important">{{ doc.name }}</td>
-          </tr>
+          <td style="text-align: right !important">
+            <strong>{{_('Invocie No')}}: </strong>
+          </td>
 
-          <tr>
-            <td style="text-align: right !important">
-              <strong>{{_('Invocie Date')}}: </strong>
-            </td>
-  
-            <td style="text-align: left !important">{{ doc.posting_date }}</td>
-          </tr>
-    
+          <td style="text-align: left !important">{{ doc.name }}</td>
+        </tr>
+
+        <tr>
+          <td style="text-align: right !important">
+            <strong>{{_('Invocie Date')}}: </strong>
+          </td>
+
+          <td style="text-align: left !important">{{ doc.posting_date }}</td>
+        </tr>
+
         <tr>
           <td style="text-align: right !important">
             <strong>{{_('Supplier Name')}}: </strong>
@@ -70,7 +73,7 @@ doc.customer)-%}
           </td>
 
           <td style="text-align: left !important">
-            {{ doc.company_address or "" }}
+            {{ get_address_display(doc.company_address or "") or "" }}
           </td>
         </tr>
 
@@ -121,7 +124,7 @@ doc.customer)-%}
           </td>
 
           <td style="text-align: left !important">
-            {{ doc.customer_address or "" }}
+            {{ get_address_display(doc.customer_address or "") or "" }}
           </td>
         </tr>
 
@@ -194,7 +197,7 @@ doc.customer)-%}
           <div>{{_('Tax Amount')}}</div>
         </th>
         <th>
-          <div>{{_('Tax Total')}}</div>
+          <div>{{_('Total With Tax')}}</div>
         </th>
       </tr>
 
@@ -217,7 +220,7 @@ doc.customer)-%}
         </td>
 
         <td>
-          {{ frappe.utils.fmt_money(item.amount + (item.tax_amount or 0),
+          {{ frappe.utils.fmt_money(item.amount ,
           currency=doc.currency) }}
         </td>
       </tr>
@@ -231,8 +234,7 @@ doc.customer)-%}
         <tr>
           <td><strong>{{_('Total (Excluding VAT)')}} : </strong></td>
           <td colspan="2">
-            {{ frappe.utils.fmt_money(total_amount +
-            total_discount,currency=doc.currency) }}
+            {{ frappe.utils.fmt_money(total_amount,currency=doc.currency) }}
           </td>
         </tr>
         <tr>
@@ -254,7 +256,30 @@ doc.customer)-%}
             {{ frappe.utils.fmt_money(net_after_tax,currency=doc.currency) }}
           </td>
         </tr>
+
+        <tr>
+          <td><strong>{{_('Total (in Words)')}} : </strong></td>
+          <td colspan="2">
+            {{ frappe.utils.money_in_words (net_after_tax,doc.currency) }}
+          </td>
+        </tr>
       </table>
+    </div>
+  </div>
+  <br />
+
+  <div class="row margin-bottom">
+    <div class="col-xs-6" style="text-align: center">
+      <strong>{{_("Seller Signature")}}</strong>
+      <br />
+      <br />
+      <strong>{{_("...................................")}}</strong>
+    </div>
+    <div class="col-xs-6" style="text-align: center">
+      <strong>{{_("Receiver Signature")}}</strong>
+      <br />
+      <br />
+      <strong>{{_("...................................")}}</strong>
     </div>
   </div>
 </div>
