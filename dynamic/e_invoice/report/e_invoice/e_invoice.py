@@ -147,6 +147,12 @@ def get_columns(filters):
             "fieldtype": "Data",
             "width": 100
         },
+        {
+            "label": _("Tax Amount"),
+            "fieldname": "tax_amount",
+            "fieldtype": "Data",
+            "width": 100
+        },
 
     ]
     return columns
@@ -172,7 +178,8 @@ def get_data(filters):
 				`tabSales Invoice`.taxable_item AS taxable_item ,
 				`tabCustomer`.buildingnumber as buildingnumber ,
 				`tabCustomer`.branchid as branchid ,
-				`tabCustomer`.receiver_id AS receiverid   
+				`tabCustomer`.receiver_id AS receiverid,
+				 0 as 'tax_amount'   
 				 FROM `tabSales Invoice`
 				 inner join `tabCustomer`  
 				 ON `tabSales Invoice`.customer = `tabCustomer`.name 
