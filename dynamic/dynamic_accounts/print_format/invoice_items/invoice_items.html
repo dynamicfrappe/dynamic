@@ -62,14 +62,14 @@ doc.customer)-%} {%- set qr_code_data = encode_invoice_data(doc.name) -%}
         </tr>
 
         <tr>
-          <td>
+          <td style="display: flex;">
             <strong>{{_('Address')}}: </strong>
-            {{ get_address_display(doc.company_address or "") or "" }}
+            <span style="text-align: center;">{{ get_address_display(doc.company_address or "") or "" }}</span>
           </td>
         </tr>
 
         <tr>
-          <td>
+          <td style="display: flex;">
             <strong>{{_('Sales Person')}}: </strong>
             {% for row in doc.items %} {{ row.sales_person or "" }} {% endfor %}
           </td>
@@ -96,7 +96,7 @@ doc.customer)-%} {%- set qr_code_data = encode_invoice_data(doc.name) -%}
         </tr>
 
         <tr>
-          <td>
+          <td style="display: flex;">
             <strong>{{_('Address')}}: </strong>
             {{ get_address_display(doc.customer_address or "") or "" }}
           </td>
