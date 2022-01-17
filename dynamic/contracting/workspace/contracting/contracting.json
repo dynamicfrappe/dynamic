@@ -1,7 +1,13 @@
 {
  "cards_label": "Mian Data",
  "category": "Modules",
- "charts": [],
+ "charts": [
+  {
+   "chart_name": "Project Summary",
+   "label": "Project"
+  }
+ ],
+ "charts_label": "Project",
  "creation": "2021-11-21 18:19:26.803532",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
@@ -60,7 +66,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-12-08 15:23:06.379879",
+ "modified": "2021-12-26 15:32:44.149207",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Contracting",
@@ -69,6 +75,12 @@
  "pin_to_top": 1,
  "restrict_to_domain": "Contracting",
  "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Project",
+   "link_to": "Project",
+   "type": "DocType"
+  },
   {
    "doc_view": "List",
    "label": "Comparison",

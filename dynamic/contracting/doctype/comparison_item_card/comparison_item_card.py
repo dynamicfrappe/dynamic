@@ -19,7 +19,7 @@ class ComparisonItemCard(Document):
 	def validate_qty(self):
 		if not self.qty:
 			self.qty = 1
-		if self.qty > self.qty_from_comparison:
-			frappe.throw("""You Cant Select QTY More Than %s"""%self.qty_from_comparison)
+		# if self.qty > self.qty_from_comparison:
+		# 	frappe.throw("""You Cant Select QTY More Than %s"""%self.qty_from_comparison)
 
 

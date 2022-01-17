@@ -117,4 +117,12 @@ frappe.ui.form.on("Tender", {
     frm.set_value("insurance_amount", amount);
     frm.refresh_field("insurance_amount");
   },
+
+
+
+current_status	:function(frm){
+  if (! frm.doc.project && frm.doc.current_status =="Approved"){
+    frappe.throw( "please Set Project for Approved Tender")
+  }
+}
 });

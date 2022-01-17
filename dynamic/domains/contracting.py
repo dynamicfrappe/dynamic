@@ -414,6 +414,16 @@ data = {
                             "mandatory_depends_on":"eval:doc.against_comparison == 1",
                             "label": "Comparison",
 
+                        },
+                        {
+                            "fieldname": "comparison_item",
+                            "fieldtype": "Link",
+                            "insert_after": "comparison",
+                            "options" : "Item",
+                            "depends_on":"eval:doc.against_comparison == 1",
+                            "mandatory_depends_on":"eval:doc.against_comparison == 1",
+                            "label": "Comparison Item",
+
                         }
                     ],
 

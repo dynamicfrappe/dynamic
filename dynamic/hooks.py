@@ -73,7 +73,8 @@ doctype_js = {
 	"Customer" : "e_invoice/doctype/customer/customer.js",
 	"Sales Invoice" : "e_invoice/doctype/sales_invoice/sales_invoice.js",
 	"Item":"e_invoice/doctype/item/item.js",
-	"Sales Order" : "public/js/sales_order.js"
+	"Sales Order" : "public/js/sales_order.js" ,
+	"Stock Entry" : "public/js/stock_entry.js"
 }
 doc_events = {
 
