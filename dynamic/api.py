@@ -1,3 +1,4 @@
+from datetime import datetime
 from dynamic.dynamic_accounts.print_format.invoice_tax.invoice_tax import get_invoice_tax_data
 import frappe 
 from frappe import _
@@ -22,7 +23,7 @@ def encode_invoice_data(doc):
         },
         {
             "tagNumber" : 3 ,
-            "value" : str(doc.datetime_issued or "") 
+            "value" : str (doc.posting_date) + " " + str(doc.posting_time) 
         },
         {
             "tagNumber" : 4 ,
