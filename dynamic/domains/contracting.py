@@ -388,6 +388,12 @@ data = {
                             "insert_after": "advance_version_account_payable_break",
                             "label": "Payment of insurance copy of operation and initial delivery(%)",
 
+                        } ,
+                        {
+                           "fieldname": "estimated_cost",
+                            "fieldtype": "Float",
+                            "insert_after": "payment_of_insurance_copy",
+                            "label": "Estimated Cost" 
                         }
 
 

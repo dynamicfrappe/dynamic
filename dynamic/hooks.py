@@ -83,7 +83,13 @@ doc_events = {
         },
 		"Stock Entry" : {
 			"on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
-		}
+		} ,
+		"Sales Order" : {
+			"validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost"
+		} ,
+		"Purchase Order": {
+		"on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
+		"on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",}
 }
 # notification_config = "dynamic.notifications.get_notification_config"
 
@@ -111,15 +117,7 @@ doc_events = {
 # ---------------
 # Hook on document methods and events
 
-doc_events = {
-	"Purchase Order": {
-		"on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
-		"on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
-		# "on_update": "method",
-		# "on_cancel": "method",
-		# "on_trash": "method"
-	}
-}
+
 
 # Scheduled Tasks
 # ---------------

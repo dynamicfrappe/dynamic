@@ -33,7 +33,9 @@
   "total_item_cost",
   "analycis_edited_by",
   "result",
-  "qty_from_comparison"
+  "qty_from_comparison",
+  "margin_percent",
+  "margin_rate"
  ],
  "fields": [
   {
@@ -196,12 +198,22 @@
    "label": "Qty From Comparison",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "margin_percent",
+   "fieldtype": "Percent",
+   "label": "Margin Percent"
+  },
+  {
+   "fieldname": "margin_rate",
+   "fieldtype": "Currency",
+   "label": "Margin rate"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-07 16:47:32.061827",
+ "modified": "2022-01-30 14:11:31.710201",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison Item Card",

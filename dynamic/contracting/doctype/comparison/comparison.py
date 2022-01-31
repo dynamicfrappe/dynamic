@@ -29,8 +29,15 @@ class Comparison(Document):
 		if not cost_center :
 			cost_center = get_default_cost_center(self.company)
 		return cost_center or ""
+	def caculate_total_item_cost(self):
+		self.total_cost_amount = 0 
+		if self.item :
+			for item in self.item :
+				item.total_item_cost = float(item.qty) * float(item.item_cost)
+				self.total_cost_amount += item.total_item_cost
 
 	def validate(self):
+		self.caculate_total_item_cost()
 		self.validate_cost_centers()
 		self.calc_taxes_and_totals()
 
@@ -82,9 +89,9 @@ class Comparison(Document):
 				items.append(dict(
 					name=i.name,
 					item_code=i.clearance_item,
-					qty=i.qty,
+					qty=1,
 					price=i.price,
-					total=i.total_price
+					total=i.price
 				))
 		return items
 
