@@ -1,10 +1,11 @@
 from __future__ import unicode_literals
+from sys import flags
 
 import frappe
 from frappe import _
 from frappe.utils.data import flt
 
-
+DOMAINS = frappe.get_active_domains()
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
@@ -48,5 +49,19 @@ def on_submit(self,fun=''):
 
 
 
-
-        
+@frappe.whitelist()
+def update_project_cost(self,*args , **kwargs):
+    
+    
+    if 'Contracting' in DOMAINS :
+   
+        if self.comparison :
+            comparison = frappe.get_doc("Comparison" , self.comparison )
+            self.estimated_cost = float(comparison.total_cost_amount or 0)
+        if self.project :
+            all_projects  = frappe.db.sql(
+                """ SELECT SUM(estimated_cost) as cost FROM `tabSales Order` WHERE project = '%s' """%self.project ,as_dict=True
+            )   
+            project = frappe.get_doc("Project" , self.project )
+            project.estimated_costing = float(all_projects[0].get("cost") or 0)
+            project.save()

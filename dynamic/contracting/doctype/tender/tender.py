@@ -137,6 +137,10 @@ class Tender(Document):
 					doc.insurance_value = self.insurance_amount
 					doc.total_insurance = (doc.insurance_value) +  (doc.delivery_insurance_value)
 					self.total_insurance = (doc.insurance_value) +  (doc.delivery_insurance_value)
+				if not self.project :
+					frappe.throw("Please Set Project")
+				else :
+					doc.project= self.project	
 				doc.docstatus = 1
 				doc.tender = self.name
 				doc.tender_status = self.current_status
