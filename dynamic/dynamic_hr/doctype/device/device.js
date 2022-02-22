@@ -69,6 +69,22 @@ frappe.ui.form.on("Device", {
           },
           __("Actions")
         );
+        frm.add_custom_button(
+          __("Calculate Attendance"),
+          function () {
+            frappe.call({
+              method:
+                "dynamic.dynamic_hr.doctype.device.device.calculate_attendance",
+              freeze: true,
+              callback: function (r) {
+                // frappe.msgprint(__("Done"));
+                frappe.hide_progress();
+                frm.refresh();
+              },
+            });
+          },
+          __("Actions")
+        );
       }
     }
   },

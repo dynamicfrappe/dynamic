@@ -85,7 +85,6 @@
    "default": "0",
    "fieldname": "auto_calculate_attendance",
    "fieldtype": "Check",
-   "hidden": 1,
    "label": "Auto Calculate Attendance"
   },
   {
@@ -134,7 +133,7 @@
   }
  ],
  "links": [],
- "modified": "2022-02-22 14:25:15.723325",
+ "modified": "2022-02-22 15:03:35.982260",
  "modified_by": "Administrator",
  "module": "Dynamic HR",
  "name": "Device",

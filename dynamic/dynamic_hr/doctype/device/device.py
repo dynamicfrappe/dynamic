@@ -12,7 +12,8 @@ from datetime import datetime
 from datetime import timedelta
 from frappe.model.naming import make_autoname
 import time
-
+from erpnext.hr.doctype.shift_type.shift_type import process_auto_attendance_for_all_shifts
+  
 
 class Device(Document):
     @frappe.whitelist()
@@ -216,43 +217,47 @@ def create_employee_checkin(names=None):
 
 
 
+# @frappe.whitelist()
+# def calculate_attendance():
+#     attendances = frappe.db.sql(""" 
+# 		select calc.name from `tabAttendance Calculation` calc
+# 		inner join `tabPayroll Period` period on calc.payroll_period = period.name
+# 		where period.docstatus < 2 and ifnull(is_closed,0) = 0
+#         and calc.docstatus < 2
+#          """, as_dict=1)
+#     if not attendances or len(attendances) == 0:
+#         # if 1 :
+#         payroll_period = frappe.db.sql("""
+# 			select period.name from `tabPayroll Period` period
+# 			where period.docstatus < 2 and ifnull(is_closed,0) = 0
+# 		""", as_dict=1)
+#         if payroll_period and len(payroll_period) != 0:
+#             for i in payroll_period:
+#                 try:
+#                     period = frappe.get_doc("Payroll Period", i.name)
+#                     doc = frappe.new_doc("Attendance Calculation")
+#                     doc.payroll_period = period.name
+#                     doc.company = period.company
+#                     doc.from_date = period.attendance_start_date
+#                     doc.to_date = period.attendance_end_date
+#                     doc.payroll_effect_date = period.attendance_end_date
+
+#                     doc.insert()
+#                     doc.Calculate_attendance()
+#                 except Exception as e:
+#                     frappe.msgprint(str(e))
+#     else:
+#         for i in attendances:
+#             doc = frappe.get_doc("Attendance Calculation", i.name)
+#             try:
+
+#                 doc.Calculate_attendance()
+#             except Exception as e:
+#                 frappe.msgprint(str(e))
+
 @frappe.whitelist()
 def calculate_attendance():
-    attendances = frappe.db.sql(""" 
-		select calc.name from `tabAttendance Calculation` calc
-		inner join `tabPayroll Period` period on calc.payroll_period = period.name
-		where period.docstatus < 2 and ifnull(is_closed,0) = 0
-        and calc.docstatus < 2
-         """, as_dict=1)
-    if not attendances or len(attendances) == 0:
-        # if 1 :
-        payroll_period = frappe.db.sql("""
-			select period.name from `tabPayroll Period` period
-			where period.docstatus < 2 and ifnull(is_closed,0) = 0
-		""", as_dict=1)
-        if payroll_period and len(payroll_period) != 0:
-            for i in payroll_period:
-                try:
-                    period = frappe.get_doc("Payroll Period", i.name)
-                    doc = frappe.new_doc("Attendance Calculation")
-                    doc.payroll_period = period.name
-                    doc.company = period.company
-                    doc.from_date = period.attendance_start_date
-                    doc.to_date = period.attendance_end_date
-                    doc.payroll_effect_date = period.attendance_end_date
-
-                    doc.insert()
-                    doc.Calculate_attendance()
-                except Exception as e:
-                    frappe.msgprint(str(e))
-    else:
-        for i in attendances:
-            doc = frappe.get_doc("Attendance Calculation", i.name)
-            try:
-
-                doc.Calculate_attendance()
-            except Exception as e:
-                frappe.msgprint(str(e))
+	process_auto_attendance_for_all_shifts()
 
 
 @frappe.whitelist()
