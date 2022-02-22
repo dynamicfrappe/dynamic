@@ -7,17 +7,16 @@ frappe.ui.form.on("Device", {
       frappe.show_progress(
         __("Calculating Attendance"),
         data.progress,
-        data.total,
-        data.footer
+        data.total
+        // data.footer
       );
     });
-
     frappe.realtime.on("update_progress_device", (data) => {
       frappe.show_progress(
         __("Getting Logs"),
         data.progress,
-        data.total,
-        __("Getting Logs")
+        data.total
+        // __("Getting Logs")
       );
     });
 
@@ -58,7 +57,8 @@ frappe.ui.form.on("Device", {
           __("Create Employee Checkin"),
           function () {
             frappe.call({
-              method: "dynamic.dynamic_hr.doctype.device.device.create_employee_checkin",
+              method:
+                "dynamic.dynamic_hr.doctype.device.device.create_employee_checkin",
               freeze: true,
               callback: function (r) {
                 // frappe.msgprint(__("Done"));

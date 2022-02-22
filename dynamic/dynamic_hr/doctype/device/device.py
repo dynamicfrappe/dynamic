@@ -155,22 +155,65 @@ def map_employees():
 	log_date = date(log_time),
 	shift = (select shift from `tabDevice` where name = log.device),
 	time_log = time(log_time) 
-	where ifnull(employee,'') = '' or ifnull(employee_name,'') = '' """)
+	where ifnull(employee,'') = '' or ifnull(employee_name,'') = ''
+	
+	 """)
+
+
+# @frappe.whitelist()
+# def create_employee_checkin(names=None):
+# 	map_employees()
+# 	sql = """
+# 	Insert Into `tabEmployee Checkin` (name , employee , time , log_type,device_log,device_id,creation,modified,owner)
+# 	(select name , employee , time_log , log_type,name,device,creation,modified,owner from 
+# 	`tabDevice Log` where employee is not null
+# 	and  name not in (select device_log from `tabEmployee Checkin` where device_log is not null));
+# 	"""
+# 	# frappe.msgprint(sql)
+# 	frappe.db.sql(sql)
+# 	frappe.db.commit()
+# 	frappe.msgprint(_("Operation Successfully"))
 
 
 @frappe.whitelist()
 def create_employee_checkin(names=None):
 	map_employees()
+	# sql = """
+	# Insert Into `tabEmployee Checkin` (name , employee , time , log_type,device_log,device_id,creation,modified,owner)
+	# (select name , employee , time_log , log_type,name,device,creation,modified,owner from 
+	# `tabDevice Log` where employee is not null
+	# and  name not in (select device_log from `tabEmployee Checkin` where device_log is not null));
+	# """
 	sql = """
-	Insert Into `tabEmployee Checkin` (name , employee , time , log_type,device_log,device_id,creation,modified,owner)
-	(select name , employee , time_log , log_type,name,device,creation,modified,owner from 
+	select name , employee , log_time , log_type,name,device,creation,modified,owner from 
 	`tabDevice Log` where employee is not null
-	and  name not in (select device_log from `tabEmployee Checkin` where device_log is not null));
+	and  name not in (
+		select device_log from `tabEmployee Checkin` where device_log is not null
+		);
 	"""
 	# frappe.msgprint(sql)
-	frappe.db.sql(sql)
-	frappe.db.commit()
-	frappe.msgprint(_("Operation Successfully"))
+	logs = frappe.db.sql(sql,as_dict=1) or []
+	for log in logs :
+		try :
+			checkin = frappe.new_doc("Employee Checkin")
+			checkin.employee = log.employee
+			checkin.time = log.log_time
+			checkin.log_type = log.log_type
+			checkin.device_log = log.name
+			checkin.device_id = log.device
+			checkin.save()
+		except Exception as e :
+			pass
+			# frappe.msgprint(_("Error While create Employee {employee} checkin {log_time} {e}").format(
+			# 	employee=log.employee,
+			# 	log_time=log.log_time,
+			# 	e=str(e)
+			# ))
+	if len(logs) > 0 :
+		frappe.msgprint(_("Operation Successfully"))
+	else :
+		frappe.msgprint(_("There is no new logs"))
+
 
 
 @frappe.whitelist()
