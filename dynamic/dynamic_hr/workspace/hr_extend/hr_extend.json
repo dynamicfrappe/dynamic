@@ -11,7 +11,7 @@
  "hide_custom": 0,
  "icon": "hr",
  "idx": 0,
- "is_default": 0,
+ "is_default": 1,
  "is_standard": 1,
  "label": "HR Extend",
  "links": [
@@ -42,7 +42,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-02-23 11:11:38.979952",
+ "modified": "2022-02-23 11:29:40.431778",
  "modified_by": "Administrator",
  "module": "Dynamic HR",
  "name": "HR Extend",
