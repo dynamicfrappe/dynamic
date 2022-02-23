@@ -1,6 +1,6 @@
 {
  "cards_label": "",
- "category": "Modules",
+ "category": "Domains",
  "charts": [],
  "creation": "2022-02-22 15:10:09.385293",
  "developer_mode_only": 0,
@@ -210,7 +210,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-02-22 15:10:09.385293",
+ "modified": "2022-02-23 11:15:37.495791",
  "modified_by": "Administrator",
  "module": "Dynamic HR",
  "name": "Attendance HR",
