@@ -29,6 +29,8 @@
   "terms_paid",
   "column_break_21",
   "terms_sheet_cost_center",
+  "section_break_31",
+  "states_template",
   "payment_details_section",
   "mode_of_payment",
   "payment_account",
@@ -37,6 +39,7 @@
   "reference_date",
   "notes_section",
   "user_notes",
+  "section_break_33",
   "amended_from"
  ],
  "fields": [
@@ -235,12 +238,27 @@
   {
    "fieldname": "column_break_26",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_31",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "states_template",
+   "fieldtype": "Table",
+   "label": "Tender States Template",
+   "options": "Tender States Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_33",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-15 13:16:15.329337",
+ "modified": "2022-03-02 13:33:39.264805",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Tender",

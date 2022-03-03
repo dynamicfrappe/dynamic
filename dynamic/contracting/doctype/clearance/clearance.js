@@ -3,6 +3,14 @@
 
 frappe.ui.form.on("Clearance", {
   setup(frm) {
+    frm.fields_dict["items"].grid.get_field("clearance_state").get_query =
+      function (doc, cdt, cdn) {
+        return {
+          query:
+            "dynamic.contracting.doctype.clearance.clearance.get_state_query",
+          filters: { parent: doc.tender },
+        };
+      };
     frm.set_query("account_head", "item_tax", function () {
       return {
         filters: [
@@ -224,13 +232,14 @@ frappe.ui.form.on("Clearance", {
     frm.set_value("total_payed_amount", total_paid_amount);
     frm.refresh_field("total_deductions");
     frm.refresh_field("total_payed_amount");
-    frm.events.clac_taxes(frm)
+    frm.events.clac_taxes(frm);
   },
   calc_total: (frm, cdt, cdn) => {
     let row = locals[cdt][cdn];
-    let total_price = row.current_qty * row.price;
+    row.current_price = (row.price * (row.state_percent || 0)) / 100;
+    let total_price = row.current_qty * row.current_price;
     let current_percent = (row.current_qty / row.qty) * 100;
-    let current_amount = row.current_qty * row.price;
+    let current_amount = row.current_qty * row.current_price;
     let completed_qty = row.current_qty || 0 + row.previous_qty || 0;
     row.total_price = !isNaN(total_price) ? total_price : 0;
     row.current_percent = !isNaN(current_percent) ? current_percent : 0;
@@ -240,7 +249,6 @@ frappe.ui.form.on("Clearance", {
     // calc complated
 
     frm.refresh_fields("items");
-
   },
   clac_taxes: (frm) => {
     let items = frm.doc.items || [];
@@ -293,7 +301,10 @@ frappe.ui.form.on("Clearance", {
 
     frm.refresh_fields("item_tax");
     frm.set_value("total_qty", parseFloat(total_qty));
-    frm.set_value("total_price", parseFloat(totals - (frm.doc.total_deductions || 0)));
+    frm.set_value(
+      "total_price",
+      parseFloat(totals - (frm.doc.total_deductions || 0))
+    );
     frm.set_value("tax_total", parseFloat(total_tax));
     frm.set_value("grand_total", parseFloat(total_paid_amount));
     frm.set_value("total_payed_amount", total_paid_amount);
@@ -306,6 +317,35 @@ frappe.ui.form.on("Clearance", {
     frm.refresh_field("total_payed_amount");
     frm.refresh_field("down_payment_insurance_amount");
     frm.refresh_field("payment_insurance");
+  },
+  get_item_price(frm, cdt, cdn) {
+    var item = locals[cdt][cdn];
+    if (
+      item.clearance_item &&
+      item.clearance_state &&
+      frm.doc.comparison &&
+      frm.doc.tender
+    ) {
+      frappe.call({
+        method:
+          "dynamic.contracting.doctype.clearance.clearance.get_item_price",
+        args: {
+          comparison: frm.doc.comparison,
+          item_code: item.clearance_item,
+          clearance_state: item.clearance_state,
+          qty: item.current_qty || 0,
+        },
+        callback: function (r) {
+          if (r.message) {
+            item.state_percent = r.message.state_percent || 100;
+            // item.current_price = r.message.item_price || 0;
+            item.price = r.message.item_price;
+            frm.events.calc_total(frm, cdt, cdn);
+            frm.events.clac_taxes(frm);
+          }
+        },
+      });
+    }
   },
 });
 frappe.ui.form.on("Deductions clearence Table", {
@@ -324,6 +364,12 @@ frappe.ui.form.on("Clearance Items", {
   price: (frm, cdt, cdn) => {
     frm.events.calc_total(frm, cdt, cdn);
     frm.events.clac_taxes(frm);
+  },
+  clearance_state: (frm, cdt, cdn) => {
+    frm.events.get_item_price(frm, cdt, cdn);
+  },
+  clearance_item: (frm, cdt, cdn) => {
+    frm.events.get_item_price(frm, cdt, cdn);
   },
 });
 frappe.ui.form.on("Purchase Taxes and Charges Clearances", {
