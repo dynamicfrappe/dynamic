@@ -110,10 +110,7 @@ class Clearance(Document):
 						log.description = clearence_item.clearance_item_description
 						log.uom = clearence_item.uom
 						log.qty = clearence_item.current_qty or 0
-						log.total_qty = comparison_item.qty or 0
 						log.price = clearence_item.current_price or 0
-						log.current_amount = completed_amount
-						log.current_percent = completed_percent
 						log.comparison = doc.name
 						log.reference_type = self.doctype
 						log.reference_name = self.name
