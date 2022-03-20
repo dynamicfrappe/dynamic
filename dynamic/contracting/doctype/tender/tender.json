@@ -29,6 +29,11 @@
   "terms_paid",
   "column_break_21",
   "terms_sheet_cost_center",
+  "risk_insurance_section",
+  "risk_insurance_amount",
+  "column_break_25",
+  "risk_insurance_account",
+  "risk_insurance_cost_center",
   "section_break_31",
   "states_template",
   "payment_details_section",
@@ -127,6 +132,7 @@
    "options": "Project"
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "comparison.total_insurance",
    "fieldname": "total_insurance",
    "fieldtype": "Read Only",
@@ -253,12 +259,40 @@
   {
    "fieldname": "section_break_33",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "risk_insurance_section",
+   "fieldtype": "Section Break",
+   "label": "Risk Insurance"
+  },
+  {
+   "fieldname": "risk_insurance_amount",
+   "fieldtype": "Currency",
+   "label": "Risk Insurance Amount"
+  },
+  {
+   "fieldname": "column_break_25",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "risk_insurance_account",
+   "fieldtype": "Link",
+   "label": "Risk Insurance Account",
+   "mandatory_depends_on": "eval:doc.risk_insurance_amount > 0",
+   "options": "Account"
+  },
+  {
+   "fieldname": "risk_insurance_cost_center",
+   "fieldtype": "Link",
+   "label": "Risk Insurance Cost Center",
+   "mandatory_depends_on": "eval:doc.risk_insurance_amount > 0",
+   "options": "Cost Center"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-02 13:33:39.264805",
+ "modified": "2022-03-08 15:18:46.335092",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Tender",

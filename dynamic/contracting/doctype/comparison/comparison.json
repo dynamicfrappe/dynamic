@@ -264,6 +264,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "tender",
    "fieldtype": "Link",
    "label": "Tender",
@@ -303,7 +304,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-30 14:17:34.246621",
+ "modified": "2022-03-08 15:13:59.395036",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Comparison",
