@@ -15,3 +15,23 @@ frappe.ui.form.on('Maintenance Contract', {
         }
     }
 });
+
+frappe.ui.form.on('Cars Plate Numbers', {
+    plate_number: (frm, cdt, cdn) => {
+        let row = locals[cdt][cdn]
+        console.log(row.plate_number)
+        if (row.plate_number.length > 1) {
+            let count = 0
+            for (let i = 0; i < frm.doc.cars_plate_numbers.length; i++) {
+                if (frm.doc.cars_plate_numbers[i].plate_number == row.plate_number) {
+
+                    count += 1
+                    if (count > 1) {
+                        row.plate_number = ""
+                        frappe.msgprint("This Plate Number Already Exist")
+                    }
+                }
+            }
+        }
+    }
+})
