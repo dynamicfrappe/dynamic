@@ -388,6 +388,12 @@ data = {
                             "insert_after": "advance_version_account_payable_break",
                             "label": "Payment of insurance copy of operation and initial delivery(%)",
 
+                        } ,
+                        {
+                           "fieldname": "estimated_cost",
+                            "fieldtype": "Float",
+                            "insert_after": "payment_of_insurance_copy",
+                            "label": "Estimated Cost" 
                         }
 
 
@@ -413,6 +419,16 @@ data = {
                             "depends_on":"eval:doc.against_comparison == 1",
                             "mandatory_depends_on":"eval:doc.against_comparison == 1",
                             "label": "Comparison",
+
+                        },
+                        {
+                            "fieldname": "comparison_item",
+                            "fieldtype": "Link",
+                            "insert_after": "comparison",
+                            "options" : "Item",
+                            "depends_on":"eval:doc.against_comparison == 1",
+                            "mandatory_depends_on":"eval:doc.against_comparison == 1",
+                            "label": "Comparison Item",
 
                         }
                     ],

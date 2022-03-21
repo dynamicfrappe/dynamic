@@ -2,3 +2,4 @@ dynamic
 E Invoice
 Contracting
 Dynamic Accounts
+Dynamic HR

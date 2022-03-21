@@ -11,15 +11,19 @@ class ComparisonItemCard(Document):
 		if bool(doc):
 			for item in doc.item :
 				if item.clearance_item == self.item_code:
-					item.price = self.result
-					item.total_price = self.result * item.qty
+					if self.margin_percent and self.margin_percent > 0 :
+						self.margin_rate = ( float(self.result) * (float(self.margin_percent or 0) /100))
+						# self.result = float(self.result) +  foat(self.margin_rate)
+					item.item_cost = self.result
+					item.price = self.result + float(self.margin_rate  or 0 )
+					item.total_price = item.price * item.qty
 			doc.save()
 	def validate(self):
 		self.validate_qty()
 	def validate_qty(self):
 		if not self.qty:
 			self.qty = 1
-		if self.qty > self.qty_from_comparison:
-			frappe.throw("""You Cant Select QTY More Than %s"""%self.qty_from_comparison)
+		# if self.qty > self.qty_from_comparison:
+		# 	frappe.throw("""You Cant Select QTY More Than %s"""%self.qty_from_comparison)
 
 

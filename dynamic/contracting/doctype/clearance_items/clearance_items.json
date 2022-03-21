@@ -7,6 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "clearance_item",
+  "clearance_state",
+  "state_percent",
   "clearance_item_name",
   "clearance_item_description",
   "cost_center",
@@ -15,6 +17,7 @@
   "qty",
   "current_qty",
   "price",
+  "current_price",
   "total_price",
   "current",
   "current_percent",
@@ -238,12 +241,32 @@
    "fieldtype": "Data",
    "label": "Purchase Order Item",
    "read_only": 1
+  },
+  {
+   "fieldname": "clearance_state",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Clearance State",
+   "options": "Clearance State",
+   "reqd": 1
+  },
+  {
+   "fieldname": "state_percent",
+   "fieldtype": "Percent",
+   "label": "State Percent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_price",
+   "fieldtype": "Float",
+   "label": "Current Price",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-12-07 16:06:35.805388",
+ "modified": "2022-03-02 15:35:11.283495",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Clearance Items",

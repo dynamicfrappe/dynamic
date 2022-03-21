@@ -21,7 +21,10 @@
   "base_amount",
   "column_break_11",
   "account",
-  "against_account",
+  "against_accounts_section",
+  "accounts",
+  "difference",
+  "total",
   "accounting_dimensions_section",
   "project",
   "column_break_16",
@@ -38,14 +41,13 @@
  ],
  "fields": [
   {
-   "default": "Pay",
    "fieldname": "document_type",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_filter": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Document Type",
-   "options": "Pay\nReceive",
+   "options": "Pay and Receipt Type",
    "reqd": 1,
    "set_only_once": 1
   },
@@ -123,15 +125,6 @@
    "fieldtype": "Currency",
    "label": "Amount",
    "options": "currency",
-   "reqd": 1
-  },
-  {
-   "fieldname": "against_account",
-   "fieldtype": "Link",
-   "in_filter": 1,
-   "in_standard_filter": 1,
-   "label": "Against Account",
-   "options": "Account",
    "reqd": 1
   },
   {
@@ -225,12 +218,40 @@
   {
    "fieldname": "column_break_27",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "against_accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Against Accounts"
+  },
+  {
+   "fieldname": "accounts",
+   "fieldtype": "Table",
+   "label": "Accounts",
+   "options": "Pay and Receipt Account",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "difference",
+   "fieldtype": "Currency",
+   "label": "Difference",
+   "options": "currency",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-02 10:52:45.580975",
+ "modified": "2022-03-21 11:23:38.598242",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Pay and Receipt Document",

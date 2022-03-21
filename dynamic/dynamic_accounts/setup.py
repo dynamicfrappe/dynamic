@@ -33,6 +33,19 @@ def add_properties():
 		doc.save()
 	except:
 		pass
+	try:
+		doc = frappe.new_doc("Pay and Receipt Type")
+		doc.type = 'Pay'
+		doc.save()
+	except:
+		pass
+
+	try:
+		doc = frappe.new_doc("Pay and Receipt Type")
+		doc.type = 'Receive'
+		doc.save()
+	except:
+		pass
 
 
 

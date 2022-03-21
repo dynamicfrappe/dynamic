@@ -1,7 +1,13 @@
 {
  "cards_label": "Mian Data",
  "category": "Modules",
- "charts": [],
+ "charts": [
+  {
+   "chart_name": "Project Summary",
+   "label": "Project"
+  }
+ ],
+ "charts_label": "Project",
  "creation": "2021-11-21 18:19:26.803532",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
@@ -58,9 +64,27 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Clearance State",
+   "link_to": "Clearance State",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Comparison Item Log",
+   "link_to": "Comparison Item Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2021-12-08 15:23:06.379879",
+ "modified": "2022-03-03 11:14:16.370714",
  "modified_by": "Administrator",
  "module": "Contracting",
  "name": "Contracting",
@@ -69,6 +93,12 @@
  "pin_to_top": 1,
  "restrict_to_domain": "Contracting",
  "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Project",
+   "link_to": "Project",
+   "type": "DocType"
+  },
   {
    "doc_view": "List",
    "label": "Comparison",
@@ -91,6 +121,12 @@
    "doc_view": "List",
    "label": "Item Card",
    "link_to": "Comparison Item Card",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Comparison Item Log",
+   "link_to": "Comparison Item Log",
    "type": "DocType"
   }
  ],

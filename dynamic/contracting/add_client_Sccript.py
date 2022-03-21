@@ -125,7 +125,7 @@ def add_sales_order_script():
 	    frm.doc.items.forEach((e)=>{
 	         var df = frappe.meta.get_docfield("Stock Entry Detail","comparison_item", e.name);
             df.hidden =  !frm.doc.against_comparison;
-            df.reqd = frm.doc.against_comparison;
+            
 	    })
 	     
             frm.refresh_field("items")

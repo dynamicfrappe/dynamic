@@ -13,7 +13,27 @@ frappe.ui.form.on("Tender", {
         },
       };
     });
+    frm.set_query("risk_insurance_account", function (doc) {
+      // alert(doc.company)
+      console.log("doc", doc);
+      return {
+        filters: {
+          is_group: 0,
+          company: doc.company,
+          root_type:"Expense"
+          // account_type:"Expense Account"
+        },
+      };
+    });
     frm.set_query("terms_sheet_cost_center", function (doc) {
+      return {
+        filters: {
+          is_group: 0,
+          company: doc.company,
+        },
+      };
+    });
+    frm.set_query("risk_insurance_cost_center", function (doc) {
       return {
         filters: {
           is_group: 0,
@@ -117,4 +137,12 @@ frappe.ui.form.on("Tender", {
     frm.set_value("insurance_amount", amount);
     frm.refresh_field("insurance_amount");
   },
+
+
+
+current_status	:function(frm){
+  if (! frm.doc.project && frm.doc.current_status =="Approved"){
+    frappe.throw( "please Set Project for Approved Tender")
+  }
+}
 });
