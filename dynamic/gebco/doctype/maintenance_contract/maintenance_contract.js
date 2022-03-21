@@ -13,7 +13,28 @@ frappe.ui.form.on('Maintenance Contract', {
                 });
             });
         }
-    }
+    },
+    from_date: (frm) => {
+        let from_date = frm.doc.from_date
+        let to_date = frm.doc.to_date
+        if (from_date != null && to_date != null) {
+            if (to_date < from_date) {
+                frm.set_value("from_date", "")
+                frappe.msgprint("To date must be greate than to date")
+            }
+        }
+    },
+    to_date: (frm) => {
+        let from_date = frm.doc.from_date
+        let to_date = frm.doc.to_date
+        if (from_date != null && to_date != null) {
+            if (to_date < from_date) {
+                frm.set_value("to_date", "")
+                frappe.msgprint("To date must be greate than to date")
+            }
+        }
+    },
+
 });
 
 frappe.ui.form.on('Cars Plate Numbers', {
