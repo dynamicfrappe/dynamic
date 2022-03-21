@@ -168,7 +168,8 @@ domains = {
 	'Dynamic Accounts':'dynamic.domains.dynamic_accounts' ,
 	'Dynamic HR':'dynamic.domains.dynamic_hr' ,
 	'E Invoice':'dynamic.domains.e_invoice' ,
-	'Contracting':'dynamic.domains.contracting'
+	'Contracting':'dynamic.domains.contracting',
+	'Gebco'      : 'dynamic.domains.gebco',
 }
 
 

@@ -1,0 +1,128 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:TEMP-{YY}-{#####}",
+ "creation": "2022-03-21 14:20:51.555662",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "maintenance_contract",
+  "column_break_2",
+  "car_numbers",
+  "section_break_4",
+  "cars_plate_numbers",
+  "section_break_6",
+  "maintenance_team",
+  "section_break_8",
+  "problem",
+  "column_break_10",
+  "the_action_taken",
+  "section_break_12",
+  "small_text_13",
+  "remarks",
+  "section_break_15",
+  "signature"
+ ],
+ "fields": [
+  {
+   "fieldname": "maintenance_contract",
+   "fieldtype": "Link",
+   "label": "Maintenance Contract",
+   "options": "Maintenance Contract"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "car_numbers",
+   "fieldtype": "Int",
+   "label": "Car Numbers"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cars_plate_numbers",
+   "fieldtype": "Table",
+   "label": "Cars Plate Numbers",
+   "options": "Cars Plate Numbers For Template"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "maintenance_team",
+   "fieldtype": "Table",
+   "label": "Maintenance Team",
+   "options": "Maintenance Team"
+  },
+  {
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "problem",
+   "fieldtype": "Small Text",
+   "label": "Problem"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "the_action_taken",
+   "fieldtype": "Data",
+   "label": "The Action Taken"
+  },
+  {
+   "fieldname": "section_break_12",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "small_text_13",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_15",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "signature",
+   "fieldtype": "Signature",
+   "label": "Signature"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-03-21 14:37:05.030638",
+ "modified_by": "Administrator",
+ "module": "gebco",
+ "name": "Maintenance Template",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

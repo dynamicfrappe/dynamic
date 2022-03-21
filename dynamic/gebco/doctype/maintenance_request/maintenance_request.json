@@ -1,0 +1,109 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2022-03-21 14:00:36.179387",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "maintenance_requesters_name",
+  "email",
+  "mobile",
+  "maintenance_contract",
+  "column_break_5",
+  "company_name",
+  "employee",
+  "maintenance_date",
+  "maintenance_location"
+ ],
+ "fields": [
+  {
+   "fieldname": "maintenance_requesters_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Maintenance requester's name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mobile",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company Name",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "maintenance_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Maintenance Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "maintenance_location",
+   "fieldtype": "Data",
+   "label": "Maintenance Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "maintenance_contract",
+   "fieldtype": "Link",
+   "label": "Maintenance Contract",
+   "options": "Maintenance Contract"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "MAINT-REQ-.YYYY.-"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-03-21 14:31:10.813559",
+ "modified_by": "Administrator",
+ "module": "gebco",
+ "name": "Maintenance Request",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

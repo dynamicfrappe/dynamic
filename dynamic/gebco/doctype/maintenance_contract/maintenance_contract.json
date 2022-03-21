@@ -1,0 +1,137 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:CON-{customer}-{YY}-{MM}-{#####}",
+ "creation": "2022-03-21 13:48:33.273277",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "from_date",
+  "visits",
+  "customer",
+  "column_break_4",
+  "to_date",
+  "number_of_visits",
+  "customer_name",
+  "contract_details_section",
+  "contract_value",
+  "column_break_10",
+  "guarantee",
+  "column_break_12",
+  "number_of_cars",
+  "cars_section",
+  "cars_plate_numbers"
+ ],
+ "fields": [
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "visits",
+   "fieldtype": "Select",
+   "label": "Visits",
+   "options": "Limited\nUnLimited"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "To Date",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.visits == \"Limited\"",
+   "fieldname": "number_of_visits",
+   "fieldtype": "Int",
+   "label": "Number Of Visits",
+   "mandatory_depends_on": "eval:doc.visits == \"Limited\""
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Read Only",
+   "label": "Customer Name"
+  },
+  {
+   "fieldname": "contract_details_section",
+   "fieldtype": "Section Break",
+   "label": "Contract Details"
+  },
+  {
+   "fieldname": "contract_value",
+   "fieldtype": "Float",
+   "label": "Contract Value"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "guarantee",
+   "fieldtype": "Select",
+   "label": "guarantee",
+   "options": "GEBCO\nAgent"
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "number_of_cars",
+   "fieldtype": "Float",
+   "label": "Number Of Cars"
+  },
+  {
+   "fieldname": "cars_section",
+   "fieldtype": "Section Break",
+   "label": "Cars"
+  },
+  {
+   "fieldname": "cars_plate_numbers",
+   "fieldtype": "Table",
+   "label": "Cars Plate Numbers",
+   "options": "Cars Plate Numbers"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-03-21 14:35:59.934925",
+ "modified_by": "Administrator",
+ "module": "gebco",
+ "name": "Maintenance Contract",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
