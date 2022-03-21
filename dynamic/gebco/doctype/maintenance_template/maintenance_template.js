@@ -26,3 +26,20 @@ frappe.ui.form.on('Cars Plate Numbers For Template', {
         }
     }
 })
+
+frappe.ui.form.on('Maintenance Team', {
+    employee: (frm, cdt, cdn) => {
+        let row = locals[cdt][cdn]
+        let employees = frm.doc.maintenance_team
+        let count = 0
+        for (let i = 0; i < employees.length; i++) {
+            if (employees[i].employee == row.employee) {
+                count += 1
+                if (count > 1) {
+                    row.employee = ""
+                    frappe.msgprint("This Employee Already Exist")
+                }
+            }
+        }
+    }
+})
