@@ -163,9 +163,13 @@
           <td>{{ item.description }}</td>
           <td>{{ item.qty }}</td>
           <td>
-            {{ frappe.utils.fmt_money(item.rate + item.discount_amount,
+            {{ frappe.utils.fmt_money(item.rate,
             currency=doc.currency) }}
           </td>
+          <!-- <td>
+            {{ frappe.utils.fmt_money(item.rate + item.discount_amount,
+            currency=doc.currency) }}
+          </td> -->
           <td>{{ (item.tax_rate or 0)}}%</td>
           <td>
             {{ frappe.utils.fmt_money((item.tax_amount or 0),
