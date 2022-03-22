@@ -20,8 +20,10 @@
   "status",
   "contract_details_section",
   "contract_value",
+  "week_end_with_extra_fees",
   "column_break_10",
   "guarantee",
+  "week_end_extra_fees",
   "column_break_12",
   "number_of_cars",
   "column_break_17",
@@ -158,12 +160,25 @@
    "label": "Status",
    "options": "Waiting\nActive\nEnded",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "week_end_with_extra_fees",
+   "fieldtype": "Check",
+   "label": "Week end with extra fees"
+  },
+  {
+   "depends_on": "eval:doc.week_end_with_extra_fees ==1",
+   "fieldname": "week_end_extra_fees",
+   "fieldtype": "Data",
+   "label": "Week End Extra Fees",
+   "mandatory_depends_on": "eval:doc.week_end_with_extra_fees ==1"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-22 14:02:19.109378",
+ "modified": "2022-03-22 15:13:52.696686",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Contract",
