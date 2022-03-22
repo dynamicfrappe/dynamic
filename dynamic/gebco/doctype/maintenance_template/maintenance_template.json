@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "maintenance_contract",
+  "include_spare_part",
   "column_break_2",
   "car_numbers",
   "column_break_4",
@@ -35,6 +36,7 @@
  ],
  "fields": [
   {
+   "default": "0",
    "fieldname": "maintenance_contract",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -115,7 +117,7 @@
    "label": "Signature"
   },
   {
-   "depends_on": "eval:doc.maintenance_contract !=null",
+   "depends_on": "eval:doc.maintenance_contract !=null || doc.maintenance_contract != ''",
    "fieldname": "cars",
    "fieldtype": "Table",
    "label": "Cars",
@@ -163,11 +165,18 @@
   {
    "fieldname": "ss577",
    "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fetch_from": "maintenance_contract.include_spare_parts",
+   "fieldname": "include_spare_part",
+   "fieldtype": "Read Only",
+   "label": "include Spare Parts "
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-22 16:13:37.841879",
+ "modified": "2022-03-22 17:01:32.387410",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Template",

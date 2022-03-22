@@ -2,9 +2,11 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Maintenance Template', {
-    // refresh: function(frm) {
-
-    // }
+    refresh: function(frm) {
+        // if(frm.doc.__islocal ==0){
+        //     if(frm.doc.)
+        // }
+    }
 });
 
 frappe.ui.form.on('Cars Plate Numbers For Template', {
