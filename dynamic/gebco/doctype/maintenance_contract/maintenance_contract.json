@@ -21,11 +21,14 @@
   "contract_details_section",
   "contract_value",
   "week_end_with_extra_fees",
+  "include_spare_parts",
   "column_break_10",
   "guarantee",
   "week_end_extra_fees",
+  "account",
   "column_break_12",
   "number_of_cars",
+  "cost_center",
   "column_break_17",
   "get_customer_cars",
   "cars_section",
@@ -158,7 +161,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Waiting\nActive\nEnded",
+   "options": "Waiting\nOn Progress\nWaiting Spare Parts\nSend Device To Supplier\nInvoiced\nCompleted",
    "read_only": 1
   },
   {
@@ -173,12 +176,34 @@
    "fieldtype": "Data",
    "label": "Week End Extra Fees",
    "mandatory_depends_on": "eval:doc.week_end_with_extra_fees ==1"
+  },
+  {
+   "fieldname": "include_spare_parts",
+   "fieldtype": "Select",
+   "label": "include Spare Parts ",
+   "options": "YES\nNO"
+  },
+  {
+   "depends_on": "eval:doc.include_spare_parts == 'YES'",
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "label": "Account",
+   "mandatory_depends_on": "eval:doc.include_spare_parts == 'YES'",
+   "options": "Account"
+  },
+  {
+   "depends_on": "eval:doc.include_spare_parts == 'YES'",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "mandatory_depends_on": "eval:doc.include_spare_parts == 'YES'",
+   "options": "Cost Center"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-22 15:13:52.696686",
+ "modified": "2022-03-22 16:26:01.342521",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Contract",
