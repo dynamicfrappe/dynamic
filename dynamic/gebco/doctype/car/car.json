@@ -10,11 +10,10 @@
   "plate_number",
   "device_type",
   "customer",
-  "customer_name",
   "column_break_4",
   "serial_no",
-  "device_number",
-  "sim_no",
+  "gps_device",
+  "customer_name",
   "section_break_8",
   "description"
  ],
@@ -46,23 +45,8 @@
    "fieldname": "serial_no",
    "fieldtype": "Link",
    "label": "Serial No",
-   "options": "Serial No"
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "depends_on": "eval:doc.device_type==\"External\"",
-   "fieldname": "device_number",
-   "fieldtype": "Data",
-   "label": "Device Number",
-   "mandatory_depends_on": "eval:doc.device_type==\"External\""
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "depends_on": "eval:doc.device_type==\"External\"",
-   "fieldname": "sim_no",
-   "fieldtype": "Data",
-   "label": "Sim No",
-   "mandatory_depends_on": "eval:doc.device_type==\"External\""
+   "options": "Serial No",
+   "unique": 1
   },
   {
    "allow_in_quick_entry": 1,
@@ -76,21 +60,34 @@
    "label": "Description"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "customer",
    "fieldtype": "Link",
    "label": "Customer",
-   "options": "Customer"
+   "options": "Customer",
+   "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fetch_from": "customer.customer_name",
    "fieldname": "customer_name",
    "fieldtype": "Read Only",
    "label": "Customer Name"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "eval:doc.device_type==\"External\"",
+   "fieldname": "gps_device",
+   "fieldtype": "Link",
+   "label": "Device",
+   "mandatory_depends_on": "eval:doc.device_type==\"External\"",
+   "options": "GBS Device",
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-22 12:20:28.799241",
+ "modified": "2022-03-22 15:37:28.837953",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Car",
