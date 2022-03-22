@@ -2,9 +2,14 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Maintenance Request', {
-    // refresh: function(frm) {
-    // 	if(frm.doc.docstatus ==1){
-    // 		console.log("hello")
-    // 	}
-    // }
+    refresh: function(frm) {
+        frm.set_query('maintenance_contract', function(doc, cdt, cdn) {
+            //var row = locals[cdt][cdn];
+            return {
+                "filters": {
+                    "customer": frm.doc.company_name
+                }
+            };
+        });
+    }
 });

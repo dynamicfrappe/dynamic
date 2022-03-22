@@ -16,7 +16,11 @@
   "company_name",
   "employee",
   "maintenance_date",
-  "maintenance_location"
+  "address_section",
+  "address_line_1",
+  "address_line_2",
+  "column_break_13",
+  "location"
  ],
  "fields": [
   {
@@ -54,19 +58,13 @@
    "fieldname": "employee",
    "fieldtype": "Link",
    "label": "Employee",
-   "options": "Employee"
+   "options": "User"
   },
   {
    "fieldname": "maintenance_date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Maintenance Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "maintenance_location",
-   "fieldtype": "Data",
-   "label": "Maintenance Location",
    "reqd": 1
   },
   {
@@ -80,11 +78,36 @@
    "fieldtype": "Select",
    "label": "Series",
    "options": "MAINT-REQ-.YYYY.-"
+  },
+  {
+   "fieldname": "address_section",
+   "fieldtype": "Section Break",
+   "label": "Address"
+  },
+  {
+   "fieldname": "address_line_1",
+   "fieldtype": "Data",
+   "label": "Address Line 1"
+  },
+  {
+   "fieldname": "address_line_2",
+   "fieldtype": "Data",
+   "label": "Address Line 2"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-21 14:31:10.813559",
+ "modified": "2022-03-22 14:07:46.848794",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Request",

@@ -14,14 +14,21 @@
   "to_date",
   "number_of_visits",
   "customer_name",
+  "column_break_8",
+  "completed_visits",
+  "remainig_visits",
+  "status",
   "contract_details_section",
   "contract_value",
   "column_break_10",
   "guarantee",
   "column_break_12",
   "number_of_cars",
+  "column_break_17",
+  "get_customer_cars",
   "cars_section",
-  "cars_plate_numbers"
+  "cars_plate_numbers",
+  "amended_from"
  ],
  "fields": [
   {
@@ -77,7 +84,8 @@
   {
    "fieldname": "contract_value",
    "fieldtype": "Float",
-   "label": "Contract Value"
+   "label": "Contract Value",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_10",
@@ -106,13 +114,56 @@
   {
    "fieldname": "cars_plate_numbers",
    "fieldtype": "Table",
-   "label": "Cars Plate Numbers",
-   "options": "Cars Plate Numbers"
+   "label": "Cars",
+   "options": "Cars Plate Numbers",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "completed_visits",
+   "fieldtype": "Read Only",
+   "label": "Completed Visits"
+  },
+  {
+   "fieldname": "remainig_visits",
+   "fieldtype": "Read Only",
+   "label": "Remainig Visits"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Maintenance Contract",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_17",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.number_of_cars > 0 && doc.customer !=null",
+   "fieldname": "get_customer_cars",
+   "fieldtype": "Button",
+   "label": "GET Customer Cars"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Waiting\nActive\nEnded",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2022-03-21 14:35:59.934925",
+ "modified": "2022-03-22 14:02:19.109378",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Contract",

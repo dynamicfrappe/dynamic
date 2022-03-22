@@ -3,16 +3,27 @@
 
 frappe.ui.form.on('Maintenance Contract', {
     refresh: function(frm) {
-        if (frm.doc.docstatus == 0) {
-            console.log("from if")
+        if (frm.doc.docstatus == 1) {
             frm.add_custom_button(__("Renew"), function() {
-                //console.log("renew")
                 frappe.model.open_mapped_doc({
                     method: "dynamic.gebco.doctype.maintenance_contract.maintenance_contract.renew_contract",
                     frm: frm,
                 });
             });
+            frm.add_custom_button(__("Close"), function() {
+
+            });
         }
+
+        frm.set_query('plate_number', 'cars_plate_numbers', function(doc, cdt, cdn) {
+            //var row = locals[cdt][cdn];
+            return {
+                "filters": {
+                    "customer": frm.doc.customer
+                }
+            };
+        });
+
     },
     from_date: (frm) => {
         let from_date = frm.doc.from_date
@@ -34,7 +45,18 @@ frappe.ui.form.on('Maintenance Contract', {
             }
         }
     },
-
+    get_customer_cars: (frm) => {
+        frappe.call({
+            method: "get_customers_cars",
+            doc: frm.doc,
+            args: {
+                "customer": frm.doc.customer
+            },
+            callback(r) {
+                frm.refresh_fields("cars_plate_numbers")
+            }
+        })
+    }
 });
 
 frappe.ui.form.on('Cars Plate Numbers', {

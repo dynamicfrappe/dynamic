@@ -5,7 +5,33 @@ import frappe
 from frappe.model.document import Document
 
 class MaintenanceContract(Document):
-	pass
+	def validate(self):
+		self.validate_car_numbers()
+
+	def validate_car_numbers(self):
+		car_numbers = self.number_of_cars
+		count = 0
+		for car in self.cars_plate_numbers:
+			if car.status == "Active":
+				count +=1
+		if count > car_numbers :
+			frappe.throw(f"You Only Have {car_numbers} in contract")
+	@frappe.whitelist()
+	def get_customers_cars(self,customer):
+		sql = f"""select name from tabCar where customer='{customer}'"""
+		cars = frappe.db.sql(sql,as_dict=1)
+		self.cars_plate_numbers = {}
+		# self.save()
+		for c in cars:
+			self.append('cars_plate_numbers',{
+				'plate_number':c.name,
+				'status':'Active'
+			})
+		return True
+		#self.save()
+		#self.reload_doc()
+		#print("carss  =>",cars)
+		#self.save()
 
 @frappe.whitelist()
 def renew_contract(source_name, target_doc=None):
@@ -27,5 +53,17 @@ def renew_contract(source_name, target_doc=None):
 	#new_contract.save()
 	return new_contract
 
+
+# @frappe.whitelist()
+# def get_customers_cars(customer):
+# 	sql = f"""select name from tabCar where customer='{customer}'"""
+# 	print("sqllllll",sql)
+# 	cars = frappe.db.sql(sql,as_dict=1)
+# 	for c in cars:
+# 		self.append('cars_plate_numbers',{
+# 			'plate_number':c.name
+# 		})
+# 	#print("carss  =>",cars)
+# 	self.save()
 
 
