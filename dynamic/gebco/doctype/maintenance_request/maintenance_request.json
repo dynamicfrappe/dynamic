@@ -13,14 +13,17 @@
   "mobile",
   "maintenance_contract",
   "column_break_5",
+  "status",
   "company_name",
   "employee",
-  "maintenance_date",
+  "m_date",
   "address_section",
   "address_line_1",
   "address_line_2",
   "column_break_13",
-  "location"
+  "location",
+  "section_break_15",
+  "description"
  ],
  "fields": [
   {
@@ -61,13 +64,6 @@
    "options": "User"
   },
   {
-   "fieldname": "maintenance_date",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Maintenance Date",
-   "reqd": 1
-  },
-  {
    "fieldname": "maintenance_contract",
    "fieldtype": "Link",
    "label": "Maintenance Contract",
@@ -103,11 +99,35 @@
   {
    "fieldname": "column_break_13",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_15",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nAssined\nStarted\nClosed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "m_date",
+   "fieldtype": "Datetime",
+   "label": "Maintenance Date",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-22 14:07:46.848794",
+ "modified": "2022-03-22 14:45:53.103733",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Request",

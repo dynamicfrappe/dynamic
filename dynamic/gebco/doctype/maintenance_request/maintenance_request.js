@@ -11,5 +11,11 @@ frappe.ui.form.on('Maintenance Request', {
                 }
             };
         });
+        frm.add_custom_button(__("Create Maintenance Template"), function() {
+            frappe.model.open_mapped_doc({
+                method: "dynamic.gebco.doctype.maintenance_request.maintenance_request.create_maintenance_request",
+                frm: frm,
+            });
+        });
     }
 });
