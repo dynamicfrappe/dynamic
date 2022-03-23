@@ -38,6 +38,14 @@ frappe.ui.form.on('Maintenance Template', {
                 }
             }
         }
+        frm.set_query('item', 'service_items', function(doc, cdt, cdn) {
+            //var row = locals[cdt][cdn];
+            return {
+                "filters": {
+                    "is_stock_item": false
+                }
+            };
+        });
     }
 });
 
@@ -96,4 +104,79 @@ frappe.ui.form.on('Maintenance Team', {
             }
         }
     }
+})
+
+frappe.ui.form.on('Maintenance Template Items', {
+    item: (frm, cdt, cdn) => {
+        let row = locals[cdt][cdn]
+        if (row.item.length > 0) {
+            frappe.call({
+                method: "get_item_price",
+                doc: frm.doc,
+                args: {
+                    "item_code": row.item
+                },
+                callback(r) {
+                    if (r.message) {
+                        row.price = r.message
+                        frm.refresh_fields("items")
+                    }
+                }
+            })
+        }
+    },
+    qty: (frm, cdt, cdn) => {
+        let row = locals[cdt][cdn]
+        let qty = row.qty
+        let rate = row.price
+        let total = qty * rate
+        row.amount = total
+        frm.refresh_fields("items")
+    },
+    amount: (frm, cdt, cdn) => {
+        let row = locals[cdt][cdn]
+        let qty = row.qty
+        let rate = row.price
+        let total = qty * rate
+        row.amount = total
+        frm.refresh_fields("items")
+    },
+})
+
+frappe.ui.form.on('Maintenance Template Service Items', {
+    item: (frm, cdt, cdn) => {
+        let row = locals[cdt][cdn]
+        if (row.item.length > 0) {
+            frappe.call({
+                method: "get_item_price",
+                doc: frm.doc,
+                args: {
+                    "item_code": row.item
+                },
+                callback(r) {
+                    if (r.message) {
+                        row.price = r.message
+                        frm.refresh_fields("service_items")
+                    }
+                }
+            })
+        }
+    },
+    qty: (frm, cdt, cdn) => {
+        let row = locals[cdt][cdn]
+        let qty = row.qty
+        let rate = row.price
+        let total = qty * rate
+        row.amount = total
+        frm.refresh_fields("service_items")
+    },
+    amount: (frm, cdt, cdn) => {
+        let row = locals[cdt][cdn]
+        let qty = row.qty
+        let rate = row.price
+        let total = qty * rate
+        row.amount = total
+        frm.refresh_fields("service_items")
+
+    },
 })

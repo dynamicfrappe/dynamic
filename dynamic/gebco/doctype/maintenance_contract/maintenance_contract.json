@@ -193,12 +193,11 @@
    "options": "Account"
   },
   {
-   "depends_on": "eval:doc.include_spare_parts == 'YES'",
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
-   "mandatory_depends_on": "eval:doc.include_spare_parts == 'YES'",
-   "options": "Cost Center"
+   "options": "Cost Center",
+   "reqd": 1
   },
   {
    "depends_on": "eval:doc.include_spare_parts == 'YES'",
@@ -212,7 +211,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-23 11:43:20.255941",
+ "modified": "2022-03-23 15:08:00.782369",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Contract",

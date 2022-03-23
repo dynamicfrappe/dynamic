@@ -9,6 +9,7 @@
   "item",
   "item_name",
   "price",
+  "uom",
   "qty",
   "amount",
   "description"
@@ -54,12 +55,19 @@
    "fieldname": "item_name",
    "fieldtype": "Read Only",
    "label": "Item Name"
+  },
+  {
+   "fetch_from": "item.stock_uom",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-03-23 14:36:07.995083",
+ "modified": "2022-03-23 14:44:10.840863",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Template Service Items",

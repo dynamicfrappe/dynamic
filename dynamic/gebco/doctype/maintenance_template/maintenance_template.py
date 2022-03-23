@@ -38,6 +38,7 @@ class MaintenanceTemplate(Document):
 					"item_name":item.item_name,
 					"description":item.description,
 					"qty":item.qty,
+					"stock_uom":item.uom,
 					"basic_rate":item.price
 				})
 			doc.save()
@@ -49,10 +50,17 @@ class MaintenanceTemplate(Document):
 			frappe.msgprint(str(ex))
 
 	@frappe.whitelist()
-	def get_item_price(self,item_name):
-		sql = """
-			select
+	def get_item_price(self,item_code):
+		sql = f"""
+			select price_list_rate FROM `tabItem Price` tip where item_code ='{item_code}' and price_list='Standard Selling' limit 1
 		"""
+		print("sql ========>",sql)
+		result = frappe.db.sql(sql,as_dict=1)
+		print("result ======>",result)
+		if len(result) > 0:
+			return result[0].price_list_rate
+		else:
+			return 0
 	
 @frappe.whitelist()
 def create_delivery_note(source_name, target_doc=None):
@@ -66,10 +74,12 @@ def create_delivery_note(source_name, target_doc=None):
 			{
 				"item_code": item.item,
 				"item_name":item.item_name,
-				"description":item.description,
+				"description":item.item_name,
 				"qty":item.qty,
+				"stock_uom":item.uom,
+				"uom":item.uom,
 				"warehouse": doc.warehouse,
-				"rate": item.price,
+				"rate": item.price
 			}
 		)
 	return delivery_note
@@ -78,6 +88,7 @@ def create_delivery_note(source_name, target_doc=None):
 @frappe.whitelist()
 def create_sales_invoice(source_name, target_doc=None):
 	doc = frappe.get_doc("Maintenance Template" , source_name)
+	company_doc = frappe.get_doc("Company",get_default_company())
 	sales_invoice = frappe.new_doc("Sales Invoice")
 	sales_invoice.company = get_default_company()
 	sales_invoice.customer = doc.customer
@@ -86,9 +97,15 @@ def create_sales_invoice(source_name, target_doc=None):
 		sales_invoice.append('items',
 			{
 				"item_code": item.item,
-				"qty": 1,
+				"item_name":item.item_name,
+				"description":item.item_name,
+				"qty":item.qty,
+				"stock_uom":item.uom,
+				"uom":item.uom,
 				"warehouse": doc.warehouse,
 				"rate": item.price,
+				"income_account":company_doc.default_income_account,
+				"cost_center":doc.cost_center
 			}
 		)
 	return sales_invoice
