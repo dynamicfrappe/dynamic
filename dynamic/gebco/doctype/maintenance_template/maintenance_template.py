@@ -28,6 +28,7 @@ class MaintenanceTemplate(Document):
 		doc = frappe.new_doc("Stock Entry")
 		doc.stock_entry_type = "Material Issue"
 		doc.company          = get_default_company()
+		doc.maintenance_template = self.name
 		#doc.save()
 		for item in self.items:
 			doc.append('items',{
@@ -47,6 +48,7 @@ def create_delivery_note(source_name, target_doc=None):
 	delivery_note = frappe.new_doc("Delivery Note")
 	delivery_note.company = get_default_company()
 	delivery_note.customer = doc.customer
+	delivery_note.maintenance_template = source_name
 	for item in doc.items:
 		delivery_note.append('items',
 			{
@@ -58,6 +60,24 @@ def create_delivery_note(source_name, target_doc=None):
 		)
 	return delivery_note
 
+
+@frappe.whitelist()
+def create_sales_invoice(source_name, target_doc=None):
+	doc = frappe.get_doc("Maintenance Template" , source_name)
+	sales_invoice = frappe.new_doc("Sales Invoice")
+	sales_invoice.company = get_default_company()
+	sales_invoice.customer = doc.customer
+	sales_invoice.maintenance_template = source_name
+	for item in doc.items:
+		sales_invoice.append('items',
+			{
+				"item_code": item.item,
+				"qty": 1,
+				"warehouse": doc.warehouse,
+				"rate": item.price,
+			}
+		)
+	return sales_invoice
 
 
 				

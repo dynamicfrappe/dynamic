@@ -26,6 +26,12 @@ frappe.ui.form.on('Maintenance Template', {
                         frm: frm,
                     });
                 });
+                frm.add_custom_button(__("Create Sales Invoice"), function() {
+                    frappe.model.open_mapped_doc({
+                        method: "dynamic.gebco.doctype.maintenance_template.maintenance_template.create_sales_invoice",
+                        frm: frm,
+                    });
+                });
             }
         }
     }

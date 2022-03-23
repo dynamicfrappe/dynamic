@@ -11,6 +11,36 @@ data = {
                 "label": "Serial No 2",
                 "unique": 1,
             },
+        ],
+        'Sales Invoice': [
+            {
+                "fieldname": "maintenance_template",
+                "fieldtype": "Link",
+                "options":"Maintenance Template",
+                "insert_after": "delivery_note",
+                "label": "Maintenance Template",
+                "print_hide": 1,
+            },
+        ],
+        'Delivery Note': [
+            {
+                "fieldname": "maintenance_template",
+                "fieldtype": "Link",
+                "options":"Maintenance Template",
+                "insert_after": "sales_team",
+                "label": "Maintenance Template",
+                "print_hide": 1,
+            },
+        ],
+        'Stock Entry': [
+            {
+                "fieldname": "maintenance_template",
+                "fieldtype": "Link",
+                "options":"Maintenance Template",
+                "insert_after": "is_return",
+                "label": "Maintenance Template",
+                "print_hide": 1,
+            },
         ]
     },
     "properties": [
