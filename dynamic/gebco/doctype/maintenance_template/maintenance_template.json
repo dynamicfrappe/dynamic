@@ -32,7 +32,13 @@
   "remarks",
   "section_break_15",
   "signature",
-  "maintenance_request"
+  "maintenance_request",
+  "account",
+  "cost_center",
+  "warehouse",
+  "stock_entry",
+  "sales_invoice",
+  "delivery_note"
  ],
  "fields": [
   {
@@ -59,7 +65,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.maintenance_contract.length ==0",
+   "depends_on": "eval:doc.maintenance_contract == null",
    "fieldname": "cars_plate_numbers",
    "fieldtype": "Table",
    "label": "Cars Plate Numbers",
@@ -117,7 +123,7 @@
    "label": "Signature"
   },
   {
-   "depends_on": "eval:doc.maintenance_contract.length > 10",
+   "depends_on": "eval:doc.maintenance_contract != null",
    "fieldname": "cars",
    "fieldtype": "Table",
    "label": "Cars",
@@ -172,11 +178,62 @@
    "fieldname": "include_spare_part",
    "fieldtype": "Read Only",
    "label": "include Spare Parts "
+  },
+  {
+   "fetch_from": "maintenance_contract.account",
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Account",
+   "options": "Account",
+   "print_hide": 1
+  },
+  {
+   "fetch_from": "maintenance_contract.cost_center",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Cost Center",
+   "options": "Cost Center",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Stock Entry",
+   "options": "Stock Entry",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Sales Invoice",
+   "options": "Sales Invoice",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "delivery_note",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Delivery Note",
+   "options": "Delivery Note",
+   "print_hide": 1
+  },
+  {
+   "fetch_from": "maintenance_contract.warehouse",
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Warehouse",
+   "options": "Warehouse",
+   "print_hide": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-22 17:18:39.168310",
+ "modified": "2022-03-23 12:05:32.621464",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Template",

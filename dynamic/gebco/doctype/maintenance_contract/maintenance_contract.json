@@ -29,6 +29,7 @@
   "column_break_12",
   "number_of_cars",
   "cost_center",
+  "warehouse",
   "column_break_17",
   "get_customer_cars",
   "cars_section",
@@ -198,12 +199,20 @@
    "label": "Cost Center",
    "mandatory_depends_on": "eval:doc.include_spare_parts == 'YES'",
    "options": "Cost Center"
+  },
+  {
+   "depends_on": "eval:doc.include_spare_parts == 'YES'",
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "mandatory_depends_on": "eval:doc.include_spare_parts == 'YES'",
+   "options": "Warehouse"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-22 16:26:01.342521",
+ "modified": "2022-03-23 11:43:20.255941",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Contract",

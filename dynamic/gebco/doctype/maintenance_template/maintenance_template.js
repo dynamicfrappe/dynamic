@@ -3,12 +3,23 @@
 
 frappe.ui.form.on('Maintenance Template', {
     refresh: function(frm) {
-        if (frm.doc.__islocal == 0) {
-            if (frm.doc.include_spare_part == "YES") {
-                frm.add_custom_button(__("Create Stock Entry"), function() {
 
+        if (!frm.doc.__islocal) {
+            if (frm.doc.include_spare_part == "YES" && frm.doc.stock_entry != null) {
+                frm.add_custom_button(__("Create Stock Entry"), function() {
+                    //console.log("asd", frm.doc.items)
+                    if (frm.doc.items.length == 0) {
+                        frappe.throw("You Dont Have Items")
+                    }
+                    frappe.call({
+                        method: "create_stock_entrys",
+                        doc: frm.doc,
+                        callback(r) {
+                            frm.reload_doc()
+                        }
+                    })
                 });
-            } else {
+            } else if (frm.doc.include_spare_part == "NO") {
                 frm.add_custom_button(__("Create Delivery Note"), function() {
 
                 });
