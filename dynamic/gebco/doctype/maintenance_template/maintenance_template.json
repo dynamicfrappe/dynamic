@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "maintenance_contract",
+  "customer",
   "include_spare_part",
   "column_break_2",
   "car_numbers",
@@ -229,11 +230,17 @@
    "label": "Warehouse",
    "options": "Warehouse",
    "print_hide": 1
+  },
+  {
+   "fetch_from": "maintenance_contract.customer",
+   "fieldname": "customer",
+   "fieldtype": "Read Only",
+   "label": "Customer"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-23 12:14:36.772723",
+ "modified": "2022-03-23 12:58:00.337317",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Template",

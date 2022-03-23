@@ -40,9 +40,24 @@ class MaintenanceTemplate(Document):
 		doc.docstatus=1
 		doc.save()
 		self.stock_entry = doc.name
-	@frappe.whitelist()
-	def create_delivery_note(self):
-		pass
+	
+@frappe.whitelist()
+def create_delivery_note(source_name, target_doc=None):
+	doc = frappe.get_doc("Maintenance Template" , source_name)
+	delivery_note = frappe.new_doc("Delivery Note")
+	delivery_note.company = get_default_company()
+	delivery_note.customer = doc.customer
+	for item in doc.items:
+		delivery_note.append('items',
+			{
+				"item_code": item.item,
+				"qty": 1,
+				"warehouse": doc.warehouse,
+				"rate": item.price,
+			}
+		)
+	return delivery_note
+
 
 
 				

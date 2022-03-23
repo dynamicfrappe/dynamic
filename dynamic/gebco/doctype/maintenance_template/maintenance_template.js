@@ -21,7 +21,10 @@ frappe.ui.form.on('Maintenance Template', {
                 });
             } else if (frm.doc.include_spare_part == "NO") {
                 frm.add_custom_button(__("Create Delivery Note"), function() {
-
+                    frappe.model.open_mapped_doc({
+                        method: "dynamic.gebco.doctype.maintenance_template.maintenance_template.create_delivery_note",
+                        frm: frm,
+                    });
                 });
             }
         }
