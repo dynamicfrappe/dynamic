@@ -35,7 +35,9 @@ class MaintenanceTemplate(Document):
 				doc.append('items',{
 					"s_warehouse": self.warehouse,
 					"item_code":item.item,
-					"qty":1,
+					"item_name":item.item_name,
+					"description":item.description,
+					"qty":item.qty,
 					"basic_rate":item.price
 				})
 			doc.save()
@@ -48,7 +50,9 @@ class MaintenanceTemplate(Document):
 
 	@frappe.whitelist()
 	def get_item_price(self,item_name):
-		pass
+		sql = """
+			select
+		"""
 	
 @frappe.whitelist()
 def create_delivery_note(source_name, target_doc=None):
@@ -61,7 +65,9 @@ def create_delivery_note(source_name, target_doc=None):
 		delivery_note.append('items',
 			{
 				"item_code": item.item,
-				"qty": 1,
+				"item_name":item.item_name,
+				"description":item.description,
+				"qty":item.qty,
 				"warehouse": doc.warehouse,
 				"rate": item.price,
 			}
