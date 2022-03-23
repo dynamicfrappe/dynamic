@@ -45,6 +45,10 @@ class MaintenanceTemplate(Document):
 			frappe.msgprint("Stock Entry Created Successfully")
 		except Exception as ex:
 			frappe.msgprint(str(ex))
+
+	@frappe.whitelist()
+	def get_item_price(self,item_name):
+		pass
 	
 @frappe.whitelist()
 def create_delivery_note(source_name, target_doc=None):
