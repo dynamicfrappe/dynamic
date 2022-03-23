@@ -65,7 +65,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.maintenance_contract == null",
+   "depends_on": "eval:doc.maintenance_contract == undefined || doc.maintenance_contract == ''",
    "fieldname": "cars_plate_numbers",
    "fieldtype": "Table",
    "label": "Cars Plate Numbers",
@@ -123,7 +123,7 @@
    "label": "Signature"
   },
   {
-   "depends_on": "eval:doc.maintenance_contract != null",
+   "depends_on": "eval:doc.maintenance_contract != undefined && doc.maintenance_contract != ''",
    "fieldname": "cars",
    "fieldtype": "Table",
    "label": "Cars",
@@ -233,7 +233,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-23 12:05:32.621464",
+ "modified": "2022-03-23 12:14:36.772723",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Template",

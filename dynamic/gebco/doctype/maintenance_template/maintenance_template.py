@@ -10,7 +10,7 @@ class MaintenanceTemplate(Document):
 		self.validate_car_numbers()
 	def validate_car_numbers(self):
 		un_existing_list = []
-		if self.maintenance_contract:
+		if self.maintenance_contract and len(self.maintenance_contract) > 0:
 			contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
 			for pnumber in self.cars_plate_numbers:
 				exist=False
