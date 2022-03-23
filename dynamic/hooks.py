@@ -79,7 +79,11 @@ doctype_js = {
 doc_events = {
 
         "Sales Invoice":{
-            "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname"
+            "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname",
+			"on_submit": "dynamic.gebco.api.validate_sales_invoice"
+        },
+		"Delivery Note":{
+			"on_submit": "dynamic.gebco.api.validate_delivery_note"
         },
 		"Stock Entry" : {
 			"on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"

@@ -20,18 +20,22 @@ frappe.ui.form.on('Maintenance Template', {
                     })
                 });
             } else if (frm.doc.include_spare_part == "NO") {
-                frm.add_custom_button(__("Create Delivery Note"), function() {
-                    frappe.model.open_mapped_doc({
-                        method: "dynamic.gebco.doctype.maintenance_template.maintenance_template.create_delivery_note",
-                        frm: frm,
+                if (frm.doc.delivery_note == '' || frm.doc.delivery_note == undefined) {
+                    frm.add_custom_button(__("Create Delivery Note"), function() {
+                        frappe.model.open_mapped_doc({
+                            method: "dynamic.gebco.doctype.maintenance_template.maintenance_template.create_delivery_note",
+                            frm: frm,
+                        });
                     });
-                });
-                frm.add_custom_button(__("Create Sales Invoice"), function() {
-                    frappe.model.open_mapped_doc({
-                        method: "dynamic.gebco.doctype.maintenance_template.maintenance_template.create_sales_invoice",
-                        frm: frm,
+                }
+                if (frm.doc.sales_invoice == '' || frm.doc.sales_invoice == undefined) {
+                    frm.add_custom_button(__("Create Sales Invoice"), function() {
+                        frappe.model.open_mapped_doc({
+                            method: "dynamic.gebco.doctype.maintenance_template.maintenance_template.create_sales_invoice",
+                            frm: frm,
+                        });
                     });
-                });
+                }
             }
         }
     }
