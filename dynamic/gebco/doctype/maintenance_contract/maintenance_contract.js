@@ -10,9 +10,17 @@ frappe.ui.form.on('Maintenance Contract', {
                     frm: frm,
                 });
             });
-            frm.add_custom_button(__("Close"), function() {
-
-            });
+            if (frm.doc.status != "Completed") {
+                frm.add_custom_button(__("Close"), function() {
+                    frappe.call({
+                        method: "update_doc_status",
+                        doc: frm.doc,
+                        callback(r) {
+                            frm.reload_doc()
+                        }
+                    })
+                });
+            }
         }
 
         frm.set_query('plate_number', 'cars_plate_numbers', function(doc, cdt, cdn) {

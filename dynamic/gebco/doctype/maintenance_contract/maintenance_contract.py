@@ -32,6 +32,10 @@ class MaintenanceContract(Document):
 		#self.reload_doc()
 		#print("carss  =>",cars)
 		#self.save()
+	@frappe.whitelist()
+	def update_doc_status(self,*args,**kwargs):
+		self.status="Completed"
+		self.save()
 
 @frappe.whitelist()
 def renew_contract(source_name, target_doc=None):
