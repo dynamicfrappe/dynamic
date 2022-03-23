@@ -4,7 +4,7 @@
 frappe.ui.form.on('Maintenance Template', {
     refresh: function(frm) {
 
-        if (!frm.doc.__islocal) {
+        if (frm.doc.docstatus == 1) {
             if (frm.doc.include_spare_part == "YES" && frm.doc.stock_entry != null) {
                 frm.add_custom_button(__("Create Stock Entry"), function() {
                     //console.log("asd", frm.doc.items)

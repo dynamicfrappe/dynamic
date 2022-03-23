@@ -82,6 +82,19 @@ def create_delivery_note(source_name, target_doc=None):
 				"rate": item.price
 			}
 		)
+	for item in doc.service_items:
+		delivery_note.append('service_items',
+			{
+				"item_code": item.item,
+				"item_name":item.item_name,
+				"description":item.description,
+				"qty":item.qty,
+				"stock_uom":item.uom,
+				"uom":item.uom,
+				"warehouse": doc.warehouse,
+				"rate": item.price
+			}
+		)
 	return delivery_note
 
 
@@ -106,6 +119,19 @@ def create_sales_invoice(source_name, target_doc=None):
 				"rate": item.price,
 				"income_account":company_doc.default_income_account,
 				"cost_center":doc.cost_center
+			}
+		)
+	for item in doc.service_items:
+		sales_invoice.append('service_items',
+			{
+				"item_code": item.item,
+				"item_name":item.item_name,
+				"description":item.description,
+				"qty":item.qty,
+				"stock_uom":item.uom,
+				"uom":item.uom,
+				"warehouse": doc.warehouse,
+				"rate": item.price
 			}
 		)
 	return sales_invoice
