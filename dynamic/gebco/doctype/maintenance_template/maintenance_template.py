@@ -25,22 +25,26 @@ class MaintenanceTemplate(Document):
 	
 	@frappe.whitelist()
 	def create_stock_entrys(self):
-		doc = frappe.new_doc("Stock Entry")
-		doc.stock_entry_type = "Material Issue"
-		doc.company          = get_default_company()
-		doc.maintenance_template = self.name
-		#doc.save()
-		for item in self.items:
-			doc.append('items',{
-				"s_warehouse": self.warehouse,
-				"item_code":item.item,
-				"qty":1,
-				"basic_rate":item.price
-			})
-		doc.save()
-		doc.docstatus=1
-		doc.save()
-		self.stock_entry = doc.name
+		try:
+			doc = frappe.new_doc("Stock Entry")
+			doc.stock_entry_type = "Material Issue"
+			doc.company          = get_default_company()
+			doc.maintenance_template = self.name
+			#doc.save()
+			for item in self.items:
+				doc.append('items',{
+					"s_warehouse": self.warehouse,
+					"item_code":item.item,
+					"qty":1,
+					"basic_rate":item.price
+				})
+			doc.save()
+			doc.docstatus=1
+			doc.save()
+			self.stock_entry = doc.name
+			frappe.msgprint("Stock Entry Created Successfully")
+		except Exception as ex:
+			frappe.msgprint(str(ex))
 	
 @frappe.whitelist()
 def create_delivery_note(source_name, target_doc=None):
