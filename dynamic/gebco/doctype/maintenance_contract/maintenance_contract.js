@@ -10,6 +10,12 @@ frappe.ui.form.on('Maintenance Contract', {
                     frm: frm,
                 });
             });
+            frm.add_custom_button(__("Create Sales Invoice"), function() {
+                frappe.model.open_mapped_doc({
+                    method: "dynamic.gebco.doctype.maintenance_contract.maintenance_contract.create_sales_invoices",
+                    frm: frm,
+                });
+            });
             if (frm.doc.status != "Completed") {
                 frm.add_custom_button(__("Close"), function() {
                     frappe.call({

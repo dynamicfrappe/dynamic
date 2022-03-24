@@ -49,5 +49,6 @@ data = {
     "property_setters": [
 
     ],
+    'on_setup': 'dynamic.gebco.setup.create_contract_service_item'
     
 }

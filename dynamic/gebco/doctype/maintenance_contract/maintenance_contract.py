@@ -42,6 +42,20 @@ class MaintenanceContract(Document):
 		self.save()
 
 @frappe.whitelist()
+def create_sales_invoices(source_name, target_doc=None):
+	doc = frappe.get_doc("Maintenance Contract",source_name)
+	sales_invoice = frappe.new_doc("Sales Invoice")
+	sales_invoice.customer = doc.customer
+	sales_invoice.append("items",{
+		"item_code":"Contract",
+		"description":"Contract",
+		"stock_uom":"Nos",
+		"uom":"Nos",
+		"qty":1,
+		"rate":doc.contract_value
+	})
+	return sales_invoice
+@frappe.whitelist()
 def renew_contract(source_name, target_doc=None):
 	doc = frappe.get_doc("Maintenance Contract", source_name)
 	new_contract = frappe.new_doc("Maintenance Contract")
