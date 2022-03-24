@@ -125,10 +125,11 @@ def create_delivery_note(source_name, target_doc=None):
 @frappe.whitelist()
 def create_sales_invoice(source_name, target_doc=None):
 	doc = frappe.get_doc("Maintenance Template" , source_name)
-	company_doc = frappe.get_doc("Company",get_default_company())
+	company_doc = frappe.get_doc("Company",get_default_company()) 
 	sales_invoice = frappe.new_doc("Sales Invoice")
 	sales_invoice.company = get_default_company()
 	sales_invoice.customer = doc.customer
+	sales_invoice.debit_to = company_doc.default_receivable_account
 	sales_invoice.maintenance_template = source_name
 	for item in doc.items:
 		sales_invoice.append('items',

@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from datetime import date
+from erpnext import get_default_company
 
 DOMAINS = frappe.get_active_domains()
 class MaintenanceContract(Document):
@@ -44,15 +45,21 @@ class MaintenanceContract(Document):
 @frappe.whitelist()
 def create_sales_invoices(source_name, target_doc=None):
 	doc = frappe.get_doc("Maintenance Contract",source_name)
+	company_doc = frappe.get_doc("Company",get_default_company())
 	sales_invoice = frappe.new_doc("Sales Invoice")
 	sales_invoice.customer = doc.customer
+	sales_invoice.debit_to = company_doc.default_receivable_account
+	sales_invoice.maintenance_contract = doc.name
 	sales_invoice.append("items",{
 		"item_code":"Contract",
+		"item_name":"Contract",
 		"description":"Contract",
 		"stock_uom":"Nos",
 		"uom":"Nos",
 		"qty":1,
-		"rate":doc.contract_value
+		"rate":doc.contract_value,
+		"income_account":company_doc.default_income_account,
+		"cost_center":doc.cost_center
 	})
 	return sales_invoice
 @frappe.whitelist()
@@ -61,6 +68,7 @@ def renew_contract(source_name, target_doc=None):
 	new_contract = frappe.new_doc("Maintenance Contract")
 	new_contract.from_date  = doc.from_date
 	new_contract.visits		= doc.visits
+	new_contract.status = "Waiting"
 	new_contract.to_date 	= doc.to_date
 	new_contract.number_of_visits = doc.number_of_visits
 	new_contract.customer   	  = doc.customer
@@ -101,7 +109,6 @@ def update_contract_status():
 				print("1-",r.get("from_date") < date.today())
 				print("2",r.get("to_date") > date.today())
 				if r.get("from_date") < date.today() and r.get("to_date") > date.today():
-					print("from iffffffffffffffffffffff",doc.name)
 					#doc.flags.ignore_mandatory = 1
 					doc.status = "On Progress"
 					doc.docstatus=1
@@ -111,7 +118,6 @@ def update_contract_status():
 					doc.status = "Completed"
 					doc.docstatus=1
 					doc.save()
-					print("statusssssssssss",doc.status)
 			except Exception as ex:
 				print(str(ex))
 				pass

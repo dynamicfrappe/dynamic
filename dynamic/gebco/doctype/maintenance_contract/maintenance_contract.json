@@ -34,7 +34,8 @@
   "get_customer_cars",
   "cars_section",
   "cars_plate_numbers",
-  "amended_from"
+  "amended_from",
+  "sales_invoice"
  ],
  "fields": [
   {
@@ -209,12 +210,21 @@
    "label": "Warehouse",
    "mandatory_depends_on": "eval:doc.include_spare_parts == 'YES'",
    "options": "Warehouse"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Sales Invoice",
+   "options": "Sales Invoice",
+   "print_hide": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-24 11:07:08.962945",
+ "modified": "2022-03-24 16:31:34.618235",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Contract",

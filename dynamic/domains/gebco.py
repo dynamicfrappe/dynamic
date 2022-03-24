@@ -21,6 +21,14 @@ data = {
                 "label": "Maintenance Template",
                 "print_hide": 1,
             },
+            {
+                "fieldname": "maintenance_contract",
+                "fieldtype": "Link",
+                "options":"Maintenance Contract",
+                "insert_after": "maintenance_template",
+                "label": "Maintenance Contract",
+                "print_hide": 1,
+            },
         ],
         'Delivery Note': [
             {
