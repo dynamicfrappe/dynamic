@@ -3,18 +3,22 @@
 
 import frappe
 from frappe.model.document import Document
+from datetime import date
 
+DOMAINS = frappe.get_active_domains()
 class MaintenanceContract(Document):
 	def validate(self):
+		if not self.remainig_visits:
+			self.remainig_visits = self.number_of_visits
 		self.validate_car_numbers()
 
 	def validate_car_numbers(self):
-		car_numbers = self.number_of_cars
+		car_numbers = float(self.number_of_cars or 0)
 		count = 0
 		for car in self.cars_plate_numbers:
 			if car.status == "Active":
 				count +=1
-		if count > car_numbers :
+		if count > float(car_numbers or 0) :
 			frappe.throw(f"You Only Have {car_numbers} in contract")
 	@frappe.whitelist()
 	def get_customers_cars(self,customer):
@@ -70,4 +74,35 @@ def renew_contract(source_name, target_doc=None):
 # 	#print("carss  =>",cars)
 # 	self.save()
 
+@frappe.whitelist()
+def update_contract_status():
+	#return "asd"	
+	if 'Gebco' in DOMAINS:
+		sql = """select name,status,from_date ,to_date  from `tabMaintenance Contract` tmc where status !="Completed" or status is NULL  """
+		res = frappe.db.sql(sql,as_dict=1)
+		print(res)
+		for r in res:
+			try:
+				doc = frappe.get_doc("Maintenance Contract",r.get("name"))
+				print("1-",r.get("from_date") < date.today())
+				print("2",r.get("to_date") > date.today())
+				if r.get("from_date") < date.today() and r.get("to_date") > date.today():
+					print("from iffffffffffffffffffffff",doc.name)
+					#doc.flags.ignore_mandatory = 1
+					doc.status = "On Progress"
+					doc.docstatus=1
+					doc.save()
+				elif r.get("to_date") < date.today():
+					doc.flags.ignore_mandatory = 1
+					doc.status = "Completed"
+					doc.docstatus=1
+					doc.save()
+					print("statusssssssssss",doc.status)
+			except Exception as ex:
+				print(str(ex))
+				pass
+		return True
+	else:
+		return False
+	
 

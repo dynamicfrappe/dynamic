@@ -118,6 +118,7 @@
    "label": "Cars"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "cars_plate_numbers",
    "fieldtype": "Table",
    "label": "Cars",
@@ -129,11 +130,13 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "completed_visits",
    "fieldtype": "Read Only",
    "label": "Completed Visits"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "remainig_visits",
    "fieldtype": "Read Only",
    "label": "Remainig Visits"
@@ -162,7 +165,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Waiting\nOn Progress\nWaiting Spare Parts\nSend Device To Supplier\nInvoiced\nCompleted",
+   "options": "Waiting\nOn Progress\nCompleted",
    "read_only": 1
   },
   {
@@ -211,7 +214,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-23 15:08:00.782369",
+ "modified": "2022-03-24 11:07:08.962945",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Contract",

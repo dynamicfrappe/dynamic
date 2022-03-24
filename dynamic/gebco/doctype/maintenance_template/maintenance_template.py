@@ -8,6 +8,8 @@ from erpnext import get_default_company
 class MaintenanceTemplate(Document):
 	def validate(self):
 		self.validate_car_numbers()
+	def on_submit(self):
+		self.update_contract_visits()
 	def validate_car_numbers(self):
 		un_existing_list = []
 		if self.maintenance_contract and len(self.maintenance_contract) > 0:
@@ -36,7 +38,6 @@ class MaintenanceTemplate(Document):
 					"s_warehouse": self.warehouse,
 					"item_code":item.item,
 					"item_name":item.item_name,
-					"description":item.description,
 					"qty":item.qty,
 					"stock_uom":item.uom,
 					"basic_rate":item.price
@@ -61,6 +62,29 @@ class MaintenanceTemplate(Document):
 			return result[0].price_list_rate
 		else:
 			return 0
+
+	@frappe.whitelist()
+	def update_contract_visits(self):
+		contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
+		total_visits = float(contract.number_of_visits or 0)
+		#print("aaaaaasddddddddddddddddddfggggggggg==============",contract.remainig_visits)
+		if float(contract.completed_visits or 0) < total_visits: 
+			contract.completed_visits = float(contract.completed_visits or 0) + 1
+			contract.remainig_visits = float(contract.remainig_visits or 0) -1 
+			contract.save()
+		else:
+			frappe.throw(f"This Customer Completed his {total_visits} visits")
+	
+	@frappe.whitelist()
+	def check_cars_from_contract(self,car):
+		contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
+		cars    = contract.cars_plate_numbers
+		#exist = False
+		for c in cars:
+			if c.plate_number == car :
+				return {"exist":True}
+		#print("exist =>",exist)
+		return {"exist":False} 
 	
 @frappe.whitelist()
 def create_delivery_note(source_name, target_doc=None):
@@ -82,19 +106,19 @@ def create_delivery_note(source_name, target_doc=None):
 				"rate": item.price
 			}
 		)
-	for item in doc.service_items:
-		delivery_note.append('items',
-			{
-				"item_code": item.item,
-				"item_name":item.item_name,
-				"description":item.description,
-				"qty":item.qty,
-				"stock_uom":item.uom,
-				"uom":item.uom,
-				"warehouse": doc.warehouse,
-				"rate": item.price
-			}
-		)
+	# for item in doc.service_items:
+	# 	delivery_note.append('items',
+	# 		{
+	# 			"item_code": item.item,
+	# 			"item_name":item.item_name,
+	# 			"description":item.description,
+	# 			"qty":item.qty,
+	# 			"stock_uom":item.uom,
+	# 			"uom":item.uom,
+	# 			"warehouse": doc.warehouse,
+	# 			"rate": item.price
+	# 		}
+	# 	)
 	return delivery_note
 
 

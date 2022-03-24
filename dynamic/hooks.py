@@ -126,7 +126,12 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
+	"cron": {
+		"0 */2 * * *": [
+			"dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",
+		]
+	},
 # 	"all": [
 # 		"dynamic.tasks.all"
 # 	],
@@ -142,7 +147,7 @@ doc_events = {
 # 	"monthly": [
 # 		"dynamic.tasks.monthly"
 # 	]
-# }
+}
 
 # Testing
 # -------

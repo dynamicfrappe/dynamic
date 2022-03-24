@@ -5,7 +5,7 @@ frappe.ui.form.on('Maintenance Template', {
     refresh: function(frm) {
 
         if (frm.doc.docstatus == 1) {
-            if (frm.doc.include_spare_part == "YES" && frm.doc.stock_entry != null) {
+            if (frm.doc.include_spare_part == "YES" && (frm.doc.stock_entry != null || frm.doc.stock_entry != "")) {
                 frm.add_custom_button(__("Create Stock Entry"), function() {
                     //console.log("asd", frm.doc.items)
                     if (frm.doc.items.length == 0) {
@@ -46,6 +46,14 @@ frappe.ui.form.on('Maintenance Template', {
                 }
             };
         });
+        frm.set_query('maintenance_contract', function(doc, cdt, cdn) {
+            //var row = locals[cdt][cdn];
+            return {
+                "filters": {
+                    "docstatus": 1
+                }
+            };
+        });
     }
 });
 
@@ -73,19 +81,35 @@ frappe.ui.form.on('Template Cars', {
     car: (frm, cdt, cdn) => {
         let row = locals[cdt][cdn]
             //console.log(row.plate_number)
-        if (row.car.length > 1) {
-            let count = 0
-            for (let i = 0; i < frm.doc.cars.length; i++) {
-                if (frm.doc.cars[i].car == row.car) {
+        frappe.call({
+            method: "check_cars_from_contract",
+            doc: frm.doc,
+            args: {
+                "car": row.car
+            },
+            callback(r) {
+                console.log("rrrrrrrrrr", r)
+                if (r.message.exist == true) {
+                    if (row.car.length > 1) {
+                        let count = 0
+                        for (let i = 0; i < frm.doc.cars.length; i++) {
+                            if (frm.doc.cars[i].car == row.car) {
 
-                    count += 1
-                    if (count > 1) {
-                        row.car = ""
-                        frappe.msgprint("This Car Already Exist")
+                                count += 1
+                                if (count > 1) {
+                                    row.car = ""
+                                    frappe.msgprint("This Car Already Exist")
+                                }
+                            }
+                        }
                     }
+                } else {
+                    row.car = ""
+                    frappe.msgprint("This Car Doesnt Exist In contract")
                 }
             }
-        }
+        })
+
     }
 })
 

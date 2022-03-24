@@ -12,6 +12,7 @@
   "email",
   "mobile",
   "maintenance_contract",
+  "car_numbers",
   "column_break_5",
   "status",
   "company_name",
@@ -23,7 +24,8 @@
   "column_break_13",
   "location",
   "section_break_15",
-  "description"
+  "description",
+  "amended_from"
  ],
  "fields": [
   {
@@ -123,11 +125,27 @@
    "fieldtype": "Datetime",
    "label": "Maintenance Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Maintenance Request",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "car_numbers",
+   "fieldtype": "Int",
+   "label": "Car Numbers",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2022-03-22 15:43:15.530983",
+ "modified": "2022-03-24 12:20:26.936225",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Request",
