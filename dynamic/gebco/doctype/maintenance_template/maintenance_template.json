@@ -16,6 +16,7 @@
   "status",
   "column_break_4",
   "material_request",
+  "maintenance_request",
   "section_break_4",
   "cars_plate_numbers",
   "section_break_6",
@@ -35,7 +36,6 @@
   "remarks",
   "section_break_15",
   "signature",
-  "maintenance_request",
   "account",
   "cost_center",
   "stock_entry",
@@ -140,10 +140,8 @@
   {
    "fieldname": "maintenance_request",
    "fieldtype": "Link",
-   "hidden": 1,
    "label": " Maintenance Request",
-   "options": "Maintenance Request",
-   "print_hide": 1
+   "options": "Maintenance Request"
   },
   {
    "fieldname": "column_break_4",
@@ -260,7 +258,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-24 16:14:19.340726",
+ "modified": "2022-03-24 17:23:32.390894",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Template",
