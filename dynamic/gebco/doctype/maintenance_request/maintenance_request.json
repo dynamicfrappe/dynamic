@@ -18,6 +18,10 @@
   "company_name",
   "employee",
   "maint_date",
+  "section_break_12",
+  "cars_plate_numbers",
+  "section_break_14",
+  "cars",
   "address_section",
   "address_line_1",
   "address_line_2",
@@ -140,12 +144,36 @@
    "fieldtype": "Int",
    "label": "Car Numbers",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.maintenance_contract == undefined || doc.maintenance_contract == ''",
+   "fieldname": "section_break_12",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cars_plate_numbers",
+   "fieldtype": "Table",
+   "label": "Cars Plate Numbers",
+   "mandatory_depends_on": "eval:doc.maintenance_contract == undefined || doc.maintenance_contract == ''",
+   "options": "Cars Plate Numbers For Request"
+  },
+  {
+   "depends_on": "eval:doc.maintenance_contract != undefined && doc.maintenance_contract != ''",
+   "fieldname": "section_break_14",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cars",
+   "fieldtype": "Table",
+   "label": "Cars",
+   "mandatory_depends_on": "eval:doc.maintenance_contract != undefined && doc.maintenance_contract != ''",
+   "options": "Request Cars"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-24 12:20:26.936225",
+ "modified": "2022-03-26 11:22:01.384249",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Request",

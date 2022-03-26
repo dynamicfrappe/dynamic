@@ -3,10 +3,10 @@
 
 import frappe
 from frappe.model.document import Document
-
+from frappe import _
 class MaintenanceRequest(Document):
 	def validate(self):
-		pass
+		self.validate_car_count()
 		
 			
 			#self.save()
@@ -21,7 +21,32 @@ class MaintenanceRequest(Document):
 		doc.reference_type = "Maintenance Request"
 		doc.reference_name = self.name
 		doc.save()
+	def validate_car_count(self):
+		contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
+		car_count_from_contract = contract.number_of_cars
+		car_numbers = float(self.car_numbers or 0)
+		table_count = 0
 
+		if car_numbers > car_count_from_contract :
+			frappe.throw(_(f"You Only Have {car_count_from_contract} In Contract"))
+		if self.maintenance_contract:
+			for car in self.cars :
+				table_count +=1
+		else:
+			for car in self.cars_plate_numbers:
+				table_count +=1
+		if table_count > car_numbers:
+			frappe.throw(_(f"You Only Have {car_numbers}"))
+	@frappe.whitelist()
+	def check_cars_from_contract(self,car):
+		contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
+		cars    = contract.cars_plate_numbers
+		#exist = False
+		for c in cars:
+			if c.plate_number == car :
+				return {"exist":True}
+		#print("exist =>",exist)
+		return {"exist":False}
 
 @frappe.whitelist()
 def create_maintenance_request(source_name, target_doc=None):

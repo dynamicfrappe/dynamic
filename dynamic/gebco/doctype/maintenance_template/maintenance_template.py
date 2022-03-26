@@ -4,10 +4,12 @@
 import frappe
 from frappe.model.document import Document
 from erpnext import get_default_company
+from frappe import _
 
 class MaintenanceTemplate(Document):
 	def validate(self):
 		self.validate_car_numbers()
+		self.validate_car_count()
 	def on_submit(self):
 		self.update_contract_visits()
 	def validate_car_numbers(self):
@@ -23,8 +25,24 @@ class MaintenanceTemplate(Document):
 					un_existing_list.append(str(pnumber.plate_number))
 		if len(un_existing_list) > 0:
 			error_str = "".join(un_existing_list)
-			frappe.throw(f"This Plate Number doesnt exist in contract {error_str}")
-	
+			frappe.throw(_(f"This Plate Number doesnt exist in contract {error_str}"))
+
+	def validate_car_count(self):
+		contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
+		car_count_from_contract = contract.number_of_cars
+		car_numbers = float(self.car_numbers or 0)
+		table_count = 0
+
+		if car_numbers > car_count_from_contract :
+			frappe.throw(_(f"You Only Have {car_count_from_contract} In Contract"))
+		if self.maintenance_contract:
+			for car in self.cars :
+				table_count +=1
+		else:
+			for car in self.cars_plate_numbers:
+				table_count +=1
+		if table_count > car_numbers:
+			frappe.throw(_(f"You Only Have {car_numbers}"))
 	@frappe.whitelist()
 	def create_stock_entrys(self):
 		try:
