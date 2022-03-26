@@ -83,15 +83,18 @@ class MaintenanceTemplate(Document):
 
 	@frappe.whitelist()
 	def update_contract_visits(self):
-		contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
-		total_visits = float(contract.number_of_visits or 0)
-		#print("aaaaaasddddddddddddddddddfggggggggg==============",contract.remainig_visits)
-		if float(contract.completed_visits or 0) < total_visits: 
-			contract.completed_visits = float(contract.completed_visits or 0) + 1
-			contract.remainig_visits = float(contract.remainig_visits or 0) -1 
-			contract.save()
+		if self.maintenance_contract:
+			contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
+			total_visits = float(contract.number_of_visits or 0)
+			#print("aaaaaasddddddddddddddddddfggggggggg==============",contract.remainig_visits)
+			if float(contract.completed_visits or 0) < total_visits: 
+				contract.completed_visits = float(contract.completed_visits or 0) + 1
+				contract.remainig_visits = float(contract.remainig_visits or 0) -1 
+				contract.save()
+			else:
+				frappe.throw(f"This Customer Completed his {total_visits} visits")
 		else:
-			frappe.throw(f"This Customer Completed his {total_visits} visits")
+			pass
 	
 	@frappe.whitelist()
 	def check_cars_from_contract(self,car):
@@ -107,6 +110,9 @@ class MaintenanceTemplate(Document):
 @frappe.whitelist()
 def create_delivery_note(source_name, target_doc=None):
 	doc = frappe.get_doc("Maintenance Template" , source_name)
+	if doc.status == "Waiting":
+		doc.status = "On Progress"
+		doc.save()
 	delivery_note = frappe.new_doc("Delivery Note")
 	delivery_note.company = get_default_company()
 	delivery_note.customer = doc.customer
@@ -143,6 +149,9 @@ def create_delivery_note(source_name, target_doc=None):
 @frappe.whitelist()
 def create_sales_invoice(source_name, target_doc=None):
 	doc = frappe.get_doc("Maintenance Template" , source_name)
+	if doc.status == "Waiting":
+		doc.status = "On Progress"
+		doc.save()
 	company_doc = frappe.get_doc("Company",get_default_company()) 
 	sales_invoice = frappe.new_doc("Sales Invoice")
 	sales_invoice.company = get_default_company()
