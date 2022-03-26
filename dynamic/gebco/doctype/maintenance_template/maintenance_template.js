@@ -19,7 +19,7 @@ frappe.ui.form.on('Maintenance Template', {
                         }
                     })
                 });
-            } else if (frm.doc.include_spare_part == "NO") {
+            } else if (frm.doc.include_spare_part == "NO" || !frm.doc.maintenance_contract) {
                 if (frm.doc.delivery_note == '' || frm.doc.delivery_note == undefined) {
                     frm.add_custom_button(__("Create Delivery Note"), function() {
                         frappe.model.open_mapped_doc({
