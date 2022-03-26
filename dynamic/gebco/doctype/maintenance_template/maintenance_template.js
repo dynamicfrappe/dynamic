@@ -46,6 +46,14 @@ frappe.ui.form.on('Maintenance Template', {
                 }
             };
         });
+        frm.set_query('item', 'items', function(doc, cdt, cdn) {
+            //var row = locals[cdt][cdn];
+            return {
+                "filters": {
+                    "is_stock_item": true
+                }
+            };
+        });
         frm.set_query('maintenance_contract', function(doc, cdt, cdn) {
             //var row = locals[cdt][cdn];
             return {
