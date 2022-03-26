@@ -39,6 +39,22 @@ frappe.ui.form.on('Maintenance Contract', {
                 }
             };
         });
+        frm.set_query('cost_center', function(doc, cdt, cdn) {
+            //var row = locals[cdt][cdn];
+            return {
+                "filters": {
+                    "is_group": 0
+                }
+            };
+        });
+        frm.set_query('account', function(doc, cdt, cdn) {
+            //var row = locals[cdt][cdn];
+            return {
+                "filters": {
+                    "is_group": 0
+                }
+            };
+        });
 
     },
     from_date: (frm) => {
