@@ -28,13 +28,13 @@ class MaintenanceTemplate(Document):
 			frappe.throw(_(f"This Plate Number doesnt exist in contract {error_str}"))
 
 	def validate_car_count(self):
-		contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
-		car_count_from_contract = contract.number_of_cars
 		car_numbers = float(self.car_numbers or 0)
 		table_count = 0
-
-		if car_numbers > car_count_from_contract :
-			frappe.throw(_(f"You Only Have {car_count_from_contract} In Contract"))
+		if self.maintenance_contract:
+			contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
+			car_count_from_contract = contract.number_of_cars
+			if car_numbers > car_count_from_contract :
+				frappe.throw(_(f"You Only Have {car_count_from_contract} In Contract"))
 		if self.maintenance_contract:
 			for car in self.cars :
 				table_count +=1

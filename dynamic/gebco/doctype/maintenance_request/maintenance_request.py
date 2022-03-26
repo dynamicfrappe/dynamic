@@ -22,13 +22,13 @@ class MaintenanceRequest(Document):
 		doc.reference_name = self.name
 		doc.save()
 	def validate_car_count(self):
-		contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
-		car_count_from_contract = contract.number_of_cars
 		car_numbers = float(self.car_numbers or 0)
 		table_count = 0
-
-		if car_numbers > car_count_from_contract :
-			frappe.throw(_(f"You Only Have {car_count_from_contract} In Contract"))
+		if self.maintenance_contract:
+			contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
+			car_count_from_contract = contract.number_of_cars
+			if car_numbers > car_count_from_contract :
+				frappe.throw(_(f"You Only Have {car_count_from_contract} In Contract"))
 		if self.maintenance_contract:
 			for car in self.cars :
 				table_count +=1
@@ -60,6 +60,17 @@ def create_maintenance_request(source_name, target_doc=None):
 		contract = frappe.get_doc("Maintenance Contract",maint_temp.maintenance_contract)
 		maint_temp.warehouse = contract.warehouse
 		maint_temp.include_spare_part = contract.include_spare_parts
+		for car in doc.cars:
+			maint_temp.append('cars',{
+				"car":car.car
+			})
+	else:
+		for car in doc.cars_plate_numbers:
+			maint_temp.append('cars_plate_numbers',{
+				"plate_number":car.plate_number,
+				"serial_no":car.serial_no,
+				"sim_no":car.sim_no
+			})
 
 	return maint_temp
 	
