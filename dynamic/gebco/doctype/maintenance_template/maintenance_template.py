@@ -14,7 +14,7 @@ class MaintenanceTemplate(Document):
 		self.update_contract_visits()
 	def validate_car_numbers(self):
 		un_existing_list = []
-		if self.maintenance_contract and len(self.maintenance_contract) > 0:
+		if self.maintenance_contract and len(self.maintenance_contract) > 2:
 			contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
 			for pnumber in self.cars_plate_numbers:
 				exist=False
@@ -30,7 +30,7 @@ class MaintenanceTemplate(Document):
 	def validate_car_count(self):
 		car_numbers = float(self.car_numbers or 0)
 		table_count = 0
-		if self.maintenance_contract:
+		if self.maintenance_contract and len(self.maintenance_contract) > 2:
 			contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
 			car_count_from_contract = contract.number_of_cars
 			if car_numbers > car_count_from_contract :

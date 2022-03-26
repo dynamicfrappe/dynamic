@@ -45,7 +45,6 @@
  ],
  "fields": [
   {
-   "default": "0",
    "fieldname": "maintenance_contract",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -174,7 +173,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "default": "0",
    "fetch_from": "maintenance_contract.include_spare_parts",
    "fieldname": "include_spare_part",
    "fieldtype": "Read Only",
@@ -258,7 +256,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-24 17:23:32.390894",
+ "modified": "2022-03-26 12:01:13.207082",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Template",
