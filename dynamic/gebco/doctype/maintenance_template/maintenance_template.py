@@ -64,6 +64,7 @@ class MaintenanceTemplate(Document):
 			doc.docstatus=1
 			doc.save()
 			self.stock_entry = doc.name
+			self.save()
 			frappe.msgprint("Stock Entry Created Successfully")
 		except Exception as ex:
 			frappe.msgprint(str(ex))
@@ -117,6 +118,8 @@ def create_delivery_note(source_name, target_doc=None):
 	delivery_note.company = get_default_company()
 	delivery_note.customer = doc.customer
 	delivery_note.maintenance_template = source_name
+	# if doc.sales_invoice:
+	# 	delivery_note.per_billed =100
 	for item in doc.items:
 		delivery_note.append('items',
 			{
@@ -127,7 +130,8 @@ def create_delivery_note(source_name, target_doc=None):
 				"stock_uom":item.uom,
 				"uom":item.uom,
 				"warehouse": doc.warehouse,
-				"rate": item.price
+				"rate": item.price,
+				"against_sales_invoice":doc.sales_invoice
 			}
 		)
 	# for item in doc.service_items:

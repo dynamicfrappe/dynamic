@@ -5,7 +5,7 @@ frappe.ui.form.on('Maintenance Template', {
     refresh: function(frm) {
 
         if (frm.doc.docstatus == 1) {
-            if (frm.doc.include_spare_part == "YES" && (frm.doc.stock_entry != null || frm.doc.stock_entry != "")) {
+            if (frm.doc.include_spare_part == "YES" && (frm.doc.stock_entry == null || frm.doc.stock_entry == "")) {
                 frm.add_custom_button(__("Create Stock Entry"), function() {
                     //console.log("asd", frm.doc.items)
                     if (frm.doc.items.length == 0) {
@@ -20,7 +20,7 @@ frappe.ui.form.on('Maintenance Template', {
                     })
                 });
             } else if (frm.doc.include_spare_part == "NO" || !frm.doc.maintenance_contract) {
-                if (frm.doc.delivery_note == '' || frm.doc.delivery_note == undefined) {
+                if ((frm.doc.delivery_note == '' || frm.doc.delivery_note == undefined) && frm.doc.sales_invoicec != '') {
                     frm.add_custom_button(__("Create Delivery Note"), function() {
                         frappe.model.open_mapped_doc({
                             method: "dynamic.gebco.doctype.maintenance_template.maintenance_template.create_delivery_note",
