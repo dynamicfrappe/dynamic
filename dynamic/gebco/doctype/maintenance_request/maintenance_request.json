@@ -117,6 +117,7 @@
    "reqd": 1
   },
   {
+   "allow_on_submit": 1,
    "default": "Pending",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -173,7 +174,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-26 11:22:01.384249",
+ "modified": "2022-03-26 12:29:01.076020",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Maintenance Request",

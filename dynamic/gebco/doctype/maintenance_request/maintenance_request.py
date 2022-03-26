@@ -51,11 +51,14 @@ class MaintenanceRequest(Document):
 @frappe.whitelist()
 def create_maintenance_request(source_name, target_doc=None):
 	doc = frappe.get_doc("Maintenance Request",source_name)
+	doc.status = "Started"
+	doc.save()
 	maint_temp = frappe.new_doc("Maintenance Template")
 	maint_temp.maintenance_contract = doc.maintenance_contract
 	maint_temp.problem = doc.description
 	maint_temp.customer = doc.company_name
 	maint_temp.car_numbers = doc.car_numbers
+	maint_temp.maintenance_request = doc.name
 	if maint_temp.maintenance_contract:
 		contract = frappe.get_doc("Maintenance Contract",maint_temp.maintenance_contract)
 		maint_temp.warehouse = contract.warehouse
