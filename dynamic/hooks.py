@@ -91,6 +91,9 @@ doc_events = {
 		"Sales Order" : {
 			"validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost"
 		} ,
+		"Purchase Receipt":{
+			"on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+		},
 		"Purchase Order": {
 		"on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
 		"on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",}
