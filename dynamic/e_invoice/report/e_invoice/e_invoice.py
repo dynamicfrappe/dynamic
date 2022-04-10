@@ -148,6 +148,24 @@ def get_columns(filters):
             "width": 100
         },
         {
+            "label": "amountSold(Item)",
+            "fieldname": "rate",
+            "fieldtype": "Data",
+            "width": 100
+        },
+        {
+            "label": "currencySold(Item)",
+            "fieldname": "currency_sold",
+            "fieldtype": "Data",
+            "width": 100
+        },
+        {
+            "label": "currencyExchangeRate(Item)",
+            "fieldname": "currency_exchange_rate",
+            "fieldtype": "Data",
+            "width": 100
+        },
+        {
             "label": _("Tax Amount"),
             "fieldname": "tax_amount",
             "fieldtype": "Data",
@@ -179,7 +197,9 @@ def get_data(filters):
 				`tabCustomer`.buildingnumber as buildingnumber ,
 				`tabCustomer`.branchid as branchid ,
 				`tabCustomer`.receiver_id AS receiverid,
-				 0 as 'tax_amount'   
+				 0 as 'tax_amount',
+                 'EGP' as 'currency_sold',
+                 1 as 'currency_exchange_rate'   
 				 FROM `tabSales Invoice`
 				 inner join `tabCustomer`  
 				 ON `tabSales Invoice`.customer = `tabCustomer`.name 
