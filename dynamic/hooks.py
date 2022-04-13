@@ -79,7 +79,11 @@ doctype_js = {
 doc_events = {
 
         "Sales Invoice":{
-            "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname"
+            "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname",
+			"on_submit": "dynamic.gebco.api.validate_sales_invoice"
+        },
+		"Delivery Note":{
+			"on_submit": "dynamic.gebco.api.validate_delivery_note"
         },
 		"Stock Entry" : {
 			"on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
@@ -87,6 +91,9 @@ doc_events = {
 		"Sales Order" : {
 			"validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost"
 		} ,
+		"Purchase Receipt":{
+			"on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+		},
 		"Purchase Order": {
 		"on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
 		"on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",}
@@ -122,7 +129,12 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
+	"cron": {
+		"0 */2 * * *": [
+			"dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",
+		]
+	},
 # 	"all": [
 # 		"dynamic.tasks.all"
 # 	],
@@ -138,7 +150,7 @@ doc_events = {
 # 	"monthly": [
 # 		"dynamic.tasks.monthly"
 # 	]
-# }
+}
 
 # Testing
 # -------
@@ -168,7 +180,8 @@ domains = {
 	'Dynamic Accounts':'dynamic.domains.dynamic_accounts' ,
 	'Dynamic HR':'dynamic.domains.dynamic_hr' ,
 	'E Invoice':'dynamic.domains.e_invoice' ,
-	'Contracting':'dynamic.domains.contracting'
+	'Contracting':'dynamic.domains.contracting',
+	'Gebco'      : 'dynamic.domains.gebco',
 }
 
 
