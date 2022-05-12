@@ -3,27 +3,14 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {},
-    "properties":[
-                        {
-                        "doc_type": "Journal Entry Account",
-                        "doctype_or_field": "DocField",
-                        "field_name": "reference_type",
-                        "name": "Journal Entry Account-reference_type-options",
-                        "property": "options",
-                        "property_type": "Text",
-                        "value": ["Sales Invoice","Purchase Invoice","Journal Entry","Sales Order","Purchase Order","Expense Claim","Asset","Loan","Payroll Entry","Employee Advance","Exchange Rate Revaluation","Invoice Discounting","Fees","Pay and Receipt Document"]
-                        }
-                ],
-     "property_setters": [
-        {
-        "doc_type": "Journal Entry Account",
-        "doctype_or_field": "DocField",
-        "field_name": "reference_type",
-        "name": "Journal Entry Account-reference_type-options",
-        "property": "options",
-        "property_type": "Text",
-        "value": ["Sales Invoice","Purchase Invoice","Journal Entry","Sales Order","Purchase Order","Expense Claim","Asset","Loan","Payroll Entry","Employee Advance","Exchange Rate Revaluation","Invoice Discounting","Fees","Pay and Receipt Document"]
-        }
-                        ],
-    'on_setup': 'dynamic.dynamic_accounts.setup.install_dynamic_accounts'
+    "properties": [{
+        "doctype":"Journal Entry Account",
+        "doctype_or_field":"DocField",
+        "fieldname":"reference_type",
+        "property":"options",
+        "property_type":"Text",
+        "value": "\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay Document\nReceipt Document\nComparison\nClearance\nTender\nPayroll Month"
+    }],
+
+   'on_setup': 'dynamic.dynamic_accounts.setup.install_dynamic_accounts'
 }

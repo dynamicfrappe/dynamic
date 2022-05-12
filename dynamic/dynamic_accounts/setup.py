@@ -14,6 +14,7 @@ def install_dynamic_accounts():
 
 
 def add_properties():
+	return
 	try:
 		name = "Journal Entry Account-reference_type-options"
 		if frappe.db.exists("Property Setter",name) :
