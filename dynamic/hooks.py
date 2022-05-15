@@ -80,10 +80,13 @@ doc_events = {
 
         "Sales Invoice":{
             "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname",
-			"on_submit": "dynamic.gebco.api.validate_sales_invoice"
+			"on_submit": "dynamic.gebco.api.validate_sales_invoice",
+			"validate" : "dynamic.product_bundle.doctype.packed_item.packed_item.make_packing_list"
         },
 		"Delivery Note":{
-			"on_submit": "dynamic.gebco.api.validate_delivery_note"
+			"on_submit": "dynamic.gebco.api.validate_delivery_note",
+			"validate" : "dynamic.product_bundle.doctype.packed_item.packed_item.make_packing_list"
+
         },
 		"Stock Entry" : {
 			"on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
@@ -116,9 +119,9 @@ doc_events = {
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle"
+}
 
 # Document Events
 # ---------------
@@ -182,6 +185,7 @@ domains = {
 	'E Invoice':'dynamic.domains.e_invoice' ,
 	'Contracting':'dynamic.domains.contracting',
 	'Gebco'      : 'dynamic.domains.gebco',
+	'Product Bundle'      : 'dynamic.domains.product_bundle',
 }
 
 
