@@ -74,7 +74,8 @@ doctype_js = {
 	"Sales Invoice" : "e_invoice/doctype/sales_invoice/sales_invoice.js",
 	"Item":"e_invoice/doctype/item/item.js",
 	"Sales Order" : "public/js/sales_order.js" ,
-	"Stock Entry" : "public/js/stock_entry.js"
+	"Stock Entry" : "public/js/stock_entry.js",
+	"Product Bundle" : "product_bundle/doctype/product_bundle/product_bundle.js"
 }
 doc_events = {
 
@@ -84,7 +85,9 @@ doc_events = {
 			"validate":"dynamic.api.validate_active_domains"
         },
 		"Delivery Note":{
-			"on_submit": "dynamic.gebco.api.validate_delivery_note"
+			"on_submit": "dynamic.gebco.api.validate_delivery_note",
+			"validate" : "dynamic.product_bundle.doctype.packed_item.packed_item.make_packing_list"
+
         },
 		"Stock Entry" : {
 			"on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
@@ -117,9 +120,9 @@ doc_events = {
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle"
+}
 
 # Document Events
 # ---------------
@@ -179,11 +182,19 @@ scheduler_events = {
 
 domains = {
 	'Dynamic Accounts':'dynamic.domains.dynamic_accounts' ,
+<<<<<<< HEAD
 	'Dynamic HR'      :'dynamic.domains.dynamic_hr' ,
 	'E Invoice'       :'dynamic.domains.e_invoice' ,
 	'Contracting'     :'dynamic.domains.contracting',
 	'Gebco'           : 'dynamic.domains.gebco',
 	"Moyate"          : 'dynamic.domains.moyate'
+=======
+	'Dynamic HR':'dynamic.domains.dynamic_hr' ,
+	'E Invoice':'dynamic.domains.e_invoice' ,
+	'Contracting':'dynamic.domains.contracting',
+	'Gebco'      : 'dynamic.domains.gebco',
+	'Product Bundle'      : 'dynamic.domains.product_bundle',
+>>>>>>> 9c767795d76f72c1d79d7a104098cb5919be1baa
 }
 
 #domain Conatin
