@@ -80,7 +80,8 @@ doc_events = {
 
         "Sales Invoice":{
             "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname",
-			"on_submit": "dynamic.gebco.api.validate_sales_invoice"
+			"on_submit": "dynamic.gebco.api.validate_sales_invoice" ,
+			"validate":"dynamic.api.validate_active_domains"
         },
 		"Delivery Note":{
 			"on_submit": "dynamic.gebco.api.validate_delivery_note"
@@ -178,13 +179,17 @@ scheduler_events = {
 
 domains = {
 	'Dynamic Accounts':'dynamic.domains.dynamic_accounts' ,
-	'Dynamic HR':'dynamic.domains.dynamic_hr' ,
-	'E Invoice':'dynamic.domains.e_invoice' ,
-	'Contracting':'dynamic.domains.contracting',
-	'Gebco'      : 'dynamic.domains.gebco',
+	'Dynamic HR'      :'dynamic.domains.dynamic_hr' ,
+	'E Invoice'       :'dynamic.domains.e_invoice' ,
+	'Contracting'     :'dynamic.domains.contracting',
+	'Gebco'           : 'dynamic.domains.gebco',
+	"Moyate"          : 'dynamic.domains.moyate'
 }
 
-
+#domain Conatin
+#Moyate
+#Add Commition table to sales person and sales invocie 
+#
 
 
 

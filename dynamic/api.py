@@ -60,3 +60,21 @@ def encode_invoice_data(doc):
     total_hex_b64 = codecs.encode(codecs.decode(total_hex, 'hex'), 'base64').decode('utf-8')
     return total_hex_b64
 
+import frappe
+from frappe import _
+from .api_hooks.sales_invoice import validate_sales_invocie_to_moyate
+DOMAINS = frappe.get_active_domains()
+
+
+@frappe.whitelist()
+def validate_active_domains(doc,*args,**kwargs):
+    if  'Moyate' in DOMAINS: 
+        """   Validate Sales Commition With Moyate """
+        validate_sales_invocie_to_moyate(doc)
+
+
+
+
+
+
+
