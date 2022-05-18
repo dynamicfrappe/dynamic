@@ -5,7 +5,7 @@ from frappe import _
 import codecs
 import json
 import base64
-
+from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -71,6 +71,11 @@ def validate_active_domains(doc,*args,**kwargs):
     if  'Moyate' in DOMAINS: 
         """   Validate Sales Commition With Moyate """
         validate_sales_invocie_to_moyate(doc)
+
+
+    if 'Product Bundle' in DOMAINS: 
+        """   Update Bundle of Bundles """
+        make_packing_list(doc)
 
 
 

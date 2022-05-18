@@ -182,19 +182,12 @@ scheduler_events = {
 
 domains = {
 	'Dynamic Accounts':'dynamic.domains.dynamic_accounts' ,
-<<<<<<< HEAD
 	'Dynamic HR'      :'dynamic.domains.dynamic_hr' ,
 	'E Invoice'       :'dynamic.domains.e_invoice' ,
 	'Contracting'     :'dynamic.domains.contracting',
 	'Gebco'           : 'dynamic.domains.gebco',
-	"Moyate"          : 'dynamic.domains.moyate'
-=======
-	'Dynamic HR':'dynamic.domains.dynamic_hr' ,
-	'E Invoice':'dynamic.domains.e_invoice' ,
-	'Contracting':'dynamic.domains.contracting',
-	'Gebco'      : 'dynamic.domains.gebco',
-	'Product Bundle'      : 'dynamic.domains.product_bundle',
->>>>>>> 9c767795d76f72c1d79d7a104098cb5919be1baa
+	"Moyate"          : 'dynamic.domains.moyate',
+	'Product Bundle'  : 'dynamic.domains.product_bundle',
 }
 
 #domain Conatin
