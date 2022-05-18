@@ -1,6 +1,8 @@
 import frappe
 from frappe import _
 from datetime import datetime ,date
+
+from html2text import re
 DOMAINS = frappe.get_active_domains()
 
 """  
@@ -50,6 +52,8 @@ def validate_sales_person(name) :
         validate_fiscal_year(fiscal_year)
         #validate Target  amount , Qty And get Mothly Target 
         # vaildate targey qty
+        if not  target.commission_template  :
+            return 0 
         template = frappe.get_doc("Commission Template" ,target.commission_template )
         if target.target_qty > 0  and target.target_amount > 0 :
             frappe.throw(""" Please Set arget Qty  or  Target Amount to 0 value in Target Table """)
@@ -79,7 +83,7 @@ def validate_sales_person(name) :
         # data = frappe.db.sql(caculation_sql ,as_dict=1)
         # frappe.throw(str(data))
 """  this method Will Run only if Moyate in Active Domain """
-def filetr_item_base_on_template(items , person , pdate) :
+def filetr_item_base_on_template(items , person , pdate ,case) :
     #caculate item percent 
     # frappe.throw(str(items))
     date_list = str(pdate).split('-')
@@ -88,6 +92,8 @@ def filetr_item_base_on_template(items , person , pdate) :
     item_group_amount = []
     sales_person = frappe.get_doc("Sales Person" ,person)
     commetion_item_group = [target.item_group for target in sales_person.targets]
+    # for target in sales_person.targets :
+    #     if target.
     invocie_item_groups = [item.get("item_group") for item in items ]
     for group in invocie_item_groups :
         if group not in invocie_item_groups :
@@ -101,7 +107,7 @@ def filetr_item_base_on_template(items , person , pdate) :
     #remove Duplicated FROM  invocie_item_groups
     invocie_item_groups = set(invocie_item_groups)
     item_group_tuple = list(invocie_item_groups)
-   
+    total_grant = 0
     for item_group in item_group_tuple :
         local_sales = 0
         local_qty = 0 
@@ -111,7 +117,7 @@ def filetr_item_base_on_template(items , person , pdate) :
                 local_qty = local_qty + float(item.get("qty"))
         start_date = f"""{year_name}-{month_name}-01"""
         end_date = f"""{year_name}-{month_name}-31"""
-        caculation_sql =    f"""   SELECT 
+        caculation_sql =    f"""    SELECT 
                                     SUM(`tabSales Invoice Item`.amount) as amount ,
                                     SUM(`tabSales Invoice Item`.qty) as qty
                                     FROM 
@@ -127,6 +133,7 @@ def filetr_item_base_on_template(items , person , pdate) :
        
         old_sales_amount = 0 
         old_sales_qty = 0
+        # frappe.throw(str(local_qty))
         sum_amount = frappe.db.sql(caculation_sql ,as_dict=1)
         if sum_amount and len(sum_amount) > 0 :
             old_sales_amount = sum_amount[0].get("amount")   
@@ -134,6 +141,7 @@ def filetr_item_base_on_template(items , person , pdate) :
         total_monthly_sales = float(old_sales_amount or 0) +float(local_sales or 0)
         total_monthly_qty = float(old_sales_qty or 0 ) + float(local_qty or 0)
         # find Commission in Commission Template
+        # frappe.throw(str(total_monthly_qty))
         template_sql = f""" SELECT commission_template FROM `tabTarget Detail`  WHERE    
         fiscal_year = '{year_name}' and parent = '{person}' and item_group = '{item_group}'
 
@@ -142,7 +150,7 @@ def filetr_item_base_on_template(items , person , pdate) :
         commition_rate = 0 
         grant_commition = 0 
         template = frappe.db.sql(template_sql ,as_dict =1)
-        if template and len(template) > 0 :
+        if template and len(template) > 0 and template[0].get("commission_template") :
             local_template = frappe.get_doc("Commission Template" , template[0].get("commission_template"))
             if local_template.base_on ==  "Amount" :
                 for in_amount in local_template.templat  :
@@ -154,13 +162,26 @@ def filetr_item_base_on_template(items , person , pdate) :
                     if float(total_monthly_qty) > float(in_amount.amount_from or  0) :
                         commition_amount  = float(in_amount.commission_amount or 0 )
                         commition_rate    = float(in_amount.commission_rate or 0 )
+                        
         grant_commition = commition_amount
         if  commition_rate  > 0 :
             grant_commition = float(total_monthly_sales) * (float(commition_rate or 0 ) /100)
-
-        return grant_commition
-        pass
-    return 0 
+        if case == "submit" :
+            """ UPDATE old value  """
+            sql_chil_str = ''
+            parent_invoice = frappe.db.sql(f""" SELECT name FROM `tabSales Invoice` WHERE name in 
+                   (SELECT parent FROM `tabSales Team` WHERE sales_person = '{person}')
+                   and  posting_date between '{start_date }' and '{end_date}'""" ,as_dict=1)
+            for i in parent_invoice :
+                 sql_chil_str =  sql_chil_str + "'" + str(i.get("name")) + "'"+ ','
+            update_sql = frappe.db.sql(f""" UPDATE  `tabSales Team` SET incentives  = 0
+                         WHERE sales_person = '{person}'  and parent in ({sql_chil_str[:-1] })""")
+            
+            # frappe.throw(str(update_sql))
+            frappe.db.commit()
+        total_grant = total_grant + grant_commition
+        
+    return total_grant 
 @frappe.whitelist()
 def validate_sales_invocie_to_moyate(self):
     """  
@@ -174,6 +195,7 @@ def validate_sales_invocie_to_moyate(self):
     """
     if self.sales_team :
         # frappe.throw(" Sales Team Found")
+        case =  "submit" if self._action == "submit" else "draft"
         for person in self.sales_team :
             sales_person = validate_sales_person(person.sales_person)
             #caculate Commition Base On total Amount Before Tax 
@@ -185,8 +207,9 @@ def validate_sales_invocie_to_moyate(self):
                                                             "qty" :item.qty} 
                                                              for item in  self.items] , 
                                                              person.sales_person ,
-                                                             self.posting_date)
+                                                             self.posting_date ,
+                                                             case )
             person.incentives = filtersitems
-    pass
+    
 
 
