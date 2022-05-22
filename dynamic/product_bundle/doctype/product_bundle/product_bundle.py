@@ -82,7 +82,6 @@ def get_item_valuation_rate(item_code, company=None, warehouse=None):
 
         if valuation_rate:
             item_cost = valuation_rate[0][0] or 0.0
-    print("item company => " , company , "   item warehouse => " , warehouse , "item Code => " , item_code , "  rate => " , item_cost)
     return {"valuation_rate": item_cost}
 
 
