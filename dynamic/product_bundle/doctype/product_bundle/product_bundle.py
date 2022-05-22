@@ -4,6 +4,7 @@ from unittest import result
 from erpnext.stock.get_item_details import get_item_defaults, get_item_group_defaults, get_brand_defaults
 import frappe
 from frappe import _
+from frappe.defaults import get_user_default
 from frappe.utils import get_link_to_form
 from frappe.model.document import Document
 
@@ -53,7 +54,7 @@ class ProductBundle(Document):
 
 @frappe.whitelist()
 def get_item_valuation_rate(item_code, company=None, warehouse=None):
-    company = company or get_default_company()
+    company = company or get_user_default('company')
     item = get_item_defaults(item_code, company)
     item_group = get_item_group_defaults(item_code, company)
     brand = get_brand_defaults(item_code, company)
@@ -81,6 +82,7 @@ def get_item_valuation_rate(item_code, company=None, warehouse=None):
 
         if valuation_rate:
             item_cost = valuation_rate[0][0] or 0.0
+    print("item company => " , company , "   item warehouse => " , warehouse , "item Code => " , item_code , "  rate => " , item_cost)
     return {"valuation_rate": item_cost}
 
 
