@@ -5,7 +5,7 @@ from frappe import _
 import codecs
 import json
 import base64
-
+from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -59,4 +59,27 @@ def encode_invoice_data(doc):
         # print ("hexa_tag => ", hexa_tag)
     total_hex_b64 = codecs.encode(codecs.decode(total_hex, 'hex'), 'base64').decode('utf-8')
     return total_hex_b64
+
+import frappe
+from frappe import _
+from .api_hooks.sales_invoice import validate_sales_invocie_to_moyate
+DOMAINS = frappe.get_active_domains()
+
+
+@frappe.whitelist()
+def validate_active_domains(doc,*args,**kwargs):
+    if  'Moyate' in DOMAINS: 
+        """   Validate Sales Commition With Moyate """
+        validate_sales_invocie_to_moyate(doc)
+
+
+    if 'Product Bundle' in DOMAINS: 
+        """   Update Bundle of Bundles """
+        make_packing_list(doc)
+
+
+
+
+
+
 
