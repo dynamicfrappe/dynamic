@@ -57,16 +57,16 @@ def get_data(filters):
 	"""
 	if filters.get("item_group") :
 		item_group = filters.get("item_group")
-		sql = sql + f"and `tabSales Invoice Item`.item_group = '{item_group}'"
+		sql = sql + "and `tabSales Invoice Item`.item_group = '%s'"%(item_group)
 	else :
 		sql = sql +"and `tabSales Invoice Item`.item_group  in(SELECT name FROM `tabItem Group` WHERE is_group=0)"
 	if filters.get("start_date")  and filters.get("end_date"):
 		start_date = filters.get("start_date")
 		end_date = filters.get("end_date")
-		sql = sql + f"""AND `tabSales Invoice`.posting_date between '{start_date }' and '{end_date}'""" 
+		sql = sql + """AND `tabSales Invoice`.posting_date between '%s' and '%s'""" %(start_date ,end_date)
 	if filters.get("sales_person") :
 		peron = filters.get("sales_person")
-		sql = sql + f"""AND  `tabSales Team`.sales_person ='{peron}' """
+		sql = sql + """AND  `tabSales Team`.sales_person ='%s' """%peron
 	group_sql ="GROUP BY `tabSales Team`.sales_person , `tabSales Invoice Item`.item_group "
 	fin_sql = sql + group_sql
 	data = frappe.db.sql(fin_sql  ,as_dict=1)
