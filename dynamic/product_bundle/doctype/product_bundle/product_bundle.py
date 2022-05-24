@@ -62,32 +62,31 @@ def get_item_valuation_rate(item_code, company=None, warehouse=None):
     # item = frappe.get_doc("Item", item_code)
     if item.get("is_stock_item"):
         if not warehouse:
-            warehouse = item.get("default_warehouse") or item_group.get(
-                "default_warehouse") or brand.get(
-                    "default_warehouse") or get_default_warehouse(company)
-        item_cost = frappe.db.get_value("Bin", {
-            "item_code": item_code,
-            "warehouse": warehouse
-        }, ["valuation_rate"]) or 0
+            warehouse = item.get("default_warehouse") 
+        if warehouse :
+            item_cost = frappe.db.get_value("Bin", {
+                "item_code": item_code,
+                "warehouse": warehouse
+            }, ["valuation_rate"]) or 0
+        else:
+            sql = f"""
+            select AVG(valuation_rate) as valuation_rate from tabBin
+            where item_code = '{item_code}'
+            """ 
+            valuation_rate = frappe.db.sql(sql)
+
+            # valuation_rate = frappe.db.sql(
+            #     """select sum(base_net_amount) / sum(qty*conversion_factor)
+            #     from `tabPurchase Invoice Item`
+            #     where item_code = %s and docstatus=1""", item_code)
+            if valuation_rate:
+                item_cost = valuation_rate[0][0] or 0.0
 
     elif frappe.db.exists("Product Bundle", item_code):
         item_cost = get_product_bundle_cost(item_code) or 0
         # frappe.msgprint(str(item_cost))
 
-    else:
-        sql = f"""
-        select AVG(valuation_rate) as valuation_rate from tabBin
-        where item_code = '{item_code}'
-        """ 
-        valuation_rate = frappe.db.sql(sql)
-
-        # valuation_rate = frappe.db.sql(
-        #     """select sum(base_net_amount) / sum(qty*conversion_factor)
-        #     from `tabPurchase Invoice Item`
-        #     where item_code = %s and docstatus=1""", item_code)
-
-        if valuation_rate:
-            item_cost = valuation_rate[0][0] or 0.0
+    
     return {"valuation_rate": item_cost}
 
 
