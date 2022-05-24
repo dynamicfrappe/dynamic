@@ -137,6 +137,7 @@ scheduler_events = {
 	"cron": {
 		"0 */2 * * *": [
 			"dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",
+			"erpnext.stock.reorder_item.reorder_item",
 		]
 	},
 # 	"all": [
