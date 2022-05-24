@@ -75,10 +75,16 @@ def get_item_valuation_rate(item_code, company=None, warehouse=None):
         # frappe.msgprint(str(item_cost))
 
     else:
-        valuation_rate = frappe.db.sql(
-            """select sum(base_net_amount) / sum(qty*conversion_factor)
-            from `tabPurchase Invoice Item`
-            where item_code = %s and docstatus=1""", item_code)
+        sql = f"""
+        select AVG(valuation_rate) as valuation_rate from tabBin
+        where item_code = '{item_code}'
+        """ 
+        valuation_rate = frappe.db.sql(sql)
+
+        # valuation_rate = frappe.db.sql(
+        #     """select sum(base_net_amount) / sum(qty*conversion_factor)
+        #     from `tabPurchase Invoice Item`
+        #     where item_code = %s and docstatus=1""", item_code)
 
         if valuation_rate:
             item_cost = valuation_rate[0][0] or 0.0
