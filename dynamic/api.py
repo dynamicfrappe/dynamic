@@ -78,8 +78,20 @@ def validate_active_domains(doc,*args,**kwargs):
         make_packing_list(doc)
 
 
+@frappe.whitelist()
+def submit_journal_entry (doc,fun=''):
+    if "Cheques" in DOMAINS :
+        submit_journal_entry_cheques(doc)
+    
 
 
+
+@frappe.whitelist()
+def submit_journal_entry_cheques (doc):
+    if getattr(doc,"payment_entry",None):
+        payment_entry = frappe.get_doc("Payment Entry",doc.payment_entry)
+        payment_entry.cheque_status = doc.cheque_status
+        payment_entry.save()
 
 
 
