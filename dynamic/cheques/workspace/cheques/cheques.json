@@ -48,9 +48,18 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cheques Report",
+   "link_to": "Cheques Report_",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-05-30 10:19:21.250283",
+ "modified": "2022-06-01 16:46:00.019297",
  "modified_by": "Administrator",
  "module": "Cheques",
  "name": "Cheques",
