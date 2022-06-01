@@ -8,8 +8,43 @@ frappe.ui.form.on("Payment Entry", {
         ],
       };
     });
+    frm.set_query("endorsed_party_account", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+          ["disabled", "=", 0],
+        ],
+      };
+    });
   },
-  onload(frm) {
+  get_party_account: function (frm, callback) {
+    if (
+      frm.doc.company &&
+      frm.doc.endorsed_party_type &&
+      frm.doc.endorsed_party_name
+    ) {
+      frappe.call({
+        method: "erpnext.accounts.party.get_party_account",
+        args: {
+          party_type: frm.doc.party_type,
+          party: frm.doc.party,
+          company: frm.doc.company,
+        },
+        callback: (response) => {
+          if (response) callback(response);
+        },
+      });
+    }
+  },
+  endorsed_party_name: function (frm) {
+    frm.events.get_party_account(frm, function (r) {
+      if (r.message) {
+        frm.set_value("endorsed_party_account", r.message);
+      }
+    });
+  },
+  refresh(frm) {
     // your code here
     if (frm.doc.docstatus == 1 && frm.doc.cheque) {
       frm.events.add_cheque_buttons(frm);
@@ -33,7 +68,7 @@ frappe.ui.form.on("Payment Entry", {
         },
         __("Cheque Management")
       );
-      // deposite Cheque under collcttion 
+      // deposite Cheque under collcttion
       frm.add_custom_button(
         __("Deposit Under Collection"),
         function () {
@@ -43,7 +78,6 @@ frappe.ui.form.on("Payment Entry", {
       );
     }
     if (["New"].includes(frm.doc.cheque_status)) {
-      
     }
 
     // cheque under collction
@@ -67,16 +101,15 @@ frappe.ui.form.on("Payment Entry", {
 
     // Reject cheque under collction
     if (["Rejected in Bank"].includes(frm.doc.cheque_status)) {
+      // deposite Cheque under collcttion
       frm.add_custom_button(
-        __("Reject"),
+        __("Deposit Under Collection"),
         function () {
-          frm.events.reject_cheque_under_collection(frm);
+          frm.events.deposite_cheque_under_collection(frm);
         },
-        __("Cheque Under Collection")
+        __("Cheque Management")
       );
     }
-
-
   },
   make_cheque_endorsement(frm) {
     if (!frm.doc.drawn_bank_account) {

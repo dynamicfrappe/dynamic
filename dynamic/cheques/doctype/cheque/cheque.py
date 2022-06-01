@@ -66,6 +66,38 @@ def make_cheque_endorsement (payment_entry):
 	payment_entry = frappe.get_doc("Payment Entry",payment_entry)
 	if not payment_entry.drawn_bank_account :
 		frappe.throw(_("Please Set Bank Account"))
+	if not payment_entry.endorsed_party_type :
+		frappe.throw(_("Please Set Endorsed Party Type"))
+	if not payment_entry.endorsed_party_name :
+		frappe.throw(_("Please Set Endorsed Party Name"))
+	if not payment_entry.endorsed_party_account :
+		frappe.throw(_("Please Set Endorsed Party Account"))
+	je = frappe.new_doc("Journal Entry")
+	je.posting_date = payment_entry.posting_date
+	je.voucher_type = 'Bank Entry'
+	je.company = payment_entry.company
+	je.cheque_status = "Endorsed"
+	je.payment_entry = payment_entry.name
+	je.cheque_no = payment_entry.reference_no
+	je.cheque_date = payment_entry.reference_date
+	#je.remark = f'Journal Entry against Insurance for {self.doctype} : {self.name}'
+	### credit
+	je.append("accounts", {
+		"account": payment_entry.paid_to,
+		"credit_in_account_currency": flt(payment_entry.paid_amount),
+		# "reference_type": payment_entry.doctype,
+		# "reference_name": payment_entry.name,
+	})
+	## debit
+	je.append("accounts", {
+		"account":   payment_entry.endorsed_party_account,
+		"debit_in_account_currency": flt(payment_entry.paid_amount),
+		"party_type": payment_entry.endorsed_party_type,
+		"party": payment_entry.endorsed_party_name
+	})
+
+	je.save()
+	return je
 
 
 @frappe.whitelist()
@@ -80,6 +112,7 @@ def deposite_cheque_under_collection (payment_entry):
 	je.posting_date = payment_entry.posting_date
 	je.voucher_type = 'Bank Entry'
 	je.company = payment_entry.company
+	je.cheque_status = "Under Collect"
 	je.payment_entry = payment_entry.name
 	je.cheque_no = payment_entry.reference_no
 	je.cheque_date = payment_entry.reference_date
@@ -128,7 +161,55 @@ def deposite_cheque_under_collection (payment_entry):
 
 @frappe.whitelist()
 def collect_cheque_now (payment_entry):
+	return collect_cheque_under_collection()
 	payment_entry = frappe.get_doc("Payment Entry",payment_entry)
+	company = frappe.get_doc("Company",payment_entry.company)
+	if not payment_entry.drawn_bank_account :
+		frappe.throw(_("Please Set Bank Account"))
+	if not payment_entry.drawn_account :
+		frappe.throw(_("Bank Account is not Company Account"))
+	je = frappe.new_doc("Journal Entry")
+	je.posting_date = payment_entry.posting_date
+	je.cheque_status = "Collected"
+	je.voucher_type = 'Bank Entry'
+	je.company = payment_entry.company
+	je.payment_entry = payment_entry.name
+	je.cheque_no = payment_entry.reference_no
+	je.cheque_date = payment_entry.reference_date
+
+
+	je.append("accounts", {
+		"account": payment_entry.drawn_account,
+		"debit_in_account_currency": flt(payment_entry.paid_amount),
+
+	})
+	## debit
+	je.append("accounts", {
+		"account":   payment_entry.cheques_receivable_account,
+		"credit_in_account_currency": flt(payment_entry.paid_amount),
+		# "reference_type": payment_entry.doctype,
+		# "reference_name": payment_entry.name
+	})
+	if payment_entry.reject_cheque_commission :
+		if not company.bank_expenses_account :
+			frappe.throw(_("Please Set Bank Expenses Account in Company"))
+
+		je.append("accounts", {
+			"account": company.bank_expenses_account,
+			"debit_in_account_currency": flt(payment_entry.reject_cheque_commission),
+			# "reference_type": payment_entry.doctype,
+			# "reference_name": payment_entry.name,
+		})
+		## debit
+		je.append("accounts", {
+			"account":   payment_entry.drawn_account,
+			"credit_in_account_currency": flt(payment_entry.reject_cheque_commission),
+			# "reference_type": payment_entry.doctype,
+			# "reference_name": payment_entry.name
+		})
+		
+	je.save()
+	return je
 
 
 
@@ -248,5 +329,6 @@ cheque_status = [
     "New",
     "Under Collect",
     "Rejected in Bank" ,
-	"Collected"
+	"Collected",
+	"Endorsed"
 ]
