@@ -224,7 +224,40 @@ data = {
                 "insert_after": "cheque_status",
                 "label": "Endorse Cheque",
                 "depends_on": "cheque",
-                "read_only": 1,
+                "read_only_depends_on": "eval:doc.cheque_status!='New'",
+                "allow_on_submit": 1
+            },
+            {
+                "fieldname": "endorsed_party_type",
+                "fieldtype": "Select",
+                "insert_after": "endorse_cheque",
+                "label": "Endorsed Party Type",
+                "options":"\nSupplier\nCustomer",
+                "depends_on": "eval:doc.endorse_cheque",
+                "read_only_depends_on": "eval:doc.cheque_status!='New'",
+                "mandatory_depends_on": "eval:doc.endorse_cheque&&doc.cheque_status=='New'",
+                "allow_on_submit": 1
+            },
+            {
+                "fieldname": "endorsed_party_name",
+                "fieldtype": "Dynamic Link",
+                "options":"endorsed_party_type",
+                "insert_after": "endorsed_party_type",
+                "label": "Endorsed Party Name",
+                "depends_on": "eval:doc.endorse_cheque",
+                "read_only_depends_on": "eval:doc.cheque_status!='New'",
+                "mandatory_depends_on": "eval:doc.endorse_cheque&&doc.cheque_status=='New'",
+                "allow_on_submit": 1
+            },
+            {
+                "fieldname": "endorsed_party_account",
+                "fieldtype": "Link",
+                "options":"Account",
+                "insert_after": "endorsed_party_name",
+                "label": "Endorsed Party Account",
+                "depends_on": "eval:doc.endorse_cheque",
+                "read_only_depends_on": "eval:doc.cheque_status!='New'",
+                "mandatory_depends_on": "eval:doc.endorse_cheque&&doc.cheque_status=='New'",
                 "allow_on_submit": 1
             },
             {
