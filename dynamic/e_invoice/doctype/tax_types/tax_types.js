@@ -4,5 +4,8 @@
 frappe.ui.form.on('Tax Types', {
 	// refresh: function(frm) {
 
+	
 	// }
 });
+
+

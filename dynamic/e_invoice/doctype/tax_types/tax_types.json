@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{code}-{desc_en}",
+ "autoname": "field:code",
  "creation": "2022-06-07 10:29:45.145342",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -16,7 +16,8 @@
   {
    "fieldname": "code",
    "fieldtype": "Data",
-   "label": "Code"
+   "label": "Code",
+   "unique": 1
   },
   {
    "fieldname": "desc_en",
@@ -36,7 +37,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-07 10:30:05.290177",
+ "modified": "2022-06-08 12:10:35.344974",
  "modified_by": "Administrator",
  "module": "E Invoice",
  "name": "Tax Types",
@@ -56,5 +57,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "title_field": "desc_en"
 }

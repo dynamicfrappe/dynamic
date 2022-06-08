@@ -319,7 +319,35 @@ data = {
             },
 
         ],
-
+        'Item Tax Template Detail':[
+            {
+                "fieldname":"tax_type_invoice",
+                "fieldtype":"Link",
+                "insert_after":"tax_type",
+                "label":"Tax Type Invoice",
+                "name":"Tax Type Invoice",
+                "options":"Tax Types",
+                "in_list_view":1
+            },
+            {
+                "fieldname":"tax_sub_type",
+                "fieldtype":"Link",
+                "insert_after":"tax_type_invoice",
+                "label":"Tax Sub Type",
+                "name":"Tax Sub Type",
+                "options":"Tax Types",
+                "in_list_view":1
+            },
+            {
+                "fieldname":"amount",
+                "fieldtype":"Float",
+                "insert_after":"tax_rate",
+                "label":"Amount",
+                "name":"Amount",
+                "in_list_view":1,
+                "default":0
+            },
+        ]
     },
     "properties":
 

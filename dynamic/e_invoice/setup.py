@@ -6,7 +6,6 @@ from pathlib import Path
 import os
 import frappe
 import os
-import json
 
 
 
