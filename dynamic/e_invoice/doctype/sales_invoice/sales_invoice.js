@@ -1,7 +1,74 @@
+var message = "";
+
+function socket(action) {
+  var minus = 1,
+    plus = 2,
+    value = 3,
+    users = 3,
+    websocket = new WebSocket("ws://127.0.0.1:6789/");
+  var run_1 = function (action) {
+    try {
+      websocket.onopen = function (evt) {
+        try {
+          websocket.send(action);
+        } catch (err) {
+          console.log("error");
+        }
+      };
+    } catch (err) {
+      frappe.show_alert("No Token", 5);
+    }
+  };
+  function plus() {
+    websocket.send(JSON.stringify({ action: "plus" }));
+  }
+
+  websocket.onmessage = function (event) {
+    message = event.data;
+    var data = JSON.parse(message);
+    if (data.status) {
+      frappe.show_alert({ message: data.status, indicator: "blue" });
+      message = data.status;
+
+      return message;
+    }
+  };
+
+  run_1(action);
+}
+
 frappe.ui.form.on("Sales Invoice", {
   refresh(frm) {
     // your code here
     frm.events.setDateTimeIssued(frm);
+    var data = { name: "ahmed" };
+    socket(JSON.stringify(data));
+    if (frm.doc.docstatus == 1 && frm.doc.is_send == 0) {
+      frm.add_custom_button(__("Check Token"), function () {
+        if (message == "Token connecting" || message == "success") {
+          frm.events.add_post(frm);
+        } else {
+          frappe.show_alert({ message: "no connection ", indicator: "red" });
+        }
+      });
+    }
+  },
+
+  add_post(frm) {
+    frm.add_custom_button(__("POST TO TAX"), function () {
+      frappe.call({
+        method:
+          "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.post_sales_invoice",
+        args: {
+          invoice_name: frm.doc.name,
+        },
+        callback: function (r) {
+          console.log(r.message);
+          var data = { invoice: r.message };
+          socket(JSON.stringify(data));
+        },
+      });
+    });
   },
   tax_auth(frm) {
     //   if (frm.doc.tax_auth) {
@@ -94,7 +161,7 @@ frappe.ui.form.on("Sales Invoice Item", {
         },
         callback: function (r) {
           if (r.message) {
-            d.itemcode = `EGS-${r.message.tax_id || ''}-${d.item_code || ''}`;
+            d.itemcode = `EGS-${r.message.tax_id || ""}-${d.item_code || ""}`;
           }
           frm.refresh_field("items");
         },
