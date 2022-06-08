@@ -76,7 +76,8 @@ doctype_js = {
     "Sales Order": "public/js/sales_order.js",
     "Stock Entry": "public/js/stock_entry.js",
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
-    "Payment Entry": "public/js/payment_entry.js"
+    "Payment Entry": "public/js/payment_entry.js",
+    "Item Tax Template":"e_invoice/doctype/item_tax_template/item_tax_template.js"
 }
 doc_events = {
 
