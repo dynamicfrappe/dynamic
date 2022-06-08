@@ -12,6 +12,7 @@
  "is_default": 0,
  "is_standard": 1,
  "label": "GEBCO",
+ "restrict_to_domain": "Gebco",
  "links": [
   {
    "hidden": 0,
