@@ -12,7 +12,6 @@
  "is_default": 0,
  "is_standard": 1,
  "label": "GEBCO",
- "restrict_to_domain": "Gebco",
  "links": [
   {
    "hidden": 0,
@@ -60,12 +59,13 @@
    "type": "Link"
   }
  ],
- "modified": "2022-03-24 10:40:13.912771",
+ "modified": "2022-06-15 14:40:14.403366",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "GEBCO",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
+ "restrict_to_domain": "Gebco",
  "shortcuts": []
 }
