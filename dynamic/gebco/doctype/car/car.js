@@ -5,4 +5,13 @@ frappe.ui.form.on('Car', {
 	// refresh: function(frm) {
 
 	// }
+	setup:function(frm){
+		frm.set_query('serial_no',(doc)=>{
+			return {
+				query: 'dynamic.gebco.doctype.car.car.get_serial_no_query',
+				filters:{"doctype":frm.doc.name}
+			}
+			
+		})
+	}
 });
