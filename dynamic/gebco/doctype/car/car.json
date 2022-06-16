@@ -14,7 +14,6 @@
   "serial_no",
   "gps_device",
   "sim_number",
-  "data_8",
   "customer_name",
   "section_break_8",
   "description"
@@ -92,15 +91,11 @@
    "fieldname": "sim_number",
    "fieldtype": "Data",
    "label": "SIM Number"
-  },
-  {
-   "fieldname": "data_8",
-   "fieldtype": "Data"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-15 15:03:21.820539",
+ "modified": "2022-06-16 13:27:35.334396",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Car",
