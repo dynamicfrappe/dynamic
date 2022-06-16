@@ -1,13 +1,14 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{device_number}",
+ "autoname": "field:device_number",
  "creation": "2022-03-22 15:25:57.268076",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "device_number",
+  "device_type",
   "serial_no",
   "sim_number",
   "amended_from"
@@ -24,9 +25,9 @@
   {
    "fieldname": "serial_no",
    "fieldtype": "Data",
+   "hidden": 1,
    "in_list_view": 1,
-   "label": "Serial No",
-   "reqd": 1
+   "label": "Serial No"
   },
   {
    "allow_in_quick_entry": 1,
@@ -42,12 +43,18 @@
    "options": "GBS Device",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "device_type",
+   "fieldtype": "Data",
+   "label": "Device Type",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-22 15:26:16.280442",
+ "modified": "2022-06-15 14:46:05.097300",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "GBS Device",
