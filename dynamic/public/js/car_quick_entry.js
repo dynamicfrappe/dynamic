@@ -9,29 +9,13 @@ frappe.ui.form.CarQuickEntryForm = class CarQuickEntryForm extends (
   }
 
   render_dialog() {
-    
-    // this.mandatory = this.mandatory.concat(this.get_variant_fields());
-	// frm.set_query('serial_no',(doc)=>{
-	// 		return {
-	// 			query: 'dynamic.gebco.doctype.car.car.get_serial_no_query',
-	// 			filters:{"doctype":frm.doc.name}
-	// 		}
-			
-	// 	})
-	this.mandatory.find(x=>x.fieldname=="serial_no").get_query = () => {
-		return {
-		  query: "dynamic.gebco.doctype.car.car.get_serial_no_query",
-		  filters: { docname: this.doc.name },
-		};
-	  };
+    this.mandatory.find((x) => x.fieldname == "serial_no").get_query = () => {
+      return {
+        query: "dynamic.gebco.doctype.car.car.get_serial_no_query",
+        filters: { docname: this.doc.name },
+      };
+    };
     super.render_dialog();
-	
-	// this.get_field("serial_no").df.get_query = () => {
-	// 	return {
-	// 	  query: "dynamic.gebco.doctype.car.car.get_serial_no_query",
-	// 	  filters: { doctype: cur_dialog.doc.name },
-	// 	};
-	//   };
   }
 
   get_variant_fields() {
