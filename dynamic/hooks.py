@@ -103,6 +103,9 @@ doc_events = {
     "Purchase Receipt": {
         "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
     },
+    "Landed Cost Voucher" :{
+        "validate" :"dynamic.dynamic.validation.validate_landed_cost"
+    },
     "Purchase Order": {
         "on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
         "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
@@ -194,6 +197,7 @@ domains = {
     "Moyate": 'dynamic.domains.moyate',
     'Product Bundle': 'dynamic.domains.product_bundle',
     'Cheques': 'dynamic.domains.cheques',
+     'Terra': 'dynamic.domains.tera',
 }
 
 # domain Conatin
