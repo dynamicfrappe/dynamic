@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {
+       
+
          'Landed Cost Item': [
             {
                 "fieldname": "rate_currency",
@@ -33,7 +35,33 @@ data = {
                 "label": "Purchase Currency",
                 'read_only' : 1
             },
+             {
+                "fieldname": "currency",
+                "fieldtype": "Data",
+                "insert_after": "item_cost_valu",
+                "label": "Currency",
+                'read_only' : 1
+            },
         ],
+         "Landed Cost Voucher" :[
+            {
+                "fieldname": "cost_set_section",
+                "fieldtype": "Section Break",
+                "insert_after": "taxes",
+                "label": "Cost Section",
+               
+            },
+             {
+                "fieldname": "cost_child_table",
+                "fieldtype": "Table",
+                "insert_after": "cost_set_section",
+                "label": "Charges",
+                "options" :"Landed Cost Voucher Child"
+            },
+
+
+        ] ,
+        
         'Company':[
             {
                 "fieldname": "sales_return_account",
@@ -72,5 +100,6 @@ data = {
         }
 
     ],
+  
     'on_setup': 'dynamic.terra.setup.create_terra_scripts'
 }
