@@ -90,7 +90,20 @@ def create_item_script():
     """
     doc.save()
 
-
+def add_property_setters():
+    name = "Item-item_code-read_only"
+    if frappe.db.exists("Property Setter",name) :
+        pass
+    else:
+        doc = frappe.new_doc("Property Setter")
+        doc.doctype_or_field="DocField"
+        doc.doc_type="Item"
+        doc.field_name="item_code"
+        doc.property="read_only"
+        doc.property_type="Check"
+        doc.value=1
+        doc.save()
+    
 def create_terra_scripts():
 
     try:
@@ -104,6 +117,11 @@ def create_terra_scripts():
     except:
         print("error in create_item_script")
 
+
+    try:
+        add_property_setters()
+    except:
+        print("error in add_property_setters")
 
 
 
