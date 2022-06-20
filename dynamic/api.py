@@ -6,6 +6,7 @@ import codecs
 import json
 import base64
 from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
+from erpnext import get_default_company, get_default_cost_center
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -63,6 +64,7 @@ def encode_invoice_data(doc):
 import frappe
 from frappe import _
 from .api_hooks.sales_invoice import validate_sales_invocie_to_moyate
+from dynamic.dynamic.validation import validate_sales_invoice
 DOMAINS = frappe.get_active_domains()
 
 
@@ -76,6 +78,11 @@ def validate_active_domains(doc,*args,**kwargs):
     if 'Product Bundle' in DOMAINS: 
         """   Update Bundle of Bundles """
         make_packing_list(doc)
+
+    
+    if 'Terra' in DOMAINS:
+        validate_sales_invoice(doc)
+
 
 
 @frappe.whitelist()
@@ -92,6 +99,17 @@ def submit_journal_entry_cheques (doc):
         payment_entry = frappe.get_doc("Payment Entry",doc.payment_entry)
         payment_entry.cheque_status = doc.cheque_status
         payment_entry.save()
+
+
+
+# ---------------- get sales return account ------------------  #
+@frappe.whitelist()
+def get_sales_return_account():
+    company_name = get_default_company()
+    company_doc = frappe.get_doc("Company",company_name)
+    if company_doc.get("sales_return_account"):
+        return company_doc.get("sales_return_account")
+    return
 
 
 
