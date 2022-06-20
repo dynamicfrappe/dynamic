@@ -2,9 +2,11 @@ from __future__ import unicode_literals
 
 
 data = {
-    'custom_fields': {
-        'Landed Cost Item': [
 
+    'custom_fields': {
+       
+
+         'Landed Cost Item': [
             {
                 "fieldname": "rate_currency",
                 "fieldtype": "Data",
@@ -80,8 +82,10 @@ data = {
 
             },
         ] 
-        },
-        'on_setup': 'dynamic.terra.setup.create_terra_scripts' 
-    
-    
-    }
+
+
+
+    },
+  
+    'on_setup': 'dynamic.terra.setup.create_terra_scripts'
+}

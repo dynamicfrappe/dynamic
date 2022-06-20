@@ -86,6 +86,9 @@ doc_events = {
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
         "validate": "dynamic.api.validate_active_domains"
     },
+    "Item": {
+        "autoname": "dynamic.api.autoname"
+    },
     "Delivery Note": {
         "on_submit": "dynamic.gebco.api.validate_delivery_note",
         "validate": "dynamic.product_bundle.doctype.packed_item.packed_item.make_packing_list"
