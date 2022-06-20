@@ -59,17 +59,17 @@ data = {
 
     },
     "properties": [
-
+        
     ],
     "property_setters": [
-        # {
-        #     "doc_type": "Item",
-        #     "doctype_or_field": "DocType",
-        #     "name": "Item-main-autoname",
-        #     "property": "autoname",
-        #     "property_type": "Data",
-        #     "value": "field:item_name"
-        #     }
+        {
+        "doc_type": "Item",
+        "doctype_or_field": "DocField",
+        "field_name": "item_code",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1"
+        }
 
     ],
     'on_setup': 'dynamic.terra.setup.create_terra_scripts'

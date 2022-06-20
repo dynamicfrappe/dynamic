@@ -87,7 +87,8 @@ doc_events = {
         "validate": "dynamic.api.validate_active_domains"
     },
     "Item": {
-        "autoname": "dynamic.api.autoname"
+        "autoname": "dynamic.api.autoname",
+        "validate": "dynamic.dynamic.validation.validate_item_code"
     },
     "Delivery Note": {
         "on_submit": "dynamic.gebco.api.validate_delivery_note",

@@ -50,12 +50,59 @@ def create_sales_invoice_script():
     doc.save()
 
 
+
+def create_item_script():
+    name = "Item-Form"
+    if frappe.db.exists("Client Script",name) :
+        doc = frappe.get_doc("Client Script",name)
+    else :
+        doc = frappe.new_doc("Client Script")
+    doc.dt      = "Item"
+    doc.view    = "Form"
+    doc.enabled = 1
+    doc.script = """
+            
+        frappe.ui.form.on("Item", {
+            item_group(frm){
+                if(frm.doc.item_group && frm.doc.__islocal){
+                    frappe.call({
+                        method:'dynamic.api.generate_item_code',
+                        args:{
+                            'item_group':frm.doc.item_group
+                        },callback(r){
+                            if(r.message){
+                                if(r.message == 'false'){
+                                    frm.set_value("item_group","")
+                                    frm.refresh_field('item_group')
+                                }else{
+                                frm.set_value('item_code',r.message)
+                                frm.refresh_field('item_code')
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        
+        });
+
+
+    """
+    doc.save()
+
+
 def create_terra_scripts():
 
     try:
         create_sales_invoice_script()
     except:
         print("error in create sales order script")
+
+    
+    try:
+        create_item_script()
+    except:
+        print("error in create_item_script")
 
 
 
