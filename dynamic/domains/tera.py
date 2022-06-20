@@ -32,8 +32,29 @@ data = {
                 "label": "Purchase Currency",
                 'read_only' : 1
             },
+        ],
+        'Company':[
+            {
+                "fieldname": "sales_return_account",
+                "fieldtype": "Link",
+                "options":"Account",
+                "insert_after": "unrealized_profit_loss_account",
+                "label": "Sales Return Account"
+            },
+        ],
+        'Item Group':[
+            {
+                "fieldname": "code",
+                "fieldtype": "Data",
+                "insert_after": "column_break_5",
+                "label": "Group Code",
+                "unique": 1,
+                "reqd":1
+
+            },
         ] 
-        } 
+        },
+        'on_setup': 'dynamic.terra.setup.create_terra_scripts' 
     
     
     }
