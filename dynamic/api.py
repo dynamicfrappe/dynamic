@@ -7,6 +7,7 @@ import json
 import base64
 from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
 from erpnext import get_default_company, get_default_cost_center
+from frappe.model.naming import make_autoname
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -113,3 +114,7 @@ def get_sales_return_account():
 
 
 
+# item auto name
+def autoname(self,fun=''):
+    #series = "Tax-Inv-.DD.-.MM.-.YYYY.-.###." if getattr(self,'tax_auth' , 0) else self.naming_series
+    self.name = self.item_name
