@@ -142,6 +142,13 @@ data = {
             "unique": 1,
             "fetch_if_empty": 1,
             "fetch_from": "party_name.phone_no" 
+            },
+             {
+            "fieldname": "opportunity_name",
+            "fieldtype": "Data",
+            "insert_after": "naming_series",
+            "label": "Opportunity Name",
+            "translatable": 1,
             }
         ] 
     },
