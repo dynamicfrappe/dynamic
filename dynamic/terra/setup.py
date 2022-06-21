@@ -103,6 +103,45 @@ def add_property_setters():
         doc.property_type="Check"
         doc.value=1
         doc.save()
+
+def add_lead_property_setters():
+    name = "Lead-main-search_fields"
+    if frappe.db.exists("Property Setter",name) :
+        pass
+    else:
+        doc = frappe.new_doc("Property Setter")
+        doc.doctype_or_field="DocType"
+        doc.doc_type="Lead"
+        doc.property="search_fields"
+        doc.property_type="Data"
+        doc.value="lead_name,lead_owner,status,phone_no"
+        doc.save()
+
+def add_opp_property_setters():
+    name = "Opportunity-main-search_fields"
+    if frappe.db.exists("Property Setter",name) :
+        pass
+    else:
+        doc = frappe.new_doc("Property Setter")
+        doc.doctype_or_field = "DocType"
+        doc.doc_type = "Opportunity"
+        doc.property = "search_fields"
+        doc.property_type = "Data"
+        doc.value="status,transaction_date,party_name,opportunity_type,territory,company,phone_no"
+        doc.save()
+
+def add_customer_property_setters():
+    name = "Customer-main-search_fields"
+    if frappe.db.exists("Property Setter",name) :
+        pass
+    else:
+        doc = frappe.new_doc("Property Setter")
+        doc.doctype_or_field="DocType"
+        doc.doc_type="Customer"
+        doc.property="search_fields"
+        doc.property_type="Data"
+        doc.value="customer_name,customer_group,territory, mobile_no,primary_address,phone_no"
+        doc.save()
     
 def create_terra_scripts():
 
@@ -122,6 +161,21 @@ def create_terra_scripts():
         add_property_setters()
     except:
         print("error in add_property_setters")
+
+    try:
+        add_lead_property_setters()
+    except:
+        print("add_item_property_setters")
+
+    try:
+        add_opp_property_setters()
+    except:
+        print("add_opp_property_setters")
+
+    try:
+        add_customer_property_setters()
+    except:
+        print("add_customer_property_setters")
 
 
 

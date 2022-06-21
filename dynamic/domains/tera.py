@@ -127,16 +127,15 @@ data = {
         
     ],
     "property_setters": [
-        {
-        "doc_type": "Item",
-        "doctype_or_field": "DocField",
-        "field_name": "item_code",
-        "property": "read_only",
-        "property_type": "Check",
-        "value": "1"
-        },
-
-    ],
+        # {
+        # "doc_type": "Lead",
+        # "doctype_or_field": "DocType",
+        # "name": "Lead-main-search_fields",
+        # "property": "search_fields",
+        # "property_type": "Data",
+        # "value": "lead_name,lead_owner,phone_no"
+        # }
+        ],
   
     'on_setup': 'dynamic.terra.setup.create_terra_scripts'
 }
