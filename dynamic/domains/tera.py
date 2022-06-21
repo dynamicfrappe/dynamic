@@ -81,10 +81,43 @@ data = {
                 "reqd":1
 
             },
+        ],
+        'Lead':[
+             {
+            "fieldname": "phone_no",
+            "fieldtype": "Data",
+            "in_global_search": 1,
+            "in_standard_filter": 1,
+            "insert_after": "email_id",
+            "label": "Phone No",
+            "translatable": 1,
+            "unique": 1,
+            }
+        ] ,
+        'Customer':[
+             {
+            "fieldname": "phone_no",
+            "fieldtype": "Data",
+            "in_global_search": 1,
+            "in_standard_filter": 1,
+            "insert_after": "email_id",
+            "label": "Phone No",
+            "translatable": 1,
+            "unique": 1,
+            }
+        ],
+        'Opportunity':[
+             {
+            "fieldname": "phone_no",
+            "fieldtype": "Data",
+            "in_global_search": 1,
+            "in_standard_filter": 1,
+            "insert_after": "source",
+            "label": "Phone No",
+            "translatable": 1,
+            "unique": 1,
+            }
         ] 
-
-
-
     },
     "properties": [
         
