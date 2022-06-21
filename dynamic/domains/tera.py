@@ -100,10 +100,12 @@ data = {
             "fieldtype": "Data",
             "in_global_search": 1,
             "in_standard_filter": 1,
-            "insert_after": "email_id",
+            "insert_after": "tax_category",
             "label": "Phone No",
             "translatable": 1,
             "unique": 1,
+            "fetch_if_empty": 1,
+            "fetch_from": "lead_name.phone_no", 
             }
         ],
         'Opportunity':[
@@ -116,6 +118,8 @@ data = {
             "label": "Phone No",
             "translatable": 1,
             "unique": 1,
+            "fetch_if_empty": 1,
+            "fetch_from": "party_name.phone_no" 
             }
         ] 
     },
