@@ -94,4 +94,41 @@ def validate_cost(self , *args , **kwargs):
 
 @frappe.whitelist()
 def get_query_type (*args,**kwargs):
-	return[[ "Purchase Invoice"],["Payment Entry"] , ["Journal Entry"]]
+	return[[ "Purchase Invoice"],["Payment Entry"] ]
+
+
+@frappe.whitelist()
+def get_doctype_info(doc_type , document  ,*args , **kwargs) :
+    doc_total = 0 
+    unallocate = 0 
+    doc= False
+    account = ""
+    if doc_type == "Purchase Invoice" :
+        doc = frappe.db.sql(f""" SELECT SUM(b.base_amount) as total 
+           FROM 
+         `tabItem` a
+          INNER JOIN 
+         `tabPurchase Invoice Item` b
+          ON a.item_code = b.item_code 
+          WHERE
+          a.is_stock_item= 0 AND
+          b.parent = '{document}'""",as_dict =1)
+        
+    if doc_type == "Payment Entry" :
+        doc=  frappe.db.sql(f""" SELECT unallocated_amount as total FROM
+                         `tabPayment Entry` WHERE name = '{document}'""" ,as_dict =1)
+    if doc and len(doc) > 0 : 
+            if doc[0].get("total") and float(doc[0].get("total") or 0 ) > 0 :
+                doc_total = float(doc[0].get("total") )
+    old_allocated = 0 
+    caculate_old = frappe.db.sql(f""" 
+    SELECT SUM(allocated_amount) as allocated FROM `tabLanded Cost Voucher Child` WHERE 
+    doc_type ='{doc_type}' and invoice ='{document}'
+    """,as_dict =1)
+    if caculate_old and len(caculate_old) > 0 :
+        old_allocated = float(caculate_old[0].get("allocated") or 0 )
+    unallocate = float(doc_total or 0) - float(old_allocated or 0 )
+    return ({
+        "total" : doc_total  , "allocated" : unallocate
+    })
+    

@@ -14,3 +14,35 @@ def validate_landed_cost(doc,*args,**kwargs):
 def validate_sales_invoice(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         check_return_account(doc)
+
+
+
+
+@frappe.whitelist()
+def get_query_type (*args,**kwargs):
+	return[[ "Purchase Invoice"],["Payment Entry"] , ["Journal Entry"]]
+
+@frappe.whitelist()
+def get_purchase_items(invoice=None , *args , **kwargs):
+
+
+	invoices = frappe.db.sql("""SELECT  p.parent  FROM 
+                                `tabPurchase Invoice Item`  p
+								inner join   
+                                `tabItem`  a 
+                                inner join 
+                                `tabPurchase Invoice` as c
+                                on p.item_code = a.item_code and c.name = p.parent
+								WHERE a.is_stock_item = 0 and c.docstatus = 1 
+								group by p.parent   """)
+
+ 
+	return invoices
+
+@frappe.whitelist()
+def get_active_domain():
+    if 'Terra' in DOMAINS:
+        return True
+    else :
+        return False
+    

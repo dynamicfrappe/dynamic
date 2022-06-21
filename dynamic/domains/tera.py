@@ -47,7 +47,7 @@ data = {
             {
                 "fieldname": "cost_set_section",
                 "fieldtype": "Section Break",
-                "insert_after": "taxes",
+                "insert_after": "items",
                 "label": "Cost Section",
                
             },

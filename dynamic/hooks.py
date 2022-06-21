@@ -34,8 +34,7 @@ app_include_js = "/assets/js/dynamic.min.js"
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
 
-# include js in doctype views
-# doctype_js = {"Sales Invoice" : "public/js/sales_invoice.js"}
+# include js in doctype views 
 # doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -77,7 +76,8 @@ doctype_js = {
     "Stock Entry": "public/js/stock_entry.js",
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
-    "Item Tax Template":"e_invoice/doctype/item_tax_template/item_tax_template.js"
+    "Item Tax Template":"e_invoice/doctype/item_tax_template/item_tax_template.js" ,
+    "Landed Cost Voucher" : "public/js/landed_cost_voucher.js"
 }
 doc_events = {
 
