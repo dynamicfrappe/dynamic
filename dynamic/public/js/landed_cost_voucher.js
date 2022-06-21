@@ -66,7 +66,21 @@ frappe.ui.form.on("Landed Cost Voucher", {
         var i = 0 
         for (i = 0 ; i < frm.doc.cost_child_table.length ; i ++ ){
             console.log(frm.doc.cost_child_table[i].invoice)
-            frm.events.add_row_to_charges(frm,frm.doc.cost_child_table[i].doc_type , frm.doc.cost_child_table[i].invoice )
+            // frm.events.add_row_to_charges(frm,frm.doc.cost_child_table[i].doc_type , frm.doc.cost_child_table[i].invoice )
+            frappe.call({
+                method:"dynamic.terra.landed_cost.get_line_info",
+                async: false,
+                args :
+                {
+                    "allocated_amount" : frm.doc.cost_child_table[i].allocated_amount ,
+                    "doc_type": frm.doc.cost_child_table[i].doc_type,
+                    "document": frm.doc.cost_child_table[i].invoice
+                } ,
+                callback:function(r){
+                    console.log(r.message)
+                }
+            })
+        
         }
     }
 

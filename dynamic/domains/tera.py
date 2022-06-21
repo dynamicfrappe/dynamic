@@ -61,6 +61,28 @@ data = {
 
 
         ] ,
+        'Landed Cost Taxes and Charges':[
+             {
+                "fieldname": "line_name",
+                "fieldtype": "Data",
+                "insert_after": "base_amount",
+                "label": "Line Name",
+                "read_only" : 1
+               
+
+            },
+             {
+                "fieldname": "docment_type",
+                "fieldtype": "Data",
+                "insert_after": "line_name",
+                "label": "Document Type",
+                "read_only" : 1
+               
+
+            },
+
+        ],
+
         
         'Company':[
             {
@@ -81,11 +103,62 @@ data = {
                 "reqd":1
 
             },
+        ],
+        'Lead':[
+             {
+            "fieldname": "phone_no",
+            "fieldtype": "Data",
+            "in_global_search": 1,
+            "in_standard_filter": 1,
+            "insert_after": "email_id",
+            "label": "Phone No",
+            "translatable": 1,
+            "unique": 1,
+            }
+        ] ,
+        'Customer':[
+             {
+            "fieldname": "phone_no",
+            "fieldtype": "Data",
+            "in_global_search": 1,
+            "in_standard_filter": 1,
+            "insert_after": "tax_category",
+            "label": "Phone No",
+            "translatable": 1,
+            "unique": 1,
+            "fetch_if_empty": 1,
+            "fetch_from": "lead_name.phone_no", 
+            }
+        ],
+        'Opportunity':[
+             {
+            "fieldname": "phone_no",
+            "fieldtype": "Data",
+            "in_global_search": 1,
+            "in_standard_filter": 1,
+            "insert_after": "source",
+            "label": "Phone No",
+            "translatable": 1,
+            "unique": 1,
+            "fetch_if_empty": 1,
+            "fetch_from": "party_name.phone_no" 
+            }
         ] 
-
-
-
     },
+    "properties": [
+        
+    ],
+    "property_setters": [
+        {
+        "doc_type": "Item",
+        "doctype_or_field": "DocField",
+        "field_name": "item_code",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1"
+        },
+
+    ],
   
     'on_setup': 'dynamic.terra.setup.create_terra_scripts'
 }

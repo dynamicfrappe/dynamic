@@ -116,5 +116,23 @@ def get_sales_return_account():
 
 # item auto name
 def autoname(self,fun=''):
-    #series = "Tax-Inv-.DD.-.MM.-.YYYY.-.###." if getattr(self,'tax_auth' , 0) else self.naming_series
-    self.name = self.item_name
+    if 'Terra' in DOMAINS:
+        #series = "Tax-Inv-.DD.-.MM.-.YYYY.-.###." if getattr(self,'tax_auth' , 0) else self.naming_series
+        self.name = self.item_name
+
+
+@frappe.whitelist()
+def generate_item_code(item_group):
+    group_doc = frappe.get_doc("Item Group",item_group)
+    group_code = group_doc.code
+    if not group_code:
+        frappe.msgprint(_("Item Group Doesnt Have Code"))
+        return 'false'
+    sql = f"""
+    select count(*) +1 as 'serial' from `tabitem code serial` where item_group= '{group_doc.name}'
+    """
+    res = frappe.db.sql(sql,as_dict=1)
+
+    serial = str(group_code or '')+'-' + str(res[0].serial or '')
+
+    return serial
