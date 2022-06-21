@@ -158,6 +158,21 @@ data = {
             "label": "Opportunity Name",
             "translatable": 1,
             }
+        ],
+        'Stock Settings':[
+            {
+                "fieldname": "email_section",
+                "fieldtype": "Section Break",
+                "insert_after": "stock_auth_role"
+            },
+            {
+            "fieldname": "email_setting",
+            "fieldtype": "Table",
+            "options":"Email Setting",
+            "insert_after": "email_section",
+            "label": "Email Setting",
+            "translatable": 1,
+            }
         ] 
     },
     "properties": [
