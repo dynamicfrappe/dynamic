@@ -136,3 +136,15 @@ def generate_item_code(item_group):
     serial = str(group_code or '')+'-' + str(res[0].serial or '')
 
     return serial
+
+
+@frappe.whitelist()
+def create_new_appointment(source_name, target_doc=None):
+    doc = frappe.get_doc("Lead", source_name)
+    appointment_doc = frappe.new_doc("Appointment")
+    appointment_doc.customer_name = doc.lead_name
+    appointment_doc.customer_phone_number = doc.phone_no 
+    appointment_doc.appointment_with = "Lead"
+    appointment_doc.party = doc.name
+    appointment_doc.customer_email = doc.email_id
+    return appointment_doc
