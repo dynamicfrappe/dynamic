@@ -47,7 +47,7 @@ data = {
             {
                 "fieldname": "cost_set_section",
                 "fieldtype": "Section Break",
-                "insert_after": "taxes",
+                "insert_after": "items",
                 "label": "Cost Section",
                
             },
@@ -61,6 +61,28 @@ data = {
 
 
         ] ,
+        'Landed Cost Taxes and Charges':[
+             {
+                "fieldname": "line_name",
+                "fieldtype": "Data",
+                "insert_after": "base_amount",
+                "label": "Line Name",
+                "read_only" : 1
+               
+
+            },
+             {
+                "fieldname": "docment_type",
+                "fieldtype": "Data",
+                "insert_after": "line_name",
+                "label": "Document Type",
+                "read_only" : 1
+               
+
+            },
+
+        ],
+
         
         'Company':[
             {

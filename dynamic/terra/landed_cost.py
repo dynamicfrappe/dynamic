@@ -1,6 +1,9 @@
 import frappe
 from frappe import _
 
+
+
+DOMAINS = frappe.get_active_domains()
 #cacluate rate and tax rescharges
 #this function 
 # caculate item Percent From The invoice total
@@ -94,4 +97,74 @@ def validate_cost(self , *args , **kwargs):
 
 @frappe.whitelist()
 def get_query_type (*args,**kwargs):
-	return[[ "Purchase Invoice"],["Payment Entry"] , ["Journal Entry"]]
+	return[[ "Purchase Invoice"],["Payment Entry"] ]
+
+
+@frappe.whitelist()
+def get_doctype_info(doc_type , document  ,*args , **kwargs) :
+    doc_total = 0 
+    unallocate = 0 
+    doc= False
+    account = ""
+    if doc_type == "Purchase Invoice" :
+        doc = frappe.db.sql(f""" SELECT SUM(b.base_amount) as total 
+           FROM 
+         `tabItem` a
+          INNER JOIN 
+         `tabPurchase Invoice Item` b
+          ON a.item_code = b.item_code 
+          WHERE
+          a.is_stock_item= 0 AND
+          b.parent = '{document}'""",as_dict =1)
+        
+    if doc_type == "Payment Entry" :
+        doc=  frappe.db.sql(f""" SELECT unallocated_amount as total FROM
+                         `tabPayment Entry` WHERE name = '{document}'""" ,as_dict =1)
+    if doc and len(doc) > 0 : 
+            if doc[0].get("total") and float(doc[0].get("total") or 0 ) > 0 :
+                doc_total = float(doc[0].get("total") )
+    old_allocated = 0 
+    caculate_old = frappe.db.sql(f""" 
+    SELECT SUM(allocated_amount) as allocated FROM `tabLanded Cost Voucher Child` WHERE 
+    doc_type ='{doc_type}' and invoice ='{document}'
+    """,as_dict =1)
+    if caculate_old and len(caculate_old) > 0 :
+        old_allocated = float(caculate_old[0].get("allocated") or 0 )
+    unallocate = float(doc_total or 0) - float(old_allocated or 0 )
+    return ({
+        "total" : doc_total  , "allocated" : unallocate
+    })
+
+def get_old_laned_cost_ex(line_name , docment_type) :
+    amount = frappe.db.sql(""" SELECT SUM(base_amount) as total FROM `tabLanded Cost Taxes and Charges`
+       WHERE line_name='{line_name}' and docment_type='{docment_type}'  """,as_dict=1)
+    if amount and len(amount) > 0 :
+        return float(amount[0].get('total') or 0 )
+    else :
+        return 0 
+
+@frappe.whitelist()    
+def get_line_info( allocated_amount ,doc_type , document ,*args ,**kwargs):
+    amount = 0
+    allcoated = 0
+    if doc_type  == "Payment Entry" :
+        return 0
+    if doc_type  == "Purchase Invoice" :
+        invocie_lines  = []
+        line_data = frappe.db.sql(f"""  SELECT b.name ,
+                                               b.item_code , 
+                                               b.base_amount  ,
+                                               b.expense_account
+                                        FROM  `tabPurchase Invoice Item`  b
+                                        INNER JOIN 
+                                        `tabPurchase Invoice` a
+                                        INNER JOIN `tabItem`   c 
+                                        ON
+                                        a.name = b.parent AND b.item_code = c.item_code
+                                        WHERE 
+                                        c.is_stock_item = 0 AND
+                                        b.parent = '{document}' 
+                                      """,as_dict =1 )
+        if line_data and len(line_data) > 0 :
+            for item in line_data:
+                old_expens = get_old_laned_cost_ex(item.get("b.name") ,)
