@@ -106,15 +106,16 @@ data = {
         ],
         'Lead':[
              {
-            "fieldname": "phone_no",
-            "fieldtype": "Data",
-            "in_global_search": 1,
-            "in_standard_filter": 1,
-            "insert_after": "email_id",
-            "label": "Phone No",
-            "translatable": 1,
-            "unique": 1,
-            }
+                "fieldname": "phone_no",
+                "fieldtype": "Data",
+                "in_global_search": 1,
+                "in_standard_filter": 1,
+                "insert_after": "email_id",
+                "label": "Phone No",
+                "translatable": 1,
+                "unique": 1,
+            },
+            
         ] ,
         'Customer':[
              {
@@ -128,6 +129,13 @@ data = {
             "unique": 1,
             "fetch_if_empty": 1,
             "fetch_from": "lead_name.phone_no", 
+            },
+             {
+                "fieldname": "from_opportunity",
+                "fieldtype": "Link",
+                "insert_after": "from_lead",
+                "label": "From Opportunity",
+                "options":"Opportunity"
             }
         ],
         'Opportunity':[
