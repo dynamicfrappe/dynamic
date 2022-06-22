@@ -62,12 +62,6 @@ def get_purchase_rate_in_supplier_currency( item ,
             total_in_supplier_currency = total_in_supplier_currency -float(item_data[0].get('discount_amount') or 0)
             discount_amount = float(item_data[0].get('discount_amount') or 0) * item_precent
             item_price = item_price - discount_amount
-        # Add old Landed Cost To item value In supplier Currency
-        if float(item_data[0].get('old_ex') or 0) > 0  :
-            item_old_exp =  float(item_data[0].get('old_ex') or 0) /float(item_data[0].get('qty') or 0) 
-            item_old_ex_in_supplier_currency =( item_old_exp / float(item_data[0].get('factor')or 1))
-            item_price = item_price  + float(item_old_ex_in_supplier_currency or 0)
-
         #add Tax amount To item Price If User Dont Use Tax Account 
         # ignored for handel case
         # if float(item_data[0].get("taxes") or 0 ) > 0 :
@@ -75,6 +69,10 @@ def get_purchase_rate_in_supplier_currency( item ,
         #     item_price = item_price + item_tax
         # check Currency Factor if > 1 Update item
         #if float(item_data[0].get('factor') or 0 ) > 1 :
+        if float(item_data[0].get('old_ex') or 0) > 0  :
+            item_old_exp =  float(item_data[0].get('old_ex') or 0) /float(item_data[0].get('qty') or 0) 
+            item_old_ex_in_supplier_currency =( item_old_exp / float(item_data[0].get('factor')or 1))
+            item_price = item_price  + float(item_old_ex_in_supplier_currency or 0)
         data = {
                 "rate"     : item_price ,
                 "currency" : item_data[0].get("currency")  ,
@@ -96,9 +94,12 @@ def validate_cost(self , *args , **kwargs):
         item.rate_currency     = float(data.get("rate" ) or 0 )
         item.purchase_currency = data.get("currency")
         item.currency          = float( data.get("factor") or 1)
+       
+
         item.item_cost_value = float(item.applicable_charges or 0) / float(item.qty or 1)
         item.item_after_cost =( item.rate_currency *  item.currency ) +item.item_cost_value 
     for invocie in self.cost_child_table : 
+       
         if invocie.doc_type == "Purchase Invoice" :
             #invocie.allocated_amount = 0 
             invocie.allocated_amount = get_doctype_info(invocie.doc_type ,
@@ -117,7 +118,7 @@ def validate_cost(self , *args , **kwargs):
 
             invocie.unallocated_amount = invocie.allocated_amount - allocated
             invocie.allocated_amount = allocated
-@frappe.whitelist()
+
 def validate_line_amount(doc_type ,document ,*args ,**kwargs):
     invoice_line_amount = 0 
     allocated_ex = get_old_laned_cost_ex(document ,doc_type ) 
@@ -131,10 +132,11 @@ def validate_line_amount(doc_type ,document ,*args ,**kwargs):
     available_amount = float(invoice_line_amount or 0) - float(allocated_ex or 0)
     return available_amount 
 
+
+
 @frappe.whitelist()
 def get_query_type (*args,**kwargs):
 	return[[ "Purchase Invoice"] ]
-
 
 @frappe.whitelist()
 def get_doctype_info(doc_type , document  ,*args , **kwargs) :
@@ -227,8 +229,6 @@ def get_line_info( allocated_amount ,doc_type , document ,*args ,**kwargs):
                     "account"     : item.get("account") ,
                     "document"    : document
                 }
-                if available_amount > 0 :
-                    invocie_lines.append(item_data)
-                else :
-                    pass
+               
+                invocie_lines.append(item_data)
         return invocie_lines
