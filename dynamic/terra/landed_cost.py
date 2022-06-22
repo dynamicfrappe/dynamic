@@ -31,6 +31,8 @@ def get_purchase_rate_in_supplier_currency( item ,
 
     item_data = frappe.db.sql(f""" SELECT   
                                     b.rate  as rate  ,
+                                    b.landed_cost_voucher_amount as old_ex ,
+                                    b.qty as qty , 
                                     a.conversion_rate as factor , 
                                     a.currency as currency ,
                                     a.discount_amount as discount_amount,
@@ -60,6 +62,12 @@ def get_purchase_rate_in_supplier_currency( item ,
             total_in_supplier_currency = total_in_supplier_currency -float(item_data[0].get('discount_amount') or 0)
             discount_amount = float(item_data[0].get('discount_amount') or 0) * item_precent
             item_price = item_price - discount_amount
+        # Add old Landed Cost To item value In supplier Currency
+        if float(item_data[0].get('old_ex') or 0) > 0  :
+            item_old_exp =  float(item_data[0].get('old_ex') or 0) /float(item_data[0].get('qty') or 0) 
+            item_old_ex_in_supplier_currency =( item_old_exp / float(item_data[0].get('factor')or 1))
+            item_price = item_price  + float(item_old_ex_in_supplier_currency or 0)
+
         #add Tax amount To item Price If User Dont Use Tax Account 
         # ignored for handel case
         # if float(item_data[0].get("taxes") or 0 ) > 0 :
@@ -88,16 +96,44 @@ def validate_cost(self , *args , **kwargs):
         item.rate_currency     = float(data.get("rate" ) or 0 )
         item.purchase_currency = data.get("currency")
         item.currency          = float( data.get("factor") or 1)
-       
-
         item.item_cost_value = float(item.applicable_charges or 0) / float(item.qty or 1)
         item.item_after_cost =( item.rate_currency *  item.currency ) +item.item_cost_value 
+    for invocie in self.cost_child_table : 
+        if invocie.doc_type == "Purchase Invoice" :
+            #invocie.allocated_amount = 0 
+            invocie.allocated_amount = get_doctype_info(invocie.doc_type ,
+                                                    invocie.invoice ).get("allocated")
+            allocated = 0
+            for item in self.taxes :
+                if item.docment_name == invocie.invoice :
+                     
+                    line_avaiable = validate_line_amount(item.docment_type , item.line_name)
+                    if float(item.base_amount or 0)  >  float(line_avaiable or 0) :
+                        frappe.throw(_(""" Allocated Amount  """))
 
+                    allocated =  allocated + float(item.base_amount or 0)
+            if allocated > invocie.allocated_amount :
+                frappe.throw(_(""" Allocated Amount  """))
 
+            invocie.unallocated_amount = invocie.allocated_amount - allocated
+            invocie.allocated_amount = allocated
+@frappe.whitelist()
+def validate_line_amount(doc_type ,document ,*args ,**kwargs):
+    invoice_line_amount = 0 
+    allocated_ex = get_old_laned_cost_ex(document ,doc_type ) 
+    line_total = frappe.db.sql(f"""SELECT SUM(base_amount) as total 
+                                  FROM 
+                                 `tabPurchase Invoice Item`  
+                                 WHERE name = '{document}' """,as_dict=1)
+    if line_total and len(line_total) > 0 :
+        invoice_line_amount = line_total[0].get("total")
+    
+    available_amount = float(invoice_line_amount or 0) - float(allocated_ex or 0)
+    return available_amount 
 
 @frappe.whitelist()
 def get_query_type (*args,**kwargs):
-	return[[ "Purchase Invoice"],["Payment Entry"] ]
+	return[[ "Purchase Invoice"] ]
 
 
 @frappe.whitelist()
@@ -108,7 +144,7 @@ def get_doctype_info(doc_type , document  ,*args , **kwargs) :
     account = ""
     if doc_type == "Purchase Invoice" :
         doc = frappe.db.sql(f""" SELECT SUM(b.base_amount) as total 
-           FROM 
+          FROM 
          `tabItem` a
           INNER JOIN 
          `tabPurchase Invoice Item` b
@@ -125,7 +161,13 @@ def get_doctype_info(doc_type , document  ,*args , **kwargs) :
                 doc_total = float(doc[0].get("total") )
     old_allocated = 0 
     caculate_old = frappe.db.sql(f""" 
-    SELECT SUM(allocated_amount) as allocated FROM `tabLanded Cost Voucher Child` WHERE 
+    SELECT SUM(a.allocated_amount) as allocated FROM 
+    
+    `tabLanded Cost Voucher Child`  a
+    INNER join `tabLanded Cost Voucher` b
+    on a.parent = b.name
+    WHERE 
+    b.docstatus = 1 AND
     doc_type ='{doc_type}' and invoice ='{document}'
     """,as_dict =1)
     if caculate_old and len(caculate_old) > 0 :
@@ -135,9 +177,14 @@ def get_doctype_info(doc_type , document  ,*args , **kwargs) :
         "total" : doc_total  , "allocated" : unallocate
     })
 
-def get_old_laned_cost_ex(line_name , docment_type) :
-    amount = frappe.db.sql(""" SELECT SUM(base_amount) as total FROM `tabLanded Cost Taxes and Charges`
-       WHERE line_name='{line_name}' and docment_type='{docment_type}'  """,as_dict=1)
+def get_old_laned_cost_ex(line_name , docment_type  ) :
+    amount = frappe.db.sql(f""" SELECT SUM(b.base_amount) as total FROM 
+    `tabLanded Cost Taxes and Charges` b
+    INNER JOIN `tabLanded Cost Voucher` a
+    ON a.name = b.parent 
+       WHERE a.docstatus =1 AND
+       b.line_name='{line_name}' and b.docment_type = '{docment_type}'  """,as_dict=1)
+    
     if amount and len(amount) > 0 :
         return float(amount[0].get('total') or 0 )
     else :
@@ -151,10 +198,10 @@ def get_line_info( allocated_amount ,doc_type , document ,*args ,**kwargs):
         return 0
     if doc_type  == "Purchase Invoice" :
         invocie_lines  = []
-        line_data = frappe.db.sql(f"""  SELECT b.name ,
-                                               b.item_code , 
-                                               b.base_amount  ,
-                                               b.expense_account
+        line_data = frappe.db.sql(f"""  SELECT b.name  as name,
+                                               b.item_code as description, 
+                                               b.base_amount  as total ,
+                                               b.expense_account as account
                                         FROM  `tabPurchase Invoice Item`  b
                                         INNER JOIN 
                                         `tabPurchase Invoice` a
@@ -166,5 +213,22 @@ def get_line_info( allocated_amount ,doc_type , document ,*args ,**kwargs):
                                         b.parent = '{document}' 
                                       """,as_dict =1 )
         if line_data and len(line_data) > 0 :
+            
             for item in line_data:
-                old_expens = get_old_laned_cost_ex(item.get("b.name") ,)
+              
+                old_expens = float(get_old_laned_cost_ex(item.get("name") ,doc_type) or 0)
+               
+                available_amount = float(item.get("total")) - old_expens
+                item_data = {
+                    "line_name"   : item.get("name") ,
+                    "docment_type": doc_type ,
+                    "description" : item.get('description'),
+                    "amount"      : available_amount ,
+                    "account"     : item.get("account") ,
+                    "document"    : document
+                }
+                if available_amount > 0 :
+                    invocie_lines.append(item_data)
+                else :
+                    pass
+        return invocie_lines

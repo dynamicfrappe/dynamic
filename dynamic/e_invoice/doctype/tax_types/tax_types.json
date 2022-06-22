@@ -9,6 +9,8 @@
  "field_order": [
   "code",
   "desc_en",
+  "fixed_amount",
+  "column_break_4",
   "desc_ar",
   "taxable",
   "taxtypereference"
@@ -40,11 +42,25 @@
    "fieldname": "taxable",
    "fieldtype": "Check",
    "label": "Taxable"
+  },
+  {
+   "default": "0",
+   "fieldname": "fixed_amount",
+   "fieldtype": "Check",
+   "label": "Fixed Amount"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2022-06-22 14:14:16.631565",
+=======
+ "modified": "2022-06-22 13:10:50.143851",
+>>>>>>> 88b9b5827fcd0bab9cd2cf6464ad28e11e3a2c2f
  "modified_by": "Administrator",
  "module": "E Invoice",
  "name": "Tax Types",
