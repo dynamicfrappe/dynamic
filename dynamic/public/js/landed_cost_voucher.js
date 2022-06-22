@@ -56,16 +56,28 @@ frappe.ui.form.on("Landed Cost Voucher", {
             frm.events.setup_child_querys(frm)
         }
     } ,
-    add_row_to_charges(frm , doc_type , doc_){
-        console.log("DocType" , doc_type)
-        console.log("document" ,doc_)
+    add_row_to_charges(frm , data){
+        data.forEach(element => {
+            
+            var raw = frm.add_child("taxes")
+            raw.expense_account = element.account
+            raw.description = element.description
+            raw.amount = element.amount
+            raw.line_name = element.line_name
+            raw.docment_type = element.docment_type
+            raw.docment_name = element.document
+            
+        });
+        frm.refresh_field("taxes")
     },
     set_applicabel_charges:function(frm){
         frm.clear_table("taxes")
         frm.refresh_field("taxes")
         var i = 0 
+
+       
         for (i = 0 ; i < frm.doc.cost_child_table.length ; i ++ ){
-            console.log(frm.doc.cost_child_table[i].invoice)
+           
             // frm.events.add_row_to_charges(frm,frm.doc.cost_child_table[i].doc_type , frm.doc.cost_child_table[i].invoice )
             frappe.call({
                 method:"dynamic.terra.landed_cost.get_line_info",
@@ -77,13 +89,14 @@ frappe.ui.form.on("Landed Cost Voucher", {
                     "document": frm.doc.cost_child_table[i].invoice
                 } ,
                 callback:function(r){
-                    console.log(r.message)
+                   
+                    frm.events.add_row_to_charges(frm ,r.message)
                 }
             })
         
         }
-    }
-
+    },
+  
 
 
 })
@@ -97,11 +110,25 @@ frappe.ui.form.on('Landed Cost Voucher Child', {
        var  local = locals[cdt][cdn]
        var doc_ument =  local.invoice
        var doctype = local.doc_type
+        if (frm.doc.cost_child_table.length > 1 ){
+            var count = frm.doc.cost_child_table.filter(
+                x=> x.invoice==doc_ument
+            ).length
+            if(count > 1){
+                local.invoice = ''
+                frm.refresh_field("cost_child_table")
+                frappe.throw("Duplicated Invocie Not allowed")
+                
+            }
+
+            
+        } 
+
        frappe.call({
            method:"dynamic.terra.landed_cost.get_doctype_info",
            async: false,
            args:{
-            doc_type :doctype ,
+            doc_type : doctype ,
             document : doc_ument
            },
            callback:function (r){
@@ -114,7 +141,20 @@ frappe.ui.form.on('Landed Cost Voucher Child', {
               }
            }
        })
+    } ,
+    cost_child_table_remove:function(frm , cdt,cdn){
+        
+        frm.events.set_applicabel_charges(frm)
+        if (frm.doc.cost_child_table.length > 0 ){
+            frm.doc.cost_child_table.forEach(element=> {
+                element.allocated_amount = element.allocated_amount + element.unallocated_amount
+                element.unallocated_amount = 0 
+            })
+            frm.refresh_field("cost_child_table")
+        }
+        frappe.msgprint("Applicable Charges Will Updated For Invocie Allocated Amount Please Chek the Amount ")
     }
+
     
 
 

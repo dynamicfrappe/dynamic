@@ -9,23 +9,23 @@ data = {
          'Landed Cost Item': [
             {
                 "fieldname": "rate_currency",
-                "fieldtype": "Data",
+                "fieldtype": "Currency",
                 "insert_after": "rate",
                 "label": "Price in supplier currency",
                 'read_only' : 1
             },
                {
                 "fieldname": "item_after_cost",
-                "fieldtype": "Data",
+                "fieldtype": "Currency",
                 "insert_after": "rate_currency",
-                "label": "Item after cost",
+                "label": "Item after cost in company Currency",
                 'read_only' : 1
             },
              {
                 "fieldname": "item_cost_value",
-                "fieldtype": "Data",
+                "fieldtype": "Currency",
                 "insert_after": "item_after_cost",
-                "label": "Item cost value",
+                "label": "Item cost value in Company Currency",
                 'read_only' : 1
             },
              {
@@ -39,7 +39,7 @@ data = {
                 "fieldname": "currency",
                 "fieldtype": "Data",
                 "insert_after": "item_cost_valu",
-                "label": "Currency",
+                "label": "Invocie Currency Factor",
                 'read_only' : 1
             },
         ],
@@ -76,6 +76,15 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "line_name",
                 "label": "Document Type",
+                "read_only" : 1
+               
+
+            },
+             {
+                "fieldname": "docment_name",
+                "fieldtype": "Data",
+                "insert_after": "docment_type",
+                "label": "Document Name",
                 "read_only" : 1
                
 
