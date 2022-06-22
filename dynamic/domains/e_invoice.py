@@ -35,7 +35,7 @@ data = {
                 "label": "Receiver Type",
                 "name": "Customer-receiver_type",
 
-                "reqd": 1
+                # "reqd": 1
             },
             {
                 "fieldname": "receiver_id",
@@ -53,7 +53,7 @@ data = {
                 "label": "Country Code",
                 "options": "Country Code",
                 "name": "Customer-country_code",
-                "reqd": 1
+                # "reqd": 1
             },
             {
                 "fieldname": "governate",
@@ -61,7 +61,7 @@ data = {
                 "insert_after": "country_code",
                 "label": "Governate",
                 "name": "Customer-governate",
-                "reqd": 1
+                # "reqd": 1
             },
             {
                 "fieldname": "e_invoice_column_break",
@@ -77,7 +77,7 @@ data = {
                 "insert_after": "e_invoice_column_break",
                 "label": "Region City",
                 "name": "Customer-regioncity",
-                "reqd": 1
+                # "reqd": 1
             },
             {
                 "fieldname": "street",
@@ -85,7 +85,7 @@ data = {
                 "insert_after": "regioncity",
                 "label": "Street",
                 "name": "Customer-street",
-                "reqd": 1
+                # "reqd": 1
             },
             {
                 "fieldname": "buildingnumber",
@@ -93,7 +93,7 @@ data = {
                 "insert_after": "street",
                 "label": "Building Number",
                 "name": "Customer-buildingnumber",
-                "reqd": 1
+                # "reqd": 1
             },
             {
                 "fieldname": "branchid",
@@ -101,7 +101,7 @@ data = {
                 "insert_after": "buildingnumber",
                 "label": "Branch ID",
                 "name": "Branch ID",
-                "reqd": 1
+                # "reqd": 1
             },
 
         ],
@@ -122,7 +122,7 @@ data = {
                 "label": "Issuer Type",
                 "name": "Company-issuer_type",
 
-                "reqd": 1
+                "reqd": 0
             },
             {
                 "fieldname": "issuer_id",
@@ -134,13 +134,20 @@ data = {
                 # "reqd":1
             },
             {
+                "fieldname": "activity_code",
+                "fieldtype": "Data",
+                "insert_after": "issuer_id",
+                "label": "Activity Code",
+                "reqd": 0,
+            },
+            {
                 "fieldname": "country_code",
                 "fieldtype": "Link",
-                "insert_after": "issuer_id",
+                "insert_after": "activity_code",
                 "label": "Country Code",
                 "options": "Country Code",
                 "name": "Company-country_code",
-                "reqd": 1
+                "reqd": 0
             },
             {
                 "fieldname": "governate",
@@ -148,7 +155,7 @@ data = {
                 "insert_after": "country_code",
                 "label": "Governate",
                 "name": "Company-governate",
-                "reqd": 1
+                "reqd": 0
             },
             {
                 "fieldname": "e_invoice_column_break",
@@ -164,7 +171,7 @@ data = {
                 "insert_after": "e_invoice_column_break",
                 "label": "Region City",
                 "name": "Company-regioncity",
-                "reqd": 1
+                "reqd": 0
             },
             {
                 "fieldname": "street",
@@ -172,7 +179,7 @@ data = {
                 "insert_after": "regioncity",
                 "label": "Street",
                 "name": "Company-street",
-                "reqd": 1
+                "reqd": 0
             },
             {
                 "fieldname": "buildingnumber",
@@ -180,7 +187,7 @@ data = {
                 "insert_after": "street",
                 "label": "Building Number",
                 "name": "Company-buildingnumber",
-                "reqd": 1
+                "reqd": 0
             },
 
         ],
@@ -189,8 +196,7 @@ data = {
                 "fieldname": "e_invoice_section_break",
                 "fieldtype": "Section Break",
                 "insert_after": "description",
-                "label": "",
-                "name": "Sales Invoice-e_invoice_section_break"
+                "label": ""
             },
             {
                 "fieldname": "item_type",
@@ -198,7 +204,6 @@ data = {
                 "insert_after": "e_invoice_section_break",
                 "label": "Item Type",
                 "options": "GS1\nEGS",
-                "name": "Sales Invoice-item_type",
                 "in_filter": 1,
                 "in_standard_filter": 1
             },
@@ -207,7 +212,15 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "item_type",
                 "label": "Item Code",
-                "name": "Sales Invoice-itemcode",
+                "in_filter": 1,
+                "in_standard_filter": 1
+            },
+            {
+                "fieldname": "e_invoice_setting",
+                "fieldtype": "Table",
+                "insert_after": "itemcode",
+                "label": "E Invoice Configuration",
+                "options": "E Invoice Item Configuration",
                 "in_filter": 1,
                 "in_standard_filter": 1
             },
@@ -218,23 +231,29 @@ data = {
                 "fieldtype": "Section Break",
                 "insert_after": "cost_center",
                 "label": "",
-                "name": "Sales Invoice-e_invoice_section_break"
             },
             {
                 "fieldname": "tax_auth",
                 "fieldtype": "Check",
                 "insert_after": "e_invoice_section_break",
                 "label": "Tax Auth",
-                "name": "Sales Invoice-tax_auth",
                 "in_filter": 1,
                 "in_standard_filter": 1
             },
             {
+                "fieldname": "activity_code",
+                "fieldtype": "Data",
+                "insert_after": "e_invoice_section_break",
+                "label": "Activity Code",
+                "fetch_if_empty": 1,
+                "allow_on_submit": 1,
+                "fetch_from": "company.activity_code"
+            },
+            {
                 "fieldname": "date_issued",
                 "fieldtype": "Datetime",
-                "insert_after": "tax_auth",
+                "insert_after": "activity_code",
                 "label": "Datetime Issued",
-                "name": "Sales Invoice-date_issued",
                 # "read_only":1
             },
             {
@@ -242,7 +261,6 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "date_issued",
                 "label": "Datetime Issued",
-                "name": "Sales Invoice-datetime_issued",
                 "read_only": 1
             },
             {
@@ -251,14 +269,55 @@ data = {
                 "options": "Taxable Items",
                 "insert_after": "datetime_issued",
                 "label": "Taxable Item",
-                "name": "Sales Invoice-taxable_item"
             },
             {
                 "fieldname": "is_send",
                 "fieldtype": "Check",
                 "insert_after": "taxable_item",
                 "label": "Is Send",
-                "read_only":1
+                "read_only": 1
+            },
+            {
+                "fieldname": "e_invoice_status_section_break",
+                "fieldtype": "Section Break",
+                "insert_after": "is_send",
+                "label": "Submission Status"
+            },
+            {
+                "fieldname": "inv_status",
+                "fieldtype": "Select",
+                "options": "\nSubmitted\nValid\nInvalid\nCancelled",
+                "label": "Invoice Status",
+                "insert_after": "e_invoice_status_section_break",
+                "in_filter": 1,
+                "in_standard_filter": 1,
+                "in_list_view": 1,
+                "read_only": 1,
+                "allow_on_submit": 1,
+            },
+            {
+                "fieldname": "error_details_column",
+                "fieldtype": "Column Break",
+                "label": "Error",
+                "insert_after": "e_invoice_status_section_break",
+                # "read_only":1,
+                # "allow_on_submit":1,
+            },
+            {
+                "fieldname": "error_code",
+                "fieldtype": "Data",
+                "label": "Error Code",
+                "insert_after": "error_details_column",
+                "read_only": 1,
+                "allow_on_submit": 1,
+            },
+            {
+                "fieldname": "error_details",
+                "fieldtype": "Text",
+                "label": "Error Details",
+                "insert_after": "error_code",
+                "read_only": 1,
+                "allow_on_submit": 1,
             },
 
         ],
@@ -269,7 +328,6 @@ data = {
                 "fieldtype": "Section Break",
                 "insert_after": "description",
                 "label": "",
-                "name": "Sales Invoice Item-e_invoice_section_break"
             },
 
             {
@@ -280,7 +338,6 @@ data = {
                 "fetch_from": "item_code.item_type",
                 "insert_after": "e_invoice_section_break",
                 "label": "Item Type",
-                "name": "Sales Invoice Item-item_type"
             },
             {
                 "fieldname": "itemcode",
@@ -289,7 +346,6 @@ data = {
                 "fetch_from": "item_code.itemcode",
                 "insert_after": "item_type",
                 "label": "ItemCode",
-                "name": "Sales Invoice Item-itemcode"
             },
 
             {
@@ -297,7 +353,6 @@ data = {
                 "fieldtype": "Column Break",
                 "insert_after": "itemcode",
                 "label": "",
-                "name": "Sales Invoice Item-e_invoice_column_break"
             },
             {
                 "fieldname": "tax_rate",
@@ -305,8 +360,7 @@ data = {
                 "insert_after": "e_invoice_column_break",
                 "label": "Tax Rate",
                 "default": 0,
-                "reqd": 1,
-                "name": "Sales Invoice Item-tax_rate"
+                "reqd": 0,
             },
             {
                 "fieldname": "tax_amount",
@@ -314,38 +368,34 @@ data = {
                 "insert_after": "tax_rate",
                 "label": "Tax Amount",
                 "default": 0,
-                "reqd": 1,
-                "name": "Sales Invoice Item-tax_amount"
+                # "reqd": 1,
             },
 
         ],
-        'Item Tax Template Detail':[
+        'Item Tax Template Detail': [
             {
-                "fieldname":"tax_type_invoice",
-                "fieldtype":"Link",
-                "insert_after":"tax_type",
-                "label":"Tax Type Invoice",
-                "name":"Tax Type Invoice",
-                "options":"Tax Types",
-                "in_list_view":1
+                "fieldname": "tax_type_invoice",
+                "fieldtype": "Link",
+                "insert_after": "tax_type",
+                "label": "Tax Type Invoice",
+                "options": "Tax Types",
+                "in_list_view": 1
             },
             {
-                "fieldname":"tax_sub_type",
-                "fieldtype":"Link",
-                "insert_after":"tax_type_invoice",
-                "label":"Tax Sub Type",
-                "name":"Tax Sub Type",
-                "options":"Tax Types",
-                "in_list_view":1
+                "fieldname": "tax_sub_type",
+                "fieldtype": "Link",
+                "insert_after": "tax_type_invoice",
+                "label": "Tax Sub Type",
+                "options": "Tax Types",
+                "in_list_view": 1
             },
             {
-                "fieldname":"amount",
-                "fieldtype":"Float",
-                "insert_after":"tax_rate",
-                "label":"Amount",
-                "name":"Amount",
-                "in_list_view":1,
-                "default":0
+                "fieldname": "amount",
+                "fieldtype": "Float",
+                "insert_after": "tax_rate",
+                "label": "Amount",
+                "in_list_view": 1,
+                "default": 0
             },
         ]
     },
@@ -360,7 +410,7 @@ data = {
                 "value": "ID",
                 "doctype_or_field": "DocField",
             }
-        ],
+    ],
 
     'on_setup': 'dynamic.e_invoice.setup.install_e_invoice'
 }

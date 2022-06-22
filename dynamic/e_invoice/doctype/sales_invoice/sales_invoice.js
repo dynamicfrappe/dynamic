@@ -48,7 +48,7 @@ frappe.ui.form.on("Sales Invoice", {
         if (message == "Token connecting" || message == "success") {
           frm.events.add_post(frm);
         } else {
-          frappe.show_alert({ message: "no connection ", indicator: "red" });
+          frappe.show_alert({ message: "no connection", indicator: "red" });
         }
       });
     }

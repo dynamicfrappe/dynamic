@@ -1,0 +1,83 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-06-22 10:55:41.794059",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "branch_code",
+  "activity_code",
+  "address_section",
+  "country_code",
+  "governate",
+  "region_city",
+  "street",
+  "building_number"
+ ],
+ "fields": [
+  {
+   "fieldname": "branch_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Branch Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "activity_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Activity Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "address_section",
+   "fieldtype": "Section Break",
+   "label": "Address"
+  },
+  {
+   "fieldname": "country_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Country Code",
+   "options": "Country Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "governate",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Governate",
+   "reqd": 1
+  },
+  {
+   "fieldname": "region_city",
+   "fieldtype": "Data",
+   "label": "Region City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "street",
+   "fieldtype": "Data",
+   "label": "Street",
+   "reqd": 1
+  },
+  {
+   "fieldname": "building_number",
+   "fieldtype": "Data",
+   "label": "Building Number",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-06-22 10:55:41.794059",
+ "modified_by": "Administrator",
+ "module": "E Invoice",
+ "name": "Branches",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
