@@ -112,7 +112,7 @@ def get_invoice_json(invoice_name):
 
     doc.purchaseOrderReference = invoice.po_no
 
-
+    totalTaxes = 0
     for item in invoice.items :
         invoice_line = frappe._dict()
         invoice_line.unitValue = frappe._dict()
@@ -123,7 +123,7 @@ def get_invoice_json(invoice_name):
         invoice_line.itemCode = clear_str(item_config.item_code or item.itemcode) 
         invoice_line.unitType = clear_str(item_config.uom)
         invoice_line.quantity = round_double(item.qty)
-
+        
         # Unit Value
         
         qty = item.qty 
@@ -132,7 +132,6 @@ def get_invoice_json(invoice_name):
         base_rate_after_discount = item.base_rate
         base_rate_before_discount = item.base_price_list_rate or item.base_rate
         base_discount_amount = (base_rate_before_discount * discount_rate /100) * qty
-
         invoice_line.unitValue.currencySold = invoice.currency
         invoice_line.unitValue.amountEGP = round_double(base_rate_before_discount)
         invoice_line.unitValue.currencyExchangeRate = '' if invoice.currency == "EGP" else round_double(invoice.exchange_rate)
@@ -145,22 +144,57 @@ def get_invoice_json(invoice_name):
             invoice_line.discount.amount = round_double(base_discount_amount / qty)
 
         # Taxes 
+        invoice_line.taxableItems = []
         if item.item_tax_template :
             tax_template = frappe.get_doc("Item Tax Template",item.item_tax_template)
             for tax in getattr(tax_template,'taxes',[]) :
                     tax_type = tax.tax_type_invoice
                     tax_subtype = tax.tax_sub_type
                     if tax_type and tax_subtype :
-                        
-                        pass
+                        tax_type_code,taxable = frappe.db.get_value("Tax Types",tax_type,['code','taxable'])
+                        tax_subtype_code,fixed_amount = frappe.db.get_value("Tax Types",tax_subtype,['code','fixed_amount'])
+                        tax_row = frappe._dict()
+                        tax_row.taxType = tax_type_code
+                        tax_row.subType = tax_subtype_code
+                        tax_row.rate = round_double(0 if fixed_amount else tax.tax_rate)
 
-        # Totals
+                        row_tax = tax.amount if fixed_amount else ( base_rate_after_discount * tax.tax_rate/100)
+                        row_tax_toal = row_tax * qty
+                        tax_row.amount = round_double(row_tax_toal)
+                        invoice_line.taxableItems.append(tax_row)
+                        if taxable :
+                            totalTaxableFees += row_tax_toal
+                            totalTaxes += row_tax_toal
+                        # Add Tax to Tax Totals
+                        exist = 0
+                        for prevTax in doc.taxTotals :
+                            if prevTax.taxType == tax_row.taxType :
+                                prevTax.amount += round_double(tax_row.amount)
+                                exist = 1
+                                break
+                        if not exist :
+                            doc.taxTotals.append(frappe._dict({
+                                "taxType":tax_row.taxType,
+                                "amount":tax_row.amount,
+                            }))
+
+
+
+        # Line Totals
         invoice_line.salesTotal = round_double(base_rate_before_discount * qty)
         invoice_line.netTotal = round_double(base_rate_after_discount * qty)
-        invoice.valueDifference = round_double(0)
-        invoice.totalTaxableFees = round_double(totalTaxableFees)
-        invoice.itemsDiscount = round_double(base_discount_amount)
+        invoice_line.valueDifference = round_double(0)
+        invoice_line.totalTaxableFees = round_double(totalTaxableFees)
+        invoice_line.itemsDiscount = round_double(base_discount_amount)
         invoice_line.total = round_double(invoice_line.netTotal- base_discount_amount + invoice.totalTaxableFees)
+        doc.invoiceLines.append(invoice_line)
+    
+    doc.totalSalesAmount = round_double(sum([x.salesTotal for x in doc.invoiceLines]))
+    doc.netAmount = round_double(sum([x.netTotal for x in doc.invoiceLines]))
+    doc.totalDiscountAmount = round_double(sum([x.itemsDiscount for x in doc.invoiceLines]))
+    doc.extraDiscountAmount = round_double((invoice.discount_amount or 0) * (doc.exchange_rate or 1))
+    doc.totalItemsDiscountAmount = round_double(doc.totalDiscountAmount + doc.extraDiscountAmount)
+    doc.totalAmount = round_double(doc.netAmount - doc.extraDiscountAmount)
 
 
     return doc

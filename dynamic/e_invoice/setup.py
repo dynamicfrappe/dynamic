@@ -135,24 +135,14 @@ def import_tax_types():
 def insert_data(data_js,taxable=0):
 	try :
 		for  data in data_js:
-<<<<<<< HEAD
 			tax_type = frappe.new_doc("Tax Types")
 			tax_type.code = data["Code"] if data["Code"] else ''
 			tax_type.desc_en = data["Desc_en"] if data["Desc_en"] else ''
 			tax_type.desc_ar = data["Desc_ar"] if data["Desc_ar"] else ''
 			tax_type.taxtypereference = data.get("TaxtypeReference","")
+			tax_type.fixed_amount = data.get("fixed_amount","")
 			tax_type.taxable = taxable
 			tax_type.save()
-=======
-			if not	frappe.db.exists("Tax Types", {"code": data["Code"]}):
-				tax_type = frappe.new_doc("Tax Types")
-				tax_type.code = data["Code"] if data["Code"] else ''
-				tax_type.desc_en = data["Desc_en"] if data["Desc_en"] else ''
-				tax_type.desc_ar = data["Desc_ar"] if data["Desc_ar"] else ''
-				tax_type.fixed_amount = data.get("fixed_amount","")
-				tax_type.taxtypereference = data.get("TaxtypeReference","")
-				tax_type.save()
->>>>>>> 88b9b5827fcd0bab9cd2cf6464ad28e11e3a2c2f
 		return 'done'
 	except Exception as e:
 		 handle_err(e)
