@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "company",
+  "company_name",
   "environment",
   "section_break_3",
   "invoice_document_version",
@@ -21,7 +22,9 @@
   "prod_login_url",
   "prod_system_api_url",
   "prod_client_id",
-  "prod_client_secret"
+  "prod_client_secret",
+  "branches_section",
+  "branches"
  ],
  "fields": [
   {
@@ -118,11 +121,30 @@
    "fieldtype": "Data",
    "label": "Client Secret",
    "mandatory_depends_on": "eval:doc.environment ==\"Production\""
+  },
+  {
+   "fieldname": "branches_section",
+   "fieldtype": "Section Break",
+   "label": "Branches"
+  },
+  {
+   "fieldname": "branches",
+   "fieldtype": "Table",
+   "label": "Branches",
+   "options": "Branches Item"
+  },
+  {
+   "fetch_from": "company.company_name",
+   "fetch_if_empty": 1,
+   "fieldname": "company_name",
+   "fieldtype": "Data",
+   "label": "Company Name",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-22 10:50:35.840602",
+ "modified": "2022-06-22 12:34:23.002476",
  "modified_by": "Administrator",
  "module": "E Invoice",
  "name": "E Invoice Configuration",

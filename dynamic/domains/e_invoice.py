@@ -111,7 +111,6 @@ data = {
                 "fieldtype": "Section Break",
                 "insert_after": "parent_company",
                 "label": "E Invoice Address",
-                "name": "Company-e_invoice_section_break",
             },
             {
                 "fieldname": "issuer_type",
@@ -120,16 +119,13 @@ data = {
                 "options": "P\nB\nF",
                 "default": "P",
                 "label": "Issuer Type",
-                "name": "Company-issuer_type",
-
-                "reqd": 1
+                "reqd": 0
             },
             {
                 "fieldname": "issuer_id",
                 "fieldtype": "Data",
                 "insert_after": "issuer_type",
                 "label": "Issuer ID",
-                "name": "Company-issuer_id",
                 "mandatory_depends_on": "eval:doc.issuer_type=='P'"
                 # "reqd":1
             },
@@ -248,9 +244,26 @@ data = {
                 "fetch_from": "company.activity_code"
             },
             {
+                "fieldname": "branch",
+                "fieldtype": "Link",
+                "options": "Branches",
+                "insert_after": "activity_code",
+                "label": "Branch",
+                "allow_on_submit": 1,
+            },
+            {
+                "fieldname": "branch_code",
+                "fieldtype": "Data",
+                "insert_after": "branch",
+                "label": "Branch Code",
+                "fetch_if_empty": 1,
+                "allow_on_submit": 1,
+                "fetch_from": "branch.branch_code"
+            },
+            {
                 "fieldname": "date_issued",
                 "fieldtype": "Datetime",
-                "insert_after": "activity_code",
+                "insert_after": "branch_code",
                 "label": "Datetime Issued",
                 "name": "Sales Invoice-date_issued",
                 # "read_only":1
@@ -364,6 +377,25 @@ data = {
                 "name":"Amount",
                 "in_list_view":1,
                 "default":0
+            },
+        ],
+        'Sales Taxes and Charges':[
+
+            {
+                "fieldname": "tax_type",
+                "fieldtype": "Link",
+                "options":"Tax Types",
+                "insert_after": "account_head",
+                "label": "Tax Type",
+                "allow_on_submit": 1
+            },
+            {
+                "fieldname": "tax_subtype",
+                "fieldtype": "Link",
+                "options":"Tax Types",
+                "insert_after": "account_head",
+                "label": "Tax Type",
+                "allow_on_submit": 1
             },
         ]
     },
