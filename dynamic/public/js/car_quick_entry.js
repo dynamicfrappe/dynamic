@@ -9,6 +9,7 @@ frappe.ui.form.CarQuickEntryForm = class CarQuickEntryForm extends (
   }
 
   render_dialog() {
+    console.log(this)
     this.mandatory.find((x) => x.fieldname == "serial_no").get_query = () => {
       return {
         query: "dynamic.gebco.doctype.car.car.get_serial_no_query",
