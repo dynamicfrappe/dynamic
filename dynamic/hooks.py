@@ -34,8 +34,7 @@ app_include_js = "/assets/js/dynamic.min.js"
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
 
-# include js in doctype views
-# doctype_js = {"Sales Invoice" : "public/js/sales_invoice.js"}
+# include js in doctype views 
 # doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -77,7 +76,8 @@ doctype_js = {
     "Stock Entry": "public/js/stock_entry.js",
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
-    "Item Tax Template":"e_invoice/doctype/item_tax_template/item_tax_template.js"
+    "Item Tax Template":"e_invoice/doctype/item_tax_template/item_tax_template.js" ,
+    "Landed Cost Voucher" : "public/js/landed_cost_voucher.js"
 }
 doc_events = {
 
@@ -85,6 +85,10 @@ doc_events = {
         "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname",
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
         "validate": "dynamic.api.validate_active_domains"
+    },
+    "Item": {
+        "autoname": "dynamic.api.autoname",
+        "validate": "dynamic.dynamic.validation.validate_item_code"
     },
     "Delivery Note": {
         "on_submit": "dynamic.gebco.api.validate_delivery_note",
@@ -102,6 +106,9 @@ doc_events = {
     },
     "Purchase Receipt": {
         "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+    },
+    "Landed Cost Voucher" :{
+        "validate" :"dynamic.dynamic.validation.validate_landed_cost"
     },
     "Purchase Order": {
         "on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
@@ -194,6 +201,7 @@ domains = {
     "Moyate": 'dynamic.domains.moyate',
     'Product Bundle': 'dynamic.domains.product_bundle',
     'Cheques': 'dynamic.domains.cheques',
+     'Terra': 'dynamic.domains.tera',
 }
 
 # domain Conatin

@@ -6,6 +6,8 @@ import codecs
 import json
 import base64
 from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
+from erpnext import get_default_company, get_default_cost_center
+from frappe.model.naming import make_autoname
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -63,6 +65,7 @@ def encode_invoice_data(doc):
 import frappe
 from frappe import _
 from .api_hooks.sales_invoice import validate_sales_invocie_to_moyate
+from dynamic.dynamic.validation import validate_sales_invoice
 DOMAINS = frappe.get_active_domains()
 
 
@@ -76,6 +79,11 @@ def validate_active_domains(doc,*args,**kwargs):
     if 'Product Bundle' in DOMAINS: 
         """   Update Bundle of Bundles """
         make_packing_list(doc)
+
+    
+    if 'Terra' in DOMAINS:
+        validate_sales_invoice(doc)
+
 
 
 @frappe.whitelist()
@@ -95,3 +103,48 @@ def submit_journal_entry_cheques (doc):
 
 
 
+# ---------------- get sales return account ------------------  #
+@frappe.whitelist()
+def get_sales_return_account():
+    company_name = get_default_company()
+    company_doc = frappe.get_doc("Company",company_name)
+    if company_doc.get("sales_return_account"):
+        return company_doc.get("sales_return_account")
+    return
+
+
+
+# item auto name
+def autoname(self,fun=''):
+    if 'Terra' in DOMAINS:
+        #series = "Tax-Inv-.DD.-.MM.-.YYYY.-.###." if getattr(self,'tax_auth' , 0) else self.naming_series
+        self.name = self.item_name
+
+
+@frappe.whitelist()
+def generate_item_code(item_group):
+    group_doc = frappe.get_doc("Item Group",item_group)
+    group_code = group_doc.code
+    if not group_code:
+        frappe.msgprint(_("Item Group Doesnt Have Code"))
+        return 'false'
+    sql = f"""
+    select count(*) +1 as 'serial' from `tabitem code serial` where item_group= '{group_doc.name}'
+    """
+    res = frappe.db.sql(sql,as_dict=1)
+
+    serial = str(group_code or '')+'-' + str(res[0].serial or '')
+
+    return serial
+
+
+@frappe.whitelist()
+def create_new_appointment(source_name, target_doc=None):
+    doc = frappe.get_doc("Lead", source_name)
+    appointment_doc = frappe.new_doc("Appointment")
+    appointment_doc.customer_name = doc.lead_name
+    appointment_doc.customer_phone_number = doc.phone_no 
+    appointment_doc.appointment_with = "Lead"
+    appointment_doc.party = doc.name
+    appointment_doc.customer_email = doc.email_id
+    return appointment_doc

@@ -1,0 +1,146 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:company",
+ "creation": "2022-06-22 09:39:19.061116",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "environment",
+  "section_break_3",
+  "invoice_document_version",
+  "tax_auth_setting_section",
+  "pre_production_column",
+  "pre_login_url",
+  "pre_system_api_url",
+  "pre_client_id",
+  "pre_client_secret",
+  "production_column",
+  "prod_login_url",
+  "prod_system_api_url",
+  "prod_client_id",
+  "prod_client_secret"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "Pre Production",
+   "fieldname": "environment",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Environment",
+   "options": "Pre Production\nProduction",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invoice_document_version",
+   "fieldtype": "Select",
+   "label": "Invoice Document Version",
+   "options": "0.9\n1.0"
+  },
+  {
+   "fieldname": "tax_auth_setting_section",
+   "fieldtype": "Section Break",
+   "label": "Tax Auth Setting"
+  },
+  {
+   "fieldname": "pre_production_column",
+   "fieldtype": "Column Break",
+   "label": "Pre Production"
+  },
+  {
+   "default": "https://id.preprod.eta.gov.eg",
+   "fieldname": "pre_login_url",
+   "fieldtype": "Data",
+   "label": "Login Url",
+   "mandatory_depends_on": "eval:doc.environment ==\"Pre Production\""
+  },
+  {
+   "default": "https://api.preprod.invoicing.eta.gov.eg",
+   "fieldname": "pre_system_api_url",
+   "fieldtype": "Data",
+   "label": "Invoicing Url",
+   "mandatory_depends_on": "eval:doc.environment ==\"Pre Production\""
+  },
+  {
+   "fieldname": "pre_client_id",
+   "fieldtype": "Data",
+   "label": "Client ID",
+   "mandatory_depends_on": "eval:doc.environment ==\"Pre Production\""
+  },
+  {
+   "fieldname": "pre_client_secret",
+   "fieldtype": "Data",
+   "label": "Client Secret",
+   "mandatory_depends_on": "eval:doc.environment ==\"Pre Production\""
+  },
+  {
+   "fieldname": "production_column",
+   "fieldtype": "Column Break",
+   "label": "Production"
+  },
+  {
+   "default": "https://id.eta.gov.eg",
+   "fieldname": "prod_login_url",
+   "fieldtype": "Data",
+   "label": "Login Url",
+   "mandatory_depends_on": "eval:doc.environment ==\"Production\""
+  },
+  {
+   "default": "https://api.invoicing.eta.gov.eg",
+   "fieldname": "prod_system_api_url",
+   "fieldtype": "Data",
+   "label": "Invoicing Url",
+   "mandatory_depends_on": "eval:doc.environment ==\"Production\""
+  },
+  {
+   "fieldname": "prod_client_id",
+   "fieldtype": "Data",
+   "label": "Client ID",
+   "mandatory_depends_on": "eval:doc.environment ==\"Production\""
+  },
+  {
+   "fieldname": "prod_client_secret",
+   "fieldtype": "Data",
+   "label": "Client Secret",
+   "mandatory_depends_on": "eval:doc.environment ==\"Production\""
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-06-22 10:50:35.840602",
+ "modified_by": "Administrator",
+ "module": "E Invoice",
+ "name": "E Invoice Configuration",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
