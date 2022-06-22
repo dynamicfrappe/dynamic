@@ -145,7 +145,23 @@ def insert_data(data_js):
 		error.save() 
 
 
+path_file = "dynamic/dynamic/public/activity_code/activity_code.json"
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+@frappe.whitelist()
+def import_activity_code():
+	try:
+		file_path =  os.path.join(BASE_DIR,path_file)
+		main_file_data = open(file_path)
+		data_js = json.load(main_file_data)
+		insert_activity_code_data(data_js)
+	except Exception as e:
+		error = frappe.new_doc('Error Log')
+		error.error = str(e)
+		error.save()
 
+	
+def insert_activity_code_data(js_data):
+	...
 
 
 
