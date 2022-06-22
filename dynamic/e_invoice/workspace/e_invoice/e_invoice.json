@@ -108,9 +108,18 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Branches",
+   "link_to": "Branches",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-06-22 09:52:17.256225",
+ "modified": "2022-06-22 11:11:51.114322",
  "modified_by": "Administrator",
  "module": "E Invoice",
  "name": "E-Invoice",
@@ -123,6 +132,12 @@
    "doc_view": "List",
    "label": "E Invoice Configuration",
    "link_to": "E Invoice Configuration",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Branches",
+   "link_to": "Branches",
    "type": "DocType"
   },
   {

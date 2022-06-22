@@ -1,4 +1,5 @@
 from unittest.util import strclass
+from dynamic.e_invoice.utils import get_auth_item_details, get_company_configuration
 import frappe
 import json
 import requests
@@ -45,25 +46,37 @@ def get_invoice_json(invoice_name):
     doc = frappe._dict({})
     invoice = frappe.get_doc("Sales Invoice", invoice_name)
     company = frappe.get_doc("Company", invoice.company)
+    setting = get_company_configuration(invoice.company,invoice.branch_code or "0")
     customer = frappe.get_doc("Customer", invoice.customer)
+
     # Prepare object
-    doc.invoiceLines = []
     doc.issuer = frappe._dict({})
     doc.issuer.address = frappe._dict({})
 
     doc.receiver = frappe._dict({})
     doc.receiver.address = frappe._dict({})
 
+    # Total Initials
+    doc.invoiceLines = []
+    doc.totalSalesAmount = round_double(0)
+    doc.totalDiscountAmount = round_double(0)
+    doc.taxTotals = []
+    doc.extraDiscountAmount = round_double(0)
+    doc.totalItemsDiscountAmount = round_double(0)
+    doc.totalAmount = round_double(0)
+
+
+
     # Issuer Details
     doc.issuer.type = company.issuer_type
     doc.issuer.id = clear_str(company.issuer_id or company.tax_id)
     doc.issuer.name = clear_str(company.company_name)
-    doc.issuer.address.branchId = 0
-    doc.issuer.address.country = clear_str(company.country_code)
-    doc.issuer.address.governate = clear_str(company.governate)
-    doc.issuer.address.regionCity = clear_str(company.regioncity)
-    doc.issuer.address.street = clear_str(company.street)
-    doc.issuer.address.buildingNumber = clear_str(company.buildingnumber)
+    doc.issuer.address.branchId = setting.branch.branch_code or 0
+    doc.issuer.address.country = clear_str(setting.branch.country_code or company.country_code)
+    doc.issuer.address.governate = clear_str(setting.branch.governate or company.governate)
+    doc.issuer.address.regionCity = clear_str(setting.branch.region_city or company.regioncity)
+    doc.issuer.address.street = clear_str(setting.branch.street or company.street)
+    doc.issuer.address.buildingNumber = clear_str(setting.branch.building_number or company.buildingnumber)
 
     # Receiver Details
     doc.receiver.type = customer.receiver_type
@@ -76,6 +89,8 @@ def get_invoice_json(invoice_name):
     doc.receiver.address.street = clear_str(customer.street)
     doc.receiver.address.buildingNumber = clear_str(customer.buildingnumber)
 
+
+    doc.taxpayerActivityCode = clear_str(invoice.activity_code or setting.branch.activity_code or company.activity_code)
     # Document Type
     doc.documentType = "i"
     if doc.is_return:
@@ -85,12 +100,56 @@ def get_invoice_json(invoice_name):
     else:
         doc.documentType = "i"
 
-    doc.documentTypeVersion = "0.9"
+    doc.documentTypeVersion = setting.document_version or "0.9"
 
     invoice_date = parser.parse(
         f"{invoice.posting_date} {invoice.posting_time}")
     doc.dateTimeIssued = invoice_date.strftime("%Y-%m-%dT%H:%M:%SZ")
-    doc.taxpayerActivityCode = invoice.activity_code or company.activity_code
+
+
+    doc.internalId = invoice.name
+
+
+    doc.purchaseOrderReference = invoice.po_no
+
+
+    for item in invoice.items :
+        invoice_line = frappe._dict()
+        invoice_line.unitValue = frappe._dict()
+        item_config = get_auth_item_details(item.item_code,invoice.company)
+        invoice_line.description = clear_str(item.description)
+        invoice_line.internalCode = clear_str(item.item_code)
+        invoice_line.itemType = clear_str(item_config.item_type or item.item_type) 
+        invoice_line.itemCode = clear_str(item_config.item_code or item.itemcode) 
+        invoice_line.unitType = clear_str(item_config.uom)
+        invoice_line.quantity = round_double(item.qty)
+
+        # Unit Value
+        
+        qty = item.qty 
+        total_tax = 0
+        discount_rate = item.discount_percentage
+        base_rate_after_discount = item.base_rate
+        base_rate_before_discount = item.base_price_list_rate or item.base_rate
+        base_discount_amount = (base_rate_before_discount * discount_rate /100) * qty
+
+        invoice_line.unitValue.currencySold = invoice.currency
+        invoice_line.unitValue.amountEGP = round_double(base_rate_before_discount)
+        invoice_line.unitValue.currencyExchangeRate = '' if invoice.currency == "EGP" else round_double(invoice.exchange_rate)
+        invoice_line.unitValue.amountSold = '' if invoice.currency == "EGP" else round_double(invoice.exchange_rate * base_rate_before_discount)
+        
+        # Discount
+        if base_discount_amount :
+            invoice_line.discount = frappe._dict()
+            invoice_line.discount.rate = item.discount_percentage
+            invoice_line.discount.amount = item.base_discount_amount
+
+
+        # Totals
+        invoice_line.salesTotal = round_double(base_rate_before_discount * qty)
+
+        invoice_line.netTotal = round_double(base_rate_after_discount * qty)
+        invoice.valueDifference = round_double(0)
 
     return doc
 
