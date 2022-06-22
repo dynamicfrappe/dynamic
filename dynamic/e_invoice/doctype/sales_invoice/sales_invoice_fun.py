@@ -127,7 +127,7 @@ def get_invoice_json(invoice_name):
         # Unit Value
         
         qty = item.qty 
-        total_tax = 0
+        totalTaxableFees = 0
         discount_rate = item.discount_percentage
         base_rate_after_discount = item.base_rate
         base_rate_before_discount = item.base_price_list_rate or item.base_rate
@@ -141,15 +141,27 @@ def get_invoice_json(invoice_name):
         # Discount
         if base_discount_amount :
             invoice_line.discount = frappe._dict()
-            invoice_line.discount.rate = item.discount_percentage
-            invoice_line.discount.amount = item.base_discount_amount
+            invoice_line.discount.rate = discount_rate
+            invoice_line.discount.amount = round_double(base_discount_amount / qty)
 
+        # Taxes 
+        if item.item_tax_template :
+            tax_template = frappe.get_doc("Item Tax Template",item.item_tax_template)
+            for tax in getattr(tax_template,'taxes',[]) :
+                    tax_type = tax.tax_type_invoice
+                    tax_subtype = tax.tax_sub_type
+                    if tax_type and tax_subtype :
+                        
+                        pass
 
         # Totals
         invoice_line.salesTotal = round_double(base_rate_before_discount * qty)
-
         invoice_line.netTotal = round_double(base_rate_after_discount * qty)
         invoice.valueDifference = round_double(0)
+        invoice.totalTaxableFees = round_double(totalTaxableFees)
+        invoice.itemsDiscount = round_double(base_discount_amount)
+        invoice_line.total = round_double(invoice_line.netTotal- base_discount_amount + invoice.totalTaxableFees)
+
 
     return doc
 

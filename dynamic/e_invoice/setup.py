@@ -118,17 +118,19 @@ path_fiels = ["sinv1.json","sinv2.json","sinv3.json"]
 def import_tax_types():
 	try :
 		for fname in path_fiels:
+			taxable = (fname=="sinv1.json")
 			file_path = path_file + fname
 			file_path =  os.path.join(BASE_DIR,file_path)
 			main_file = open(file_path)
 			data_js = json.load(main_file)
-			insert_data(data_js)
+
+			insert_data(data_js,taxable)
 	except Exception as e:
 		error = frappe.new_doc("Error Log")
 		error.error = str(e) #str(e)[0:200] if len(e) > 200 else e
 		error.save() 
 
-def insert_data(data_js):
+def insert_data(data_js,taxable=0):
 	try :
 		for  data in data_js:
 			tax_type = frappe.new_doc("Tax Types")
@@ -136,6 +138,7 @@ def insert_data(data_js):
 			tax_type.desc_en = data["Desc_en"] if data["Desc_en"] else ''
 			tax_type.desc_ar = data["Desc_ar"] if data["Desc_ar"] else ''
 			tax_type.taxtypereference = data.get("TaxtypeReference","")
+			tax_type.taxable = taxable
 			tax_type.save()
 		return 'done'
 

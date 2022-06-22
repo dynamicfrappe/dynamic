@@ -10,6 +10,7 @@
   "code",
   "desc_en",
   "desc_ar",
+  "taxable",
   "taxtypereference"
  ],
  "fields": [
@@ -33,11 +34,17 @@
    "fieldname": "taxtypereference",
    "fieldtype": "Data",
    "label": "TaxtypeReference"
+  },
+  {
+   "default": "0",
+   "fieldname": "taxable",
+   "fieldtype": "Check",
+   "label": "Taxable"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-08 12:10:35.344974",
+ "modified": "2022-06-22 14:14:16.631565",
  "modified_by": "Administrator",
  "module": "E Invoice",
  "name": "Tax Types",
