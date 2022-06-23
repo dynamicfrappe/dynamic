@@ -8,6 +8,8 @@ import base64
 from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
 from erpnext import get_default_company, get_default_cost_center
 from frappe.model.naming import make_autoname
+from frappe.utils.user import get_users_with_role
+from frappe.utils.background_jobs import enqueue
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -148,3 +150,97 @@ def create_new_appointment(source_name, target_doc=None):
     appointment_doc.party = doc.name
     appointment_doc.customer_email = doc.email_id
     return appointment_doc
+
+
+from dynamic.gebco.api import validate_purchase_recipt
+def submit_purchase_recipt_based_on_active_domains(doc,*args,**kwargs):
+    if 'Gebco' in DOMAINS:
+        validate_purchase_recipt(doc)
+    if 'Terra' in DOMAINS:
+        check_email_setting_in_stock_setting(doc)
+
+
+
+
+def check_email_setting_in_stock_setting(doc):
+    sql = """
+    select document,role from `tabEmail Setting`;
+    """
+    setting_table = frappe.db.sql(sql,as_dict=1)
+    if setting_table:
+        for row in setting_table:
+            if row.document == "Purchase Recipt" and row.role:
+                link_str = frappe.utils.get_url_to_form("Purchase Recipt",doc.name)
+                msg = f"New Purchase Recipt Created  {link_str}"
+                send_mail_by_role(row.role,msg,"Purchase Recipt")
+            # if row.document == "Item Re Order" and row.role:
+            #     msg = f"New Purchase Recipt Created  {link_str}" 
+            # if row.document == "Safty Stock" and row.role:
+            #     pass
+
+
+
+def validate_material_request(doc,*args,**kwargs):
+    sql = """
+    select document,role from `tabEmail Setting` where document='Item Re Order';
+    """
+    setting_table = frappe.db.sql(sql,as_dict=1)
+    if len(setting_table) > 0:
+        if setting_table[0].role:
+            link_str = frappe.utils.get_url_to_form("Material Request",doc.name)
+            msg = f" Material Request {link_str} Created Successfully "
+            send_mail_by_role(setting_table[0].role,msg,"Item Re Order")
+        
+
+
+import os
+# @frappe.whitelist()
+def saftey_stock():
+    sql = """
+    select document,role from `tabEmail Setting` where document='Safty Stock';
+    """
+    setting_table = frappe.db.sql(sql,as_dict=1)
+    if len(setting_table) > 0:
+        item_sql = """
+            select tb.item_code  ,sum(tb.actual_qty) as 'actual_qty',ti.safety_stock 
+            from tabBin tb
+            inner join tabItem ti 
+            on tb.item_code = ti.name
+            group by tb.item_code
+            HAVING  sum(tb.actual_qty) > ti.safety_stock 
+        """ 
+        
+        item_list = frappe.db.sql(item_sql,as_dict=1)
+        str_list = "This Items Exceed safty stock limit"
+        str_list += "("
+        for itm in item_list:
+            print("aaaaaa",itm.item_code)
+            str_list +=" %s , "%itm.item_code
+        str_list += ")"
+        print("str list",str_list)
+        #shotage_string = " This Items Exceed safty stock limit " + lst_str
+        
+        asd = send_mail_by_role(setting_table[0].role,str_list,"Saftey Stock")
+        return asd
+        
+
+
+
+
+# @frappe.whitelist()
+def send_mail_by_role(role,msg,subject):
+    recip_list = get_users_with_role(role)
+    email_args = {
+        "recipients": recip_list,
+        "sender": None,
+        "subject": subject,
+        "message":msg,
+        "now": True
+    }
+    print(" emails =====> ", email_args )
+
+    if not frappe.flags.in_test:
+        frappe.enqueue(method=frappe.sendmail, queue="short", timeout=500, is_async=True, **email_args)
+    else:
+        frappe.sendmail(**email_args)
+    return email_args
