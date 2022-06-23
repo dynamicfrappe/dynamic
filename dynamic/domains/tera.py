@@ -4,8 +4,16 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {
-       
-
+         'Sales Order':[
+            {
+                "fieldname": "reservation",
+                "fieldtype": "Link",
+                "insert_after": "project",
+                "label": "Reservation",
+                'options' : 'Reservation',
+                'read_only' : 1
+            },
+         ],
          'Landed Cost Item': [
             {
                 "fieldname": "rate_currency",
@@ -163,6 +171,14 @@ data = {
         "doctype_or_field": "DocField",
         "field_name": "item_code",
         "property": "read_only",
+        "property_type": "Check",
+        "value": "1"
+        },
+         {
+        "doc_type": "Sales Order",
+        "doctype_or_field": "DocField",
+        "field_name": "set_warehouse",
+        "property": "reqd",
         "property_type": "Check",
         "value": "1"
         },
