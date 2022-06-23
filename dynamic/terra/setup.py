@@ -114,6 +114,70 @@ def create_lead_script():
                 },
                 __("Create")
               );
+              frm.add_custom_button(
+                __("Show History"),
+                function () {
+                  console.log("hello")
+                }
+              );
+                }
+            }
+        
+        });
+
+
+    """
+    doc.save()
+
+def create_customer_script():
+    name = "Customer-Form"
+    if frappe.db.exists("Client Script",name) :
+        doc = frappe.get_doc("Client Script",name)
+    else :
+        doc = frappe.new_doc("Client Script")
+    doc.dt      = "Customer"
+    doc.view    = "Form"
+    doc.enabled = 1
+    doc.script = """
+            
+        frappe.ui.form.on("Customer", {
+            refresh(frm){
+                if(!frm.doc.__islocal){
+              frm.add_custom_button(
+                __("Show History"),
+                function () {
+                  console.log("hello")
+                }
+              );
+                }
+            }
+        
+        });
+
+
+    """
+    doc.save()
+
+def create_opportunity_script():
+    name = "Opportunity-Form"
+    if frappe.db.exists("Client Script",name) :
+        doc = frappe.get_doc("Client Script",name)
+    else :
+        doc = frappe.new_doc("Client Script")
+    doc.dt      = "Opportunity"
+    doc.view    = "Form"
+    doc.enabled = 1
+    doc.script = """
+            
+        frappe.ui.form.on("Opportunity", {
+            refresh(frm){
+                if(!frm.doc.__islocal){
+              frm.add_custom_button(
+                __("Show History"),
+                function () {
+                  console.log("hello")
+                }
+              );
                 }
             }
         
@@ -216,6 +280,16 @@ def create_terra_scripts():
 
     try:
         create_lead_script()
+    except:
+        pass
+    
+    try:
+        create_customer_script()
+    except:
+        pass
+    
+    try:
+        create_opportunity_script()
     except:
         pass
     try:
