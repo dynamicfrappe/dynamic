@@ -224,15 +224,7 @@ data = {
                 "label": "",
                 "name": "Sales Invoice-e_invoice_section_break"
             },
-            {
-                "fieldname": "tax_auth",
-                "fieldtype": "Check",
-                "insert_after": "e_invoice_section_break",
-                "label": "Tax Auth",
-                "name": "Sales Invoice-tax_auth",
-                "in_filter": 1,
-                "in_standard_filter": 1
-            },
+            
              {
                 "fieldname": "activity_code",
                 "fieldtype": "Link",
@@ -251,6 +243,16 @@ data = {
                 "label": "Branch",
                 "allow_on_submit": 1,
             },
+            {
+                "fieldname": "tax_auth",
+                "fieldtype": "Check",
+                "insert_after": "branch",
+                "label": "Tax Auth",
+                "name": "Sales Invoice-tax_auth",
+                "in_filter": 1,
+                "in_standard_filter": 1
+            },
+            
             {
                 "fieldname": "branch_code",
                 "fieldtype": "Data",
@@ -291,6 +293,72 @@ data = {
                 "label": "Is Send",
                 "read_only":1
             },
+            {
+                "fieldname":"envoice_result_section",
+                "label":"",
+                "insert_after":"is_send",
+                "fieldtype":"Section Break",
+                # "name": "Sales Invoice-e_invoice_section_break"
+            },
+            {
+                "fieldname": "submissionId",
+                "fieldtype": "Data",
+                "insert_after": "envoice_result_section",
+                "label": "SubmissionId",
+                "read_only":1,
+                "allow_on_submit":1,
+                "default":"22222222"
+            },
+            {
+                "fieldname": "uuid",
+                "fieldtype": "Data",
+                "insert_after": "submissionId",
+                "label": "UUID",
+                "read_only":1,
+                "allow_on_submit":1,
+                "default":"22222222"
+            },
+            {
+                "fieldname": "longId",
+                "fieldtype": "Data",
+                "insert_after": "submissionId",
+                "label": "LongId",
+                "read_only":1,
+                "allow_on_submit":1
+            },
+            {
+                "fieldname": "column_br_en_st",
+                "fieldtype": "Column Break",
+                "insert_after": "submissionId",
+                "label": "",
+            },
+            {
+                "fieldname": "invoice_status",
+                "fieldtype": "Select",
+                "insert_after": "column_br_en_st",
+                "label": "Invoice Status",
+                "options":"\nValid\nInvalid\nSubmited\nCancelled",
+                "read_only":1,
+                "allow_on_submit":1
+            },
+            {
+                "fieldname": "error_code",
+                "fieldtype": "Data",
+                "insert_after": "invoice_status",
+                "label": "Error Code",
+                "read_only":1,
+                "allow_on_submit":1,
+                #"mandatory_depends_on": "eval:doc.invoice_status=='Invalid'"
+            },
+            {
+                "fieldname": "error_details",
+                "fieldtype": "Small Text",
+                "insert_after": "error_code",
+                "label": "Error Detalis",
+                "read_only":1,
+                "allow_on_submit":1
+            },
+            
 
         ],
         'Sales Invoice Item': [
