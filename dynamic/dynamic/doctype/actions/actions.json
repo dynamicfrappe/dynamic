@@ -80,13 +80,13 @@
   },
   {
    "fieldname": "time",
-   "fieldtype": "Data",
+   "fieldtype": "Time",
    "label": "Time"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-22 17:07:17.828615",
+ "modified": "2022-06-23 12:30:19.779213",
  "modified_by": "Administrator",
  "module": "dynamic",
  "name": "Actions",
