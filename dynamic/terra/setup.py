@@ -175,7 +175,32 @@ def add_customer_property_setters():
         doc.property_type="Data"
         doc.value="customer_name,customer_group,territory, mobile_no,primary_address,phone_no"
         doc.save()
-    
+
+
+def install_action():
+    data =[
+            {
+            "type": "Indoor",
+            "action_name": "Visit"
+            },
+            {
+                "type": "Indoor",
+                "action_name": "Call"
+            },
+            {
+                "type": "Out door",
+                "action_name": "Out"
+            }
+
+        ]
+    for i in data :
+        if not frappe.db.exists("Action",i.get("action_name")) :
+            frappe.get_doc({
+                "doctype":"Action",
+                "type":i.get("type"),
+                "action_name":i.get("action_name")
+            }).insert()
+
 def create_terra_scripts():
 
     try:
@@ -212,6 +237,11 @@ def create_terra_scripts():
         add_customer_property_setters()
     except:
         print("add_customer_property_setters")
+
+    try:
+        install_action()
+    except Exception as ex:
+        print("----------------------- install_actioninstall_actioninstall_action",str(ex))
 
 
 
