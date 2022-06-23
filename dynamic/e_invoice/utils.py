@@ -51,7 +51,7 @@ def get_company_configuration(company=None, branch_code=0):
 def get_auth_item_details(item_code,company=None):
     if not company:
         company = get_default_company()
-    item = frappe.get_doc("Item Code",item_code)
+    item = frappe.get_doc("Item",item_code)
     item_details = frappe._dict()
     if getattr(item,'e_invoice_setting',[]):
         item_config = [x for x in item.e_invoice_setting if x.company == company]
@@ -63,20 +63,3 @@ def get_auth_item_details(item_code,company=None):
     return item_details
 
 
-
-
-@frappe.whitelist()
-def get_company_auth_token(clientID , clientSecret , base_url):
-    # base_url = "https://id.preprod.eta.gov.eg"
-    method = "/connect/token"
-    str_byte = bytes(f"{clientID}:{clientSecret}", 'utf-8')
-    auth = b64encode(str_byte).decode("ascii")
-    # headers =  {'Authorization': 'application/octet-stream'}
-    headers = { 'Authorization' : f'Basic {auth}',
-				 'Content-Type': 'application/x-www-form-urlencoded'}
-    body = {"grant_type":"client_credentials"}
-    response = requests.post(base_url+method,headers=headers,data=body)
-    access_token = response.json().get('access_token')
-    if not access_token :
-        frappe.throw(_("Invalid Client Tax Auth"))
-    return response.json().get('access_token')
