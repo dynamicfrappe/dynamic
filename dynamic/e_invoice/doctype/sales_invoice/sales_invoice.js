@@ -51,7 +51,14 @@ frappe.ui.form.on("Sales Invoice", {
           frappe.show_alert({ message: "no connection", indicator: "red" });
         }
       });
-    }
+    };
+    frm.set_query("branch",()=>{
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+        ],
+      };
+    })
   },
 
   add_post(frm) {

@@ -224,15 +224,7 @@ data = {
                 "label": "",
                 "name": "Sales Invoice-e_invoice_section_break"
             },
-            {
-                "fieldname": "tax_auth",
-                "fieldtype": "Check",
-                "insert_after": "e_invoice_section_break",
-                "label": "Tax Auth",
-                "name": "Sales Invoice-tax_auth",
-                "in_filter": 1,
-                "in_standard_filter": 1
-            },
+            
              {
                 "fieldname": "activity_code",
                 "fieldtype": "Link",
@@ -251,6 +243,16 @@ data = {
                 "label": "Branch",
                 "allow_on_submit": 1,
             },
+            {
+                "fieldname": "tax_auth",
+                "fieldtype": "Check",
+                "insert_after": "branch",
+                "label": "Tax Auth",
+                "name": "Sales Invoice-tax_auth",
+                "in_filter": 1,
+                "in_standard_filter": 1
+            },
+            
             {
                 "fieldname": "branch_code",
                 "fieldtype": "Data",
