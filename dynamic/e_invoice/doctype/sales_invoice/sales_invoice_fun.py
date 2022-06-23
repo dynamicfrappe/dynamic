@@ -151,6 +151,7 @@ def get_invoice_json(invoice , company , setting , customer ):
         invoice_line.unitValue.currencyExchangeRate = 0 if invoice.currency == "EGP" else round_double(invoice.exchange_rate)
         invoice_line.unitValue.amountSold = 0 if invoice.currency == "EGP" else round_double(invoice.exchange_rate * base_rate_before_discount)
         
+        
         # Discount
         if base_discount_amount :
             invoice_line.discount = frappe._dict()
