@@ -64,7 +64,7 @@ data = {
         'Landed Cost Taxes and Charges':[
              {
                 "fieldname": "line_name",
-                "fieldtype": "Data",
+                "fieldtype": "Currency",
                 "insert_after": "base_amount",
                 "label": "Line Name",
                 "read_only" : 1
@@ -115,16 +115,15 @@ data = {
         ],
         'Lead':[
              {
-                "fieldname": "phone_no",
-                "fieldtype": "Data",
-                "in_global_search": 1,
-                "in_standard_filter": 1,
-                "insert_after": "email_id",
-                "label": "Phone No",
-                "translatable": 1,
-                "unique": 1,
-            },
-            
+            "fieldname": "phone_no",
+            "fieldtype": "Data",
+            "in_global_search": 1,
+            "in_standard_filter": 1,
+            "insert_after": "email_id",
+            "label": "Phone No",
+            "translatable": 1,
+            "unique": 1,
+            }
         ] ,
         'Customer':[
              {
@@ -138,13 +137,6 @@ data = {
             "unique": 1,
             "fetch_if_empty": 1,
             "fetch_from": "lead_name.phone_no", 
-            },
-             {
-                "fieldname": "from_opportunity",
-                "fieldtype": "Link",
-                "insert_after": "from_lead",
-                "label": "From Opportunity",
-                "options":"Opportunity"
             }
         ],
         'Opportunity':[
@@ -159,28 +151,6 @@ data = {
             "unique": 1,
             "fetch_if_empty": 1,
             "fetch_from": "party_name.phone_no" 
-            },
-             {
-            "fieldname": "opportunity_name",
-            "fieldtype": "Data",
-            "insert_after": "naming_series",
-            "label": "Opportunity Name",
-            "translatable": 1,
-            }
-        ],
-        'Stock Settings':[
-            {
-                "fieldname": "email_section",
-                "fieldtype": "Section Break",
-                "insert_after": "stock_auth_role"
-            },
-            {
-            "fieldname": "email_setting",
-            "fieldtype": "Table",
-            "options":"Email Setting",
-            "insert_after": "email_section",
-            "label": "Email Setting",
-            "translatable": 1,
             }
         ] 
     },
@@ -188,15 +158,16 @@ data = {
         
     ],
     "property_setters": [
-        # {
-        # "doc_type": "Lead",
-        # "doctype_or_field": "DocType",
-        # "name": "Lead-main-search_fields",
-        # "property": "search_fields",
-        # "property_type": "Data",
-        # "value": "lead_name,lead_owner,phone_no"
-        # }
-        ],
+        {
+        "doc_type": "Item",
+        "doctype_or_field": "DocField",
+        "field_name": "item_code",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1"
+        },
+
+    ],
   
     'on_setup': 'dynamic.terra.setup.create_terra_scripts'
 }
