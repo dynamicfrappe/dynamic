@@ -17,7 +17,8 @@
   "column_break_7",
   "street",
   "building_number",
-  "amended_from"
+  "amended_from",
+  "company"
  ],
  "fields": [
   {
@@ -91,11 +92,17 @@
    "options": "Branches",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-22 11:13:38.623365",
+ "modified": "2022-06-22 14:09:22.022265",
  "modified_by": "Administrator",
  "module": "E Invoice",
  "name": "Branches",
