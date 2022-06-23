@@ -48,7 +48,14 @@ def post_sales_invoice(invoice_name):
     #     frappe.local.response["message"] = str(e)
     #     frappe.local.response['http_status_code'] = 400
 
-
+@frappe.whitelist()
+def update_invoice_submission_status(submit_response):
+    # Update All Invoices With Submission Status
+    """
+    "Submitted" for accepted Docs
+    "Invalid" for Rejected Docs
+    """
+    pass
 def get_invoice_json(invoice , company , setting , customer ):
     """
     get single invoice json
