@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 frappe.query_reports["Actions Report"] = {
+	// asd
 	"filters": [
 
 	]
