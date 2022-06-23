@@ -43,8 +43,9 @@ frappe.ui.form.on("Sales Invoice", {
     frm.events.setDateTimeIssued(frm);
     var data = { name: "ahmed" };
     socket(JSON.stringify(data));
-    if (frm.doc.docstatus == 1 && frm.doc.is_send == 0) {
-      frm.add_custom_button(__("Check Token"), function () {
+    // if (frm.doc.docstatus == 1 && frm.doc.is_send == 0) {
+      if (frm.doc.is_send == 0) {
+        frm.add_custom_button(__("Check Token"), function () {
         if (message == "Token connecting" || message == "success") {
           frm.events.add_post(frm);
         } else {
@@ -71,7 +72,7 @@ frappe.ui.form.on("Sales Invoice", {
         },
         callback: function (r) {
           console.log(r.message);
-          var data = { invoice: r.message };
+          var data = r.message;
           socket(JSON.stringify(data));
         },
       });

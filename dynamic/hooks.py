@@ -105,7 +105,13 @@ doc_events = {
         "validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost"
     },
     "Purchase Receipt": {
-        "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+        # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+        "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains"
+
+    },
+    "Material Request": {
+        "on_submit": "dynamic.api.validate_material_request"
+
     },
     "Landed Cost Voucher" :{
         "validate" :"dynamic.dynamic.validation.validate_landed_cost"
@@ -149,6 +155,9 @@ scheduler_events = {
         "0 */2 * * *": [
             "dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",
             "erpnext.stock.reorder_item.reorder_item",
+        ],
+        "0 11 * * *":[
+            "dynamic.api.saftey_stock",
         ]
     },
     # 	"all": [
