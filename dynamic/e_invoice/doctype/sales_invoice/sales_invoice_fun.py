@@ -60,8 +60,8 @@ def update_invoice_submission_status(submit_response):
         internalID = submit_response['acceptedDocuments'][0]['internalId']
         sinv_doc = frappe.get_doc('Sales Invoice',internalID)
         sinv_doc.uuid = submit_response['acceptedDocuments'][0]['uuid']
-        sinv_doc.longId = submit_response['acceptedDocuments'][0]['longId']
-        sinv_doc.submissionId = submit_response['submissionId']
+        sinv_doc.long_id = submit_response['acceptedDocuments'][0]['longId']
+        sinv_doc.submission_id = submit_response['submissionId']
         sinv_doc.invoice_status = 'Valid'
         sinv_doc.save()
     else:
