@@ -123,6 +123,7 @@ data = {
             "label": "Phone No",
             "translatable": 1,
             "unique": 1,
+            "reqd": 1
             }
         ] ,
         'Customer':[
@@ -137,6 +138,7 @@ data = {
             "unique": 1,
             "fetch_if_empty": 1,
             "fetch_from": "lead_name.phone_no", 
+            "reqd": 1
             }
         ],
         'Opportunity':[
@@ -150,6 +152,7 @@ data = {
             "translatable": 1,
             "unique": 1,
             "fetch_if_empty": 1,
+            "reqd": 1,
             "fetch_from": "party_name.phone_no" 
             }
         ],
@@ -167,7 +170,16 @@ data = {
                 "label": "Email Setting",
                 "translatable": 1,
             }
-        ]  
+        ],
+        'Material Request':[
+             {
+            "fieldname": "project_name",
+            "fieldtype": "Link",
+            "options": "Project Name",
+            "insert_after": "material_request_type",
+            "label": "Project Name"
+            }
+        ],  
     },
     "properties": [
         

@@ -64,6 +64,13 @@
    "options": "customer_type"
   },
   {
+   "fetch_from": "customer.phone_no",
+   "fieldname": "phone_no",
+   "fieldtype": "Data",
+   "label": "Phone No",
+   "read_only": 1
+  },
+  {
    "fieldname": "branch",
    "fieldtype": "Link",
    "label": "Branch",
@@ -85,20 +92,13 @@
    "fieldname": "time",
    "fieldtype": "Time",
    "label": "Time"
-  },
-  {
-   "fetch_from": "customer.phone_no",
-   "fieldname": "phone_no",
-   "fieldtype": "Data",
-   "label": "Phone No",
-   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-26 10:21:49.509019",
+ "modified": "2022-06-26 10:40:20.386209",
  "modified_by": "Administrator",
- "module": "dynamic",
+ "module": "terra",
  "name": "Actions",
  "owner": "Administrator",
  "permissions": [
