@@ -57,14 +57,13 @@ def get_document_sales_invoice(invoice_name):
     result = frappe._dict({"documents": []})
     invoice = frappe.get_doc("Sales Invoice", invoice_name)
     setting = get_company_configuration(invoice.company,invoice.branch_code or "0")
-    if setting.document_version == "0.9" :
-        access_token = get_company_auth_token(setting.client_id,setting.client_secret,setting.login_url)
-        document_response = document_invoice_api(invoice.uuid,access_token,setting.system_url)
-        # data = json.loads(document_response.get('document'))
-        # frappe.msgprint(str(document_response.get('status')))
-        invoice.invoice_status = document_response.get('status')
-        invoice.uuid = document_response.get('uuid')
-        invoice.save()
+    access_token = get_company_auth_token(setting.client_id,setting.client_secret,setting.login_url)
+    document_response = document_invoice_api(invoice.uuid,access_token,setting.system_url)
+    # data = json.loads(document_response.get('document'))
+    # frappe.msgprint(str(document_response.get('status')))
+    invoice.invoice_status = document_response.get('status')
+    invoice.uuid = document_response.get('uuid')
+    invoice.save()
     return result
 
 @frappe.whitelist()
@@ -74,13 +73,14 @@ def update_invoice_submission_status(submit_response):
     "Submitted" for accepted Docs
     "Invalid" for Rejected Docs
     """
+    submit_response = json.loads(str(submit_response))
     for accepted_doc in  (submit_response.get("acceptedDocuments") or []):
         internalID = accepted_doc['internalId']
         sinv_doc = frappe.get_doc('Sales Invoice',internalID)
         sinv_doc.uuid = accepted_doc['uuid']
         sinv_doc.long_id = accepted_doc['longId']
         sinv_doc.submission_id = submit_response['submissionId']
-        sinv_doc.invoice_status = 'Valid'
+        sinv_doc.invoice_status = 'Submitted'
         sinv_doc.save()
         #!get document api 
         #? update 1-uuid , 2-invoice_status
@@ -96,9 +96,7 @@ def update_invoice_submission_status(submit_response):
         err_details = ''
         for index in range(len(err_list)):
             for key,val in err_list[index].items():
-                err_details += f'{key} : {err_list[index][key]} --  '
-        
-        frappe.errprint(f'str error -> {err_details}')
+                err_details += f'{key} : {err_list[index][key]} --  '        
         sinv_doc.error_details = err_details
         sinv_doc.save()
         
