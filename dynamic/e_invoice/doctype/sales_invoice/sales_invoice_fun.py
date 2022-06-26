@@ -18,12 +18,13 @@ def post_sales_invoice(invoice_name):
     customer = frappe.get_doc("Customer", invoice.customer)
     invoice_json = get_invoice_json(invoice,company,setting,customer)
     result.documents.append(invoice_json)
-    result = json.dumps(result)
+    # result = json.dumps(result)
     if setting.document_version == "0.9" :
         access_token = get_company_auth_token(setting.client_id,setting.client_secret,setting.login_url)
         submit_response = submit_invoice_api(result,access_token,setting.system_url)
         frappe.msgprint (str(submit_response))
         update_invoice_submission_status(submit_response)
+    # frappe.msgprint(str(result))
     return result
     ########## get server url ############
     server_url = frappe.db.get_single_value('EInvoice Setting', 'url')

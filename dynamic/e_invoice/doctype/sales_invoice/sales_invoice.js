@@ -26,6 +26,7 @@ function socket(action) {
   websocket.onmessage = function (event) {
     message = event.data;
     var data = JSON.parse(message);
+    console.log("data ===> " ,data);
     if (data.status) {
       frappe.show_alert({ message: data.status, indicator: "blue" });
       message = data.status;
