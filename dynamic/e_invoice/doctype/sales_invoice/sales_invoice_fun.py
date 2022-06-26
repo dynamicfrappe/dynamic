@@ -1,5 +1,5 @@
 from unittest.util import strclass
-from dynamic.e_invoice.apis import get_company_auth_token, submit_invoice_api
+from dynamic.e_invoice.apis import get_company_auth_token, submit_invoice_api, document_invoice_api
 from dynamic.e_invoice.utils import get_auth_item_details, get_company_configuration
 import frappe
 import json
@@ -50,6 +50,23 @@ def post_sales_invoice(invoice_name):
     #     frappe.local.response["message"] = str(e)
     #     frappe.local.response['http_status_code'] = 400
 
+
+@frappe.whitelist()
+def get_document_sales_invoice(invoice_name):
+    # try:
+    result = frappe._dict({"documents": []})
+    invoice = frappe.get_doc("Sales Invoice", invoice_name)
+    setting = get_company_configuration(invoice.company,invoice.branch_code or "0")
+    if setting.document_version == "0.9" :
+        access_token = get_company_auth_token(setting.client_id,setting.client_secret,setting.login_url)
+        document_response = document_invoice_api(invoice.uuid,access_token,setting.system_url)
+        # data = json.loads(document_response.get('document'))
+        # frappe.msgprint(str(document_response.get('status')))
+        invoice.invoice_status = document_response.get('status')
+        invoice.uuid = document_response.get('uuid')
+        invoice.save()
+    return result
+
 @frappe.whitelist()
 def update_invoice_submission_status(submit_response):
     # Update All Invoices With Submission Status
@@ -57,26 +74,31 @@ def update_invoice_submission_status(submit_response):
     "Submitted" for accepted Docs
     "Invalid" for Rejected Docs
     """
-    if submit_response["acceptedDocuments"]:
-        internalID = submit_response['acceptedDocuments'][0]['internalId']
+    for accepted_doc in  (submit_response.get("acceptedDocuments") or []):
+        internalID = accepted_doc['internalId']
         sinv_doc = frappe.get_doc('Sales Invoice',internalID)
-        sinv_doc.uuid = submit_response['acceptedDocuments'][0]['uuid']
-        sinv_doc.longId = submit_response['acceptedDocuments'][0]['longId']
-        sinv_doc.submissionId = submit_response['submissionId']
+        sinv_doc.uuid = accepted_doc['uuid']
+        sinv_doc.long_id = accepted_doc['longId']
+        sinv_doc.submission_id = submit_response['submissionId']
         sinv_doc.invoice_status = 'Valid'
         sinv_doc.save()
-    else:
-        internalID = submit_response['rejectedDocuments'][0]['internalId']
+        #!get document api 
+        #? update 1-uuid , 2-invoice_status
+
+
+    for rejected_doc in  (submit_response.get("rejectedDocuments") or []):
+        internalID = rejected_doc['internalId']
         sinv_doc = frappe.get_doc('Sales Invoice',internalID)
-        sinv_doc.error_code = submit_response['rejectedDocuments'][0]['error']['code']
-        sinv_doc.submission_id = submit_response.get('submissionId', ' ')
+        sinv_doc.error_code = rejected_doc['error']['code']
+        sinv_doc.submission_id = submit_response.get('submissionId', '')
         sinv_doc.invoice_status = 'Invalid'
-        err_list = submit_response['rejectedDocuments'][0]['error']['details']
+        err_list = rejected_doc['error']['details']
         err_details = ''
         for index in range(len(err_list)):
             for key,val in err_list[index].items():
                 err_details += f'{key} : {err_list[index][key]} --  '
-
+        
+        frappe.errprint(f'str error -> {err_details}')
         sinv_doc.error_details = err_details
         sinv_doc.save()
         

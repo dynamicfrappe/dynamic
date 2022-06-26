@@ -346,7 +346,7 @@ data = {
                 "fieldtype": "Select",
                 "insert_after": "column_br_en_st",
                 "label": "Invoice Status",
-                "options":"\nValid\nInvalid\nSubmitted\nCancelled",
+                "options":"\nValid\nInvalid\nSubmitted\nCancelled\nRejected",
                 "read_only":1,
                 "allow_on_submit":1
             },
