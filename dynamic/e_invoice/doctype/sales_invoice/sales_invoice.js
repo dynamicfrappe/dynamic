@@ -38,9 +38,8 @@ function socket(action) {
             submit_response: data.response,
           },
           callback: function (r) {
-            cur_frm.refresh_fields();
-            cur_frm.refresh();
-            // window.location.reload()
+            // cur_frm.events.get_document_sinv(cur_frm);
+            window.location.reload();
           },
         });
       }
@@ -53,24 +52,23 @@ function socket(action) {
 }
 
 frappe.ui.form.on("Sales Invoice", {
+  onload(frm) {
+    frm.events.add_e_tax_btns(frm);
+  },
+  after_save(frm) {
+    frm.events.add_e_tax_btns(frm);
+  },
   refresh(frm) {
+    if (frm.is_new()) {
+      frm.doc.submission_id = "";
+      frm.doc.uuid = "";
+      frm.doc.long_id = "";
+      frm.doc.error_code = "";
+      frm.doc.error_details = "";
+      frm.doc.invoice_status = "";
+    }
     // your code here
     frm.events.setDateTimeIssued(frm);
-    var data = { name: "ahmed" };
-    socket(JSON.stringify(data));
-    // if (frm.doc.docstatus == 1 && frm.doc.is_send == 0) {
-    if (frm.doc.is_send == 0) {
-      frm.add_custom_button(__("Check Token"), function () {
-        if (message == "Token connecting" || message == "success") {
-          frm.events.add_post(frm);
-        } else {
-          frappe.show_alert({ message: "no connection", indicator: "red" });
-        }
-      });
-      if (frm.doc.uuid) {
-        frm.events.get_document_sinv(frm);
-      }
-    }
     frm.set_query("branch", () => {
       return {
         filters: [["company", "=", frm.doc.company]],
@@ -78,45 +76,75 @@ frappe.ui.form.on("Sales Invoice", {
     });
   },
 
+  add_e_tax_btns(frm) {
+    var data = { name: "ahmed" };
+    socket(JSON.stringify(data));
+    // if (frm.doc.docstatus == 1 && frm.doc.is_send == 0) {
+    // if (frm.doc.docstatus == 1) {
+
+    frm.events.add_check_token(frm);
+    if (frm.doc.uuid) {
+      frm.events.add_get_document(frm);
+    }
+  },
+
+  add_check_token(frm) {
+    frm.add_custom_button(
+      __("Check Token"),
+      function () {
+        if (message == "Token connecting" || message == "success") {
+          frm.events.add_post(frm);
+        } else {
+          frappe.show_alert({ message: "no connection", indicator: "red" });
+        }
+      },
+      __("E Tax")
+    );
+  },
   add_post(frm) {
+    if (["Invalid", ""].includes(frm.doc.invoice_status || "")) {
+      frm.add_custom_button(
+        __("POST TO TAX"),
+        function () {
+          frappe.call({
+            method:
+              "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.post_sales_invoice",
+            args: {
+              invoice_name: frm.doc.name,
+            },
+            callback: function (r) {
+              // console.log(r.message);
+              var data = r.message;
+              socket(JSON.stringify(data));
+            },
+          });
+        },
+        "E Tax"
+      );
+    }
+  },
+
+  add_get_document(frm) {
     frm.add_custom_button(
       __("POST TO TAX"),
       function () {
-        frappe.call({
-          method:
-            "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.post_sales_invoice",
-          args: {
-            invoice_name: frm.doc.name,
-          },
-          callback: function (r) {
-            // console.log(r.message);
-            var data = r.message;
-            socket(JSON.stringify(data));
-          },
-        });
+        frm.events.get_document_sinv(frm);
       },
       "E Tax"
     );
   },
 
   get_document_sinv(frm) {
-    frm.add_custom_button(
-      __("GET Document"),
-      function () {
-        frappe.call({
-          method:
-            "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.get_document_sales_invoice",
-          args: {
-            invoice_name: frm.doc.name,
-          },
-          callback: function (r) {
-            cur_frm.refresh_fields();
-            cur_frm.refresh();
-          },
-        });
+    frappe.call({
+      method:
+        "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.get_document_sales_invoice",
+      args: {
+        invoice_name: frm.doc.name,
       },
-      "E Tax"
-    );
+      callback: function (r) {
+        window.location.reload();
+      },
+    });
   },
   tax_auth(frm) {
     //   if (frm.doc.tax_auth) {
