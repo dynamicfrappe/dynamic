@@ -23,6 +23,7 @@ def post_sales_invoice(invoice_name):
         access_token = get_company_auth_token(setting.client_id,setting.client_secret,setting.login_url)
         submit_response = submit_invoice_api(result,access_token,setting.system_url)
         frappe.msgprint (str(submit_response))
+        update_invoice_submission_status(submit_response)
     return result
     ########## get server url ############
     server_url = frappe.db.get_single_value('EInvoice Setting', 'url')
@@ -55,7 +56,32 @@ def update_invoice_submission_status(submit_response):
     "Submitted" for accepted Docs
     "Invalid" for Rejected Docs
     """
-    pass
+    if submit_response["acceptedDocuments"]:
+        internalID = submit_response['acceptedDocuments'][0]['internalId']
+        sinv_doc = frappe.get_doc('Sales Invoice',internalID)
+        sinv_doc.uuid = submit_response['acceptedDocuments'][0]['uuid']
+        sinv_doc.longId = submit_response['acceptedDocuments'][0]['longId']
+        sinv_doc.submissionId = submit_response['submissionId']
+        sinv_doc.invoice_status = 'Valid'
+        sinv_doc.save()
+    else:
+        internalID = submit_response['rejectedDocuments'][0]['internalId']
+        sinv_doc = frappe.get_doc('Sales Invoice',internalID)
+        sinv_doc.error_code = submit_response['rejectedDocuments'][0]['error']['code']
+        sinv_doc.submission_id = submit_response.get('submissionId', ' ')
+        sinv_doc.invoice_status = 'Invalid'
+        err_list = submit_response['rejectedDocuments'][0]['error']['details']
+        err_details = ''
+        for index in range(len(err_list)):
+            for key,val in err_list[index].items():
+                err_details += f'{key} : {err_list[index][key]} --  '
+
+        sinv_doc.error_details = err_details
+        sinv_doc.save()
+        
+        
+
+
 def get_invoice_json(invoice , company , setting , customer ):
     """
     get single invoice json
