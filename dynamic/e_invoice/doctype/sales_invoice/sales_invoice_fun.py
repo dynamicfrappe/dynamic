@@ -99,7 +99,11 @@ def update_invoice_submission_status(submit_response):
         sinv_doc.long_id = accepted_doc['longId']
         sinv_doc.submission_id = submit_response['submissionId']
         sinv_doc.invoice_status = 'Submitted'
+        sinv_doc.error_code = ''
+        sinv_doc.error_details = ''
         sinv_doc.save()
+        if sinv_doc.uuid :
+            get_document_sales_invoice(sinv_doc.name)
         #!get document api 
         #? update 1-uuid , 2-invoice_status
 
@@ -117,6 +121,7 @@ def update_invoice_submission_status(submit_response):
                 err_details += f'{key} : {err_list[index][key]} --  '        
         sinv_doc.error_details = err_details
         sinv_doc.save()
+
         
         
 
