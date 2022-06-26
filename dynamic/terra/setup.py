@@ -117,7 +117,7 @@ def create_lead_script():
               frm.add_custom_button(
                 __("Show History"),
                 function () {
-                  console.log("hello")
+                  frappe.set_route('query-report','Actions Report',{"phone_no":frm.doc.phone_no})
                 }
               );
                 }
@@ -146,7 +146,7 @@ def create_customer_script():
               frm.add_custom_button(
                 __("Show History"),
                 function () {
-                  console.log("hello")
+                  frappe.set_route('query-report','Actions Report',{"phone_no":frm.doc.phone_no})
                 }
               );
                 }
@@ -175,7 +175,7 @@ def create_opportunity_script():
               frm.add_custom_button(
                 __("Show History"),
                 function () {
-                  console.log("hello")
+                  frappe.set_route('query-report','Actions Report',{"phone_no":frm.doc.phone_no})
                 }
               );
                 }

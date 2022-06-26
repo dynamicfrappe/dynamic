@@ -21,10 +21,13 @@ def get_data(filters):
 		conditions += " and type = '%s'"%filters.get("type")
 	if filters.get("actions"):
 		conditions += " and action = '%s'"%filters.get("actions")
-	if filters.get("customer_type"):
-		conditions += " and customer_type = '%s'"%filters.get("customer_type")
+	# if filters.get("customer_type"):
+	# 	conditions += " and customer_type = '%s'"%filters.get("customer_type")
 	if filters.get("branch"):
 		conditions += " and branch = '%s'"%filters.get("branch")
+	
+	if filters.get("phone_no"):
+		conditions += " and phone_no = '%s'"%filters.get("phone_no")
 
 	sql = f"""
 	select * from tabActions 
@@ -63,6 +66,12 @@ def get_columns():
 		{
             "label": _("Customer"),
             "fieldname": "customer",
+            "fieldtype": "Data",
+            "width": 150
+        },
+		{
+            "label": _("Phone No"),
+            "fieldname": "phone_no",
             "fieldtype": "Data",
             "width": 150
         },
