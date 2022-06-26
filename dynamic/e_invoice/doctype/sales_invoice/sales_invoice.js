@@ -52,6 +52,9 @@ frappe.ui.form.on("Sales Invoice", {
           frappe.show_alert({ message: "no connection", indicator: "red" });
         }
       });
+      if(frm.doc.uuid){
+        frm.events.get_document_sinv(frm);
+      }
     };
     frm.set_query("branch",()=>{
       return {
@@ -71,12 +74,30 @@ frappe.ui.form.on("Sales Invoice", {
           invoice_name: frm.doc.name,
         },
         callback: function (r) {
-          console.log(r.message);
+          // console.log(r.message);
           var data = r.message;
           socket(JSON.stringify(data));
+          
         },
       });
-    });
+    },'E Tax');
+  },
+
+  get_document_sinv(frm){
+    frm.add_custom_button(__("GET Document"), function () {
+      frappe.call({
+        method:
+          "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.get_document_sales_invoice",
+        args: {
+          invoice_name: frm.doc.name,
+        },
+        callback: function (r) {
+          var data = r.message;
+          socket(JSON.stringify(data));
+          
+        },
+      });
+    },'E Tax');
   },
   tax_auth(frm) {
     //   if (frm.doc.tax_auth) {
