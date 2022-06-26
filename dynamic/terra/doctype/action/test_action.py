@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestReservation(unittest.TestCase):
+class TestAction(unittest.TestCase):
 	pass
