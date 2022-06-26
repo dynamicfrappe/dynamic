@@ -241,6 +241,7 @@ def get_invoice_json(invoice , company , setting , customer ):
     doc.totalAmount = round_double(totalAmount - doc.extraDiscountAmount)
 
 
+
     return doc
 
 
