@@ -259,9 +259,26 @@ def send_mail_by_role(role,msg,subject):
         frappe.sendmail(**email_args)
     return email_args
 
+@frappe.whitelist()
+def create_reservation_validate(self,*args , **kwargs):
+    if "Terra" in DOMAINS:
+        frappe.errprint(f'data self-->{self}')
+        add_row_for_reservation(self)
+       
+def add_row_for_reservation(self):
+    for item in self.items:
+            reserv_doc = frappe.new_doc('Reservation')
+            reserv_doc.item_code = item.item_code
+            reserv_doc.status = 'Active'
+            reserv_doc.reservation_amount = item.qty
+            reserv_doc.warehouse_source = self.set_warehouse if self.set_warehouse else ""
+            # row = doc.append('warehouse', {})
+            reserv_doc.append('warehouse', {
+                'item': item.item_name,
+                'reserved_qty': item.qty
+            })
+            frappe.errprint(f'sales_order name self-->{self.name}')
+            reserv_doc.save()
+            # reserv_doc.sales_order = self.name
+            # reserv_doc.save()
 
-def validate_sales_order_items_amount(self,*args , **kwargs):
-    frappe.errprint(f'data self-->{self}')
-    #check item in purchase order
-    #check item in stock
-    pass
