@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{customer}-{DD}-{MM}-{YY}",
  "creation": "2022-06-22 17:07:17.828615",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -15,16 +14,19 @@
   "column_break_6",
   "customer_type",
   "customer",
-  "phone_no",
   "branch",
   "create_by",
   "date",
-  "time"
+  "time",
+  "source",
+  "data_14"
  ],
  "fields": [
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Type",
    "options": "\nIndoor\nOut door"
   },
@@ -33,16 +35,19 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "action",
    "fieldtype": "Link",
    "label": "Action",
-   "options": "Action"
+   "options": "Action",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_4",
    "fieldtype": "Section Break"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "description",
    "fieldtype": "Small Text",
    "label": "Description"
@@ -52,16 +57,21 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "customer_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Customer Type",
    "options": "Lead\nOpportunity\nCustomer"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "customer",
    "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
    "label": "Customer",
-   "options": "customer_type"
+   "options": "customer_type",
+   "reqd": 1
   },
   {
    "fieldname": "branch",
@@ -70,33 +80,46 @@
    "options": "Branch"
   },
   {
-   "default": "__user",
    "fieldname": "create_by",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Create By",
-   "options": "User"
+   "options": "User",
+   "read_only": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "label": "Date",
+   "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "time",
-   "fieldtype": "Time",
-   "label": "Time"
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Time",
+   "reqd": 1
   },
   {
-   "fetch_from": "customer.phone_no",
-   "fieldname": "phone_no",
-   "fieldtype": "Data",
-   "label": "Phone No",
-   "read_only": 1
+   "allow_in_quick_entry": 1,
+   "fieldname": "source",
+   "fieldtype": "Link",
+   "label": "Source",
+   "options": "Lead Source"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "data_14",
+   "fieldtype": "Link",
+   "label": "Local Source",
+   "options": "Local Source"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-26 10:21:49.509019",
+ "modified": "2022-06-26 11:26:07.034422",
  "modified_by": "Administrator",
  "module": "dynamic",
  "name": "Actions",
@@ -115,6 +138,7 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC"
 }

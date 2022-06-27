@@ -78,6 +78,7 @@ def update_packing_list_item(doc, packing_item_code, qty, main_item_row, descrip
 		pi.warehouse = old_packed_items_map.get((packing_item_code, main_item_row.item_code))[0].warehouse
 
 def make_packing_list(doc,fun=''):
+	# cleanup_packing_list(doc)
 	doc.set('packed_items', [])
 	"""make packing list for Product Bundle item"""
 	if doc.get("_action") and doc._action == "update_after_submit": return
