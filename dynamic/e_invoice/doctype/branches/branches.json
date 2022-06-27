@@ -9,6 +9,8 @@
  "field_order": [
   "branch_name",
   "branch_code",
+  "column_break_3",
+  "company",
   "activity_code",
   "address_section",
   "country_code",
@@ -17,8 +19,7 @@
   "column_break_7",
   "street",
   "building_number",
-  "amended_from",
-  "company"
+  "amended_from"
  ],
  "fields": [
   {
@@ -97,12 +98,17 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-22 14:09:22.022265",
+ "modified": "2022-06-27 10:10:37.443998",
  "modified_by": "Administrator",
  "module": "E Invoice",
  "name": "Branches",

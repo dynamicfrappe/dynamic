@@ -20,9 +20,11 @@ def post_sales_invoice(invoice_name):
     result.documents.append(invoice_json)
     # result = json.dumps(result)
     if setting.document_version == "0.9" :
+
         access_token = get_company_auth_token(setting.client_id,setting.client_secret,setting.login_url)
-        submit_response = submit_invoice_api(result,access_token,setting.system_url)
-        frappe.msgprint (str(submit_response))
+        submit_response = submit_invoice_api(json.dumps(result),access_token,setting.system_url)
+
+        # frappe.msgprint(str(json.dumps(result)))
         update_invoice_submission_status(submit_response)
     # frappe.msgprint(str(result))
     return result
@@ -73,7 +75,8 @@ def update_invoice_submission_status(submit_response):
     "Submitted" for accepted Docs
     "Invalid" for Rejected Docs
     """
-    submit_response = json.loads(str(submit_response))
+    if type(submit_response) is str :
+        submit_response = json.loads(str(submit_response))
     for accepted_doc in  (submit_response.get("acceptedDocuments") or []):
         internalID = accepted_doc['internalId']
         sinv_doc = frappe.get_doc('Sales Invoice',internalID)
@@ -84,6 +87,7 @@ def update_invoice_submission_status(submit_response):
         sinv_doc.error_code = ''
         sinv_doc.error_details = ''
         sinv_doc.save()
+        frappe.msgprint(str(sinv_doc.uuid))
         if sinv_doc.uuid :
             get_document_sales_invoice(sinv_doc.name)
         #!get document api 
@@ -194,6 +198,7 @@ def get_invoice_json(invoice , company , setting , customer ):
         
         qty = item.qty 
         totalTaxableFees = 0
+        invoice_line.totalTaxableFees = 0
         discount_rate = max(item.discount_percentage,0)
         base_rate_after_discount = item.base_rate
         base_rate_before_discount = item.base_price_list_rate or item.base_rate
@@ -225,8 +230,10 @@ def get_invoice_json(invoice , company , setting , customer ):
                         tax_row.subType = tax_subtype_code
                         tax_row.rate = round_double(0 if fixed_amount else tax.tax_rate)
 
-                        row_tax = tax.amount if fixed_amount else ( base_rate_after_discount * tax.tax_rate/100)
-                        row_tax_toal = row_tax * qty
+                        row_tax = tax.amount if fixed_amount else ( (base_rate_after_discount + (invoice_line.totalTaxableFees / qty)) * tax.tax_rate/100) 
+                        
+                        row_tax_toal = row_tax * qty if tax_subtype_code not in ["ST02"] else row_tax
+
                         tax_row.amount = round_double(row_tax_toal)
                         invoice_line.taxableItems.append(tax_row)
                         if taxable :
@@ -244,6 +251,8 @@ def get_invoice_json(invoice , company , setting , customer ):
                                 "taxType":tax_row.taxType,
                                 "amount":tax_row.amount,
                             }))
+                        if fixed_amount and taxable :
+                            invoice_line.totalTaxableFees += tax_row.amount
 
 
 
@@ -251,7 +260,7 @@ def get_invoice_json(invoice , company , setting , customer ):
         invoice_line.salesTotal = round_double(base_rate_before_discount * qty)
         invoice_line.netTotal = round_double(base_rate_after_discount * qty)
         invoice_line.valueDifference = round_double(0)
-        invoice_line.totalTaxableFees = round_double(0)
+        invoice_line.totalTaxableFees = round_double(invoice_line.totalTaxableFees)
         invoice_line.itemsDiscount = round_double(0)
         invoice_line.total = round_double(invoice_line.netTotal + totalTaxableFees)
         
@@ -260,7 +269,7 @@ def get_invoice_json(invoice , company , setting , customer ):
     
     doc.totalSalesAmount = round_double(sum([x.salesTotal for x in doc.invoiceLines]))
     doc.netAmount = round_double(sum([x.netTotal for x in doc.invoiceLines]))
-    doc.totalDiscountAmount = round_double(sum([x.discount_amount for x in invoice.items]))
+    doc.totalDiscountAmount = round_double(sum([x.discount.amount for x in doc.invoiceLines if x.discount]))
     doc.extraDiscountAmount = round_double((invoice.discount_amount or 0) * (doc.exchange_rate or 1))
     doc.totalItemsDiscountAmount = round_double(0)
     totalAmount = sum([x.total for x in doc.invoiceLines])
