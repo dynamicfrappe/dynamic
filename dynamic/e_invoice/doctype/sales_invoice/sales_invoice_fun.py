@@ -61,9 +61,7 @@ def get_document_sales_invoice(invoice_name):
     setting = get_company_configuration(invoice.company,invoice.branch_code or "0")
     access_token = get_company_auth_token(setting.client_id,setting.client_secret,setting.login_url)
     document_response = document_invoice_api(invoice.uuid,access_token,setting.system_url)
-    # data = json.loads(document_response.get('document'))
-    # frappe.msgprint(str(document_response.get('status')))
-    # frappe.errprint(f'response-->{document_response}')
+    
     
     if document_response.get('status') != 'Invalid':
         invoice.invoice_status = document_response.get('status')
@@ -79,7 +77,6 @@ def get_document_sales_invoice(invoice_name):
                     for index in range(len(err_list)):
                         for k,v in err_list[index].items():
                             invoice.error_details += f'-- {k} :{v}'
-        frappe.errprint(f'validationSteps-->{validationSteps}')
 
         invoice.invoice_status = document_response.get('status')
         
@@ -108,8 +105,7 @@ def update_invoice_submission_status(submit_response):
         frappe.msgprint(str(sinv_doc.uuid))
         if sinv_doc.uuid :
             get_document_sales_invoice(sinv_doc.name)
-        #!get document api 
-        #? update 1-uuid , 2-invoice_status
+        
 
 
     for rejected_doc in  (submit_response.get("rejectedDocuments") or []):
