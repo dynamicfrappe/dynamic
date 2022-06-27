@@ -30,6 +30,7 @@ function socket(action) {
     if (data.status) {
       frappe.show_alert({ message: data.status, indicator: "blue" });
       message = data.status;
+      cur_frm.events.add_post(cur_frm);
       if (data.response) {
         frappe.call({
           method:
@@ -52,10 +53,52 @@ function socket(action) {
 }
 
 frappe.ui.form.on("Sales Invoice", {
+  domian_valid: function (frm) {
+    var tera = false
+   frappe.call({
+         method :"dynamic.dynamic.validation.get_active_domain_gebco" ,
+         async: false,
+         callback:function (r){
+             if (r.message) {
+                 tera = true
+             }else {
+                 tera = false
+             }
+         }
+     })
+  return tera
+} ,
   onload(frm) {
+    var check_domain = frm.events.domian_valid()
+    console.log(check_domain)
+    if (!check_domain){
+      console.log("ONE")
+    frm.events.add_e_tax_btns(frm); } 
+    if (check_domain && frm.doc.docstatus == 0) {
+      frm.add_custom_button(
+        __("view Item Shortage"),
+        function () {
+          frappe.call({
+            method:
+              "dynamic.api.validate_active_domains_invocie",
+            args: {
+              doc: frm.doc.name ,
+            },
+            callback: function (r) {
+               console.log(r.message);
+              
+              // socket(JSON.stringify(data));
+            },
+          });
+        },
+        "view Item Shortage"
+      );
+    }
+  },
+  save(frm) {
     frm.events.add_e_tax_btns(frm);
   },
-  after_save(frm) {
+  on_submit(frm) {
     frm.events.add_e_tax_btns(frm);
   },
   refresh(frm) {
@@ -67,7 +110,30 @@ frappe.ui.form.on("Sales Invoice", {
       frm.doc.error_details = "";
       frm.doc.invoice_status = "";
     }
+    var check_domain = frm.events.domian_valid()
+    if (check_domain && frm.doc.docstatus == 0 ){
+      frm.add_custom_button(
+        __("view Item Shortage"),
+        function () {
+          frappe.call({
+            method:
+              "dynamic.api.validate_active_domains_invocie",
+            args: {
+              doc: frm.doc.name ,
+            },
+            callback: function (r) {
+               console.log(r.message);
+              
+              // socket(JSON.stringify(data));
+            },
+          });
+        },
+        "view Item Shortage"
+      );
+
+    }else {
     // your code here
+
     frm.events.setDateTimeIssued(frm);
     frm.set_query("branch", () => {
       return {
@@ -76,12 +142,11 @@ frappe.ui.form.on("Sales Invoice", {
     });
 
     var data = { name: "ahmed" };
-    socket(JSON.stringify(data));
+    socket(JSON.stringify(data)); 
+  }
   },
 
   add_e_tax_btns(frm) {
-    var data = { name: "ahmed" };
-    socket(JSON.stringify(data));
     // if (frm.doc.docstatus == 1 && frm.doc.is_send == 0) {
     // if (frm.doc.docstatus == 1) {
     if (message == "Token connecting" || message == "success") {
