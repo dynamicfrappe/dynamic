@@ -63,8 +63,26 @@ def get_document_sales_invoice(invoice_name):
     document_response = document_invoice_api(invoice.uuid,access_token,setting.system_url)
     # data = json.loads(document_response.get('document'))
     # frappe.msgprint(str(document_response.get('status')))
-    invoice.invoice_status = document_response.get('status')
-    invoice.uuid = document_response.get('uuid')
+    # frappe.errprint(f'response-->{document_response}')
+    
+    if document_response.get('status') != 'Invalid':
+        invoice.invoice_status = document_response.get('status')
+        invoice.uuid = document_response.get('uuid')
+    else:
+        validationSteps = document_response.get("validationResults")['validationSteps']
+        for err in validationSteps:
+            if err['error']:
+                invoice.error_code += err['error']['errorCode']
+                invoice.error_details += err['error']['error']
+                err_list = err['error']['innerError']
+                if err_list:
+                    for index in range(len(err_list)):
+                        for k,v in err_list[index].items():
+                            invoice.error_details += f'-- {k} :{v}'
+        frappe.errprint(f'validationSteps-->{validationSteps}')
+
+        invoice.invoice_status = document_response.get('status')
+        
     invoice.save()
     return result
 
