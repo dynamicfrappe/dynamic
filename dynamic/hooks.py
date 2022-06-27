@@ -105,7 +105,7 @@ doc_events = {
         "validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost"
     },
     "Purchase Receipt": {
-        # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+         #"on_submit": "dynamic.gebco.api.validate_purchase_recipt"
         "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains"
 
     },
@@ -139,7 +139,8 @@ doc_events = {
 # Override standard doctype classes
 
 override_doctype_class = {
-    "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle"
+    "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
+    #"Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
 }
 
 # Document Events

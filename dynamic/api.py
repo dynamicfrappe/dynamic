@@ -68,6 +68,7 @@ import frappe
 from frappe import _
 from .api_hooks.sales_invoice import validate_sales_invocie_to_moyate
 from dynamic.dynamic.validation import validate_sales_invoice
+from dynamic.gebco.doctype.sales_invocie.stock_settings import caculate_shortage_item
 DOMAINS = frappe.get_active_domains()
 
 
@@ -86,7 +87,20 @@ def validate_active_domains(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         validate_sales_invoice(doc)
 
-
+    if 'Gebco' in DOMAINS:
+        if doc.maintenance_template:
+            m_temp = frappe.get_doc("Maintenance Template",doc.maintenance_template)
+            m_temp.sales_invoice = doc.name
+            m_temp.save()
+        if doc.maintenance_contract:
+            contract_doc = frappe.get_doc("Maintenance Contract",doc.maintenance_contract)
+            contract_doc.sales_invoice = doc.name
+            contract_doc.save()
+        #validate stock amount in packed list 
+        #send  packed_items to valid and get Response message with item and shrotage amount and whare house  
+        # this fuction validate current srock without looking for other resources    
+        if len(doc.packed_items) > 0  and doc.update_stock == 1:
+            caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
 
 @frappe.whitelist()
 def submit_journal_entry (doc,fun=''):
