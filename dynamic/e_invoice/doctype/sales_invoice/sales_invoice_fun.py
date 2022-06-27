@@ -1,5 +1,5 @@
 from unittest.util import strclass
-from dynamic.e_invoice.apis import get_company_auth_token, submit_invoice_api
+from dynamic.e_invoice.apis import get_company_auth_token, submit_invoice_api, document_invoice_api
 from dynamic.e_invoice.utils import get_auth_item_details, get_company_configuration
 import frappe
 import json
@@ -18,11 +18,13 @@ def post_sales_invoice(invoice_name):
     customer = frappe.get_doc("Customer", invoice.customer)
     invoice_json = get_invoice_json(invoice,company,setting,customer)
     result.documents.append(invoice_json)
-    result = json.dumps(result)
+    # result = json.dumps(result)
     if setting.document_version == "0.9" :
         access_token = get_company_auth_token(setting.client_id,setting.client_secret,setting.login_url)
         submit_response = submit_invoice_api(result,access_token,setting.system_url)
         frappe.msgprint (str(submit_response))
+        update_invoice_submission_status(submit_response)
+    # frappe.msgprint(str(result))
     return result
     ########## get server url ############
     server_url = frappe.db.get_single_value('EInvoice Setting', 'url')
@@ -48,6 +50,40 @@ def post_sales_invoice(invoice_name):
     #     frappe.local.response["message"] = str(e)
     #     frappe.local.response['http_status_code'] = 400
 
+
+@frappe.whitelist()
+def get_document_sales_invoice(invoice_name):
+    # try:
+    result = frappe._dict({"documents": []})
+    invoice = frappe.get_doc("Sales Invoice", invoice_name)
+    setting = get_company_configuration(invoice.company,invoice.branch_code or "0")
+    access_token = get_company_auth_token(setting.client_id,setting.client_secret,setting.login_url)
+    document_response = document_invoice_api(invoice.uuid,access_token,setting.system_url)
+    # data = json.loads(document_response.get('document'))
+    # frappe.msgprint(str(document_response.get('status')))
+    # frappe.errprint(f'response-->{document_response}')
+    
+    if document_response.get('status') != 'Invalid':
+        invoice.invoice_status = document_response.get('status')
+        invoice.uuid = document_response.get('uuid')
+    else:
+        validationSteps = document_response.get("validationResults")['validationSteps']
+        for err in validationSteps:
+            if err['error']:
+                invoice.error_code += err['error']['errorCode']
+                invoice.error_details += err['error']['error']
+                err_list = err['error']['innerError']
+                if err_list:
+                    for index in range(len(err_list)):
+                        for k,v in err_list[index].items():
+                            invoice.error_details += f'-- {k} :{v}'
+        frappe.errprint(f'validationSteps-->{validationSteps}')
+
+        invoice.invoice_status = document_response.get('status')
+        
+    invoice.save()
+    return result
+
 @frappe.whitelist()
 def update_invoice_submission_status(submit_response):
     # Update All Invoices With Submission Status
@@ -55,7 +91,41 @@ def update_invoice_submission_status(submit_response):
     "Submitted" for accepted Docs
     "Invalid" for Rejected Docs
     """
-    pass
+    submit_response = json.loads(str(submit_response))
+    for accepted_doc in  (submit_response.get("acceptedDocuments") or []):
+        internalID = accepted_doc['internalId']
+        sinv_doc = frappe.get_doc('Sales Invoice',internalID)
+        sinv_doc.uuid = accepted_doc['uuid']
+        sinv_doc.long_id = accepted_doc['longId']
+        sinv_doc.submission_id = submit_response['submissionId']
+        sinv_doc.invoice_status = 'Submitted'
+        sinv_doc.error_code = ''
+        sinv_doc.error_details = ''
+        sinv_doc.save()
+        if sinv_doc.uuid :
+            get_document_sales_invoice(sinv_doc.name)
+        #!get document api 
+        #? update 1-uuid , 2-invoice_status
+
+
+    for rejected_doc in  (submit_response.get("rejectedDocuments") or []):
+        internalID = rejected_doc['internalId']
+        sinv_doc = frappe.get_doc('Sales Invoice',internalID)
+        sinv_doc.error_code = rejected_doc['error']['code']
+        sinv_doc.submission_id = submit_response.get('submissionId', '')
+        sinv_doc.invoice_status = 'Invalid'
+        err_list = rejected_doc['error']['details']
+        err_details = ''
+        for index in range(len(err_list)):
+            for key,val in err_list[index].items():
+                err_details += f'{key} : {err_list[index][key]} --  '        
+        sinv_doc.error_details = err_details
+        sinv_doc.save()
+
+        
+        
+
+
 def get_invoice_json(invoice , company , setting , customer ):
     """
     get single invoice json
@@ -151,12 +221,12 @@ def get_invoice_json(invoice , company , setting , customer ):
         invoice_line.unitValue.currencyExchangeRate = 0 if invoice.currency == "EGP" else round_double(invoice.exchange_rate)
         invoice_line.unitValue.amountSold = 0 if invoice.currency == "EGP" else round_double(invoice.exchange_rate * base_rate_before_discount)
         
-        
+
         # Discount
         if base_discount_amount :
             invoice_line.discount = frappe._dict()
-            invoice_line.discount.rate = discount_rate
-            invoice_line.discount.amount = round_double(base_discount_amount / qty)
+            invoice_line.discount.rate = round_double(0) # discount_rate
+            invoice_line.discount.amount = round_double(base_discount_amount)
 
         # Taxes 
         invoice_line.taxableItems = []
@@ -200,7 +270,7 @@ def get_invoice_json(invoice , company , setting , customer ):
         invoice_line.netTotal = round_double(base_rate_after_discount * qty)
         invoice_line.valueDifference = round_double(0)
         invoice_line.totalTaxableFees = round_double(0)
-        invoice_line.itemsDiscount = round_double(base_discount_amount)
+        invoice_line.itemsDiscount = round_double(0)
         invoice_line.total = round_double(invoice_line.netTotal + totalTaxableFees)
         
         
@@ -208,11 +278,12 @@ def get_invoice_json(invoice , company , setting , customer ):
     
     doc.totalSalesAmount = round_double(sum([x.salesTotal for x in doc.invoiceLines]))
     doc.netAmount = round_double(sum([x.netTotal for x in doc.invoiceLines]))
-    doc.totalDiscountAmount = round_double(sum([x.itemsDiscount for x in doc.invoiceLines]))
+    doc.totalDiscountAmount = round_double(sum([x.discount_amount for x in invoice.items]))
     doc.extraDiscountAmount = round_double((invoice.discount_amount or 0) * (doc.exchange_rate or 1))
-    doc.totalItemsDiscountAmount = round_double(doc.totalDiscountAmount + doc.extraDiscountAmount)
+    doc.totalItemsDiscountAmount = round_double(0)
     totalAmount = sum([x.total for x in doc.invoiceLines])
     doc.totalAmount = round_double(totalAmount - doc.extraDiscountAmount)
+
 
 
     return doc

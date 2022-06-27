@@ -18,7 +18,7 @@ def get_company_configuration(company=None, branch_code=0):
     setting = frappe.get_doc("E Invoice Configuration", company)
     company = frappe.get_doc("Company", company)
     config = frappe._dict({})
-    config.document_version = "1.0" if setting.environment == "Production" else "0.9"
+    config.document_version = setting.invoice_document_version or "0.9"
     config.environment = (setting.environment == "Production")
     config.company_name = setting.company_name or company.company_name
     config.login_url = setting.prod_login_url if setting.environment == "Production" else setting.pre_login_url

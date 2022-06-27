@@ -26,9 +26,23 @@ function socket(action) {
   websocket.onmessage = function (event) {
     message = event.data;
     var data = JSON.parse(message);
+    console.log("data ===> ", data);
     if (data.status) {
       frappe.show_alert({ message: data.status, indicator: "blue" });
       message = data.status;
+      if (data.response) {
+        frappe.call({
+          method:
+            "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.update_invoice_submission_status",
+          args: {
+            submit_response: data.response,
+          },
+          callback: function (r) {
+            // cur_frm.events.get_document_sinv(cur_frm);
+            window.location.reload();
+          },
+        });
+      }
 
       return message;
     }
@@ -38,44 +52,98 @@ function socket(action) {
 }
 
 frappe.ui.form.on("Sales Invoice", {
+  onload(frm) {
+    frm.events.add_e_tax_btns(frm);
+  },
+  after_save(frm) {
+    frm.events.add_e_tax_btns(frm);
+  },
   refresh(frm) {
+    if (frm.is_new()) {
+      frm.doc.submission_id = "";
+      frm.doc.uuid = "";
+      frm.doc.long_id = "";
+      frm.doc.error_code = "";
+      frm.doc.error_details = "";
+      frm.doc.invoice_status = "";
+    }
     // your code here
     frm.events.setDateTimeIssued(frm);
+    frm.set_query("branch", () => {
+      return {
+        filters: [["company", "=", frm.doc.company]],
+      };
+    });
+  },
+
+  add_e_tax_btns(frm) {
     var data = { name: "ahmed" };
     socket(JSON.stringify(data));
     // if (frm.doc.docstatus == 1 && frm.doc.is_send == 0) {
-      if (frm.doc.is_send == 0) {
-        frm.add_custom_button(__("Check Token"), function () {
+    // if (frm.doc.docstatus == 1) {
+
+    frm.events.add_check_token(frm);
+    if (frm.doc.uuid) {
+      frm.events.add_get_document(frm);
+    }
+  },
+
+  add_check_token(frm) {
+    frm.add_custom_button(
+      __("Check Token"),
+      function () {
         if (message == "Token connecting" || message == "success") {
           frm.events.add_post(frm);
         } else {
           frappe.show_alert({ message: "no connection", indicator: "red" });
         }
-      });
-    };
-    frm.set_query("branch",()=>{
-      return {
-        filters: [
-          ["company", "=", frm.doc.company],
-        ],
-      };
-    })
+      },
+      __("E Tax")
+    );
+  },
+  add_post(frm) {
+    if (["Invalid", ""].includes(frm.doc.invoice_status || "")) {
+      frm.add_custom_button(
+        __("POST TO TAX"),
+        function () {
+          frappe.call({
+            method:
+              "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.post_sales_invoice",
+            args: {
+              invoice_name: frm.doc.name,
+            },
+            callback: function (r) {
+              // console.log(r.message);
+              var data = r.message;
+              socket(JSON.stringify(data));
+            },
+          });
+        },
+        "E Tax"
+      );
+    }
   },
 
-  add_post(frm) {
-    frm.add_custom_button(__("POST TO TAX"), function () {
-      frappe.call({
-        method:
-          "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.post_sales_invoice",
-        args: {
-          invoice_name: frm.doc.name,
-        },
-        callback: function (r) {
-          console.log(r.message);
-          var data = r.message;
-          socket(JSON.stringify(data));
-        },
-      });
+  add_get_document(frm) {
+    frm.add_custom_button(
+      __("POST TO TAX"),
+      function () {
+        frm.events.get_document_sinv(frm);
+      },
+      "E Tax"
+    );
+  },
+
+  get_document_sinv(frm) {
+    frappe.call({
+      method:
+        "dynamic.e_invoice.doctype.sales_invoice.sales_invoice_fun.get_document_sales_invoice",
+      args: {
+        invoice_name: frm.doc.name,
+      },
+      callback: function (r) {
+        window.location.reload();
+      },
     });
   },
   tax_auth(frm) {

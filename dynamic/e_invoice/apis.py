@@ -40,3 +40,12 @@ def submit_invoice_api(json_body,access_token,base_url):
     #     frappe.msgprint(str(response.status_code))
     #     frappe.throw(str(response.json()))
     return response.json()
+
+
+@frappe.whitelist()
+def document_invoice_api(uuid,access_token,base_url):
+    method = f"/api/v1.0/documents/{uuid}/raw"
+    headers = { 'Authorization' : f'Bearer {access_token}',
+				 'Content-Type': 'application/json'}
+    response = requests.get(base_url+method,headers=headers)
+    return response.json()
