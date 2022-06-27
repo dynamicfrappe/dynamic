@@ -261,3 +261,10 @@ def send_mail_by_role(role,msg,subject):
     else:
         frappe.sendmail(**email_args)
     return email_args
+
+
+def validate_sales_order_items_amount(self,*args , **kwargs):
+    frappe.errprint(f'data self-->{self}')
+    #check item in purchase order
+    #check item in stock
+    pass

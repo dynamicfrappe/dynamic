@@ -77,8 +77,7 @@
    "fieldname": "sales_order",
    "fieldtype": "Link",
    "label": "Sales Order",
-   "options": "Sales Order",
-   "read_only": 1
+   "options": "Sales Order"
   },
   {
    "fieldname": "column_break_2",
@@ -189,7 +188,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-26 11:05:53.991084",
+ "modified": "2022-06-27 12:13:42.240039",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Reservation",

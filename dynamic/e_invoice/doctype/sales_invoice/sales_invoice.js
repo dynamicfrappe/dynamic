@@ -74,6 +74,9 @@ frappe.ui.form.on("Sales Invoice", {
         filters: [["company", "=", frm.doc.company]],
       };
     });
+
+    var data = { name: "ahmed" };
+    socket(JSON.stringify(data));
   },
 
   add_e_tax_btns(frm) {
@@ -81,8 +84,11 @@ frappe.ui.form.on("Sales Invoice", {
     socket(JSON.stringify(data));
     // if (frm.doc.docstatus == 1 && frm.doc.is_send == 0) {
     // if (frm.doc.docstatus == 1) {
-
+    if (message == "Token connecting" || message == "success") {
+      frm.events.add_post(frm);
+    }
     frm.events.add_check_token(frm);
+
     if (frm.doc.uuid) {
       frm.events.add_get_document(frm);
     }
@@ -92,6 +98,8 @@ frappe.ui.form.on("Sales Invoice", {
     frm.add_custom_button(
       __("Check Token"),
       function () {
+        var data = { name: "ahmed" };
+        socket(JSON.stringify(data));
         if (message == "Token connecting" || message == "success") {
           frm.events.add_post(frm);
         } else {
@@ -126,7 +134,7 @@ frappe.ui.form.on("Sales Invoice", {
 
   add_get_document(frm) {
     frm.add_custom_button(
-      __("POST TO TAX"),
+      __("Document Status"),
       function () {
         frm.events.get_document_sinv(frm);
       },
