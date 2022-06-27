@@ -14,37 +14,38 @@ def validate_sql(out) :
     if len(out) > 0 :
         return out[0].get("actual_qty")
     else: return 0 
-def get_item_availabel_stock_with_warehouse(item) :
-    
-    main_item = frappe.get_doc("Item" , item.get("item_code"))
-    if main_item.is_stock_item == 1 and item.get('warehouse') :
+def get_item_availabel_stock_with_warehouse(item ,warehouse) :
+    main_item = frappe.get_doc("Item" , item[0])
+    if main_item.is_stock_item == 1 and warehouse :
         actual_qty = frappe.db.sql(f"""SELECT actual_qty FROM`tabBin` WHERE 
-                item_code ='{item.get("item_code")}' and 
-                warehouse='{item.get("warehouse")}'""",as_dict = 1)
+                item_code ='{ item[0]}' and 
+                warehouse='{warehouse}'""",as_dict = 1)
         avilable_qty = validate_sql(actual_qty)
         if avilable_qty :
-            required_qty = float(item.get("qty") or 0 )
+            required_qty = float(item[1] or 0 )
             if float(avilable_qty)  >  required_qty :
-                return{}
+                pass
             if float(avilable_qty) <  required_qty  :
-                shortage = float(avilable_qty) - required_qty
-                return {item.get("item_code") : shortage  }   
-        if not  avilable_qty:
-           return {item.get("item_code") : item.get("qty")  }
+                shortage =  required_qty - float(avilable_qty)
+                return {str(item[0] ): shortage  }   
+        else :
+             return {str(item[0])  : item[1]  }
+       
+def get_sum_items(item):
+    main_item = frappe.get_doc("Item" , item.get("item_code"))
+    if main_item.is_stock_item == 1 and item.get('warehouse') :   
+        return {item.get("item_code") : item.get("qty")  }
     if not main_item.is_stock_item   or not  item.get('warehouse'):
-        return{}
+        pass    
         
-   
-    
 def caculate_shortage_item(items , wharehouse,*args ,**kwargs ) :
-    data =list(map(get_item_availabel_stock_with_warehouse ,items))
+    str_o  = "[Completed]"
+    data =list(map(get_sum_items ,items))
+    wharehouselist =list( map(lambda item: item.get('warehouse') , items))
     sum_dict = reduce(add, (map(Counter, data)))
-    if len(data) > 0 :
-        table = "<table>"
-        message = ""
-        for i ,v in sum_dict.items() :
-            #frappe.msgprint(str(i))
-            message = message +  "<tr>  <td>" + str(i) +  "<td>" + str(v) +"</td>" + "</tr>" 
-        message = message +"</table>"
-        frappe.msgprint(message)
-    return []
+    wharehouselist = wharehouselist[0 :(len(sum_dict.items()) -1)]
+    pure_data = list(map(get_item_availabel_stock_with_warehouse ,sum_dict.items() ,wharehouselist))
+    cleard_data = list(filter(None, pure_data))
+    str_o = list(map(lambda v : "<tr>" + "<td>" +str(list(v.keys())[0])  + "</td>" + "<td>" +str(list(v.values())[0])  + "</td> </<tr>" , cleard_data))
+    frappe.msgprint(str(str_o[1:-1]))
+    return str_o 

@@ -17,7 +17,6 @@ def validate_sales_invoice(doc,*args,**kwargs):
         #send  packed_items to valid and get Response message with item and shrotage amount and whare house  
         # this fuction validate current srock without looking for other resources    
         if len(doc.packed_items) > 0  and doc.update_stock == 1:
-            frappe.thrwo("one")
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
 def validate_delivery_note(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
@@ -25,6 +24,8 @@ def validate_delivery_note(doc,*args,**kwargs):
             m_temp = frappe.get_doc("Maintenance Template",doc.maintenance_template)
             m_temp.delivery_note = doc.name
             m_temp.save()
+        if len(doc.packed_items) > 0  :
+            caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
 
 def validate_purchase_recipt(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:

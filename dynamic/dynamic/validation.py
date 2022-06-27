@@ -55,7 +55,12 @@ def get_active_domain():
         return True
     else :
         return False
-    
+@frappe.whitelist()
+def get_active_domain_gebco():
+    if 'Gebco' in DOMAINS:
+        return True
+    else :
+        return False   
 def validate_item_code(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         if doc.is_new():

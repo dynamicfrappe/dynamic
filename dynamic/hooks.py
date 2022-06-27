@@ -77,7 +77,8 @@ doctype_js = {
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Item Tax Template":"e_invoice/doctype/item_tax_template/item_tax_template.js" ,
-    "Landed Cost Voucher" : "public/js/landed_cost_voucher.js"
+    "Landed Cost Voucher" : "public/js/landed_cost_voucher.js",
+    "Delivery Note" : "public/js/delivery_note.js"
 }
 doc_events = {
 
@@ -92,7 +93,7 @@ doc_events = {
     },
     "Delivery Note": {
         "on_submit": "dynamic.gebco.api.validate_delivery_note",
-        "validate": "dynamic.product_bundle.doctype.packed_item.packed_item.make_packing_list"
+        "validate": "dynamic.api.validate_delivery_note"
 
     },
     "Stock Entry": {

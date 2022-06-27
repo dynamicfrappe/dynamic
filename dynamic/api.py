@@ -11,6 +11,7 @@ from frappe.model.naming import make_autoname
 from frappe.utils.user import get_users_with_role
 from frappe.utils.background_jobs import enqueue
 from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
+
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -102,16 +103,32 @@ def validate_active_domains(doc,*args,**kwargs):
         # this fuction validate current srock without looking for other resources    
         if len(doc.packed_items) > 0  and doc.update_stock == 1:
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
-
+@frappe.whitelist()
+def validate_active_domains_invocie(doc,*args,**kwargs):
+    cur_doc  = frappe.get_doc("Sales Invoice" , doc)
+    if len(cur_doc.packed_items) > 0  and cur_doc.update_stock == 1:
+            caculate_shortage_item(cur_doc.packed_items ,cur_doc.set_warehouse)
+@frappe.whitelist()
+def validate_active_domains_note(doc,*args,**kwargs):
+    cur_doc  = frappe.get_doc("Delivery Note" , doc)
+    if len(cur_doc.packed_items) > 0 :
+            caculate_shortage_item(cur_doc.packed_items ,cur_doc.set_warehouse)
 @frappe.whitelist()
 def submit_journal_entry (doc,fun=''):
     if "Cheques" in DOMAINS :
         submit_journal_entry_cheques(doc)
-    
 
-@frappe.whitelist()
-def validate_devliery_note(doc , *args, **kwargs):
-    pass
+@frappe.whitelist()       
+def validate_delivery_note(doc,*args,**kwargs):
+    if 'Gebco' in DOMAINS:
+        if doc.maintenance_template:
+            m_temp = frappe.get_doc("Maintenance Template",doc.maintenance_template)
+            m_temp.delivery_note = doc.name
+            m_temp.save()
+        if len(doc.packed_items) > 0  :
+            caculate_shortage_item(doc.packed_items ,doc.set_warehouse)    
+
+
 
 @frappe.whitelist()
 def submit_journal_entry_cheques (doc):
