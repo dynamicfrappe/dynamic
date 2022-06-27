@@ -30,6 +30,7 @@ function socket(action) {
     if (data.status) {
       frappe.show_alert({ message: data.status, indicator: "blue" });
       message = data.status;
+      cur_frm.events.add_post(cur_frm);
       if (data.response) {
         frappe.call({
           method:
@@ -94,7 +95,10 @@ frappe.ui.form.on("Sales Invoice", {
       );
     }
   },
-  after_save(frm) {
+  save(frm) {
+    frm.events.add_e_tax_btns(frm);
+  },
+  on_submit(frm) {
     frm.events.add_e_tax_btns(frm);
   },
   refresh(frm) {
@@ -143,8 +147,6 @@ frappe.ui.form.on("Sales Invoice", {
   },
 
   add_e_tax_btns(frm) {
-    var data = { name: "ahmed" };
-    socket(JSON.stringify(data));
     // if (frm.doc.docstatus == 1 && frm.doc.is_send == 0) {
     // if (frm.doc.docstatus == 1) {
     if (message == "Token connecting" || message == "success") {

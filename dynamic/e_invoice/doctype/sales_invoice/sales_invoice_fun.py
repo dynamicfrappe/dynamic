@@ -215,12 +215,13 @@ def get_invoice_json(invoice , company , setting , customer ):
         invoice_line.totalTaxableFees = 0
         discount_rate = max(item.discount_percentage,0)
         base_rate_after_discount = item.base_rate
-        base_rate_before_discount = item.base_price_list_rate or item.base_rate
-        base_discount_amount = (base_rate_before_discount * discount_rate /100) * qty
+        base_discount_amount = (item.discount_amount  * invoice.conversion_rate)
+        base_rate_before_discount = base_rate_after_discount + (base_discount_amount / qty)
+        # base_discount_amount = (base_rate_before_discount * discount_rate /100) * qty
         invoice_line.unitValue.currencySold = invoice.currency
         invoice_line.unitValue.amountEGP = round_double(base_rate_before_discount)
-        invoice_line.unitValue.currencyExchangeRate = 0 if invoice.currency == "EGP" else round_double(invoice.exchange_rate)
-        invoice_line.unitValue.amountSold = 0 if invoice.currency == "EGP" else round_double(invoice.exchange_rate * base_rate_before_discount)
+        invoice_line.unitValue.currencyExchangeRate = 0 if invoice.currency == "EGP" else round_double(invoice.conversion_rate)
+        invoice_line.unitValue.amountSold = 0 if invoice.currency == "EGP" else round_double(invoice.conversion_rate * base_rate_before_discount)
         
 
         # Discount
@@ -284,7 +285,7 @@ def get_invoice_json(invoice , company , setting , customer ):
     doc.totalSalesAmount = round_double(sum([x.salesTotal for x in doc.invoiceLines]))
     doc.netAmount = round_double(sum([x.netTotal for x in doc.invoiceLines]))
     doc.totalDiscountAmount = round_double(sum([x.discount.amount for x in doc.invoiceLines if x.discount]))
-    doc.extraDiscountAmount = round_double((invoice.discount_amount or 0) * (doc.exchange_rate or 1))
+    doc.extraDiscountAmount = round_double((invoice.discount_amount or 0) * (invoice.conversion_rate or 1))
     doc.totalItemsDiscountAmount = round_double(0)
     totalAmount = sum([x.total for x in doc.invoiceLines])
     doc.totalAmount = round_double(totalAmount - doc.extraDiscountAmount)
