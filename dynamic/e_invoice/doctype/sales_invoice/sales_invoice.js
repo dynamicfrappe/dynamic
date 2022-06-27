@@ -82,7 +82,7 @@ frappe.ui.form.on("Sales Invoice", {
             method:
               "dynamic.api.validate_active_domains_invocie",
             args: {
-              doc: frm.doc ,
+              doc: frm.doc.name ,
             },
             callback: function (r) {
                console.log(r.message);
