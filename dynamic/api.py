@@ -10,6 +10,7 @@ from erpnext import get_default_company, get_default_cost_center
 from frappe.model.naming import make_autoname
 from frappe.utils.user import get_users_with_role
 from frappe.utils.background_jobs import enqueue
+from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -108,7 +109,9 @@ def submit_journal_entry (doc,fun=''):
         submit_journal_entry_cheques(doc)
     
 
-
+@frappe.whitelist()
+def validate_devliery_note(doc , *args, **kwargs):
+    pass
 
 @frappe.whitelist()
 def submit_journal_entry_cheques (doc):
