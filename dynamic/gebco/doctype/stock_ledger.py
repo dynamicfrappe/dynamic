@@ -435,8 +435,8 @@ class update_entries_after(object):
 
 			self.update_bin()
 
-		if self.exceptions:
-			self.raise_exceptions()
+		# if self.exceptions:
+		# 	self.raise_exceptions()
 
 	def process_sle_against_current_timestamp(self):
 		sl_entries = self.get_sle_against_current_voucher()

@@ -102,17 +102,17 @@ def validate_active_domains(doc,*args,**kwargs):
         #send  packed_items to valid and get Response message with item and shrotage amount and whare house  
         # this fuction validate current srock without looking for other resources    
         if len(doc.packed_items) > 0  and doc.update_stock == 1:
-            caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
+            caculate_shortage_item(doc.packed_items + doc.items  ,doc.set_warehouse)
 @frappe.whitelist()
 def validate_active_domains_invocie(doc,*args,**kwargs):
     cur_doc  = frappe.get_doc("Sales Invoice" , doc)
     if len(cur_doc.packed_items) > 0  and cur_doc.update_stock == 1:
-            caculate_shortage_item(cur_doc.packed_items ,cur_doc.set_warehouse)
+            caculate_shortage_item(cur_doc.packed_items + cur_doc.items ,cur_doc.set_warehouse)
 @frappe.whitelist()
 def validate_active_domains_note(doc,*args,**kwargs):
     cur_doc  = frappe.get_doc("Delivery Note" , doc)
     if len(cur_doc.packed_items) > 0 :
-            caculate_shortage_item(cur_doc.packed_items ,cur_doc.set_warehouse)
+            caculate_shortage_item(cur_doc.packed_items + cur_doc.items ,cur_doc.set_warehouse)
 @frappe.whitelist()
 def submit_journal_entry (doc,fun=''):
     if "Cheques" in DOMAINS :

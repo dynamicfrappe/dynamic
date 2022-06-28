@@ -47,5 +47,5 @@ def caculate_shortage_item(items , wharehouse,*args ,**kwargs ) :
     pure_data = list(map(get_item_availabel_stock_with_warehouse ,sum_dict.items() ,wharehouselist))
     cleard_data = list(filter(None, pure_data))
     str_o = list(map(lambda v : "<tr>" + "<td>" +str(list(v.keys())[0])  + "</td>" + "<td>" +str(list(v.values())[0])  + "</td> </<tr>" , cleard_data))
-    frappe.msgprint(str(str_o[1:-1]))
+    frappe.msgprint(str(str_o))
     return str_o 

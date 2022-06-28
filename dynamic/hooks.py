@@ -78,7 +78,7 @@ doctype_js = {
     "Payment Entry": "public/js/payment_entry.js",
     "Item Tax Template":"e_invoice/doctype/item_tax_template/item_tax_template.js" ,
     "Landed Cost Voucher" : "public/js/landed_cost_voucher.js",
-    "Delivery Note" : "public/js/delivery_note.js"
+     "Delivery Note" : "public/js/delivery_note.js"
 }
 doc_events = {
 
