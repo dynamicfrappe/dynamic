@@ -13,6 +13,13 @@ data = {
                 'options' : 'Reservation',
                 'read_only' : 1
             },
+            {
+                "fieldname": "purchase_order",
+                "fieldtype": "Link",
+                "insert_after": "set_warehouse",
+                "label": "Purchase Order",
+                'options' : 'Purchase Order'
+            }
          ],
          'Landed Cost Item': [
             {

@@ -282,23 +282,30 @@ def send_mail_by_role(role,msg,subject):
 @frappe.whitelist()
 def create_reservation_validate(self,*args , **kwargs):
     if "Terra" in DOMAINS:
-        frappe.errprint(f'data self-->{self}')
         add_row_for_reservation(self)
        
 def add_row_for_reservation(self):
-    for item in self.items:
-            reserv_doc = frappe.new_doc('Reservation')
-            reserv_doc.item_code = item.item_code
-            reserv_doc.status = 'Active'
-            reserv_doc.reservation_amount = item.qty
-            reserv_doc.warehouse_source = self.set_warehouse if self.set_warehouse else ""
-            # row = doc.append('warehouse', {})
-            reserv_doc.append('warehouse', {
-                'item': item.item_name,
-                'reserved_qty': item.qty
-            })
-            frappe.errprint(f'sales_order name self-->{self.name}')
-            reserv_doc.save()
-            # reserv_doc.sales_order = self.name
-            # reserv_doc.save()
+    if not self.reservation:
+        for item in self.items:
+                reserv_doc = frappe.new_doc('Reservation')
+                reserv_doc.item_code = item.item_code
+                reserv_doc.status = 'Active'
+                reserv_doc.reservation_amount = item.qty
+                reserv_doc.warehouse_source = self.set_warehouse if self.set_warehouse else ""
+                reserv_doc.order_source = self.purchase_order if self.purchase_order else ""
+                if self.purchase_order:
+                    reserv_doc.append('reservation_purchase_order', {
+                            'purchase_order': self.purchase_order,
+                            'item': item.item_name,
+                            'qty':item.qty
+                        })
+                else:
+                    reserv_doc.append('warehouse', {
+                        'item': item.item_name,
+                        'reserved_qty': item.qty
+                    })
+                reserv_doc.insert()
+                self.reservation = reserv_doc.name
+                reserv_doc.db_set('sales_order',self.name)
 
+        #2-purchase order
