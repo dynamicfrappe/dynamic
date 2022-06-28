@@ -4,7 +4,7 @@ from sys import flags
 import frappe
 from frappe import _
 from frappe.utils.data import flt
-from dynamic.api import validate_sales_order_items_amount
+from dynamic.api import create_reservation_validate
 DOMAINS = frappe.get_active_domains()
 
 @frappe.whitelist()
@@ -66,6 +66,6 @@ def update_project_cost(self,*args , **kwargs):
             project.estimated_costing = float(all_projects[0].get("cost") or 0)
             project.save()
 
-    if "Terra" in DOMAINS:
-        ## call method from api 
-        validate_sales_order_items_amount(self,*args , **kwargs)
+    # if "Terra" in DOMAINS:
+    #     ## call method from api 
+    #     create_reservation_validate(self,*args , **kwargs)
