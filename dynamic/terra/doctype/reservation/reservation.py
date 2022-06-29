@@ -2,15 +2,105 @@
 # For license information, please see license.txt
 
 from pickle import TRUE
+import re
 import frappe
 from frappe.model.document import Document
-
+from frappe import _ 
 class Reservation(Document):
 	def validate(self):
-		if(not self.sales_order):
-			self.check_available_ietm_in_stock()
-	
 
+		#validate item 
+		if not self.item_code :
+			frappe .throw(_("Please Select Item First !"))
+		# validate required qty 
+		if float(self.reservation_amount or 0) == 0 or  float(self.reservation_amount or 0) < 0 :
+			frappe.throw(_("Invalid Amount Required "))
+		#validate source 
+		if  self.warehouse_source and self.order_source :
+			frappe.throw(_("Invalid Source "))
+		#validate status 
+		if self.status == "Active" :
+			#validate warehouse case
+			if self.warehouse_source :
+				self.validate_warehouse()
+			if self.order_source :
+				self.validate_purchase_order()
+			pass
+
+
+
+		# if(not self.sales_order):
+		# 	self.check_available_ietm_in_stock()
+	# Check if reservation_amount is valid and is available in ware house 
+	def validate_warehouse(self):
+		stock_sql = frappe.db.sql(f""" 
+				      SELECT a.name as bin , 
+					CASE 
+                         WHEN b.reserved_qty > 0 AND c.status="Active"
+						 then a.actual_qty - SUM(b.reserved_qty)
+						 ELSE a.actual_qty 
+						 END  as qty
+					 FROM 
+					`tabBin` a
+					LEFT JOIN 
+				   `tabReservation Warehouse` b 
+					ON a.name = b.bin 
+                     LEFT JOIN 
+                    `tabReservation` c
+                    ON b.parent = c.name
+					WHERE a.warehouse = '{self.warehouse_source}'
+					AND a.item_code = '{self.item_code}'
+                    AND c.name <> "{self.name}"
+					
+					""" ,as_dict=1)
+		if stock_sql and len(stock_sql) > 0 :
+
+			if stock_sql[0].get("qty") == 0 or float( stock_sql[0].get("qty")  or 0 ) < self.reservation_amount  :
+				frappe.throw(_(f""" stock value in warehouse {self.warehouse_source} = {stock_sql[0].get("qty")} 
+				  and you requires  {self.reservation_amount}  """))
+
+			self.warehouse = []
+			row = self.append('warehouse', {})
+			row.item = self.item_code
+			row.bin = stock_sql[0].get("bin") 
+			row.warehouse = self.warehouse_source
+			row.current_available_qty = stock_sql[0].get("qty") 
+			row.reserved_qty = self.reservation_amount
+			row.available_qty_atfer___reservation = stock_sql[0].get("qty") - self.reservation_amount
+		if  not stock_sql and len(stock_sql) == 0 :
+			frappe.throw(_(f""" no stock value in warehouse {self.warehouse_source} for item {self.item_code}  """))
+	#validate Item in Purchase order 
+	def validate_purchase_order(self):
+		order = frappe.db.sql(f""" SELECT 
+		  name , (qty - received_qty) as qty   FROM 
+		 `tabPurchase Order Item` WHERE parent = '{self.order_source}' 
+		 and item_code = '{self.item_code}' """,as_dict=1)
+		
+		if order and len(order) > 0 :
+			if order[0].get("name") and float(order[0].get("qty")) > 0 :
+				valid = self.validate_order_line(order[0].get("name") , float(order[0].get("qty")))
+				if not valid :
+					frappe.throw(_("Required Qty not Available In Purchase Order !"))
+				
+			
+			if order[0].get("name") and float(order[0].get("qty")) ==  0 :
+				frappe.throw(_(f"  Purchase Order {self.order_source} dont have {self.item_code} avaliable Stock" ))
+			if not order[0].get("name") :
+				frappe.throw(_(f"  Purchase Order {self.order_source} dont have item {self.item_code}" ))	
+		if not order or  len(order) == 0 :
+			frappe.throw(_(f"Invalid Purchase Order {self.order_source} dont have item {self.item_code}"))
+	
+	def validate_order_line(self , line , qty ):
+		#check reseved qty from order line 
+		res_sql = frappe.db.sql(""" SELECT SUM(reserved_qty) AS qty FROM `tabReservation Purchase Order`
+		WHERE item = '{self.item}' and purchase_order_line = '{line}'  """,as_dict = True)
+		if res_sql and len(res_sql) > 0 :
+			if qty  - float(res_sql[0].get('qty') or 0 ) > self.reservation_amount :
+				return True
+			if qty  - float(res_sql[0].get('qty') or 0 ) < self.reservation_amount :
+				return False
+		else :
+			return True
 	def check_available_ietm_in_stock(self):
 		if not self.order_source:
 			warehouse_data = self.warehouse
