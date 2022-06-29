@@ -296,12 +296,12 @@ def add_row_for_reservation(self):
                 if self.purchase_order:
                     reserv_doc.append('reservation_purchase_order', {
                             'purchase_order': self.purchase_order,
-                            'item': item.item_name,
+                            'item': item.item_code,
                             'qty':item.qty
                         })
                 else:
                     reserv_doc.append('warehouse', {
-                        'item': item.item_name,
+                        'item': item.item_code,
                         'reserved_qty': item.qty
                     })
                 reserv_doc.insert()

@@ -76,6 +76,7 @@ class Reservation(Document):
 		 `tabPurchase Order Item` WHERE parent = '{self.order_source}' 
 		 and item_code = '{self.item_code}' """,as_dict=1)
 		
+		# frappe.errprint(f'order -->{order}')
 		if order and len(order) > 0 :
 			if order[0].get("name") and float(order[0].get("qty")) > 0 :
 				valid = self.validate_order_line(order[0].get("name") , float(order[0].get("qty")))
@@ -93,7 +94,7 @@ class Reservation(Document):
 	def validate_order_line(self , line , qty ):
 		#check reseved qty from order line 
 		res_sql = frappe.db.sql(""" SELECT SUM(reserved_qty) AS qty FROM `tabReservation Purchase Order`
-		WHERE item = '{self.item}' and purchase_order_line = '{line}'  """,as_dict = True)
+		WHERE item = '{self.item_code}' and purchase_order_line = '{line}'  """,as_dict = True)
 		if res_sql and len(res_sql) > 0 :
 			if qty  - float(res_sql[0].get('qty') or 0 ) > self.reservation_amount :
 				return True

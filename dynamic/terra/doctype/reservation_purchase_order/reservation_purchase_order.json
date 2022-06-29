@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2022-06-23 12:23:52.496497",
+ "creation": "2022-06-29 10:51:05.639580",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -25,7 +25,7 @@
   },
   {
    "fieldname": "purchase_order_line",
-   "fieldtype": "Date",
+   "fieldtype": "Data",
    "label": " Purchase Order Line"
   },
   {
@@ -62,10 +62,10 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-06-28 17:16:46.229662",
+ "modified": "2022-06-29 10:51:05.639580",
  "modified_by": "Administrator",
  "module": "terra",
- "name": "Reservation  Purchase Order",
+ "name": "Reservation Purchase Order",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

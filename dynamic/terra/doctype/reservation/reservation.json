@@ -134,7 +134,7 @@
    "fieldname": "reservation_purchase_order",
    "fieldtype": "Table",
    "label": "Reservation Purchase Order",
-   "options": "Reservation  Purchase Order"
+   "options": "Reservation Purchase Order"
   },
   {
    "fieldname": "section_break_9",
@@ -188,7 +188,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-27 12:13:42.240039",
+ "modified": "2022-06-29 10:54:31.362009",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Reservation",
