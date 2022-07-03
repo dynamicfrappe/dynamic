@@ -299,7 +299,7 @@ def add_row_for_reservation(self):
                             'item': item.item_code,
                             'qty':item.qty
                         })
-                else:
+                elif self.set_warehouse:
                     reserv_doc.append('warehouse', {
                         'item': item.item_code,
                         'reserved_qty': item.qty
