@@ -120,6 +120,9 @@ def submit_journal_entry (doc,fun=''):
 
 @frappe.whitelist()       
 def validate_delivery_note(doc,*args,**kwargs):
+    if 'Product Bundle' in DOMAINS: 
+        """   Update Bundle of Bundles """
+        make_packing_list(doc)
     if 'Gebco' in DOMAINS:
         if doc.maintenance_template:
             m_temp = frappe.get_doc("Maintenance Template",doc.maintenance_template)
