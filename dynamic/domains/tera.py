@@ -19,7 +19,18 @@ data = {
                 "insert_after": "set_warehouse",
                 "label": "Purchase Order",
                 'options' : 'Purchase Order'
-            }
+            },
+            {
+                "fieldname": "reservation_status",
+                "fieldtype": "Select",
+                "options": "\nActive\nClosed\nInvalid",
+                "insert_after": "set_warehouse",
+                "label": "Reservation Status",
+                'read_only' : 1,
+                "fetch_from": "reservation.status",
+                "allow_on_submit":1 
+            },
+            
          ],
          'Landed Cost Item': [
             {
@@ -183,6 +194,19 @@ data = {
                 "options":"Email Setting",
                 "insert_after": "email_section",
                 "label": "Email Setting",
+                "translatable": 1,
+            },
+            {
+                "fieldname": "reservation_setting_section",
+                "fieldtype": "Section Break",
+                "insert_after": "email_setting"
+            },
+            {
+                "fieldname": "reservation_setting",
+                "fieldtype": "Table",
+                "options":"Reservation Child",
+                "insert_after": "reservation_setting_section",
+                "label": "Reservation Setting",
                 "translatable": 1,
             }
         ],
