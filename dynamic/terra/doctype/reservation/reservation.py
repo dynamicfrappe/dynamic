@@ -7,8 +7,8 @@ import frappe
 from frappe.model.document import Document
 from frappe import _ 
 class Reservation(Document):
-	def validate(self):
 
+	def before_insert(self):
 		#validate item 
 		if not self.item_code :
 			frappe .throw(_("Please Select Item First !"))
@@ -123,7 +123,6 @@ class Reservation(Document):
 										where a.item_code = '{self.item_code}' and a.parent = '{self.order_source}'
 										""")
 										
-		frappe.errprint(f'used_pur_order_name--->{used_pur_order_name}')
 		res =  frappe.db.sql(f"""                   
 										SELECT a.name as `name` ,a.parent,a.parenttype as doctype,
 										CASE
@@ -142,12 +141,9 @@ class Reservation(Document):
 										AND c.name <> "{self.name}"
 										where a.item_code = '{self.item_code}' and a.parent = '{self.order_source}'
 										""",as_dict=1)
-		frappe.errprint(f'res--->{res}')
 		
 		result_str_list = "" if not used_pur_order_name else ','.join([f"'{x}'" for x in used_pur_order_name])
 		res += frappe.db.sql(f""" SELECT name,parent,parenttype as doctype , (qty - received_qty) as qty   FROM `tabPurchase Order Item` WHERE qty > 0 AND item_code = '{self.item_code}' AND name NOT IN({result_str_list}) """,as_dict=1)
-		frappe.errprint(f'res-total-->{res}')
-		frappe.throw('ok')
 		return res
 
 	def validate_stock_unkown(self):

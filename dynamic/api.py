@@ -293,6 +293,7 @@ def add_row_for_reservation(self):
                 reserv_doc = frappe.new_doc('Reservation')
                 reserv_doc.item_code = item.item_code
                 reserv_doc.status = 'Active'
+                reserv_doc.valid_from = self.transaction_date
                 reserv_doc.reservation_amount = item.qty
                 reserv_doc.warehouse_source = self.set_warehouse if self.set_warehouse else ""
                 reserv_doc.order_source = self.purchase_order if self.purchase_order else ""
