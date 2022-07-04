@@ -161,6 +161,9 @@ scheduler_events = {
         ],
         "0 11 * * *":[
             "dynamic.api.saftey_stock",
+        ],
+        "0 */12 * * *":[
+            "dynamic.api.validate_sales_order_reservation_status",
         ]
     },
     # 	"all": [

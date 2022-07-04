@@ -46,6 +46,7 @@
   },
   {
    "allow_in_quick_entry": 1,
+   "allow_on_submit": 1,
    "default": "Active",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -188,7 +189,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-29 10:54:31.362009",
+ "modified": "2022-07-04 13:56:35.732326",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Reservation",

@@ -11,6 +11,7 @@ from frappe.model.naming import make_autoname
 from frappe.utils.user import get_users_with_role
 from frappe.utils.background_jobs import enqueue
 from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
+from frappe.utils import add_days, nowdate, today
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -266,21 +267,24 @@ def saftey_stock():
 
 # @frappe.whitelist()
 def send_mail_by_role(role,msg,subject):
-    recip_list = get_users_with_role(role)
-    email_args = {
-        "recipients": recip_list,
-        "sender": None,
-        "subject": subject,
-        "message":msg,
-        "now": True
-    }
-    print(" emails =====> ", email_args )
+    try:
+        recip_list = get_users_with_role(role)
+        email_args = {
+            "recipients": recip_list,
+            "sender": None,
+            "subject": subject,
+            "message":msg,
+            "now": True
+        }
+        print(" emails =====> ", email_args )
 
-    if not frappe.flags.in_test:
-        frappe.enqueue(method=frappe.sendmail, queue="short", timeout=500, is_async=True, **email_args)
-    else:
-        frappe.sendmail(**email_args)
-    return email_args
+        if not frappe.flags.in_test:
+            frappe.enqueue(method=frappe.sendmail, queue="short", timeout=500, is_async=True, **email_args)
+        else:
+            frappe.sendmail(**email_args)
+        return email_args
+    except Exception as ex:
+        print("exception",str(ex))
 
 @frappe.whitelist()
 def create_reservation_validate(self,*args , **kwargs):
@@ -313,3 +317,36 @@ def add_row_for_reservation(self):
                 reserv_doc.db_set('sales_order',self.name)
 
         #2-purchase order
+
+
+
+
+# @frappe.whitelist()
+def validate_sales_order_reservation_status():
+
+    # 1- get conf
+    reservation_conf = """
+    select * from `tabReservation Child`
+    """
+    conf_result = frappe.db.sql(reservation_conf,as_dict=1)
+
+    # 2- get all sales order with reservation_status = 'Active'
+    sql = """
+        select name,advance_paid,base_grand_total,DATEDIFF(CURDATE(),creation) as 'diff' from `tabSales Order` where reservation is not null and reservation_status ='Active'
+        """
+    sales_order_result = frappe.db.sql(sql,as_dict=1)
+
+    # loop throgth conf and update sales order that achive criteria
+    for c in conf_result:
+        for s in sales_order_result:
+            if s.diff > float(c.days or 0) and (float(s.advance_paid or 0) / s.base_grand_total)*100 < float(c.percent or 0):
+                sales_order = frappe.get_doc("Sales Order",s.name)
+                reserv_doc = frappe.get_doc("Reservation",sales_order.get("reservation"))
+                reserv_doc.status = "Invalid"
+                reserv_doc.save()
+                sales_order.reservation_status = "Invalid"
+                sales_order.save()
+                
+
+
+        
