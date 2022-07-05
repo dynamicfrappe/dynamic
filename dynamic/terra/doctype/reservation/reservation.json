@@ -143,9 +143,11 @@
   },
   {
    "allow_in_quick_entry": 1,
+   "allow_on_submit": 1,
    "fieldname": "valid_from",
    "fieldtype": "Date",
-   "label": "Valid From"
+   "label": "Valid From",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_11",
@@ -153,9 +155,11 @@
   },
   {
    "allow_in_quick_entry": 1,
+   "allow_on_submit": 1,
    "fieldname": "valid_to",
    "fieldtype": "Date",
-   "label": "Valid To"
+   "label": "Valid To",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_13",
@@ -163,18 +167,22 @@
    "label": "Totals"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_warehouse_reseved_qty",
    "fieldtype": "Data",
-   "label": "Total Warehouse Reseved Qty"
+   "label": "Total Warehouse Reseved Qty",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_20",
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_purchase_order_reserved_qty",
    "fieldtype": "Data",
-   "label": "Total Purchase Order Reserved Qty"
+   "label": "Total Purchase Order Reserved Qty",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -189,7 +197,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-07-04 13:56:35.732326",
+ "modified": "2022-07-05 10:33:32.584653",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Reservation",

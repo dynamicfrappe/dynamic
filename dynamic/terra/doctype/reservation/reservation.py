@@ -27,8 +27,13 @@ class Reservation(Document):
 				self.validate_purchase_order()
 			if not self.warehouse_source and not self.order_source:
 				self.get_pur_order_or_warehouse()
-				
 
+		if self.warehouse:
+			self.total_warehouse_reseved()
+		if self.reservation_purchase_order:
+			self.total_purchase_order_reseved()
+		
+				
 
 	def get_pur_order_or_warehouse(self):
 		if not self.warehouse_source and not self.order_source:
@@ -263,7 +268,6 @@ class Reservation(Document):
 		
 
 	def add_row_warehouse_or_pur_order(self,valid_data,main_qty_row): # 2 1 3 6 -->10
-		# frappe.throw('thanks')
 		main_qty_row_test = main_qty_row
 		self.warehouse = []
 		self.reservation_purchase_order = []
@@ -303,9 +307,19 @@ class Reservation(Document):
 				main_qty_row_test -= data.qty
 
 
-			 # 
-
+	def total_warehouse_reseved(self):
+		total_warehouse=0
+		for row in self.warehouse:
+			total_warehouse += float(row.reserved_qty)
+		self.db_set('total_warehouse_reseved_qty',total_warehouse)
 	
+	def total_purchase_order_reseved(self):
+		total_put_order=0
+		for row in self.reservation_purchase_order:
+			total_put_order += float(row.reserved_qty)
+		self.db_set('total_purchase_order_reserved_qty',total_put_order)
+
+
 	# def check_available_ietm_in_stock(self):
 	# 	if not self.order_source:
 	# 		warehouse_data = self.warehouse
