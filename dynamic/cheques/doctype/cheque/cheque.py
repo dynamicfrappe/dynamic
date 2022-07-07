@@ -189,7 +189,7 @@ def deposite_cheque_under_collection(payment_entry):
 
 @frappe.whitelist()
 def collect_cheque_now(payment_entry):
-    return collect_cheque_under_collection()
+    return collect_cheque_under_collection(payment_entry)
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
     company = frappe.get_doc("Company", payment_entry.company)
     if not payment_entry.drawn_bank_account:
