@@ -69,21 +69,17 @@ after_migrate = "dynamic.install.after_install"
 
 
 doctype_js = {
-    "Customer": "e_invoice/doctype/customer/customer.js",
-    "Sales Invoice": "e_invoice/doctype/sales_invoice/sales_invoice.js",
-    "Item": "e_invoice/doctype/item/item.js",
+    "Sales Invoice": "public/js/sales_invoice.js",
     "Sales Order": "public/js/sales_order.js",
     "Stock Entry": "public/js/stock_entry.js",
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
-    "Item Tax Template":"e_invoice/doctype/item_tax_template/item_tax_template.js" ,
     "Landed Cost Voucher" : "public/js/landed_cost_voucher.js",
      "Delivery Note" : "public/js/delivery_note.js"
 }
 doc_events = {
 
     "Sales Invoice": {
-        "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname",
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
         "validate": "dynamic.api.validate_active_domains"
     },
@@ -210,7 +206,6 @@ scheduler_events = {
 domains = {
     'Dynamic Accounts': 'dynamic.domains.dynamic_accounts',
     'Dynamic HR': 'dynamic.domains.dynamic_hr',
-    'E Invoice': 'dynamic.domains.e_invoice',
     'Contracting': 'dynamic.domains.contracting',
     'Gebco': 'dynamic.domains.gebco',
     "Moyate": 'dynamic.domains.moyate',
