@@ -70,7 +70,7 @@ def encode_invoice_data(doc):
 import frappe
 from frappe import _
 from .api_hooks.sales_invoice import validate_sales_invocie_to_moyate
-from dynamic.dynamic.validation import validate_sales_invoice
+from dynamic.dynamic.validation import get_active_domain, validate_sales_invoice
 from dynamic.gebco.doctype.sales_invocie.stock_settings import caculate_shortage_item
 DOMAINS = frappe.get_active_domains()
 
@@ -349,4 +349,9 @@ def validate_sales_order_reservation_status():
                 
 
 
-        
+
+
+
+@frappe.whitelist()
+def get_active_domains():
+    return frappe.get_active_domains()

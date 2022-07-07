@@ -17,16 +17,23 @@ data = {
                 "options": "Account"
             },
             {
-                "fieldname": "saved_cheques_bank_account",
+                "fieldname": "outcoming_cheque_wallet_account",
                 "fieldtype": "Link",
                 "insert_after": "incoming_cheque_wallet_account",
-                "label": "Saved Cheques Bank Account",
+                "label": "Outcoming Cheques Wallet Account",
+                "options": "Account"
+            },
+            {
+                "fieldname": "rejected_cheques_bank_account",
+                "fieldtype": "Link",
+                "insert_after": "outcoming_cheque_wallet_account",
+                "label": "Rejected Cheques Bank Account",
                 "options": "Account"
             },
             {
                 "fieldname": "cheques_column",
                 "fieldtype": "Column Break",
-                "insert_after": "saved_cheques_bank_account",
+                "insert_after": "rejected_cheques_bank_account",
                 "label": "",
             },
             {
@@ -34,6 +41,13 @@ data = {
                 "fieldtype": "Link",
                 "insert_after": "cheques_column",
                 "label": "Returned Cheques Bank Account",
+                "options": "Account"
+            },
+            {
+                "fieldname": "deposit_cheques_bank_account",
+                "fieldtype": "Link",
+                "insert_after": "returned_cheques_bank_account",
+                "label": "Deposit Cheques Bank Account",
                 "options": "Account"
             },
             {
@@ -232,7 +246,7 @@ data = {
                 "fieldtype": "Select",
                 "insert_after": "endorse_cheque",
                 "label": "Endorsed Party Type",
-                "options":"\nSupplier\nCustomer",
+                "options": "\nSupplier\nCustomer",
                 "depends_on": "eval:doc.endorse_cheque",
                 "read_only_depends_on": "eval:doc.cheque_status!='New'",
                 "mandatory_depends_on": "eval:doc.endorse_cheque&&doc.cheque_status=='New'",
@@ -241,7 +255,7 @@ data = {
             {
                 "fieldname": "endorsed_party_name",
                 "fieldtype": "Dynamic Link",
-                "options":"endorsed_party_type",
+                "options": "endorsed_party_type",
                 "insert_after": "endorsed_party_type",
                 "label": "Endorsed Party Name",
                 "depends_on": "eval:doc.endorse_cheque",
@@ -252,7 +266,7 @@ data = {
             {
                 "fieldname": "endorsed_party_account",
                 "fieldtype": "Link",
-                "options":"Account",
+                "options": "Account",
                 "insert_after": "endorsed_party_name",
                 "label": "Endorsed Party Account",
                 "depends_on": "eval:doc.endorse_cheque",
@@ -373,26 +387,34 @@ data = {
                 "allow_on_submit": 1
             },
             {
+
+                "fieldname": "cheque",
+                "fieldtype": "Link",
+                "insert_after": "payment_entry",
+                "label": "Cheque",
+                "options": "Cheque",
+                "read_only": 1,
+                "allow_on_submit": 1,
+                "fetch_from": "payment_entry.cheque"
+            },
+            {
                 "fieldname": "cheque_status",
                 "fieldtype": "Data",
-                "insert_after": "payment_entry",
+                "insert_after": "cheque",
                 "label": "Cheque Status",
                 "read_only": 1,
                 "allow_on_submit": 1,
             },
+
         ]
     },
-    # "properties": [{
-    #     "doctype":"Journal Entry Account",
-    #     "doctype_or_field":"DocField",
-    #     "fieldname":"reference_type",
-    #     "property":"options",
-    #     "property_type":"Text",
-    #     "value": "\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document\nComparison\nClearance\nTender"
-    # }],
+    "properties": [{
+        "doctype":"Journal Entry Account",
+        "doctype_or_field":"DocField",
+        "fieldname":"reference_type",
+        "property":"options",
+        "property_type":"Text",
+        "value": "\nPayment Entry\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document\nComparison\nClearance\nTender"
+    }],
     'on_setup': 'dynamic.cheques.setup.install'
 }
-
-
-
-

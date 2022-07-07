@@ -6,7 +6,7 @@ def get_data():
 	return {
 		'fieldname': 'cheque',
 		'non_standard_fieldnames': {
-			'Journal Entry': 'reference_name',
+			'Journal Entry': 'cheque',
 			'Payment Entry': 'cheque'
 		},
 		'transactions': [

@@ -2,36 +2,37 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Cheque", {
-	setup: function (frm) {
+  setup: function (frm) {
+    frm.set_query("account_paid_from", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+          ["disabled", "=", 0],
+        ],
+      };
+    });
 
-		frm.set_query("account_paid_from", function () {
-			return {
-			  filters: [
-				["company", "=", frm.doc.company],
-				["is_group", "=", 0],
-				["disabled", "=", 0],
-			  ],
-			};
-		  });
-
-		  frm.set_query("account_paid_to", function () {
-			  return {
-				filters: [
-				  ["company", "=", frm.doc.company],
-				  ["is_group", "=", 0],
-				  ["disabled", "=", 0],
-				],
-			  };
-			});
-	},
-	refresh: function (frm) {},
-	onload: function (frm) {
+    frm.set_query("account_paid_to", function () {
+      return {
+        filters: [
+          ["company", "=", frm.doc.company],
+          ["is_group", "=", 0],
+          ["disabled", "=", 0],
+        ],
+      };
+    });
+  },
+  refresh: function (frm) {},
+  onload: function (frm) {
     if (frm.is_new()) {
       frm.events.set_new_form_date(frm);
     }
   },
   set_new_form_date: function (frm) {
     frm.doc.status = "New";
+    frm.events.get_cheque_account(frm);
+    frm.events.party(frm);
     frm.refresh_fields();
   },
   payment_type: function (frm) {
@@ -45,7 +46,11 @@ frappe.ui.form.on("Cheque", {
   party: function (frm) {
     frm.events.get_party_account(frm, function (r) {
       if (r.message) {
-        frm.set_value("account_paid_from", r.message);
+        let fieldname =
+          frm.doc.payment_type == "Pay"
+            ? "account_paid_to"
+            : "account_paid_from";
+        frm.set_value(fieldname, r.message);
       }
     });
   },
@@ -73,14 +78,16 @@ frappe.ui.form.on("Cheque", {
     if (!frm.doc.payment_type || !frm.doc.company) return;
     let account_name =
       frm.doc.payment_type == "Pay"
-        ? "saved_cheques_bank_account"
+        ? "outcoming_cheque_wallet_account"
         : "incoming_cheque_wallet_account";
+    let fieldname =
+      frm.doc.payment_type == "Pay" ? "account_paid_from" : "account_paid_to";
     frappe.db
       .get_value("Company", frm.doc.company, account_name)
       .then((value) => {
         if (value.message) {
-          frm.set_value("account_paid_to", value.message[account_name]);
-          frm.refresh_field("account_paid_to");
+          frm.set_value(fieldname, value.message[account_name]);
+          frm.refresh_field(fieldname);
         }
       });
   },
