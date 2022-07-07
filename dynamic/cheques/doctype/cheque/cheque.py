@@ -210,6 +210,8 @@ def collect_cheque_now(payment_entry):
     je.append("accounts", {
         "account": payment_entry.drawn_account,
         "debit_in_account_currency": flt(payment_entry.paid_amount),
+        "reference_type": payment_entry.doctype,
+        "reference_name": payment_entry.name
 
     })
     # debit
@@ -262,6 +264,8 @@ def collect_cheque_under_collection(payment_entry):
     je.append("accounts", {
         "account": payment_entry.drawn_account,
         "debit_in_account_currency": flt(payment_entry.paid_amount),
+        "reference_type": payment_entry.doctype,
+        "reference_name": payment_entry.name
 
     })
     # debit
