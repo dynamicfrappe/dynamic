@@ -30,11 +30,11 @@ class Cheque(Document):
 				party_name = frappe.db.get_value(self.reference_type,self.reference_name,self.party_type.lower())
 				if not party_name or party_name != self.party :
 					frappe.throw(_("Invalid {} {} For {} {}").format(self.reference_type,self.reference_name,self.party_type,self.party))
-		else :
-			self.party_type = ""
-			self.party = ""
-			self.reference_type = ""
-			self.reference_name = ""
+		# else :
+		# 	self.party_type = ""
+		# 	self.party = ""
+		# 	self.reference_type = ""
+		# 	self.reference_name = ""
 
 
 
