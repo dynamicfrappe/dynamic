@@ -3,7 +3,7 @@ frappe.ui.form.on("Payment Entry", {
     frm.set_query("drawn_bank_account", function () {
       return {
         filters: [
-          ["bank", "=", frm.doc.drawn_bank],
+          // ["bank", "=", frm.doc.drawn_bank],
           ["is_company_account", "=", 1],
         ],
       };
