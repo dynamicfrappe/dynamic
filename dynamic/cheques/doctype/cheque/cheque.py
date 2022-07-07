@@ -1,6 +1,7 @@
 # Copyright (c) 2022, Dynamic and contributors
 # For license information, please see license.txt
 
+from tabnanny import check
 import frappe
 from frappe import _
 from frappe.client import attach_file
@@ -8,10 +9,35 @@ from frappe.model.document import Document
 from frappe.utils.data import flt, get_link_to_form, nowdate
 
 
+
+
+validate_reference_dict = {
+	"Supplier" :["Purchase Invoice" , "Purchase Order"] ,
+	"Customer" :["Sales Invoice" , "Sales Order"] ,
+}
+
 class Cheque(Document):
 
 	def on_submit(self):
 		self.create_payment_entries()
+	def validate (self):
+		self.validate_references()
+	def validate_references (self):
+		if (self.reference_type and self.party_type) :
+			if self.reference_type not in validate_reference_dict.get(self.party_type) or [] :
+				frappe.throw(_("Invalid Reference Type {} For Party Type {}").format(self.reference_type,self.party_type))
+			if self.party :
+				party_name = frappe.db.get_value(self.reference_type,self.reference_name,self.party_type.lower())
+				if not party_name or party_name != self.party :
+					frappe.throw(_("Invalid {} {} For {} {}").format(self.reference_type,self.reference_name,self.party_type,self.party))
+		else :
+			self.party_type = ""
+			self.party = ""
+			self.reference_type = ""
+			self.reference_name = ""
+
+
+
 
 	@frappe.whitelist()
 	def create_payment_entries(self):
@@ -35,10 +61,10 @@ class Cheque(Document):
 			payment_entry.first_benefit = row.first_benefit
 			payment_entry.drawn_bank = row.bank
 			payment_entry.person_name = row.person_name
-			if self.document_type :
+			if self.reference_type :
 				ref = payment_entry.append("references")
-				ref.reference_doctype =  self.document_type
-				ref.reference_name =  self.document_name
+				ref.reference_doctype =  self.reference_type
+				ref.reference_name =  self.reference_name
 				ref.allocated_amount = row.amount
 			payment_entry.save()
 			if row.attachment:
@@ -341,12 +367,15 @@ def make_cheque_doc(dt, dn):
 	cheque.mode_of_payment = "Cheque"
 	cheque.status = "New"
 	cheque.posting_date = nowdate()
-	cheque.document_type = dt
-	cheque.document_name = dn
+	cheque.reference_type = dt
+	cheque.reference_name = dn
 	payment_type = "Pay" if dt in ["Purchase Invoice","Purchase Order"] else "Receive"
 	cheque.payment_type = payment_type
 	cheque.party_type = "Supplier" if payment_type =="Pay" else "Customer"
 	cheque.party = ref_doc.supplier if payment_type =="Pay" else ref_doc.customer
 	row = cheque.append('items')
-	row.amount = ref_doc.outstanding_amount
+	if hasattr(ref_doc,'outstanding_amount'):
+		row.amount = ref_doc.outstanding_amount
+	else :
+		row.amount = ref_doc.base_rounded_total or  ref_doc.base_grand_total
 	return cheque

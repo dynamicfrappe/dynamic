@@ -25,9 +25,9 @@
   "details_section",
   "items",
   "references_section",
-  "document_type",
+  "reference_type",
   "column_break_20",
-  "document_name",
+  "reference_name",
   "amended_from"
  ],
  "fields": [
@@ -171,27 +171,29 @@
    "label": "References"
   },
   {
-   "fieldname": "document_type",
-   "fieldtype": "Select",
-   "label": "Document Type",
-   "options": "\nSales Order\nSales Invoice\nPurchase Order\nPurchase Invoice"
-  },
-  {
    "fieldname": "column_break_20",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "document_name",
+   "depends_on": "eval:doc.party_type&&doc.party",
+   "fieldname": "reference_type",
+   "fieldtype": "Link",
+   "label": "Reference Type",
+   "options": "DocType"
+  },
+  {
+   "depends_on": "eval:doc.reference_type",
+   "fieldname": "reference_name",
    "fieldtype": "Dynamic Link",
-   "label": "Document Name",
-   "mandatory_depends_on": "eval:doc.document_type",
-   "options": "document_type"
+   "label": "Reference Name",
+   "mandatory_depends_on": "eval:doc.reference_type",
+   "options": "reference_type"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-07-07 12:56:42.274936",
+ "modified": "2022-07-07 13:56:40.636999",
  "modified_by": "Administrator",
  "module": "Cheques",
  "name": "Cheque",
@@ -206,6 +208,32 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User",
    "share": 1,
    "write": 1
   }

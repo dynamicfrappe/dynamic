@@ -1,4 +1,7 @@
 frappe.ui.form.on("Sales Invoice", {
+  setup(frm) {
+    frm.custom_make_buttons["Cheque"] = "Cheque";
+  },
   domian_valid: function (frm) {
     var tera = false;
     frappe.call({
@@ -59,9 +62,6 @@ frappe.ui.form.on("Sales Invoice", {
     }
   },
 
-  on_submit(frm) {
-    frm.events.add_cheque_button(frm);
-  },
 
   add_cheque_button(frm) {
     if (frm.doc.docstatus == 1) {

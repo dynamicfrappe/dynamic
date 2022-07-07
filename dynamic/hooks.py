@@ -34,7 +34,7 @@ app_include_js = "/assets/js/dynamic.min.js"
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
 
-# include js in doctype views 
+# include js in doctype views
 # doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -72,10 +72,12 @@ doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Sales Order": "public/js/sales_order.js",
     "Stock Entry": "public/js/stock_entry.js",
+    "Purchase Order": "public/js/purchase_order.js",
+    "Purchase Invoice": "public/js/purchase_invoice.js",
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
-    "Landed Cost Voucher" : "public/js/landed_cost_voucher.js",
-     "Delivery Note" : "public/js/delivery_note.js"
+    "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
+    "Delivery Note": "public/js/delivery_note.js"
 }
 doc_events = {
 
@@ -103,7 +105,7 @@ doc_events = {
         "on_submit": "dynamic.api.create_reservation_validate"
     },
     "Purchase Receipt": {
-         #"on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+        # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
         "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains"
 
     },
@@ -111,8 +113,8 @@ doc_events = {
         "on_submit": "dynamic.api.validate_material_request"
 
     },
-    "Landed Cost Voucher" :{
-        "validate" :"dynamic.dynamic.validation.validate_landed_cost"
+    "Landed Cost Voucher": {
+        "validate": "dynamic.dynamic.validation.validate_landed_cost"
     },
     "Purchase Order": {
         "on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
@@ -138,7 +140,7 @@ doc_events = {
 
 override_doctype_class = {
     "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
-    #"Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
+    # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
 }
 
 # Document Events
@@ -155,10 +157,10 @@ scheduler_events = {
             "dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",
             "erpnext.stock.reorder_item.reorder_item",
         ],
-        "0 11 * * *":[
+        "0 11 * * *": [
             "dynamic.api.saftey_stock",
         ],
-        "0 */12 * * *":[
+        "0 */12 * * *": [
             "dynamic.api.validate_sales_order_reservation_status",
         ]
     },
@@ -194,9 +196,12 @@ scheduler_events = {
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
-# override_doctype_dashboards = {
-# 	"Task": "dynamic.task.get_dashboard_data"
-# }
+override_doctype_dashboards = {
+    "Sales Invoice": "dynamic.public.dashboard.sales_invoice_dashboard.get_data",
+    "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
+    "Purchase Invoice": "dynamic.public.dashboard.purchase_invoice_dashboard.get_data",
+    "Purchase Order": "dynamic.public.dashboard.purchase_order_dashboard.get_data"
+}
 
 # exempt linked doctypes from being automatically cancelled
 #
@@ -211,7 +216,7 @@ domains = {
     "Moyate": 'dynamic.domains.moyate',
     'Product Bundle': 'dynamic.domains.product_bundle',
     'Cheques': 'dynamic.domains.cheques',
-     'Terra': 'dynamic.domains.tera',
+    'Terra': 'dynamic.domains.tera',
 }
 
 # domain Conatin

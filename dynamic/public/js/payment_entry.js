@@ -51,64 +51,68 @@ frappe.ui.form.on("Payment Entry", {
     }
   },
   add_cheque_buttons(frm) {
-    if (["New"].includes(frm.doc.cheque_status)) {
-      // cheque Endorsement
-      frm.add_custom_button(
-        __("Endorsement"),
-        function () {
-          frm.events.make_cheque_endorsement(frm);
-        },
-        __("Cheque Management")
-      );
-      // Collections Cheque Now
-      frm.add_custom_button(
-        __("Collect Now"),
-        function () {
-          frm.events.collect_cheque_now(frm);
-        },
-        __("Cheque Management")
-      );
-      // deposite Cheque under collcttion
-      frm.add_custom_button(
-        __("Deposit Under Collection"),
-        function () {
-          frm.events.deposite_cheque_under_collection(frm);
-        },
-        __("Cheque Management")
-      );
+    if (frm.doc.payment_type == "Pay") {
     }
-    if (["New"].includes(frm.doc.cheque_status)) {
-    }
+    if (frm.doc.payment_type == "Receive") {
+      if (["New"].includes(frm.doc.cheque_status)) {
+        // cheque Endorsement
+        frm.add_custom_button(
+          __("Endorsement"),
+          function () {
+            frm.events.make_cheque_endorsement(frm);
+          },
+          __("Cheque Management")
+        );
+        // Collections Cheque Now
+        frm.add_custom_button(
+          __("Collect Now"),
+          function () {
+            frm.events.collect_cheque_now(frm);
+          },
+          __("Cheque Management")
+        );
+        // deposite Cheque under collcttion
+        frm.add_custom_button(
+          __("Deposit Under Collection"),
+          function () {
+            frm.events.deposite_cheque_under_collection(frm);
+          },
+          __("Cheque Management")
+        );
+      }
+      if (["New"].includes(frm.doc.cheque_status)) {
+      }
 
-    // cheque under collction
+      // cheque under collction
 
-    if (["Under Collect"].includes(frm.doc.cheque_status)) {
-      frm.add_custom_button(
-        __("Collect"),
-        function () {
-          frm.events.collect_cheque_under_collection(frm);
-        },
-        __("Cheque Under Collection")
-      );
-      frm.add_custom_button(
-        __("Reject"),
-        function () {
-          frm.events.reject_cheque_under_collection(frm);
-        },
-        __("Cheque Under Collection")
-      );
-    }
+      if (["Under Collect"].includes(frm.doc.cheque_status)) {
+        frm.add_custom_button(
+          __("Collect"),
+          function () {
+            frm.events.collect_cheque_under_collection(frm);
+          },
+          __("Cheque Under Collection")
+        );
+        frm.add_custom_button(
+          __("Reject"),
+          function () {
+            frm.events.reject_cheque_under_collection(frm);
+          },
+          __("Cheque Under Collection")
+        );
+      }
 
-    // Reject cheque under collction
-    if (["Rejected in Bank"].includes(frm.doc.cheque_status)) {
-      // deposite Cheque under collcttion
-      frm.add_custom_button(
-        __("Deposit Under Collection"),
-        function () {
-          frm.events.deposite_cheque_under_collection(frm);
-        },
-        __("Cheque Management")
-      );
+      // Reject cheque under collction
+      if (["Rejected in Bank"].includes(frm.doc.cheque_status)) {
+        // deposite Cheque under collcttion
+        frm.add_custom_button(
+          __("Deposit Under Collection"),
+          function () {
+            frm.events.deposite_cheque_under_collection(frm);
+          },
+          __("Cheque Management")
+        );
+      }
     }
   },
   make_cheque_endorsement(frm) {
