@@ -13,7 +13,7 @@
  "is_standard": 1,
  "label": "Terra",
  "links": [],
- "modified": "2022-06-26 10:42:19.991939",
+ "modified": "2022-07-07 16:01:38.528960",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Terra",
@@ -21,6 +21,7 @@
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
+ "restrict_to_domain": "Terra",
  "shortcuts": [
   {
    "doc_view": "List",
