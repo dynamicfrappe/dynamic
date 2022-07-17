@@ -313,7 +313,11 @@ def add_row_for_reservation(self):
                         'reserved_qty': item.qty
                     })
                 reserv_doc.insert()
-                self.db_set('reservation',reserv_doc.name)
+                #self.db_set('reservation',reserv_doc.name)
+                #frappe.db.update('Sales Order', self.name, 'reservation', reserv_doc.name)
+                sql = f""" update `tabSales Order` set reservation='{reserv_doc.name}' , reservation_status='Active' where name='{self.name}'"""
+                frappe.db.sql(sql)
+                frappe.db.commit()
                 reserv_doc.db_set('sales_order',self.name)
 
         #2-purchase order
@@ -339,13 +343,16 @@ def validate_sales_order_reservation_status():
     # loop throgth conf and update sales order that achive criteria
     for c in conf_result:
         for s in sales_order_result:
-            if s.diff > float(c.days or 0) and (float(s.advance_paid or 0) / s.base_grand_total)*100 < float(c.percent or 0):
+            if s.diff >= float(c.days or 0) and ((float(s.advance_paid or 0) / s.base_grand_total) *100 < float(c.percent or 0) or c.percent==0):
                 sales_order = frappe.get_doc("Sales Order",s.name)
                 reserv_doc = frappe.get_doc("Reservation",sales_order.get("reservation"))
                 reserv_doc.status = "Closed"
                 reserv_doc.save()
-                sales_order.reservation_status = "Closed"
-                sales_order.save()
+                # sales_order.reservation_status = "Closed"
+                # sales_order.save()
+                sql = f""" update `tabSales Order` set  reservation_status='Closed' where name='{s.name}'"""
+                frappe.db.sql(sql)
+                frappe.db.commit()
                 
 
 
