@@ -94,14 +94,14 @@ doc_events = {
         "validate": "dynamic.api.validate_delivery_note"
 
     },
-    "Stock Entry": {
-        "on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
-    },
+    # "Stock Entry": {
+    #     "on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
+    # },
     "Journal Entry": {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
-        "validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost",
+        # "validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost",
         "on_submit": "dynamic.api.create_reservation_validate"
     },
     "Purchase Receipt": {
@@ -116,9 +116,9 @@ doc_events = {
     "Landed Cost Voucher": {
         "validate": "dynamic.dynamic.validation.validate_landed_cost"
     },
-    "Purchase Order": {
-        "on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
-        "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
+    # "Purchase Order": {
+    #     "on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
+    #     "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
 }
 # notification_config = "dynamic.notifications.get_notification_config"
 
