@@ -313,7 +313,7 @@ def add_row_for_reservation(self):
                         'reserved_qty': item.qty
                     })
                 reserv_doc.insert()
-                self.reservation = reserv_doc.name
+                self.db_set('reservation',reserv_doc.name)
                 reserv_doc.db_set('sales_order',self.name)
 
         #2-purchase order
