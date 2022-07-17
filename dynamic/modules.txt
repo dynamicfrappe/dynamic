@@ -1,5 +1,4 @@
 dynamic
-Contracting
 Dynamic Accounts
 Dynamic HR
 gebco
