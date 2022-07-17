@@ -212,7 +212,6 @@ override_doctype_dashboards = {
 domains = {
     'Dynamic Accounts': 'dynamic.domains.dynamic_accounts',
     'Dynamic HR': 'dynamic.domains.dynamic_hr',
-    'Contracting': 'dynamic.domains.contracting',
     'Gebco': 'dynamic.domains.gebco',
     "Moyate": 'dynamic.domains.moyate',
     'Product Bundle': 'dynamic.domains.product_bundle',
