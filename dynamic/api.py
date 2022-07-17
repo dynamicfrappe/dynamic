@@ -342,9 +342,9 @@ def validate_sales_order_reservation_status():
             if s.diff > float(c.days or 0) and (float(s.advance_paid or 0) / s.base_grand_total)*100 < float(c.percent or 0):
                 sales_order = frappe.get_doc("Sales Order",s.name)
                 reserv_doc = frappe.get_doc("Reservation",sales_order.get("reservation"))
-                reserv_doc.status = "Invalid"
+                reserv_doc.status = "Closed"
                 reserv_doc.save()
-                sales_order.reservation_status = "Invalid"
+                sales_order.reservation_status = "Closed"
                 sales_order.save()
                 
 
