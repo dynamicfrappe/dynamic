@@ -51,7 +51,14 @@ frappe.ui.form.on("Payment Entry", {
     }
   },
   add_cheque_buttons(frm) {
-    if (frm.doc.payment_type == "Pay") {
+    if (frm.doc.payment_type == "Pay" && frm.doc.drawn_bank_account && frm.doc.cheque_status == "New") {
+      frm.add_custom_button(
+        __("Pay"),
+        function () {
+          frm.events.make_cheque_pay(frm);
+        },
+        __("Cheque Management")
+      );
     }
     if (frm.doc.payment_type == "Receive") {
       if (["New"].includes(frm.doc.cheque_status)) {
@@ -191,4 +198,21 @@ frappe.ui.form.on("Payment Entry", {
       },
     });
   },
+  make_cheque_pay(frm) {
+    if (!frm.doc.drawn_bank_account) {
+      frappe.throw(__("Please Set Bank Account"));
+    }
+    frappe.call({
+      method: "dynamic.cheques.doctype.cheque.cheque.make_cheque_pay",
+      args: {
+        payment_entry: frm.doc.name,
+      },
+      callback: function (r) {
+        frm.refresh();
+        if (r && r.message) {
+          frappe.set_route("Form", r.message.doctype, r.message.name);
+        }
+      },
+    });
+  }
 });

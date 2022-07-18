@@ -294,7 +294,7 @@ data = {
                 "fieldname": "drawn_account",
                 "fieldtype": "Link",
                 "insert_after": "drawn_bank_account",
-                "label": "Cheques Payable Account",
+                "label": "Bank Company Account",
                 "options": "Account",
                 "read_only": 1,
                 "fetch_from": "drawn_bank_account.account",
