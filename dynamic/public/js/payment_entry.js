@@ -51,7 +51,7 @@ frappe.ui.form.on("Payment Entry", {
     }
   },
   add_cheque_buttons(frm) {
-    if (frm.doc.payment_type == "Pay" && frm.doc.drawn_bank_account && frm.doc.cheque_status == "New") {
+    if (frm.doc.payment_type == "Pay" && frm.doc.cheque_status == "New") {
       frm.add_custom_button(
         __("Pay"),
         function () {
@@ -59,6 +59,7 @@ frappe.ui.form.on("Payment Entry", {
         },
         __("Cheque Management")
       );
+      
     }
     if (frm.doc.payment_type == "Receive") {
       if (["New"].includes(frm.doc.cheque_status)) {

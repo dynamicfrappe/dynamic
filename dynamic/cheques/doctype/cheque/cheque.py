@@ -136,12 +136,7 @@ def make_cheque_pay(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
-    if not payment_entry.endorsed_party_type:
-        frappe.throw(_("Please Set Endorsed Party Type"))
-    if not payment_entry.endorsed_party_name:
-        frappe.throw(_("Please Set Endorsed Party Name"))
-    if not payment_entry.endorsed_party_account:
-        frappe.throw(_("Please Set Endorsed Party Account"))
+    
     je = frappe.new_doc("Journal Entry")
     je.posting_date = payment_entry.posting_date
     je.voucher_type = 'Bank Entry'
@@ -154,17 +149,17 @@ def make_cheque_pay(payment_entry):
     #je.remark = f'Journal Entry against Insurance for {self.doctype} : {self.name}'
     # credit
     je.append("accounts", {
-        "account": payment_entry.paid_to,
+        "account": payment_entry.drawn_account,
         "credit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.endorsed_party_type,
-        "party": payment_entry.endorsed_party_name
+        "party_type": payment_entry.party_type,
+        "party": payment_entry.party
         
     })
     # debit
     je.append("accounts", {
-        "account":   payment_entry.drawn_account, 
+        "account":   payment_entry.paid_from, 
         "debit_in_account_currency": flt(payment_entry.paid_amount),
         "party_type": payment_entry.endorsed_party_type,
         "party": payment_entry.endorsed_party_name
