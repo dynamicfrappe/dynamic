@@ -50,13 +50,25 @@ frappe.query_reports["Cheques Report"] = {
 				return {
 					filters: {"name": ["in", ["Customer", "Supplier"]]}
 				}
-			}
+			},
+      on_change: () => {
+        frappe.query_report.set_filter_value("party", ' ');
+				frappe.query_report.refresh();
+      },
 		},
     {
       fieldname: "party",
       label: __("Party"),
       fieldtype: "Dynamic Link",
-      options: "party_type",
+      // options: "party_type",
+      "get_options": function() {
+				var applicant_type = frappe.query_report.get_filter_value('party_type');
+				var applicant = frappe.query_report.get_filter_value('party');
+				if(applicant && !applicant_type) {
+					frappe.throw(__("Please select Party Type first"));
+				}
+				return applicant_type;
+			}
     },  
     {
       fieldname: "bank",
