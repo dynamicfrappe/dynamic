@@ -113,10 +113,9 @@ class Cheques_report(object):
 		query_test_p = """
 		select p.name as `Payment`,p.reference_no as `Cheques NO`,p.party as `Party`,p.party_type as `Party Type`,p.cheque_status as `Cheque Status`, p.paid_amount as `Amount`,p.posting_date as `Transaction Date`,p.reference_date as `Reference Date`,p.drawn_bank as `Bank`,p.drawn_bank_account as `Bank Account`
 		from `tabPayment Entry` as p
-		WHERE {conditions} AND p.docstatus = '1'
+		WHERE {conditions} AND p.cheque <> ''
 		""".format(conditions=conditions)
 		data_dict_p = frappe.db.sql(query_test_p,values=values,as_dict=1)
-		# frappe.errprint(f'query_test_p is ==>{data_dict_p}')
 
 		return data_dict_p
 
@@ -129,7 +128,10 @@ class Cheques_report(object):
 			values["payment_type"] = filters.get("payment_type")
 
 		if filters.get("cheque_status"):
-			conditions += " AND p.cheque_status =  %(cheque_status)s "
+			if filters.get("cheque_status") == 'Rejected' or filters.get("cheque_status") == "Rejected in Bank":
+				conditions += " AND p.docstatus = '2' "
+			else:
+				conditions += " AND p.cheque_status =  %(cheque_status)s AND p.docstatus = '1' "
 			values["cheque_status"] = filters.get("cheque_status")
 
 		if filters.get("bank"):

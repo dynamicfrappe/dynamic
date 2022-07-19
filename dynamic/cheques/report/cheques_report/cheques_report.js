@@ -21,6 +21,7 @@ frappe.query_reports["Cheques Report"] = {
         "",
         "New",
         "Under Collect",
+        "Rejected",
         "Rejected in Bank",
         "Collected",
         "Endorsed",
@@ -40,6 +41,23 @@ frappe.query_reports["Cheques Report"] = {
       label: __("To Date"),
       fieldtype: "Date",
     },
+    {
+			"fieldname":"party_type",
+			"label": __("Party Type"),
+			"fieldtype": "Link",
+			"options": "DocType",
+			"get_query": function() {
+				return {
+					filters: {"name": ["in", ["Customer", "Supplier"]]}
+				}
+			}
+		},
+    {
+      fieldname: "party",
+      label: __("Party"),
+      fieldtype: "Dynamic Link",
+      options: "party_type",
+    },  
     {
       fieldname: "bank",
       label: __("Bank"),
