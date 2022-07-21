@@ -78,13 +78,13 @@ frappe.ui.form.on("Payment Entry", {
     //     },
     //     __("Cheque Management")
     //   );
-    //   frm.add_custom_button(
-    //     __("Reject Cheque In Bank"),
-    //     function () {
-    //       frm.events.add_row_cheque_tracks(frm,"Rejected In Bank")
-    //     },
-    //     __("Cheque Management")
-    //   );
+      // frm.add_custom_button(
+      //   __("Reject Cheque In Bank"),
+      //   function () {
+      //     frm.events.add_row_cheque_tracks(frm,"Rejected In Bank")
+      //   },
+      //   __("Cheque Management")
+      // );
     // }
     if (frm.doc.payment_type == "Receive") {
       if (["New"].includes(frm.doc.cheque_status)) {
@@ -138,6 +138,13 @@ frappe.ui.form.on("Payment Entry", {
           __("Reject"),
           function () {
             frm.events.reject_cheque_under_collection(frm);
+          },
+          __("Cheque Under Collection")
+        );
+        frm.add_custom_button(
+          __("Reject Cheque In Bank"),
+          function () {
+            frm.events.add_row_cheque_tracks(frm,"Rejected In Bank")
           },
           __("Cheque Under Collection")
         );
