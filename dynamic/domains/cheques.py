@@ -1,5 +1,17 @@
 from __future__ import unicode_literals
+from ntpath import join
 
+cheque_status = [
+    "New",
+    "Under Collect",
+    "Collected",
+    "Endorsed",
+    "Rejected",
+    "Cash",
+    "Paid",
+    "Rejected in Bank",
+    "Rejected", 
+]
 data = {
     'custom_fields': {
         'Company': [
@@ -238,9 +250,13 @@ data = {
                 "insert_after": "cheque",
                 "label": "Cheque Status",
                 "read_only": 1,
-                "options":"\nPaid\nNew\nRejected\nRejected in Bank\nUnder Collect",
+                "options":"\n".join(cheque_status),
                 "allow_on_submit": 1,
+                "in_list_view": 1,
+                "in_filter": 1,
+                "in_standard_filter": 1,
             },
+
             {
                 "fieldname": "endorse_cheque",
                 "fieldtype": "Check",
