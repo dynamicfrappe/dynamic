@@ -12,6 +12,7 @@ from frappe.utils.user import get_users_with_role
 from frappe.utils.background_jobs import enqueue
 from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
 from frappe.utils import add_days, nowdate, today
+from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -138,8 +139,10 @@ def validate_delivery_note(doc,*args,**kwargs):
 def submit_journal_entry_cheques (doc):
     if getattr(doc,"payment_entry",None):
         payment_entry = frappe.get_doc("Payment Entry",doc.payment_entry)
+        old_status = payment_entry.cheque_status
         payment_entry.cheque_status = doc.cheque_status
         payment_entry.save()
+        add_row_cheque_tracks(doc.payment_entry,doc.cheque_status,old_status)
 
 
 

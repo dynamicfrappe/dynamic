@@ -55,12 +55,37 @@ frappe.ui.form.on("Payment Entry", {
       frm.add_custom_button(
         __("Pay"),
         function () {
+          frm.events.add_row_cheque_tracks(frm,'Paid')
           frm.events.make_cheque_pay(frm);
+        },
+        __("Cheque Management")
+      );
+      //** replace cheque by cash */
+      frm.add_custom_button(
+        __("Cash"),
+        function(){
+          frm.events.pay_cash_new(frm)
         },
         __("Cheque Management")
       );
       
     }
+    // if(frm.doc.cheque_status != "Rejected" && frm.doc.cheque_status != "Rejected In Bank"){
+    //   frm.add_custom_button(
+    //     __("Reject Cheque"),
+    //     function () {
+    //       frm.events.add_row_cheque_tracks(frm,"Rejected")
+    //     },
+    //     __("Cheque Management")
+    //   );
+    //   frm.add_custom_button(
+    //     __("Reject Cheque In Bank"),
+    //     function () {
+    //       frm.events.add_row_cheque_tracks(frm,"Rejected In Bank")
+    //     },
+    //     __("Cheque Management")
+    //   );
+    // }
     if (frm.doc.payment_type == "Receive") {
       if (["New"].includes(frm.doc.cheque_status)) {
         // cheque Endorsement
@@ -101,6 +126,14 @@ frappe.ui.form.on("Payment Entry", {
           },
           __("Cheque Under Collection")
         );
+        //** replace cheque by cash */
+        frm.add_custom_button(
+          __("Cash"),
+          function(){
+            frm.events.pay_cash_new(frm)
+          },
+          __("Cheque Under Collection")
+        );
         frm.add_custom_button(
           __("Reject"),
           function () {
@@ -121,6 +154,8 @@ frappe.ui.form.on("Payment Entry", {
           __("Cheque Management")
         );
       }
+
+      
     }
   },
   make_cheque_endorsement(frm) {
@@ -215,5 +250,43 @@ frappe.ui.form.on("Payment Entry", {
         }
       },
     });
+  },
+  add_row_cheque_tracks(frm,new_cheque_status) {
+    // if (!frm.doc.drawn_bank_account) {
+    //   frappe.throw(__("Please Set Bank Account"));
+    // }
+    frappe.call({
+      method:"dynamic.cheques.doctype.cheque.cheque.add_row_cheque_tracks",
+      args:{
+        payment_entry:frm.doc.name,
+        new_cheque_status:new_cheque_status
+      },
+      callback:function(r){
+        if(!r.exc){
+          frm.refresh()
+        }else{
+          frappe.throw(r.exc)
+        }
+      }
+    })
+  },
+  pay_cash_new(frm){
+    if (!frm.doc.cash_mod_of_payment) {
+      frappe.throw(__("Please Add Cash Mode Of Payment"));
+    }
+    frappe.call({
+      method:"dynamic.cheques.doctype.cheque.cheque.pay_cash_new",
+      args:{
+        payment_entry : frm.doc.name,
+      },
+      callback:function(r){
+        if(!r.exc){
+          frm.refresh()
+          frappe.set_route("Form", r.message.doctype, r.message.name);
+        }else{
+          frappe.throw(r.exc)
+        }
+      }
+    })
   }
 });

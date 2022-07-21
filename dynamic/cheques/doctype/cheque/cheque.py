@@ -164,7 +164,8 @@ def make_cheque_pay(payment_entry):
         "party_type": payment_entry.endorsed_party_type,
         "party": payment_entry.endorsed_party_name
     })
-
+    payment_entry.cheque_status = 'Pay'
+    payment_entry.save()
     je.save()
     return je
 
@@ -421,3 +422,90 @@ def make_cheque_doc(dt, dn):
 	else :
 		row.amount = ref_doc.base_rounded_total or  ref_doc.base_grand_total
 	return cheque
+
+@frappe.whitelist()
+def add_row_cheque_tracks(payment_entry,new_cheque_status,old_status=None):
+    try:
+        payment_entry = frappe.get_doc("Payment Entry", payment_entry)
+        cheque = frappe.get_doc('Cheque',payment_entry.cheque)
+        cheque.append("cheque_tracks",{
+            "user":frappe.session.user,
+            "day_time":payment_entry.modified,
+            "old_status":old_status if old_status else payment_entry.cheque_status,
+            "new_status":new_cheque_status,
+            "time":payment_entry.modified.time()
+        }
+        )
+        payment_entry.db_set('cheque_status',new_cheque_status)
+        cheque.save()
+        # frappe.errprint('chequ tracjks update')
+    except Exception as e :
+        print("exception",str(e))
+    
+
+@frappe.whitelist()
+def pay_cash_new(payment_entry):
+    payment_entry = frappe.get_doc("Payment Entry", payment_entry)
+    je = frappe.new_doc("Journal Entry")
+    je.posting_date = payment_entry.posting_date
+    je.voucher_type = 'Bank Entry'
+    je.company = payment_entry.company
+    je.cheque_status = "Paid"
+    je.cheque = payment_entry.cheque
+    je.payment_entry = payment_entry.name
+    je.cheque_no = payment_entry.reference_no
+    je.cheque_date = payment_entry.reference_date
+    company = frappe.get_doc('Company',payment_entry.company)
+    cash_mod_of_payment = payment_entry.cash_mod_of_payment
+    try:
+        cash_def_account = frappe.get_doc('Mode of Payment',cash_mod_of_payment).accounts[0].get('default_account',None)
+    except Exception as ex:
+        frappe.throw(_(f"Please Set Default Account In  {cash_mod_of_payment} Cash Mode Of Payment"))
+    # if(not cash_def_account):
+    #     frappe.throw(_(f"Please Set Default Account In  {cash_mod_of_payment} Cash Mode Of Payment"))
+
+    
+    if payment_entry.cheque_status == "New":
+        # credit
+        je.append("accounts", {
+            "account": payment_entry.paid_to,
+            "credit_in_account_currency": flt(payment_entry.paid_amount),
+            "reference_type": payment_entry.doctype,
+            "reference_name": payment_entry.name,
+            "party_type": payment_entry.party_type,
+            "party": payment_entry.party
+            
+        })
+    elif payment_entry.cheque_status == "Rejected": #Rejected Cheques Bank Account
+        # credit
+        je.append("accounts", {
+            "account": company.rejected_cheques_bank_account,
+            "credit_in_account_currency": flt(payment_entry.paid_amount),
+            "reference_type": payment_entry.doctype,
+            "reference_name": payment_entry.name,
+            "party_type": payment_entry.party_type,
+            "party": payment_entry.party
+            
+        })
+    elif payment_entry.cheque_status == "Under Collect":
+        # credit
+        je.append("accounts", {
+            "account": payment_entry.cheques_receivable_account,
+            "credit_in_account_currency": flt(payment_entry.paid_amount),
+            "reference_type": payment_entry.doctype,
+            "reference_name": payment_entry.name,
+            "party_type": payment_entry.party_type,
+            "party": payment_entry.party   
+        })
+    
+    # debit
+    je.append("accounts", {
+        "account":  cash_def_account, 
+        "debit_in_account_currency": flt(payment_entry.paid_amount),
+        "party_type": payment_entry.endorsed_party_type,
+        "party": payment_entry.endorsed_party_name
+    })
+    je.save()
+    return je
+
+

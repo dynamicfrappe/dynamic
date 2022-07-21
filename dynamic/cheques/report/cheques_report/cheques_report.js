@@ -32,9 +32,6 @@ frappe.query_reports["Cheques Report"] = {
       fieldname: "from_date",
       label: __("From Date"),
       fieldtype: "Date",
-      // depends_on: 'eval:doc.owner=="admin@admin.com"'
-      // default: frappe.datetime.get_today(),
-      // reqd: 1
     },
     {
       fieldname: "to_date",

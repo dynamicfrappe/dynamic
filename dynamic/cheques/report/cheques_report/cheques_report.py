@@ -129,7 +129,7 @@ class Cheques_report(object):
 
 		if filters.get("cheque_status"):
 			if filters.get("cheque_status") == 'Rejected' or filters.get("cheque_status") == "Rejected in Bank":
-				conditions += " AND p.docstatus = '2' "
+				conditions += " AND p.cheque_status =  %(cheque_status)s " #AND p.docstatus = '2'
 			else:
 				conditions += " AND p.cheque_status =  %(cheque_status)s AND p.docstatus = '1' "
 			values["cheque_status"] = filters.get("cheque_status")
@@ -146,6 +146,7 @@ class Cheques_report(object):
 			conditions += " And p.party = %(party)s"
 			values["party"] = filters.get('party')
 
+		
 
 		if filters.get("from_date"):
 			if filters.get("from_date") and filters.get("to_date"):

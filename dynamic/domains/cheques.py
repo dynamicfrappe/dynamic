@@ -203,6 +203,14 @@ data = {
                 "read_only": 1
             },
             {
+                "fieldname": "cash_mod_of_payment",
+                "fieldtype": "Link",
+                "insert_after": "mode_of_payment",
+                "label": "Cash Mode Of Payment",
+                "options": "Mode of Payment",
+                "allow_on_submit": 1,
+            },
+            {
                 "fieldname": "first_benefit",
                 "fieldtype": "Data",
                 "insert_after": "cheque_type",
@@ -219,17 +227,18 @@ data = {
             {
                 "fieldname": "cheque",
                 "fieldtype": "Link",
-                "insert_after": "mode_of_payment",
+                "insert_after": "cash_mod_of_payment",
                 "label": "Cheque",
                 "options": "Cheque",
                 "read_only": 1
             },
             {
                 "fieldname": "cheque_status",
-                "fieldtype": "Data",
+                "fieldtype": "Select",
                 "insert_after": "cheque",
                 "label": "Cheque Status",
                 "read_only": 1,
+                "options":"\nPaid\nNew\nRejected\nRejected in Bank\nUnder Collect",
                 "allow_on_submit": 1,
             },
             {
@@ -408,13 +417,15 @@ data = {
 
         ]
     },
-    "properties": [{
+    "properties": [
+        {
         "doctype":"Journal Entry Account",
         "doctype_or_field":"DocField",
         "fieldname":"reference_type",
         "property":"options",
         "property_type":"Text",
         "value": "\nPayment Entry\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document\nComparison\nClearance\nTender"
-    }],
+    },
+    ],
     'on_setup': 'dynamic.cheques.setup.install'
 }
