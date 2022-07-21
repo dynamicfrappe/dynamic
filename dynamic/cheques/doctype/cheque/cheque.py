@@ -167,8 +167,6 @@ def make_cheque_pay(payment_entry):
         "party_type": payment_entry.party_type,
         "party": payment_entry.party
     })
-    payment_entry.cheque_status = 'Pay'
-    payment_entry.save()
     je.save()
     return je
 
