@@ -52,6 +52,7 @@ frappe.ui.form.on("Payment Entry", {
   },
   add_cheque_buttons(frm) {
     if (frm.doc.payment_type == "Pay") {
+      
     }
     if (frm.doc.payment_type == "Receive") {
       if (["New"].includes(frm.doc.cheque_status)) {
