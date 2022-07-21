@@ -55,7 +55,7 @@ frappe.ui.form.on("Payment Entry", {
       frm.add_custom_button(
         __("Pay"),
         function () {
-          frm.events.add_row_cheque_tracks(frm,'Paid')
+          // frm.events.add_row_cheque_tracks(frm,'Paid')
           frm.events.make_cheque_pay(frm);
         },
         __("Cheque Management")
