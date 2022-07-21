@@ -1,5 +1,17 @@
 from __future__ import unicode_literals
+from ntpath import join
 
+cheque_status = [
+    "New",
+    "Under Collect",
+    "Rejected in Bank",
+    "Rejected", 
+    "Collected",
+    "Endorsed",
+    "Rejected",
+    "Cash",
+    "Paid"
+]
 data = {
     'custom_fields': {
         'Company': [
@@ -203,6 +215,14 @@ data = {
                 "read_only": 1
             },
             {
+                "fieldname": "cash_mod_of_payment",
+                "fieldtype": "Link",
+                "insert_after": "mode_of_payment",
+                "label": "Cash Mode Of Payment",
+                "options": "Mode of Payment",
+                "allow_on_submit": 1,
+            },
+            {
                 "fieldname": "first_benefit",
                 "fieldtype": "Data",
                 "insert_after": "cheque_type",
@@ -219,19 +239,21 @@ data = {
             {
                 "fieldname": "cheque",
                 "fieldtype": "Link",
-                "insert_after": "mode_of_payment",
+                "insert_after": "cash_mod_of_payment",
                 "label": "Cheque",
                 "options": "Cheque",
                 "read_only": 1
             },
             {
                 "fieldname": "cheque_status",
-                "fieldtype": "Data",
+                "fieldtype": "Select",
                 "insert_after": "cheque",
                 "label": "Cheque Status",
                 "read_only": 1,
+                "options":"\n".join(cheque_status),
                 "allow_on_submit": 1,
             },
+
             {
                 "fieldname": "endorse_cheque",
                 "fieldtype": "Check",
@@ -294,7 +316,7 @@ data = {
                 "fieldname": "drawn_account",
                 "fieldtype": "Link",
                 "insert_after": "drawn_bank_account",
-                "label": "Cheques Payable Account",
+                "label": "Bank Company Account",
                 "options": "Account",
                 "read_only": 1,
                 "fetch_from": "drawn_bank_account.account",
@@ -408,13 +430,15 @@ data = {
 
         ]
     },
-    "properties": [{
+    "properties": [
+        {
         "doctype":"Journal Entry Account",
         "doctype_or_field":"DocField",
         "fieldname":"reference_type",
         "property":"options",
         "property_type":"Text",
         "value": "\nPayment Entry\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document\nComparison\nClearance\nTender"
-    }],
+    },
+    ],
     'on_setup': 'dynamic.cheques.setup.install'
 }

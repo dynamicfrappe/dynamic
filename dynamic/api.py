@@ -12,6 +12,7 @@ from frappe.utils.user import get_users_with_role
 from frappe.utils.background_jobs import enqueue
 from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
 from frappe.utils import add_days, nowdate, today
+from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -138,8 +139,10 @@ def validate_delivery_note(doc,*args,**kwargs):
 def submit_journal_entry_cheques (doc):
     if getattr(doc,"payment_entry",None):
         payment_entry = frappe.get_doc("Payment Entry",doc.payment_entry)
+        old_status = payment_entry.cheque_status
         payment_entry.cheque_status = doc.cheque_status
         payment_entry.save()
+        add_row_cheque_tracks(doc.payment_entry,doc.cheque_status,old_status)
 
 
 
@@ -313,7 +316,11 @@ def add_row_for_reservation(self):
                         'reserved_qty': item.qty
                     })
                 reserv_doc.insert()
-                self.reservation = reserv_doc.name
+                #self.db_set('reservation',reserv_doc.name)
+                #frappe.db.update('Sales Order', self.name, 'reservation', reserv_doc.name)
+                sql = f""" update `tabSales Order` set reservation='{reserv_doc.name}' , reservation_status='Active' where name='{self.name}'"""
+                frappe.db.sql(sql)
+                frappe.db.commit()
                 reserv_doc.db_set('sales_order',self.name)
 
         #2-purchase order
@@ -339,13 +346,16 @@ def validate_sales_order_reservation_status():
     # loop throgth conf and update sales order that achive criteria
     for c in conf_result:
         for s in sales_order_result:
-            if s.diff > float(c.days or 0) and (float(s.advance_paid or 0) / s.base_grand_total)*100 < float(c.percent or 0):
+            if s.diff >= float(c.days or 0) and ((float(s.advance_paid or 0) / s.base_grand_total) *100 < float(c.percent or 0) or c.percent==0):
                 sales_order = frappe.get_doc("Sales Order",s.name)
                 reserv_doc = frappe.get_doc("Reservation",sales_order.get("reservation"))
-                reserv_doc.status = "Invalid"
+                reserv_doc.status = "Closed"
                 reserv_doc.save()
-                sales_order.reservation_status = "Invalid"
-                sales_order.save()
+                # sales_order.reservation_status = "Closed"
+                # sales_order.save()
+                sql = f""" update `tabSales Order` set  reservation_status='Closed' where name='{s.name}'"""
+                frappe.db.sql(sql)
+                frappe.db.commit()
                 
 
 

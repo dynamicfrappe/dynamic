@@ -28,7 +28,9 @@
   "reference_type",
   "column_break_20",
   "reference_name",
-  "amended_from"
+  "amended_from",
+  "cheque_tracks_section",
+  "cheque_tracks"
  ],
  "fields": [
   {
@@ -188,12 +190,25 @@
    "label": "Reference Name",
    "mandatory_depends_on": "eval:doc.reference_type",
    "options": "reference_type"
+  },
+  {
+   "fieldname": "cheque_tracks_section",
+   "fieldtype": "Section Break",
+   "label": "Cheque Tracks"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "cheque_tracks",
+   "fieldtype": "Table",
+   "label": "Cheque Tracks",
+   "options": "Cheque Tracks",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-07-07 13:56:40.636999",
+ "modified": "2022-07-20 12:02:52.435778",
  "modified_by": "Administrator",
  "module": "Cheques",
  "name": "Cheque",

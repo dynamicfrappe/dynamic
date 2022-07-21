@@ -111,13 +111,12 @@ class Cheques_report(object):
 
 	def get_data_from_payment_entry(self,conditions = '' ,values = ''):
 		query_test_p = """
-		select p.name as `Payment`,p.reference_no as `Cheques NO`,p.party as `Party`,p.party_type as `Party Type`,p.cheque_status as `Cheque Status`, p.paid_amount as `Amount`,p.posting_date as `Transaction Date`,p.reference_date as `Reference Date`,p.drawn_bank as `Bank`,p.drawn_bank_account as `Bank Account`
-		from `tabPayment Entry` as p
-		WHERE {conditions} AND p.docstatus = '1'
+		select p.name as `Payment`,p.reference_no as `Cheques NO`,p.party as `Party`,p.party_type as `Party Type`,p.cheque_status as `Cheque Status`, p.paid_amount as `Amount`,p.posting_date as `Transaction Date`,p.reference_date as `Reference Date`,p.drawn_bank as `Bank`,p.drawn_bank_account as `Bank Account` 
+		from `tabPayment Entry` as p , `tabCheque` as cq
+		WHERE {conditions} AND p.cheque <> '' AND p.cheque = cq.name
 		""".format(conditions=conditions)
 		data_dict_p = frappe.db.sql(query_test_p,values=values,as_dict=1)
-		# frappe.errprint(f'query_test_p is ==>{data_dict_p}')
-
+		# frappe.errprint(data_dict_p)
 		return data_dict_p
 
 	def get_conditions(self,filters):
@@ -129,7 +128,10 @@ class Cheques_report(object):
 			values["payment_type"] = filters.get("payment_type")
 
 		if filters.get("cheque_status"):
-			conditions += " AND p.cheque_status =  %(cheque_status)s "
+			if filters.get("cheque_status") == 'Rejected' or filters.get("cheque_status") == "Rejected in Bank":
+				conditions += " AND p.cheque_status =  %(cheque_status)s " #AND p.docstatus = '2'
+			else:
+				conditions += " AND p.cheque_status =  %(cheque_status)s AND p.docstatus = '1' "
 			values["cheque_status"] = filters.get("cheque_status")
 
 		if filters.get("bank"):
@@ -140,6 +142,11 @@ class Cheques_report(object):
 			conditions += " AND p.drawn_bank_account =  %(drawn_bank_account)s "
 			values["drawn_bank_account"] = filters.get("bank_account")
 
+		if filters.get('party'):
+			conditions += " And p.party = %(party)s"
+			values["party"] = filters.get('party')
+
+		
 
 		if filters.get("from_date"):
 			if filters.get("from_date") and filters.get("to_date"):
