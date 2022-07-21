@@ -4,13 +4,13 @@ from ntpath import join
 cheque_status = [
     "New",
     "Under Collect",
-    "Rejected in Bank",
-    "Rejected", 
     "Collected",
     "Endorsed",
     "Rejected",
     "Cash",
-    "Paid"
+    "Paid",
+    "Rejected in Bank",
+    "Rejected", 
 ]
 data = {
     'custom_fields': {
@@ -252,6 +252,9 @@ data = {
                 "read_only": 1,
                 "options":"\n".join(cheque_status),
                 "allow_on_submit": 1,
+                "in_list_view": 1,
+                "in_filter": 1,
+                "in_standard_filter": 1,
             },
 
             {
