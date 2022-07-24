@@ -40,7 +40,7 @@ class Cheques_states_history_report(object):
 			"fieldname": "Cheques NO",
 			"fieldtype": "Data",
 			"label": "Cheques NO",
-			"width": 70
+			"width": 110
 
 		},
 		{
@@ -54,13 +54,6 @@ class Cheques_states_history_report(object):
 			"fieldtype": "Data",
 			"label": "Party",
 			"width": 120
-		},
-		{
-			"fieldname": "old_history",
-			"fieldtype": "Data",
-			"label": "Old History",
-			"width": 100
-
 		},
 		{
 			"fieldname": "Cheque Status",
@@ -83,24 +76,14 @@ class Cheques_states_history_report(object):
 			"width": 120
 
 		},
-			{
-			"fieldname": "Amount",
-			"fieldtype": "Data",
-			"label": "Amount",
-			"width": 120
-		},
 		{
-			"fieldname": "Bank",
+			"fieldname": "history_states",
 			"fieldtype": "Data",
-			"label": "Bank",
-			"width": 70
+			"label": "History States",
+			"width": 150
+
 		},
-		{
-			"fieldname": "Bank Account",
-			"fieldtype": "Data",
-			"label": "Bank Account",
-			"width": 100
-		},
+		
 		]
 
 		return self.columns
@@ -117,12 +100,18 @@ class Cheques_states_history_report(object):
 
 
 	def get_data_from_payment_entry(self,conditions = '' ,values = ''):
-		query_test_p = """
-		select p.name as `Payment`,p.reference_no as `Cheques NO`,p.party as `Party`,p.party_type as `Party Type`,p.cheque_status as `Cheque Status`, p.paid_amount as `Amount`,p.posting_date as `Transaction Date`,p.reference_date as `Reference Date`,p.drawn_bank as `Bank`,p.drawn_bank_account as `Bank Account` 
-		from `tabPayment Entry` as p , `tabCheque` as cq
-		WHERE {conditions} AND p.cheque <> '' AND p.cheque = cq.name
+		query_test2 = """
+				SELECT p.name as `Payment`,p.reference_no as `Cheques NO`,tct.parent,p.party as `Party`,p.party_type as `Party Type`,GROUP_CONCAT(tct.new_status SEPARATOR '=> ') As `history_states`,
+				p.paid_amount as `Amount`,p.posting_date as `Transaction Date`,p.reference_date as `Reference Date`,p.cheque_status as `Cheque Status`
+				from `tabPayment Entry` p,`tabCheque Tracks` tct
+				WHERE {conditions} AND p.name=tct.parent AND tct.parenttype ='Payment Entry'
+				GROUP BY parent;
 		""".format(conditions=conditions)
-		data_dict_p = frappe.db.sql(query_test_p,values=values,as_dict=1)
+
+		data_dict_p = frappe.db.sql(query_test2,values=values,as_dict=1)
+		for row in data_dict_p:
+			if row['history_states']:
+				row['history_states'] = 'New =>' + row['history_states']
 		# frappe.errprint(data_dict_p)
 		return data_dict_p
 
@@ -148,12 +137,7 @@ class Cheques_states_history_report(object):
 			else:
 				conditions += " AND p.cheque_status =  %(current_state)s AND p.docstatus = '1' "
 			values["current_state"] = filters.get("current_state")
-
-
 		
-
-		
-
 		if filters.get("from_date"):
 			if filters.get("from_date") and filters.get("to_date"):
 				conditions += " AND CAST(p.posting_date AS DATE) >= %(from_date)s  AND CAST(p.posting_date AS DATE) <= %(to_date)s"

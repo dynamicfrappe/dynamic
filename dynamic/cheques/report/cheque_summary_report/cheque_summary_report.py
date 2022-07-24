@@ -60,12 +60,12 @@ class Cheques_summary_report(object):
 		]
 
 		for c_status in cheque_status:
-			if not self.filters.get('attributes') or self.filters.get('attributes') == ['Count', 'Both', None]:
+			if not self.filters.get('attributes') or self.filters.get('attributes') in ['Count', 'Both', None]:
 				self.columns.append({
 					"fieldname": c_status.replace(' ', '_').lower() + "_count",
 					"fieldtype": "Float",
-					"label": _(c_status),
-					"width": 100
+					"label": _(c_status)+ " " + _("Amount"),
+					"width": 150
 				})
 			if not self.filters.get('attributes') or self.filters.get('attributes') in ['Amount', 'Both', None]:
 				self.columns.append({
