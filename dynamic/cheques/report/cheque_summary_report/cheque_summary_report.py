@@ -49,64 +49,7 @@ class Cheques_summary_report(object):
 
 		},
 		]
-		# if 'Count' in self.filters.get('attributes'):
-		# 		self.columns.extend([
-		# {
-		# 	"fieldname": "New",
-		# 	"fieldtype": "Int",
-		# 	"label": "New",
-		# 	"width": 70
-		# },
-		# {
-		# 	"fieldname": "Paid",
-		# 	"fieldtype": "Int",
-		# 	"label": "Paid",
-		# 	"width": 70
-		# },
-		# {
-		# 	"fieldname": "Cash",
-		# 	"fieldtype": "Int",
-		# 	"label": "Cash",
-		# 	"width": 70
-		# },
-		# {
-		# 	"fieldname": "Rejected",
-		# 	"fieldtype": "Int",
-		# 	"label": "Rejected",
-		# 	"width": 90
-		# },
-		# {
-		# 	"fieldname": "Rejected in Bank",
-		# 	"fieldtype": "Int",
-		# 	"label": "Rejected in Bank",
-		# 	"width": 150
-		# },
-		# {
-		# 	"fieldname": "Collected",
-		# 	"fieldtype": "Int",
-		# 	"label": "Collected",
-		# 	"width": 100
-		# },
-		# {
-		# 	"fieldname": "Under Collect",
-		# 	"fieldtype": "Int",
-		# 	"label": "Under Collect",
-		# 	"width": 120
-		# },
-		# {
-		# 	"fieldname": "Endorsed",
-		# 	"fieldtype": "Int",
-		# 	"label": "Endorsed",
-		# 	"width": 100
-		# },
-		# {
-		# 	"fieldname": "Amount",
-		# 	"fieldtype": "Float",
-		# 	"label": "Amount",
-		# 	"width": 150
-		# },
-		# 	])
-		frappe.errprint(self.filters.get('attributes'))
+	
 		#TODO set coloms to Amount,Count
 		if self.filters.get('attributes') == 'Count':
 			self.columns.extend([
@@ -343,55 +286,6 @@ class Cheques_summary_report(object):
 		self.data = self.get_data_from_payment_entry_amount(self.conditions,self.values)
 		return self.data
 
-	def get_data_from_payment_entry(self,conditions = '' ,values = ''):
-		query_test_p = """
-		select party_type,party,count(cheque) as `Total Count`,sum(paid_amount) as Amount,
-		SUM(CASE 
-			WHEN cheque_status = "New" 
-			THEN 1 
-			ELSE 0 
-		END) AS `New`,
-		SUM(CASE 
-			WHEN cheque_status = "Rejected" 
-			THEN 1 
-			ELSE 0 
-		END) AS `Rejected`,
-		SUM(CASE 
-			WHEN cheque_status = "Rejected in Bank" 
-			THEN 1 
-			ELSE 0 
-		END) AS `Rejected in Bank`,
-		SUM(CASE 
-			WHEN cheque_status = "Under Collect" 
-			THEN 1 
-			ELSE 0 
-		END) AS `Under Collect Cheque`,
-		SUM(CASE 
-			WHEN cheque_status = "Collected" 
-			THEN 1 
-			ELSE 0 
-		END) AS `Collected Cheque`,
-		SUM(CASE 
-			WHEN cheque_status = "Endorsed" 
-			THEN 1 
-			ELSE 0 
-		END) AS `Endorsed Cheque`,
-		COALESCE(SUM(CASE 
-			WHEN cheque_status = "Paid" 
-			THEN 1 
-			ELSE 0 
-		END),500) AS `Paid Cheque`,
-		SUM(CASE 
-			WHEN cheque_status = "Cash" 
-			THEN 1 
-			ELSE 0 
-		END) AS `Cash Cheque`
-		from `tabPayment Entry` p 
-		WHERE {conditions} group by party
-		""".format(conditions=conditions)
-
-		data_dict_p = frappe.db.sql(query_test_p,values=values,as_dict=1)
-		return data_dict_p
 
 	def get_data_from_payment_entry_amount(self,conditions = '' ,values = ''):
 		query_test_p = """
@@ -456,11 +350,11 @@ class Cheques_summary_report(object):
 			THEN paid_amount 
 			ELSE 0 
 		END) AS `endorsed_amount`,
-		COALESCE(SUM(CASE 
+		SUM(CASE 
 			WHEN cheque_status = "Paid" 
 			THEN 1 
 			ELSE 0 
-		END),500) AS `Paid Cheque`,
+		END) AS `Paid Cheque`,
 		SUM(CASE 
 			WHEN cheque_status = "Paid"  
 			THEN paid_amount 
@@ -508,3 +402,111 @@ class Cheques_summary_report(object):
 				values["from_date"] = filters.get("from_date")
 
 		return conditions, values
+
+
+# def get_data_from_payment_entry(self,conditions = '' ,values = ''):
+	# 	query_test_p = """
+	# 	select party_type,party,count(cheque) as `Total Count`,sum(paid_amount) as Amount,
+	# 	SUM(CASE 
+	# 		WHEN cheque_status = "New" 
+	# 		THEN 1 
+	# 		ELSE 0 
+	# 	END) AS `New`,
+	# 	SUM(CASE 
+	# 		WHEN cheque_status = "Rejected" 
+	# 		THEN 1 
+	# 		ELSE 0 
+	# 	END) AS `Rejected`,
+	# 	SUM(CASE 
+	# 		WHEN cheque_status = "Rejected in Bank" 
+	# 		THEN 1 
+	# 		ELSE 0 
+	# 	END) AS `Rejected in Bank`,
+	# 	SUM(CASE 
+	# 		WHEN cheque_status = "Under Collect" 
+	# 		THEN 1 
+	# 		ELSE 0 
+	# 	END) AS `Under Collect Cheque`,
+	# 	SUM(CASE 
+	# 		WHEN cheque_status = "Collected" 
+	# 		THEN 1 
+	# 		ELSE 0 
+	# 	END) AS `Collected Cheque`,
+	# 	SUM(CASE 
+	# 		WHEN cheque_status = "Endorsed" 
+	# 		THEN 1 
+	# 		ELSE 0 
+	# 	END) AS `Endorsed Cheque`,
+	# 	COALESCE(SUM(CASE 
+	# 		WHEN cheque_status = "Paid" 
+	# 		THEN 1 
+	# 		ELSE 0 
+	# 	END),500) AS `Paid Cheque`,
+	# 	SUM(CASE 
+	# 		WHEN cheque_status = "Cash" 
+	# 		THEN 1 
+	# 		ELSE 0 
+	# 	END) AS `Cash Cheque`
+	# 	from `tabPayment Entry` p 
+	# 	WHERE {conditions} group by party
+	# 	""".format(conditions=conditions)
+	# 	data_dict_p = frappe.db.sql(query_test_p,values=values,as_dict=1)
+	# return data_dict_p#
+
+	# if 'Count' in self.filters.get('attributes'):
+		# 		self.columns.extend([
+		# {
+		# 	"fieldname": "New",
+		# 	"fieldtype": "Int",
+		# 	"label": "New",
+		# 	"width": 70
+		# },
+		# {
+		# 	"fieldname": "Paid",
+		# 	"fieldtype": "Int",
+		# 	"label": "Paid",
+		# 	"width": 70
+		# },
+		# {
+		# 	"fieldname": "Cash",
+		# 	"fieldtype": "Int",
+		# 	"label": "Cash",
+		# 	"width": 70
+		# },
+		# {
+		# 	"fieldname": "Rejected",
+		# 	"fieldtype": "Int",
+		# 	"label": "Rejected",
+		# 	"width": 90
+		# },
+		# {
+		# 	"fieldname": "Rejected in Bank",
+		# 	"fieldtype": "Int",
+		# 	"label": "Rejected in Bank",
+		# 	"width": 150
+		# },
+		# {
+		# 	"fieldname": "Collected",
+		# 	"fieldtype": "Int",
+		# 	"label": "Collected",
+		# 	"width": 100
+		# },
+		# {
+		# 	"fieldname": "Under Collect",
+		# 	"fieldtype": "Int",
+		# 	"label": "Under Collect",
+		# 	"width": 120
+		# },
+		# {
+		# 	"fieldname": "Endorsed",
+		# 	"fieldtype": "Int",
+		# 	"label": "Endorsed",
+		# 	"width": 100
+		# },
+		# {
+		# 	"fieldname": "Amount",
+		# 	"fieldtype": "Float",
+		# 	"label": "Amount",
+		# 	"width": 150
+		# },
+		# 	])

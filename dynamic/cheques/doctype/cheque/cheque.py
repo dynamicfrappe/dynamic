@@ -477,9 +477,8 @@ def add_row_cheque_tracks(payment_entry, new_cheque_status, old_status=None):
             "time": payment_entry.modified.time()
         }
         )
-        payment_entry.db_set('cheque_status', new_cheque_status)
-        cheque.save()
-        # frappe.errprint('chequ tracjks update')
+        # payment_entry.db_set('cheque_status', new_cheque_status)
+        payment_entry.save()
     except Exception as e:
         print("exception", str(e))
 
