@@ -80,7 +80,7 @@ class Cheques_states_history_report(object):
 			"fieldname": "history_states",
 			"fieldtype": "Data",
 			"label": "History States",
-			"width": 150
+			"width": 200
 
 		},
 		
@@ -101,7 +101,7 @@ class Cheques_states_history_report(object):
 
 	def get_data_from_payment_entry(self,conditions = '' ,values = ''):
 		query_test2 = """
-				SELECT p.name as `Payment`,p.reference_no as `Cheques NO`,tct.parent,p.party as `Party`,p.party_type as `Party Type`,GROUP_CONCAT(tct.new_status SEPARATOR '=> ') As `history_states`,
+				SELECT p.name as `Payment`,p.reference_no as `Cheques NO`,tct.parent,p.party as `Party`,p.party_type as `Party Type`,GROUP_CONCAT(tct.new_status SEPARATOR ' => ') As `history_states`,
 				p.paid_amount as `Amount`,p.posting_date as `Transaction Date`,p.reference_date as `Reference Date`,p.cheque_status as `Cheque Status`
 				from `tabPayment Entry` p,`tabCheque Tracks` tct
 				WHERE {conditions} AND p.name=tct.parent AND tct.parenttype ='Payment Entry'
