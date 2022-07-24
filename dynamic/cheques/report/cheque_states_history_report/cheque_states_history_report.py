@@ -94,17 +94,17 @@ class Cheques_states_history_report(object):
 
 	def get_data_from_payment_entry(self,conditions = '' ,values = ''):
 		query_test2 = """
-				SELECT p.name as `Payment`,p.reference_no as `Cheques NO`,tct.parent,p.party as `Party`,p.party_type as `Party Type`,GROUP_CONCAT(tct.new_status SEPARATOR ' => ') As `history_states`,
-				`Party Type`,GROUP_CONCAT(tct.old_status SEPARATOR ' => ') As `old_states`,
+				SELECT p.name as `Payment`,p.reference_no as `Cheques NO`,tct.parent,p.party as `Party`,p.party_type as `Party Type`,
+				CONCAT('New => ',GROUP_CONCAT(tct.new_status SEPARATOR ' => ')) As `history_states`,
 				p.paid_amount as `Amount`,p.posting_date as `Transaction Date`,p.reference_date as `Reference Date`,p.cheque_status as `Cheque Status`
 				from `tabPayment Entry` p,`tabCheque Tracks` tct
 				WHERE {conditions} AND p.name=tct.parent AND tct.parenttype ='Payment Entry'
 				GROUP BY parent;
 		""".format(conditions=conditions)
 		data_dict_p = frappe.db.sql(query_test2,values=values,as_dict=1)
-		for row in data_dict_p:
-			if row['history_states']:
-				row['history_states'] = 'New =>' + row['history_states']
+		# for row in data_dict_p:
+		# 	if row['history_states']:
+		# 		row['history_states'] = 'New =>' + row['history_states']
 		return data_dict_p
 
 	def get_conditions(self,filters):
