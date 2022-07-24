@@ -10,7 +10,7 @@ cheque_status = [
     "Cash",
     "Paid",
     "Rejected in Bank",
-    "Rejected", 
+    "Rejected",
 ]
 data = {
     'custom_fields': {
@@ -106,95 +106,109 @@ data = {
                 "insert_after": "cheques_receivable_account",
                 "label": "Commissions",
             },
-            {
-                "fieldname": "bank_guarantee_column1",
-                "fieldtype": "Column Break",
-                "insert_after": "cheques_commission_section",
-                "label": "Bank Guarantee",
-            },
-            {
-                "fieldname": "bank_warranty_letter_commission",
-                "fieldtype": "Float",
-                "insert_after": "bank_guarantee_column1",
-                "label": "Bank Warranty Letter Commission",
-                "default": 0
-            },
-            {
-                "fieldname": "initial_bank_warranty_letter_commission",
-                "fieldtype": "Percent",
-                "insert_after": "bank_warranty_letter_commission",
-                "label": "Initial Bank Warranty Letter Commission",
-                "default": 0
-            },
-            {
-                "fieldname": "bank_warranty_letter_commission_advance_payment",
-                "fieldtype": "Percent",
-                "insert_after": "initial_bank_warranty_letter_commission",
-                "label": "Bank Warranty Letter Commission Advance Payment",
-                "default": 0
-            },
-            {
-                "fieldname": "bank_warranty_letter_reservation_commission_advance_payment",
-                "fieldtype": "Percent",
-                "insert_after": "bank_warranty_letter_commission_advance_payment",
-                "label": "Bank Warranty Letter Reservation Commission Advance Payment",
-                "default": 0
-            },
-            {
-                "fieldname": "final_bank_warranty_letter_commission",
-                "fieldtype": "Percent",
-                "insert_after": "bank_warranty_letter_reservation_commission_advance_payment",
-                "label": "Final Bank Warranty Letter Commission",
-                "default": 0
-            },
+            # {
+            #     "fieldname": "bank_guarantee_column1",
+            #     "fieldtype": "Column Break",
+            #     "insert_after": "cheques_commission_section",
+            #     "label": "Bank Guarantee",
+            # },
+            # {
+            #     "fieldname": "bank_warranty_letter_commission",
+            #     "fieldtype": "Float",
+            #     "insert_after": "bank_guarantee_column1",
+            #     "label": "Bank Warranty Letter Commission",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "initial_bank_warranty_letter_commission",
+            #     "fieldtype": "Percent",
+            #     "insert_after": "bank_warranty_letter_commission",
+            #     "label": "Initial Bank Warranty Letter Commission",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "bank_warranty_letter_commission_advance_payment",
+            #     "fieldtype": "Percent",
+            #     "insert_after": "initial_bank_warranty_letter_commission",
+            #     "label": "Bank Warranty Letter Commission Advance Payment",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "bank_warranty_letter_reservation_commission_advance_payment",
+            #     "fieldtype": "Percent",
+            #     "insert_after": "bank_warranty_letter_commission_advance_payment",
+            #     "label": "Bank Warranty Letter Reservation Commission Advance Payment",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "final_bank_warranty_letter_commission",
+            #     "fieldtype": "Percent",
+            #     "insert_after": "bank_warranty_letter_reservation_commission_advance_payment",
+            #     "label": "Final Bank Warranty Letter Commission",
+            #     "default": 0
+            # },
 
+            # {
+            #     "fieldname": "cheques_commissions_column",
+            #     "fieldtype": "Column Break",
+            #     "insert_after": "final_bank_warranty_letter_commission",
+            #     "label": "Cheque",
+            # },
+            # {
+            #     "fieldname": "cheque_commission",
+            #     "fieldtype": "Float",
+            #     "insert_after": "cheques_commissions_column",
+            #     "label": "Cheque Commission",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "collect_cheque_commission",
+            #     "fieldtype": "Float",
+            #     "insert_after": "cheque_commission",
+            #     "label": "Collect Cheque Commission",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "reject_cheque_commission",
+            #     "fieldtype": "Float",
+            #     "insert_after": "collect_cheque_commission",
+            #     "label": "Reject Cheque Commission",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "bank_transfer_commission",
+            #     "fieldtype": "Float",
+            #     "insert_after": "reject_cheque_commission",
+            #     "label": "Bank Transfer Commission",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "issue_cheque_commission",
+            #     "fieldtype": "Float",
+            #     "insert_after": "bank_transfer_commission",
+            #     "label": "Issue Cheque Commission",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "initial_bank_warranty_letter_commission_reservation",
+            #     "fieldtype": "Percent",
+            #     "insert_after": "issue_cheque_commission",
+            #     "label": "Initial Bank Warranty Letter Commission Reservation",
+            #     "default": 0
+            # },
+            # {
+            #     "fieldname": "cheques_section2",
+            #     "fieldtype": "Section Break",
+            #     "insert_after": "issue_cheque_commission",
+            #     "label": "Cheques Section",
+            # },
             {
-                "fieldname": "cheques_commissions_column",
-                "fieldtype": "Column Break",
-                "insert_after": "final_bank_warranty_letter_commission",
-                "label": "Cheque",
-            },
-            {
-                "fieldname": "cheque_commission",
-                "fieldtype": "Float",
-                "insert_after": "cheques_commissions_column",
-                "label": "Cheque Commission",
-                "default": 0
-            },
-            {
-                "fieldname": "collect_cheque_commission",
-                "fieldtype": "Float",
-                "insert_after": "cheque_commission",
-                "label": "Collect Cheque Commission",
-                "default": 0
-            },
-            {
-                "fieldname": "reject_cheque_commission",
-                "fieldtype": "Float",
-                "insert_after": "collect_cheque_commission",
-                "label": "Reject Cheque Commission",
-                "default": 0
-            },
-            {
-                "fieldname": "bank_transfer_commission",
-                "fieldtype": "Float",
-                "insert_after": "reject_cheque_commission",
-                "label": "Bank Transfer Commission",
-                "default": 0
-            },
-            {
-                "fieldname": "issue_cheque_commission",
-                "fieldtype": "Float",
-                "insert_after": "bank_transfer_commission",
-                "label": "Issue Cheque Commission",
-                "default": 0
-            },
-            {
-                "fieldname": "initial_bank_warranty_letter_commission_reservation",
-                "fieldtype": "Percent",
-                "insert_after": "issue_cheque_commission",
-                "label": "Initial Bank Warranty Letter Commission Reservation",
-                "default": 0
+                "fieldname": "bank_commissions",
+                "fieldtype": "Table",
+                "insert_after": "cheques_commission_section",
+                "label": "Bank Commissions",
+                "options": "Bank Commissions",
+                "reqd": 1
             },
         ],
         "Payment Entry": [
@@ -250,7 +264,7 @@ data = {
                 "insert_after": "cheque",
                 "label": "Cheque Status",
                 "read_only": 1,
-                "options":"\n".join(cheque_status),
+                "options": "\n".join(cheque_status),
                 "allow_on_submit": 1,
                 "in_list_view": 1,
                 "in_filter": 1,
@@ -316,20 +330,9 @@ data = {
                 "depends_on": "cheque"
             },
             {
-                "fieldname": "drawn_account",
-                "fieldtype": "Link",
-                "insert_after": "drawn_bank_account",
-                "label": "Bank Company Account",
-                "options": "Account",
-                "read_only": 1,
-                "fetch_from": "drawn_bank_account.account",
-                "allow_on_submit": 1,
-                "depends_on": "drawn_bank_account"
-            },
-            {
                 "fieldname": "cheques_payable_account",
                 "fieldtype": "Link",
-                "insert_after": "drawn_account",
+                "insert_after": "drawn_bank_account",
                 "label": "Cheques Payable Account",
                 "options": "Account",
                 "read_only": 1,
@@ -338,9 +341,27 @@ data = {
                 "depends_on": "drawn_bank_account"
             },
             {
+                "fieldname": "bank_details_column",
+                "fieldtype": "Column Break",
+                "insert_after": "cheques_payable_account",
+                "label": "",
+            },
+
+            {
+                "fieldname": "drawn_account",
+                "fieldtype": "Link",
+                "insert_after": "bank_details_column",
+                "label": "Bank Company Account",
+                "options": "Account",
+                "read_only": 1,
+                "fetch_from": "drawn_bank_account.account",
+                "allow_on_submit": 1,
+                "depends_on": "drawn_bank_account"
+            },
+            {
                 "fieldname": "cheques_receivable_account",
                 "fieldtype": "Link",
-                "insert_after": "cheques_payable_account",
+                "insert_after": "drawn_account",
                 "label": "Cheques Receivable Account",
                 "options": "Account",
                 "read_only": 1,
@@ -348,56 +369,56 @@ data = {
                 "allow_on_submit": 1,
                 "depends_on": "drawn_bank_account"
             },
-            {
-                "fieldname": "bank_details_column",
-                "fieldtype": "Column Break",
-                "insert_after": "cheques_receivable_account",
-                "label": "",
-            },
-            {
-                "fieldname": "collect_cheque_commission",
-                "fieldtype": "Float",
-                "insert_after": "bank_details_column",
-                "label": "Collect Cheque Commission",
-                "default": 0,
-                "read_only": 1,
-                "fetch_from": "drawn_bank_account.collect_cheque_commission",
-                "allow_on_submit": 1,
-                "depends_on": "drawn_bank_account"
-            },
-            {
-                "fieldname": "issue_cheque_commission",
-                "fieldtype": "Float",
-                "insert_after": "collect_cheque_commission",
-                "label": "Issue Cheque Commission",
-                "default": 0,
-                "read_only": 1,
-                "fetch_from": "drawn_bank_account.issue_cheque_commission",
-                "allow_on_submit": 1,
-                "depends_on": "drawn_bank_account"
-            },
-            {
-                "fieldname": "reject_cheque_commission",
-                "fieldtype": "Float",
-                "insert_after": "issue_cheque_commission",
-                "label": "Reject Cheque Commission",
-                "default": 0,
-                "read_only": 1,
-                "fetch_from": "drawn_bank_account.reject_cheque_commission",
-                "allow_on_submit": 1,
-                "depends_on": "drawn_bank_account"
-            },
-            {
-                "fieldname": "bank_transfer_commission",
-                "fieldtype": "Percent",
-                "insert_after": "reject_cheque_commission",
-                "label": "Bank Transfer Commission",
-                "default": 0,
-                "read_only": 1,
-                "fetch_from": "drawn_bank_account.bank_transfer_commission",
-                "allow_on_submit": 1,
-                "depends_on": "drawn_bank_account"
-            },
+            # {
+            #     "fieldname": "bank_details_column",
+            #     "fieldtype": "Column Break",
+            #     "insert_after": "cheques_receivable_account",
+            #     "label": "",
+            # },
+            # {
+            #     "fieldname": "collect_cheque_commission",
+            #     "fieldtype": "Float",
+            #     "insert_after": "bank_details_column",
+            #     "label": "Collect Cheque Commission",
+            #     "default": 0,
+            #     "read_only": 1,
+            #     "fetch_from": "drawn_bank_account.collect_cheque_commission",
+            #     "allow_on_submit": 1,
+            #     "depends_on": "drawn_bank_account"
+            # },
+            # {
+            #     "fieldname": "issue_cheque_commission",
+            #     "fieldtype": "Float",
+            #     "insert_after": "collect_cheque_commission",
+            #     "label": "Issue Cheque Commission",
+            #     "default": 0,
+            #     "read_only": 1,
+            #     "fetch_from": "drawn_bank_account.issue_cheque_commission",
+            #     "allow_on_submit": 1,
+            #     "depends_on": "drawn_bank_account"
+            # },
+            # {
+            #     "fieldname": "reject_cheque_commission",
+            #     "fieldtype": "Float",
+            #     "insert_after": "issue_cheque_commission",
+            #     "label": "Reject Cheque Commission",
+            #     "default": 0,
+            #     "read_only": 1,
+            #     "fetch_from": "drawn_bank_account.reject_cheque_commission",
+            #     "allow_on_submit": 1,
+            #     "depends_on": "drawn_bank_account"
+            # },
+            # {
+            #     "fieldname": "bank_transfer_commission",
+            #     "fieldtype": "Percent",
+            #     "insert_after": "reject_cheque_commission",
+            #     "label": "Bank Transfer Commission",
+            #     "default": 0,
+            #     "read_only": 1,
+            #     "fetch_from": "drawn_bank_account.bank_transfer_commission",
+            #     "allow_on_submit": 1,
+            #     "depends_on": "drawn_bank_account"
+            # },
 
 
         ],
@@ -435,13 +456,13 @@ data = {
     },
     "properties": [
         {
-        "doctype":"Journal Entry Account",
-        "doctype_or_field":"DocField",
-        "fieldname":"reference_type",
-        "property":"options",
-        "property_type":"Text",
-        "value": "\nPayment Entry\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document\nComparison\nClearance\nTender"
-    },
+            "doctype": "Journal Entry Account",
+            "doctype_or_field": "DocField",
+            "fieldname": "reference_type",
+            "property": "options",
+            "property_type": "Text",
+            "value": "\nPayment Entry\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document\nComparison\nClearance\nTender"
+        },
     ],
     'on_setup': 'dynamic.cheques.setup.install'
 }
