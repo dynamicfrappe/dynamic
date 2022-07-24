@@ -14,6 +14,10 @@ validate_reference_dict = {
     "Customer": ["Sales Invoice", "Sales Order"],
 }
 
+collect_cheque_commission_name = "Collect"
+reject_cheque_commission_name = "Reject"
+pay_cheque_commission_name = "Pay"
+
 
 class Cheque(Document):
 
@@ -136,10 +140,13 @@ def make_cheque_endorsement(payment_entry):
 
 @frappe.whitelist()
 def make_cheque_pay(payment_entry):
+
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
+    
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
 
+    company = frappe.get_doc("Company", payment_entry.company)
     je = frappe.new_doc("Journal Entry")
     je.posting_date = payment_entry.posting_date
     je.voucher_type = 'Bank Entry'
@@ -167,6 +174,31 @@ def make_cheque_pay(payment_entry):
         "party_type": payment_entry.party_type,
         "party": payment_entry.party
     })
+
+
+    pay_cheque_commission = get_bank_commission (payment_entry.drawn_bank_account,pay_cheque_commission_name,payment_entry.paid_amount)
+    if pay_cheque_commission:
+        if not company.bank_expenses_account:
+            frappe.throw(_("Please Set Bank Expenses Account in Company"))
+
+        je.append("accounts", {
+            "account": company.bank_expenses_account,
+            "debit_in_account_currency": flt(pay_cheque_commission),
+            "reference_type": payment_entry.doctype,
+            "reference_name": payment_entry.name,
+            "party_type": payment_entry.party_type,
+            "party": payment_entry.party
+        })
+        # debit
+        je.append("accounts", {
+            "account":   payment_entry.drawn_account,
+            "credit_in_account_currency": flt(pay_cheque_commission),
+            "reference_type": payment_entry.doctype,
+            "reference_name": payment_entry.name,
+            "party_type": payment_entry.party_type,
+            "party": payment_entry.party
+        })
+
     je.save()
     return je
 
@@ -209,13 +241,14 @@ def deposite_cheque_under_collection(payment_entry):
         "party_type": payment_entry.party_type,
         "party": payment_entry.party
     })
-    if payment_entry.collect_cheque_commission:
+    collect_cheque_commission = get_bank_commission (payment_entry.drawn_bank_account,collect_cheque_commission_name,payment_entry.paid_amount)
+    if collect_cheque_commission:
         if not company.bank_expenses_account:
             frappe.throw(_("Please Set Bank Expenses Account in Company"))
 
         je.append("accounts", {
             "account": company.bank_expenses_account,
-            "debit_in_account_currency": flt(payment_entry.collect_cheque_commission),
+            "debit_in_account_currency": flt(collect_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
             "party_type": payment_entry.party_type,
@@ -224,7 +257,7 @@ def deposite_cheque_under_collection(payment_entry):
         # debit
         je.append("accounts", {
             "account":   payment_entry.drawn_account,
-            "credit_in_account_currency": flt(payment_entry.collect_cheque_commission),
+            "credit_in_account_currency": flt(collect_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
             "party_type": payment_entry.party_type,
@@ -274,13 +307,14 @@ def collect_cheque_now(payment_entry):
         "party_type": payment_entry.party_type,
         "party": payment_entry.party
     })
-    if payment_entry.collect_cheque_commission:
+    collect_cheque_commission = get_bank_commission (payment_entry.drawn_bank_account,collect_cheque_commission_name,payment_entry.paid_amount)
+    if collect_cheque_commission:
         if not company.bank_expenses_account:
             frappe.throw(_("Please Set Bank Expenses Account in Company"))
 
         je.append("accounts", {
             "account": company.bank_expenses_account,
-            "debit_in_account_currency": flt(payment_entry.collect_cheque_commission),
+            "debit_in_account_currency": flt(collect_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
             "party_type": payment_entry.party_type,
@@ -289,7 +323,7 @@ def collect_cheque_now(payment_entry):
         # debit
         je.append("accounts", {
             "account":   payment_entry.drawn_account,
-            "credit_in_account_currency": flt(payment_entry.collect_cheque_commission),
+            "credit_in_account_currency": flt(collect_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
             "party_type": payment_entry.party_type,
@@ -336,13 +370,15 @@ def collect_cheque_under_collection(payment_entry):
         "party_type": payment_entry.party_type,
         "party": payment_entry.party
     })
-    if payment_entry.reject_cheque_commission:
+    reject_cheque_commission = get_bank_commission (payment_entry.drawn_bank_account,reject_cheque_commission_name,payment_entry.paid_amount)
+
+    if reject_cheque_commission:
         if not company.bank_expenses_account:
             frappe.throw(_("Please Set Bank Expenses Account in Company"))
 
         je.append("accounts", {
             "account": company.bank_expenses_account,
-            "debit_in_account_currency": flt(payment_entry.reject_cheque_commission),
+            "debit_in_account_currency": flt(reject_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
             "party_type": payment_entry.party_type,
@@ -351,7 +387,7 @@ def collect_cheque_under_collection(payment_entry):
         # debit
         je.append("accounts", {
             "account":   payment_entry.drawn_account,
-            "credit_in_account_currency": flt(payment_entry.reject_cheque_commission),
+            "credit_in_account_currency": flt(reject_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
             "party_type": payment_entry.party_type,
@@ -402,13 +438,14 @@ def reject_cheque_under_collection(payment_entry):
         "party_type": payment_entry.party_type,
         "party": payment_entry.party
     })
-    if payment_entry.reject_cheque_commission:
+    reject_cheque_commission = get_bank_commission (payment_entry.drawn_bank_account,reject_cheque_commission_name,payment_entry.paid_amount)
+    if reject_cheque_commission:
         if not company.bank_expenses_account:
             frappe.throw(_("Please Set Bank Expenses Account in Company"))
 
         je.append("accounts", {
             "account": company.bank_expenses_account,
-            "debit_in_account_currency": flt(payment_entry.reject_cheque_commission),
+            "debit_in_account_currency": flt(reject_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
             "party_type": payment_entry.party_type,
@@ -417,7 +454,7 @@ def reject_cheque_under_collection(payment_entry):
         # debit
         je.append("accounts", {
             "account":   payment_entry.drawn_account,
-            "credit_in_account_currency": flt(payment_entry.reject_cheque_commission),
+            "credit_in_account_currency": flt(reject_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
             "party_type": payment_entry.party_type,
@@ -548,3 +585,29 @@ def pay_cash_new(payment_entry):
     })
     je.save()
     return je
+
+
+
+@frappe.whitelist()
+def get_bank_commission(bank_account,comission_type,cheque_amount=0):
+    comission_amount = 0
+    bank_account = frappe.get_doc("Bank Account",bank_account)
+    if  hasattr(bank_account,'bank_commissions'):
+        comissions = [x for x in bank_account.bank_commissions if x.comm_desc == comission_type ]
+        if not len(comissions) :
+            lnk = get_link_to_form(bank_account.doctype,bank_account.name)
+            frappe.throw(_("Pleaset Commission Type {} in Bank Account {}").format(comission_type,lnk))
+        comission = comissions[0]
+        comission.amount = comission.amount or 0
+        comission.min = comission.min or 0
+        comission.max = comission.max or 0
+        cheque_amount = cheque_amount or 0
+        comission_amount = (cheque_amount * comission.amount /100) if comission.comm_type == "Percent" else (comission.amount or 0)
+
+        if comission.min :
+            comission_amount = max(comission.min,comission_amount)
+        if comission.max :
+            comission_amount = min(comission.max,comission_amount)
+    
+    
+    return comission_amount or 0

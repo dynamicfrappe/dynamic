@@ -52,20 +52,37 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Cheques Reports",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Cheques Report",
    "link_to": "Cheques Report",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cheque Summary Report",
+   "link_to": "Cheque Summary Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-06-01 17:03:58.745239",
+ "modified": "2022-07-24 10:34:51.397069",
  "modified_by": "Administrator",
  "module": "Cheques",
  "name": "Cheques",
  "owner": "Administrator",
  "pin_to_bottom": 0,
- "pin_to_top": 0,
+ "pin_to_top": 1,
  "restrict_to_domain": "Cheques",
  "shortcuts": [
   {
@@ -78,6 +95,12 @@
    "doc_view": "",
    "label": "Cheques Report",
    "link_to": "Cheques Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Cheque Summary Report",
+   "link_to": "Cheque Summary Report",
    "type": "Report"
   }
  ]
