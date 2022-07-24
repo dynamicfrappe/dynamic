@@ -1,6 +1,7 @@
 // Copyright (c) 2022, Dynamic and contributors
 // For license information, please see license.txt
 /* eslint-disable */
+var attr = ['Amount','Count','Both'];
 
 frappe.query_reports["Cheque Summary Report"] = {
 	"filters": [
@@ -58,5 +59,23 @@ frappe.query_reports["Cheque Summary Report"] = {
 			  "Paid",
 			],
 		  },
+		//   {
+
+		// 	"fieldname":"attributes",
+		// 	"label": __("Attributes"),
+		// 	"fieldtype": "MultiSelectList",
+		// 	"get_data":function(txt) {
+		// 		return attr
+		// 	}
+
+		// },
+		{
+
+			fieldname:"attributes",
+			label: __("Attributes"),
+			fieldtype: "Select",
+			options: ['','Amount','Count','Both']
+
+		},
 	]
 };

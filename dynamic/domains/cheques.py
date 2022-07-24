@@ -6,7 +6,6 @@ cheque_status = [
     "Under Collect",
     "Collected",
     "Endorsed",
-    "Rejected",
     "Cash",
     "Paid",
     "Rejected in Bank",
@@ -397,6 +396,21 @@ data = {
                 "fetch_from": "drawn_bank_account.bank_transfer_commission",
                 "allow_on_submit": 1,
                 "depends_on": "drawn_bank_account"
+            },
+            {
+                "fieldname": "section_tracks",
+                "fieldtype": "Section Break",
+                "insert_after": "payment_order",
+                "label": "Section Tracks",
+            },
+            {
+                "fieldname": "cheque_tracks",
+                "fieldtype": "Table",
+                "options":"Cheque Tracks",
+                "insert_after": "section_tracks",
+                "label": "Cheque Tracks",
+                "read_only": 1,
+                "allow_on_submit": 1,
             },
 
 

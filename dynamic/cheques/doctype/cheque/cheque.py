@@ -470,8 +470,8 @@ def make_cheque_doc(dt, dn):
 def add_row_cheque_tracks(payment_entry, new_cheque_status, old_status=None):
     try:
         payment_entry = frappe.get_doc("Payment Entry", payment_entry)
-        cheque = frappe.get_doc('Cheque', payment_entry.cheque)
-        cheque.append("cheque_tracks", {
+        # cheque = frappe.get_doc('Cheque', payment_entry.cheque)
+        payment_entry.append("cheque_tracks", {
             "user": frappe.session.user,
             "day_time": payment_entry.modified,
             "old_status": old_status if old_status else payment_entry.cheque_status,
