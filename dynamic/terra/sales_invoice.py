@@ -21,6 +21,11 @@ def validate_sales_invoices(doc):
                                 Please Check item {line.item_name}"""))
 
         #check reservation 
-    if doc.update_stock ==1  : 
+    if doc.update_stock ==1  :
+        sales_order = frappe.get_doc('Sales Order',doc.items[0].sales_order)
         #close Item Reservation 
-        frappe.throw("validate")
+        for row in sales_order.items:
+            frappe.db.set_value('Reservation',row.reservation,{
+            'status': 'Closed',
+        })
+        
