@@ -161,7 +161,7 @@ def get_sales_return_account():
 def autoname(self,fun=''):
     if 'Terra' in DOMAINS:
         #series = "Tax-Inv-.DD.-.MM.-.YYYY.-.###." if getattr(self,'tax_auth' , 0) else self.naming_series
-        self.name = self.item_name
+        self.name = self.item_code
 
 
 @frappe.whitelist()
