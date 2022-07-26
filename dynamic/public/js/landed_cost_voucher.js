@@ -35,14 +35,7 @@ frappe.ui.form.on("Landed Cost Voucher", {
                 }
 
             }
-            if (d.doc_type== "Payment Entry") {
-                var filters = [
-                [d.doc_type, 'docstatus', '=', '1'],
-                [d.doc_type, 'company', '=', me.frm.doc.company],
-            ]
-                filters.push(["Payment Entry", "payment_type", "=", "Pay"])
-                filters.push(["Payment Entry", "unallocated_amount", ">", "0"])
-            }
+         
             return {
                 filters: filters
             }

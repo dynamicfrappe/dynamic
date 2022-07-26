@@ -25,7 +25,7 @@ def validate_sales_invoice(doc,*args,**kwargs):
 
 @frappe.whitelist()
 def get_query_type (*args,**kwargs):
-	return[[ "Purchase Invoice"],["Payment Entry"] , ["Journal Entry"]]
+	return[[ "Purchase Invoice"]]
 
 @frappe.whitelist()
 def get_purchase_items(invoice=None , *args , **kwargs):
