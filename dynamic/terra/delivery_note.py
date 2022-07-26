@@ -12,7 +12,7 @@ def validate_delivery_notes_sal_ord(doc):
         if not line.against_sales_order : 
             frappe.throw(_(f"""You can not add Delivery Note withou Sales Order 
                                 Please Check item {line.item_name}"""))
-
+    
     #check reservation 
     sales_order = frappe.get_doc('Sales Order',doc.items[0].against_sales_order)
     #close Item Reservation 
