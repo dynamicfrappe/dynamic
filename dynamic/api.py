@@ -13,6 +13,7 @@ from frappe.utils.background_jobs import enqueue
 from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
 from frappe.utils import add_days, nowdate, today
 from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
+from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -104,7 +105,7 @@ def validate_active_domains(doc,*args,**kwargs):
         #send  packed_items to valid and get Response message with item and shrotage amount and whare house  
         # this fuction validate current srock without looking for other resources    
         if len(doc.packed_items) > 0  and doc.update_stock == 1:
-            caculate_shortage_item(doc.packed_items + doc.items  ,doc.set_warehouse)
+            caculate_shortage_item(doc.packed_items + doc.items  ,doc.set_warehouse)   
 @frappe.whitelist()
 def validate_active_domains_invocie(doc,*args,**kwargs):
     cur_doc  = frappe.get_doc("Sales Invoice" , doc)
@@ -132,7 +133,9 @@ def validate_delivery_note(doc,*args,**kwargs):
             m_temp.save()
         if len(doc.packed_items) > 0  :
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)    
-
+    if 'Terra' in DOMAINS:
+        # frappe.throw('Validate delivery Note')
+        validate_delivery_notes_sal_ord(doc)
 
 
 @frappe.whitelist()
