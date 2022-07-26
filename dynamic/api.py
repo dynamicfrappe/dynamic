@@ -320,6 +320,7 @@ def add_row_for_reservation(self):
                 frappe.db.sql(sql)
                 frappe.db.commit()
                 item.reservation = reserv_doc.name
+                item.reservation_status = reserv_doc.status
                 item.save()
                 reserv_doc.db_set('sales_order',self.name)
 
