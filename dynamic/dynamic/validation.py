@@ -25,23 +25,23 @@ def validate_sales_invoice(doc,*args,**kwargs):
 
 @frappe.whitelist()
 def get_query_type (*args,**kwargs):
-	return[[ "Purchase Invoice"],["Payment Entry"] , ["Journal Entry"]]
+	return[[ "Purchase Invoice"]]
 
 @frappe.whitelist()
 def get_purchase_items(invoice=None , *args , **kwargs):
-
+  
 
     invoices = frappe.db.sql("""SELECT  p.parent  FROM 
                                 `tabPurchase Invoice Item`  p
                                 inner join   
                                 `tabItem`  a 
                                 inner join 
-                                `tabPurchase Invoice` as c
-                                on p.item_code = a.item_code and c.name = p.parent
+                                `tabPurchase Invoice`  c
+                                on p.item_code = a.name and c.name = p.parent
                                 WHERE a.is_stock_item = 0 and c.docstatus = 1 
                                 group by p.parent   """)
 
-
+    
     invocie_typ = []
     for i in invoices :
         available = get_doctype_info("Purchase Invoice" , i[0] )
