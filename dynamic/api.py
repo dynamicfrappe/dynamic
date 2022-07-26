@@ -321,9 +321,12 @@ def add_row_for_reservation(self):
                 reserv_doc.insert()
                 #self.db_set('reservation',reserv_doc.name)
                 #frappe.db.update('Sales Order', self.name, 'reservation', reserv_doc.name)
-                sql = f""" update `tabSales Order` set reservation='{reserv_doc.name}' , reservation_status='Active' where name='{self.name}'"""
-                frappe.db.sql(sql)
-                frappe.db.commit()
+                # sql = f""" update `tabSales Order` set reservation='{reserv_doc.name}' , reservation_status='Active' where name='{self.name}'"""
+                # frappe.db.sql(sql)
+                # frappe.db.commit()
+                item.reservation = reserv_doc.name
+                item.reservation_status = reserv_doc.status
+                item.save()
                 reserv_doc.db_set('sales_order',self.name)
 
         #2-purchase order
@@ -342,12 +345,18 @@ def validate_sales_order_reservation_status():
 
     # 2- get all sales order with reservation_status = 'Active'
     sql = """
-        select name
-               ,advance_paid
-               ,base_grand_total
-               ,DATEDIFF(CURDATE(),creation) as 'diff' 
-               from `tabSales Order` 
-               where reservation is not null and reservation_status ='Active'
+        select 
+            tso.name,
+            tsoi.reservation 
+            ,tsoi.reservation_status
+            ,tso.advance_paid
+            ,tso.base_grand_total
+            ,DATEDIFF(CURDATE(),tso.creation) as 'diff' 
+            from 
+            `tabSales Order Item` tsoi
+            inner join `tabSales Order` tso 
+            on tso.name = tsoi .parent 
+            where tsoi.reservation  is not null and tsoi.reservation_status ='Active'
         """
     sales_order_result = frappe.db.sql(sql,as_dict=1)
 
