@@ -8,6 +8,7 @@ frappe.ui.form.on("Landed Cost Voucher", {
             callback:function (r){
                 if (r.message) {
                     tera = true
+                    console.log("terra Active")
                 }else {
                     tera = false
                 }
