@@ -5,14 +5,14 @@ data = {
 
     'custom_fields': {
          'Sales Order':[
-            {
-                "fieldname": "reservation",
-                "fieldtype": "Link",
-                "insert_after": "project",
-                "label": "Reservation",
-                'options' : 'Reservation',
-                'read_only' : 1
-            },
+            # {
+            #     "fieldname": "reservation",
+            #     "fieldtype": "Link",
+            #     "insert_after": "project",
+            #     "label": "Reservation",
+            #     'options' : 'Reservation',
+            #     'read_only' : 1
+            # },
             {
                 "fieldname": "purchase_order",
                 "fieldtype": "Link",

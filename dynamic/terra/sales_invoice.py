@@ -22,10 +22,16 @@ def validate_sales_invoices(doc):
 
         #check reservation 
     if doc.update_stock ==1  :
-        sales_order = frappe.get_doc('Sales Order',doc.items[0].sales_order)
-        #close Item Reservation 
-        for row in sales_order.items:
-            frappe.db.set_value('Reservation',row.reservation,{
-            'status': 'Closed',
-        })
+        for line in doc.items :
+            reservation_name = frappe.db.get_value("Sales Order Item",line.so_detail,"reservation")
+            frappe.db.set_value('Reservation',reservation_name,{
+                'status': 'Closed',
+            })
+            # sales_order = frappe.get_doc('Sales Order Item',line.so_detail)
+            # reservation_doc = frappe.get_doc('Reservation',reservation_name)
+            #close Item Reservation 
+            # for row in sales_order.items:
+            #     frappe.db.set_value('Reservation',row.reservation,{
+            #     'status': 'Closed',
+            # })
         

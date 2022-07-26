@@ -298,36 +298,31 @@ def create_reservation_validate(self,*args , **kwargs):
         add_row_for_reservation(self)
        
 def add_row_for_reservation(self):
-    if not self.reservation:
-        for item in self.items:
-                reserv_doc = frappe.new_doc('Reservation')
-                reserv_doc.item_code = item.item_code
-                reserv_doc.status = 'Active'
-                reserv_doc.valid_from = self.transaction_date
-                reserv_doc.reservation_amount = item.qty
-                reserv_doc.warehouse_source = self.set_warehouse if self.set_warehouse else ""
-                reserv_doc.order_source = self.purchase_order if self.purchase_order else ""
-                if self.purchase_order:
-                    reserv_doc.append('reservation_purchase_order', {
-                            'purchase_order': self.purchase_order,
-                            'item': item.item_code,
-                            'qty':item.qty
-                        })
-                elif self.set_warehouse:
-                    reserv_doc.append('warehouse', {
+    # if not self.reservation:
+    for item in self.items:
+            reserv_doc = frappe.new_doc('Reservation')
+            reserv_doc.item_code = item.item_code
+            reserv_doc.status = 'Active'
+            reserv_doc.valid_from = self.transaction_date
+            reserv_doc.reservation_amount = item.qty
+            reserv_doc.warehouse_source = self.set_warehouse if self.set_warehouse else ""
+            reserv_doc.order_source = self.purchase_order if self.purchase_order else ""
+            if self.purchase_order:
+                reserv_doc.append('reservation_purchase_order', {
+                        'purchase_order': self.purchase_order,
                         'item': item.item_code,
-                        'reserved_qty': item.qty
+                        'qty':item.qty
                     })
-                reserv_doc.insert()
-                #self.db_set('reservation',reserv_doc.name)
-                #frappe.db.update('Sales Order', self.name, 'reservation', reserv_doc.name)
-                # sql = f""" update `tabSales Order` set reservation='{reserv_doc.name}' , reservation_status='Active' where name='{self.name}'"""
-                # frappe.db.sql(sql)
-                # frappe.db.commit()
-                item.reservation = reserv_doc.name
-                item.reservation_status = reserv_doc.status
-                item.save()
-                reserv_doc.db_set('sales_order',self.name)
+            elif self.set_warehouse:
+                reserv_doc.append('warehouse', {
+                    'item': item.item_code,
+                    'reserved_qty': item.qty
+                })
+            reserv_doc.insert()
+            item.reservation = reserv_doc.name
+            item.reservation_status = reserv_doc.status
+            item.save()
+            reserv_doc.db_set('sales_order',self.name)
 
         #2-purchase order
 
