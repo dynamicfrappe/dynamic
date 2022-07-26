@@ -150,7 +150,7 @@ def get_doctype_info(doc_type , document  ,*args , **kwargs) :
          `tabItem` a
           INNER JOIN 
          `tabPurchase Invoice Item` b
-          ON a.item_code = b.item_code 
+          ON a.name = b.item_code 
           WHERE
           a.is_stock_item= 0 AND
           b.parent = '{document}'""",as_dict =1)
@@ -209,7 +209,7 @@ def get_line_info( allocated_amount ,doc_type , document ,*args ,**kwargs):
                                         `tabPurchase Invoice` a
                                         INNER JOIN `tabItem`   c 
                                         ON
-                                        a.name = b.parent AND b.item_code = c.item_code
+                                        a.name = b.parent AND b.item_code = c.name
                                         WHERE 
                                         c.is_stock_item = 0 AND
                                         b.parent = '{document}' 
