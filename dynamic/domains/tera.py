@@ -218,7 +218,18 @@ data = {
             "insert_after": "material_request_type",
             "label": "Project Name"
             }
-        ],  
+        ],
+        'Sales Order Item':[
+             {
+            "fieldname": "reservation",
+            "fieldtype": "Link",
+            "options": "Reservation",
+            "insert_after": "item_name",
+            "label": "Reservation",
+            "in_list_view":1,
+            "allow_on_submit":1
+            }
+        ], 
     },
     "properties": [
         

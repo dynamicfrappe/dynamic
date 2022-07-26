@@ -316,14 +316,13 @@ def add_row_for_reservation(self):
                         'reserved_qty': item.qty
                     })
                 reserv_doc.insert()
-                #self.db_set('reservation',reserv_doc.name)
-                #frappe.db.update('Sales Order', self.name, 'reservation', reserv_doc.name)
                 sql = f""" update `tabSales Order` set reservation='{reserv_doc.name}' , reservation_status='Active' where name='{self.name}'"""
                 frappe.db.sql(sql)
                 frappe.db.commit()
+                item.reservation = reserv_doc.name
+                item.save()
                 reserv_doc.db_set('sales_order',self.name)
 
-        #2-purchase order
 
 
 
