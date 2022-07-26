@@ -3,7 +3,7 @@ frappe.ui.form.on("Landed Cost Voucher", {
     domian_valid: function (frm) {
        var tera = false
       frappe.call({
-            method :"dynamic.dynamic.validation.get_active_domain_gebco" ,
+            method :"dynamic.dynamic.validation.get_active_domain" ,
             async: false,
             callback:function (r){
                 if (r.message) {
