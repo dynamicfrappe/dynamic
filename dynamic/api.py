@@ -334,7 +334,7 @@ def add_row_for_reservation(self):
 
 
 
-# @frappe.whitelist()
+@frappe.whitelist()
 def validate_sales_order_reservation_status():
 
     # 1- get conf
@@ -346,8 +346,9 @@ def validate_sales_order_reservation_status():
     # 2- get all sales order with reservation_status = 'Active'
     sql = """
         select 
-            tso.name,
-            tsoi.reservation 
+            tso.name
+            ,tsoi.name as 'childname'
+            ,tsoi.reservation 
             ,tsoi.reservation_status
             ,tso.advance_paid
             ,tso.base_grand_total
@@ -364,13 +365,13 @@ def validate_sales_order_reservation_status():
     for c in conf_result:
         for s in sales_order_result:
             if s.diff >= float(c.days or 0) and ((float(s.advance_paid or 0) / s.base_grand_total) *100 < float(c.percent or 0) or c.percent==0):
-                sales_order = frappe.get_doc("Sales Order",s.name)
-                reserv_doc = frappe.get_doc("Reservation",sales_order.get("reservation"))
+                #sales_order = frappe.get_doc("Sales Order",s.name)
+                reserv_doc = frappe.get_doc("Reservation",s.reservation)
                 reserv_doc.status = "Closed"
                 reserv_doc.save()
                 # sales_order.reservation_status = "Closed"
                 # sales_order.save()
-                sql = f""" update `tabSales Order` set  reservation_status='Closed' where name='{s.name}'"""
+                sql = f""" update `tabSales Order Item` set  reservation_status='Closed' where name='{s.childname}'"""
                 frappe.db.sql(sql)
                 frappe.db.commit()
                 
