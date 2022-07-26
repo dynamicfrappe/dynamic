@@ -19,5 +19,8 @@ def validate_sales_invoices(doc):
         if not line.sales_order : 
             frappe.throw(_(f"""You can not add Sales Invocie withou Sales Order 
                                 Please Check item {line.item_name}"""))
+
+        #check reservation 
     if doc.update_stock ==1  : 
+        #close Item Reservation 
         frappe.throw("validate")
