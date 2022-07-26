@@ -339,12 +339,18 @@ def validate_sales_order_reservation_status():
 
     # 2- get all sales order with reservation_status = 'Active'
     sql = """
-        select name
-               ,advance_paid
-               ,base_grand_total
-               ,DATEDIFF(CURDATE(),creation) as 'diff' 
-               from `tabSales Order` 
-               where reservation is not null and reservation_status ='Active'
+        select 
+            tso.name,
+            tsoi.reservation 
+            ,tsoi.reservation_status
+            ,tso.advance_paid
+            ,tso.base_grand_total
+            ,DATEDIFF(CURDATE(),tso.creation) as 'diff' 
+            from 
+            `tabSales Order Item` tsoi
+            inner join `tabSales Order` tso 
+            on tso.name = tsoi .parent 
+            where tsoi.reservation  is not null and tsoi.reservation_status ='Active'
         """
     sales_order_result = frappe.db.sql(sql,as_dict=1)
 
