@@ -11,17 +11,17 @@
   "column_break_2",
   "action",
   "section_break_4",
+  "date",
+  "time",
+  "source",
+  "local_source",
   "description",
   "column_break_6",
   "customer_type",
   "customer",
   "phone_no",
   "branch",
-  "create_by",
-  "date",
-  "time",
-  "source",
-  "local_source"
+  "create_by"
  ],
  "fields": [
   {
@@ -139,7 +139,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-26 12:29:23.299299",
+ "modified": "2022-07-26 13:40:53.534420",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Actions",

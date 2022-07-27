@@ -13,6 +13,7 @@ from frappe.utils.background_jobs import enqueue
 from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
 from frappe.utils import add_days, nowdate, today
 from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
+from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -104,7 +105,7 @@ def validate_active_domains(doc,*args,**kwargs):
         #send  packed_items to valid and get Response message with item and shrotage amount and whare house  
         # this fuction validate current srock without looking for other resources    
         if len(doc.packed_items) > 0  and doc.update_stock == 1:
-            caculate_shortage_item(doc.packed_items + doc.items  ,doc.set_warehouse)
+            caculate_shortage_item(doc.packed_items + doc.items  ,doc.set_warehouse)   
 @frappe.whitelist()
 def validate_active_domains_invocie(doc,*args,**kwargs):
     cur_doc  = frappe.get_doc("Sales Invoice" , doc)
@@ -132,7 +133,9 @@ def validate_delivery_note(doc,*args,**kwargs):
             m_temp.save()
         if len(doc.packed_items) > 0  :
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)    
-
+    if 'Terra' in DOMAINS:
+        # frappe.throw('Validate delivery Note')
+        validate_delivery_notes_sal_ord(doc)
 
 
 @frappe.whitelist()
@@ -295,40 +298,38 @@ def create_reservation_validate(self,*args , **kwargs):
         add_row_for_reservation(self)
        
 def add_row_for_reservation(self):
-    if not self.reservation:
-        for item in self.items:
-                reserv_doc = frappe.new_doc('Reservation')
-                reserv_doc.item_code = item.item_code
-                reserv_doc.status = 'Active'
-                reserv_doc.valid_from = self.transaction_date
-                reserv_doc.reservation_amount = item.qty
-                reserv_doc.warehouse_source = self.set_warehouse if self.set_warehouse else ""
-                reserv_doc.order_source = self.purchase_order if self.purchase_order else ""
-                if self.purchase_order:
-                    reserv_doc.append('reservation_purchase_order', {
-                            'purchase_order': self.purchase_order,
-                            'item': item.item_code,
-                            'qty':item.qty
-                        })
-                elif self.set_warehouse:
-                    reserv_doc.append('warehouse', {
+    # if not self.reservation:
+    for item in self.items:
+            reserv_doc = frappe.new_doc('Reservation')
+            reserv_doc.item_code = item.item_code
+            reserv_doc.status = 'Active'
+            reserv_doc.valid_from = self.transaction_date
+            reserv_doc.reservation_amount = item.qty
+            reserv_doc.warehouse_source = self.set_warehouse if self.set_warehouse else ""
+            reserv_doc.order_source = self.purchase_order if self.purchase_order else ""
+            if self.purchase_order:
+                reserv_doc.append('reservation_purchase_order', {
+                        'purchase_order': self.purchase_order,
                         'item': item.item_code,
-                        'reserved_qty': item.qty
+                        'qty':item.qty
                     })
-                reserv_doc.insert()
-                #self.db_set('reservation',reserv_doc.name)
-                #frappe.db.update('Sales Order', self.name, 'reservation', reserv_doc.name)
-                sql = f""" update `tabSales Order` set reservation='{reserv_doc.name}' , reservation_status='Active' where name='{self.name}'"""
-                frappe.db.sql(sql)
-                frappe.db.commit()
-                reserv_doc.db_set('sales_order',self.name)
+            elif self.set_warehouse:
+                reserv_doc.append('warehouse', {
+                    'item': item.item_code,
+                    'reserved_qty': item.qty
+                })
+            reserv_doc.insert()
+            item.reservation = reserv_doc.name
+            item.reservation_status = reserv_doc.status
+            item.save()
+            reserv_doc.db_set('sales_order',self.name)
 
         #2-purchase order
 
 
 
 
-# @frappe.whitelist()
+@frappe.whitelist()
 def validate_sales_order_reservation_status():
 
     # 1- get conf
@@ -339,7 +340,19 @@ def validate_sales_order_reservation_status():
 
     # 2- get all sales order with reservation_status = 'Active'
     sql = """
-        select name,advance_paid,base_grand_total,DATEDIFF(CURDATE(),creation) as 'diff' from `tabSales Order` where reservation is not null and reservation_status ='Active'
+        select 
+            tso.name
+            ,tsoi.name as 'childname'
+            ,tsoi.reservation 
+            ,tsoi.reservation_status
+            ,tso.advance_paid
+            ,tso.base_grand_total
+            ,DATEDIFF(CURDATE(),tso.creation) as 'diff' 
+            from 
+            `tabSales Order Item` tsoi
+            inner join `tabSales Order` tso 
+            on tso.name = tsoi .parent 
+            where tsoi.reservation  is not null and tsoi.reservation_status ='Active'
         """
     sales_order_result = frappe.db.sql(sql,as_dict=1)
 
@@ -347,13 +360,13 @@ def validate_sales_order_reservation_status():
     for c in conf_result:
         for s in sales_order_result:
             if s.diff >= float(c.days or 0) and ((float(s.advance_paid or 0) / s.base_grand_total) *100 < float(c.percent or 0) or c.percent==0):
-                sales_order = frappe.get_doc("Sales Order",s.name)
-                reserv_doc = frappe.get_doc("Reservation",sales_order.get("reservation"))
+                #sales_order = frappe.get_doc("Sales Order",s.name)
+                reserv_doc = frappe.get_doc("Reservation",s.reservation)
                 reserv_doc.status = "Closed"
                 reserv_doc.save()
                 # sales_order.reservation_status = "Closed"
                 # sales_order.save()
-                sql = f""" update `tabSales Order` set  reservation_status='Closed' where name='{s.name}'"""
+                sql = f""" update `tabSales Order Item` set  reservation_status='Closed' where name='{s.childname}'"""
                 frappe.db.sql(sql)
                 frappe.db.commit()
                 

@@ -2,7 +2,7 @@ import frappe
 from frappe import _
 # Terra Domain required 
 from dynamic.terra.landed_cost import validate_cost ,get_doctype_info
-from dynamic.terra.sales_invoice import check_return_account
+from dynamic.terra.sales_invoice import check_return_account ,validate_sales_invoices
 from dynamic.terra.item import create_item_serial_doc
 DOMAINS = frappe.get_active_domains()
 
@@ -17,10 +17,9 @@ def validate_landed_cost(doc,*args,**kwargs):
 def validate_sales_invoice(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         check_return_account(doc)
+        validate_sales_invoices(doc)
     else :
         pass
-
-
 
 
 @frappe.whitelist()
