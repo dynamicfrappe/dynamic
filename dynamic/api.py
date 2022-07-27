@@ -214,9 +214,9 @@ def check_email_setting_in_stock_setting(doc):
     if setting_table:
         for row in setting_table:
             if row.document == "Purchase Recipt" and row.role:
-                link_str = frappe.utils.get_url_to_form("Purchase Recipt",doc.name)
+                link_str = frappe.utils.get_url_to_form("Purchase Receipt",doc.name)
                 msg = f"New Purchase Recipt Created  {link_str}"
-                send_mail_by_role(row.role,msg,"Purchase Recipt")
+                send_mail_by_role(row.role,msg,"Purchase Receipt")
             # if row.document == "Item Re Order" and row.role:
             #     msg = f"New Purchase Recipt Created  {link_str}" 
             # if row.document == "Safty Stock" and row.role:
