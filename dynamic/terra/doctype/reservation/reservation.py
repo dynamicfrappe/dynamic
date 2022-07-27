@@ -86,6 +86,7 @@ class Reservation(Document):
 	#validate Item in Purchase order 
 
 	def stock_sql(self):
+		"""get bin ehich its choosen and check itsqty before this transaction and reserv name != self.name"""
 		return frappe.db.sql(f""" 
 				      SELECT a.name as bin , 'Bin' as `doctype`,
 					CASE 
@@ -209,8 +210,6 @@ class Reservation(Document):
 										ON b.parent = c.name AND c.name <> '{self.name}'
 										where a.item_code = '{self.item_code}'  and a.parent = '{self.order_source}' 
 										""",as_dict=1)
-		frappe.errprint(f'order-->{order}')
-		# frappe.throw('thanks')
 		if order and len(order) > 0 :
 			if order[0].get("name") and float(order[0].get("qty")) > 0 :
 				valid = self.validate_order_line(order[0].get("name") , float(order[0].get("qty")))
