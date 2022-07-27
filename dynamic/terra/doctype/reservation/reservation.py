@@ -73,7 +73,7 @@ class Reservation(Document):
 				  and you requires  {self.reservation_amount}  """))
 
 
-			# self.warehouse = [] #?add row
+			self.warehouse = [] #?add row
 			row = self.append('warehouse', {})
 			row.item = self.item_code
 			row.bin = stock_sql[0].get("bin") 
@@ -158,26 +158,26 @@ class Reservation(Document):
 				from tabBin  a, `tabReservation Warehouse` b, tabReservation c
 				WHERE a.name = b.bin and a.item_code='{self.item_code}' and b.parent=c.name;
 		""")
-		used_warehouse_name = frappe.db.sql_list("""
-		 SELECT a.name as bin , 'Bin' as `doctype`,
-					CASE 
-                         WHEN b.reserved_qty > 0 AND c.status="Active"
-						 then a.actual_qty - SUM(b.reserved_qty)
-						 ELSE a.actual_qty 
-						 END  as qty
-					 FROM 
-					`tabBin` a
-					LEFT JOIN 
-				   `tabReservation Warehouse` b 
-					ON a.name = b.bin 
-                     LEFT JOIN 
-                    `tabReservation` c
-                    ON b.parent = c.name AND c.name <> '{self.name}' AND a.item_code = '{self.item_code}'
-					WHERE a.warehouse = b.warehouse
-		""")
+		# used_warehouse_name = frappe.db.sql_list("""
+		#  SELECT a.name as bin , 'Bin' as `doctype`,
+		# 			CASE 
+        #                  WHEN b.reserved_qty > 0 AND c.status="Active"
+		# 				 then a.actual_qty - SUM(b.reserved_qty)
+		# 				 ELSE a.actual_qty 
+		# 				 END  as qty
+		# 			 FROM 
+		# 			`tabBin` a
+		# 			LEFT JOIN 
+		# 		   `tabReservation Warehouse` b 
+		# 			ON a.name = b.bin 
+        #              LEFT JOIN 
+        #             `tabReservation` c
+        #             ON b.parent = c.name AND c.name <> '{self.name}' AND a.item_code = '{self.item_code}'
+		# 			WHERE a.warehouse = b.warehouse
+		# """)
 		result_str_list = f"''" if not used_warehouse else ','.join([f"'{x}'" for x in used_warehouse])
 
-		#**: get all before data
+		#**: get all before data(used + un_used)
 		get_all_warehouse = frappe.db.sql(f"""
 				select  a.name as bin,'Bin' as `doctype`, IF(b.reserved_qty>0, a.actual_qty-b.reserved_qty, a.actual_qty) as qty
 				from tabBin  a, `tabReservation Warehouse` b, tabReservation c
@@ -189,10 +189,6 @@ class Reservation(Document):
 		return get_all_warehouse
 
 	def validate_purchase_order(self):
-		# order = frappe.db.sql(f""" SELECT 
-		#   name , (qty - received_qty) as qty   FROM 
-		#  `tabPurchase Order Item` WHERE parent = '{self.order_source}' 
-		#  and item_code = '{self.item_code}' """,as_dict=1)
 		order =  frappe.db.sql(f"""                   
 										SELECT a.name as `name` ,a.parent,a.parenttype as doctype,
 										CASE
@@ -248,13 +244,13 @@ class Reservation(Document):
 
 	def add_row_single(self,target,data):		
 		if target=='warehouse':
-			# self.warehouse = [] #?add row
+			self.warehouse = [] #?add row
 			row = self.append('warehouse', {})
 			row.bin = data.get("bin") 
 			row.warehouse = self.warehouse_source
 			row.reserved_qty = self.reservation_amount
 		if target== 'pur':
-			# self.reservation_purchase_order = [] #?add row
+			self.reservation_purchase_order = [] #?add row
 			row = self.append('reservation_purchase_order', {})
 			row.purchase_order_line = data.get("name")
 			row.purchase_order = self.order_source
@@ -267,8 +263,8 @@ class Reservation(Document):
 
 	def add_row_warehouse_or_pur_order(self,valid_data,main_qty_row): # 2 1 3 6 -->10
 		main_qty_row_test = main_qty_row
-		# self.warehouse = []
-		# self.reservation_purchase_order = []
+		self.warehouse = []
+		self.reservation_purchase_order = []
 		for data in valid_data:
 			if data.get('doctype') == 'Bin':
 				row = self.append('warehouse', {})
