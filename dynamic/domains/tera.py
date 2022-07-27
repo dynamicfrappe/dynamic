@@ -5,14 +5,14 @@ data = {
 
     'custom_fields': {
          'Sales Order':[
-            {
-                "fieldname": "reservation",
-                "fieldtype": "Link",
-                "insert_after": "project",
-                "label": "Reservation",
-                'options' : 'Reservation',
-                'read_only' : 1
-            },
+            # {
+            #     "fieldname": "reservation",
+            #     "fieldtype": "Link",
+            #     "insert_after": "project",
+            #     "label": "Reservation",
+            #     'options' : 'Reservation',
+            #     'read_only' : 1
+            # },
             {
                 "fieldname": "purchase_order",
                 "fieldtype": "Link",
@@ -224,10 +224,20 @@ data = {
             "fieldname": "reservation",
             "fieldtype": "Link",
             "options": "Reservation",
-            "insert_after": "item_name",
+            "insert_after": "section_break_5",
             "label": "Reservation",
-            "in_list_view":1,
-            "allow_on_submit":1
+            # "in_list_view":1,
+            "allow_on_submit":1,
+            "read_only" : 1
+            },
+            {
+            "fieldname": "reservation_status",
+            "fieldtype": "Data",
+            "insert_after": "reservation",
+            "label": "Reservation Status",
+            # "in_list_view":1,
+            "allow_on_submit":1,
+            "read_only" : 1
             }
         ], 
     },
