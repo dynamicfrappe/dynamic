@@ -90,7 +90,7 @@ data = {
         'Landed Cost Taxes and Charges':[
              {
                 "fieldname": "line_name",
-                "fieldtype": "Currency",
+                "fieldtype": "Data",
                 "insert_after": "base_amount",
                 "label": "Line Name",
                 "read_only" : 1
