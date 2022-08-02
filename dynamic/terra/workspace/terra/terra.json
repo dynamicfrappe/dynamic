@@ -1,0 +1,45 @@
+{
+ "category": "Modules",
+ "charts": [],
+ "creation": "2022-06-26 10:42:19.991939",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Terra",
+ "links": [],
+ "modified": "2022-07-07 16:01:38.528960",
+ "modified_by": "Administrator",
+ "module": "terra",
+ "name": "Terra",
+ "onboarding": "",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "restrict_to_domain": "Terra",
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Reservation",
+   "link_to": "Reservation",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Actions",
+   "link_to": "Actions",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Actions Report",
+   "link_to": "Actions Report",
+   "type": "Report"
+  }
+ ]
+}

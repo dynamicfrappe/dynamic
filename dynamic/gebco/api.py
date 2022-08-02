@@ -1,6 +1,8 @@
 import frappe
 from frappe import _
+from dynamic.gebco.doctype.sales_invocie.stock_settings import caculate_shortage_item
 DOMAINS = frappe.get_active_domains()
+
 def validate_sales_invoice(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
         if doc.maintenance_template:
@@ -11,12 +13,19 @@ def validate_sales_invoice(doc,*args,**kwargs):
             contract_doc = frappe.get_doc("Maintenance Contract",doc.maintenance_contract)
             contract_doc.sales_invoice = doc.name
             contract_doc.save()
+        #validate stock amount in packed list 
+        #send  packed_items to valid and get Response message with item and shrotage amount and whare house  
+        # this fuction validate current srock without looking for other resources    
+        if len(doc.packed_items) > 0  and doc.update_stock == 1:
+            caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
 def validate_delivery_note(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
         if doc.maintenance_template:
             m_temp = frappe.get_doc("Maintenance Template",doc.maintenance_template)
             m_temp.delivery_note = doc.name
             m_temp.save()
+        if len(doc.packed_items) > 0  :
+            caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
 
 def validate_purchase_recipt(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:

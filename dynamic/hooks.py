@@ -17,7 +17,7 @@ app_logo_url = "/assets/dynamic/images/dynamic-logo.png"
 
 # include js, css files in header of desk.html
 app_include_css = "/assets/dynamic/css/dynamic.css"
-# app_include_js = "/assets/dynamic/js/dynamic.js"
+app_include_js = "/assets/js/dynamic.min.js"
 
 # include js, css files in header of web template
 # web_include_js = "/assets/dynamic/js/dynamic.js"
@@ -35,8 +35,7 @@ app_include_css = "/assets/dynamic/css/dynamic.css"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"Sales Invoice" : "public/js/sales_invoice.js"}
-# doctype_js = {"Sales Order" : "public/js/sales_order.js"}
+# doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -70,37 +69,57 @@ after_migrate = "dynamic.install.after_install"
 
 
 doctype_js = {
-	"Customer" : "e_invoice/doctype/customer/customer.js",
-	"Sales Invoice" : "e_invoice/doctype/sales_invoice/sales_invoice.js",
-	"Item":"e_invoice/doctype/item/item.js",
-	"Sales Order" : "public/js/sales_order.js" ,
-	"Stock Entry" : "public/js/stock_entry.js",
-	"Product Bundle" : "product_bundle/doctype/product_bundle/product_bundle.js"
+    "Sales Invoice": "public/js/sales_invoice.js",
+    "Sales Order": "public/js/sales_order.js",
+    "Stock Entry": "public/js/stock_entry.js",
+    "Purchase Order": "public/js/purchase_order.js",
+    "Purchase Invoice": "public/js/purchase_invoice.js",
+    "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
+    "Payment Entry": "public/js/payment_entry.js",
+    "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
+    "Delivery Note": "public/js/delivery_note.js"
 }
 doc_events = {
 
-        "Sales Invoice":{
-            "autoname": "dynamic.e_invoice.doctype.sales_invoice.sales_invoice.autoname",
-			"on_submit": "dynamic.gebco.api.validate_sales_invoice" ,
-			"validate":"dynamic.api.validate_active_domains"
-        },
-		"Delivery Note":{
-			"on_submit": "dynamic.gebco.api.validate_delivery_note",
-			"validate" : "dynamic.product_bundle.doctype.packed_item.packed_item.make_packing_list"
+    "Sales Invoice": {
+        "on_submit": "dynamic.gebco.api.validate_sales_invoice",
+        "validate": "dynamic.api.validate_active_domains"
+    },
+    "Item": {
+        "autoname": "dynamic.api.autoname",
+        "validate": "dynamic.dynamic.validation.validate_item_code"
+    },
+    "Delivery Note": {
+        "on_submit": "dynamic.gebco.api.validate_delivery_note",
+        "validate": "dynamic.api.validate_delivery_note"
 
-        },
-		"Stock Entry" : {
-			"on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
-		} ,
-		"Sales Order" : {
-			"validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost"
-		} ,
-		"Purchase Receipt":{
-			"on_submit": "dynamic.gebco.api.validate_purchase_recipt"
-		},
-		"Purchase Order": {
-		"on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
-		"on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",}
+    },
+    # "Stock Entry": {
+    #     "on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
+    # },
+    "Journal Entry": {
+        "on_submit": "dynamic.api.submit_journal_entry"
+    },
+    "Sales Order": {
+        # "validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost",
+        "on_submit": "dynamic.api.create_reservation_validate",
+        "before_save": "dynamic.api.check_source_item"
+    },
+    "Purchase Receipt": {
+        # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+        "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains"
+
+    },
+    "Material Request": {
+        "on_submit": "dynamic.api.validate_material_request"
+
+    },
+    "Landed Cost Voucher": {
+        "validate": "dynamic.dynamic.validation.validate_landed_cost"
+    },
+    # "Purchase Order": {
+    #     "on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
+    #     "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
 }
 # notification_config = "dynamic.notifications.get_notification_config"
 
@@ -121,7 +140,8 @@ doc_events = {
 # Override standard doctype classes
 
 override_doctype_class = {
-	"Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle"
+    "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
+    # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
 }
 
 # Document Events
@@ -129,31 +149,37 @@ override_doctype_class = {
 # Hook on document methods and events
 
 
-
 # Scheduled Tasks
 # ---------------
 
 scheduler_events = {
-	"cron": {
-		"0 */2 * * *": [
-			"dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",
-		]
-	},
-# 	"all": [
-# 		"dynamic.tasks.all"
-# 	],
-# 	"daily": [
-# 		"dynamic.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"dynamic.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"dynamic.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"dynamic.tasks.monthly"
-# 	]
+    "cron": {
+        "0 */2 * * *": [
+            "dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",
+            "erpnext.stock.reorder_item.reorder_item",
+        ],
+        "0 11 * * *": [
+            "dynamic.api.saftey_stock",
+        ],
+        "0 */12 * * *": [
+            "dynamic.api.validate_sales_order_reservation_status",
+        ]
+    },
+    # 	"all": [
+    # 		"dynamic.tasks.all"
+    # 	],
+    # 	"daily": [
+    # 		"dynamic.tasks.daily"
+    # 	],
+    # 	"hourly": [
+    # 		"dynamic.tasks.hourly"
+    # 	],
+    # 	"weekly": [
+    # 		"dynamic.tasks.weekly"
+    # 	]
+    # 	"monthly": [
+    # 		"dynamic.tasks.monthly"
+    # 	]
 }
 
 # Testing
@@ -171,9 +197,13 @@ scheduler_events = {
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
-# override_doctype_dashboards = {
-# 	"Task": "dynamic.task.get_dashboard_data"
-# }
+override_doctype_dashboards = {
+    "Sales Invoice": "dynamic.public.dashboard.sales_invoice_dashboard.get_data",
+    "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
+    "Purchase Invoice": "dynamic.public.dashboard.purchase_invoice_dashboard.get_data",
+    "Purchase Order": "dynamic.public.dashboard.purchase_order_dashboard.get_data",
+    "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data"
+}
 
 # exempt linked doctypes from being automatically cancelled
 #
@@ -181,31 +211,28 @@ scheduler_events = {
 
 
 domains = {
-	'Dynamic Accounts':'dynamic.domains.dynamic_accounts' ,
-	'Dynamic HR'      :'dynamic.domains.dynamic_hr' ,
-	'E Invoice'       :'dynamic.domains.e_invoice' ,
-	'Contracting'     :'dynamic.domains.contracting',
-	'Gebco'           : 'dynamic.domains.gebco',
-	"Moyate"          : 'dynamic.domains.moyate',
-	'Product Bundle'  : 'dynamic.domains.product_bundle',
+    'Dynamic Accounts': 'dynamic.domains.dynamic_accounts',
+    'Dynamic HR': 'dynamic.domains.dynamic_hr',
+    'Gebco': 'dynamic.domains.gebco',
+    "Moyate": 'dynamic.domains.moyate',
+    'Product Bundle': 'dynamic.domains.product_bundle',
+    'Cheques': 'dynamic.domains.cheques',
+    'Terra': 'dynamic.domains.tera',
 }
 
-#domain Conatin
-#Moyate
-#Add Commition table to sales person and sales invocie 
+# domain Conatin
+# Moyate
+# Add Commition table to sales person and sales invocie
 #
-
-
 
 
 jenv = {
     "methods": [
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
-		"encode_invoice_data:dynamic.api.encode_invoice_data",
-		"get_company_address:frappe.contacts.doctype.address.address.get_company_address",
-		"get_address_display:frappe.contacts.doctype.address.address.get_address_display",
-		"get_balance_on:erpnext.accounts.utils.get_balance_on"
+        "encode_invoice_data:dynamic.api.encode_invoice_data",
+        "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
+        "get_address_display:frappe.contacts.doctype.address.address.get_address_display",
+        "get_balance_on:erpnext.accounts.utils.get_balance_on"
     ],
-	"filters":[]
+    "filters": []
 }
-

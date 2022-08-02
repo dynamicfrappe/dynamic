@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{plate_number}",
+ "autoname": "field:plate_number",
  "creation": "2022-03-21 16:52:25.469769",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -13,6 +13,7 @@
   "column_break_4",
   "serial_no",
   "gps_device",
+  "sim_number",
   "customer_name",
   "section_break_8",
   "description"
@@ -83,11 +84,18 @@
    "mandatory_depends_on": "eval:doc.device_type==\"External\"",
    "options": "GBS Device",
    "unique": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "eval:doc.device_type == \"GEBCO\"",
+   "fieldname": "sim_number",
+   "fieldtype": "Data",
+   "label": "SIM Number"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-22 15:37:28.837953",
+ "modified": "2022-06-16 13:27:35.334396",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Car",
