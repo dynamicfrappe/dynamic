@@ -238,6 +238,22 @@ data = {
             # "in_list_view":1,
             "allow_on_submit":1,
             "read_only" : 1
+            },
+            {
+            "fieldname": "item_warehouse",
+            "fieldtype": "Link",
+            "insert_after": "item_name",
+            "label": "Item Warehouse",
+            'options' : 'Warehouse'
+            # "in_list_view":1,
+            },
+            {
+            "fieldname": "item_purchase_order",
+            "fieldtype": "Link",
+            "insert_after": "item_warehouse",
+            "label": "Purchase Order",
+            'options' : 'Purchase Order'
+            # "in_list_view":1,
             }
         ], 
     },
