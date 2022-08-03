@@ -11,6 +11,7 @@
   "sales_order",
   "column_break_1",
   "naming_series",
+  "posting_date",
   "section_break_3",
   "customer",
   "customer_name",
@@ -133,6 +134,7 @@
   {
    "fieldname": "total_cars",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Total Cars",
    "read_only": 1
   },
@@ -178,6 +180,7 @@
    "default": "0",
    "fieldname": "completed_cars",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Completed Cars",
    "no_copy": 1,
    "read_only": 1
@@ -187,6 +190,7 @@
    "default": "0",
    "fieldname": "pending_cars",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Pending Cars",
    "no_copy": 1,
    "read_only": 1
@@ -216,12 +220,19 @@
    "fieldname": "totals_section",
    "fieldtype": "Section Break",
    "label": "Totals"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-03 10:31:09.399168",
+ "modified": "2022-08-03 14:14:15.278964",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Installation Order",
@@ -240,6 +251,8 @@
    "write": 1
   }
  ],
+ "search_fields": "customer,sales_order",
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "title_field": "customer"
 }
