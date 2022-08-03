@@ -15,5 +15,18 @@ frappe.ui.form.on('Car Installation', {
 			},
 			})
 		}
+	},
+
+	installation_order:function(frm){
+		if(frm.doc.installation_order){
+			frappe.call({
+				method: "get_cst_delgate",
+				doc: frm.doc,
+				callback: function () {
+			  		frm.refresh_fields();
+			},
+			})
+		}
 	}
+
 });

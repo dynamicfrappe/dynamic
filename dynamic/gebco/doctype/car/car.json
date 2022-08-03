@@ -16,7 +16,10 @@
   "sim_number",
   "customer_name",
   "section_break_8",
-  "description"
+  "description",
+  "car_model",
+  "car_type",
+  "car_brand"
  ],
  "fields": [
   {
@@ -91,11 +94,26 @@
    "fieldname": "sim_number",
    "fieldtype": "Data",
    "label": "SIM Number"
+  },
+  {
+   "fieldname": "car_model",
+   "fieldtype": "Data",
+   "label": "Car Model"
+  },
+  {
+   "fieldname": "car_type",
+   "fieldtype": "Data",
+   "label": "Car Type"
+  },
+  {
+   "fieldname": "car_brand",
+   "fieldtype": "Data",
+   "label": "Car Brand"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-16 13:27:35.334396",
+ "modified": "2022-08-03 14:50:29.329074",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Car",

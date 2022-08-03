@@ -11,14 +11,26 @@
   "installation_type",
   "column_break_3",
   "naming_series",
-  "item",
+  "accessories",
   "serial_number",
   "car_section_section",
   "car",
   "car_model",
   "car_type",
+  "car_brand",
   "column_break_11",
-  "car_brand"
+  "device_name",
+  "serial_no",
+  "imei_no",
+  "warehouse",
+  "customer_info_section",
+  "customer",
+  "customer_name",
+  "customer_phone_number",
+  "column_break_17",
+  "delegate",
+  "delegate_name",
+  "delegate_phone_number"
  ],
  "fields": [
   {
@@ -55,12 +67,6 @@
    "options": "Car"
   },
   {
-   "fieldname": "item",
-   "fieldtype": "Link",
-   "label": "Item",
-   "options": "Item"
-  },
-  {
    "fieldname": "serial_number",
    "fieldtype": "Link",
    "label": "Serial Number",
@@ -88,12 +94,87 @@
   {
    "fieldname": "car_brand",
    "fieldtype": "Data",
-   "label": "car brand"
+   "label": "Car Brand"
+  },
+  {
+   "fieldname": "customer_info_section",
+   "fieldtype": "Section Break",
+   "label": "Customer Info"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_17",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delegate",
+   "fieldtype": "Link",
+   "label": "Delegate",
+   "options": "Customer Delegate"
+  },
+  {
+   "fetch_from": "delegate.delegate_name",
+   "fetch_if_empty": 1,
+   "fieldname": "delegate_name",
+   "fieldtype": "Data",
+   "label": "Delegate Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delegate_phone_number",
+   "fieldtype": "Data",
+   "label": "Delegate Phone Number"
+  },
+  {
+   "fieldname": "customer_phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "accessories",
+   "fieldtype": "Link",
+   "label": "Accessories",
+   "options": "Item"
+  },
+  {
+   "fieldname": "device_name",
+   "fieldtype": "Data",
+   "label": "Device Name"
+  },
+  {
+   "fieldname": "serial_no",
+   "fieldtype": "Data",
+   "label": "Serial No"
+  },
+  {
+   "depends_on": "eval:doc.installation_order != \"\"",
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "imei_no",
+   "fieldtype": "Data",
+   "label": "IMEI No"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-03 14:15:48.319492",
+ "modified": "2022-08-03 15:19:46.487596",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
