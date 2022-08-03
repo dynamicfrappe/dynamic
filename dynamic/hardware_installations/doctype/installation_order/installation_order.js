@@ -8,7 +8,7 @@ frappe.ui.form.on("Installation Order", {
   refresh: function (frm) {
     if (frm.doc.docstatus == 1 && frm.doc.pending_cars > 0) {
       frm.add_custom_button(
-        __("Installation Order"),
+        __("Installation"),
         function () {
           frm.events.make_installation(frm);
         },
@@ -17,7 +17,7 @@ frappe.ui.form.on("Installation Order", {
     }
   },
   setup: function (frm) {
-    frm.custom_make_buttons = { Installation: "Installation" };
+    frm.custom_make_buttons = { "Car Installation": "Installation" };
     frm.set_query("delegate", function () {
       return {
         filters: [["customer", "=", frm.doc.customer]],
@@ -45,7 +45,7 @@ frappe.ui.form.on("Installation Order", {
   make_installation(frm) {
     frappe.model.open_mapped_doc({
       method:
-        "dynamic.hardware_installations.doctype.installation_request.installation_request.make_installation",
+        "dynamic.hardware_installations.doctype.installation_order.installation_order.make_installation",
       frm: frm,
     });
   },

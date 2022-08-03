@@ -5,17 +5,19 @@ from frappe import _
 
 def get_data():
     return {
-        'fieldname': 'installation_order',
+        'fieldname': 'car_installation',
         'non_standard_fieldnames': {
         },
 
         'internal_links': {
-            'Installation Request': 'installation_request'
+            'Installation Request': 'installation_request' ,
+            'Installation Order': 'installation_order' ,
+            'Car': 'car' ,
         },
         'transactions': [
             {
                 'label': _('Installation'),
-                'items': ['Installation Request', 'Car Installation']
+                'items': ['Installation Request', 'Installation Order']
             },
         ]
     }
