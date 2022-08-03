@@ -15,7 +15,7 @@ def get_data():
         'transactions': [
             {
                 'label': _('Installation'),
-                'items': ['Installation Request', 'Installation']
+                'items': ['Installation Request', 'Car Installation']
             },
         ]
     }
