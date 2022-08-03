@@ -1,0 +1,117 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2022-08-03 13:43:13.173347",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "installation_order",
+  "installation_type",
+  "column_break_3",
+  "naming_series",
+  "item",
+  "serial_number",
+  "car_section_section",
+  "car",
+  "car_model",
+  "car_type",
+  "column_break_11",
+  "car_brand"
+ ],
+ "fields": [
+  {
+   "fieldname": "installation_order",
+   "fieldtype": "Link",
+   "label": "Installation Order",
+   "mandatory_depends_on": "eval:doc.installation_type == \"New\"",
+   "options": "Installation Order"
+  },
+  {
+   "fieldname": "installation_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Installation Type",
+   "options": "\nNew\nRenew",
+   "reqd": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Series",
+   "options": "INS-car-.",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "car",
+   "fieldtype": "Link",
+   "label": "Car",
+   "options": "Car"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "serial_number",
+   "fieldtype": "Link",
+   "label": "Serial Number",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "car_section_section",
+   "fieldtype": "Section Break",
+   "label": "Car Section"
+  },
+  {
+   "fieldname": "car_model",
+   "fieldtype": "Data",
+   "label": "Car Model"
+  },
+  {
+   "fieldname": "car_type",
+   "fieldtype": "Data",
+   "label": "Car Type"
+  },
+  {
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "car_brand",
+   "fieldtype": "Data",
+   "label": "car brand"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-08-03 14:15:48.319492",
+ "modified_by": "Administrator",
+ "module": "Hardware Installations",
+ "name": "Car Installation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
