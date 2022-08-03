@@ -1,18 +1,18 @@
 
 frappe.ui.form.on("Stock Entry", {
-    setup :function(frm){
+    // setup :function(frm){
 
-      frappe.call({
-          "method" : "dynamic.contracting.doctype.stock_functions.fetch_contracting_data" ,
-          callback :function(r){
-            console.log(r)
-            if (r.message){
+    //   frappe.call({
+    //       "method" : "dynamic.contracting.doctype.stock_functions.fetch_contracting_data" ,
+    //       callback :function(r){
+    //         console.log(r)
+    //         if (r.message){
 
-            }
-          }
-      })
+    //         }
+    //       }
+    //   })
        
-    },
+    // },
     comparison : function (frm) {
         if(frm.doc.against_comparison){
 
