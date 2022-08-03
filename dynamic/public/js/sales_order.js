@@ -191,7 +191,7 @@ frappe.ui.form.on("Sales Order Item", {
 
 frappe.ui.form.on("Sales Order Item", 'item_purchase_order', function(frm, cdt, cdn){
   let row = locals[cdt][cdn]
-  if(row.item_purchase_order){
+  if(row.item_purchase_order && row.item_code){
     frappe.call({
         method: "dynamic.api.check_delivery_warehosue",
         args:{
