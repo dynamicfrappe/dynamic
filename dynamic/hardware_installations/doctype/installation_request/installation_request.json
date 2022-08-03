@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "sales_order",
+  "posting_date",
   "column_break_1",
   "naming_series",
   "section_break_3",
@@ -110,6 +111,7 @@
   {
    "fieldname": "total_cars",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Total Cars"
   },
   {
@@ -167,6 +169,7 @@
    "default": "0",
    "fieldname": "ordered_cars",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Ordered Cars",
    "read_only": 1
   },
@@ -175,14 +178,23 @@
    "default": "0",
    "fieldname": "not_ordered_cars",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Not Ordered Cars",
    "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only": 1,
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-03 12:50:15.454224",
+ "modified": "2022-08-03 13:47:31.149265",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Installation Request",
@@ -201,6 +213,8 @@
    "write": 1
   }
  ],
+ "search_fields": "customer,sales_order",
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "title_field": "customer"
 }

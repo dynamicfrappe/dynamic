@@ -30,7 +30,10 @@ frappe.ui.form.on("Installation Order", {
     });
     frm.set_query("installation_request", function () {
       return {
-        filters: [["docstatus", "=", 1]],
+        filters: [
+          ["docstatus", "=", 1],
+          ["not_ordered_cars", ">", 0],
+        ],
       };
     });
   },
@@ -46,16 +49,16 @@ frappe.ui.form.on("Installation Order", {
       frm: frm,
     });
   },
-  team(frm){
-	if(frm.doc.team){
-		frappe.call({
-			method: "get_team_parties",
-			doc: frm.doc,
-			callback: function () {
-			  frm.refresh_fields(["installation_team_detail", "team"]);
-			},
-		  });
-	}
+  team(frm) {
+    if (frm.doc.team) {
+      frappe.call({
+        method: "get_team_parties",
+        doc: frm.doc,
+        callback: function () {
+          frm.refresh_fields(["installation_team_detail", "team"]);
+        },
+      });
+    }
   },
   set_totals(frm) {
     frappe.call({
