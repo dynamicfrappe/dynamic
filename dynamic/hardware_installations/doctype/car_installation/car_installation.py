@@ -33,7 +33,7 @@ class CarInstallation(Document):
 			self.db_set("car_model",car_doc.get('car_model'))
 			self.db_set("car_brand",car_doc.get('car_brand'))
 			if car_doc.device_type == "GEBCO":
-				serial_doc = frappe.get_doc("Serial No",car_doc.serial_no)
+				serial_doc = frappe.get_doc("Serial No",self.serial_number)
 				self.db_set("device_name",serial_doc.get('item_code'))
 				self.db_set("serial_no",serial_doc.get('serial2'))
 				self.db_set("imei_no",serial_doc.get('name'))
@@ -48,4 +48,11 @@ class CarInstallation(Document):
 			self.db_set("delegate",install_req.get('delegate'))
 			self.db_set("delegate_name",install_req.get('delegate_name'))
 			self.db_set("delegate_phone_number",install_req.get('delegate_phone_number'))
+			if install_req.installation_team_detail:
+				self.installation_team_detail = []
+				for row in install_req.installation_team_detail:
+					self.append('installation_team_detail', {
+						'employee': row.employee,
+						'employee_name': row.employee_name,
+						})
 
