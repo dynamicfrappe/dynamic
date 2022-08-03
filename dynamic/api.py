@@ -293,14 +293,31 @@ def send_mail_by_role(role,msg,subject):
         print("exception",str(ex))
 
 
+@frappe.whitelist()
+def check_delivery_warehosue(doc_name,item_code,warehouse):
+     if not warehouse:
+                purchase_warehouse_list=frappe.db.get_list('Purchase Order Item', filters={
+                                    'parent':doc_name,
+                                    'item_code':item_code
+                                },
+                                fields=['warehouse']
+                                )
+                return purchase_warehouse_list[0].get('warehouse')
 
 
 @frappe.whitelist()
 def check_source_item(self,*args , **kwargs):
     if "Terra" in DOMAINS:
-        ...
-        # if not self.set_warehouse and  not self.purchase_order:
-        #     frappe.throw(_("Please Select Source As Warehouse Or Purchase Order for Item"))
+        # sales_order_doc = frappe.get_doc('Sales Order',self)
+        for item in self.items:
+             #TODO if item has purchase and warehouse show error or both has value
+            if (not item.item_warehouse and not item.item_purchase_order):
+                frappe.throw(_(f"Please Select Source As Warehouse Or Purchase Order for Item {item.item_code}"))
+            if ( item.item_warehouse and  item.item_purchase_order):
+                frappe.throw(_(f"Please Select Just One Source As Warehouse Or Purchase Order for Item {item.item_code}"))
+            if (not item.warehouse):
+                check_delivery_warehosue(item.item_purchase_order,item.item_code,'')
+
     
 
 @frappe.whitelist()
@@ -310,12 +327,7 @@ def create_reservation_validate(self,*args , **kwargs):
        
 def add_row_for_reservation(self):
     # if not self.reservation:
-    for item in self.items:
-            #TODO if item has purchase and warehouse show error or both has value
-            if (not item.item_warehouse and not item.item_purchase_order):
-                frappe.throw(_(f"Please Select Source As Warehouse Or Purchase Order for Item {item.item_code}"))
-            if ( item.item_warehouse and  item.item_purchase_order):
-                frappe.throw(_(f"Please Select Just One Source As Warehouse Or Purchase Order for Item {item.item_code}"))
+    for item in self.items:    
             reserv_doc = frappe.new_doc('Reservation')
             reserv_doc.item_code = item.item_code
             reserv_doc.status = 'Active'
@@ -323,7 +335,8 @@ def add_row_for_reservation(self):
             reserv_doc.reservation_amount = item.qty
             #source in reservation = row.source else slaes_order_source
             reserv_doc.warehouse_source = item.item_warehouse if item.item_warehouse  else "" #self.set_warehouse
-            reserv_doc.order_source = item.item_purchase_order if item.item_purchase_order else "" #self.purchase_order
+            if not reserv_doc.warehouse_source:
+                reserv_doc.order_source = item.item_purchase_order if item.item_purchase_order else "" #self.purchase_order
             reserv_doc.insert()
             item.reservation = reserv_doc.name
             item.reservation_status = reserv_doc.status
