@@ -11,40 +11,40 @@
   "installation_type",
   "column_break_3",
   "naming_series",
-  "serial_number",
-  "car_section_section",
-  "car",
-  "car_model",
-  "car_type",
-  "car_brand",
-  "column_break_11",
-  "device_name",
-  "serial_no",
-  "imei_no",
-  "warehouse",
-  "accessories_section",
-  "accessories_type",
-  "accessories",
-  "accessories_warehouse",
-  "accessories_name",
-  "qty",
-  "gps_details_section",
-  "gps_supplier",
-  "gps_no",
-  "gps_series",
-  "column_break_24",
-  "engineer_name",
-  "technical_name",
   "customer_info_section",
   "customer",
   "customer_name",
   "customer_phone_number",
-  "column_break_17",
+  "column_break_24",
   "delegate",
   "delegate_name",
   "delegate_phone_number",
+  "car_section_section",
+  "car",
+  "car_model",
+  "column_break_17",
+  "car_type",
+  "car_brand",
+  "accessories_section",
+  "accessories_type",
+  "accessories",
+  "column_break_22",
+  "accessories_warehouse",
+  "accessories_name",
+  "qty",
+  "gps_details_section",
+  "gps_type",
+  "gps_item_code",
+  "serial_number",
+  "column_break_11",
+  "gps_warehouse",
+  "gps_no",
+  "gps_series",
   "team_details_section",
-  "installation_team_detail"
+  "team",
+  "installation_team_detail",
+  "engineer_name",
+  "technical_name"
  ],
  "fields": [
   {
@@ -81,6 +81,7 @@
    "options": "Car"
   },
   {
+   "depends_on": "eval:doc.gps_type == 'Internal'",
    "fieldname": "serial_number",
    "fieldtype": "Link",
    "label": "Serial Number",
@@ -158,33 +159,11 @@
    "label": "Phone Number"
   },
   {
-   "depends_on": "eval:doc.accessories_type == \"GEBCO\"",
+   "depends_on": "eval:doc.accessories_type == \"Internal\"",
    "fieldname": "accessories",
    "fieldtype": "Link",
    "label": "Accessories",
    "options": "Item"
-  },
-  {
-   "fieldname": "device_name",
-   "fieldtype": "Data",
-   "label": "Device Name"
-  },
-  {
-   "fieldname": "serial_no",
-   "fieldtype": "Data",
-   "label": "Serial No"
-  },
-  {
-   "depends_on": "eval:doc.installation_order != \"\"",
-   "fieldname": "warehouse",
-   "fieldtype": "Link",
-   "label": "Warehouse",
-   "options": "Warehouse"
-  },
-  {
-   "fieldname": "imei_no",
-   "fieldtype": "Data",
-   "label": "IMEI No"
   },
   {
    "fieldname": "accessories_section",
@@ -192,7 +171,7 @@
    "label": "Accessories Details"
   },
   {
-   "depends_on": "eval:doc.accessories_type == \"GEBCO\"",
+   "depends_on": "eval:doc.accessories_type == \"Internal\"",
    "fieldname": "accessories_warehouse",
    "fieldtype": "Link",
    "label": "Accessories Warehouse",
@@ -207,10 +186,11 @@
    "fieldname": "accessories_type",
    "fieldtype": "Select",
    "label": "Accessories Type",
-   "options": "\nGEBCO\nExternal"
+   "options": "\nInternal\nExternal"
   },
   {
-   "depends_on": "eval:doc.accessories_type == \"External\"",
+   "fetch_from": "accessories.item_name",
+   "fetch_if_empty": 1,
    "fieldname": "accessories_name",
    "fieldtype": "Data",
    "label": "Accessories Name"
@@ -230,11 +210,6 @@
    "fieldname": "gps_details_section",
    "fieldtype": "Section Break",
    "label": "GPS Details"
-  },
-  {
-   "fieldname": "gps_supplier",
-   "fieldtype": "Data",
-   "label": "GPS Supplier"
   },
   {
    "fieldname": "column_break_24",
@@ -259,11 +234,40 @@
    "fieldname": "technical_name",
    "fieldtype": "Data",
    "label": "Technical Name"
+  },
+  {
+   "fieldname": "gps_type",
+   "fieldtype": "Select",
+   "label": "GPS Type",
+   "options": "\nInternal\nExternal"
+  },
+  {
+   "fieldname": "team",
+   "fieldtype": "Link",
+   "label": "Team",
+   "options": "Installation Team"
+  },
+  {
+   "depends_on": "eval:doc.gps_type == 'Internal'",
+   "fieldname": "gps_warehouse",
+   "fieldtype": "Link",
+   "label": "GPS Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "column_break_22",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "gps_item_code",
+   "fieldtype": "Link",
+   "label": "GPS Item Code",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-03 15:49:53.940017",
+ "modified": "2022-08-03 17:01:05.994472",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",

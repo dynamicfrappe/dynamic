@@ -32,27 +32,31 @@ class CarInstallation(Document):
 			self.db_set("car_type",car_doc.get('car_type'))
 			self.db_set("car_model",car_doc.get('car_model'))
 			self.db_set("car_brand",car_doc.get('car_brand'))
-			if car_doc.device_type == "GEBCO":
-				serial_doc = frappe.get_doc("Serial No",self.serial_number)
-				self.db_set("device_name",serial_doc.get('item_code'))
-				self.db_set("serial_no",serial_doc.get('serial2'))
-				self.db_set("imei_no",serial_doc.get('name'))
+			
 
 	@frappe.whitelist()
 	def get_cst_delgate(self):
 		if self.installation_order:
-			install_req = frappe.get_doc("Installation Order",self.installation_order)
-			self.db_set("customer",install_req.get('customer'))
-			self.db_set("customer_name",install_req.get('customer_name'))
-			self.db_set("customer_phone_number",install_req.get('customer_phone_number'))
-			self.db_set("delegate",install_req.get('delegate'))
-			self.db_set("delegate_name",install_req.get('delegate_name'))
-			self.db_set("delegate_phone_number",install_req.get('delegate_phone_number'))
-			if install_req.installation_team_detail:
+			install_ord = frappe.get_doc("Installation Order",self.installation_order)
+			self.db_set("customer",install_ord.get('customer'))
+			self.db_set("customer_name",install_ord.get('customer_name'))
+			self.db_set("customer_phone_number",install_ord.get('customer_phone_number'))
+			self.db_set("delegate",install_ord.get('delegate'))
+			self.db_set("delegate_name",install_ord.get('delegate_name'))
+			self.db_set("delegate_phone_number",install_ord.get('delegate_phone_number'))
+			if install_ord.installation_team_detail:
+				self.team = install_ord.team
 				self.installation_team_detail = []
-				for row in install_req.installation_team_detail:
+				for row in install_ord.installation_team_detail:
 					self.append('installation_team_detail', {
 						'employee': row.employee,
 						'employee_name': row.employee_name,
 						})
 
+	@frappe.whitelist()
+	def get_serial_gps(self):
+		if self.gps_type == "Internal":
+				serial_doc = frappe.get_doc("Serial No",self.serial_number)
+				# self.db_set("device_name",serial_doc.get('item_code'))
+				self.db_set("gps_no",serial_doc.get('serial2'))
+				self.db_set("gps_series",serial_doc.get('name'))
