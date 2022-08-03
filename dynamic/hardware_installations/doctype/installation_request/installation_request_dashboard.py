@@ -14,5 +14,9 @@ def get_data():
                 'label': _('Installation'),
                 'items': ['Installation Order', 'Car Installation']
             },
+            {
+                'label': _('Schedule'),
+                'items': ['Employee Schedule']
+            },
         ]
     }

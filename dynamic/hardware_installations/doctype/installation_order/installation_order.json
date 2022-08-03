@@ -9,8 +9,8 @@
  "field_order": [
   "installation_request",
   "sales_order",
-  "column_break_1",
   "naming_series",
+  "column_break_1",
   "posting_date",
   "section_break_3",
   "customer",
@@ -232,7 +232,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-03 14:14:15.278964",
+ "modified": "2022-08-03 16:48:57.926830",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Installation Order",
