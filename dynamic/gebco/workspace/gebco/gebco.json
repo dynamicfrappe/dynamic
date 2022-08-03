@@ -17,6 +17,68 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Main",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Car",
+   "link_to": "Car",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Employee",
+   "link_to": "Employee",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Installation Team",
+   "link_to": "Installation Team",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer",
+   "link_to": "Customer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer Delegate",
+   "link_to": "Customer Delegate",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "GBS Device",
+   "link_to": "GBS Device",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Maintenance",
    "link_type": "DocType",
    "onboard": 0,
@@ -52,28 +114,19 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Car",
-   "link_to": "Car",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "GBS Device",
-   "link_to": "GBS Device",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Installation Management",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Order",
+   "link_to": "Sales Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   },
   {
    "hidden": 0,
@@ -96,8 +149,8 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Installation Team",
-   "link_to": "Installation Team",
+   "label": "Car Installation",
+   "link_to": "Car Installation",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -105,14 +158,14 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Customer Delegate",
-   "link_to": "Customer Delegate",
+   "label": "Employee Schedule",
+   "link_to": "Employee Schedule",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2022-08-03 09:42:14.184026",
+ "modified": "2022-08-03 17:01:28.104500",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "GEBCO",
