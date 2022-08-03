@@ -174,6 +174,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "completed_cars",
    "fieldtype": "Int",
@@ -182,6 +183,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "pending_cars",
    "fieldtype": "Int",
@@ -219,7 +221,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-02 17:19:54.737295",
+ "modified": "2022-08-03 10:31:09.399168",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Installation Order",

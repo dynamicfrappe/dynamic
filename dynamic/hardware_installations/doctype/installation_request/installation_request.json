@@ -22,8 +22,10 @@
   "total_cars",
   "column_break_14",
   "completed_cars",
+  "ordered_cars",
   "column_break_16",
   "pending_cars",
+  "not_ordered_cars",
   "section_break_18",
   "notes",
   "section_break_20",
@@ -43,12 +45,13 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "sales_order.customer",
    "fieldname": "customer",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Customer",
    "options": "Customer",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fetch_from": "customer.customer_name",
@@ -114,6 +117,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "completed_cars",
    "fieldtype": "Int",
@@ -126,6 +130,8 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
+   "default": "0",
    "fieldname": "pending_cars",
    "fieldtype": "Int",
    "label": "Pending Cars",
@@ -155,12 +161,28 @@
   {
    "fieldname": "section_break_20",
    "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "ordered_cars",
+   "fieldtype": "Int",
+   "label": "Ordered Cars",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "not_ordered_cars",
+   "fieldtype": "Int",
+   "label": "Not Ordered Cars",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-02 17:05:03.550429",
+ "modified": "2022-08-03 12:50:15.454224",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Installation Request",
