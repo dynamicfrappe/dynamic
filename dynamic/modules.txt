@@ -6,3 +6,4 @@ api_hooks
 Product Bundle
 Cheques
 terra
+Hardware Installations

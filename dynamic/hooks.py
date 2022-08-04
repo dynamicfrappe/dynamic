@@ -103,7 +103,7 @@ doc_events = {
     "Sales Order": {
         # "validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost",
         "on_submit": "dynamic.api.create_reservation_validate",
-        "before_save": "dynamic.api.check_source_item"
+        "before_save": "dynamic.api.check_source_item",
     },
     "Purchase Receipt": {
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"

@@ -257,27 +257,34 @@ data = {
             }
         ], 
     },
-    "properties": [
+    # "properties": [
         
-    ],
-    "property_setters": [
+    # ],
+    "properties": [
         {
-        "doc_type": "Item",
+        "doctype": "Item",
         "doctype_or_field": "DocField",
-        "field_name": "item_code",
+        "fieldname": "item_code",
         "property": "read_only",
         "property_type": "Check",
         "value": "1"
         },
-         {
-        "doc_type": "Sales Order",
+        #  {
+        # "doctype": "Sales Order",
+        # "doctype_or_field": "DocField",
+        # "fieldname": "set_warehouse",
+        # "property": "reqd",
+        # "property_type": "Check",
+        # "value": "1"
+        # },
+        {
+        "doctype": "Sales Order Item",
         "doctype_or_field": "DocField",
-        "field_name": "set_warehouse",
-        "property": "reqd",
+        "fieldname": "warehouse",
+        "property": "read_only",
         "property_type": "Check",
         "value": "1"
         },
-
     ],
   
     'on_setup': 'dynamic.terra.setup.create_terra_scripts'

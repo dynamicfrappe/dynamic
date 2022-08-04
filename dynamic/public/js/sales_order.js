@@ -1,4 +1,16 @@
 frappe.ui.form.on("Sales Order", {
+  // validate: function(frm) {
+  //   console.log('validate1111111111111111')
+  //   frappe.call({
+  //     method: "dynamic.api.check_source_item",
+  //     args:{
+  //       self:frm.doc,
+  //     },
+  //     callback: function(r) {
+	//      console.log(r.message)
+  //     }
+  // });
+  // },
   refresh: function (frm) {
     frm.custom_make_buttons["Cheque"] = "Cheque";
     frm.events.add_cheque_button(frm);
@@ -141,4 +153,58 @@ frappe.ui.form.on("Sales Order", {
       },
     });
   },
+
+  set_warehouse:function(frm){
+    frm.events.autofill_warehouse(frm,frm.doc.items,"item_warehouse",frm.doc.set_warehouse)
+},
+  purchase_order:function(frm){
+  frm.events.autofill_purchase_order(frm,frm.doc.items,"item_purchase_order",frm.doc.purchase_order)
+  
+},
+  autofill_warehouse : function (frm,child_table, warehouse_field, warehouse) {
+		if (warehouse && child_table && child_table.length) {
+			let doctype = child_table[0].doctype;
+			$.each(child_table || [], function(i, item) {
+				frappe.model.set_value(doctype, item.name, warehouse_field, warehouse);
+			});
+		}
+	},
+  autofill_purchase_order : function (frm,child_table, warehouse_field, warehouse) {
+		if (warehouse && child_table && child_table.length) {
+			let doctype = child_table[0].doctype;
+			$.each(child_table || [], function(i, item) {
+				frappe.model.set_value(doctype, item.name, warehouse_field, warehouse);
+			});
+		}
+	}
 });
+
+
+frappe.ui.form.on("Sales Order Item", {
+  item_warehouse:function(frm, cdt, cdn){
+    var row = frappe.get_doc(cdt, cdn);
+    frappe.model.set_value(cdt, cdn, 'warehouse', row.item_warehouse);
+  },
+
+})
+
+
+frappe.ui.form.on("Sales Order Item", 'item_purchase_order', function(frm, cdt, cdn){
+  let row = locals[cdt][cdn]
+  if(row.item_purchase_order && row.item_code){
+    frappe.call({
+        method: "dynamic.api.check_delivery_warehosue",
+        args:{
+          doc_name:row.item_purchase_order,
+          item_code:row.item_code,
+          warehouse:row.warehouse,
+        },
+        callback: function(r) {
+        row.warehouse = r.message
+        frm.refresh_fields();
+        }
+    });
+  }
+  
+});
+
