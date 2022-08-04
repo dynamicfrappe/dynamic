@@ -75,6 +75,12 @@ frappe.ui.form.on("Sales Order", {
       frm.refresh_field("payment_of_insurance_copy");
     }
   },
+  total_cars:function(frm){
+    if(frm.doc.total_cars){
+      frm.set_value("pending_cars",frm.doc.total_cars)
+      frm.set_value("not_requested_cars",frm.doc.total_cars)
+    }
+  },
   set_contracting(frm) {
     frappe.call({
       method: "dynamic.contracting.global_data.get_comparison_data",
@@ -175,15 +181,28 @@ frappe.ui.form.on("Sales Order", {
     });
   },
   make_installation_request(frm){
-    return frappe.call({
-      method: "dynamic.gebco.api.create_installation_request",
-      args: {
-        total_cars: frm.doc.total_cars,
-        sales_order: frm.doc.name,
-      },
-      callback: function (r) {
-      },
-    });
+    frappe.model.open_mapped_doc({
+      // installation_request_doc
+      method:"dynamic.gebco.api.create_installation_request",
+      frm:frm
+      // args: {
+      //   total_cars: frm.doc.total_cars,
+      //   sales_order: frm.doc.name,
+      // },
+    })
+    // return frappe.call({
+    //   method: "dynamic.gebco.api.create_installation_request",
+    //   args: {
+    //     total_cars: frm.doc.total_cars,
+    //     sales_order: frm.doc.name,
+    //   },
+    //   callback: function (r) {
+    //     console.log(r,message)
+    // //     // frappe.model.open_mapped_doc({
+    // //     //   // installation_request_doc
+    // //     // })
+    //   },
+    // });
   },
   set_warehouse:function(frm){
     frm.events.autofill_warehouse(frm,frm.doc.items,"item_warehouse",frm.doc.set_warehouse)

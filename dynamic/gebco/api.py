@@ -50,7 +50,7 @@ def validate_purchase_recipt(doc,*args,**kwargs):
 
 
 @frappe.whitelist()
-def create_installation_request(sales_order,total_cars):
+def create_installation_request(sales_order):
     sales_order_doc = frappe.get_doc('Sales Order',sales_order)
     installation_request_doc = frappe.new_doc("Installation Request")
     installation_request_doc.sales_order = sales_order
@@ -59,4 +59,5 @@ def create_installation_request(sales_order,total_cars):
     installation_request_doc.total_cars = sales_order_doc.total_cars
     installation_request_doc.posting_date = datetime.datetime.now()
     installation_request_doc.save()
+    return installation_request_doc
     

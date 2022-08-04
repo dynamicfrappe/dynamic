@@ -154,7 +154,7 @@ data = {
                 "default":0
             },
             {
-                "fieldname": "not_requested_Cars",
+                "fieldname": "not_requested_cars",
                 "fieldtype": "Int",
                 "insert_after": "pending_cars",
                 "label": "Not Requested Cars",
