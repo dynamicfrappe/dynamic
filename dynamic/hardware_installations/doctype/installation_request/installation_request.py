@@ -81,6 +81,7 @@ def update_sales_order_qty(sales_order):
 	
 	sales_order.completed_cars = completed_qty
 	sales_order.pending_cars = sales_order.total_cars - sales_order.completed_cars
+	
 	sales_order.total_requested_cars = total_cars
 	sales_order.total_not_requested_cars = sales_order.total_cars - sales_order.total_requested_cars
 	sales_order.save()
