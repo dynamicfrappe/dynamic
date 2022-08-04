@@ -52,6 +52,37 @@ data = {
                 "label": "Maintenance Template",
                 "print_hide": 1,
             },
+            {
+                "fieldname": "installation_section",
+                "fieldtype": "Section Break",
+                "insert_after": "apply_putaway_rule",
+                "label": "Installation Section",
+               
+            },
+            {
+                "fieldname": "installation_request",
+                "fieldtype": "Link",
+                "options":"Installation Request",
+                "insert_after": "installation_section",
+                "label": "Installation Request",
+                "read_only" : 1
+            },
+            {
+                "fieldname": "installation_order",
+                "fieldtype": "Link",
+                "options":"Installation Order",
+                "insert_after": "installation_request",
+                "label": "Installation Order",
+                "read_only" : 1
+            },
+            {
+                "fieldname": "car_installation",
+                "fieldtype": "Link",
+                "options":"Car Installation",
+                "insert_after": "installation_order",
+                "label": "Car Installation",
+                "read_only" : 1
+            },
         ],
         'Purchase Receipt Item':[
             {
