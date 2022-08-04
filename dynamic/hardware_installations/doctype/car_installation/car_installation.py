@@ -68,6 +68,9 @@ class CarInstallation(Document):
 				'basic_rate':get_valuation_rate(self.gps_item_code, get_default_company(), warehouse=self.gps_warehouse),
 				'serial_no': self.gps_series
 			})
+		stock_entry_doc.installation_request = self.installation_request
+		stock_entry_doc.installation_order = self.installation_order
+		stock_entry_doc.car_installation = self.name
 		stock_entry_doc.submit()
 
 	@frappe.whitelist()

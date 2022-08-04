@@ -68,10 +68,17 @@ data = {
                 "read_only" : 1
             },
             {
+                "fieldname": "install_column_break",
+                "fieldtype": "Column Break",
+                "insert_after": "installation_request",
+                "label": "",
+               
+            },
+            {
                 "fieldname": "installation_order",
                 "fieldtype": "Link",
                 "options":"Installation Order",
-                "insert_after": "installation_request",
+                "insert_after": "install_column_break",
                 "label": "Installation Order",
                 "read_only" : 1
             },
