@@ -90,8 +90,8 @@ def validate_active_domains(doc,*args,**kwargs):
 
     
     if 'Terra' in DOMAINS:
-        validate_sales_invoice(doc)
-
+        #validate_sales_invoice(doc)
+        pass
     if 'Gebco' in DOMAINS:
         if doc.maintenance_template:
             m_temp = frappe.get_doc("Maintenance Template",doc.maintenance_template)
