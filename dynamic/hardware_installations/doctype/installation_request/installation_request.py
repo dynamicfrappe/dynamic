@@ -84,20 +84,32 @@ def update_installation_request_qty(installation_request):
 @frappe.whitelist()
 def update_sales_order_qty(sales_order):
 	sales_order = frappe.get_doc("Sales Order",sales_order)
-	result = frappe.db.sql(f"""
-		select sum(completed_cars) as completed_qty ,
-		 sum(total_cars) as total_cars from `tabInstallation Request` 
+	requested_cars_result = frappe.db.sql(f"""
+		select sum(total_cars) as total_cars from `tabInstallation Request` 
+		where docstatus = 1 and  sales_order = '{sales_order.name}'
+	""",as_dict=1) or 0
+	total_order_result = frappe.db.sql(f"""
+		select sum(total_cars) as total_cars from `tabInstallation Order` 
+		where docstatus = 1 and  sales_order = '{sales_order.name}'
+	""",as_dict=1) or 0
+	completed_qty_result = frappe.db.sql(f"""
+		select sum(1) as completed_qty from `tabCar Installation` 
 		where docstatus = 1 and  sales_order = '{sales_order.name}'
 	""",as_dict=1) or 0
 
-	completed_qty = (result[0].completed_qty or 0) if result else 0
-	total_cars = (result[0].total_cars or 0) if result else 0
+	completed_qty = (completed_qty_result[0].completed_qty or 0) if completed_qty_result else 0
+	requested_cars = (requested_cars_result[0].total_cars or 0) if requested_cars_result else 0
+	ordered_cars = (total_order_result[0].total_cars or 0) if total_order_result else 0
 	
 	sales_order.completed_cars = completed_qty
 	sales_order.pending_cars = sales_order.total_cars - sales_order.completed_cars
 	
-	sales_order.requested_cars = total_cars
+	sales_order.ordered_cars = ordered_cars
+	sales_order.not_ordered_cars = sales_order.total_cars - sales_order.ordered_cars
+	
+	sales_order.requested_cars = requested_cars
 	sales_order.not_requested_Cars = sales_order.total_cars - sales_order.requested_cars
+
 	sales_order.save()
 
 
