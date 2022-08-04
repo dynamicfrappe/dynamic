@@ -152,14 +152,14 @@ def make_installation(source_name):
 	installation.delegate_phone_number = source.delegate_phone_number
 
 	installation.team = source.team
-	if hasattr(installation,'installation_team_detail') :
-		installation.set("installation_team_detail", [])
-		for emp in source.installation_team_detail:
-			# print ("emp ====> ", emp)
-			installation.append("installation_team_detail", {
-				"employee": emp.employee,
-				"employee_name": emp.employee_name
-			})
+	# if hasattr(installation,'installation_team_detail') :
+	installation.set("installation_team_detail", [])
+	for emp in source.installation_team_detail:
+		# print ("emp ====> ", emp)
+		installation.append("installation_team_detail", {
+			"employee": emp.employee,
+			"employee_name": emp.employee_name
+		})
 
 	installation.notes = source.notes
 	return installation

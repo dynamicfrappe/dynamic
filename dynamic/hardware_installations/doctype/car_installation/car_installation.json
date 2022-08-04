@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "installation_order",
+  "installation_request",
   "installation_type",
   "column_break_3",
   "naming_series",
@@ -50,7 +51,10 @@
   "team",
   "installation_team_detail",
   "engineer_name",
-  "technical_name"
+  "technical_name",
+  "notes_section",
+  "notes",
+  "amended_from"
  ],
  "fields": [
   {
@@ -184,7 +188,7 @@
    "options": "Warehouse"
   },
   {
-   "depends_on": "eval:doc.accessories_type!=null\n",
+   "depends_on": "eval:doc.accessories_type!=null",
    "fieldname": "qty",
    "fieldtype": "Data",
    "label": "QTY"
@@ -196,7 +200,7 @@
    "options": "\nInternal\nExternal"
   },
   {
-   "depends_on": "eval:doc.accessories_type!=null\n",
+   "depends_on": "eval:doc.accessories_type!=null",
    "fetch_from": "accessories.item_name",
    "fetch_if_empty": 1,
    "fieldname": "accessories_name",
@@ -306,11 +310,40 @@
    "fieldname": "sim_serial",
    "fieldtype": "Data",
    "label": "SIM serial"
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Car Installation",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fetch_from": "installation_order.installation_request",
+   "fieldname": "installation_request",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "label": "Installation Request",
+   "options": "Installation Request",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2022-08-04 11:24:02.184009",
+ "modified": "2022-08-04 11:58:24.104715",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
