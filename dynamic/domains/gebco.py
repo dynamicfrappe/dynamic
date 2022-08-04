@@ -116,14 +116,18 @@ data = {
                 "fieldtype": "Int",
                 "insert_after": "colum_break_install_details1",
                 "label": "Completed Cars",
-                "read_only" : 1
+                "read_only" : 1,
+                "allow_on_submit":1,
+                "default":0
             },
             {
                 "fieldname": "requested_cars",
                 "fieldtype": "Int",
                 "insert_after": "completed_cars",
                 "label": "Requested Cars",
-                "read_only" : 1
+                "read_only" : 1,
+                "allow_on_submit":1,
+                "default":0
             },
             {
                 "fieldname": "colum_break_install_details2",
@@ -136,14 +140,18 @@ data = {
                 "fieldtype": "Int",
                 "insert_after": "colum_break_install_details2",
                 "label": "Pending Cars",
-                "read_only" : 1
+                "read_only" : 1,
+                "allow_on_submit":1,
+                "default":0
             },
             {
                 "fieldname": "not_requested_Cars",
                 "fieldtype": "Int",
                 "insert_after": "pending_cars",
                 "label": "Not Requested Cars",
-                "read_only" : 1
+                "read_only" : 1,
+                "allow_on_submit":1,
+                "default":0
             },
         ],
         'Purchase Receipt Item':[

@@ -1,7 +1,9 @@
+from datetime import datetime
 import frappe
 from frappe import _
 from dynamic.gebco.doctype.sales_invocie.stock_settings import caculate_shortage_item
 DOMAINS = frappe.get_active_domains()
+import datetime
 
 def validate_sales_invoice(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
@@ -45,3 +47,15 @@ def validate_purchase_recipt(doc,*args,**kwargs):
                             serial_doc.save()
                     else:
                         frappe.throw(_("Serial No list Doest Not Equal Serial2"))
+
+
+def create_installation_request(sales_order,total_cars):
+    sales_order_doc = frappe.get_doc('Sales Order',sales_order)
+    installation_request_doc = frappe.new_doc("Installation Request")
+    installation_request_doc.sales_order = sales_order
+    installation_request_doc.customer = sales_order_doc.customer
+    installation_request_doc.customer_name = sales_order_doc.customer_name
+    installation_request_doc.total_cars = sales_order_doc.total_cars
+    installation_request_doc.posting_date = datetime.datetime.now()
+    installation_request_doc.save()
+    
