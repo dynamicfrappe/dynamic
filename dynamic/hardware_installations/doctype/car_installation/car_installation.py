@@ -18,7 +18,7 @@ class CarInstallation(Document):
 		installation_order = frappe.get_doc(
 			"Installation Order", self.installation_order)
 		factor = -1 if cancel else 1
-		installation_order.ordered_cars += factor * self.total_cars
+		installation_order.completed_cars += factor * 1
 		installation_order.validate()
 		installation_order.save()
 		if installation_order.installation_request :
