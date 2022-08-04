@@ -61,6 +61,33 @@ def update_installation_request_qty(installation_request):
 	installation_request.ordered_cars = total_cars
 	installation_request.validate()
 	installation_request.save()
+	if installation_request.sales_order :
+		update_sales_order_qty(installation_request.sales_order)
+
+
+
+
+@frappe.whitelist()
+def update_sales_order_qty(sales_order):
+	sales_order = frappe.get_doc("Sales Order",sales_order)
+	result = frappe.db.sql(f"""
+		select sum(completed_cars) as completed_qty ,
+		 sum(total_cars) as total_cars from `tabInstallation Request` 
+		where docstatus = 1 and  sales_order = '{sales_order.name}'
+	""",as_dict=1) or 0
+
+	completed_qty = (result[0].completed_qty or 0) if result else 0
+	total_cars = (result[0].total_cars or 0) if result else 0
+	
+	sales_order.completed_cars = completed_qty
+	sales_order.pending_cars = sales_order.total_cars - sales_order.completed_cars
+	sales_order.total_requested_cars = total_cars
+	sales_order.total_not_requested_cars = sales_order.total_cars - sales_order.total_requested_cars
+	sales_order.save()
+
+
+
+
 	# frappe.msgprint(str(installation_request.ordered_cars))
 	# frappe.msgprint(str(installation_request.ordered_cars))
 	

@@ -12,6 +12,7 @@
   "column_break_3",
   "installation_order",
   "installation_request",
+  "sales_order",
   "customer_info_section",
   "customer",
   "customer_name",
@@ -348,12 +349,20 @@
    "fieldtype": "Data",
    "label": "GPS Serial",
    "mandatory_depends_on": "eval:doc.gps_type\n"
+  },
+  {
+   "fetch_from": "installation_request.sales_order",
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-04 15:24:34.941514",
+ "modified": "2022-08-04 16:22:36.079141",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
