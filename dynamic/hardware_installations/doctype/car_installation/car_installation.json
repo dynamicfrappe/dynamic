@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "installation_order",
+  "installation_request",
   "installation_type",
   "column_break_3",
   "naming_series",
@@ -46,7 +47,8 @@
   "engineer_name",
   "technical_name",
   "notes_section",
-  "notes"
+  "notes",
+  "amended_from"
  ],
  "fields": [
   {
@@ -275,11 +277,30 @@
    "fieldname": "notes",
    "fieldtype": "Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Car Installation",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fetch_from": "installation_order.installation_request",
+   "fieldname": "installation_request",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "label": "Installation Request",
+   "options": "Installation Request",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2022-08-04 10:56:26.872512",
+ "modified": "2022-08-04 11:04:31.338665",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
