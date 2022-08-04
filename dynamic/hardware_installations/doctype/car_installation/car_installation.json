@@ -44,7 +44,9 @@
   "team",
   "installation_team_detail",
   "engineer_name",
-  "technical_name"
+  "technical_name",
+  "notes_section",
+  "notes"
  ],
  "fields": [
   {
@@ -263,11 +265,21 @@
    "fieldtype": "Link",
    "label": "GPS Item Code",
    "options": "Item"
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-03 17:01:05.994472",
+ "modified": "2022-08-04 10:56:26.872512",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
