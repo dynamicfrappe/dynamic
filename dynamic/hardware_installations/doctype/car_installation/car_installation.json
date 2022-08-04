@@ -41,6 +41,12 @@
   "gps_warehouse",
   "gps_no",
   "gps_series",
+  "sim_details_section",
+  "sim_supplier",
+  "sim_supplier_name",
+  "column_break_37",
+  "sim_number",
+  "sim_serial",
   "team_details_section",
   "team",
   "installation_team_detail",
@@ -175,13 +181,14 @@
    "label": "Accessories Details"
   },
   {
-   "depends_on": "eval:doc.accessories_type == \"Internal\"",
+   "depends_on": "eval:doc.accessories_type == \"Internal\"\n",
    "fieldname": "accessories_warehouse",
    "fieldtype": "Link",
    "label": "Accessories Warehouse",
    "options": "Warehouse"
   },
   {
+   "depends_on": "eval:doc.accessories_type!=null",
    "fieldname": "qty",
    "fieldtype": "Data",
    "label": "QTY"
@@ -193,6 +200,7 @@
    "options": "\nInternal\nExternal"
   },
   {
+   "depends_on": "eval:doc.accessories_type!=null",
    "fetch_from": "accessories.item_name",
    "fetch_if_empty": 1,
    "fieldname": "accessories_name",
@@ -220,11 +228,13 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.gps_type !=null",
    "fieldname": "gps_no",
    "fieldtype": "Data",
    "label": "GPS No"
   },
   {
+   "depends_on": "eval:doc.gps_type !=null\n",
    "fieldname": "gps_series",
    "fieldtype": "Data",
    "label": "GPS Series"
@@ -263,10 +273,43 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.gps_type !=null",
    "fieldname": "gps_item_code",
    "fieldtype": "Link",
    "label": "GPS Item Code",
    "options": "Item"
+  },
+  {
+   "fieldname": "sim_details_section",
+   "fieldtype": "Section Break",
+   "label": "SIM Details"
+  },
+  {
+   "fieldname": "sim_supplier",
+   "fieldtype": "Link",
+   "label": "SIM Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fetch_from": "sim_supplier.supplier_name",
+   "fetch_if_empty": 1,
+   "fieldname": "sim_supplier_name",
+   "fieldtype": "Data",
+   "label": "SIM Supplier Name"
+  },
+  {
+   "fieldname": "column_break_37",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sim_number",
+   "fieldtype": "Data",
+   "label": "SIM Number"
+  },
+  {
+   "fieldname": "sim_serial",
+   "fieldtype": "Data",
+   "label": "SIM serial"
   },
   {
    "fieldname": "notes_section",
@@ -300,7 +343,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-04 11:04:31.338665",
+ "modified": "2022-08-04 11:58:24.104715",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",

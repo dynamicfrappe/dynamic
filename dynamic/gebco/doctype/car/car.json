@@ -10,16 +10,16 @@
   "plate_number",
   "device_type",
   "customer",
+  "car_brand",
+  "car_model",
   "column_break_4",
   "serial_no",
   "gps_device",
   "sim_number",
   "customer_name",
-  "section_break_8",
-  "description",
-  "car_model",
   "car_type",
-  "car_brand"
+  "section_break_8",
+  "description"
  ],
  "fields": [
   {
@@ -113,7 +113,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-03 14:50:29.329074",
+ "modified": "2022-08-04 11:08:48.203090",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Car",
