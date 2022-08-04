@@ -58,7 +58,7 @@ frappe.ui.form.on("Car Installation", {
     // 	});
     // }
   },
-  serial_number: function (frm) {
+  gps_serial_number: function (frm) {
     if (frm.doc.serial_number) {
       frappe.call({
         method: "get_serial_gps",
@@ -69,4 +69,15 @@ frappe.ui.form.on("Car Installation", {
       });
     }
   },
+  team:function(frm){
+	if(frm.doc.team){
+		frappe.call({
+			method: "get_team",
+			doc: frm.doc,
+			callback: function () {
+			  frm.refresh_fields();
+			},
+		  });
+	}
+  }
 });

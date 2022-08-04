@@ -8,7 +8,7 @@ import datetime
 
 class CarInstallation(Document):
 	def before_save(self):
-		self.create_stock_ledger()
+		self.create_stock_entry()
 
 	def on_submit(self):
 		if self.installation_order :
@@ -28,26 +28,45 @@ class CarInstallation(Document):
 		if installation_order.installation_request :
 			update_installation_request_qty(installation_order.installation_request)
 
-	def create_stock_ledger(self):
-		get_last_stock_ledger_list_accessory = frappe.db.get_list('Stock Ledger Entry',
-						filters={
-							'item_code': self.accessories
-						},
-						fields=['actual_qty', 'qty_after_transaction'],
-						order_by='posting_date desc',
-					)
-		# frappe.errprint(get_last_stock_ledger_list_accessory[0])
-		# frappe.errprint(get_last_stock_ledger_list_accessory[-1])
-		# stock_ledger_last = get_last_stock_ledger_list_accessory[-1]
-		stock_ledger_doc = frappe.new_doc('Stock Ledger Entry')
-		stock_ledger_doc.item_code = self.accessories
-		stock_ledger_doc.voucher_type = "Car Installation"
-		stock_ledger_doc.voucher_no = self.name
-		stock_ledger_doc.actual_qty = -1
-		stock_ledger_doc.qty_after_transaction = stock_ledger_last['qty_after_transaction'] -1 
-		stock_ledger_doc.warehouse = self.accessories_warehouse
-		stock_ledger_doc.posting_date = datetime.datetime.now()
-		stock_ledger_doc.save()
+	def create_stock_entry(self):
+		stock_entry_doc = frappe.new_doc('Stock Entry')
+		if self.accessories_type == 'Internal':
+			# for Accesoreies
+			git_bin_qty = frappe.db.get_list('Bin',
+							filters={
+								'item_code': self.accessories
+							},
+							fields=['actual_qty', 'reserved_qty','valuation_rate'],
+						)
+			if(git_bin_qty):
+				if(git_bin_qty[0].actual_qty - git_bin_qty[0].reserved_qty > 0):
+					stock_entry_doc = frappe.new_doc('Stock Entry')
+					stock_entry_doc.stock_entry_type = "Material Issue"
+					stock_entry_doc.append("items",{
+						's_warehouse':self.accessories_warehouse,
+						'item_code':self.accessories,
+						'qty':1,
+						'basic_rate':git_bin_qty[0].valuation_rate
+					})
+		if self.gps_type == 'Internal':
+			# for Accesoreies
+			git_bin_qty = frappe.db.get_list('Bin',
+							filters={
+								'item_code': self.gps_item_code
+							},
+							fields=['actual_qty', 'reserved_qty','valuation_rate'],
+						)
+			if(git_bin_qty):
+				if(git_bin_qty[0].actual_qty - git_bin_qty[0].reserved_qty > 0):
+					stock_entry_doc.stock_entry_type = "Material Issue"
+					stock_entry_doc.append("items",{
+						's_warehouse':self.gps_warehouse,
+						'item_code':self.gps_item_code,
+						'qty':1,
+						'basic_rate':git_bin_qty[0].valuation_rate,
+						'serial_no': self.gps_series
+					})
+		if stock_entry_doc.items : stock_entry_doc.submit()
 
 	@frappe.whitelist()
 	def get_car_data(self):
@@ -81,7 +100,18 @@ class CarInstallation(Document):
 	@frappe.whitelist()
 	def get_serial_gps(self):
 		if self.gps_type == "Internal":
-				serial_doc = frappe.get_doc("Serial No",self.serial_number)
+				serial_doc = frappe.get_doc("Serial No",self.gps_serial_number)
 				# self.db_set("device_name",serial_doc.get('item_code'))
-				self.db_set("gps_no",serial_doc.get('serial2'))
+				self.db_set("gps_serial_number2",serial_doc.get('serial2'))
 				self.db_set("gps_series",serial_doc.get('name'))
+	
+	@frappe.whitelist()
+	def get_team(self):
+		if self.team:
+			team_doc= frappe.get_doc('Installation Team',self.team)
+			# self.team = []
+			for row in team_doc.employees:
+				self.append('installation_team_detail',{
+					"employee":row.employee,
+					"employee_name":row.employee_name
+				})

@@ -36,10 +36,10 @@
   "gps_details_section",
   "gps_type",
   "gps_item_code",
-  "serial_number",
+  "gps_serial_number",
   "column_break_11",
   "gps_warehouse",
-  "gps_no",
+  "gps_serial_number2",
   "gps_series",
   "sim_details_section",
   "sim_supplier",
@@ -89,13 +89,6 @@
    "fieldtype": "Link",
    "label": "Car",
    "options": "Car"
-  },
-  {
-   "depends_on": "eval:doc.gps_type == 'Internal'",
-   "fieldname": "serial_number",
-   "fieldtype": "Link",
-   "label": "Serial Number",
-   "options": "Serial No"
   },
   {
    "fieldname": "car_section_section",
@@ -225,12 +218,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.gps_type !=null",
-   "fieldname": "gps_no",
-   "fieldtype": "Data",
-   "label": "GPS No"
-  },
-  {
    "depends_on": "eval:doc.gps_type !=null\n",
    "fieldname": "gps_series",
    "fieldtype": "Data",
@@ -342,12 +329,27 @@
    "fieldtype": "Data",
    "label": "Accessories QTY",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.gps_type == 'Internal'",
+   "fieldname": "gps_serial_number",
+   "fieldtype": "Link",
+   "label": "GPS Serial Number",
+   "options": "Serial No"
+  },
+  {
+   "depends_on": "eval:doc.gps_type !=null",
+   "fetch_from": "gps_serial_number.serial2",
+   "fetch_if_empty": 1,
+   "fieldname": "gps_serial_number2",
+   "fieldtype": "Data",
+   "label": "GPS Serial Number2"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-04 14:15:52.530211",
+ "modified": "2022-08-04 15:07:32.991742",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
