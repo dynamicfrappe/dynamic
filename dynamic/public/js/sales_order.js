@@ -14,6 +14,7 @@ frappe.ui.form.on("Sales Order", {
   refresh: function (frm) {
     frm.custom_make_buttons["Cheque"] = "Cheque";
     frm.events.add_cheque_button(frm);
+    frm.events.add_installation_button(frm);
     console.log("over Write ");
   },
   onload: function (frm) {
@@ -140,6 +141,26 @@ frappe.ui.form.on("Sales Order", {
       });
     }
   },
+  add_installation_button(frm){
+    if (frm.doc.docstatus == 1) {
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Gebco")) {
+                frm.add_custom_button(
+                  __("Installation Request"),
+                  function () {
+                    frm.events.make_installation_request(frm);
+                  },
+                  __("Create")
+                );
+            }
+          }
+        },
+      });
+    }
+  },
   make_cheque_doc(frm) {
     return frappe.call({
       method: "dynamic.cheques.doctype.cheque.cheque.make_cheque_doc",
@@ -153,7 +174,9 @@ frappe.ui.form.on("Sales Order", {
       },
     });
   },
+  make_installation_request(frm){
 
+  },
   set_warehouse:function(frm){
     frm.events.autofill_warehouse(frm,frm.doc.items,"item_warehouse",frm.doc.set_warehouse)
 },

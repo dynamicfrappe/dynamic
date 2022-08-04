@@ -91,6 +91,61 @@ data = {
                 "read_only" : 1
             },
         ],
+        'Sales Order':[
+            {
+                "fieldname": "installation_details",
+                "fieldtype": "Section Break",
+                "insert_after": "items",
+                "label": "Installation Details",
+               
+            },
+             {
+                "fieldname": "total_cars",
+                "fieldtype": "Int",
+                "insert_after": "installation_details",
+                "label": "Total Cars",
+            },
+             {
+                "fieldname": "colum_break_install_details1",
+                "fieldtype": "Column Break",
+                "insert_after": "total_cars",
+                "label": "",
+            },
+            {
+                "fieldname": "completed_cars",
+                "fieldtype": "Int",
+                "insert_after": "colum_break_install_details1",
+                "label": "Completed Cars",
+                "read_only" : 1
+            },
+            {
+                "fieldname": "requested_cars",
+                "fieldtype": "Int",
+                "insert_after": "completed_cars",
+                "label": "Requested Cars",
+                "read_only" : 1
+            },
+            {
+                "fieldname": "colum_break_install_details2",
+                "fieldtype": "Column Break",
+                "insert_after": "requested_cars",
+                "label": "",
+            },
+            {
+                "fieldname": "pending_cars",
+                "fieldtype": "Int",
+                "insert_after": "colum_break_install_details2",
+                "label": "Pending Cars",
+                "read_only" : 1
+            },
+            {
+                "fieldname": "not_requested_Cars",
+                "fieldtype": "Int",
+                "insert_after": "pending_cars",
+                "label": "Not Requested Cars",
+                "read_only" : 1
+            },
+        ],
         'Purchase Receipt Item':[
             {
                 "fieldname": "serial2",
