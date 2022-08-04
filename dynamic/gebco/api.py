@@ -49,6 +49,7 @@ def validate_purchase_recipt(doc,*args,**kwargs):
                         frappe.throw(_("Serial No list Doest Not Equal Serial2"))
 
 
+@frappe.whitelist()
 def create_installation_request(sales_order,total_cars):
     sales_order_doc = frappe.get_doc('Sales Order',sales_order)
     installation_request_doc = frappe.new_doc("Installation Request")

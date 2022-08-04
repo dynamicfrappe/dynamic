@@ -175,7 +175,15 @@ frappe.ui.form.on("Sales Order", {
     });
   },
   make_installation_request(frm){
-
+    return frappe.call({
+      method: "dynamic.gebco.api.create_installation_request",
+      args: {
+        total_cars: frm.doc.total_cars,
+        sales_order: frm.doc.name,
+      },
+      callback: function (r) {
+      },
+    });
   },
   set_warehouse:function(frm){
     frm.events.autofill_warehouse(frm,frm.doc.items,"item_warehouse",frm.doc.set_warehouse)

@@ -130,9 +130,18 @@ data = {
                 "default":0
             },
             {
+                "fieldname": "ordered_cars",
+                "fieldtype": "Int",
+                "insert_after": "requested_cars",
+                "label": "Ordered Cars",
+                "read_only" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+            {
                 "fieldname": "colum_break_install_details2",
                 "fieldtype": "Column Break",
-                "insert_after": "requested_cars",
+                "insert_after": "ordered_cars",
                 "label": "",
             },
             {
@@ -149,6 +158,15 @@ data = {
                 "fieldtype": "Int",
                 "insert_after": "pending_cars",
                 "label": "Not Requested Cars",
+                "read_only" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+            {
+                "fieldname": "not_ordered_cars",
+                "fieldtype": "Int",
+                "insert_after": "not_requested_Cars",
+                "label": "Not Ordered Cars",
                 "read_only" : 1,
                 "allow_on_submit":1,
                 "default":0
