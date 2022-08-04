@@ -214,9 +214,9 @@ def check_email_setting_in_stock_setting(doc):
     if setting_table:
         for row in setting_table:
             if row.document == "Purchase Recipt" and row.role:
-                link_str = frappe.utils.get_url_to_form("Purchase Recipt",doc.name)
+                link_str = frappe.utils.get_url_to_form("Purchase Receipt",doc.name)
                 msg = f"New Purchase Recipt Created  {link_str}"
-                send_mail_by_role(row.role,msg,"Purchase Recipt")
+                send_mail_by_role(row.role,msg,"Purchase Receipt")
             # if row.document == "Item Re Order" and row.role:
             #     msg = f"New Purchase Recipt Created  {link_str}" 
             # if row.document == "Safty Stock" and row.role:
@@ -292,6 +292,34 @@ def send_mail_by_role(role,msg,subject):
     except Exception as ex:
         print("exception",str(ex))
 
+
+@frappe.whitelist()
+def check_delivery_warehosue(doc_name,item_code,warehouse):
+     if not warehouse and item_code:
+                purchase_warehouse_list=frappe.db.get_list('Purchase Order Item', filters={
+                                    'parent':doc_name,
+                                    'item_code':item_code
+                                },
+                                fields=['warehouse']
+                                )
+                return purchase_warehouse_list[0].get('warehouse')
+
+
+@frappe.whitelist()
+def check_source_item(self,*args , **kwargs):
+    if "Terra" in DOMAINS:
+        # sales_order_doc = frappe.get_doc('Sales Order',self)
+        for item in self.items:
+             #TODO if item has purchase and warehouse show error or both has value
+            if (not item.item_warehouse and not item.item_purchase_order):
+                frappe.throw(_(f"Please Select Source As Warehouse Or Purchase Order for Item {item.item_code}"))
+            if ( item.item_warehouse and  item.item_purchase_order):
+                frappe.throw(_(f"Please Select Just One Source As Warehouse Or Purchase Order for Item {item.item_code}"))
+            if (not item.warehouse):
+                check_delivery_warehosue(item.item_purchase_order,item.item_code,'')
+
+    
+
 @frappe.whitelist()
 def create_reservation_validate(self,*args , **kwargs):
     if "Terra" in DOMAINS:
@@ -299,33 +327,33 @@ def create_reservation_validate(self,*args , **kwargs):
        
 def add_row_for_reservation(self):
     # if not self.reservation:
-    for item in self.items:
+    for item in self.items:    
             reserv_doc = frappe.new_doc('Reservation')
             reserv_doc.item_code = item.item_code
             reserv_doc.status = 'Active'
             reserv_doc.valid_from = self.transaction_date
             reserv_doc.reservation_amount = item.qty
-            reserv_doc.warehouse_source = self.set_warehouse if self.set_warehouse else ""
-            reserv_doc.order_source = self.purchase_order if self.purchase_order else ""
-            if self.purchase_order:
-                reserv_doc.append('reservation_purchase_order', {
-                        'purchase_order': self.purchase_order,
-                        'item': item.item_code,
-                        'qty':item.qty
-                    })
-            elif self.set_warehouse:
-                reserv_doc.append('warehouse', {
-                    'item': item.item_code,
-                    'reserved_qty': item.qty
-                })
+            #source in reservation = row.source else slaes_order_source
+            reserv_doc.warehouse_source = item.item_warehouse if item.item_warehouse  else "" #self.set_warehouse
+            if not reserv_doc.warehouse_source:
+                reserv_doc.order_source = item.item_purchase_order if item.item_purchase_order else "" #self.purchase_order
             reserv_doc.insert()
             item.reservation = reserv_doc.name
             item.reservation_status = reserv_doc.status
             item.save()
             reserv_doc.db_set('sales_order',self.name)
 
-        #2-purchase order
-
+                 # if self.purchase_order:
+            #     reserv_doc.append('reservation_purchase_order', {
+            #             'purchase_order': self.purchase_order,
+            #             'item': item.item_code,
+            #             'qty':item.qty
+            #         })
+            # elif self.set_warehouse:
+            #     reserv_doc.append('warehouse', {
+            #         'item': item.item_code,
+            #         'reserved_qty': item.qty
+            #     })
 
 
 

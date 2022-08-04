@@ -10,11 +10,14 @@
   "plate_number",
   "device_type",
   "customer",
+  "car_brand",
+  "car_model",
   "column_break_4",
   "serial_no",
   "gps_device",
   "sim_number",
   "customer_name",
+  "car_type",
   "section_break_8",
   "description"
  ],
@@ -91,11 +94,26 @@
    "fieldname": "sim_number",
    "fieldtype": "Data",
    "label": "SIM Number"
+  },
+  {
+   "fieldname": "car_model",
+   "fieldtype": "Data",
+   "label": "Car Model"
+  },
+  {
+   "fieldname": "car_type",
+   "fieldtype": "Data",
+   "label": "Car Type"
+  },
+  {
+   "fieldname": "car_brand",
+   "fieldtype": "Data",
+   "label": "Car Brand"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-16 13:27:35.334396",
+ "modified": "2022-08-04 11:08:48.203090",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Car",

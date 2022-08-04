@@ -238,30 +238,53 @@ data = {
             # "in_list_view":1,
             "allow_on_submit":1,
             "read_only" : 1
+            },
+            {
+            "fieldname": "item_warehouse",
+            "fieldtype": "Link",
+            "insert_after": "item_name",
+            "label": "Item Warehouse",
+            'options' : 'Warehouse'
+            # "in_list_view":1,
+            },
+            {
+            "fieldname": "item_purchase_order",
+            "fieldtype": "Link",
+            "insert_after": "item_warehouse",
+            "label": "Purchase Order",
+            'options' : 'Purchase Order'
+            # "in_list_view":1,
             }
         ], 
     },
-    "properties": [
+    # "properties": [
         
-    ],
-    "property_setters": [
+    # ],
+    "properties": [
         {
-        "doc_type": "Item",
+        "doctype": "Item",
         "doctype_or_field": "DocField",
-        "field_name": "item_code",
+        "fieldname": "item_code",
         "property": "read_only",
         "property_type": "Check",
         "value": "1"
         },
-         {
-        "doc_type": "Sales Order",
+        #  {
+        # "doctype": "Sales Order",
+        # "doctype_or_field": "DocField",
+        # "fieldname": "set_warehouse",
+        # "property": "reqd",
+        # "property_type": "Check",
+        # "value": "1"
+        # },
+        {
+        "doctype": "Sales Order Item",
         "doctype_or_field": "DocField",
-        "field_name": "set_warehouse",
-        "property": "reqd",
+        "fieldname": "warehouse",
+        "property": "read_only",
         "property_type": "Check",
         "value": "1"
         },
-
     ],
   
     'on_setup': 'dynamic.terra.setup.create_terra_scripts'
