@@ -44,6 +44,23 @@ frappe.ui.form.on('Car Installation', {
 			})
 		}
 	},
+	accessories:function(frm){
+		if(frm.doc.accessories){
+			frappe.call({
+				method: 'frappe.client.get_value',
+				args: {
+				doctype: 'Item',
+				name: frm.doc.accessories,
+				fieldname: 'item_name'
+				},
+				   callback: function(r){						
+					   frm.set_value('accessories_name',r.message.accessories_name)
+					//    frm.refresh_fields('accessories_name')
+					// frm.refresh()
+				}
+			});
+		}
+	},
 	serial_number:function(frm){
 		if(frm.doc.serial_number){
 			frappe.call({

@@ -4,8 +4,12 @@
 from dynamic.hardware_installations.doctype.installation_request.installation_request import update_installation_request_qty
 import frappe
 from frappe.model.document import Document
+import datetime
 
 class CarInstallation(Document):
+	def before_save(self):
+		self.create_stock_ledger()
+
 	def on_submit(self):
 		if self.installation_order :
 			self.update_installation_order()
@@ -23,6 +27,27 @@ class CarInstallation(Document):
 		installation_order.save()
 		if installation_order.installation_request :
 			update_installation_request_qty(installation_order.installation_request)
+
+	def create_stock_ledger(self):
+		get_last_stock_ledger_list_accessory = frappe.db.get_list('Stock Ledger Entry',
+						filters={
+							'item_code': self.accessories
+						},
+						fields=['actual_qty', 'qty_after_transaction'],
+						order_by='posting_date desc',
+					)
+		frappe.errprint(get_last_stock_ledger_list_accessory[0])
+		frappe.errprint(get_last_stock_ledger_list_accessory[-1])
+		stock_ledger_last = get_last_stock_ledger_list_accessory[-1]
+		stock_ledger_doc = frappe.new_doc('Stock Ledger Entry')
+		stock_ledger_doc.item_code = self.accessories
+		stock_ledger_doc.voucher_type = "Car Installation"
+		stock_ledger_doc.voucher_no = self.name
+		stock_ledger_doc.actual_qty = -1
+		stock_ledger_doc.qty_after_transaction = stock_ledger_last['qty_after_transaction'] -1 
+		stock_ledger_doc.warehouse = self.accessories_warehouse
+		stock_ledger_doc.posting_date = datetime.datetime.now()
+		stock_ledger_doc.save()
 
 	@frappe.whitelist()
 	def get_car_data(self):

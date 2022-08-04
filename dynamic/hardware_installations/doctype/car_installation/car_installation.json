@@ -32,7 +32,7 @@
   "column_break_22",
   "accessories_warehouse",
   "accessories_name",
-  "qty",
+  "accessories_qty",
   "gps_details_section",
   "gps_type",
   "gps_item_code",
@@ -173,6 +173,7 @@
    "fieldname": "accessories",
    "fieldtype": "Link",
    "label": "Accessories",
+   "mandatory_depends_on": "eval:doc.accessories_type == \"Internal\"",
    "options": "Item"
   },
   {
@@ -185,13 +186,8 @@
    "fieldname": "accessories_warehouse",
    "fieldtype": "Link",
    "label": "Accessories Warehouse",
+   "mandatory_depends_on": "eval:doc.accessories_type == \"Internal\"",
    "options": "Warehouse"
-  },
-  {
-   "depends_on": "eval:doc.accessories_type!=null",
-   "fieldname": "qty",
-   "fieldtype": "Data",
-   "label": "QTY"
   },
   {
    "fieldname": "accessories_type",
@@ -205,7 +201,8 @@
    "fetch_if_empty": 1,
    "fieldname": "accessories_name",
    "fieldtype": "Data",
-   "label": "Accessories Name"
+   "label": "Accessories Name",
+   "reqd": 1
   },
   {
    "fieldname": "team_details_section",
@@ -338,12 +335,19 @@
    "label": "Installation Request",
    "options": "Installation Request",
    "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.accessories_type!=null",
+   "fieldname": "accessories_qty",
+   "fieldtype": "Data",
+   "label": "Accessories QTY",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-04 11:58:24.104715",
+ "modified": "2022-08-04 12:29:04.929817",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
