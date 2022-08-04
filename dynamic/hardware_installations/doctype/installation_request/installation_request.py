@@ -18,6 +18,20 @@ class InstallationRequest(Document):
 		# frappe.throw(str(self.not_ordered_cars))
 
 
+	def on_submit(self):
+		if self.sales_order :
+			self.update_sales_order()
+	def on_cancel(self):
+		if self.sales_order :
+			self.update_sales_order(cancel=1)
+	
+	def update_sales_order(self,cancel=0):
+		factor = -1 if not cancel else 1
+		sales_order = frappe.get_doc("Sales Order",self.sales_order)
+		sales_order.requested_cars += factor * self.total_cars
+		sales_order.not_requested_Cars = sales_order.total_cars - sales_order.requested_cars
+		sales_order.save()
+
 @frappe.whitelist()
 def make_installation_order(source_name):
 	source = frappe.get_doc("Installation Request" , source_name)
@@ -82,8 +96,8 @@ def update_sales_order_qty(sales_order):
 	sales_order.completed_cars = completed_qty
 	sales_order.pending_cars = sales_order.total_cars - sales_order.completed_cars
 	
-	sales_order.total_requested_cars = total_cars
-	sales_order.total_not_requested_cars = sales_order.total_cars - sales_order.total_requested_cars
+	sales_order.requested_cars = total_cars
+	sales_order.not_requested_Cars = sales_order.total_cars - sales_order.requested_cars
 	sales_order.save()
 
 
