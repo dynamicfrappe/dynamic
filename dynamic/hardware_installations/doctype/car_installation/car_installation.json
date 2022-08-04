@@ -196,7 +196,7 @@
    "options": "\nInternal\nExternal"
   },
   {
-   "depends_on": "eval:doc.accessories_type!=null",
+   "depends_on": "eval:doc.accessories_type",
    "fetch_from": "accessories.item_name",
    "fetch_if_empty": 1,
    "fieldname": "accessories_name",
@@ -347,7 +347,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-04 12:29:04.929817",
+ "modified": "2022-08-04 14:15:52.530211",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",

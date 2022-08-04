@@ -36,9 +36,9 @@ class CarInstallation(Document):
 						fields=['actual_qty', 'qty_after_transaction'],
 						order_by='posting_date desc',
 					)
-		frappe.errprint(get_last_stock_ledger_list_accessory[0])
-		frappe.errprint(get_last_stock_ledger_list_accessory[-1])
-		stock_ledger_last = get_last_stock_ledger_list_accessory[-1]
+		# frappe.errprint(get_last_stock_ledger_list_accessory[0])
+		# frappe.errprint(get_last_stock_ledger_list_accessory[-1])
+		# stock_ledger_last = get_last_stock_ledger_list_accessory[-1]
 		stock_ledger_doc = frappe.new_doc('Stock Ledger Entry')
 		stock_ledger_doc.item_code = self.accessories
 		stock_ledger_doc.voucher_type = "Car Installation"
