@@ -77,7 +77,7 @@ def make_installation_order(source_name):
 
 
 @frappe.whitelist()
-def update_installation_request_qty(installation_request):
+def update_installation_request_qty(installation_request,sales_order=None):
 	installation_request = frappe.get_doc("Installation Request",installation_request)
 	result = frappe.db.sql(f"""
 		select sum(completed_cars) as completed_qty , sum(total_cars) as total_cars from `tabInstallation Order` 
@@ -91,8 +91,8 @@ def update_installation_request_qty(installation_request):
 	installation_request.ordered_cars = total_cars
 	installation_request.validate()
 	installation_request.save()
-	if installation_request.sales_order :
-		update_sales_order_qty(installation_request.sales_order)
+	if sales_order or installation_request.sales_order :
+		update_sales_order_qty(sales_order or installation_request.sales_order)
 
 
 

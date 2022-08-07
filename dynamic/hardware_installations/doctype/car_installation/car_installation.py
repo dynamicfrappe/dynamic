@@ -57,7 +57,7 @@ class CarInstallation(Document):
         installation_order.save()
         if installation_order.installation_request:
             update_installation_request_qty(
-                installation_order.installation_request)
+                installation_order.installation_request,self.sales_order)
 
     def create_stock_entry(self):
         if self.gps_type == 'Internal' or self.accessories_type == 'Internal':
