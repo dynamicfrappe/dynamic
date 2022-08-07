@@ -5,7 +5,7 @@ from gettext import install
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils.data import nowdate
+from frappe.utils.data import flt, nowdate
 
 
 class InstallationRequest(Document):
@@ -13,6 +13,22 @@ class InstallationRequest(Document):
 		self.validate_qty()
 
 	def validate_qty(self):
+		if self.sales_order:
+			total_cars = frappe.db.get_value("Sales Order",self.sales_order , "total_cars")
+			total_requested_qty = frappe.db.sql(f"""
+			select SUM(total_cars) as total_cars  from `tabInstallation Request`
+			where docstatus = 1 and name <> '{self.name}' and sales_order = '{self.sales_order}'
+				""", as_dict=1)
+			if total_requested_qty:
+				total_requested_qty = total_requested_qty[0].total_cars or 0
+			else:
+				total_requested_qty = 0
+			if (total_cars - total_requested_qty) < self.total_cars:
+				frappe.throw(_("""Sales Order {} has {}/{} car is Already Requested""").format(
+					self.sales_order, total_requested_qty, flt(
+						total_cars)
+				))
+
 		self.pending_cars = self.total_cars - self.completed_cars
 		self.not_ordered_cars = self.total_cars - self.ordered_cars
 		# frappe.throw(str(self.not_ordered_cars))
@@ -29,7 +45,7 @@ class InstallationRequest(Document):
 		factor = -1 if cancel else 1
 		sales_order = frappe.get_doc("Sales Order",self.sales_order)
 		sales_order.requested_cars += (factor * self.total_cars)
-		sales_order.not_requested_Cars = sales_order.total_cars - sales_order.requested_cars
+		sales_order.not_requested_cars = sales_order.total_cars - sales_order.requested_cars
 		sales_order.save()
 
 @frappe.whitelist()
