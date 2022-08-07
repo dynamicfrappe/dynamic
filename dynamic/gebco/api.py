@@ -56,7 +56,7 @@ def create_installation_request(sales_order):
     installation_request_doc.sales_order = sales_order
     installation_request_doc.customer = sales_order_doc.customer
     installation_request_doc.customer_name = sales_order_doc.customer_name
-    installation_request_doc.total_cars = sales_order_doc.total_cars
+    installation_request_doc.total_cars = sales_order_doc.not_requested_cars
     installation_request_doc.posting_date = datetime.datetime.now()
     installation_request_doc.save()
     return installation_request_doc
