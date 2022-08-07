@@ -117,6 +117,7 @@ data = {
                 "insert_after": "colum_break_install_details1",
                 "label": "Completed Cars",
                 "read_only" : 1,
+                "no_copy" : 1,
                 "allow_on_submit":1,
                 "default":0
             },
@@ -126,6 +127,7 @@ data = {
                 "insert_after": "completed_cars",
                 "label": "Requested Cars",
                 "read_only" : 1,
+                "no_copy" : 1,
                 "allow_on_submit":1,
                 "default":0
             },
@@ -135,6 +137,7 @@ data = {
                 "insert_after": "requested_cars",
                 "label": "Ordered Cars",
                 "read_only" : 1,
+                "no_copy" : 1,
                 "allow_on_submit":1,
                 "default":0
             },
@@ -150,6 +153,7 @@ data = {
                 "insert_after": "colum_break_install_details2",
                 "label": "Pending Cars",
                 "read_only" : 1,
+                "no_copy" : 1,
                 "allow_on_submit":1,
                 "default":0
             },
@@ -159,6 +163,7 @@ data = {
                 "insert_after": "pending_cars",
                 "label": "Not Requested Cars",
                 "read_only" : 1,
+                "no_copy" : 1,
                 "allow_on_submit":1,
                 "default":0
             },
@@ -168,6 +173,7 @@ data = {
                 "insert_after": "not_requested_Cars",
                 "label": "Not Ordered Cars",
                 "read_only" : 1,
+                "no_copy" : 1,
                 "allow_on_submit":1,
                 "default":0
             },

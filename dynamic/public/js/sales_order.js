@@ -12,19 +12,21 @@ frappe.ui.form.on("Sales Order", {
   // });
   // },
   setup(frm) {
-    frm.custom_make_buttons = { "Installation Request": "Installation Request" };
+    frm.custom_make_buttons = {
+      "Installation Request": "Installation Request",
+      "Cheque": "Cheque",
+    };
   },
   refresh: function (frm) {
-    frm.custom_make_buttons["Cheque"] = "Cheque";
     frm.events.add_cheque_button(frm);
     frm.events.add_installation_button(frm);
-    console.log("over Write ");
+    // console.log("over Write ");
   },
   onload: function (frm) {
-    console.log("over Write ");
+    // console.log("over Write ");
   },
   comparison: function (frm) {
-    console.log("com");
+    // console.log("com");
     frappe.call({
       method: "dynamic.contracting.global_data.get_comparison_data",
       args: { comparison: frm.doc.comparison },
