@@ -338,6 +338,7 @@ def add_row_for_reservation(self):
             if not reserv_doc.warehouse_source:
                 reserv_doc.order_source = item.item_purchase_order if item.item_purchase_order else "" #self.purchase_order
             reserv_doc.save()
+            frappe.errprint(f'reser name => {reserv_doc.name}')
             item.reservation = reserv_doc.name
             item.reservation_status = reserv_doc.status
             item.save()

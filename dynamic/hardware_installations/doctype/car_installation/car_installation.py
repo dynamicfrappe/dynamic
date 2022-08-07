@@ -155,6 +155,7 @@ class CarInstallation(Document):
             delivery_note.car_installation = self.name
             delivery_note.submit()
 
+
     @frappe.whitelist()
     def get_car_data(self):
         if self.car:
