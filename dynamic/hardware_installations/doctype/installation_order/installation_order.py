@@ -1,7 +1,7 @@
 # Copyright (c) 2022, Dynamic and contributors
 # For license information, please see license.txt
 
-from dynamic.hardware_installations.doctype.installation_request.installation_request import update_installation_request_qty
+from dynamic.hardware_installations.doctype.installation_request.installation_request import update_installation_request_qty, update_sales_order_qty
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -108,6 +108,8 @@ class InstallationOrder(Document):
 		installation_request.ordered_cars += factor * self.total_cars
 		installation_request.validate()
 		installation_request.save()
+		if installation_request.sales_order :
+			update_sales_order_qty(installation_request.sales_order)
 
 	# def on_update_after_submit(self):
 	# 	if self.installation_request:

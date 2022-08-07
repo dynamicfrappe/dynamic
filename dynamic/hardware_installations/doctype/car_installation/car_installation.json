@@ -7,11 +7,12 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "installation_order",
-  "installation_request",
+  "naming_series",
   "installation_type",
   "column_break_3",
-  "naming_series",
+  "installation_order",
+  "installation_request",
+  "sales_order",
   "customer_info_section",
   "customer",
   "customer_name",
@@ -29,18 +30,18 @@
   "accessories_section",
   "accessories_type",
   "accessories",
-  "column_break_22",
   "accessories_warehouse",
+  "column_break_22",
   "accessories_name",
-  "qty",
+  "accessories_qty",
   "gps_details_section",
   "gps_type",
   "gps_item_code",
-  "serial_number",
-  "column_break_11",
+  "gps_serial_number",
   "gps_warehouse",
-  "gps_no",
+  "column_break_11",
   "gps_series",
+  "gps_serial_number2",
   "sim_details_section",
   "sim_supplier",
   "sim_supplier_name",
@@ -89,13 +90,6 @@
    "fieldtype": "Link",
    "label": "Car",
    "options": "Car"
-  },
-  {
-   "depends_on": "eval:doc.gps_type == 'Internal'",
-   "fieldname": "serial_number",
-   "fieldtype": "Link",
-   "label": "Serial Number",
-   "options": "Serial No"
   },
   {
    "fieldname": "car_section_section",
@@ -173,6 +167,7 @@
    "fieldname": "accessories",
    "fieldtype": "Link",
    "label": "Accessories",
+   "mandatory_depends_on": "eval:doc.accessories_type == \"Internal\"",
    "options": "Item"
   },
   {
@@ -181,17 +176,12 @@
    "label": "Accessories Details"
   },
   {
-   "depends_on": "eval:doc.accessories_type == \"Internal\"\n",
+   "depends_on": "eval:doc.accessories_type==\"Internal\"",
    "fieldname": "accessories_warehouse",
    "fieldtype": "Link",
    "label": "Accessories Warehouse",
+   "mandatory_depends_on": "eval:doc.accessories_type==\"Internal\"",
    "options": "Warehouse"
-  },
-  {
-   "depends_on": "eval:doc.accessories_type!=null",
-   "fieldname": "qty",
-   "fieldtype": "Data",
-   "label": "QTY"
   },
   {
    "fieldname": "accessories_type",
@@ -200,12 +190,12 @@
    "options": "\nInternal\nExternal"
   },
   {
-   "depends_on": "eval:doc.accessories_type!=null",
+   "depends_on": "eval:doc.accessories_type",
    "fetch_from": "accessories.item_name",
-   "fetch_if_empty": 1,
    "fieldname": "accessories_name",
    "fieldtype": "Data",
-   "label": "Accessories Name"
+   "label": "Accessories Name",
+   "mandatory_depends_on": "eval:doc.accessories_type"
   },
   {
    "fieldname": "team_details_section",
@@ -228,16 +218,12 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.gps_type !=null",
-   "fieldname": "gps_no",
-   "fieldtype": "Data",
-   "label": "GPS No"
-  },
-  {
-   "depends_on": "eval:doc.gps_type !=null\n",
+   "depends_on": "eval:doc.gps_type\n",
+   "fetch_from": "gps_serial_number.name",
    "fieldname": "gps_series",
    "fieldtype": "Data",
-   "label": "GPS Series"
+   "label": "GPS IMEI",
+   "mandatory_depends_on": "eval:doc.gps_type\n"
   },
   {
    "fieldname": "engineer_name",
@@ -266,6 +252,7 @@
    "fieldname": "gps_warehouse",
    "fieldtype": "Link",
    "label": "GPS Warehouse",
+   "mandatory_depends_on": "eval:doc.gps_type == 'Internal'",
    "options": "Warehouse"
   },
   {
@@ -273,10 +260,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.gps_type !=null",
+   "depends_on": "eval:doc.gps_type == \"Internal\"",
    "fieldname": "gps_item_code",
    "fieldtype": "Link",
    "label": "GPS Item Code",
+   "mandatory_depends_on": "eval:doc.gps_type == \"Internal\"",
    "options": "Item"
   },
   {
@@ -312,6 +300,7 @@
    "label": "SIM serial"
   },
   {
+   "collapsible": 1,
    "fieldname": "notes_section",
    "fieldtype": "Section Break",
    "label": "Notes"
@@ -338,12 +327,43 @@
    "label": "Installation Request",
    "options": "Installation Request",
    "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.accessories_type",
+   "fieldname": "accessories_qty",
+   "fieldtype": "Data",
+   "label": "Accessories QTY",
+   "mandatory_depends_on": "eval:doc.accessories_type==\"Internal\""
+  },
+  {
+   "depends_on": "eval:doc.gps_type == \"Internal\"",
+   "fieldname": "gps_serial_number",
+   "fieldtype": "Link",
+   "label": "GPS Serial Number",
+   "mandatory_depends_on": "eval:doc.gps_type == \"Internal\"",
+   "options": "Serial No"
+  },
+  {
+   "depends_on": "eval:doc.gps_type\n",
+   "fetch_from": "gps_serial_number.serial2",
+   "fieldname": "gps_serial_number2",
+   "fieldtype": "Data",
+   "label": "GPS Serial",
+   "mandatory_depends_on": "eval:doc.gps_type\n"
+  },
+  {
+   "fetch_from": "installation_request.sales_order",
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-04 11:58:24.104715",
+ "modified": "2022-08-04 16:25:37.089496",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
