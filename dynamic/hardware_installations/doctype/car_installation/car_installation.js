@@ -2,6 +2,18 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Car Installation", {
+  setup(frm){
+    let get_item_query = () => {
+			return {
+				query: 'dynamic.hardware_installations.doctype.car_installation.car_installation.get_item_query',
+				filters: {
+					'sales_order': frm.doc.sales_order
+				}
+			};
+		};
+		frm.set_query('accessories', get_item_query);
+		frm.set_query('gps_item_code', get_item_query);
+  },
   refresh: function (frm) {
     frm.set_query("installation_order", function () {
       return {

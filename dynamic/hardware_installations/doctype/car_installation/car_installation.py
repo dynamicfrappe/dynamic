@@ -44,7 +44,7 @@ class CarInstallation(Document):
                 total_order_qty = 0
 
             if (installation_order.total_cars-total_order_qty) < 1:
-                frappe.throw(_("""Order {} has {}/{} car is Already Requested""").format(
+                frappe.throw(_("""Order {} has {}/{} car is Already Installed""").format(
                     self.installation_order, total_order_qty, flt(
                         installation_order.total_cars)
                 ))
@@ -103,6 +103,8 @@ class CarInstallation(Document):
             stock_entry_doc.installation_request = self.installation_request
             stock_entry_doc.installation_order = self.installation_order
             stock_entry_doc.car_installation = self.name
+            stock_entry_doc.validate()
+            stock_entry_doc.save()
             stock_entry_doc.submit()
 
     def create_delivery_note(self):
@@ -121,7 +123,7 @@ class CarInstallation(Document):
                 # 			)
                 # if(git_bin_qty):
                 # 	if(git_bin_qty[0].actual_qty - git_bin_qty[0].reserved_qty > 0):
-                item = [item.rate for item in sales_order.items if item.item_code == self.accessories]
+                item = [item for item in sales_order.items if item.item_code == self.accessories]
                 rate = 0 if not item else item[0].rate
                 delivery_note.append("items", {
                     'against_sales_order': self.sales_order,
@@ -140,7 +142,7 @@ class CarInstallation(Document):
                 # 			)
                 # if(git_bin_qty):
                 # 	if(git_bin_qty[0].actual_qty - git_bin_qty[0].reserved_qty > 0):
-                item = [item.rate for item in sales_order.items if item.item_code == self.gps_item_code]
+                item = [item for item in sales_order.items if item.item_code == self.gps_item_code]
                 rate = 0 if not item else item[0].rate
                 delivery_note.append("items", {
                     'against_sales_order': self.sales_order,
@@ -153,6 +155,8 @@ class CarInstallation(Document):
             delivery_note.installation_request = self.installation_request
             delivery_note.installation_order = self.installation_order
             delivery_note.car_installation = self.name
+            # delivery_note.validate()
+            # delivery_note.save()
             delivery_note.submit()
 
 
@@ -205,3 +209,18 @@ class CarInstallation(Document):
                     "employee": row.employee,
                     "employee_name": row.employee_name
                 })
+
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_item_query(doctype, txt, searchfield, start, page_len, filters):
+    sales_order = filters.get("sales_order") or ''
+    search_txt = "%%%s%%" % txt
+
+    return frappe.db.sql(f"""select item.name , item.item_name
+                    from tabItem item
+                    inner join `tabSales Order Item` child
+                        on  child.item_code = item.name
+                    where child.parent = '{sales_order}'
+                    and (item.name like '{search_txt}' or item.item_name like '{search_txt}' )""")
