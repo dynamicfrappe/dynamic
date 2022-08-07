@@ -12,8 +12,28 @@
  "is_default": 0,
  "is_standard": 1,
  "label": "Terra",
- "links": [],
- "modified": "2022-07-07 16:01:38.528960",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_to": "",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Order Reservations",
+   "link_to": "Purchase Order Reservations",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2022-08-07 17:45:37.589871",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Terra",
