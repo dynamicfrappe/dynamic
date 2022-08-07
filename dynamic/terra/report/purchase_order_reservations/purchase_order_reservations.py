@@ -27,7 +27,7 @@ def get_data(filters):
 			inner join `tabPurchase Order Item` tpoi 
 			on tpoi.parent  = por.purchase_order  and tpoi.item_code = por.item
 			left join `tabPurchase Receipt Item` tpri
-			on tpoi.parent = tpri.purchase_order  and tpoi.item_code  = tpri.item_code and tpri.purchase_order is not null
+			on tpoi.parent = tpri.purchase_order  and tpoi.item_code  = tpri.item_code and tpri.purchase_order is not null and tpri.docstatus =1
 			{conditions}
 			GROUP by  por.purchase_order,tpri.purchase_order
 		
