@@ -14,7 +14,7 @@ from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_
 from frappe.utils import add_days, nowdate, today
 from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
 from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
-
+from erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import repost_entries
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -147,8 +147,12 @@ def submit_journal_entry_cheques (doc):
         payment_entry.save()
         add_row_cheque_tracks(doc.payment_entry,doc.cheque_status,old_status)
 
-
-
+@frappe.whitelist()
+def submit_purchase_invoice(doc , *args , **kwargs) :
+      if 'Gebco' in DOMAINS:
+          if doc._action == "submit":
+            repost_entries()
+    #erpnext.stock.doctype.repost_item_valuation.repost_item_valuation.repost_entries
 # ---------------- get sales return account ------------------  #
 @frappe.whitelist()
 def get_sales_return_account():

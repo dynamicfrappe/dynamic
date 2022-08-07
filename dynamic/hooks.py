@@ -117,9 +117,9 @@ doc_events = {
     "Landed Cost Voucher": {
         "validate": "dynamic.dynamic.validation.validate_landed_cost"
     },
-    # "Purchase Order": {
-    #     "on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
-    #     "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
+    "Purchase Invoice": {
+        "on_submit": "dynamic.api.submit_purchase_invoice",
+     } # "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
 }
 # notification_config = "dynamic.notifications.get_notification_config"
 

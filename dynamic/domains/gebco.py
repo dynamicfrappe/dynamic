@@ -61,6 +61,15 @@ data = {
                 "label": "Serial No 2",
                 "length": 240,
             },
+        ],
+         'Sales Order':[
+            {
+                "fieldname": "serial2",
+                "fieldtype": "Small Text",
+                "insert_after": "serial_no",
+                "label": "Serial No 2",
+                "length": 240,
+            },
         ]
     },
     "properties": [
