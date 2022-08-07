@@ -18,6 +18,7 @@ class CarInstallation(Document):
     def on_submit(self):
         if self.installation_order:
             self.update_installation_order()
+            self.create_delivery_note()
         self.create_stock_entry()
 
     def on_cancell(self):
@@ -101,6 +102,14 @@ class CarInstallation(Document):
             stock_entry_doc.installation_order = self.installation_order
             stock_entry_doc.car_installation = self.name
             stock_entry_doc.submit()
+
+    def create_delivery_note(self):
+        delivery_note_doc = frappe.new_doc('Delivery Note')
+        delivery_note_doc.customer = self.customer
+        sales_order_name = frappe.db.get_value('Installation Request',self.installation_request,"sales_order")
+        sales_order_doc = frappe.get_doc('Sales order',sales_order_name)
+        delivery_note_doc.set_warehouse = sales_order_doc.set_warehouse
+        pass
 
     @frappe.whitelist()
     def get_car_data(self):
