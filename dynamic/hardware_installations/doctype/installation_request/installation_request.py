@@ -26,9 +26,9 @@ class InstallationRequest(Document):
 			self.update_sales_order(cancel=1)
 	
 	def update_sales_order(self,cancel=0):
-		factor = -1 if not cancel else 1
+		factor = -1 if cancel else 1
 		sales_order = frappe.get_doc("Sales Order",self.sales_order)
-		sales_order.requested_cars += factor * self.total_cars
+		sales_order.requested_cars += (factor * self.total_cars)
 		sales_order.not_requested_Cars = sales_order.total_cars - sales_order.requested_cars
 		sales_order.save()
 
