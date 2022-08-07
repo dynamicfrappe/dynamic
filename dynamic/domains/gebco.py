@@ -170,7 +170,7 @@ data = {
             {
                 "fieldname": "not_ordered_cars",
                 "fieldtype": "Int",
-                "insert_after": "not_requested_Cars",
+                "insert_after": "not_requested_cars",
                 "label": "Not Ordered Cars",
                 "read_only" : 1,
                 "no_copy" : 1,
