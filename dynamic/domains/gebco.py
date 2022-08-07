@@ -218,26 +218,26 @@ data = {
                 "allow_on_submit":1,
                 "default":0
             },
-            {
-                "fieldname": "invoice_payment",
-                "fieldtype": "Float",
-                "insert_after": "advance_paid",
-                "label": "Invoice Payment",
-                "read_only" : 1,
-                "no_copy" : 1,
-                "allow_on_submit":1,
-                "default":0
-            },
-            {
-                "fieldname": "outstanding_amount",
-                "fieldtype": "Float",
-                "insert_after": "invoice_payment",
-                "label": "Outstanding Amount",
-                "read_only" : 1,
-                "no_copy" : 1,
-                "allow_on_submit":1,
-                "default":0
-            },
+            # {
+            #     "fieldname": "invoice_payment",
+            #     "fieldtype": "Float",
+            #     "insert_after": "advance_paid",
+            #     "label": "Invoice Payment",
+            #     "read_only" : 1,
+            #     "no_copy" : 1,
+            #     "allow_on_submit":1,
+            #     "default":0
+            # },
+            # {
+            #     "fieldname": "outstanding_amount",
+            #     "fieldtype": "Float",
+            #     "insert_after": "invoice_payment",
+            #     "label": "Outstanding Amount",
+            #     "read_only" : 1,
+            #     "no_copy" : 1,
+            #     "allow_on_submit":1,
+            #     "default":0
+            # },
         ],
         'Purchase Receipt Item':[
             {

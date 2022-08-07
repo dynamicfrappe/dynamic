@@ -19,5 +19,9 @@ def get_data():
                 'label': _('Installation'),
                 'items': ['Installation Request', 'Installation Order']
             },
+            {
+                'label': _('Stock'),
+                'items': ['Delivery Note']
+            },
         ]
     }
