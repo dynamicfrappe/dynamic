@@ -107,7 +107,7 @@ class InstallationOrder(Document):
 			"Installation Request", self.installation_request)
 		factor = -1 if cancel else 1
 		installation_request.ordered_cars += factor * self.total_cars
-		installation_request.validate(ignore_errors=1)
+		installation_request.validate()
 		installation_request.save()
 		if installation_request.sales_order :
 			update_sales_order_qty(installation_request.sales_order)
