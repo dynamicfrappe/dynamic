@@ -92,7 +92,7 @@ class employee_schedule(object):
                 values["from_time"] = filters.get("from_time")
                 values["to_time"] = filters.get("to_time")
 
-            if filters.get("from_time"):
+            if filters.get("from_time") and not filters.get("to_time"):
                 conditions += " AND date(p.from_time)  = date(%(from_time)s) "
                 values["from_time"] = filters.get("from_time")
 

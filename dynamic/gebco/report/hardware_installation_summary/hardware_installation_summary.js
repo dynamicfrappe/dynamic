@@ -5,42 +5,24 @@
 frappe.query_reports["Hardware Installation Summary"] = {
 	"filters": [
 		{
-			fieldname: "from_time",
+			fieldname: "from_date",
 			label: __("From Time"),
 			fieldtype: "Date",
 			default: frappe.datetime.get_today(),
 		  },
 		  {
-			fieldname: "to_time",
+			fieldname: "to_date",
 			label: __("To time"),
 			fieldtype: "Date",
 			default: frappe.datetime.get_today(),
 		  },
-		//   {
-		// 	fieldname:"sales_order",
-		// 	label:__("Sales Order"),
-		// 	fieldtype:"Link",
-		// 	options:"Sales Order"
-		//   },
-		//   {
-		// 	fieldname:"installation_order",
-		// 	label:__("Installation Order"),
-		// 	fieldtype:"Link",
-		// 	options:"Installation Order"
-		//   },
-		//   {
-		// 	fieldname:"installation_request",
-		// 	label:__("Installation Request"),
-		// 	fieldtype:"Link",
-		// 	options:"Installation Request"
-		//   },
 		  {
 			"fieldname":"source",
 			"label": __("Source"),
 			"fieldtype": "Link",
 			"options": "DocType",
-			"default": "Sales Order",
-			"reqd":1,
+			// "default": "Sales Order",
+			// "reqd":1,
 			"get_query": function() {
 				return {
 					filters: {"name": ["in", ["Sales Order", "Installation Request","Installation Order"]]}

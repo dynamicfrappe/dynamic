@@ -27,13 +27,13 @@ class instalation_summary(object):
 				"fieldname": "customer",
 				"fieldtype": "Link",
 				"options": "Doctype",
-				"width": 130,
+				"width": 140,
 			},
             {
                 "fieldname": "sales_order",
                 "fieldtype": "Link",
                 "label": _("Sales Order"),
-                "width": 120,
+                "width": 150,
                 "options": "Sales Order",
             },
 			{
@@ -69,13 +69,8 @@ class instalation_summary(object):
 		self.data = []
 		self.conditions, self.values,self.query = self.get_conditions(self.filters)
 
-		data = f"""{self.query} where {self.conditions}
-				
-				"""
-
+		data = f"""{self.query} where {self.conditions}"""
 		self.data = frappe.db.sql(data, values=self.values, as_dict=1)
-		
-		frappe.errprint(f'data-->{self.data}')
 		return self.data
 
 		
@@ -84,48 +79,53 @@ class instalation_summary(object):
 		values = dict()
 		query = ""
 		dict_fields = {
-			"Installation Request":['p.sales_order',"p.customer","p.total_cars","p.completed_cars as `completed_car`"," p.ordered_cars as `ordered_car`"],
-			"Installation Order":['p.sales_order','p.customer','p.total_cars'],
-			"Sales Order":[]
+			"Installation Request":['p.sales_order',"p.customer","p.total_cars","p.total_cars as `requested_car`","p.completed_cars as `completed_car`"," p.ordered_cars as `ordered_car`"],
+			"Installation Order":['p.sales_order',"p.total_requested_cars as `total_cars`","p.total_cars as `ordered_car`",'p.customer','p.total_cars `requested_car`','p.completed_cars as `completed_car`'],
+			"Sales Order":['p.customer','p.name as `sales_order`', 'p.total_cars as `total_cars`','p.ordered_cars as `ordered_car`','SUM(re.total_cars) as `requested_car`','SUM(re.completed_cars) as `completed_car`'],
+			"default":['p.customer','p.name as `sales_order`', 'p.completed_cars as `completed_car`','p.requested_cars as `requested_car`','p.total_cars as `total_cars`','p.ordered_cars as `ordered_car`']
 		}
-		#TODO: convert to one query AND show all data from sales Order if Not select on of source
+		if filters.get("from_date"):
+			if filters.get("from_date") and filters.get("to_date"):
+				frappe.errprint('to_date')
+				conditions += " AND date(p.creation)  >= date(%(from_date)s)  AND date(p.creation)  <= date(%(to_date)s)"
+				values["from_date"] = filters.get("from_date")
+				values["to_date"] = filters.get("to_date")
+
+			if  filters.get("from_date") and not filters.get("to_date"):
+				frappe.errprint(' from_date')
+				conditions += " AND date(p.creation)  = date(%(from_date)s) "
+				values["from_date"] = filters.get("from_date")
+
+		#TODO:get field according to doctype
 		if self.filters.get('source'):
 			if self.filters.get('source') == "Installation Request":
 				query_fields = self.get_query_field(dict_fields["Installation Request"])
-				query = f"Select {query_fields} `tabInstallation Request` p  "
+				query = f"Select {query_fields} from `tabInstallation Request` p  "
 				conditions += " AND p.name  =  %(doc_name)s "
 				values["doc_name"] = filters.get("doc_name")
 
 			if self.filters.get('source') == "Installation Order":
 				query_fields = self.get_query_field(dict_fields["Installation Order"])
-				query = "Select  {query_fields} from `tabInstallation Order` p  "
+				query = f"Select  {query_fields} from `tabInstallation Order` p  "
 				conditions += " AND p.name  =  %(doc_name)s "
 				values["doc_name"] = filters.get("doc_name")
 
 			if self.filters.get('source') == "Sales Order":
-				query = "select p.name as `sales_order`, sum(p.total_cars) as total_cars,sum(re.total_cars) as requested_car from `tabSales Order` as p,`tabInstallation Request` as re"
-				conditions += " AND p.name  =  %(doc_name)s "
+				query_fields = self.get_query_field(dict_fields["Sales Order"])
+				query = f"select {query_fields} from `tabSales Order` as p JOIN `tabInstallation Request` re ON p.name = re.sales_order "
+				conditions += " AND p.name  =  %(doc_name)s AND p.docstatus = 1 and re.docstatus  = 1 GROUP BY p.name"
 				values["doc_name"] = filters.get("doc_name")
 
+		if not self.filters.get('source'):
+			query_fields = self.get_query_field(dict_fields["default"])
+			query = f"select {query_fields} from `tabSales Order` as p"
+			conditions += " AND p.docstatus = 1 "
+			
 		return conditions, values, query
 		
 	def get_query_field(self,list_field):
 		fields = ''
 		for field in list_field:
 			fields += field + ' ,'
-		frappe.errprint(fields[:-1])
 		return fields[:-1]
 
-
-# requested_cars_result = frappe.db.sql(f"""
-# 		select sum(total_cars) as total_cars from `tabInstallation Request` 
-# 		where docstatus = 1 and  sales_order = '{sales_order.name}'
-# 	""",as_dict=1) or 0
-# 	total_order_result = frappe.db.sql(f"""
-# 		select sum(total_cars) as total_cars from `tabInstallation Order` 
-# 		where docstatus = 1 and  sales_order = '{sales_order.name}'
-# 	""",as_dict=1) or 0
-# 	completed_qty_result = frappe.db.sql(f"""
-# 		select sum(1) as completed_qty from `tabCar Installation` 
-# 		where docstatus = 1 and  sales_order = '{sales_order.name}'
-# 	""",as_dict=1) or 0
