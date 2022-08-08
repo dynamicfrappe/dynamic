@@ -18,6 +18,7 @@ class CarInstallation(Document):
     def on_submit(self):
         if self.installation_order:
             self.update_installation_order()
+            self.update_car()
         if not self.sales_order :
             self.create_stock_entry()
         else :
@@ -62,37 +63,27 @@ class CarInstallation(Document):
             update_installation_request_qty(
                 installation_order.installation_request,self.sales_order)
 
+    def update_car(self):
+        car_doc =frappe.get_doc('Car',self.car)
+        car_doc.device_type = 'GEBCO' if self.gps_type == 'Internal' else "External"
+        car_doc.serial_no = self.gps_serial_number
+        car_doc.sim_number = self.sim_number
+        car_doc.save()
+
     def create_stock_entry(self):
         if self.gps_type == 'Internal' or self.accessories_type == 'Internal':
             stock_entry_doc = frappe.new_doc('Stock Entry')
             stock_entry_doc.set("items", [])
             stock_entry_doc.stock_entry_type = "Material Issue"
-            if self.accessories_type == 'Internal':
-                # for Accesoreies
-                # git_bin_qty = frappe.db.get_list('Bin',
-                # 				filters={
-                # 					'item_code': self.accessories
-                # 				},
-                # 				fields=['actual_qty', 'reserved_qty','valuation_rate'],
-                # 			)
-                # if(git_bin_qty):
-                # 	if(git_bin_qty[0].actual_qty - git_bin_qty[0].reserved_qty > 0):
-                stock_entry_doc.append("items", {
-                    's_warehouse': self.accessories_warehouse,
-                    'item_code': self.accessories,
-                    'qty': self.accessories_qty,
-                    'basic_rate': get_valuation_rate(self.accessories, get_default_company(), warehouse=self.accessories_warehouse)
-                })
+            for row in self.installation_accessories:
+                if row.accessories_type == 'Internal':
+                    stock_entry_doc.append("items", {
+                        's_warehouse': row.accessories_warehouse,
+                        'item_code': row.accessories,
+                        'qty': row.accessories_qty,
+                        'basic_rate': get_valuation_rate(row.accessories, get_default_company(), warehouse=row.accessories_warehouse)
+                    })
             if self.gps_type == 'Internal':
-                # for Accesoreies
-                # git_bin_qty = frappe.db.get_list('Bin',
-                # 				filters={
-                # 					'item_code': self.gps_item_code
-                # 				},
-                # 				fields=['actual_qty', 'reserved_qty','valuation_rate'],
-                # 			)
-                # if(git_bin_qty):
-                # 	if(git_bin_qty[0].actual_qty - git_bin_qty[0].reserved_qty > 0):
                 stock_entry_doc.append("items", {
                     's_warehouse': self.gps_warehouse,
                     'item_code': self.gps_item_code,
@@ -113,36 +104,19 @@ class CarInstallation(Document):
             delivery_note = frappe.new_doc('Delivery Note')
             delivery_note.set("items", [])
             delivery_note.customer = sales_order.customer
-            if self.accessories_type == 'Internal':
-                # for Accesoreies
-                # git_bin_qty = frappe.db.get_list('Bin',
-                # 				filters={
-                # 					'item_code': self.accessories
-                # 				},
-                # 				fields=['actual_qty', 'reserved_qty','valuation_rate'],
-                # 			)
-                # if(git_bin_qty):
-                # 	if(git_bin_qty[0].actual_qty - git_bin_qty[0].reserved_qty > 0):
-                item = [item for item in sales_order.items if item.item_code == self.accessories]
-                rate = 0 if not item else item[0].rate
-                delivery_note.append("items", {
-                    'against_sales_order': self.sales_order,
-                    'so_detail': '' if not item else item[0].name ,
-                    'warehouse': self.accessories_warehouse,
-                    'item_code': self.accessories,
-                    'qty': self.accessories_qty,
-                    'rate': rate
-                })
+            for row in self.installation_accessories:
+                if row.accessories_type == 'Internal':
+                    item = [item for item in sales_order.items if item.item_code == row.accessories]
+                    rate = 0 if not item else item[0].rate
+                    delivery_note.append("items", {
+                        'against_sales_order': self.sales_order,
+                        'so_detail': '' if not item else item[0].name ,
+                        'warehouse': row.accessories_warehouse,
+                        'item_code': row.accessories,
+                        'qty': row.accessories_qty,
+                        'rate': rate,
+                    })
             if self.gps_type == 'Internal':
-                # for Accesoreies
-                # git_bin_qty = frappe.db.get_list('Bin',
-                # 				filters={
-                # 					'item_code': self.gps_item_code
-                # 				},
-                # 				fields=['actual_qty', 'reserved_qty','valuation_rate'],
-                # 			)
-                # if(git_bin_qty):
-                # 	if(git_bin_qty[0].actual_qty - git_bin_qty[0].reserved_qty > 0):
                 item = [item for item in sales_order.items if item.item_code == self.gps_item_code]
                 rate = 0 if not item else item[0].rate
                 delivery_note.append("items", {

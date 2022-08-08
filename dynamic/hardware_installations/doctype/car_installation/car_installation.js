@@ -29,6 +29,16 @@ frappe.ui.form.on("Car Installation", {
         ],
       };
     });
+
+    frm.set_query("gps_serial_number", function () {
+      return {
+        filters: [
+          ["item_code", "=", frm.doc.gps_item_code],
+          ["status", "=", "Active"],
+        ],
+      };
+    });
+   
   },
   car: function (frm) {
     if (frm.doc.car) {
@@ -91,5 +101,25 @@ frappe.ui.form.on("Car Installation", {
 			},
 		  });
 	}
+  }
+});
+
+
+frappe.ui.form.on("Installation Accessories", "accessories_type", function(frm, cdt, cdn) {
+  let row = locals[cdt][cdn];
+  console.log("chaged")
+  if(row.accessories_type === "External"){
+    let accessories_df = frappe.meta.get_docfield("Installation Accessories", "accessories", row.name);
+    let accessories_warehouse_df = frappe.meta.get_docfield("Installation Accessories", "accessories_warehouse", row.name);
+    accessories_df.read_only= 1
+    accessories_warehouse_df.read_only= 1
+    frm.refresh_fields();
+  }
+  if(row.accessories_type === "Internal"){
+    let accessories_df = frappe.meta.get_docfield("Installation Accessories", "accessories", row.name);
+    let accessories_warehouse_df = frappe.meta.get_docfield("Installation Accessories", "accessories_warehouse", row.name);
+    accessories_df.read_only= 0
+    accessories_warehouse_df.read_only= 0
+    frm.refresh_fields();
   }
 });

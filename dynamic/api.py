@@ -315,10 +315,10 @@ def check_source_item(self,*args , **kwargs):
         # sales_order_doc = frappe.get_doc('Sales Order',self)
         for item in self.items:
              #TODO if item has purchase and warehouse show error or both has value
-            if (not item.item_warehouse and not item.item_purchase_order):
+            if (not item.item_warehouse and  not item.item_purchase_order):
                 frappe.throw(_(f"Please Select Source As Warehouse Or Purchase Order for Item {item.item_code}"))
             if ( item.item_warehouse and  item.item_purchase_order):
-                frappe.throw(_(f"Please Select Just One Source As Warehouse Or Purchase Order for Item {item.item_code}"))
+                frappe.throw(_(f"Please Select Just One Source As Warehouse Or Purchase Order for Item {item.item_code} Not Both"))
             if (not item.warehouse):
                 check_delivery_warehosue(item.item_purchase_order,item.item_code,'')
 
@@ -342,7 +342,6 @@ def add_row_for_reservation(self):
             if not reserv_doc.warehouse_source:
                 reserv_doc.order_source = item.item_purchase_order if item.item_purchase_order else "" #self.purchase_order
             reserv_doc.save()
-            frappe.errprint(f'reser name => {reserv_doc.name}')
             item.reservation = reserv_doc.name
             item.reservation_status = reserv_doc.status
             item.save()
