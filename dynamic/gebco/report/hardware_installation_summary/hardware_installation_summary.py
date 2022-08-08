@@ -22,96 +22,110 @@ class instalation_summary(object):
 	def get_columns(self):
 		# add columns wich appear data
 		self.columns = [
-            {
-                "fieldname": "from_time",
-                "fieldtype": "Date",
-                "label": _("From"),
-                "width": 150
-            },
-            {
-                "fieldname": "to_time",
-                "fieldtype": "Date",
-                "label": _("To"),
-                "width": 150
-            },
+			{
+				"label": _("Customer"),
+				"fieldname": "customer",
+				"fieldtype": "Link",
+				"options": "Doctype",
+				"width": 130,
+			},
             {
                 "fieldname": "sales_order",
                 "fieldtype": "Link",
                 "label": _("Sales Order"),
                 "width": 120,
                 "options": "Sales Order",
-
-
             },
-            {
-                "fieldname": "installation_order",
-                "fieldtype": "Link",
-                "label": _("Installation Order"),
+			{
+                "fieldname": "total_cars",
+                "fieldtype": "Int",
+                "label": _("Total Car"),
                 "width": 120,
-                "options": "Installation Order",
-            },
-            {
-                "fieldname": "installation_request",
-                "fieldtype": "Link",
-                "label": _("Installation Request"),
-                "width": 120,
-                "options": "Installation Request",
-            },
-            {
-                "fieldname": "team",
-                "fieldtype": "Link",
-                "label": _("Installation Team"),
-                "width": 120,
-                "options": "Installation Team",
             },
 			{
                 "fieldname": "requested_car",
                 "fieldtype": "Int",
                 "label": _("requested Car"),
-                "width": 70,
+                "width": 120,
             },
 			{
                 "fieldname": "ordered_car",
                 "fieldtype": "Int",
                 "label": _("Ordered Car"),
-                "width": 70,
+                "width": 120,
             },
 			{
                 "fieldname": "completed_car",
                 "fieldtype": "Int",
                 "label": _("Completed Car"),
-                "width": 70,
+                "width": 120,
             },
+			
         ]
 		return self.columns
 		
 	
 	def get_data(self):
 		self.data = []
-		self.conditions, self.values = self.get_conditions(self.filters)
-		query = ''
-		# data_query = f"""
-		# 	select * {query}
-		# 	from `tabInstallation Request` p
-		# 	where {self.conditions}
-			
-		# """
+		self.conditions, self.values,self.query = self.get_conditions(self.filters)
+
+		data = f"""{self.query} where {self.conditions}
+				
+				"""
+
+		self.data = frappe.db.sql(data, values=self.values, as_dict=1)
+		
+		frappe.errprint(f'data-->{self.data}')
 		return self.data
-	
+
+		
 	def get_conditions(self,filters):
 		conditions = "1=1 "
 		values = dict()
+		query = ""
+		dict_fields = {
+			"Installation Request":['p.sales_order',"p.customer","p.total_cars","p.completed_cars as `completed_car`"," p.ordered_cars as `ordered_car`"],
+			"Installation Order":['p.sales_order','p.customer','p.total_cars'],
+			"Sales Order":[]
+		}
+		#TODO: convert to one query AND show all data from sales Order if Not select on of source
+		if self.filters.get('source'):
+			if self.filters.get('source') == "Installation Request":
+				query_fields = self.get_query_field(dict_fields["Installation Request"])
+				query = f"Select {query_fields} `tabInstallation Request` p  "
+				conditions += " AND p.name  =  %(doc_name)s "
+				values["doc_name"] = filters.get("doc_name")
 
-		if filters.get('sales_order'):
-			conditions += " AND p.sales_order  =  %(sales_order)s "
-			values["sales_order"] = filters.get("sales_order")
+			if self.filters.get('source') == "Installation Order":
+				query_fields = self.get_query_field(dict_fields["Installation Order"])
+				query = "Select  {query_fields} from `tabInstallation Order` p  "
+				conditions += " AND p.name  =  %(doc_name)s "
+				values["doc_name"] = filters.get("doc_name")
 
-		if filters.get('installation_order'):
-			conditions += " AND p.installation_order  =  %(installation_order)s "
-			values["installation_order"] = filters.get("installation_order")
+			if self.filters.get('source') == "Sales Order":
+				query = "select p.name as `sales_order`, sum(p.total_cars) as total_cars,sum(re.total_cars) as requested_car from `tabSales Order` as p,`tabInstallation Request` as re"
+				conditions += " AND p.name  =  %(doc_name)s "
+				values["doc_name"] = filters.get("doc_name")
 
-		if filters.get('installation_request'):
-			conditions += " AND p.installation_request  =  %(installation_request)s "
-			values["installation_request"] = filters.get(
-				"installation_request")
+		return conditions, values, query
+		
+	def get_query_field(self,list_field):
+		fields = ''
+		for field in list_field:
+			fields += field + ' ,'
+		frappe.errprint(fields[:-1])
+		return fields[:-1]
 
+
+# requested_cars_result = frappe.db.sql(f"""
+# 		select sum(total_cars) as total_cars from `tabInstallation Request` 
+# 		where docstatus = 1 and  sales_order = '{sales_order.name}'
+# 	""",as_dict=1) or 0
+# 	total_order_result = frappe.db.sql(f"""
+# 		select sum(total_cars) as total_cars from `tabInstallation Order` 
+# 		where docstatus = 1 and  sales_order = '{sales_order.name}'
+# 	""",as_dict=1) or 0
+# 	completed_qty_result = frappe.db.sql(f"""
+# 		select sum(1) as completed_qty from `tabCar Installation` 
+# 		where docstatus = 1 and  sales_order = '{sales_order.name}'
+# 	""",as_dict=1) or 0
