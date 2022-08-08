@@ -94,12 +94,9 @@ def validate_cost(self , *args , **kwargs):
         item.rate_currency     = float(data.get("rate" ) or 0 )
         item.purchase_currency = data.get("currency")
         item.currency          = float( data.get("factor") or 1)
-       
-
         item.item_cost_value = float(item.applicable_charges or 0) / float(item.qty or 1)
         item.item_after_cost =( item.rate_currency *  item.currency ) +item.item_cost_value 
     for invocie in self.cost_child_table : 
-       
         if invocie.doc_type == "Purchase Invoice" :
             #invocie.allocated_amount = 0 
             invocie.allocated_amount = get_doctype_info(invocie.doc_type ,
@@ -107,7 +104,7 @@ def validate_cost(self , *args , **kwargs):
             allocated = 0
             for item in self.taxes :
                 if item.docment_name == invocie.invoice :
-                     
+                    # frappe.throw("HERE!" , str( self.taxes))
                     line_avaiable = validate_line_amount(item.docment_type , item.line_name)
                     if float(item.base_amount or 0)  >  float(line_avaiable or 0) :
                         frappe.throw(_(""" Allocated Amount  """))
@@ -122,7 +119,7 @@ def validate_cost(self , *args , **kwargs):
 def validate_line_amount(doc_type ,document ,*args ,**kwargs):
     invoice_line_amount = 0 
     allocated_ex = get_old_laned_cost_ex(document ,doc_type ) 
-    line_total = frappe.db.sql(f"""SELECT SUM(base_amount) as total 
+    line_total = frappe.db.sql(f"""SELECT SUM(amount) as total 
                                   FROM 
                                  `tabPurchase Invoice Item`  
                                  WHERE name = '{document}' """,as_dict=1)
@@ -130,6 +127,7 @@ def validate_line_amount(doc_type ,document ,*args ,**kwargs):
         invoice_line_amount = line_total[0].get("total")
     
     available_amount = float(invoice_line_amount or 0) - float(allocated_ex or 0)
+    # frappe.throw(str(document))
     return available_amount 
 
 

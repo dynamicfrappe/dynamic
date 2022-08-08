@@ -18,8 +18,8 @@ def validate_sales_invoice(doc,*args,**kwargs):
         #validate stock amount in packed list 
         #send  packed_items to valid and get Response message with item and shrotage amount and whare house  
         # this fuction validate current srock without looking for other resources    
-        if len(doc.packed_items) > 0  and doc.update_stock == 1:
-            caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
+        # if len(doc.packed_items) > 0  and doc.update_stock == 1:
+        #     caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
 def validate_delivery_note(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
         if doc.maintenance_template:

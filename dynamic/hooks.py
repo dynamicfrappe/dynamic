@@ -79,7 +79,10 @@ doctype_js = {
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
     "Delivery Note": "public/js/delivery_note.js"
 }
-doc_events = {
+doc_events = {\
+    "Payment Entry":{
+               "on_submit": "dynamic.api.submit_payment",
+    },
 
     "Sales Invoice": {
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
@@ -117,9 +120,9 @@ doc_events = {
     "Landed Cost Voucher": {
         "validate": "dynamic.dynamic.validation.validate_landed_cost"
     },
-    # "Purchase Order": {
-    #     "on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
-    #     "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
+    "Purchase Invoice": {
+        "on_submit": "dynamic.api.submit_purchase_invoice",
+     } # "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
 }
 # notification_config = "dynamic.notifications.get_notification_config"
 

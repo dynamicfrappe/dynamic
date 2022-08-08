@@ -127,6 +127,7 @@ class CarInstallation(Document):
                 rate = 0 if not item else item[0].rate
                 delivery_note.append("items", {
                     'against_sales_order': self.sales_order,
+                    'so_detail': '' if not item else item[0].name ,
                     'warehouse': self.accessories_warehouse,
                     'item_code': self.accessories,
                     'qty': self.accessories_qty,
@@ -146,6 +147,7 @@ class CarInstallation(Document):
                 rate = 0 if not item else item[0].rate
                 delivery_note.append("items", {
                     'against_sales_order': self.sales_order,
+                    'so_detail': '' if not item else item[0].name ,
                     'warehouse': self.gps_warehouse,
                     'item_code': self.gps_item_code,
                     'qty': 1,

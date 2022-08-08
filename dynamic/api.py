@@ -14,7 +14,7 @@ from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_
 from frappe.utils import add_days, nowdate, today
 from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
 from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
-
+from erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import repost_entries
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -90,8 +90,8 @@ def validate_active_domains(doc,*args,**kwargs):
 
     
     if 'Terra' in DOMAINS:
-        validate_sales_invoice(doc)
-
+        #validate_sales_invoice(doc)
+        pass
     if 'Gebco' in DOMAINS:
         if doc.maintenance_template:
             m_temp = frappe.get_doc("Maintenance Template",doc.maintenance_template)
@@ -147,8 +147,12 @@ def submit_journal_entry_cheques (doc):
         payment_entry.save()
         add_row_cheque_tracks(doc.payment_entry,doc.cheque_status,old_status)
 
-
-
+@frappe.whitelist()
+def submit_purchase_invoice(doc , *args , **kwargs) :
+      if 'Gebco' in DOMAINS:
+          if doc._action == "submit":
+            repost_entries()
+    #erpnext.stock.doctype.repost_item_valuation.repost_item_valuation.repost_entries
 # ---------------- get sales return account ------------------  #
 @frappe.whitelist()
 def get_sales_return_account():
@@ -397,3 +401,66 @@ def validate_sales_order_reservation_status():
 @frappe.whitelist()
 def get_active_domains():
     return frappe.get_active_domains()
+@frappe.whitelist()
+def submit_payment(doc,*args,**kwargs):
+     if "Terra" in DOMAINS:
+          submit_payment_for_terra(doc)
+
+
+@frappe.whitelist()
+def submit_payment_for_terra(doc , *args ,**kwargs):
+    if doc.references and len (doc.references) > 0 :
+        for ref in doc.references :
+            if ref.reference_doctype in ["Sales Order" , "Sales Invoice" ]  :
+                
+                out_stand = frappe.db.sql(f"""SELECT 
+                b.total_amount - SUM(b.allocated_amount)  AS out_stand FROM 
+                `tabPayment Entry Reference` b
+                Inner Join `tabPayment Entry` a 
+                ON a.name = b.parent
+                WHERE b.reference_doctype ="{ref.reference_doctype}" AND 
+                b.reference_name ='{ref.reference_name}' AND a.docstatus =1
+                """,as_dict =1)  
+                # update sales order allocated amount if payment againest sales order 
+                if ref.reference_doctype == "Sales Order" :
+                    if out_stand and out_stand[0].get("out_stand") : 
+                        frappe.db.sql(f""" UPDATE `tabSales Order` SET 
+                        outstanding_amount ={ out_stand[0].get("out_stand")} 
+                        WHERE name = {ref.reference_name}""")
+                        frappe.db.commit()
+                
+                  # update sales order allocated amount if payment againest sales invoice 
+                if ref.reference_doctype == "Sales Invoice" :
+                    #get invoice total 
+                    invoice_total = frappe.db.get_value("Sales Invoice" , ref.reference_name ,"total")
+                   
+                    sales_invoice = frappe.get_doc("Sales Invoice" , ref.reference_name )
+                    orders =[]
+                    for line  in sales_invoice.items :
+                        if line.sales_order not in orders :
+                            # frappe.throw(str(line.sales_order))
+                            order_amount = frappe.db.sql(f"""SELECT SUM(b.amount) AS amount 
+                                    FROM 
+                                    `tabSales Invoice Item` b 
+                                    inner join `tabSales Invoice` a 
+                                    ON a.name = b.parent
+                                    WHERE  
+                              b.sales_order  ="{line.sales_order}" 
+                              AND a.docstatus =1""",as_dict = 1)
+                            orders.append(line.sales_order)
+                            if len(orders) > 1 :
+                                frappe.throw(""" Sales Invocie Line Have To many orders """)
+                            if len(order_amount) >  0 and order_amount[0].get("amount") :
+                                # oreder_perecent = float(order_amount[0].get("amount")) / float(invoice_total or 0)
+                                # order_amount = line.amount * oreder_perecent
+                              
+                                frappe.db.sql(f""" UPDATE `tabSales Order`
+                                 SET 
+                                 outstanding_amount = {out_stand[0].get("out_stand")}
+                                 WHERE name = '{line.sales_order}'""")
+                                frappe.db.commit()
+
+
+                                #frappe.throw(str(oreder_perecent))
+                    
+
