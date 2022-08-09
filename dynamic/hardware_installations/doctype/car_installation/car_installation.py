@@ -65,74 +65,75 @@ class CarInstallation(Document):
 
     def update_car(self):
         car_doc =frappe.get_doc('Car',self.car)
+
         car_doc.device_type = 'GEBCO' if self.gps_type == 'Internal' else "External"
-        car_doc.serial_no = self.gps_serial_number
+        car_doc.serial_no =  self.gps_serial_number if self.gps_type == 'Internal' else ""
         car_doc.sim_number = self.sim_number
         car_doc.save()
 
     def create_stock_entry(self):
-        if self.gps_type == 'Internal' or self.accessories_type == 'Internal':
-            stock_entry_doc = frappe.new_doc('Stock Entry')
-            stock_entry_doc.set("items", [])
-            stock_entry_doc.stock_entry_type = "Material Issue"
-            for row in self.installation_accessories:
-                if row.accessories_type == 'Internal':
-                    stock_entry_doc.append("items", {
-                        's_warehouse': row.accessories_warehouse,
-                        'item_code': row.accessories,
-                        'qty': row.accessories_qty,
-                        'basic_rate': get_valuation_rate(row.accessories, get_default_company(), warehouse=row.accessories_warehouse)
-                    })
-            if self.gps_type == 'Internal':
+        stock_entry_doc = frappe.new_doc('Stock Entry')
+        stock_entry_doc.set("items", [])
+        stock_entry_doc.stock_entry_type = "Material Issue"
+        for row in self.installation_accessories:
+            if row.accessories_type == 'Internal':
                 stock_entry_doc.append("items", {
-                    's_warehouse': self.gps_warehouse,
-                    'item_code': self.gps_item_code,
-                    'qty': 1,
-                    'basic_rate': get_valuation_rate(self.gps_item_code, get_default_company(), warehouse=self.gps_warehouse),
-                    'serial_no': self.gps_series
+                    's_warehouse': row.accessories_warehouse,
+                    'item_code': row.accessories,
+                    'qty': row.accessories_qty,
+                    'basic_rate': get_valuation_rate(row.accessories, get_default_company(), warehouse=row.accessories_warehouse)
                 })
-            stock_entry_doc.installation_request = self.installation_request
-            stock_entry_doc.installation_order = self.installation_order
-            stock_entry_doc.car_installation = self.name
-            stock_entry_doc.validate()
+        if self.gps_type == 'Internal':
+            stock_entry_doc.append("items", {
+                's_warehouse': self.gps_warehouse,
+                'item_code': self.gps_item_code,
+                'qty': 1,
+                'basic_rate': get_valuation_rate(self.gps_item_code, get_default_company(), warehouse=self.gps_warehouse),
+                'serial_no': self.gps_series
+            })
+        stock_entry_doc.installation_request = self.installation_request
+        stock_entry_doc.installation_order = self.installation_order
+        stock_entry_doc.car_installation = self.name
+        stock_entry_doc.validate()
+        if stock_entry_doc.get('items') and  len(stock_entry_doc.get('items')):
             stock_entry_doc.save()
             stock_entry_doc.submit()
 
     def create_delivery_note(self):
-        if self.gps_type == 'Internal' or self.accessories_type == 'Internal':
-            sales_order = frappe.get_doc("Sales Order", self.sales_order)
-            delivery_note = frappe.new_doc('Delivery Note')
-            delivery_note.set("items", [])
-            delivery_note.customer = sales_order.customer
-            for row in self.installation_accessories:
-                if row.accessories_type == 'Internal':
-                    item = [item for item in sales_order.items if item.item_code == row.accessories]
-                    rate = 0 if not item else item[0].rate
-                    delivery_note.append("items", {
-                        'against_sales_order': self.sales_order,
-                        'so_detail': '' if not item else item[0].name ,
-                        'warehouse': row.accessories_warehouse,
-                        'item_code': row.accessories,
-                        'qty': row.accessories_qty,
-                        'rate': rate,
-                    })
-            if self.gps_type == 'Internal':
-                item = [item for item in sales_order.items if item.item_code == self.gps_item_code]
+        sales_order = frappe.get_doc("Sales Order", self.sales_order)
+        delivery_note = frappe.new_doc('Delivery Note')
+        delivery_note.set("items", [])
+        delivery_note.customer = sales_order.customer
+        for row in self.installation_accessories:
+            if row.accessories_type == 'Internal':
+                item = [item for item in sales_order.items if item.item_code == row.accessories]
                 rate = 0 if not item else item[0].rate
                 delivery_note.append("items", {
                     'against_sales_order': self.sales_order,
                     'so_detail': '' if not item else item[0].name ,
-                    'warehouse': self.gps_warehouse,
-                    'item_code': self.gps_item_code,
-                    'qty': 1,
-                    'basic_rate': rate,
-                    'serial_no': self.gps_series
+                    'warehouse': row.accessories_warehouse,
+                    'item_code': row.accessories,
+                    'qty': row.accessories_qty,
+                    'rate': rate,
                 })
-            delivery_note.installation_request = self.installation_request
-            delivery_note.installation_order = self.installation_order
-            delivery_note.car_installation = self.name
-            # delivery_note.validate()
-            # delivery_note.save()
+        if self.gps_type == 'Internal':
+            item = [item for item in sales_order.items if item.item_code == self.gps_item_code]
+            rate = 0 if not item else item[0].rate
+            delivery_note.append("items", {
+                'against_sales_order': self.sales_order,
+                'so_detail': '' if not item else item[0].name ,
+                'warehouse': self.gps_warehouse,
+                'item_code': self.gps_item_code,
+                'qty': 1,
+                'basic_rate': rate,
+                'serial_no': self.gps_series
+            })
+        delivery_note.installation_request = self.installation_request
+        delivery_note.installation_order = self.installation_order
+        delivery_note.car_installation = self.name
+        # delivery_note.validate()
+        # delivery_note.save()
+        if delivery_note.items:
             delivery_note.submit()
 
 
