@@ -319,7 +319,7 @@ def check_source_item(self,*args , **kwargs):
                 frappe.throw(_(f"Please Select Source As Warehouse Or Purchase Order for Item {item.item_code}"))
             if ( item.item_warehouse and  item.item_purchase_order):
                 frappe.throw(_(f"Please Select Just One Source As Warehouse Or Purchase Order for Item {item.item_code} Not Both"))
-            if (not item.warehouse):
+            if (not item.warehouse and item.item_purchase_order):
                 def_warhouse = check_delivery_warehosue(item.item_purchase_order,item.item_code,'')
                 item.db_set('warehouse',def_warhouse)
 
