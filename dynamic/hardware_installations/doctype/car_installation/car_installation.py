@@ -95,7 +95,7 @@ class CarInstallation(Document):
         stock_entry_doc.installation_order = self.installation_order
         stock_entry_doc.car_installation = self.name
         stock_entry_doc.validate()
-        if stock_entry_doc.get('items') and  len(stock_entry_doc.get('items')):
+        if stock_entry_doc.items:
             stock_entry_doc.save()
             stock_entry_doc.submit()
 
