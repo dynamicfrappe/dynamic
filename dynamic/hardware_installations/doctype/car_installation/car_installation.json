@@ -92,11 +92,13 @@
    "label": "Car Details"
   },
   {
+   "fetch_from": "car.car_model",
    "fieldname": "car_model",
    "fieldtype": "Data",
    "label": "Car Model"
   },
   {
+   "fetch_from": "car.car_type",
    "fieldname": "car_type",
    "fieldtype": "Data",
    "label": "Car Type"
@@ -106,6 +108,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "car.car_brand",
    "fieldname": "car_brand",
    "fieldtype": "Data",
    "label": "Car Brand"
@@ -303,8 +306,7 @@
    "fetch_if_empty": 1,
    "fieldname": "gps_serial_number2",
    "fieldtype": "Data",
-   "label": "GPS Serial",
-   "mandatory_depends_on": "eval:doc.gps_type\n"
+   "label": "GPS Serial"
   },
   {
    "fetch_from": "installation_request.sales_order",
@@ -324,7 +326,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-08 16:50:47.203287",
+ "modified": "2022-08-09 12:20:40.602940",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
