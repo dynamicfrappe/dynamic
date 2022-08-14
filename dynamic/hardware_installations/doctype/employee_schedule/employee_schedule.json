@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "EMP-SCH-.YYYY.-.MM.-.DD.-.#####",
  "creation": "2022-08-03 16:15:31.205067",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -142,7 +143,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-03 16:42:58.815711",
+ "modified": "2022-08-07 10:19:28.654956",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Employee Schedule",

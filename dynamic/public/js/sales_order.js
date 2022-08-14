@@ -7,20 +7,26 @@ frappe.ui.form.on("Sales Order", {
   //       self:frm.doc,
   //     },
   //     callback: function(r) {
-	//      console.log(r.message)
+  //      console.log(r.message)
   //     }
   // });
   // },
+  setup(frm) {
+    frm.custom_make_buttons = {
+      "Installation Request": "Installation Request",
+      "Cheque": "Cheque",
+    };
+  },
   refresh: function (frm) {
-    frm.custom_make_buttons["Cheque"] = "Cheque";
     frm.events.add_cheque_button(frm);
-    console.log("over Write ");
+    frm.events.add_installation_button(frm);
+    // console.log("over Write ");
   },
   onload: function (frm) {
-    console.log("over Write ");
+    // console.log("over Write ");
   },
   comparison: function (frm) {
-    console.log("com");
+    // console.log("com");
     frappe.call({
       method: "dynamic.contracting.global_data.get_comparison_data",
       args: { comparison: frm.doc.comparison },
@@ -72,6 +78,12 @@ frappe.ui.form.on("Sales Order", {
       frm.doc.payment_of_insurance_copy = 0;
       frm.refresh_field("down_payment_insurance_rate");
       frm.refresh_field("payment_of_insurance_copy");
+    }
+  },
+  total_cars: function (frm) {
+    if (frm.doc.total_cars) {
+      frm.set_value("pending_cars", frm.doc.total_cars);
+      frm.set_value("not_requested_cars", frm.doc.total_cars);
     }
   },
   set_contracting(frm) {
@@ -140,6 +152,26 @@ frappe.ui.form.on("Sales Order", {
       });
     }
   },
+  add_installation_button(frm) {
+    if (frm.doc.docstatus == 1) {
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Gebco")) {
+              frm.add_custom_button(
+                __("Installation Request"),
+                function () {
+                  frm.events.make_installation_request(frm);
+                },
+                __("Create")
+              );
+            }
+          }
+        },
+      });
+    }
+  },
   make_cheque_doc(frm) {
     return frappe.call({
       method: "dynamic.cheques.doctype.cheque.cheque.make_cheque_doc",
@@ -153,58 +185,94 @@ frappe.ui.form.on("Sales Order", {
       },
     });
   },
-
-  set_warehouse:function(frm){
-    frm.events.autofill_warehouse(frm,frm.doc.items,"item_warehouse",frm.doc.set_warehouse)
-},
-  purchase_order:function(frm){
-  frm.events.autofill_purchase_order(frm,frm.doc.items,"item_purchase_order",frm.doc.purchase_order)
-  
-},
-  autofill_warehouse : function (frm,child_table, warehouse_field, warehouse) {
-		if (warehouse && child_table && child_table.length) {
-			let doctype = child_table[0].doctype;
-			$.each(child_table || [], function(i, item) {
-				frappe.model.set_value(doctype, item.name, warehouse_field, warehouse);
-			});
-		}
-	},
-  autofill_purchase_order : function (frm,child_table, warehouse_field, warehouse) {
-		if (warehouse && child_table && child_table.length) {
-			let doctype = child_table[0].doctype;
-			$.each(child_table || [], function(i, item) {
-				frappe.model.set_value(doctype, item.name, warehouse_field, warehouse);
-			});
-		}
-	}
+  make_installation_request(frm) {
+    frappe.model.open_mapped_doc({
+      // installation_request_doc
+      method: "dynamic.gebco.api.create_installation_request",
+      frm: frm,
+      // args: {
+      //   total_cars: frm.doc.total_cars,
+      //   sales_order: frm.doc.name,
+      // },
+    });
+    // return frappe.call({
+    //   method: "dynamic.gebco.api.create_installation_request",
+    //   args: {
+    //     total_cars: frm.doc.total_cars,
+    //     sales_order: frm.doc.name,
+    //   },
+    //   callback: function (r) {
+    //     console.log(r,message)
+    // //     // frappe.model.open_mapped_doc({
+    // //     //   // installation_request_doc
+    // //     // })
+    //   },
+    // });
+  },
+  set_warehouse: function (frm) {
+    frm.events.autofill_warehouse(
+      frm,
+      frm.doc.items,
+      "item_warehouse",
+      frm.doc.set_warehouse
+    );
+  },
+  purchase_order: function (frm) {
+    frm.events.autofill_purchase_order(
+      frm,
+      frm.doc.items,
+      "item_purchase_order",
+      frm.doc.purchase_order
+    );
+  },
+  autofill_warehouse: function (frm, child_table, warehouse_field, warehouse) {
+    if (warehouse && child_table && child_table.length) {
+      let doctype = child_table[0].doctype;
+      $.each(child_table || [], function (i, item) {
+        frappe.model.set_value(doctype, item.name, warehouse_field, warehouse);
+      });
+    }
+  },
+  autofill_purchase_order: function (
+    frm,
+    child_table,
+    warehouse_field,
+    warehouse
+  ) {
+    if (warehouse && child_table && child_table.length) {
+      let doctype = child_table[0].doctype;
+      $.each(child_table || [], function (i, item) {
+        frappe.model.set_value(doctype, item.name, warehouse_field, warehouse);
+      });
+    }
+  },
 });
-
 
 frappe.ui.form.on("Sales Order Item", {
-  item_warehouse:function(frm, cdt, cdn){
+  item_warehouse: function (frm, cdt, cdn) {
     var row = frappe.get_doc(cdt, cdn);
-    frappe.model.set_value(cdt, cdn, 'warehouse', row.item_warehouse);
+    frappe.model.set_value(cdt, cdn, "warehouse", row.item_warehouse);
   },
-
-})
-
-
-frappe.ui.form.on("Sales Order Item", 'item_purchase_order', function(frm, cdt, cdn){
-  let row = locals[cdt][cdn]
-  if(row.item_purchase_order && row.item_code){
-    frappe.call({
-        method: "dynamic.api.check_delivery_warehosue",
-        args:{
-          doc_name:row.item_purchase_order,
-          item_code:row.item_code,
-          warehouse:row.warehouse,
-        },
-        callback: function(r) {
-        row.warehouse = r.message
-        frm.refresh_fields();
-        }
-    });
-  }
-  
 });
 
+frappe.ui.form.on(
+  "Sales Order Item",
+  "item_purchase_order",
+  function (frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+    if (row.item_purchase_order && row.item_code) {
+      frappe.call({
+        method: "dynamic.api.check_delivery_warehosue",
+        args: {
+          doc_name: row.item_purchase_order,
+          item_code: row.item_code,
+          warehouse: row.warehouse,
+        },
+        callback: function (r) {
+          row.warehouse = r.message;
+          frm.refresh_fields();
+        },
+      });
+    }
+  }
+);

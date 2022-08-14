@@ -256,6 +256,28 @@ data = {
             # "in_list_view":1,
             }
         ], 
+        "Sales Order":[
+             {
+                "fieldname": "invoice_payment",
+                "fieldtype": "Float",
+                "insert_after": "advance_paid",
+                "label": "Invoice Payment",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+            {
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "invoice_payment",
+                "label": "Outstanding Amount",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+        ]
     },
     # "properties": [
         
@@ -269,14 +291,14 @@ data = {
         "property_type": "Check",
         "value": "1"
         },
-        #  {
-        # "doctype": "Sales Order",
-        # "doctype_or_field": "DocField",
-        # "fieldname": "set_warehouse",
-        # "property": "reqd",
-        # "property_type": "Check",
-        # "value": "1"
-        # },
+         {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "set_warehouse",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "0"
+        },
         {
         "doctype": "Sales Order Item",
         "doctype_or_field": "DocField",

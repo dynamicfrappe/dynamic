@@ -52,7 +52,7 @@ frappe.ui.form.on("Landed Cost Voucher", {
     } ,
     add_row_to_charges(frm , data){
         data.forEach(element => {
-            
+            console.log("element" ,element.line_name)
             var raw = frm.add_child("taxes")
             raw.expense_account = element.account
             raw.description = element.description
@@ -83,7 +83,7 @@ frappe.ui.form.on("Landed Cost Voucher", {
                     "document": frm.doc.cost_child_table[i].invoice
                 } ,
                 callback:function(r){
-                   
+                    console.log(r)
                     frm.events.add_row_to_charges(frm ,r.message)
                 }
             })

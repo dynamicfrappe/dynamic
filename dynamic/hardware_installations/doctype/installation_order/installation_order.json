@@ -38,14 +38,13 @@
  "fields": [
   {
    "fetch_from": "installation_request.sales_order",
-   "fetch_if_empty": 1,
    "fieldname": "sales_order",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Sales Order",
    "options": "Sales Order",
-   "read_only_depends_on": "installation_request",
-   "reqd": 1
+   "read_only": 1,
+   "read_only_depends_on": "installation_request"
   },
   {
    "fieldname": "column_break_1",
@@ -232,7 +231,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-03 16:48:57.926830",
+ "modified": "2022-08-04 16:23:13.548103",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Installation Order",

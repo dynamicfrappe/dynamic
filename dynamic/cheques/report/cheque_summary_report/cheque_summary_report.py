@@ -15,7 +15,7 @@ from dynamic.cheques.doctype.cheque.cheque import cheque_status
 
 
 def execute(filters=None):
-    return Cheques_summary_report(filters).run()
+    return Cheques_summary_report(filters).run() 
 
 
 class Cheques_summary_report(object):
