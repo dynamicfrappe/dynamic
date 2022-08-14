@@ -212,6 +212,7 @@
    "fieldname": "journal_entry",
    "fieldtype": "Link",
    "label": "Journal Entry",
+   "no_copy": 1,
    "options": "Journal Entry",
    "read_only": 1
   },
@@ -251,7 +252,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-21 11:23:38.598242",
+ "modified": "2022-08-14 16:54:18.101044",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Pay and Receipt Document",
