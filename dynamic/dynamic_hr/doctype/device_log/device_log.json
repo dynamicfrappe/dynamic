@@ -86,7 +86,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "device.name1",
+   "fetch_from": "device.device_name",
    "fieldname": "device_name",
    "fieldtype": "Data",
    "in_filter": 1,
