@@ -271,7 +271,16 @@ def saftey_stock():
         asd = send_mail_by_role(setting_table[0].role,str_list,"Saftey Stock")
         return asd
         
-
+@frappe.whitelist()
+def check_delivery_warehosue(doc_name,item_code,warehouse):
+     if not warehouse and item_code:
+                purchase_warehouse_list=frappe.db.get_list('Purchase Order Item', filters={
+                                    'parent':doc_name,
+                                    'item_code':item_code
+                                },
+                                fields=['warehouse']
+                                )
+                return purchase_warehouse_list[0].get('warehouse')
 
 
 
@@ -297,16 +306,7 @@ def send_mail_by_role(role,msg,subject):
         print("exception",str(ex))
 
 
-@frappe.whitelist()
-def check_delivery_warehosue(doc_name,item_code,warehouse):
-     if not warehouse and item_code:
-                purchase_warehouse_list=frappe.db.get_list('Purchase Order Item', filters={
-                                    'parent':doc_name,
-                                    'item_code':item_code
-                                },
-                                fields=['warehouse']
-                                )
-                return purchase_warehouse_list[0].get('warehouse')
+
 
 
 @frappe.whitelist()

@@ -305,7 +305,7 @@ data = {
         "fieldname": "warehouse",
         "property": "read_only",
         "property_type": "Check",
-        "value": "1"
+        "value": "0"
         },
     ],
   
