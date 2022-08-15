@@ -24,6 +24,13 @@ frappe.ui.form.on("Sales Order", {
   },
   onload: function (frm) {
     // console.log("over Write ");
+    // frm.set_query('item_purchase_order', 'items', function() {
+		// 	return {
+		// 		'filters': {
+		// 			'{{ field in linked doctype }}': ['{{ operator }}', '{{ value }}']
+		// 		}
+		// 	};
+		// });
   },
   comparison: function (frm) {
     // console.log("com");
