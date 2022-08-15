@@ -128,7 +128,7 @@ class Reservation(Document):
 										ON b.parent = c.name AND c.name <> '{self.name}'
 										where a.item_code = '{self.item_code}'  and a.parent = '{self.order_source}' 
 										""",as_dict=1)
-		frappe.errprint(f'ordered->{order}')
+		# frappe.errprint(f'ordered->{order}')
 		if order and len(order) > 0 :
 			if order[0].get("name") and float(order[0].get("qty")) > 0 :
 				valid = self.validate_order_line(order[0].get("name") , float(order[0].get("qty")))
