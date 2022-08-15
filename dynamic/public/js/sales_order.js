@@ -269,8 +269,11 @@ frappe.ui.form.on(
           warehouse: row.warehouse,
         },
         callback: function (r) {
-          row.warehouse = r.message;
-          frm.refresh_fields();
+          if (r.message){
+            console.log('warehouse -> ',r.message)
+            row.warehouse = r.message;
+            frm.refresh_fields();
+          }
         },
       });
     }

@@ -84,11 +84,10 @@ class Reservation(Document):
 			row.available_qty_atfer___reservation = stock_sql[0].get("qty") - self.reservation_amount
 		if  not stock_sql and len(stock_sql) == 0 :
 			frappe.throw(_(f""" no stock value in warehouse {self.warehouse_source} for item {self.item_code}  """))
-	#validate Item in Purchase order 
 
 	def stock_sql(self):
 		"""get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
-		return frappe.db.sql(f""" 
+		data = frappe.db.sql(f""" 
 				      SELECT a.name as bin , 'Bin' as `doctype`,
 					CASE 
                          WHEN b.reserved_qty > 0 AND c.status="Active"
@@ -108,14 +107,16 @@ class Reservation(Document):
                     AND c.name <> "{self.name}"
 					
 					""" ,as_dict=1)
+		# frappe.errprint(f'data is -> {data}')
+		return data
 
 	def validate_purchase_order(self):
 		order =  frappe.db.sql(f"""                   
 										SELECT a.name as `name` ,a.parent,a.parenttype as doctype,
 										CASE
 										WHEN b.reserved_qty > 0 AND c.status="Active"
-										then a.qty - SUM(b.reserved_qty)
-										else a.qty
+										then (a.qty - a.received_qty) - SUM(b.reserved_qty)
+										else a.qty - a.received_qty
 										end as qty
 										from
 										`tabPurchase Order Item` a
@@ -127,6 +128,7 @@ class Reservation(Document):
 										ON b.parent = c.name AND c.name <> '{self.name}'
 										where a.item_code = '{self.item_code}'  and a.parent = '{self.order_source}' 
 										""",as_dict=1)
+		frappe.errprint(f'ordered->{order}')
 		if order and len(order) > 0 :
 			if order[0].get("name") and float(order[0].get("qty")) > 0 :
 				valid = self.validate_order_line(order[0].get("name") , float(order[0].get("qty")))
