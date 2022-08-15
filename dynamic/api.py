@@ -453,11 +453,11 @@ def submit_payment_for_terra(doc , *args ,**kwargs):
                             if len(order_amount) >  0 and order_amount[0].get("amount") :
                                 # oreder_perecent = float(order_amount[0].get("amount")) / float(invoice_total or 0)
                                 # order_amount = line.amount * oreder_perecent
-                              
-                                frappe.db.sql(f""" UPDATE `tabSales Order`
-                                 SET 
-                                 outstanding_amount = {out_stand[0].get("out_stand")}
-                                 WHERE name = "{line.sales_order}"  """)
+                                amount =out_stand[0].get("out_stand")
+                                order_name = line.sales_order
+                                frappe.db.sql(""" UPDATE `tabSales Order`
+                                 SET  outstanding_amount = %d 
+                                 WHERE name = '%s'  """%(amount , order_name))
                                 frappe.db.commit()
 
 
