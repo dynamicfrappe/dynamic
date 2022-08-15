@@ -24,13 +24,13 @@ frappe.ui.form.on("Sales Order", {
   },
   onload: function (frm) {
     // console.log("over Write ");
-    // frm.set_query('item_purchase_order', 'items', function() {
-		// 	return {
-		// 		'filters': {
-		// 			'{{ field in linked doctype }}': ['{{ operator }}', '{{ value }}']
-		// 		}
-		// 	};
-		// });
+    frm.set_query('item_purchase_order', 'items', function(doc, cdt, cdn) {
+      let row = locals[cdt][cdn];
+			return {
+				query: 'dynamic.api.get_purchase_order',
+				filters:{"item_code":row.item_code}
+			};
+		});
   },
   comparison: function (frm) {
     // console.log("com");
