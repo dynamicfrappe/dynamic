@@ -1,13 +1,13 @@
 {
  "actions": [],
- "autoname": "field:name1",
+ "autoname": "field:device_name",
  "creation": "2020-11-18 13:01:58.741405",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "device_details_section",
-  "name1",
+  "device_name",
   "company",
   "shift",
   "column_break_6",
@@ -126,14 +126,18 @@
    "label": "Last Connection Details"
   },
   {
-   "fieldname": "name1",
+   "allow_in_quick_entry": 1,
+   "fieldname": "device_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Device Name",
+   "reqd": 1,
    "unique": 1
   }
  ],
  "links": [],
- "modified": "2022-02-22 15:03:35.982260",
+ "modified": "2022-08-14 10:49:33.230555",
  "modified_by": "Administrator",
  "module": "Dynamic HR",
  "name": "Device",
@@ -191,6 +195,6 @@
  "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "title_field": "name1",
+ "title_field": "device_name",
  "track_changes": 1
 }
