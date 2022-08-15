@@ -90,7 +90,7 @@ class Reservation(Document):
 		data = frappe.db.sql(f""" 
 				      SELECT a.name as bin , 'Bin' as `doctype`,
 					CASE 
-                         WHEN b.reserved_qty > 0 AND c.status="Active"
+                         WHEN b.reserved_qty > 0 AND c.status = "Active"
 						 then a.actual_qty - SUM(b.reserved_qty)
 						 ELSE a.actual_qty 
 						 END  as qty
@@ -107,14 +107,14 @@ class Reservation(Document):
                     AND c.name <> "{self.name}"
 					
 					""" ,as_dict=1)
-		# frappe.errprint(f'data is -> {data}')
+		frappe.errprint(f'data is -> {data}')
 		return data
 
 	def validate_purchase_order(self):
 		order =  frappe.db.sql(f"""                   
 										SELECT a.name as `name` ,a.parent,a.parenttype as doctype,
 										CASE
-										WHEN b.reserved_qty > 0 AND c.status="Active"
+										WHEN b.reserved_qty > 0 AND c.status = "Active"
 										then (a.qty - a.received_qty) - SUM(b.reserved_qty)
 										else a.qty - a.received_qty
 										end as qty
