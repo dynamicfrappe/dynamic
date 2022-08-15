@@ -426,7 +426,7 @@ def submit_payment_for_terra(doc , *args ,**kwargs):
                     if out_stand and out_stand[0].get("out_stand") : 
                         frappe.db.sql(f""" UPDATE `tabSales Order` SET 
                         outstanding_amount ={ out_stand[0].get("out_stand")} 
-                        WHERE name = {ref.reference_name}""")
+                        WHERE name = "{ref.reference_name}" """)
                         frappe.db.commit()
                 
                   # update sales order allocated amount if payment againest sales invoice 
@@ -455,8 +455,7 @@ def submit_payment_for_terra(doc , *args ,**kwargs):
                                 # order_amount = line.amount * oreder_perecent
                                 amount =out_stand[0].get("out_stand")
                                 order_name = line.sales_order
-                                frappe.db.sql(""" UPDATE `tabSales Order`
-                                 SET  outstanding_amount = %d 
+                                frappe.db.sql(""" UPDATE `tabSales Order`  SET  outstanding_amount = %d 
                                  WHERE name = '%s'  """%(amount , order_name))
                                 frappe.db.commit()
 
