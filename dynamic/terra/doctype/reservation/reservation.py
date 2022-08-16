@@ -107,14 +107,14 @@ class Reservation(Document):
                     AND c.name <> "{self.name}"
 					
 					""" ,as_dict=1)
-		frappe.errprint(f'data is -> {data}')
+		# frappe.errprint(f'data is -> {data}')
 		return data
 
 	def validate_purchase_order(self):
 		order =  frappe.db.sql(f"""                   
 										SELECT a.name as `name` ,a.parent,a.parenttype as doctype,
 										CASE
-										WHEN b.reserved_qty > 0 AND c.status = "Active"
+										WHEN b.reserved_qty > 0 AND c.status <> "Invalid"
 										then (a.qty - a.received_qty) - SUM(b.reserved_qty)
 										else a.qty - a.received_qty
 										end as qty
@@ -131,10 +131,10 @@ class Reservation(Document):
 		# frappe.errprint(f'ordered->{order}')
 		if order and len(order) > 0 :
 			if order[0].get("name") and float(order[0].get("qty")) > 0 :
-				valid = self.validate_order_line(order[0].get("name") , float(order[0].get("qty")))
-				if not valid :
+				# valid = self.validate_order_line(order[0].get("name") , float(order[0].get("qty")))
+				if order[0].get('qty') < self.reservation_amount :
 					frappe.throw(_(f"Pruchase Order  {self.order_source} = {order[0].get('qty')} and you requires  {self.reservation_amount} "))
-				if valid:
+				if self.reservation_amount >= order[0].get('qty') :
 					# self.add_row_single('pur',order[0])
 					self.reservation_purchase_order = [] #?add row
 					row = self.append('reservation_purchase_order', {})
@@ -153,16 +153,7 @@ class Reservation(Document):
 		if not order or  len(order) == 0 :
 			frappe.throw(_(f"Invalid Purchase Order {self.order_source} don't have item {self.item_code}"))
 	
-	def validate_order_line(self , line , qty ):
-		res_sql = frappe.db.sql(""" SELECT SUM(reserved_qty) AS qty FROM `tabReservation Purchase Order`
-		WHERE item = '{self.item_code}' and purchase_order_line = '{line}'  """,as_dict = True)
-		if res_sql and len(res_sql) > 0 :
-			if qty  - float(res_sql[0].get('qty') or 0 ) >= self.reservation_amount :
-				return True
-			if qty  - float(res_sql[0].get('qty') or 0 ) < self.reservation_amount :
-				return False
-		else :
-			return True		
+		
 
 
 	def add_row_single(self,target,data):		
@@ -195,7 +186,17 @@ class Reservation(Document):
 			total_put_order += float(row.reserved_qty)
 		self.db_set('total_purchase_order_reserved_qty',total_put_order)
 
-
+	#** used in validate_purchase_order
+	# def validate_order_line(self , line , qty ):
+	# 	res_sql = frappe.db.sql(""" SELECT SUM(reserved_qty) AS qty FROM `tabReservation Purchase Order`
+	# 	WHERE item = '{self.item_code}' and purchase_order_line = '{line}'  """,as_dict = True)
+	# 	if res_sql and len(res_sql) > 0 :
+	# 		if qty  - float(res_sql[0].get('qty') or 0 ) >= self.reservation_amount :
+	# 			return True
+	# 		if qty  - float(res_sql[0].get('qty') or 0 ) < self.reservation_amount :
+	# 			return False
+	# 	else :
+	# 		return True	
 
 	# def validate_pur_order_unkown(self):
 	# 	used_pur_order_name =  frappe.db.sql_list(f"""                   
