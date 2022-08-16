@@ -352,10 +352,9 @@ def add_row_for_reservation(self):
 @frappe.whitelist()
 def cancel_reservation(self,*args , **kwargs):
     if "Terra" in DOMAINS:
-        ...
-        # for item in self.items:
-        #     if(item.reservation):
-        #         frappe.db.set_value('Reservation',item.reservation,'status','Invalid')
+        for item in self.items:
+            if(item.reservation):
+                frappe.db.set_value('Reservation',item.reservation,'status','Invalid')
 
 
 

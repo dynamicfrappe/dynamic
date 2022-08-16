@@ -186,7 +186,25 @@ class Reservation(Document):
 			total_put_order += float(row.reserved_qty)
 		self.db_set('total_purchase_order_reserved_qty',total_put_order)
 
-	#** used in validate_purchase_order
+
+	#?another query for validate purchase order
+	# def validate_purchase_order_two(self):
+	# 	order =  frappe.db.sql(f"""
+	# 		SELECT a.name ,a.parent,a.parenttype as doctype , 
+	# 		CASE
+	# 		WHEN b.reserved_qty > 0 AND c.status <> "Invalid"
+	# 		then (a.qty - a.received_qty) - SUM(b.reserved_qty)
+	# 		else a.qty - a.received_qty
+	# 		end as qty 
+	# 		from `tabPurchase Order Item` a, `tabReservation Purchase Order` b,`tabReservation` c
+	# 		WHERE a.item_code = '{self.item_code}' AND   b.purchase_order_line=a.name AND b.parent = c.name AND c.name <> '{self.name}' 
+	# 		AND a.item_code = '{self.item_code}'  and a.parent = '{self.order_source}' 
+	# 		GROUP  BY a.name
+	# 	 """,as_dict=1)
+	# 	return order
+		
+
+	#? used in validate_purchase_order
 	# def validate_order_line(self , line , qty ):
 	# 	res_sql = frappe.db.sql(""" SELECT SUM(reserved_qty) AS qty FROM `tabReservation Purchase Order`
 	# 	WHERE item = '{self.item_code}' and purchase_order_line = '{line}'  """,as_dict = True)
