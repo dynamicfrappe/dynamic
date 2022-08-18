@@ -127,4 +127,11 @@ class PayDocument(Document):
             je = frappe.get_doc("Journal Entry", self.journal_entry)
             if (je.docstatus == 1):
                 je.cancel()
-            self.journal_entry = ''
+            self.db_set("journal_entry", '')
+            gl_entries = frappe.get_all("GL Entry", filters={
+                "against_voucher_type": self.doctype,
+                "against_voucher": self.name
+
+            })
+            for gl in gl_entries:
+                frappe.get_doc("GL Entry", gl).cancel()
