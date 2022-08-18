@@ -114,7 +114,7 @@ class PayandReceiptDocument(Document):
 					"exchange_rate": flt(account_row_exchange_rate),
 					"credit_in_account_currency": flt(amount_in_account_row_currency),
 					"credit_in_company_currency": flt(account_row.base_amount),
-                	"against_account": self.account,
+					"against_account": self.account,
 					"cost_center": self.cost_center,
 					"project": self.project,
 					"user_remark": getattr(account_row, "note", (self.notes or "")),
@@ -158,7 +158,7 @@ class PayandReceiptDocument(Document):
 				je.append("accounts", {
 					"account": account_row.account,
 					"account_currency": account_row_currency,
-                	"against_account": self.account,
+					"against_account": self.account,
 					"exchange_rate": flt(account_row_exchange_rate),
 					"debit_in_account_currency":  flt(amount_in_account_row_currency),
 					"debit_in_company_currency": flt(account_row.base_amount),
@@ -181,7 +181,15 @@ class PayandReceiptDocument(Document):
 			je = frappe.get_doc("Journal Entry", self.journal_entry)
 			if (je.docstatus == 1):
 				je.cancel()
-			self.db_set("journal_entry",'')
+			self.db_set("journal_entry", '')
+			gl_entries = frappe.get_all("GL Entry", filters={
+				"against_voucher_type": self.doctype,
+				"against_voucher": self.name
+
+			})
+			for gl in gl_entries:
+				frappe.get_doc("GL Entry", gl).cancel()
+
 			# self.journal_entry = ''
 
 	# def create_journal_entry (self):
