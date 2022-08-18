@@ -9,7 +9,7 @@ frappe.ui.form.on("Receipt Document", {
         function () {
           frappe.route_options = {
             voucher_no: frm.doc.journal_entry,
-            from_date: moment(frm.doc.creation).format("YYYY-MM-DD"),
+            from_date: frm.doc.posting_date,
             to_date: moment(frm.doc.modified).format("YYYY-MM-DD"),
             company: frm.doc.company,
             show_cancelled_entries: frm.doc.docstatus === 2,

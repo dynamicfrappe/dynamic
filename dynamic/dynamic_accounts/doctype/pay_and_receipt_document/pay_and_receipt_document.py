@@ -50,7 +50,7 @@ class PayandReceiptDocument(Document):
 	def on_submit(self):
 		self.create_journal_entry()
 
-	def on_cancell(self):
+	def on_cancel(self):
 		self.cancel_journal_entry()
 
 	def create_journal_entry(self):
@@ -181,7 +181,8 @@ class PayandReceiptDocument(Document):
 			je = frappe.get_doc("Journal Entry", self.journal_entry)
 			if (je.docstatus == 1):
 				je.cancel()
-			self.journal_entry = ''
+			self.db_set("journal_entry",'')
+			# self.journal_entry = ''
 
 	# def create_journal_entry (self):
 	# 	company_currency = erpnext.get_company_currency(self.company)

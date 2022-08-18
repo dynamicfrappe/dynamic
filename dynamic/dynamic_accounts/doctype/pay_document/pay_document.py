@@ -127,4 +127,4 @@ class PayDocument(Document):
             je = frappe.get_doc("Journal Entry", self.journal_entry)
             if (je.docstatus == 1):
                 je.cancel()
-            self.journal_entry = ''
+            self.db_set("journal_entry",'')
