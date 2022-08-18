@@ -97,16 +97,14 @@ doc_events = {\
         "validate": "dynamic.api.validate_delivery_note"
 
     },
-    # "Stock Entry": {
-    #     "on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
-    # },
+   
     "Journal Entry": {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
-        # "validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost",
         "on_submit": "dynamic.api.create_reservation_validate",
         "before_save": "dynamic.api.check_source_item",
+        "on_cancel":"dynamic.api.cancel_reservation",
     },
     "Purchase Receipt": {
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
@@ -122,7 +120,7 @@ doc_events = {\
     },
     "Purchase Invoice": {
         "on_submit": "dynamic.api.submit_purchase_invoice",
-     } # "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
+     } 
 }
 # notification_config = "dynamic.notifications.get_notification_config"
 
@@ -200,6 +198,8 @@ scheduler_events = {
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
+
+
 override_doctype_dashboards = {
     "Sales Invoice": "dynamic.public.dashboard.sales_invoice_dashboard.get_data",
     "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",

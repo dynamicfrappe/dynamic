@@ -271,7 +271,16 @@ def saftey_stock():
         asd = send_mail_by_role(setting_table[0].role,str_list,"Saftey Stock")
         return asd
         
-
+@frappe.whitelist()
+def check_delivery_warehosue(doc_name,item_code,warehouse):
+     if not warehouse and item_code:
+                purchase_warehouse_list=frappe.db.get_list('Purchase Order Item', filters={
+                                    'parent':doc_name,
+                                    'item_code':item_code
+                                },
+                                fields=['warehouse']
+                                )
+                return purchase_warehouse_list[0].get('warehouse')
 
 
 
@@ -297,16 +306,7 @@ def send_mail_by_role(role,msg,subject):
         print("exception",str(ex))
 
 
-@frappe.whitelist()
-def check_delivery_warehosue(doc_name,item_code,warehouse):
-     if not warehouse and item_code:
-                purchase_warehouse_list=frappe.db.get_list('Purchase Order Item', filters={
-                                    'parent':doc_name,
-                                    'item_code':item_code
-                                },
-                                fields=['warehouse']
-                                )
-                return purchase_warehouse_list[0].get('warehouse')
+
 
 
 @frappe.whitelist()
@@ -319,7 +319,7 @@ def check_source_item(self,*args , **kwargs):
                 frappe.throw(_(f"Please Select Source As Warehouse Or Purchase Order for Item {item.item_code}"))
             if ( item.item_warehouse and  item.item_purchase_order):
                 frappe.throw(_(f"Please Select Just One Source As Warehouse Or Purchase Order for Item {item.item_code} Not Both"))
-            if (not item.warehouse):
+            if (not item.warehouse and item.item_purchase_order):
                 def_warhouse = check_delivery_warehosue(item.item_purchase_order,item.item_code,'')
                 item.db_set('warehouse',def_warhouse)
 
@@ -348,6 +348,13 @@ def add_row_for_reservation(self):
             item.save()
             reserv_doc.db_set('sales_order',self.name)
 
+
+@frappe.whitelist()
+def cancel_reservation(self,*args , **kwargs):
+    if "Terra" in DOMAINS:
+        for item in self.items:
+            if(item.reservation):
+                frappe.db.set_value('Reservation',item.reservation,'status','Invalid')
 
 
 
@@ -426,7 +433,7 @@ def submit_payment_for_terra(doc , *args ,**kwargs):
                     if out_stand and out_stand[0].get("out_stand") : 
                         frappe.db.sql(f""" UPDATE `tabSales Order` SET 
                         outstanding_amount ={ out_stand[0].get("out_stand")} 
-                        WHERE name = {ref.reference_name}""")
+                        WHERE name = "{ref.reference_name}" """)
                         frappe.db.commit()
                 
                   # update sales order allocated amount if payment againest sales invoice 
@@ -453,14 +460,25 @@ def submit_payment_for_terra(doc , *args ,**kwargs):
                             if len(order_amount) >  0 and order_amount[0].get("amount") :
                                 # oreder_perecent = float(order_amount[0].get("amount")) / float(invoice_total or 0)
                                 # order_amount = line.amount * oreder_perecent
-                              
-                                frappe.db.sql(f""" UPDATE `tabSales Order`
-                                 SET 
-                                 outstanding_amount = {out_stand[0].get("out_stand")}
-                                 WHERE name = '{line.sales_order}'""")
+                                amount =out_stand[0].get("out_stand")
+                                order_name = line.sales_order
+                                frappe.db.sql(""" UPDATE `tabSales Order`  SET  outstanding_amount = %d 
+                                 WHERE name = '%s'  """%(amount , order_name))
                                 frappe.db.commit()
 
 
                                 #frappe.throw(str(oreder_perecent))
                     
 
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_purchase_order(doctype, txt, searchfield, start, page_len, filters):
+    if  filters and filters.get("item_code"):
+        return frappe.db.sql(
+            f"""select parent from `tabPurchase Order Item` po
+                where po.item_code = '{filters.get("item_code")}'
+                """
+        )
+    return ()
