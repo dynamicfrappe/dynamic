@@ -28,6 +28,27 @@ def validate_delivery_note(doc,*args,**kwargs):
             m_temp.save()
         if len(doc.packed_items) > 0  :
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
+    if 'Terra' in DOMAINS:
+        # frappe.throw('Validate delivery Note')
+        minus_delivery_qty_from_reservation(doc,*args,**kwargs)
+
+
+def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
+    #1-qty deliverd from delivery note
+    for row in doc.items:
+        reserv_data = frappe.db.get_value('Sales Order Item',{'item_code':row.item_code,'parent':row.against_sales_order},['reservation','item_purchase_order','item_warehouse'],as_dict=1)
+        reserv_doc = frappe.get_doc('Reservation',reserv_data['reservation'])
+        #2- get row from & get reservation then check it reserver over warehouse or po -> then minus qty from reservation
+        if reserv_data.get('item_purchase_order'):
+            item = frappe.get_doc('Reservation Purchase Order',reserv_doc.reservation_purchase_order[0].name)
+        if reserv_data.get('item_warehouse'):
+            item = frappe.get_doc('Reservation Warehouse',reserv_doc.warehouse[0].name)
+        if(item.reserved_qty < row.qty):
+            frappe.throw(f'Not Enough Reservation qty for item {row.item_code} for reservation {reserv_data["reservation"]} avail reserved qty {item.reserved_qty}')
+        item.reserved_qty = item.reserved_qty - row.qty
+        item.save() 
+
+    
 
 def validate_purchase_recipt(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:

@@ -94,8 +94,7 @@ doc_events = {\
     },
     "Delivery Note": {
         "on_submit": "dynamic.gebco.api.validate_delivery_note",
-        "validate": "dynamic.api.validate_delivery_note"
-
+        "validate": "dynamic.api.validate_delivery_note",
     },
    
     "Journal Entry": {
@@ -108,8 +107,8 @@ doc_events = {\
     },
     "Purchase Receipt": {
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
-        "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains"
-
+        "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains",
+        # "before_save":"dynamic.api.check_pr_reservation"
     },
     "Material Request": {
         "on_submit": "dynamic.api.validate_material_request"
