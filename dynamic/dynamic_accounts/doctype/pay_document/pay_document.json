@@ -217,10 +217,9 @@
   },
   {
    "fieldname": "journal_entry",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Journal Entry",
    "no_copy": 1,
-   "options": "Journal Entry",
    "read_only": 1
   },
   {
@@ -249,7 +248,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-14 16:54:34.338701",
+ "modified": "2022-08-18 14:08:21.206038",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Pay Document",
