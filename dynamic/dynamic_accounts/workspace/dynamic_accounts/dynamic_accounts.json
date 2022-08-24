@@ -25,15 +25,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Pay and Receipt Document",
-   "link_to": "Pay and Receipt Document",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Pay Document",
    "link_to": "Pay Document",
    "link_type": "DocType",
@@ -50,7 +41,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-05-12 15:27:21.870368",
+ "modified": "2022-05-12 15:40:29.901112",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Dynamic Accounts",
@@ -59,12 +50,6 @@
  "pin_to_top": 0,
  "restrict_to_domain": "Dynamic Accounts",
  "shortcuts": [
-  {
-   "doc_view": "List",
-   "label": "Pay and Receipt Document",
-   "link_to": "Pay and Receipt Document",
-   "type": "DocType"
-  },
   {
    "doc_view": "List",
    "label": "Pay Document",
