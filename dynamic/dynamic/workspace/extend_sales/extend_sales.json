@@ -15,7 +15,7 @@
  "is_standard": 1,
  "label": "Extend Sales",
  "links": [],
- "modified": "2022-05-18 15:59:04.972704",
+ "modified": "2022-05-22 15:07:53.363346",
  "modified_by": "Administrator",
  "module": "dynamic",
  "name": "Extend Sales",
@@ -28,6 +28,12 @@
    "label": "Sales Person Comminion",
    "link_to": "Sales Person Comminion",
    "type": "Report"
+  },
+  {
+   "doc_view": "List",
+   "label": "Commission Template",
+   "link_to": "Commission Template",
+   "type": "DocType"
   }
  ],
  "shortcuts_label": "Sales Commition Report"
