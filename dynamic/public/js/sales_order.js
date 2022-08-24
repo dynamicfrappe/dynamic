@@ -20,6 +20,7 @@ frappe.ui.form.on("Sales Order", {
   refresh: function (frm) {
     frm.events.add_cheque_button(frm);
     frm.events.add_installation_button(frm);
+    frm.events.domian_valid()
     // console.log("over Write ");
   },
   onload: function (frm) {
@@ -253,6 +254,20 @@ frappe.ui.form.on("Sales Order", {
       });
     }
   },
+
+  domian_valid: function (frm) {
+    if(cur_frm.doc.docstatus === 1){
+      frappe.call({
+        method :"dynamic.api.get_active_domains" ,
+        async: false,
+        callback:function (r){
+         if (r.message.includes("Terra")) {
+            cur_frm.page.remove_inner_button(__('Update Items'))
+            }
+        }
+    })
+    }
+ } ,
 });
 
 frappe.ui.form.on("Sales Order Item", {

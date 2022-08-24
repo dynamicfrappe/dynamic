@@ -137,7 +137,17 @@ def validate_delivery_note(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         # frappe.throw('Validate delivery Note')
         validate_delivery_notes_sal_ord(doc)
+        
 
+@frappe.whitelist()       
+def cancel_delivery_note(doc,*args,**kwargs):
+    #1-qty deliverd from delivery note
+    if  'Terra' in DOMAINS:
+        for row in doc.items:
+            reserv_data = frappe.db.get_value('Sales Order Item',{'item_code':row.item_code,'parent':row.against_sales_order},['reservation'],as_dict=1)
+            reserv_doc = frappe.get_doc('Reservation',reserv_data['reservation'])
+            reserv_doc.db_set('status','Invalid')
+    
 
 @frappe.whitelist()
 def submit_journal_entry_cheques (doc):
@@ -512,8 +522,8 @@ def submit_payment_for_terra(doc , *args ,**kwargs):
 def get_purchase_order(doctype, txt, searchfield, start, page_len, filters):
     if  filters and filters.get("item_code"):
         return frappe.db.sql(
-            f"""select parent from `tabPurchase Order Item` po
-                where po.item_code = '{filters.get("item_code")}'
+            f"""select po.parent from `tabPurchase Order Item` po
+                where po.item_code = '{filters.get("item_code")}' AND IFNULL(po.received_qty,0) < po.qty
                 """
         )
     return ()
