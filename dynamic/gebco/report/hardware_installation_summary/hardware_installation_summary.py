@@ -22,96 +22,110 @@ class instalation_summary(object):
 	def get_columns(self):
 		# add columns wich appear data
 		self.columns = [
-            {
-                "fieldname": "from_time",
-                "fieldtype": "Date",
-                "label": _("From"),
-                "width": 150
-            },
-            {
-                "fieldname": "to_time",
-                "fieldtype": "Date",
-                "label": _("To"),
-                "width": 150
-            },
+			{
+				"label": _("Customer"),
+				"fieldname": "customer",
+				"fieldtype": "Link",
+				"options": "Doctype",
+				"width": 140,
+			},
             {
                 "fieldname": "sales_order",
                 "fieldtype": "Link",
                 "label": _("Sales Order"),
-                "width": 120,
+                "width": 150,
                 "options": "Sales Order",
-
-
             },
-            {
-                "fieldname": "installation_order",
-                "fieldtype": "Link",
-                "label": _("Installation Order"),
+			{
+                "fieldname": "total_cars",
+                "fieldtype": "Int",
+                "label": _("Total Car"),
                 "width": 120,
-                "options": "Installation Order",
-            },
-            {
-                "fieldname": "installation_request",
-                "fieldtype": "Link",
-                "label": _("Installation Request"),
-                "width": 120,
-                "options": "Installation Request",
-            },
-            {
-                "fieldname": "team",
-                "fieldtype": "Link",
-                "label": _("Installation Team"),
-                "width": 120,
-                "options": "Installation Team",
             },
 			{
                 "fieldname": "requested_car",
                 "fieldtype": "Int",
                 "label": _("requested Car"),
-                "width": 70,
+                "width": 120,
             },
 			{
                 "fieldname": "ordered_car",
                 "fieldtype": "Int",
                 "label": _("Ordered Car"),
-                "width": 70,
+                "width": 120,
             },
 			{
                 "fieldname": "completed_car",
                 "fieldtype": "Int",
                 "label": _("Completed Car"),
-                "width": 70,
+                "width": 120,
             },
+			
         ]
 		return self.columns
 		
 	
 	def get_data(self):
 		self.data = []
-		self.conditions, self.values = self.get_conditions(self.filters)
-		query = ''
-		# data_query = f"""
-		# 	select * {query}
-		# 	from `tabInstallation Request` p
-		# 	where {self.conditions}
-			
-		# """
+		self.conditions, self.values,self.query = self.get_conditions(self.filters)
+
+		data = f"""{self.query} where {self.conditions}"""
+		self.data = frappe.db.sql(data, values=self.values, as_dict=1)
 		return self.data
-	
+
+		
 	def get_conditions(self,filters):
 		conditions = "1=1 "
 		values = dict()
+		query = ""
+		dict_fields = {
+			"Installation Request":['p.sales_order',"p.customer","p.total_cars","p.total_cars as `requested_car`","p.completed_cars as `completed_car`"," p.ordered_cars as `ordered_car`"],
+			"Installation Order":['p.sales_order',"p.total_requested_cars as `total_cars`","p.total_cars as `ordered_car`",'p.customer','p.total_cars `requested_car`','p.completed_cars as `completed_car`'],
+			"Sales Order":['p.customer','p.name as `sales_order`', 'p.total_cars as `total_cars`','p.ordered_cars as `ordered_car`','SUM(re.total_cars) as `requested_car`','SUM(re.completed_cars) as `completed_car`'],
+			"default":['p.customer','p.name as `sales_order`', 'p.completed_cars as `completed_car`','p.requested_cars as `requested_car`','p.total_cars as `total_cars`','p.ordered_cars as `ordered_car`']
+		}
+		if filters.get("from_date"):
+			if filters.get("from_date") and filters.get("to_date"):
+				frappe.errprint('to_date')
+				conditions += " AND date(p.creation)  >= date(%(from_date)s)  AND date(p.creation)  <= date(%(to_date)s)"
+				values["from_date"] = filters.get("from_date")
+				values["to_date"] = filters.get("to_date")
 
-		if filters.get('sales_order'):
-			conditions += " AND p.sales_order  =  %(sales_order)s "
-			values["sales_order"] = filters.get("sales_order")
+			if  filters.get("from_date") and not filters.get("to_date"):
+				frappe.errprint(' from_date')
+				conditions += " AND date(p.creation)  = date(%(from_date)s) "
+				values["from_date"] = filters.get("from_date")
 
-		if filters.get('installation_order'):
-			conditions += " AND p.installation_order  =  %(installation_order)s "
-			values["installation_order"] = filters.get("installation_order")
+		#TODO:get field according to doctype
+		if self.filters.get('source'):
+			if self.filters.get('source') == "Installation Request":
+				query_fields = self.get_query_field(dict_fields["Installation Request"])
+				query = f"Select {query_fields} from `tabInstallation Request` p  "
+				conditions += " AND p.name  =  %(doc_name)s "
+				values["doc_name"] = filters.get("doc_name")
 
-		if filters.get('installation_request'):
-			conditions += " AND p.installation_request  =  %(installation_request)s "
-			values["installation_request"] = filters.get(
-				"installation_request")
+			if self.filters.get('source') == "Installation Order":
+				query_fields = self.get_query_field(dict_fields["Installation Order"])
+				query = f"Select  {query_fields} from `tabInstallation Order` p  "
+				conditions += " AND p.name  =  %(doc_name)s "
+				values["doc_name"] = filters.get("doc_name")
+
+			if self.filters.get('source') == "Sales Order":
+				query_fields = self.get_query_field(dict_fields["Sales Order"])
+				query = f"select {query_fields} from `tabSales Order` as p JOIN `tabInstallation Request` re ON p.name = re.sales_order "
+				conditions += " AND p.name  =  %(doc_name)s AND p.docstatus = 1 and re.docstatus  = 1 GROUP BY p.name"
+				values["doc_name"] = filters.get("doc_name")
+
+		if not self.filters.get('source'):
+			query_fields = self.get_query_field(dict_fields["default"])
+			query = f"select {query_fields} from `tabSales Order` as p"
+			conditions += " AND p.docstatus = 1 "
+			
+		return conditions, values, query
+		
+	def get_query_field(self,list_field):
+		fields = ''
+		for field in list_field:
+			fields += field + ' ,'
+		return fields[:-1]
 

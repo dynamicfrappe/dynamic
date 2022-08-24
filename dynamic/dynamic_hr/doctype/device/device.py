@@ -95,7 +95,7 @@ class Device(Document):
                             log.parenttype = 'Device'
                             log.parentfield = 'device_logs'
                             log.device = device_name
-                            log.device_name = doc.name1
+                            log.device_name = doc.device_name
                             log.log_date = record.timestamp.date()
 
                             old_user = user

@@ -17,7 +17,8 @@ def get_data(filters):
 		conditions += " and por.purchase_order='%s'"%filters.get("puchase_order")
 
 	sql = f"""
-		    select 
+		    select
+			tpoi.item_code, 
 			por.purchase_order , 
 			por.reserved_qty reserved_qty ,
 			sum(tpri.qty) accepted_qty,
@@ -39,29 +40,36 @@ def get_data(filters):
 def get_columns():
 	columns = [
 		{
+            "label": _("Item Code"),
+            "fieldname": "item_code",
+            "fieldtype": "Link",
+			"options":"Item",
+            "width": 150
+        },
+		{
             "label": _("Purchase Order"),
             "fieldname": "purchase_order",
             "fieldtype": "Link",
 			"options":"Purchase Order",
-            "width": 150
+            "width": 190
         },
 		{
             "label": _("Reserved Qty"),
             "fieldname": "reserved_qty",
             "fieldtype": "Data",
-            "width": 150
+            "width": 160
         },
 		{
             "label": _("Accepted QTY"),
             "fieldname": "accepted_qty",
             "fieldtype": "Data",
-            "width": 150
+            "width": 160
         },
 		{
             "label": _("Remaining QTY"),
             "fieldname": "remaining_qty",
             "fieldtype": "Data",
-            "width": 150
+            "width": 160
         },
 	
 	
