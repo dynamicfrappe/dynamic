@@ -1,4 +1,5 @@
 from datetime import datetime
+from warnings import filters
 from dynamic.dynamic_accounts.print_format.invoice_tax.invoice_tax import get_invoice_tax_data
 import frappe 
 from frappe import _
@@ -149,9 +150,13 @@ def submit_journal_entry_cheques (doc):
 
 @frappe.whitelist()
 def submit_purchase_invoice(doc , *args , **kwargs) :
-      if 'Gebco' in DOMAINS:
+    if 'Gebco' in DOMAINS:
           if doc._action == "submit":
             repost_entries()
+    if 'Terra' in DOMAINS:
+        check_pr_reservation(doc)
+
+    
     #erpnext.stock.doctype.repost_item_valuation.repost_item_valuation.repost_entries
 # ---------------- get sales return account ------------------  #
 @frappe.whitelist()
@@ -206,9 +211,8 @@ def submit_purchase_recipt_based_on_active_domains(doc,*args,**kwargs):
         validate_purchase_recipt(doc)
     if 'Terra' in DOMAINS:
         check_email_setting_in_stock_setting(doc)
-
-
-
+        #check if PR has Reservation & reserve over warehouse
+        check_pr_reservation(doc)
 
 def check_email_setting_in_stock_setting(doc):
     sql = """
@@ -226,7 +230,38 @@ def check_email_setting_in_stock_setting(doc):
             # if row.document == "Safty Stock" and row.role:
             #     pass
 
+def check_pr_reservation(doc):
+    if doc.doctype == "Purchase Invoice":
+        if not doc.update_stock:
+            frappe.throw('Please Check Update Stock')
+    for row in doc.items:
+        if(row.purchase_order):
+            #get all reservation for this purchase_order wiz this item
+            get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
 
+def get_po_reservation(purchase_order,item,target_warehouse):
+    reservation_list_sql = f"""SELECT r.name from `tabReservation` as r WHERE r.status <> 'Invalid' AND r.order_source='{purchase_order}' AND r.item_code = '{item}' AND sales_order <> 'Invalid' AND r.warehouse_source = '' """
+    data = frappe.db.sql(reservation_list_sql,as_dict=1)
+    if data:
+        for reservation in data:
+            # make reserv over warehouse
+            reserv_doc = frappe.get_doc('Reservation',reservation.get('name'))
+            oldest_reservation = reserv_doc.reservation_purchase_order[0]
+            bin_data = frappe.db.get_value('Bin',{'item_code':item,'warehouse':target_warehouse},['name','warehouse','actual_qty','reserved_qty'],as_dict=1)
+            reserv_doc.warehouse_source = target_warehouse
+            reserv_doc.warehouse = [] #?add row
+            row = reserv_doc.append('warehouse', {})
+            row.item = item
+            row.bin = bin_data.get('name')
+            row.warehouse = target_warehouse
+            row.qty = oldest_reservation.qty
+            row.reserved_qty =  oldest_reservation.reserved_qty
+            #! not clear TODO
+            row.current_available_qty = bin_data.get('actual_qty') + row.qty - bin_data.get('reserved_qty')
+            # row.available_qty_atfer___reservation = bin_data.get('actual_qty') - bin_data.get('reserved_qty')#row.current_available_qty - row.reserved_qty
+            reserv_doc.reservation_purchase_order = []
+            reserv_doc.save()
+            
 
 def validate_material_request(doc,*args,**kwargs):
     sql = """
