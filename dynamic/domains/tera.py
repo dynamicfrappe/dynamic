@@ -228,7 +228,8 @@ data = {
             "label": "Reservation",
             # "in_list_view":1,
             "allow_on_submit":1,
-            "read_only" : 1
+            "read_only" : 1,
+            "no_copy":1
             },
             {
             "fieldname": "reservation_status",
@@ -237,7 +238,8 @@ data = {
             "label": "Reservation Status",
             # "in_list_view":1,
             "allow_on_submit":1,
-            "read_only" : 1
+            "read_only" : 1,
+            "no_copy":1
             },
             {
             "fieldname": "item_warehouse",

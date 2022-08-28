@@ -527,3 +527,51 @@ def get_purchase_order(doctype, txt, searchfield, start, page_len, filters):
                 """
         )
     return ()
+
+
+@frappe.whitelist()
+def change_row_after_submit(doc , *args ,**kwargs):
+    if('Terra' in DOMAINS):
+        #TODO loop and change qty if changed delete row if not found
+        #1-get all reservation as list
+        reservation_list = frappe.get_list('Reservation',filters={'sales_order':doc.name},fields='name')
+        sql_reserv = f"""
+            select name from tabReservation tr where sales_order ='{doc.name}'
+        """
+        sql_reserv = frappe.db.sql(sql_reserv)
+        # for v in sql_reserv:
+        #     frappe.errprint(f'v is  {v}')
+        
+        # if 'ITEM-RES-00082' in sql_reserv:
+        #     frappe.errprint(f'v is found')
+        # else:
+        #     frappe.errprint(f'v is  not found')
+
+        # frappe.errprint(f'list is {sql_reserv}--{type(sql_reserv)}')
+        # frappe.errprint(f'first list is {sql_reserv[0]}')
+        for row in doc.items:
+            if(row.reservation and row.reservation_status == 'Active'):
+                if(row.get('item_purchase_order')):
+                    sql = f"""
+                        UPDATE `tabReservation Purchase Order` trpo
+                        SET trpo.reserved_qty  = {row.qty}
+                        WHERE trpo.parent='{row.reservation}';
+                    """
+                    frappe.db.sql(sql)
+
+                if row.get('item_warehouse'):
+                    sql = f"""
+                        UPDATE `tabReservation Warehouse` trw
+                        SET trw.reserved_qty  = {row.qty}
+                        WHERE trw.parent='{row.reservation}';
+                    """
+                    frappe.db.sql(sql)
+            if(not row.reservation):
+                #todo create reservation
+                ...
+                    
+            #2- edit reservation qty
+            # 3- delete reserv from list
+            # 4- after loop if len(list) set these list reserv as inactive status 
+            # frappe.errprint(f'row is --> {row.name} ** {row.item_code}')
+    

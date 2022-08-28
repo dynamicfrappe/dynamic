@@ -105,6 +105,7 @@ doc_events = {\
         "on_submit": "dynamic.api.create_reservation_validate",
         "before_save": "dynamic.api.check_source_item",
         "on_cancel":"dynamic.api.cancel_reservation",
+        "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
     "Purchase Receipt": {
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
@@ -143,6 +144,7 @@ doc_events = {\
 override_doctype_class = {
     "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
+    # "Sales Order": "dynamic.terra.sales_order"
 }
 
 # Document Events

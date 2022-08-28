@@ -20,7 +20,13 @@ frappe.ui.form.on("Sales Order", {
   refresh: function (frm) {
     frm.events.add_cheque_button(frm);
     frm.events.add_installation_button(frm);
-    frm.events.domian_valid()
+  //   frm.fields_dict.items.grid.wrapper.on('change', 'input[data-fieldname="qty"][data-doctype="Sales Order Item"]', function(e) {
+  //     console.log(e.type);
+  // });
+    // frm.fields_dict.items.item_code.$input.on("click", function(evt){
+    //   console.log(e.type);
+    //   });
+    // frm.events.domian_valid()
     // console.log("over Write ");
   },
   onload: function (frm) {
@@ -301,3 +307,10 @@ frappe.ui.form.on(
     }
   }
 );
+
+// frappe.ui.form.on("Sales Order Item",{
+//     items_remove:function(frm,cdt,cdn){
+//       console.log('qty changed standard')
+//     },
+    
+// })
