@@ -438,6 +438,7 @@ def validate_sales_order_reservation_status():
                 #sales_order = frappe.get_doc("Sales Order",s.name)
                 reserv_doc = frappe.get_doc("Reservation",s.reservation)
                 reserv_doc.status = "Closed"
+                reserv_doc.closing_date = nowdate()
                 reserv_doc.save()
                 # sales_order.reservation_status = "Closed"
                 # sales_order.save()
