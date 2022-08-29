@@ -1,7 +1,8 @@
 # Copyright (c) 2022, Dynamic and contributors
 # For license information, please see license.txt
 
-from dynamic.hardware_installations.doctype.installation_request.installation_request import update_installation_request_qty
+from codecs import ignore_errors
+from dynamic.hardware_installations.doctype.installation_request.installation_request import update_installation_request_qty, update_sales_order_qty
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -25,7 +26,7 @@ class InstallationOrder(Document):
 			else:
 				total_requested_qty = 0
 			if (self.total_requested_cars-total_requested_qty) < self.total_cars:
-				frappe.throw(_("""Request {} has {}/{} car is Already Requested""").format(
+				frappe.throw(_("""Request {} has {}/{} car is Already Ordered""").format(
 					self.installation_request, total_requested_qty, flt(
 						self.total_requested_cars)
 				))
@@ -108,6 +109,8 @@ class InstallationOrder(Document):
 		installation_request.ordered_cars += factor * self.total_cars
 		installation_request.validate()
 		installation_request.save()
+		if installation_request.sales_order :
+			update_sales_order_qty(installation_request.sales_order)
 
 	# def on_update_after_submit(self):
 	# 	if self.installation_request:

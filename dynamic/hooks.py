@@ -79,7 +79,10 @@ doctype_js = {
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
     "Delivery Note": "public/js/delivery_note.js"
 }
-doc_events = {
+doc_events = {\
+    "Payment Entry":{
+               "on_submit": "dynamic.api.submit_payment",
+    },
 
     "Sales Invoice": {
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
@@ -91,24 +94,23 @@ doc_events = {
     },
     "Delivery Note": {
         "on_submit": "dynamic.gebco.api.validate_delivery_note",
-        "validate": "dynamic.api.validate_delivery_note"
-
+        "validate": "dynamic.api.validate_delivery_note",
+        "on_cancel": "dynamic.api.cancel_delivery_note",
     },
-    # "Stock Entry": {
-    #     "on_submit": "dynamic.contracting.doctype.stock_entry.stock_entry.on_submit"
-    # },
+   
     "Journal Entry": {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
-        # "validate": "dynamic.contracting.doctype.stock_entry.stock_entry.update_project_cost",
         "on_submit": "dynamic.api.create_reservation_validate",
         "before_save": "dynamic.api.check_source_item",
+        "on_cancel":"dynamic.api.cancel_reservation",
+        "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
     "Purchase Receipt": {
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
-        "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains"
-
+        "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains",
+        # "before_save":"dynamic.api.check_pr_reservation"
     },
     "Material Request": {
         "on_submit": "dynamic.api.validate_material_request"
@@ -117,9 +119,9 @@ doc_events = {
     "Landed Cost Voucher": {
         "validate": "dynamic.dynamic.validation.validate_landed_cost"
     },
-    # "Purchase Order": {
-    #     "on_submit": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison",
-    #     "on_cancel": "dynamic.contracting.doctype.purchase_order.purchase_order.update_comparison", }
+    "Purchase Invoice": {
+        "on_submit": "dynamic.api.submit_purchase_invoice",
+     } 
 }
 # notification_config = "dynamic.notifications.get_notification_config"
 
@@ -142,6 +144,7 @@ doc_events = {
 override_doctype_class = {
     "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
+    # "Sales Order": "dynamic.terra.sales_order"
 }
 
 # Document Events
@@ -197,6 +200,8 @@ scheduler_events = {
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
+
+
 override_doctype_dashboards = {
     "Sales Invoice": "dynamic.public.dashboard.sales_invoice_dashboard.get_data",
     "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",

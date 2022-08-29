@@ -14,10 +14,10 @@ def validate_delivery_notes_sal_ord(doc):
                                 Please Check item {line.item_name}"""))
 
     #check reservation 
-    for line in doc.items :
-        reservation_name = frappe.db.get_value("Sales Order Item",line.so_detail,"reservation")
-        frappe.db.set_value('Reservation',reservation_name,{
-            'status': 'Closed',
-        })
+    # for line in doc.items :
+    #     reservation_name = frappe.db.get_value("Sales Order Item",line.so_detail,"reservation")
+    #     frappe.db.set_value('Reservation',reservation_name,{
+    #         'status': 'Closed',
+    #     })
   
         

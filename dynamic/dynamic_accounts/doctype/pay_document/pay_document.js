@@ -3,6 +3,22 @@
 
 frappe.ui.form.on("Pay Document", {
   refresh: function (frm) {
+    if (frm.doc.docstatus > 0) {
+      frm.add_custom_button(
+        __("Ledger"),
+        function () {
+          frappe.route_options = {
+            voucher_no: frm.doc.journal_entry,
+            from_date: frm.doc.posting_date,
+            to_date: moment(frm.doc.modified).format("YYYY-MM-DD"),
+            company: frm.doc.company,
+            show_cancelled_entries: frm.doc.docstatus === 2,
+          };
+          frappe.set_route("query-report", "General Ledger");
+        },
+        __("View")
+      );
+    }
     frm.events.set_base_amount(frm);
     frm.set_query("account", function (doc) {
       return {

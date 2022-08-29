@@ -160,8 +160,8 @@ def filetr_item_base_on_template(items , person , pdate ,case) :
             if local_template.base_on ==  "Qty" : 
                 for in_amount in local_template.templat  :
                     if float(total_monthly_qty) > float(in_amount.amount_from or  0) :
-                        commition_amount  = float(in_amount.commission_amount or 0 )
-                        commition_rate    = float(in_amount.commission_rate or 0 )
+                        commition_amount  = float(in_amount.commission_amount or 0 ) * total_monthly_qty
+                        commition_rate    = float(in_amount.commission_rate or 0 )* total_monthly_qty
                         
         grant_commition = commition_amount
         if  commition_rate  > 0 :

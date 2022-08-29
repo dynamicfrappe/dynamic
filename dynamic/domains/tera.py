@@ -228,7 +228,8 @@ data = {
             "label": "Reservation",
             # "in_list_view":1,
             "allow_on_submit":1,
-            "read_only" : 1
+            "read_only" : 1,
+            "no_copy":1
             },
             {
             "fieldname": "reservation_status",
@@ -237,7 +238,8 @@ data = {
             "label": "Reservation Status",
             # "in_list_view":1,
             "allow_on_submit":1,
-            "read_only" : 1
+            "read_only" : 1,
+            "no_copy":1
             },
             {
             "fieldname": "item_warehouse",
@@ -254,8 +256,40 @@ data = {
             "label": "Purchase Order",
             'options' : 'Purchase Order'
             # "in_list_view":1,
+            },
+            {
+            "fieldname": "schedule_date",
+            "fieldtype": "Date",
+            "insert_after": "item_purchase_order",
+            "label": "Required By",
+            'options' : 'Purchase Order',
+            'fetch_from':'item_purchase_order.schedule_date',
+            "read_only" : 1,
+            "fetch_if_empty": 1
             }
         ], 
+        "Sales Order":[
+             {
+                "fieldname": "invoice_payment",
+                "fieldtype": "Float",
+                "insert_after": "advance_paid",
+                "label": "Invoice Payment",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+            {
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "invoice_payment",
+                "label": "Outstanding Amount",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+        ]
     },
     # "properties": [
         
@@ -269,21 +303,21 @@ data = {
         "property_type": "Check",
         "value": "1"
         },
-        #  {
-        # "doctype": "Sales Order",
-        # "doctype_or_field": "DocField",
-        # "fieldname": "set_warehouse",
-        # "property": "reqd",
-        # "property_type": "Check",
-        # "value": "1"
-        # },
+         {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "set_warehouse",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "0"
+        },
         {
         "doctype": "Sales Order Item",
         "doctype_or_field": "DocField",
         "fieldname": "warehouse",
         "property": "read_only",
         "property_type": "Check",
-        "value": "1"
+        "value": "0"
         },
     ],
   

@@ -12,12 +12,14 @@
   "customer",
   "car_brand",
   "car_model",
+  "chasis_no",
   "column_break_4",
   "serial_no",
   "gps_device",
   "sim_number",
   "customer_name",
   "car_type",
+  "motor_no",
   "section_break_8",
   "description"
  ],
@@ -109,11 +111,21 @@
    "fieldname": "car_brand",
    "fieldtype": "Data",
    "label": "Car Brand"
+  },
+  {
+   "fieldname": "chasis_no",
+   "fieldtype": "Data",
+   "label": "Chasis No"
+  },
+  {
+   "fieldname": "motor_no",
+   "fieldtype": "Data",
+   "label": "Motor NO"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-04 11:08:48.203090",
+ "modified": "2022-08-25 15:05:06.800754",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Car",
