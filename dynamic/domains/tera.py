@@ -256,6 +256,16 @@ data = {
             "label": "Purchase Order",
             'options' : 'Purchase Order'
             # "in_list_view":1,
+            },
+            {
+            "fieldname": "schedule_date",
+            "fieldtype": "Date",
+            "insert_after": "item_purchase_order",
+            "label": "Required By",
+            'options' : 'Purchase Order',
+            'fetch_from':'item_purchase_order.schedule_date',
+            "read_only" : 1,
+            "fetch_if_empty": 1
             }
         ], 
         "Sales Order":[

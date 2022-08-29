@@ -377,7 +377,8 @@ def create_reservation_validate(self,*args , **kwargs):
        
 def add_row_for_reservation(self):
     # if not self.reservation:
-    for item in self.items:    
+    for item in self.items:
+        if not item.reservation:
             reserv_doc = frappe.new_doc('Reservation')
             reserv_doc.item_code = item.item_code
             reserv_doc.status = 'Active'
@@ -533,23 +534,19 @@ def get_purchase_order(doctype, txt, searchfield, start, page_len, filters):
 @frappe.whitelist()
 def change_row_after_submit(doc , *args ,**kwargs):
     if('Terra' in DOMAINS):
-        #TODO loop and change qty if changed delete row if not found
-        #1-get all reservation as list
-        reservation_list = frappe.get_list('Reservation',filters={'sales_order':doc.name},fields='name')
+        """
+        1-get all reservation list for sales order
+        2-then update qty if this reservation still exist 
+        3-set status as invalid for reserv if  row deleted
+        4- create new reservation if new row added
+        """
+        # reservation_list = frappe.get_list('Reservation',filters={'sales_order':doc.name},fields='name')
         sql_reserv = f"""
             select name from tabReservation tr where sales_order ='{doc.name}'
         """
         sql_reserv = frappe.db.sql(sql_reserv)
-        # for v in sql_reserv:
-        #     frappe.errprint(f'v is  {v}')
-        
-        # if 'ITEM-RES-00082' in sql_reserv:
-        #     frappe.errprint(f'v is found')
-        # else:
-        #     frappe.errprint(f'v is  not found')
-
-        # frappe.errprint(f'list is {sql_reserv}--{type(sql_reserv)}')
-        # frappe.errprint(f'first list is {sql_reserv[0]}')
+        sql_reserv_list = [l[0] for l in sql_reserv]
+        frappe.errprint(f'list is {sql_reserv_list}--{type(sql_reserv_list)}')
         for row in doc.items:
             if(row.reservation and row.reservation_status == 'Active'):
                 if(row.get('item_purchase_order')):
@@ -559,7 +556,6 @@ def change_row_after_submit(doc , *args ,**kwargs):
                         WHERE trpo.parent='{row.reservation}';
                     """
                     frappe.db.sql(sql)
-
                 if row.get('item_warehouse'):
                     sql = f"""
                         UPDATE `tabReservation Warehouse` trw
@@ -567,12 +563,15 @@ def change_row_after_submit(doc , *args ,**kwargs):
                         WHERE trw.parent='{row.reservation}';
                     """
                     frappe.db.sql(sql)
+                if row.reservation in sql_reserv_list:
+                    sql_reserv_list.remove(row.reservation)
             if(not row.reservation):
-                #todo create reservation
-                ...
-                    
-            #2- edit reservation qty
-            # 3- delete reserv from list
-            # 4- after loop if len(list) set these list reserv as inactive status 
-            # frappe.errprint(f'row is --> {row.name} ** {row.item_code}')
+                #**check if have ware house or purchase invoice
+                check_source_item(doc)
+                #**create reservation
+                add_row_for_reservation(doc)
+        else:
+            if len(sql_reserv_list):
+                for reservation in sql_reserv_list:
+                    frappe.db.set_value('Reservation',reservation,{'status':'Invalid'})
     
