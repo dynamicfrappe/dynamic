@@ -1,8 +1,10 @@
 import frappe
 from frappe import _
 from datetime import datetime ,date
-
+from functools import reduce
 from html2text import re
+from collections import Counter
+from operator import add
 DOMAINS = frappe.get_active_domains()
 
 """  
@@ -11,6 +13,63 @@ Under The  Fiscal Year Sales Invocie Month will Be The Count Method
 
 """
 
+
+#caculate total item group sales amount ant qty 
+def count_total_item_group_qty_amount(invoice):
+    group_qty = [{item.get("item_group"): item.get("qty")} for item in invoice.items ]
+    group_amount = [{item.get("item_group"): item.get("amount")} for item in invoice.items ]
+    #get Sum qty amd amount for each item group 
+    sum_group_qty  = reduce(add, (map(Counter, group_qty )))
+    sum_group_amount  = reduce(add, (map(Counter, group_amount )))
+ 
+    for person in invoice.sales_team :
+        sales_person = validate_sales_person(person.sales_person)
+        person_percent  = float(person.allocated_percentage) /100 
+        #maping item Group with commision template -- >
+        if not sales_person :
+            
+            return 0 
+        target_ietm_group =[]
+        for target in sales_person.targets :
+            tem_name= frappe.db.sql(""" SELECT name FROM 
+                        `tabCommission Template` WHERE name = '{target.commission_template}'
+                         """,as_dict =1)
+
+   
+            if tem_name and len(tem_name) > 0  :
+                template = frappe.get_doc("Commission Template", ) 
+           
+            child_list =  {target.item_group : target.commission_template } if (target.commission_template and target.item_group
+            )  in [k for k,v in sum_group_qty.items() ] else None
+              
+            if child_list :
+                target_ietm_group.append(child_list)
+        for commetion in  target_ietm_group :
+            #craete Commetion log
+            #check invocie old commetions 
+            for k,v in commetion.items() :
+                item_group = k
+            old_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE 
+            sales_person = '{person.sales_person}' and invocie='{invoice.name}' and 
+            item__group = '{item_group}' 
+                """,as_dict =1)
+            if old_log and len(old_log) > 0 :
+                log = frappe.get_doc("Sales Person Commetion" ,old_log[0].get('name') )
+            else: 
+                log = frappe.new_doc("Sales Person Commetion" )
+            log.sales_person = person.sales_person
+            log.invocie = invoice.name
+            for k,v in commetion.items() :
+               log.item__group = k 
+               log.commission_template = v
+            for e ,d in sum_group_qty.items():
+                if e ==log.item__group :
+                    log.invoice_qty = d
+            for e ,d in sum_group_amount.items():
+                if e ==log.item__group :
+                    log.invocie_amount = d
+            log.save()
+    #frappe.throw(str(sum_group_amount))
 def validate_fiscal_year(year):
     """   this function Check if the year is Disabled  and If company Belong to The year  """
 
@@ -53,7 +112,7 @@ def validate_sales_person(name) :
         #validate Target  amount , Qty And get Mothly Target 
         # vaildate targey qty
         if not  target.commission_template  :
-            return 0 
+            return sales_person
         template = frappe.get_doc("Commission Template" ,target.commission_template )
         if target.target_qty > 0  and target.target_amount > 0 :
             frappe.throw(""" Please Set arget Qty  or  Target Amount to 0 value in Target Table """)
@@ -82,6 +141,7 @@ def validate_sales_person(name) :
                             """
         # data = frappe.db.sql(caculation_sql ,as_dict=1)
         # frappe.throw(str(data))
+        return sales_person
 """  this method Will Run only if Moyate in Active Domain """
 def filetr_item_base_on_template(items , person , pdate ,case) :
     #caculate item percent 
@@ -181,8 +241,9 @@ def filetr_item_base_on_template(items , person , pdate ,case) :
             frappe.db.commit()
         total_grant = total_grant + grant_commition
         
-    return total_grant 
-@frappe.whitelist()
+    return total_grant
+ 
+#@frappe.whitelist()
 def valiate_sales_invocie_to_moyate(self):
     """  
     Calculate the Commetion For Sales Person Base on Commission Template
@@ -193,6 +254,7 @@ def valiate_sales_invocie_to_moyate(self):
                 2 - In Sales Person Add The Link of The Commition table To the Targets Table 
                 3 - 
     """
+    count_total_item_group_qty_amount(self)
     if self.sales_team :
         # frappe.throw(" Sales Team Found")
         case =  "submit" if self._action == "submit" else "draft"

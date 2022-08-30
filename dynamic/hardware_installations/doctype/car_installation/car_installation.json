@@ -24,9 +24,11 @@
   "car_section_section",
   "car",
   "car_model",
+  "chasis_no",
   "column_break_17",
   "car_type",
   "car_brand",
+  "motor_no",
   "accessories_section",
   "installation_accessories",
   "gps_details_section",
@@ -321,12 +323,24 @@
    "fieldtype": "Table",
    "label": "Installation Accessories",
    "options": "Installation Accessories"
+  },
+  {
+   "fetch_from": "car.chasis_no",
+   "fieldname": "chasis_no",
+   "fieldtype": "Data",
+   "label": "Chasis No"
+  },
+  {
+   "fetch_from": "car.motor_no",
+   "fieldname": "motor_no",
+   "fieldtype": "Data",
+   "label": "Motor NO"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-09 12:20:40.602940",
+ "modified": "2022-08-25 15:09:18.980050",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",
