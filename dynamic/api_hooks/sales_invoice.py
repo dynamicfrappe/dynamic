@@ -241,10 +241,9 @@ def filetr_item_base_on_template(items , person , pdate ,case) :
             frappe.db.commit()
         total_grant = total_grant + grant_commition
         
-    return total_grant
- 
-@frappe.whitelist()
-def valiate_sales_invocie_to_moyate(self):
+    return total_grant 
+# @frappe.whitelist()
+def   validate_sales_invocie_to_moyate(self):
     """  
     Calculate the Commetion For Sales Person Base on Commission Template
     Disabled Sales Person throw Error
