@@ -24,35 +24,53 @@ import frappe
 from frappe import _
 
 
+def get_product_bundle_items(item_code):
+	product_bundle = frappe.qb.DocType("Product Bundle")
+	product_bundle_item = frappe.qb.DocType("Product Bundle Item")
+
+	query = (
+		frappe.qb.from_(product_bundle_item)
+		.join(product_bundle)
+		.on(product_bundle_item.parent == product_bundle.name)
+		.select(
+			product_bundle_item.item_code,
+			product_bundle_item.qty,
+			product_bundle_item.uom,
+			product_bundle_item.description,
+		)
+		.where(product_bundle.new_item_code == item_code)
+		.orderby(product_bundle_item.idx)
+	)
+	return query.run(as_dict=True)
 #ckeck if item is pundel and is complicated 
-def validate_com_pundel(item_code):
-    # get pundel _item 
-    is_stock_item = frappe.db.sql(f"""SELECT is_stock_item as stock 
-                                    FROM `tabItem` WHERE item_code ='{item_code}'""",as_dict=1)
-    if is_stock_item and len(is_stock_item) > 0 :
-        if is_stock_item[0].get("stock") == '1' :
-            return False
-    if not is_stock_item :
-        frappe.throw("UnKnown Item code {}".format(str(item_code)))
-    pundel_name = frappe.db.sql(f""" SELECT name FROM `tabProduct Bundle` 
-    WHERE new_item_code  = '{item_code}'
-    """ ,as_dict = True)
-    if pundel_name and len(pundel_name) > 0 :
-            return pundel_name[0].get("name")
-    return 0
+
 #check if complicated
 
 
 @frappe.whitelist()
 def set_complicated_pundel_list(invoice):
     #frappe.throw("Face One ")
+    #clear invocie compicated_pund
+    
+    invoice.set("compicated_pundel" , [])
     complicated_pundel = []
     for item in invoice.items :
-        # check if stock Item Pass
-        # if sigle pundel pass
-        # check If item is pundel of pundel -- > add child pundels 
-        is_pundel = validate_com_pundel(item.item_code)
+        is_pundel =  bool(frappe.db.exists("Product Bundle", {"new_item_code": item.item_code}))
         if is_pundel :
-            pass 
-    
+           items = get_product_bundle_items(item.item_code)
+           for i in items :
+              com_pundel = bool(frappe.db.exists("Product Bundle", {"new_item_code": i.item_code}))
+              # add item to new Child table 
+              #  
+              # 
+              if  com_pundel :
+                pundel_data = get_product_bundle_items(i.item_code)
+                #check if bundel is three level pundel 
+                # throw erro in case of three level 
+                for it in pundel_data :
+                    if bool(frappe.db.exists("Product Bundle", {"new_item_code": it.item_code})) :
+                        frappe.throw(f"""_( Parent item {pundel_data} Product Pundel {it.item_code})  Has three level of pundels And max level is Tow""")
+                #set child product conf pundel 
+                #
+                 
     pass

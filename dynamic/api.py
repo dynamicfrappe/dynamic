@@ -91,7 +91,7 @@ def validate_active_domains(doc,*args,**kwargs):
         make_packing_list(doc)
         # add child table to sales invoice from utils 
 
-        #set_complicated_pundel_list(doc)
+        set_complicated_pundel_list(doc)
     
     if 'Terra' in DOMAINS:
         #validate_sales_invoice(doc)
