@@ -43,8 +43,7 @@ def caculate_shortage_item(items , wharehouse,*args ,**kwargs ) :
     data =list(map(get_sum_items ,items))
     wharehouselist =list( map(lambda item: item.get('warehouse') , items))
     sum_dict = reduce(add, (map(Counter, data)))
-    for item in sum_dict.items() :
-        frappe.msgprint(str(item))
+
     #frappe.throw(str(sum_dict))
     wharehouselist = wharehouselist[0 :(len(sum_dict.items()) -1)]
     pure_data = list(map(get_item_availabel_stock_with_warehouse ,sum_dict.items() ,wharehouselist))
