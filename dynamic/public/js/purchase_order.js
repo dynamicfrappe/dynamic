@@ -2,7 +2,30 @@ frappe.ui.form.on("Purchase Order", {
   refresh: function (frm) {
     frm.custom_make_buttons["Cheque"] = "Cheque";
     frm.events.add_cheque_button(frm);
+    
+    frm.events.get_linked_doctypes(frm)
   },
+  get_linked_doctypes(frm) {
+		return new Promise((resolve) => {
+			if (frm.__linked_doctypes) {
+				resolve();
+			}
+
+			frappe.call({
+				method: "frappe.desk.form.linked_with.get_linked_doctypes",
+				args: {
+					doctype: frm.doc.doctype
+				},
+				callback: (r) => {
+					frm.__linked_doctypes = r.message;
+          console.log('linked--->',r.message)
+					resolve();
+          console.log('linked--->',r.message)
+
+				}
+			});
+		});
+	},
   add_cheque_button(frm) {
     if (frm.doc.docstatus == 1) {
       frappe.call({

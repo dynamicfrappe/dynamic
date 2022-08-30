@@ -45,9 +45,13 @@ def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
             item = frappe.get_doc('Reservation Warehouse',reserv_doc.warehouse[0].name)
         if(item.reserved_qty < row.qty):
             frappe.throw(f'Not Enough Reservation qty for item {row.item_code} for reservation {reserv_data["reservation"]} avail reserved qty {item.reserved_qty}')
+        if(row.qty <=  item.reserved_qty):
+            if row.qty < item.reserved_qty:
+                reserv_doc.db_set('status','Partial Delivered')
+            else:
+                reserv_doc.db_set('status','Closed')
         item.reserved_qty = item.reserved_qty - row.qty
-        item.save() 
-
+        item.save()
     
 
 def validate_purchase_recipt(doc,*args,**kwargs):
