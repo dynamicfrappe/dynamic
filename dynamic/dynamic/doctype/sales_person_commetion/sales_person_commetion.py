@@ -58,7 +58,7 @@ class SalesPersonCommetion(Document):
 					main_amount = float(main_amount or 0) * float(self.invoice_qty or 0)
 				# frappe.throw(str(template_rate))
 				self.amount = main_amount
-	#update monyhlu commetion base on date and item group 
+	#update monthly commetion base on date and item group 
 	def update_monthly_commetions(self):
 		pass
 	def validate_invocie_status(self):
@@ -68,4 +68,4 @@ class SalesPersonCommetion(Document):
 	def validate(self):
 		self.set_messing_dates()
 		self.caculate_qty_amount()
-		self.validate_invocie_status()
+		#self.validate_invocie_status()

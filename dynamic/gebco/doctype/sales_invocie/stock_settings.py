@@ -36,7 +36,7 @@ def get_sum_items(item):
     if main_item.is_stock_item == 1 and item.get('warehouse') :   
         return {item.get("item_code") : item.get("qty")  }
     if not main_item.is_stock_item   or not  item.get('warehouse'):
-        pass    
+        frappe.throw(f"""Item Code {main_item.item_code} Is not Stock Item """)   
         
 def caculate_shortage_item(items , wharehouse,*args ,**kwargs ) :
     str_o  = "[Completed]"
