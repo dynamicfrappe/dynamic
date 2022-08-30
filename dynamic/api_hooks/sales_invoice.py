@@ -243,7 +243,7 @@ def filetr_item_base_on_template(items , person , pdate ,case) :
         
     return total_grant
  
-#@frappe.whitelist()
+@frappe.whitelist()
 def valiate_sales_invocie_to_moyate(self):
     """  
     Calculate the Commetion For Sales Person Base on Commission Template
