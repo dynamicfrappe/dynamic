@@ -183,7 +183,7 @@ def filetr_item_base_on_template(items , person , pdate ,case) :
         
     return total_grant 
 @frappe.whitelist()
-def validgit pus    ate_sales_invocie_to_moyate(self):
+def valiate_sales_invocie_to_moyate(self):
     """  
     Calculate the Commetion For Sales Person Base on Commission Template
     Disabled Sales Person throw Error
