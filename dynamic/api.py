@@ -16,6 +16,7 @@ from frappe.utils import add_days, nowdate, today
 from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
 from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
 from erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import repost_entries
+from dynamic.gebco.doctype.sales_invocie.utils import set_complicated_pundel_list
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -88,7 +89,9 @@ def validate_active_domains(doc,*args,**kwargs):
     if 'Product Bundle' in DOMAINS: 
         """   Update Bundle of Bundles """
         make_packing_list(doc)
+        # add child table to sales invoice from utils 
 
+        set_complicated_pundel_list(doc)
     
     if 'Terra' in DOMAINS:
         #validate_sales_invoice(doc)

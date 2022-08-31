@@ -2,6 +2,18 @@ from __future__ import unicode_literals
 
 data = {
     'custom_fields': {
+        'Sales Invoice': [
+             {
+                "fieldname": "compicated_pundel",
+                "fieldtype": "Table",
+                "options":"Compicated Pundel",
+                "insert_after": "packing_list",
+                "label": "Compicated Pundel",
+                "read_only":1,
+                
+            },
+
+        ],
         'Product Bundle': [
             {
                 "fieldname": "item_name",

@@ -35,14 +35,16 @@ def get_sum_items(item):
     main_item = frappe.get_doc("Item" , item.get("item_code"))
     if main_item.is_stock_item == 1 and item.get('warehouse') :   
         return {item.get("item_code") : item.get("qty")  }
-    if not main_item.is_stock_item   or not  item.get('warehouse'):
-        pass    
-        
+    if not main_item.is_stock_item and item.get("parent_item")  :
+        frappe.throw(f"""Item Code {item.get("item_code")} Is not Stock Item { item.get("qty")} """)   
+        #pass
 def caculate_shortage_item(items , wharehouse,*args ,**kwargs ) :
     str_o  = "[Completed]"
     data =list(map(get_sum_items ,items))
     wharehouselist =list( map(lambda item: item.get('warehouse') , items))
     sum_dict = reduce(add, (map(Counter, data)))
+
+    #frappe.throw(str(sum_dict))
     wharehouselist = wharehouselist[0 :(len(sum_dict.items()) -1)]
     pure_data = list(map(get_item_availabel_stock_with_warehouse ,sum_dict.items() ,wharehouselist))
     cleard_data = list(filter(None, pure_data))
