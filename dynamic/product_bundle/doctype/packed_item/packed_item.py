@@ -5,8 +5,11 @@
 
 
 import json
-from erpnext.stock.doctype.packed_item.packed_item import is_product_bundle
 
+try :
+	from erpnext.stock.doctype.packed_item.packed_item import is_product_bundle
+except :
+	from dynamic.gebco.doctype.sales_invocie.utils import is_product_bundle
 import frappe
 from frappe.model.document import Document
 from frappe.utils import cstr, flt

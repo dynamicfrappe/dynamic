@@ -34,7 +34,6 @@
   {
    "fieldname": "item_group",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "in_preview": 1,
    "label": "Item Group",
    "options": "Item Group"
@@ -68,7 +67,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-08-30 12:00:46.184488",
+ "modified": "2022-08-31 11:59:14.433691",
  "modified_by": "Administrator",
  "module": "dynamic",
  "name": "Compicated Pundel",
