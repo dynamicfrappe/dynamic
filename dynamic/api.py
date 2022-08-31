@@ -543,7 +543,6 @@ def change_row_after_submit(doc , *args ,**kwargs):
         3-set status as invalid for reserv if  row deleted
         4- create new reservation if new row added
         """
-        # reservation_list = frappe.get_list('Reservation',filters={'sales_order':doc.name},fields='name')
         sql_reserv = f"""
             select name from tabReservation tr where sales_order ='{doc.name}'
         """
@@ -558,7 +557,6 @@ def change_row_after_submit(doc , *args ,**kwargs):
                         WHERE trpo.parent='{row.reservation}' AND Item='{row.item_code}';
                     """
                     frappe.db.sql(sql)
-                    # frappe.errprint(f'update purchase order')
                 if row.get('item_warehouse'):
                     sql = f"""
                         UPDATE `tabReservation Warehouse` trw
@@ -566,7 +564,6 @@ def change_row_after_submit(doc , *args ,**kwargs):
                         WHERE trw.parent='{row.reservation}' AND Item='{row.item_code}';
                     """
                     frappe.db.sql(sql)
-                    # frappe.errprint(f'update warehouse ')
 
                 if row.reservation in sql_reserv_list:
                     sql_reserv_list.remove(row.reservation)
