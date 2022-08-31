@@ -68,8 +68,8 @@ def count_total_item_group_qty_amount(invoice):
             for e ,d in sum_group_amount.items():
                 if e ==log.item__group :
                     log.invocie_amount = d
-            log.save()
-    #frappe.throw(str(sum_group_amount))
+            log.save(ignore_permissions=True)
+    #frappe.throw(str(sum_group_amount)) 
 def validate_fiscal_year(year):
     """   this function Check if the year is Disabled  and If company Belong to The year  """
 
@@ -242,7 +242,7 @@ def filetr_item_base_on_template(items , person , pdate ,case) :
         total_grant = total_grant + grant_commition
         
     return total_grant 
-@frappe.whitelist()
+# @frappe.whitelist()
 def   validate_sales_invocie_to_moyate(self):
     """  
     Calculate the Commetion For Sales Person Base on Commission Template
