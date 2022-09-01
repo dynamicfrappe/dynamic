@@ -543,36 +543,35 @@ def change_row_after_submit(doc , *args ,**kwargs):
         3-set status as invalid for reserv if  row deleted
         4- create new reservation if new row added
         """
-        # reservation_list = frappe.get_list('Reservation',filters={'sales_order':doc.name},fields='name')
         sql_reserv = f"""
             select name from tabReservation tr where sales_order ='{doc.name}'
         """
         sql_reserv = frappe.db.sql(sql_reserv)
         sql_reserv_list = [l[0] for l in sql_reserv]
-        frappe.errprint(f'list is {sql_reserv_list}--{type(sql_reserv_list)}')
         for row in doc.items:
             if(row.reservation and row.reservation_status == 'Active'):
                 if(row.get('item_purchase_order')):
                     sql = f"""
                         UPDATE `tabReservation Purchase Order` trpo
                         SET trpo.reserved_qty  = {row.qty}
-                        WHERE trpo.parent='{row.reservation}';
+                        WHERE trpo.parent='{row.reservation}' AND Item='{row.item_code}';
                     """
                     frappe.db.sql(sql)
                 if row.get('item_warehouse'):
                     sql = f"""
                         UPDATE `tabReservation Warehouse` trw
                         SET trw.reserved_qty  = {row.qty}
-                        WHERE trw.parent='{row.reservation}';
+                        WHERE trw.parent='{row.reservation}' AND Item='{row.item_code}';
                     """
                     frappe.db.sql(sql)
+
                 if row.reservation in sql_reserv_list:
                     sql_reserv_list.remove(row.reservation)
-            if(not row.reservation):
-                #**check if have ware house or purchase invoice
-                check_source_item(doc)
-                #**create reservation
-                add_row_for_reservation(doc)
+            # if(not row.reservation):
+            #     #**check if have ware house or purchase invoice
+            #     check_source_item(doc)
+            #     #**create reservation
+            #     add_row_for_reservation(doc)
         else:
             if len(sql_reserv_list):
                 for reservation in sql_reserv_list:
