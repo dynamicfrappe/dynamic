@@ -49,7 +49,7 @@ def is_product_bundle(item_code) :
 
 @frappe.whitelist()
 def set_complicated_pundel_list(invoice):
-    #frappe.throw("Face One ")
+  
     #clear invocie compicated_pund
     
     invoice.set("compicated_pundel" , [])
@@ -58,6 +58,7 @@ def set_complicated_pundel_list(invoice):
         is_pundel =  bool(frappe.db.exists("Product Bundle", {"new_item_code": item.item_code}))
         if is_pundel :
             items = get_product_bundle_items(item.item_code)
+            #frappe.throw(str(len(items)))
             for i in items :
               com_pundel = bool(frappe.db.exists("Product Bundle", {"new_item_code": i.item_code}))
               # add item to new Child table 
@@ -71,11 +72,7 @@ def set_complicated_pundel_list(invoice):
                 for it in pundel_data :
                     if bool(frappe.db.exists("Product Bundle", {"new_item_code": it.item_code})) :
                         frappe.throw(f"""_( Parent item {pundel_data} Product Pundel {it.item_code})  Has three level of pundels And max level is Tow""")
-                    #set child product conf pundel 
-                    # pi_row =invoice.append("compicated_pundel", {})
-                    # pi_row.parent_item = i.item_code
-                    # pi_row.item_code = it.item_code
-                    # pi_row.item_group = it.item_group
+                  
                 com_pundel_items.append(i)
                 pi_row =invoice.append("compicated_pundel", {})
                 pi_row.parent_item = item.item_code
@@ -85,8 +82,7 @@ def set_complicated_pundel_list(invoice):
 
                 #pi_row.item_group = it.item_group
             complicated_pundel.append({item.item_code : com_pundel_items})
-    frappe.msgprint(str( complicated_pundel))
+    #frappe.msgprint(str( complicated_pundel))
 
 
-                 
-    pass
+           
