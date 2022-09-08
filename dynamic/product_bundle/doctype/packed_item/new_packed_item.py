@@ -324,11 +324,11 @@ def get_items_from_product_bundle(row):
 def cancel_amend(invocie):
 	doc = frappe.get_doc("Sales Invoice" , invocie)
 	print(doc.docstatus)
-	# doc.cancel()
-	# doc.reload()
-	# print(doc.docstatus)
-	# create a new amendment
-	#frappe.db.commit()
+	doc.cancel()
+	#doc.reload()
+	print(doc.docstatus)
+	#create a new amendment
+	frappe.db.commit()
 	amendment = frappe.copy_doc(doc)
 	amendment.docstatus = 0
 	amendment.amended_from = doc.name
@@ -352,4 +352,3 @@ def get_old_invocie(invoice =None):
 		print(inv)
 
 	
-
