@@ -6,12 +6,13 @@ from frappe import _
 import codecs
 import json
 import base64
-from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
+#from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
+from dynamic.product_bundle.doctype.packed_item.new_packed_item import make_packing_list
 from erpnext import get_default_company, get_default_cost_center
 from frappe.model.naming import make_autoname
 from frappe.utils.user import get_users_with_role
 from frappe.utils.background_jobs import enqueue
-from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
+#from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
 from frappe.utils import add_days, nowdate, today
 from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
 from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
