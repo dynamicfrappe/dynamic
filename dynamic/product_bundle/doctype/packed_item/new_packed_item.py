@@ -329,15 +329,25 @@ def cancel_amend(invocie):
 	print(doc.docstatus)
 	#create a new amendment
 	frappe.db.commit()
-	time.sleep(2.5)
+	#add cancel log 
+	record = frappe.new_doc("Updated Invoices")
+	record.old_name = doc.name
+	record.save()
+	frappe.db.commit()
+	print("Cancel Completed")
+	time.sleep(15)
 	amendment = frappe.copy_doc(doc)
 	amendment.docstatus = 0
 	amendment.amended_from = doc.name
 
 	amendment.save()
 	amendment.submit()
+	record.new_name = amendment.name
+	record.save()
 	# #amendment.reload()
 	frappe.db.commit()
+	print("Amended Completed Completed")
+	time.sleep(50)
 	return amendment.name
 
 
@@ -361,7 +371,8 @@ def get_old_invocie(invoice =None):
 		""")
 		#print(invoice_list)
 	for invocie in invoice_list :
-		inv = cancel_amend(invocie)
-		print(inv)
+		time.sleep(15)
+		inv = cancel_amend(invocie[0])
+		#print(inv)
 
 	

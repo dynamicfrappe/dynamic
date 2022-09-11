@@ -68,6 +68,7 @@ def set_complicated_pundel_list(invoice):
             items = get_product_bundle_items(item.item_code)
             parent_items = len(items)
             #item_obj = {item.item_code : parent_items}
+            com_pundel_items = []
             for i in items :
             
                  
