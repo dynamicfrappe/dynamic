@@ -319,7 +319,7 @@ def get_items_from_product_bundle(row):
 
 
 #amend Old Invocies function 
-
+import time
 #cancel and amend invocie 
 def cancel_amend(invocie):
 	doc = frappe.get_doc("Sales Invoice" , invocie)
@@ -329,6 +329,7 @@ def cancel_amend(invocie):
 	print(doc.docstatus)
 	#create a new amendment
 	frappe.db.commit()
+	time.sleep(2.5)
 	amendment = frappe.copy_doc(doc)
 	amendment.docstatus = 0
 	amendment.amended_from = doc.name
@@ -346,7 +347,19 @@ def get_old_invocie(invoice =None):
 	if invoice :
 		invoice_list = [invoice]
 	else :
-		pass
+
+		invoice_list = frappe.db.sql(""" 
+		select invoice.name 
+	     from 
+		`tabPacked Item` packed_item 
+		inner join `tabProduct Bundle` bundle 
+		on bundle.new_item_code = packed_item.item_code 
+		INNER join `tabSales Invoice` invoice on packed_item.parent = invoice.name 
+		WHERE invoice.docstatus = 1
+		group by invoice.name 
+		ORDER BY invoice.name
+		""")
+		#print(invoice_list)
 	for invocie in invoice_list :
 		inv = cancel_amend(invocie)
 		print(inv)
