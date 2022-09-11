@@ -5,41 +5,75 @@
 
 
 import json
-from erpnext.stock.doctype.packed_item.packed_item import is_product_bundle
 
+try :
+	from erpnext.stock.doctype.packed_item.packed_item import is_product_bundle
+except :
+	from dynamic.gebco.doctype.sales_invocie.utils import is_product_bundle
 import frappe
 from frappe.model.document import Document
 from frappe.utils import cstr, flt
 
 from erpnext.stock.get_item_details import get_item_details
 
-
+from dynamic.gebco.doctype.sales_invocie.utils import get_product_bundle_items
 class PackedItem(Document):
 	pass
 
-def get_product_bundle_items(item_code):
-	return frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
-		from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
-		where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", item_code, as_dict=1)
+# def get_product_bundle_items(item_code):
+# 	return frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
+# 		from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
+# 		where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", item_code, as_dict=1)
 
-def get_packing_item_details(item, company):
-	return frappe.db.sql("""
-		select i.item_name, i.is_stock_item, i.description, i.stock_uom, id.default_warehouse
-		from `tabItem` i LEFT JOIN `tabItem Default` id ON id.parent=i.name and id.company=%s
-		where i.name = %s""",
-		(company, item), as_dict = 1)[0]
+# def get_packing_item_details(item, company):
+# 	return frappe.db.sql("""
+# 		select i.item_name, i.is_stock_item, i.description, i.stock_uom, id.default_warehouse
+# 		from `tabItem` i LEFT JOIN `tabItem Default` id ON id.parent=i.name and id.company=%s
+# 		where i.name = %s""",
+# 		(company, item), as_dict = 1)[0]
+
+
+# update function get_packing_item_details
+def get_packed_item_details(item_code, company):
+	item = frappe.qb.DocType("Item")
+	item_default = frappe.qb.DocType("Item Default")
+	query = (
+		frappe.qb.from_(item)
+		.left_join(item_default)
+		.on((item_default.parent == item.name) & (item_default.company == company))
+		.select(
+			item.item_name,
+			item.is_stock_item,
+			item.description,
+			item.stock_uom,
+			item.valuation_rate,
+			item_default.default_warehouse,
+		)
+		.where(item.name == item_code)
+	)
+	return query.run(as_dict=True)[0]
+
 
 def get_bin_qty(item, warehouse):
-	det = frappe.db.sql("""select actual_qty, projected_qty from `tabBin`
-		where item_code = %s and warehouse = %s""", (item, warehouse), as_dict = 1)
-	return det and det[0] or frappe._dict()
+	# det = frappe.db.sql("""select actual_qty, projected_qty from `tabBin`
+	# 	where item_code = %s and warehouse = %s""", (item, warehouse), as_dict = 1)
+	# return det and det[0] or frappe._dict()
+	#updated to 
+	bin_data = frappe.db.get_values(
+		"Bin",
+		fieldname=["actual_qty", "projected_qty"],
+		filters={"item_code": item, "warehouse": warehouse},
+		as_dict=True,
+	)
+
+	return bin_data[0] if bin_data else {}
 
 def update_packing_list_item(doc, packing_item_code, qty, main_item_row, description):
 	if doc.amended_from:
 		old_packed_items_map = get_old_packed_item_details(doc.packed_items)
 	else:
 		old_packed_items_map = False
-	item = get_packing_item_details(packing_item_code, doc.company)
+	item = get_packed_item_details(packing_item_code, doc.company)
 
 	# check if exists
 	exists = 0
@@ -200,3 +234,10 @@ def get_old_packed_item_details(old_packed_items):
 	for items in old_packed_items:
 		old_packed_items_map.setdefault((items.item_code ,items.parent_item), []).append(items.as_dict())
 	return old_packed_items_map
+
+
+
+##### Update caculation for bundel of bundel 
+#### in level one we set bundel level 2 in compicated bundel table
+#### after adding level 2 
+### update invocie items with level 2 items 

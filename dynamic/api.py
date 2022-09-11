@@ -6,12 +6,13 @@ from frappe import _
 import codecs
 import json
 import base64
-from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
+#from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
+from dynamic.product_bundle.doctype.packed_item.new_packed_item import make_packing_list
 from erpnext import get_default_company, get_default_cost_center
 from frappe.model.naming import make_autoname
 from frappe.utils.user import get_users_with_role
 from frappe.utils.background_jobs import enqueue
-from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
+#from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
 from frappe.utils import add_days, nowdate, today
 from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
 from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
@@ -245,12 +246,12 @@ def check_email_setting_in_stock_setting(doc):
 
 def check_pr_reservation(doc):
     if doc.doctype == "Purchase Invoice":
-        if not doc.update_stock:
-            frappe.throw('Please Check Update Stock')
-    for row in doc.items:
-        if(row.purchase_order):
-            #get all reservation for this purchase_order wiz this item
-            get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
+        if  doc.update_stock:
+           
+            for row in doc.items:
+                if(row.purchase_order):
+                    #get all reservation for this purchase_order wiz this item
+                    get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
 
 def get_po_reservation(purchase_order,item,target_warehouse):
     reservation_list_sql = f"""SELECT r.name from `tabReservation` as r WHERE r.status <> 'Invalid' AND r.order_source='{purchase_order}' AND r.item_code = '{item}' AND sales_order <> 'Invalid' AND r.warehouse_source = '' """
@@ -543,36 +544,35 @@ def change_row_after_submit(doc , *args ,**kwargs):
         3-set status as invalid for reserv if  row deleted
         4- create new reservation if new row added
         """
-        # reservation_list = frappe.get_list('Reservation',filters={'sales_order':doc.name},fields='name')
         sql_reserv = f"""
             select name from tabReservation tr where sales_order ='{doc.name}'
         """
         sql_reserv = frappe.db.sql(sql_reserv)
         sql_reserv_list = [l[0] for l in sql_reserv]
-        frappe.errprint(f'list is {sql_reserv_list}--{type(sql_reserv_list)}')
         for row in doc.items:
             if(row.reservation and row.reservation_status == 'Active'):
                 if(row.get('item_purchase_order')):
                     sql = f"""
                         UPDATE `tabReservation Purchase Order` trpo
                         SET trpo.reserved_qty  = {row.qty}
-                        WHERE trpo.parent='{row.reservation}';
+                        WHERE trpo.parent='{row.reservation}' AND Item='{row.item_code}';
                     """
                     frappe.db.sql(sql)
                 if row.get('item_warehouse'):
                     sql = f"""
                         UPDATE `tabReservation Warehouse` trw
                         SET trw.reserved_qty  = {row.qty}
-                        WHERE trw.parent='{row.reservation}';
+                        WHERE trw.parent='{row.reservation}' AND Item='{row.item_code}';
                     """
                     frappe.db.sql(sql)
+
                 if row.reservation in sql_reserv_list:
                     sql_reserv_list.remove(row.reservation)
-            if(not row.reservation):
-                #**check if have ware house or purchase invoice
-                check_source_item(doc)
-                #**create reservation
-                add_row_for_reservation(doc)
+            # if(not row.reservation):
+            #     #**check if have ware house or purchase invoice
+            #     check_source_item(doc)
+            #     #**create reservation
+            #     add_row_for_reservation(doc)
         else:
             if len(sql_reserv_list):
                 for reservation in sql_reserv_list:
