@@ -119,6 +119,7 @@ def validate_active_domains_invocie(doc,*args,**kwargs):
 @frappe.whitelist()
 def validate_active_domains_note(doc,*args,**kwargs):
     cur_doc  = frappe.get_doc("Delivery Note" , doc)
+   
     if len(cur_doc.packed_items) > 0 :
             caculate_shortage_item(cur_doc.packed_items + cur_doc.items ,cur_doc.set_warehouse)
 @frappe.whitelist()
@@ -137,6 +138,8 @@ def validate_delivery_note(doc,*args,**kwargs):
             m_temp.delivery_note = doc.name
             m_temp.save()
         if len(doc.packed_items) > 0  :
+            make_packing_list(doc)
+            set_complicated_pundel_list(doc)
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)    
     if 'Terra' in DOMAINS:
         # frappe.throw('Validate delivery Note')

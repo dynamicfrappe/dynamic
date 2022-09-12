@@ -2,6 +2,8 @@ from datetime import datetime
 import frappe
 from frappe import _
 from dynamic.gebco.doctype.sales_invocie.stock_settings import caculate_shortage_item
+from dynamic.product_bundle.doctype.packed_item.new_packed_item import make_packing_list
+from dynamic.gebco.doctype.sales_invocie.utils import set_complicated_pundel_list
 DOMAINS = frappe.get_active_domains()
 import datetime
 
@@ -18,8 +20,11 @@ def validate_sales_invoice(doc,*args,**kwargs):
         #validate stock amount in packed list 
         #send  packed_items to valid and get Response message with item and shrotage amount and whare house  
         # this fuction validate current srock without looking for other resources    
-        # if len(doc.packed_items) > 0  and doc.update_stock == 1:
+        if len(doc.packed_items) > 0  and doc.update_stock == 1:
+             make_packing_list(doc)
+             set_complicated_pundel_list(doc)
         #     caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
+
 def validate_delivery_note(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
         if doc.maintenance_template:
