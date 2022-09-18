@@ -581,3 +581,27 @@ def change_row_after_submit(doc , *args ,**kwargs):
                 for reservation in sql_reserv_list:
                     frappe.db.set_value('Reservation',reservation,{'status':'Invalid'})
     
+
+
+#add Whats App Message send Button 
+@frappe.whitelist()
+def validate_whatsApp(*args , **kwargs) :
+      if  'Moyate' in DOMAINS: 
+        """   Validate Sales Commition With Moyate """
+        return True
+
+
+@frappe.whitelist()
+def validate_whats_app_settings(data , *args ,**kwargs) :
+    json_data = json.loads(data)
+    #get_active_profile 
+    profile = frappe.db.sql(""" SELECT name from `tabWhatsApp`  WHERE status = 'Active' """ ,as_dict =1)
+    if len(profile) == 0 :
+        frappe.throw("No Active profile")
+    if len(profile) > 0 :
+        for i in json_data :
+            msg = frappe.new_doc("Whats App Message")
+            msg.customer = frappe.get_doc("Customer" ,i.get("name")).name
+            msg.fromm = profile[-1].get("name")
+            msg.save()
+            # frappe.throw(i.get("name"))

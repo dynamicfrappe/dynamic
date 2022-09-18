@@ -13,10 +13,10 @@ def sendMessage():
     url = INSTANCE_URL + f"/{PRODUCT_ID}/{PHONE_ID}/sendMessage"
     payload = {
 
-        "message" : "Hello" ,
-        "text" : "hello user" ,
+        "message" : "Hello From Other Side" ,
+        # "text" : "hello user text" ,
         "to_number" : "00201205554644",
-        "type": "link"
+        "type": "text"
 
     }
     headers = {
