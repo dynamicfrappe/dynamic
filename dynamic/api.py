@@ -6,12 +6,13 @@ from frappe import _
 import codecs
 import json
 import base64
-from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
+#from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
+from dynamic.product_bundle.doctype.packed_item.new_packed_item import make_packing_list
 from erpnext import get_default_company, get_default_cost_center
 from frappe.model.naming import make_autoname
 from frappe.utils.user import get_users_with_role
 from frappe.utils.background_jobs import enqueue
-from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
+#from dynamic.product_bundle.doctype.packed_item.packed_item import make_packing_list
 from frappe.utils import add_days, nowdate, today
 from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
 from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
@@ -118,6 +119,7 @@ def validate_active_domains_invocie(doc,*args,**kwargs):
 @frappe.whitelist()
 def validate_active_domains_note(doc,*args,**kwargs):
     cur_doc  = frappe.get_doc("Delivery Note" , doc)
+   
     if len(cur_doc.packed_items) > 0 :
             caculate_shortage_item(cur_doc.packed_items + cur_doc.items ,cur_doc.set_warehouse)
 @frappe.whitelist()
@@ -136,6 +138,8 @@ def validate_delivery_note(doc,*args,**kwargs):
             m_temp.delivery_note = doc.name
             m_temp.save()
         if len(doc.packed_items) > 0  :
+            make_packing_list(doc)
+            set_complicated_pundel_list(doc)
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)    
     if 'Terra' in DOMAINS:
         # frappe.throw('Validate delivery Note')
@@ -577,3 +581,27 @@ def change_row_after_submit(doc , *args ,**kwargs):
                 for reservation in sql_reserv_list:
                     frappe.db.set_value('Reservation',reservation,{'status':'Invalid'})
     
+
+
+#add Whats App Message send Button 
+@frappe.whitelist()
+def validate_whatsApp(*args , **kwargs) :
+      if  'Moyate' in DOMAINS: 
+        """   Validate Sales Commition With Moyate """
+        return True
+
+
+@frappe.whitelist()
+def validate_whats_app_settings(data , *args ,**kwargs) :
+    json_data = json.loads(data)
+    #get_active_profile 
+    profile = frappe.db.sql(""" SELECT name from `tabWhatsApp`  WHERE status = 'Active' """ ,as_dict =1)
+    if len(profile) == 0 :
+        frappe.throw("No Active profile")
+    if len(profile) > 0 :
+        for i in json_data :
+            msg = frappe.new_doc("Whats App Message")
+            msg.customer = frappe.get_doc("Customer" ,i.get("name")).name
+            msg.fromm = profile[-1].get("name")
+            msg.save()
+            # frappe.throw(i.get("name"))
