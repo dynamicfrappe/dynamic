@@ -250,11 +250,15 @@ def check_email_setting_in_stock_setting(doc):
 def check_pr_reservation(doc):
     if doc.doctype == "Purchase Invoice":
         if  doc.update_stock:
-           
-            for row in doc.items:
-                if(row.purchase_order):
-                    #get all reservation for this purchase_order wiz this item
-                    get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
+            loop_over_doc_items(doc)
+    if doc.doctype == 'Purchase Receipt':
+        loop_over_doc_items(doc)
+
+def loop_over_doc_items(doc):
+    for row in doc.items:
+        if(row.purchase_order):
+            #get all reservation for this purchase_order wiz this item
+            get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
 
 def get_po_reservation(purchase_order,item,target_warehouse):
     reservation_list_sql = f"""SELECT r.name from `tabReservation` as r WHERE r.status <> 'Invalid' AND r.order_source='{purchase_order}' AND r.item_code = '{item}' AND sales_order <> 'Invalid' AND r.warehouse_source = '' """
