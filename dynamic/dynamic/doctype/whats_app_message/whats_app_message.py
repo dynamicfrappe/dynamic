@@ -9,6 +9,9 @@ import requests
 import sys
 import base64
 
+
+#check If number is KSA Linked With Moyate Domain 
+DOMAINS = frappe.get_active_domains()
 class WhatsAppMessage(Document):
 	def get_whats_app_data(self) :
 		whats_obj = frappe.get_doc("WhatsApp" , self.fromm)
@@ -50,6 +53,9 @@ class WhatsAppMessage(Document):
 		    #set Data
 			self.contact = linked_contact[-1].get("contact")
 			self.mobil_number = linked_contact[-1].get("phone")
+			if  'Moyate' in DOMAINS:  
+				self.mobil_number = "+966" + str(linked_contact[-1].get("phone"))[1::]
+				
 			self.get_whats_app_data()
 
 	def validate(self):
