@@ -73,7 +73,17 @@ class Reservation(Document):
                     AND c.name <> "{self.name}"
 					
 					""" ,as_dict=1)
-		# frappe.errprint(f'data is -> {data}')
+		# data2= f"""
+		# 	select tb.name ,tb.item_code  ,tb.actual_qty  ,tb.reserved_qty,  (tb.actual_qty  -  sum(trw.reserved_qty)) as diff  from `tabReservation Warehouse` trw 
+		# 	INNER JOIN tabBin tb 
+		# 	ON tb.name  = trw.bin  
+		# 	INNER JOIN tabReservation tr 
+		# 	ON tr.name <> "{self.name}" AND trw.parent = tr.name AND tb.item_code = '{self.item_code}'
+		# 	AND tb.warehouse = '{self.warehouse_source}' AND tb.item_code = '{self.item_code}'
+		# """
+		# data2 = frappe.db.sql(data2)
+		# frappe.errprint(f'data is -> {data2}')
+		# frappe.throw('wait')
 		return data
 
 	def validate_purchase_order(self):

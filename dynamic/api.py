@@ -250,11 +250,15 @@ def check_email_setting_in_stock_setting(doc):
 def check_pr_reservation(doc):
     if doc.doctype == "Purchase Invoice":
         if  doc.update_stock:
-           
-            for row in doc.items:
-                if(row.purchase_order):
-                    #get all reservation for this purchase_order wiz this item
-                    get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
+            loop_over_doc_items(doc)
+    if doc.doctype == 'Purchase Receipt':
+        loop_over_doc_items(doc)
+
+def loop_over_doc_items(doc):
+    for row in doc.items:
+        if(row.purchase_order):
+            #get all reservation for this purchase_order wiz this item
+            get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
 
 def get_po_reservation(purchase_order,item,target_warehouse):
     reservation_list_sql = f"""SELECT r.name from `tabReservation` as r WHERE r.status <> 'Invalid' AND r.order_source='{purchase_order}' AND r.item_code = '{item}' AND sales_order <> 'Invalid' AND r.warehouse_source = '' """
@@ -581,3 +585,27 @@ def change_row_after_submit(doc , *args ,**kwargs):
                 for reservation in sql_reserv_list:
                     frappe.db.set_value('Reservation',reservation,{'status':'Invalid'})
     
+
+
+#add Whats App Message send Button 
+@frappe.whitelist()
+def validate_whatsApp(*args , **kwargs) :
+      if  'Moyate' in DOMAINS: 
+        """   Validate Sales Commition With Moyate """
+        return True
+
+
+@frappe.whitelist()
+def validate_whats_app_settings(data , *args ,**kwargs) :
+    json_data = json.loads(data)
+    #get_active_profile 
+    profile = frappe.db.sql(""" SELECT name from `tabWhatsApp`  WHERE status = 'Active' """ ,as_dict =1)
+    if len(profile) == 0 :
+        frappe.throw("No Active profile")
+    if len(profile) > 0 :
+        for i in json_data :
+            msg = frappe.new_doc("Whats App Message")
+            msg.customer = frappe.get_doc("Customer" ,i.get("name")).name
+            msg.fromm = profile[-1].get("name")
+            msg.save()
+            # frappe.throw(i.get("name"))
