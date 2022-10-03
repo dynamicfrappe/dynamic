@@ -1,0 +1,45 @@
+{
+ "category": "Modules",
+ "charts": [],
+ "creation": "2022-10-03 10:50:33.660201",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends": "Accounting",
+ "extends_another_page": 1,
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Extends Accounts Report",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Extends Accounts Report",
+   "link_to": "About Us Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Trial Balance Date",
+   "link_to": "Trial Balance Date",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2022-10-03 11:13:30.005615",
+ "modified_by": "Administrator",
+ "module": "Dynamic Accounts",
+ "name": "Extends Accounts Report",
+ "onboarding": "Accounts",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": []
+}
