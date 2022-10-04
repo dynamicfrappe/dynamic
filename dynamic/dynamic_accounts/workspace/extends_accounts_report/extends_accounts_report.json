@@ -14,7 +14,7 @@
  "is_standard": 1,
  "label": "Extends Accounts Report",
  "links": [],
- "modified": "2022-10-03 16:41:57.508775",
+ "modified": "2022-10-04 10:31:24.641755",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Extends Accounts Report",
@@ -27,6 +27,12 @@
    "doc_view": "Report Builder",
    "label": "Trial Balance Date",
    "link_to": "Trial Balance Date",
+   "type": "Report"
+  },
+  {
+   "doc_view": "Report Builder",
+   "label": "Balance Sheet Date",
+   "link_to": "Balance Sheet Date",
    "type": "Report"
   }
  ]
