@@ -264,9 +264,26 @@ def install_action():
                 "type":i.get("type"),
                 "action_name":i.get("action_name")
             }).insert()
+# Create two Stock Entry Types --  Material Send -- Matrial Receive
+def create_trans():
+    name ="Transfer"
+    # if exit 
+    exit_name= frappe.db.sql(f""" 
+    SELECT name FROM `tabStock Entry Type` WHERE name = '{name}'
+    """,as_dict=1)
+    if not exit_name or len(exit_name) == 0 :
+        #create Stock Entry Type 
+        new_type = frappe.new_doc("Stock Entry Type")
+        new_type.__newname = name
+        new_type.purpose = "Material Transfer"
+        new_type.add_to_transit = 1
+        new_type.save()
+
+
+
 
 def create_terra_scripts():
-
+    create_trans()
     try:
         create_sales_invoice_script()
     except:
