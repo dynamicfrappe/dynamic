@@ -120,7 +120,7 @@ scheduler_events = {
         "0 */12 * * *": [
             "dynamic.api.validate_sales_order_reservation_status",
         ] ,
-        "0 4 * * * " :[
+        "0 13 * * * " :[
             "dynamic.product_bundle.doctype.packed_item.new_packed_item.get_old_invocie"
         ]
     },
