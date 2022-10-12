@@ -49,7 +49,7 @@ doctype_js = {
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
     "Delivery Note": "public/js/delivery_note.js"
 }
-doc_events = {\
+doc_events = {
     "Payment Entry":{
                "on_submit": "dynamic.api.submit_payment",
     },
@@ -119,6 +119,9 @@ scheduler_events = {
         ],
         "0 */12 * * *": [
             "dynamic.api.validate_sales_order_reservation_status",
+        ] ,
+        "0 4 * * * " :[
+            "dynamic.product_bundle.doctype.packed_item.new_packed_item.get_old_invocie"
         ]
     },
     # 	"all": [
