@@ -238,6 +238,13 @@ data = {
             #     "allow_on_submit":1,
             #     "default":0
             # },
+            {
+                "fieldname": "serial2",
+                "fieldtype": "Small Text",
+                "insert_after": "serial_no",
+                "label": "Serial No 2",
+                "length": 240,
+            },
         ],
         'Purchase Receipt Item':[
             {
@@ -248,15 +255,7 @@ data = {
                 "length": 240,
             },
         ],
-         'Sales Order':[
-            {
-                "fieldname": "serial2",
-                "fieldtype": "Small Text",
-                "insert_after": "serial_no",
-                "label": "Serial No 2",
-                "length": 240,
-            },
-        ]
+
     },
     "properties": [
 

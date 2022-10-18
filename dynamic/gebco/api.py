@@ -2,11 +2,29 @@ from datetime import datetime
 import frappe
 from frappe import _
 from dynamic.gebco.doctype.sales_invocie.stock_settings import caculate_shortage_item
-from dynamic.product_bundle.doctype.packed_item.new_packed_item import make_packing_list
+from dynamic.product_bundle.doctype.packed_item.new_packed_item import make_packing_list , get_old_invocie
 from dynamic.gebco.doctype.sales_invocie.utils import set_complicated_pundel_list
 DOMAINS = frappe.get_active_domains()
 import datetime
 
+
+
+def validate_packed_item(name):
+    invoice_list = frappe.db.sql(f""" 
+		select invoice.name 
+	     from 
+		`tabPacked Item` packed_item 
+		inner join `tabProduct Bundle` bundle 
+		on bundle.new_item_code = packed_item.item_code 
+		INNER join `tabSales Invoice` invoice on packed_item.parent = invoice.name 
+		WHERE invoice.name = '{name}'
+		group by invoice.name 
+		ORDER BY invoice.name
+		""")
+    if len(invoice_list) > 0 :
+        frappe.throw("Packed Item Error")
+    if not invoice_list or len(invoice_list) == 0 :
+        frappe.msgprint("valid Paked Item")
 def validate_sales_invoice(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
         if doc.maintenance_template:
@@ -23,6 +41,7 @@ def validate_sales_invoice(doc,*args,**kwargs):
         if len(doc.packed_items) > 0  and doc.update_stock == 1:
              make_packing_list(doc)
              set_complicated_pundel_list(doc)
+             validate_packed_item(doc.name)
         #     caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
 
 def validate_delivery_note(doc,*args,**kwargs):

@@ -119,7 +119,7 @@ def reset_packing_list(doc):
 	if reset_table:
 		doc.set("packed_items", [])
 	return reset_table
-
+DOMAINS = frappe.get_active_domains()
 
 def get_product_bundle_items(item_code):
 	product_bundle = frappe.qb.DocType("Product Bundle")
@@ -352,9 +352,10 @@ def cancel_amend(invocie):
 
 
 # Create Function To get Old Wrong invocies  353
-
+#from dynamic.product_bundle.doctype.packed_item.new_packed_item import get_old_invocie
 def get_old_invocie(invoice =None): 
-	if invoice :
+	
+	if invoice and'Gebco' in DOMAINS:
 		invoice_list = [invoice]
 	else :
 

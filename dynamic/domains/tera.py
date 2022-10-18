@@ -289,7 +289,46 @@ data = {
                 "allow_on_submit":1,
                 "default":0
             },
-        ]
+        ],
+
+        #New Request Update 1- Update Cost Center Warehouse
+        "Cost Center" :[
+            {
+                    "fieldname": "payment_naming",
+                    "fieldtype": "Data",
+                    "insert_after": "old_parent",
+                    "label": "Branch Options"   
+
+            },
+            {
+                    "fieldname": "branch_section",
+                    "fieldtype": "Section Break",
+                    "insert_after": "old_parent",
+                    "label": "Branch Options"   
+
+            },
+            
+             {
+                "fieldname": "warehouse",
+                "fieldtype": "Link",
+                "insert_after": "intermediate_warehouse",
+                "label": "Warehouse",
+                'options' : 'Warehouse'
+            
+            },
+              {
+                "fieldname": "manager",
+                "fieldtype": "Table",
+                "insert_after": "warehouse",
+                "label": "Branch managers",
+                'options' : 'Branch Managers'
+            
+            },
+
+        ] ,
+
+
+
     },
     # "properties": [
         
