@@ -134,7 +134,8 @@ def make_cheque_endorsement(payment_entry):
         "party": payment_entry.endorsed_party_name
     })
 
-    je.save()
+    cheque_submit = check_cheque_submit()
+    je.submit() if cheque_submit else je.save()
     return je
 
 
@@ -199,7 +200,8 @@ def make_cheque_pay(payment_entry):
             "party": payment_entry.party
         })
 
-    je.save()
+    cheque_submit = check_cheque_submit()
+    je.submit() if cheque_submit else je.save()
     return je
 
 
@@ -264,7 +266,8 @@ def deposite_cheque_under_collection(payment_entry):
             "party": payment_entry.party
         })
 
-    je.save()
+    cheque_submit = check_cheque_submit()
+    je.submit() if cheque_submit else je.save()
     return je
 
 
@@ -330,7 +333,8 @@ def collect_cheque_now(payment_entry):
             "party": payment_entry.party
         })
 
-    je.save()
+    cheque_submit = check_cheque_submit()
+    je.submit() if cheque_submit else je.save()
     return je
 
 
@@ -394,7 +398,8 @@ def collect_cheque_under_collection(payment_entry):
             "party": payment_entry.party
         })
 
-    je.save()
+    cheque_submit = check_cheque_submit()
+    je.submit() if cheque_submit else je.save()
     return je
 
 
@@ -461,7 +466,8 @@ def reject_cheque_under_collection(payment_entry):
             "party": payment_entry.party
         })
 
-    je.save()
+    cheque_submit = check_cheque_submit()
+    je.submit() if cheque_submit else je.save()
     return je
 
 
@@ -583,7 +589,8 @@ def pay_cash_new(payment_entry):
         "party_type": payment_entry.party_type,
         "party": payment_entry.party
     })
-    je.save()
+    cheque_submit = check_cheque_submit()
+    je.submit() if cheque_submit else je.save()
     return je
 
 
@@ -611,3 +618,8 @@ def get_bank_commission(bank_account,comission_type,cheque_amount=0):
     
     
     return comission_amount or 0
+
+def check_cheque_submit():
+    company = frappe.defaults.get_defaults().company
+    cheque_submit = frappe.db.get_value('Company',company,'cheque_submit')
+    return cheque_submit

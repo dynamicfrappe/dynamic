@@ -67,6 +67,13 @@ data = {
                 "insert_after": "returned_cheques_bank_account",
                 "label": "Bank Expenses Account",
                 "options": "Account"
+            },
+            {
+                "fieldname": "cheque_submit",
+                "fieldtype": "Check",
+                "insert_after": "bank_expenses_account",
+                "label": "Cheque Submit",
+                "default":0
             }
         ],
         'Bank Account': [
