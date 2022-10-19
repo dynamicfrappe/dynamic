@@ -27,9 +27,9 @@ app_include_js = "/assets/js/dynamic.min.js"
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 doctype_list_js = {
-            "Customer" : "public/js/customer_list.js"
+                    "Customer" : "public/js/customer_list.js"
             
-            }
+                    }
 
 after_install = "dynamic.install.after_install"
 after_migrate = "dynamic.install.after_install"
@@ -120,7 +120,7 @@ scheduler_events = {
         "0 */12 * * *": [
             "dynamic.api.validate_sales_order_reservation_status",
         ] ,
-        "0 13 * * * " :[
+        "0 13 * * *" :[
             "dynamic.product_bundle.doctype.packed_item.new_packed_item.get_old_invocie"
         ]
     },

@@ -8,10 +8,11 @@
 // 	]
 // };
 
+
 frappe.require("assets/erpnext/js/financial_statements.js", function() {
 	frappe.query_reports["Balance Sheet Date"] = $.extend({}, erpnext.financial_statements);
 
-	erpnext.utils.add_dimensions('Balance Sheet', 10);
+	// erpnext.utils.add_dimensions('Balance Sheet', 10);
 
 	frappe.query_reports["Balance Sheet Date"]["filters"].push({
 		"fieldname": "accumulated_values",

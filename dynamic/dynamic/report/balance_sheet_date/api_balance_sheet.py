@@ -160,7 +160,7 @@ def get_data(
 	period_list,
 	filters=None,
 	accumulated_values=1,
-	only_current_fiscal_year=True,
+	only_current_fiscal_year=False,
 	ignore_closing_entries=False,
 	ignore_accumulated_values_for_fy=False,
 	total=True,
