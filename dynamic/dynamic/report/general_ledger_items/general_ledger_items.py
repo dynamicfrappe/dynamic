@@ -62,7 +62,7 @@ def get_transactions_items(result):
 			#!if voucher type purchase invoice :child table name is `Purchase Invoice Item` -colms-> item_code,qty,amount
 			if row.get('voucher_type') == "Purchase Invoice":
 				sql_query = """
-					SELECT name as 'teeeeeeeeest',pi.parent as voucher_no,pi.item_code as item,pi.qty,pi.amount FROM `tabPurchase Invoice Item` as pi
+					SELECT name as 'teeeeeeeeest',pi.parent as voucher_no,pi.item_code as item,pi.rate ,pi.qty,pi.amount FROM `tabPurchase Invoice Item` as pi
 					WHERE pi.parent = '{parent}'
 				""".format(parent=row.get('voucher_no'))
 				query_data = frappe.db.sql(sql_query,as_dict=1)
@@ -70,7 +70,7 @@ def get_transactions_items(result):
 			#!if  voucher type sales invoice child table name is `Sales Invoice Item` --colms-> item,qty,amount
 			if row.get('voucher_type') == "Sales Invoice":
 				sql_query = """
-					SELECT name as 'teeeeeeeeest',si.parent as voucher_no,si.item_code as item,si.qty,si.amount FROM `tabSales Invoice Item` as si
+					SELECT name as 'teeeeeeeeest',si.parent as voucher_no,si.item_code as item,si.rate, si.qty,si.amount FROM `tabSales Invoice Item` as si
 					WHERE si.parent = '{parent}'
 				""".format(parent=row.get('voucher_no'))
 				query_data = frappe.db.sql(sql_query,as_dict=1)
@@ -637,6 +637,7 @@ def get_columns(filters):
 			{"label": _("Party"), "fieldname": "party", "width": 100},
 			{"label": _("Item"),"fieldtype":"Link","options":"Item", "fieldname": "item", "width": 100},
 			{"label": _("QTY"), "fieldname": "qty","fieldtype": "Float", "width": 100},	
+			{"label": _("Rate"), "fieldname": "rate","fieldtype": "Float", "width": 100},	
 			{"label": _("Amount"),"fieldtype":"Float", "fieldname": "amount", "width": 100},
 		]
 	)
@@ -646,21 +647,21 @@ def get_columns(filters):
 			columns.append(
 				{"label": _(dim.label), "options": dim.label, "fieldname": dim.fieldname, "width": 100}
 			)
-		columns.append(
-			{"label": _("Cost Center"), "options": "Cost Center", "fieldname": "cost_center", "width": 100}
-		)
+		# columns.append(
+		# 	{"label": _("Cost Center"), "options": "Cost Center", "fieldname": "cost_center", "width": 100}
+		# )
 
 	columns.extend(
 		[
-			{"label": _("Against Voucher Type"), "fieldname": "against_voucher_type", "width": 100},
-			{
-				"label": _("Against Voucher"),
-				"fieldname": "against_voucher",
-				"fieldtype": "Dynamic Link",
-				"options": "against_voucher_type",
-				"width": 100,
-			},
-			{"label": _("Supplier Invoice No"), "fieldname": "bill_no", "fieldtype": "Data", "width": 100},
+			# {"label": _("Against Voucher Type"), "fieldname": "against_voucher_type", "width": 100},
+			# {
+			# 	"label": _("Against Voucher"),
+			# 	"fieldname": "against_voucher",
+			# 	"fieldtype": "Dynamic Link",
+			# 	"options": "against_voucher_type",
+			# 	"width": 100,
+			# },
+			# {"label": _("Supplier Invoice No"), "fieldname": "bill_no", "fieldtype": "Data", "width": 100},
 			{"label": _("Remarks"), "fieldname": "remarks", "width": 400},
 		]
 	)

@@ -69,11 +69,19 @@ frappe.query_reports["General Ledger Items"] = {
 			"fieldname":"party_type",
 			"label": __("Party Type"),
 			"fieldtype": "Select",
-			"options": "Customer\nSupplier",
-			"default": "Customer",
-			on_change: function() {
-				frappe.query_report.set_filter_value('party', "");
-			}
+			"options": [
+				{
+					label: __("Supplier"),
+					value: "Supplier",
+				},
+				{
+					label: __("Customer"),
+					value: "Customer",
+				},
+			],
+			// on_change: function() {
+			// 			frappe.query_report.set_filter_value('party', "");
+			// 		}
 		},
 		// {
 		// 	"fieldname":"party_type",
@@ -165,16 +173,16 @@ frappe.query_reports["General Ledger Items"] = {
 		// 	"fieldtype": "Select",
 		// 	"options": erpnext.get_presentation_currency_list()
 		// },
-		{
-			"fieldname":"cost_center",
-			"label": __("Cost Center"),
-			"fieldtype": "MultiSelectList",
-			get_data: function(txt) {
-				return frappe.db.get_link_options('Cost Center', txt, {
-					company: frappe.query_report.get_filter_value("company")
-				});
-			}
-		},
+		// {
+		// 	"fieldname":"cost_center",
+		// 	"label": __("Cost Center"),
+		// 	"fieldtype": "MultiSelectList",
+		// 	get_data: function(txt) {
+		// 		return frappe.db.get_link_options('Cost Center', txt, {
+		// 			company: frappe.query_report.get_filter_value("company")
+		// 		});
+		// 	}
+		// },
 		// {
 		// 	"fieldname":"project",
 		// 	"label": __("Project"),
