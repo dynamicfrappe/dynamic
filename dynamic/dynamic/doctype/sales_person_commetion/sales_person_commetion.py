@@ -1,6 +1,7 @@
 # Copyright (c) 2022, Dynamic and contributors
 # For license information, please see license.txt
 
+from datetime import datetime
 from pty import slave_open
 from pydoc import doc
 from shutil import ExecError
@@ -8,6 +9,7 @@ import frappe
 from frappe.model.document import Document
 import calendar
 from frappe.utils import today
+from frappe.utils.data import add_days, add_months
 class SalesPersonCommetion(Document):
 	def set_messing_dates(self):
 		if self.date :
@@ -95,6 +97,10 @@ class SalesPersonCommetion(Document):
 
 		except Exception as ex:
 			print("from exception errror  ==================> ",str(ex))
+			error = frappe.new_doc("Error Log")
+			error.method = f"update_monthly_commetions while save {self.name}"
+			error.error = str(ex)
+			error.save() 
 		
 
 	# def validate_invocie_status(self):
@@ -152,3 +158,53 @@ class SalesPersonCommetion(Document):
 				return main_amount
 		return 0
 
+
+
+
+@frappe.whitelist()
+def update_month_previous_logs():
+	first_day = datetime.today().replace(day=1)
+	last_day = add_days(add_months(first_day, 1),-1) 
+
+	sql = f"""
+				select
+					name ,
+					sales_person ,
+					item__group ,
+					commission_template ,
+					commission_amount ,
+					invoice_qty ,
+					from_date ,
+					to_date
+				from
+					`tabSales Person Commetion` t1
+				where
+					t1.name = (
+					select
+						t2.name
+					from
+						`tabSales Person Commetion` t2
+					where
+						t2.from_date = date('{first_day}')
+						and t2.to_date = date('{last_day}')
+						and t1.sales_person = t2.sales_person
+						and t1.item__group = t2.item__group
+						and t1.commission_template = t2.commission_template
+					ORDER BY
+						t2.sales_person ,
+						t2.item__group ,
+						t2.commission_template ,
+						t2.creation DESC
+					limit 1
+				)
+				ORDER BY
+					t1.sales_person ,
+					t1.item__group ,
+					t1.commission_template ,
+					t1.creation DESC
+	"""
+	logs = frappe.db.sql(sql,as_dict=1) or []
+
+	for row in logs :
+		doc = frappe.get_doc("Sales Person Commetion" , row.name)
+		doc.save()
