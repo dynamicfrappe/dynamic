@@ -127,9 +127,9 @@ scheduler_events = {
     # 	"all": [
     # 		"dynamic.tasks.all"
     # 	],
-    # 	"daily": [
-    # 		"dynamic.tasks.daily"
-    # 	],
+    	"daily": [
+    		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs"
+    	],
     # 	"hourly": [
     # 		"dynamic.tasks.hourly"
     # 	],
