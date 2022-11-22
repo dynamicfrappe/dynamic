@@ -12,7 +12,7 @@
 # # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # # License: GNU General Public License v3. See license.txt
 
-
+import datetime
 from datetime import datetime
 import frappe
 from frappe import _
@@ -153,10 +153,13 @@ def get_opening_balances(filters):
 
 
 def get_rootwise_opening_balances(filters, report_type):
+	# frappe.errprint(f'filters-->{filters}')
+	datem = filters.from_date
+	year_start_date = datem.year
 	additional_conditions = ""
 	if not filters.show_unclosed_fy_pl_balances:
 		additional_conditions = (
-			" and posting_date >= %(from_date)s" if report_type == "Profit and Loss" else "" #new ->year_start_date =>from_date
+			" and posting_date >= %(year_start_date)s" if report_type == "Profit and Loss" else "" #new ->year_start_date =>from_date
 		)
 
 	if not flt(filters.with_period_closing_entry):
@@ -189,7 +192,7 @@ def get_rootwise_opening_balances(filters, report_type):
 		"from_date": filters.from_date,
 		"to_date": filters.to_date,
 		"report_type": report_type,
-		# "year_start_date": filters.year_start_date,
+		"year_start_date": year_start_date,
 		"project": filters.project,
 		"finance_book": filters.finance_book,
 		"company_fb": frappe.db.get_value("Company", filters.company, "default_finance_book"),
@@ -225,7 +228,6 @@ def get_rootwise_opening_balances(filters, report_type):
 		query_filters,
 		as_dict=True,
 	)
-	# frappe.errprint(f'data--> {gle}')
 	opening = frappe._dict()
 	for d in gle:
 		opening.setdefault(d.account, d)
@@ -266,10 +268,7 @@ def calculate_values(accounts, gl_entries_by_account, opening_balances, filters,
 		# add opening
 		d["opening_debit"] = opening_balances.get(d.name, {}).get("opening_debit", 0)
 		d["opening_credit"] = opening_balances.get(d.name, {}).get("opening_credit", 0)
-		# d["posting_date"] =  opening_balances.get(d.name, {}).get("posting_date", "")
 		
-		# frappe.errprint(f'd --> {d}')
-		# frappe.errprint(f'd date--> {d["posting_date"]}')
 		for entry in gl_entries_by_account.get(d.name, []):
 			if cstr(entry.is_opening) != "Yes":
 				d["debit"] += flt(entry.debit)
@@ -281,11 +280,6 @@ def calculate_values(accounts, gl_entries_by_account, opening_balances, filters,
 		prepare_opening_closing(d)
 
 		for field in value_fields:
-			# if field == 'posting_date':
-			# 	frappe.errprint(f'if-->{field}')
-			# 	total_row["posting_date"] = 'test' #opening_balances.get(d.name, {}).get("posting_date", "")
-			# else:
-			# frappe.errprint(f'else-->{field}')
 			total_row[field] += d[field]
 
 	return total_row

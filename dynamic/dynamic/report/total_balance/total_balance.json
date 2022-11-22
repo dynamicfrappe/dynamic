@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2022-09-27 14:56:27.810500",
+ "modified": "2022-10-18 17:22:48.072246",
  "modified_by": "Administrator",
  "module": "dynamic",
  "name": "Total Balance",
@@ -27,6 +27,9 @@
   },
   {
    "role": "Auditor"
+  },
+  {
+   "role": "test_role_report"
   }
  ]
 }
