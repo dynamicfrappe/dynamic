@@ -176,7 +176,7 @@ data = {
             "insert_after": "source",
             "label": "Phone No",
             "translatable": 1,
-            "unique": 1,
+            # "unique": 1,
             "fetch_if_empty": 1,
             "reqd": 1,
             "fetch_from": "party_name.phone_no" 
@@ -266,6 +266,30 @@ data = {
             'fetch_from':'item_purchase_order.schedule_date',
             "read_only" : 1,
             "fetch_if_empty": 1
+            },
+            {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "picked_qty",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
             }
         ], 
         "Sales Order":[
@@ -290,7 +314,58 @@ data = {
                 "default":0
             },
         ],
-
+        "Purchase Order Item":[
+             {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "stock_uom",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ],
+        "Delivery Note Item":[
+             {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "stock_uom",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ],
         #New Request Update 1- Update Cost Center Warehouse
         "Cost Center" :[
             {
@@ -326,6 +401,58 @@ data = {
             },
 
         ] ,
+        "Quotation Item":[
+            {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "stock_uom",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ],
+        "Stock Entry Detail":[
+            {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "transfer_qty",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ]
 
 
 
