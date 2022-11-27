@@ -452,6 +452,16 @@ data = {
                 "read_only":1
             
             }
+        ],
+        "UOM Conversion Detail":[
+            {
+                "fieldname": "is_sub_uom",
+                "fieldtype": "Check",
+                "insert_after": "conversation_factor",
+                "label": "Is Sub Uom",
+                "in_list_view":1
+            
+            }
         ]
 
 
