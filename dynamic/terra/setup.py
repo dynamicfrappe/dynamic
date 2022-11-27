@@ -10,9 +10,9 @@ def create_sales_invoice_script():
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Sales Invoice"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Sales Invoice"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """
             
         frappe.ui.form.on("Sales Invoice", {
@@ -57,9 +57,9 @@ def create_item_script():
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Item"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Item"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """
             
         frappe.ui.form.on("Item", {
@@ -89,8 +89,8 @@ def create_item_script():
             is_sub_uom:(frm,cdt,cdn)=>{
                 var row = locals[cdt][cdn];
                 var count_check = 0;
-                for(let i =0;i<frm.uoms.length;i++){
-                    if(frm.uoms[i].is_sub_uom==1){
+                for(let i =0;i<frm.doc.uoms.length;i++){
+                    if(frm.doc.uoms[i].is_sub_uom==1){
                         count_check = count_check +1;
                     }
                 }
@@ -98,6 +98,12 @@ def create_item_script():
                     row.is_sub_uom = 0
                     frm.refresh_fields("uoms")
                     frappe.throw(__("only one sub unit allowed"))
+                }
+                if (row.uom == frm.doc.stock_uom){
+                    row.is_sub_uom = 0;
+                    frm.refresh_fields("uoms")
+                    frappe.throw(__("Sub UOM cant be eaqul default uom"))
+
                 }
             }
         });
@@ -113,9 +119,9 @@ def create_delivery_note_script():
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Delivery Note"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Delivery Note"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """
             frappe.ui.form.on('Delivery Note Item', {
                 qty:(frm,cdt,cdn)=>{
@@ -169,9 +175,9 @@ def create_lead_script():
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Lead"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Lead"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """
             
         frappe.ui.form.on("Lead", {
@@ -208,9 +214,9 @@ def create_customer_script():
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Customer"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Customer"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """
             
         frappe.ui.form.on("Customer", {
@@ -237,9 +243,9 @@ def create_opportunity_script():
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Opportunity"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Opportunity"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """
             
         frappe.ui.form.on("Opportunity", {
@@ -267,9 +273,9 @@ def create_quotation_script():
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Quotation"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Quotation"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """
             frappe.ui.form.on('Quotation Item', {
             qty:(frm,cdt,cdn)=>{
@@ -325,9 +331,9 @@ def create_sales_order_scipt():
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Sales Order"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Sales Order"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """
             frappe.ui.form.on('Sales Order Item', {
                 qty:(frm,cdt,cdn)=>{
@@ -382,9 +388,9 @@ def create_purchase_order_scipt():
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Purchase Order"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Purchase Order"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """
             frappe.ui.form.on('Purchase Order Item', {
                 qty:(frm,cdt,cdn)=>{
@@ -491,41 +497,41 @@ def create_stock_entry_scipt():
 
 
 
-def create_item_script():
-    name = "Item-Form"
-    if frappe.db.exists("Client Script",name) :
-        doc = frappe.get_doc("Client Script",name)
-    else :
-        doc = frappe.new_doc("Client Script")
-    doc.dt      = "Stock Entry"
-    doc.view    = "Form"
-    doc.enabled = 1
-    doc.script = """
-            frappe.ui.form.on('Item', {
-                qty:(frm,cdt,cdn)=>{
-                    var row = locals[cdt][cdn];
-                    frappe.call({
-                        method:"dynamic.terra.api.get_iem_sub_uom",
-                        args:{
-                            "item_code":row.item_code,
-                            "uom":row.uom,
-                            "qty":row.qty
-                        },callback(r){
-                        console.log(r.message)
-                            if(r.message){
-                                let result = r.message
-                                row.sub_uom = result.sub_uom;
-                                row.sub_uom_conversation_factor = result.sub_uom_conversation_factor;
-                                row.qty_as_per_sub_uom = result.qty_as_per_sub_uom;
-                                frm.refresh_fields("items")
-                            }
-                        }
-                    })
-                }
+# def create_item_script():
+#     name = "Item-Form"
+#     if frappe.db.exists("Client Script",name) :
+#         doc = frappe.get_doc("Client Script",name)
+#     else :
+#         doc = frappe.new_doc("Client Script")
+#     doc.dt      = "Stock Entry"
+#     doc.view    = "Form"
+#     doc.enabled = 1
+#     doc.script = """
+#             frappe.ui.form.on('Item', {
+#                 qty:(frm,cdt,cdn)=>{
+#                     var row = locals[cdt][cdn];
+#                     frappe.call({
+#                         method:"dynamic.terra.api.get_iem_sub_uom",
+#                         args:{
+#                             "item_code":row.item_code,
+#                             "uom":row.uom,
+#                             "qty":row.qty
+#                         },callback(r){
+#                         console.log(r.message)
+#                             if(r.message){
+#                                 let result = r.message
+#                                 row.sub_uom = result.sub_uom;
+#                                 row.sub_uom_conversation_factor = result.sub_uom_conversation_factor;
+#                                 row.qty_as_per_sub_uom = result.qty_as_per_sub_uom;
+#                                 frm.refresh_fields("items")
+#                             }
+#                         }
+#                     })
+#                 }
             
-        })
-    """
-    doc.save()
+#         })
+#     """
+#     doc.save()
 
 
 
