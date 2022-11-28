@@ -626,15 +626,18 @@ data = {
         "Item":[
             {
                 "fieldname": "color",
-                "fieldtype": "Data",
+                "fieldtype": "Link",
                 "insert_after": "brand",
                 "label": "Color",
+                "options":"Color"
             },
             {
                 "fieldname": "size",
-                "fieldtype": "Data",
+                "fieldtype": "Link",
                 "insert_after": "color",
                 "label": "Size",
+                "options":"Size"
+
             },
             {
                 "fieldname": "cbreak12",
@@ -649,9 +652,10 @@ data = {
             },
             {
                 "fieldname": "cutting_type",
-                "fieldtype": "Data",
+                "fieldtype": "Link",
                 "insert_after": "specs",
                 "label": "Cutting Type",
+                "options":"Cutting Type"
             }
         ]
 
