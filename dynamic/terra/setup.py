@@ -325,6 +325,8 @@ def create_opportunity_script():
         doc.enabled = 1
     doc.script = """
             
+        
+            
         frappe.ui.form.on("Opportunity", {
             refresh(frm){
                 if(!frm.doc.__islocal){
@@ -335,9 +337,35 @@ def create_opportunity_script():
                 }
               );
                 }
+                
+                frm.add_custom_button(__('Make Sales Order'),
+                function() {
+                	frm.trigger("make_sales_order")
+                }, __('Create'));
+                
+                frm.add_custom_button(__('Make Material Request'),
+                function() {
+                	frm.trigger("make_material_request")
+                }, __('Create'));
+            },
+            make_sales_order:function(frm){
+                frappe.model.open_mapped_doc({
+                    method:"dynamic.terra.api.create_sales_order_from_opportunity",
+                    frm:frm
+                })
+            },
+            make_material_request:function(frm){
+                frappe.model.open_mapped_doc({
+                    method:"dynamic.terra.api.create_material_request_from_opportunity",
+                    frm:frm
+                })
             }
+            
         
         });
+
+
+    
 
 
     """

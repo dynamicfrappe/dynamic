@@ -1,6 +1,6 @@
 import frappe
 
-
+from frappe.utils import add_days, nowdate, today
 
 
 @frappe.whitelist()
@@ -46,4 +46,44 @@ def get_iem_sub_uom(item_code,uom,qty):
         }
 
 
-        
+
+# material request type ------------> purchase
+# validate if no item   ------------> validation error 
+@frappe.whitelist()
+def create_sales_order_from_opportunity(source_name, target_doc=None):
+    source_doc = frappe.get_doc("Opportunity",source_name)
+    doc = frappe.new_doc("Sales Order")
+    if source_doc.opportunity_from == "Customer":
+        doc.customer = source_doc.party_name
+    if len(source_doc.items)> 0:
+        for item in source_doc.items:
+            item_doc = frappe.get_doc("Item",item.item_code)
+            doc.append("items",{
+                "item_code"     : item.item_code,
+                "qty"           : item.qty,
+                "item_name"     : item.item_name,
+                "description"   : item.item_name,
+                "uom"           : item_doc.stock_uom,
+                "stock_uom"     : item_doc.stock_uom
+            })
+
+    return doc
+
+@frappe.whitelist()
+def create_material_request_from_opportunity(source_name, target_doc=None):
+    source_doc = frappe.get_doc("Opportunity",source_name)
+    doc = frappe.new_doc("Material Request")
+    doc.purpose = "Purchase"
+    if len(source_doc.items)> 0:
+        for item in source_doc.items:
+            item_doc = frappe.get_doc("Item",item.item_code)
+            doc.append("items",{
+                "item_code"     : item.item_code,
+                "qty"           : item.qty,
+                "item_name"     : item.item_name,
+                "description"   : item.item_name,
+                "uom"           : item_doc.stock_uom,
+                "stock_uom"     : item_doc.stock_uom,
+                "schedule_date" : today()
+            })
+    return doc
