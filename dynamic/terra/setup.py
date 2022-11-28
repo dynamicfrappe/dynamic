@@ -337,7 +337,7 @@ def create_opportunity_script():
                 }
               );
                 }
-                
+                if(!frm.doc.__islocal){
                 frm.add_custom_button(__('Make Sales Order'),
                 function() {
                 	frm.trigger("make_sales_order")
@@ -347,6 +347,7 @@ def create_opportunity_script():
                 function() {
                 	frm.trigger("make_material_request")
                 }, __('Create'));
+                }
             },
             make_sales_order:function(frm){
                 frappe.model.open_mapped_doc({
