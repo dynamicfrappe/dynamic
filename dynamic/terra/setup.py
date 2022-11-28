@@ -169,6 +169,83 @@ def create_delivery_note_script():
     """
     doc.save()
 
+
+def create_purchase_recipt_script():
+    name = "Purchase Receipt-Form"
+    if frappe.db.exists("Client Script",name) :
+        doc = frappe.get_doc("Client Script",name)
+    else :
+        doc = frappe.new_doc("Client Script")
+        doc.dt      = "Purchase Receipt"
+        doc.view    = "Form"
+        doc.enabled = 1
+    doc.script = """
+            frappe.ui.form.on('Purchase Receipt Item', {
+                qty:(frm,cdt,cdn)=>{
+                    var row = locals[cdt][cdn];
+                    frappe.call({
+                        method:"dynamic.terra.api.get_iem_sub_uom",
+                        args:{
+                            "item_code":row.item_code,
+                            "uom":row.uom,
+                            "qty":row.qty + row.rejected_qty
+                        },callback(r){
+                        console.log(r.message)
+                            if(r.message){
+                                let result = r.message
+                                row.sub_uom = result.sub_uom;
+                                row.sub_uom_conversation_factor = result.sub_uom_conversation_factor;
+                                row.qty_as_per_sub_uom = result.qty_as_per_sub_uom;
+                                frm.refresh_fields("items")
+                            }
+                        }
+                    })
+                },
+                rejected_qty:(frm,cdt,cdn)=>{
+                    var row = locals[cdt][cdn];
+                    frappe.call({
+                        method:"dynamic.terra.api.get_iem_sub_uom",
+                        args:{
+                            "item_code":row.item_code,
+                            "uom":row.uom,
+                            "qty":row.qty + row.rejected_qty
+                        },callback(r){
+                        console.log(r.message)
+                            if(r.message){
+                                let result = r.message
+                                row.sub_uom = result.sub_uom;
+                                row.sub_uom_conversation_factor = result.sub_uom_conversation_factor;
+                                row.qty_as_per_sub_uom = result.qty_as_per_sub_uom;
+                                frm.refresh_fields("items")
+                            }
+                        }
+                    })
+                },
+                uom:(frm,cdt,cdn)=>{
+                    var row = locals[cdt][cdn];
+                    frappe.call({
+                        method:"dynamic.terra.api.get_iem_sub_uom",
+                        args:{
+                            "item_code":row.item_code,
+                            "uom":row.uom,
+                            "qty":row.qty
+                        },callback(r){
+                        console.log(r.message)
+                            if(r.message){
+                                let result = r.message
+                                row.sub_uom = result.sub_uom;
+                                row.sub_uom_conversation_factor = result.sub_uom_conversation_factor;
+                                row.qty_as_per_sub_uom = result.qty_as_per_sub_uom;
+                                frm.refresh_fields("items")
+                            }
+                        }
+                    })
+                },
+            
+        })
+    """
+    doc.save()
+
 def create_lead_script():
     name = "Lead-Form"
     if frappe.db.exists("Client Script",name) :
@@ -698,6 +775,11 @@ def create_terra_scripts():
         create_stock_entry_scipt()
     except:
         print("error")
+
+    try:
+        create_purchase_recipt_script()
+    except:
+        pass
     try:
         install_action()
     except Exception as ex:

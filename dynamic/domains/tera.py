@@ -453,6 +453,32 @@ data = {
             
             }
         ],
+         "Purchase Receipt Item":[
+            {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "stock_qty",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "Recived QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ],
         "UOM Conversion Detail":[
             {
                 "fieldname": "is_sub_uom",
