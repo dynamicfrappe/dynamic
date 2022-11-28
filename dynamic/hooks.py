@@ -83,7 +83,8 @@ doc_events = {
         # "before_save":"dynamic.api.check_pr_reservation"
     },
     "Material Request": {
-        "on_submit": "dynamic.api.validate_material_request"
+        "on_submit": "dynamic.api.validate_material_request",
+        "validate" : "dynamic.api.onsave_material_request"
 
     },
     "Landed Cost Voucher": {
