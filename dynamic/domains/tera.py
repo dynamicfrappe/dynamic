@@ -211,14 +211,31 @@ data = {
             }
         ],
         'Material Request':[
-             {
-            "fieldname": "project_name",
-            "fieldtype": "Link",
-            "options": "Project Name",
-            "insert_after": "material_request_type",
-            "label": "Project Name"
+            {
+                "fieldname": "project_name",
+                "fieldtype": "Link",
+                "options": "Project Name",
+                "insert_after": "material_request_type",
+                "label": "Project Name"
+            },
+            {
+                "fieldname": "m_created_by",
+                "fieldtype": "Link",
+                "options": "User",
+                "insert_after": "company",
+                "label": "Created By",
+                "read_only":1,
+                "default":"__user"
+            },
+            {
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "options": "Cost Center",
+                "insert_after": "m_created_by",
+                "label": "Cost Center"
             }
         ],
+
         'Sales Order Item':[
              {
             "fieldname": "reservation",
