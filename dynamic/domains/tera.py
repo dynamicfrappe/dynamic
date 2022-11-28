@@ -4,7 +4,57 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {
-         'Sales Order':[
+        'Quotation' :[
+            {
+                "fieldname": "advance_paid",
+                "fieldtype": "Currency",
+                "insert_after": "in_words",
+                "label": "Advance Paid",
+                'options' : 'party_account_currency',
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "party_account_currency",
+                "fieldtype": "Link",
+                "insert_after": "advance_paid",
+                "label": "Party Account Currency",
+                'options' : 'Currency',
+                'hidden' : 1 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+        ],
+        
+        "Sales Order":[
+             {
+                "fieldname": "invoice_payment",
+                "fieldtype": "Float",
+                "insert_after": "advance_paid",
+                "label": "Invoice Payment",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+            {
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "invoice_payment",
+                "label": "Outstanding Amount",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+        # ],
+
+
+        #  'Sales Order' :[
             # {
             #     "fieldname": "reservation",
             #     "fieldtype": "Link",
@@ -30,6 +80,94 @@ data = {
                 "fetch_from": "reservation.status",
                 "allow_on_submit":1 
             },
+             # quotation payment fields
+            {
+                "fieldname": "advance_payments",
+                "fieldtype": "Section Break",
+                "insert_after": "terms",
+                "label": "Advance Payments",
+            },
+            {
+                "fieldname": "allocate_advances_automatically",
+                "fieldtype": "Check",
+                "insert_after": "advance_payments",
+                "label": "Allocate Advances Automatically (FIFO)",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 0 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 0 ,
+            },
+            {
+                "fieldname": "get_advances",
+                "fieldtype": "Button",
+                "insert_after": "allocate_advances_automatically",
+                "label": "Get Advances Received",
+                'hidden' : 0 ,
+                'read_only' : 0 ,
+                'no_copy' : 0 ,
+                'allow_on_submit' : 0 ,
+            },
+            {
+                "fieldname": "advances",
+                "fieldtype": "Table",
+                "insert_after": "get_advances",
+                "options":"Sales Invoice Advance",
+                "label": "Advances",
+                'hidden' : 0 ,
+                'read_only' : 0 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 0 ,
+            },
+            {
+                "fieldname": "base_write_off_amount",
+                "fieldtype": "Currency",
+                "insert_after": "base_rounded_total",
+                "options":"Company:company:default_currency",
+                "label": "Write Off Amount (Company Currency)",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "total_advance",
+                "fieldtype": "Currency",
+                "insert_after": "rounded_total",
+                "options":"party_account_currency",
+                "label": "Total Advance",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "write_off_amount",
+                "fieldtype": "Currency",
+                "insert_after": "total_advance",
+                "options":"currency",
+                "label": "Write Off Amount",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "is_return",
+                "fieldtype": "Check",
+                "insert_after": "write_off_amount",
+                "options":"currency",
+                "label": "is Return",
+                'default' : '0' ,
+                'hidden' : 1 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            
             
          ],
          'Landed Cost Item': [
@@ -309,28 +447,6 @@ data = {
             
             }
         ], 
-        "Sales Order":[
-             {
-                "fieldname": "invoice_payment",
-                "fieldtype": "Float",
-                "insert_after": "advance_paid",
-                "label": "Invoice Payment",
-                "read_only" : 1,
-                "no_copy" : 1,
-                "allow_on_submit":1,
-                "default":0
-            },
-            {
-                "fieldname": "outstanding_amount",
-                "fieldtype": "Float",
-                "insert_after": "invoice_payment",
-                "label": "Outstanding Amount",
-                "read_only" : 1,
-                "no_copy" : 1,
-                "allow_on_submit":1,
-                "default":0
-            },
-        ],
         "Purchase Order Item":[
              {
                 "fieldname": "sub_uom",
@@ -383,6 +499,7 @@ data = {
             
             }
         ],
+
         #New Request Update 1- Update Cost Center Warehouse
         "Cost Center" :[
             {
@@ -522,7 +639,7 @@ data = {
         "property_type": "Check",
         "value": "1"
         },
-         {
+        {
         "doctype": "Sales Order",
         "doctype_or_field": "DocField",
         "fieldname": "set_warehouse",

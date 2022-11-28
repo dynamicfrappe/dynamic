@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+from dynamic import overrride_doctype_js
 from . import __version__ as app_version
 
 app_name = "dynamic"
@@ -49,6 +51,13 @@ doctype_js = {
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
     "Delivery Note": "public/js/delivery_note.js"
 }
+
+
+
+doctype_js = overrride_doctype_js.doctype_js
+
+
+
 doc_events = {
     "Payment Entry":{
                "on_submit": "dynamic.api.submit_payment",
@@ -97,9 +106,20 @@ doc_events = {
 
 override_doctype_class = {
     "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
+    "Payment Entry" : "dynamic.override_doctype_class.PaymentEntry",
+    "Quotation" : "dynamic.override_doctype_class.Quotation",
+    "Sales Order" : "dynamic.override_doctype_class.SalesOrder"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
+
+# added in terra only comment it in another domains
+# doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
+# override_doctype_class ["Payment Entry"] = "dynamic.terra.doctype.payment_entry.payment_entry.PaymentEntry"
+# override_doctype_class ["Quotation"] = "dynamic.terra.doctype.quotation.quotation.Quotation"
+# override_doctype_class ["Sales Order"] = "dynamic.terra.doctype.sales_order.sales_order.SalesOrder"
+
+
 
 # Document Events
 # ---------------
