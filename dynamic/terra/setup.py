@@ -601,6 +601,21 @@ def create_stock_entry_scipt():
     """
     doc.save()
 
+def create_material_request_script():
+    name = "Material Request-Form"
+    if frappe.db.exists("Client Script",name) :
+        doc = frappe.get_doc("Client Script",name)
+    else :
+        doc = frappe.new_doc("Client Script")
+    doc.dt      = "Material Request"
+    doc.view    = "Form"
+    doc.enabled = 1
+    doc.script = """
+            frappe.ui.form.on('Material Request', {
+                
+        })
+    """
+    doc.save()
 
 
 # def create_item_script():
