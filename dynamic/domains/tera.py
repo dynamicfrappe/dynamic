@@ -371,6 +371,14 @@ data = {
                 "options": "Cost Center",
                 "insert_after": "m_created_by",
                 "label": "Cost Center"
+            },
+            {
+                "fieldname": "quotation",
+                "fieldtype": "Link",
+                "options": "Quotation",
+                "insert_after": "project_name",
+                "label": "Quotation",
+                "depends_on":"eval:doc.material_request_type=='Purchase'"
             }
         ],
 
