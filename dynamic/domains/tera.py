@@ -622,6 +622,37 @@ data = {
                 "in_list_view":1
             
             }
+        ],
+        "Item":[
+            {
+                "fieldname": "color",
+                "fieldtype": "Data",
+                "insert_after": "brand",
+                "label": "Color",
+            },
+            {
+                "fieldname": "size",
+                "fieldtype": "Data",
+                "insert_after": "color",
+                "label": "Size",
+            },
+            {
+                "fieldname": "cbreak12",
+                "fieldtype": "Column Break",
+                "insert_after": "size",
+            },
+            {
+                "fieldname": "specs",
+                "fieldtype": "Data",
+                "insert_after": "cbreak12",
+                "label": "Specification",
+            },
+            {
+                "fieldname": "cutting_type",
+                "fieldtype": "Data",
+                "insert_after": "specs",
+                "label": "Cutting Type",
+            }
         ]
 
 
