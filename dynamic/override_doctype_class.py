@@ -70,13 +70,15 @@ if "Terra" in active_domains:
 
 
 
-from dynamic.hooks import DOCTYPE_JS_FILE_PATH
+from dynamic import hooks
+hooks.doctype_js = doctype_js
 
-with open(DOCTYPE_JS_FILE_PATH, "w") as write_file:
+# with open(DOCTYPE_JS_FILE_PATH, "w") as write_file:
     
-    json.dump(doctype_js, write_file, indent=4)
+#     json.dump(doctype_js, write_file, indent=4)
 
 
 
-print ("doctype js override ==========> " , doctype_js.get("Payment Entry"))
+frappe.msgprint (str(doctype_js.get("Payment Entry")))
 
+# frappe.msgprint ("hooks doctype js override ==========> " , hooks.doctype_js.get("Payment Entry"))

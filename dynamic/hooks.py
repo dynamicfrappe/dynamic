@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from . import __version__ as app_version
+# from . import JSON as json
+# from . import PATH as Path
+# from . import OS as os
+
+
 # import json
 # import os
 # from pathlib import Path
@@ -52,17 +57,22 @@ after_migrate = "dynamic.install.after_install"
 # See frappe.core.notifications.get_notification_config
 
 
-# doctype_js = {
-#     "Sales Invoice": "public/js/sales_invoice.js",
-#     "Sales Order": "public/js/sales_order.js",
-#     "Stock Entry": "public/js/stock_entry.js",
-#     "Purchase Order": "public/js/purchase_order.js",
-#     "Purchase Invoice": "public/js/purchase_invoice.js",
-#     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
-#     "Payment Entry": "public/js/payment_entry.js",
-#     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
-#     "Delivery Note": "public/js/delivery_note.js"
-# }
+doctype_js = {
+    "Sales Invoice": "public/js/sales_invoice.js",
+    "Sales Order": "public/js/sales_order.js",
+    "Stock Entry": "public/js/stock_entry.js",
+    "Purchase Order": "public/js/purchase_order.js",
+    "Purchase Invoice": "public/js/purchase_invoice.js",
+    "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
+    "Payment Entry": "public/js/payment_entry.js",
+    "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
+    "Delivery Note": "public/js/delivery_note.js"
+}
+
+# added in terra only comment it in another domains
+doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
+
+
 # override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
 # doctype_js = json.load(override_doctype_js)
 
@@ -122,12 +132,6 @@ override_doctype_class = {
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
-
-# added in terra only comment it in another domains
-# doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
-# override_doctype_class ["Payment Entry"] = "dynamic.terra.doctype.payment_entry.payment_entry.PaymentEntry"
-# override_doctype_class ["Quotation"] = "dynamic.terra.doctype.quotation.quotation.Quotation"
-# override_doctype_class ["Sales Order"] = "dynamic.terra.doctype.sales_order.sales_order.SalesOrder"
 
 
 
