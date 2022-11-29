@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-from dynamic import overrride_doctype_js
+import json
+import os
 from . import __version__ as app_version
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent
+print ("BASE_DIR ====> " , BASE_DIR)
+
+
+DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
+
+
+
+
+
+
 
 app_name = "dynamic"
 app_title = "Dynamic"
@@ -40,23 +52,21 @@ after_migrate = "dynamic.install.after_install"
 # See frappe.core.notifications.get_notification_config
 
 
-doctype_js = {
-    "Sales Invoice": "public/js/sales_invoice.js",
-    "Sales Order": "public/js/sales_order.js",
-    "Stock Entry": "public/js/stock_entry.js",
-    "Purchase Order": "public/js/purchase_order.js",
-    "Purchase Invoice": "public/js/purchase_invoice.js",
-    "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
-    "Payment Entry": "public/js/payment_entry.js",
-    "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
-    "Delivery Note": "public/js/delivery_note.js"
-}
+# doctype_js = {
+#     "Sales Invoice": "public/js/sales_invoice.js",
+#     "Sales Order": "public/js/sales_order.js",
+#     "Stock Entry": "public/js/stock_entry.js",
+#     "Purchase Order": "public/js/purchase_order.js",
+#     "Purchase Invoice": "public/js/purchase_invoice.js",
+#     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
+#     "Payment Entry": "public/js/payment_entry.js",
+#     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
+#     "Delivery Note": "public/js/delivery_note.js"
+# }
+override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
+doctype_js = json.load(override_doctype_js)
 
-
-
-doctype_js = overrride_doctype_js.doctype_js
-
-
+print("doctype_js Payment Entry ===========> " , doctype_js.get("Payment Entry"))
 
 doc_events = {
     "Payment Entry":{
