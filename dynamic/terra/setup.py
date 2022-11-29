@@ -610,11 +610,43 @@ def create_material_request_script():
     doc.dt      = "Material Request"
     doc.view    = "Form"
     doc.enabled = 1
-    doc.script = """
-            frappe.ui.form.on('Material Request', {
-                
-        })
-    """
+    doc.script = """    
+                frappe.ui.form.on('Material Request', {
+                refresh:(frm)=>{
+                    frm.add_custom_button(__('Quotation'), () => frm.events.get_items_from_quotation(frm),
+                    __("Get Items From"));
+                },
+                get_items_from_quotation:(frm)=>{
+                    console.log("quotation =======>",frm.doc.quotation)
+                    if(frm.doc.quotation == undefined){
+                        frappe.throw(__("You must choose quotation"))
+                    }
+                    frappe.call({
+                        method:"dynamic.terra.api.get_quotation_item",
+                        args:{
+                            "quotation":frm.doc.quotation
+                        },callback(r){
+                            if(r.message){
+                                let items = r.message;
+                                for(let i=0;i<items.length;i++){
+                                    var row = frm.add_child("items");
+                                    row.item_code = items[i].item_code;
+                                    row.item_name = items[i].item_name;
+                                    row.qty = items[i].qty;
+                                    row.rate = items[i].rate;
+                                    row.description = items[i].description;
+                                    row.uom = items[i].uom;
+                                    row.schedule_date = items[i].schedule_date;
+                                    row.stock_uom = items[i].stock_uom;
+                                }
+                                frm.refresh_fields("items");
+                            }
+                        }
+                    })
+                }
+            })
+        
+        """
     doc.save()
 
 
@@ -822,6 +854,10 @@ def create_terra_scripts():
 
     try:
         create_purchase_recipt_script()
+    except:
+        pass
+    try:
+        create_material_request_script()
     except:
         pass
     try:

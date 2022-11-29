@@ -89,3 +89,10 @@ def create_material_request_from_opportunity(source_name, target_doc=None):
     return doc
 
 
+
+
+@frappe.whitelist()
+def get_quotation_item(quotation,*args,**Kwargs):
+    doc = frappe.get_doc("Quotation",quotation)
+    return doc.items
+    
