@@ -72,7 +72,7 @@ after_migrate = "dynamic.install.after_install"
 # override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
 # doctype_js = json.load(override_doctype_js)
 
-print("doctype_js Payment Entry ===========> " , doctype_js.get("Payment Entry"))
+# print("doctype_js Payment Entry ===========> " , doctype_js.get("Payment Entry"))
 
 doc_events = {
     "Payment Entry":{
