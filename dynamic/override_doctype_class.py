@@ -79,6 +79,6 @@ hooks.doctype_js = doctype_js
 
 
 
-frappe.msgprint (str(doctype_js.get("Payment Entry")))
+# frappe.msgprint (str(doctype_js.get("Payment Entry")))
 
 # frappe.msgprint ("hooks doctype js override ==========> " , hooks.doctype_js.get("Payment Entry"))
