@@ -60,7 +60,26 @@ def get_active_domain_gebco():
         return True
     else :
         return False   
+
+def create_item_specs(doc):
+    doc.description = doc.item_name
+    #doc.description = doc.item_name + str(doc.get("specs") or "") + str(doc.get("color") or "") + str(doc.get("size") or "") + str(doc.get("cutting_type") or "")
+    #print("sssssssssss===================>",doc.description)
+    if doc.get("specs"):
+        doc.description += doc.get("specs")
+    if doc.get("color"):
+        doc.description += "-"+doc.get("color")
+    if doc.get("size"):
+        doc.description += "-"+doc.get("size")
+    if doc.get("cutting_type"):
+        doc.description += "-"+doc.get("cutting_type")
+
+
 def validate_item_code(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         if doc.is_new():
             create_item_serial_doc(doc)
+    create_item_specs(doc)
+
+
+

@@ -1,6 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from . import __version__ as app_version
+from pathlib import Path
+
+import json
+import os
+
+
+BASE_DIR = ''
+DOCTYPE_JS_FILE_PATH = ''
+
+# BASE_DIR = Path(__file__).resolve().parent
+# print ("BASE_DIR ====> " , BASE_DIR)
+
+
+# DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
+
+
+
+
+
+
 
 app_name = "dynamic"
 app_title = "Dynamic"
@@ -52,6 +72,22 @@ doctype_js = {
     "Supplier":"public/js/supplier.js",
     "Customer":"public/js/customer.js",
 }
+# doctype_js = {
+#     "Sales Invoice": "public/js/sales_invoice.js",
+#     "Sales Order": "public/js/sales_order.js",
+#     "Stock Entry": "public/js/stock_entry.js",
+#     "Purchase Order": "public/js/purchase_order.js",
+#     "Purchase Invoice": "public/js/purchase_invoice.js",
+#     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
+#     "Payment Entry": "public/js/payment_entry.js",
+#     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
+#     "Delivery Note": "public/js/delivery_note.js"
+# }
+# override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
+# doctype_js = json.load(override_doctype_js)
+
+# print("doctype_js Payment Entry ===========> " , doctype_js.get("Payment Entry"))
+
 doc_events = {
     "Payment Entry":{
                "on_submit": "dynamic.api.submit_payment",
@@ -86,7 +122,8 @@ doc_events = {
         # "before_save":"dynamic.api.check_pr_reservation"
     },
     "Material Request": {
-        "on_submit": "dynamic.api.validate_material_request"
+        "on_submit": "dynamic.api.validate_material_request",
+        "validate" : "dynamic.api.onsave_material_request"
 
     },
     "Landed Cost Voucher": {
@@ -109,9 +146,20 @@ doc_events = {
 
 override_doctype_class = {
     "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
+    "Payment Entry" : "dynamic.override_doctype_class.PaymentEntry",
+    "Quotation" : "dynamic.override_doctype_class.Quotation",
+    "Sales Order" : "dynamic.override_doctype_class.SalesOrder"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
+
+# added in terra only comment it in another domains
+# doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
+# override_doctype_class ["Payment Entry"] = "dynamic.terra.doctype.payment_entry.payment_entry.PaymentEntry"
+# override_doctype_class ["Quotation"] = "dynamic.terra.doctype.quotation.quotation.Quotation"
+# override_doctype_class ["Sales Order"] = "dynamic.terra.doctype.sales_order.sales_order.SalesOrder"
+
+
 
 # Document Events
 # ---------------

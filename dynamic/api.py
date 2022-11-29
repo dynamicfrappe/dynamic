@@ -318,7 +318,16 @@ def validate_material_request(doc,*args,**kwargs):
             send_mail_by_role(setting_table[0].role,msg,"Item Re Order")
         
 
+def validate_material_request_cost_center(doc,*args,**Kwargs):
+    if doc.get("cost_center"):
+        for item in doc.get("items"):
+            if not item.get("cost_center"):
+                item.cost_center = doc.get("cost_center")
 
+def onsave_material_request(doc,*args,**kwargs):
+     if "Terra" in DOMAINS:
+        validate_material_request_cost_center(doc)
+        
 import os
 # @frappe.whitelist()
 def saftey_stock():

@@ -8,31 +8,31 @@ from frappe.model.document import Document
 from frappe import _ 
 class Reservation(Document):
 
-	def before_insert(self):
-		#validate item 
-		if not self.item_code :
-			frappe .throw(_("Please Select Item First !"))
-		# validate required qty 
-		if float(self.reservation_amount or 0) == 0 or  float(self.reservation_amount or 0) < 0 :
-			frappe.throw(_("Invalid Amount Required "))
-		#validate source 
-		if  self.warehouse_source and self.order_source :
-			frappe.throw(_("Invalid Source "))
-		#validate status 
-		if self.status == "Active" :
-			#validate warehouse case
-			if self.warehouse_source :
-				self.validate_warehouse()
-			if self.order_source :
-				self.validate_purchase_order()
-			if not self.warehouse_source and not self.order_source:
-				frappe.throw(_("Please Select Source As Warehouse Or Purchase Order for Item"))
+	# def before_insert(self):
+	# 	#validate item 
+	# 	if not self.item_code :
+	# 		frappe .throw(_("Please Select Item First !"))
+	# 	# validate required qty 
+	# 	if float(self.reservation_amount or 0) == 0 or  float(self.reservation_amount or 0) < 0 :
+	# 		frappe.throw(_("Invalid Amount Required "))
+	# 	#validate source 
+	# 	if  self.warehouse_source and self.order_source :
+	# 		frappe.throw(_("Invalid Source "))
+	# 	#validate status 
+	# 	if self.status == "Active" :
+	# 		#validate warehouse case
+	# 		if self.warehouse_source :
+	# 			self.validate_warehouse()
+	# 		if self.order_source :
+	# 			self.validate_purchase_order()
+	# 		if not self.warehouse_source and not self.order_source:
+	# 			frappe.throw(_("Please Select Source As Warehouse Or Purchase Order for Item"))
 				# self.get_pur_order_or_warehouse()
 
-		if self.warehouse:
-			self.total_warehouse_reseved()
-		if self.reservation_purchase_order:
-			self.total_purchase_order_reseved()
+		# if self.warehouse:
+		# 	self.total_warehouse_reseved()
+		# if self.reservation_purchase_order:
+		# 	self.total_purchase_order_reseved()
 		
 	def validate_warehouse(self):
 		stock_sql = self.stock_sql()

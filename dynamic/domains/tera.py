@@ -4,7 +4,57 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {
-         'Sales Order':[
+        'Quotation' :[
+            {
+                "fieldname": "advance_paid",
+                "fieldtype": "Currency",
+                "insert_after": "in_words",
+                "label": "Advance Paid",
+                'options' : 'party_account_currency',
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "party_account_currency",
+                "fieldtype": "Link",
+                "insert_after": "advance_paid",
+                "label": "Party Account Currency",
+                'options' : 'Currency',
+                'hidden' : 1 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+        ],
+        
+        "Sales Order":[
+             {
+                "fieldname": "invoice_payment",
+                "fieldtype": "Float",
+                "insert_after": "advance_paid",
+                "label": "Invoice Payment",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+            {
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "invoice_payment",
+                "label": "Outstanding Amount",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+        # ],
+
+
+        #  'Sales Order' :[
             # {
             #     "fieldname": "reservation",
             #     "fieldtype": "Link",
@@ -30,6 +80,94 @@ data = {
                 "fetch_from": "reservation.status",
                 "allow_on_submit":1 
             },
+             # quotation payment fields
+            {
+                "fieldname": "advance_payments",
+                "fieldtype": "Section Break",
+                "insert_after": "terms",
+                "label": "Advance Payments",
+            },
+            {
+                "fieldname": "allocate_advances_automatically",
+                "fieldtype": "Check",
+                "insert_after": "advance_payments",
+                "label": "Allocate Advances Automatically (FIFO)",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 0 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 0 ,
+            },
+            {
+                "fieldname": "get_advances",
+                "fieldtype": "Button",
+                "insert_after": "allocate_advances_automatically",
+                "label": "Get Advances Received",
+                'hidden' : 0 ,
+                'read_only' : 0 ,
+                'no_copy' : 0 ,
+                'allow_on_submit' : 0 ,
+            },
+            {
+                "fieldname": "advances",
+                "fieldtype": "Table",
+                "insert_after": "get_advances",
+                "options":"Sales Invoice Advance",
+                "label": "Advances",
+                'hidden' : 0 ,
+                'read_only' : 0 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 0 ,
+            },
+            {
+                "fieldname": "base_write_off_amount",
+                "fieldtype": "Currency",
+                "insert_after": "base_rounded_total",
+                "options":"Company:company:default_currency",
+                "label": "Write Off Amount (Company Currency)",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "total_advance",
+                "fieldtype": "Currency",
+                "insert_after": "rounded_total",
+                "options":"party_account_currency",
+                "label": "Total Advance",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "write_off_amount",
+                "fieldtype": "Currency",
+                "insert_after": "total_advance",
+                "options":"currency",
+                "label": "Write Off Amount",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "is_return",
+                "fieldtype": "Check",
+                "insert_after": "write_off_amount",
+                "options":"currency",
+                "label": "is Return",
+                'default' : '0' ,
+                'hidden' : 1 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            
             
          ],
          'Landed Cost Item': [
@@ -176,7 +314,7 @@ data = {
             "insert_after": "source",
             "label": "Phone No",
             "translatable": 1,
-            "unique": 1,
+            # "unique": 1,
             "fetch_if_empty": 1,
             "reqd": 1,
             "fetch_from": "party_name.phone_no" 
@@ -211,14 +349,39 @@ data = {
             }
         ],
         'Material Request':[
-             {
-            "fieldname": "project_name",
-            "fieldtype": "Link",
-            "options": "Project Name",
-            "insert_after": "material_request_type",
-            "label": "Project Name"
+            {
+                "fieldname": "project_name",
+                "fieldtype": "Link",
+                "options": "Project Name",
+                "insert_after": "material_request_type",
+                "label": "Project Name"
+            },
+            {
+                "fieldname": "m_created_by",
+                "fieldtype": "Link",
+                "options": "User",
+                "insert_after": "company",
+                "label": "Created By",
+                "read_only":1,
+                "default":"__user"
+            },
+            {
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "options": "Cost Center",
+                "insert_after": "m_created_by",
+                "label": "Cost Center"
+            },
+            {
+                "fieldname": "quotation",
+                "fieldtype": "Link",
+                "options": "Quotation",
+                "insert_after": "project_name",
+                "label": "Quotation",
+                "depends_on":"eval:doc.material_request_type=='Purchase'"
             }
         ],
+
         'Sales Order Item':[
              {
             "fieldname": "reservation",
@@ -266,29 +429,83 @@ data = {
             'fetch_from':'item_purchase_order.schedule_date',
             "read_only" : 1,
             "fetch_if_empty": 1
-            }
-        ], 
-        "Sales Order":[
-             {
-                "fieldname": "invoice_payment",
-                "fieldtype": "Float",
-                "insert_after": "advance_paid",
-                "label": "Invoice Payment",
-                "read_only" : 1,
-                "no_copy" : 1,
-                "allow_on_submit":1,
-                "default":0
             },
             {
-                "fieldname": "outstanding_amount",
-                "fieldtype": "Float",
-                "insert_after": "invoice_payment",
-                "label": "Outstanding Amount",
-                "read_only" : 1,
-                "no_copy" : 1,
-                "allow_on_submit":1,
-                "default":0
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "picked_qty",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
             },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ], 
+        "Purchase Order Item":[
+             {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "stock_uom",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ],
+        "Delivery Note Item":[
+             {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "stock_uom",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
         ],
 
         #New Request Update 1- Update Cost Center Warehouse
@@ -326,6 +543,129 @@ data = {
             },
 
         ] ,
+        "Quotation Item":[
+            {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "stock_uom",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ],
+        "Stock Entry Detail":[
+            {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "transfer_qty",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ],
+         "Purchase Receipt Item":[
+            {
+                "fieldname": "sub_uom",
+                "fieldtype": "Link",
+                "insert_after": "stock_qty",
+                "label": "Sub Uom",
+                "options" : 'UOM',
+                "read_only":1,
+            
+            },
+            {
+                "fieldname": "sub_uom_conversation_factor",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom",
+                "label": "Sub Uom Conversion Factor",
+                "read_only":1
+            },
+            {
+                "fieldname": "qty_as_per_sub_uom",
+                "fieldtype": "Float",
+                "insert_after": "sub_uom_conversation_factor",
+                "label": "Recived QTY As Per Sub Uom",
+                "read_only":1
+            
+            }
+        ],
+        "UOM Conversion Detail":[
+            {
+                "fieldname": "is_sub_uom",
+                "fieldtype": "Check",
+                "insert_after": "conversation_factor",
+                "label": "Is Sub Uom",
+                "in_list_view":1
+            
+            }
+        ],
+        "Item":[
+            {
+                "fieldname": "color",
+                "fieldtype": "Link",
+                "insert_after": "brand",
+                "label": "Color",
+                "options":"Color"
+            },
+            {
+                "fieldname": "size",
+                "fieldtype": "Link",
+                "insert_after": "color",
+                "label": "Size",
+                "options":"Size"
+
+            },
+            {
+                "fieldname": "cbreak12",
+                "fieldtype": "Column Break",
+                "insert_after": "size",
+            },
+            {
+                "fieldname": "specs",
+                "fieldtype": "Data",
+                "insert_after": "cbreak12",
+                "label": "Specification",
+            },
+            {
+                "fieldname": "cutting_type",
+                "fieldtype": "Link",
+                "insert_after": "specs",
+                "label": "Cutting Type",
+                "options":"Cutting Type"
+            }
+        ]
 
 
 
@@ -342,7 +682,7 @@ data = {
         "property_type": "Check",
         "value": "1"
         },
-         {
+        {
         "doctype": "Sales Order",
         "doctype_or_field": "DocField",
         "fieldname": "set_warehouse",
