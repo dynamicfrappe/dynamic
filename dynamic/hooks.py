@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import json
-import os
 from . import __version__ as app_version
 from pathlib import Path
-BASE_DIR = Path(__file__).resolve().parent
-print ("BASE_DIR ====> " , BASE_DIR)
+
+import json
+import os
 
 
-DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
+BASE_DIR = ''
+DOCTYPE_JS_FILE_PATH = ''
+
+# BASE_DIR = Path(__file__).resolve().parent
+# print ("BASE_DIR ====> " , BASE_DIR)
+
+
+# DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
 
 
 
@@ -63,8 +69,8 @@ after_migrate = "dynamic.install.after_install"
 #     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
 #     "Delivery Note": "public/js/delivery_note.js"
 # }
-override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
-doctype_js = json.load(override_doctype_js)
+# override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
+# doctype_js = json.load(override_doctype_js)
 
 print("doctype_js Payment Entry ===========> " , doctype_js.get("Payment Entry"))
 
