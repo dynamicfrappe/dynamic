@@ -7,7 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "employee",
-  "employee_name"
+  "employee_name",
+  "employee_email"
  ],
  "fields": [
   {
@@ -25,12 +26,19 @@
    "in_list_view": 1,
    "label": "Employee Name",
    "read_only": 1
+  },
+  {
+   "fetch_from": "employee.user_id",
+   "fieldname": "employee_email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Email"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-08-03 12:45:29.783589",
+ "modified": "2022-11-28 15:06:54.491981",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Installation Team Detail",

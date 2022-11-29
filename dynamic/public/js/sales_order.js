@@ -20,6 +20,7 @@ frappe.ui.form.on("Sales Order", {
   refresh: function (frm) {
     frm.events.add_cheque_button(frm);
     frm.events.add_installation_button(frm);
+    frm.events.add_furniture_installation_button(frm);
     cur_frm.page.remove_inner_button(__('Update Items'))
     if(frm.doc.docstatus === 1 && frm.doc.status !== 'Closed'
 			&& flt(frm.doc.per_delivered, 6) < 100 && flt(frm.doc.per_billed, 6) < 100) {
@@ -438,6 +439,37 @@ update_child_items : function(frm,child_docname,child_doctype,cannot_add_row) {
 	dialog.show();
 },
 
+add_furniture_installation_button(frm) {
+  if (frm.doc.docstatus == 1) {
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("IFI")) {
+            frm.add_custom_button(
+              __("Installation Furniture Order"),
+              function () {
+                frm.events.make_furniture_installation_order(frm);
+              },
+              __("Create")
+            );
+          }
+        }
+      },
+    });
+  }
+},
+
+make_furniture_installation_order(frm) {
+  frappe.model.open_mapped_doc({
+    // installation_request_doc
+    method: "dynamic.ifi.api.create_furniture_installation_order",
+    frm: frm,
+
+  });
+  
+},
+
 });
 
 frappe.ui.form.on("Sales Order Item", {
@@ -462,7 +494,7 @@ frappe.ui.form.on(
         },
         callback: function (r) {
           if (r.message){
-            console.log('warehouse -> ',r.message)
+            // console.log('warehouse -> ',r.message)
             row.warehouse = r.message;
             frm.refresh_fields();
           }
@@ -471,6 +503,27 @@ frappe.ui.form.on(
     }
   }
 );
+
+// frappe.ui.form.on("Installation Furniture Item", {
+// items_add: function (frm, cdt, cdn) {
+//   console.log('row_added')
+//   // frm.events.set_totals(frm);
+// },
+// items_remove: function (frm, cdt, cdn) {
+//   console.log('row_deleted')
+//   // frm.events.set_totals(frm);
+// },
+
+// set_totals(frm) {
+//   frappe.call({
+//     method: "dynamic.ifi.api.set_total",
+//     frm: frm,
+//     callback: function () {
+//       frm.refresh_fields(["items", "total_cars"]);
+//     },
+//   });
+// }
+// });
 
 // frappe.ui.form.on("Sales Order Item",{
 //     items_remove:function(frm,cdt,cdn){

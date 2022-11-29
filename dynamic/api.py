@@ -5,6 +5,7 @@ import frappe
 from frappe import _
 import codecs
 import json
+import erpnext
 import base64
 #from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
 from dynamic.product_bundle.doctype.packed_item.new_packed_item import make_packing_list
@@ -77,6 +78,8 @@ from frappe import _
 from .api_hooks.sales_invoice import validate_sales_invocie_to_moyate
 from dynamic.dynamic.validation import get_active_domain, validate_sales_invoice
 from dynamic.gebco.doctype.sales_invocie.stock_settings import caculate_shortage_item
+from dynamic.gebco.doctype.stock_ledger import get_valuation_rate
+
 DOMAINS = frappe.get_active_domains()
 
 
@@ -111,6 +114,25 @@ def validate_active_domains(doc,*args,**kwargs):
         # this fuction validate current srock without looking for other resources    
         if len(doc.packed_items) > 0  and doc.update_stock == 1:
             caculate_shortage_item(doc.packed_items + doc.items  ,doc.set_warehouse)   
+    if 'IFI' in DOMAINS:
+        # check sINV items valutaion rate
+        check_item_valuation_rate(doc)
+
+def check_item_valuation_rate(doc):
+    for item in doc.items:
+        value_rate = get_valuation_rate(item.item_code,
+        item.warehouse,
+        item.parenttype,
+        item.parent,
+        allow_zero_rate=False,
+        currency=erpnext.get_company_currency(doc.company),
+        company=doc.company,
+        raise_error_if_no_rate=True,
+        )
+        if(value_rate):
+            if(item.rate < value_rate):
+                frappe.throw(_("Selling Rate cann't Be Less Than Value Rate "))
+
 @frappe.whitelist()
 def validate_active_domains_invocie(doc,*args,**kwargs):
     cur_doc  = frappe.get_doc("Sales Invoice" , doc)
@@ -466,6 +488,7 @@ def validate_sales_order_reservation_status():
 @frappe.whitelist()
 def get_active_domains():
     return frappe.get_active_domains()
+    
 @frappe.whitelist()
 def submit_payment(doc,*args,**kwargs):
      if "Terra" in DOMAINS:

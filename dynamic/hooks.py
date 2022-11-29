@@ -47,7 +47,10 @@ doctype_js = {
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
-    "Delivery Note": "public/js/delivery_note.js"
+    "Delivery Note": "public/js/delivery_note.js",
+    "Lead":"public/js/lead.js",
+    "Supplier":"public/js/supplier.js",
+    "Customer":"public/js/customer.js",
 }
 doc_events = {
     "Payment Entry":{
@@ -91,7 +94,17 @@ doc_events = {
     },
     "Purchase Invoice": {
         "on_submit": "dynamic.api.submit_purchase_invoice",
-     } 
+     },
+     "Opportunity":{
+    #    "validate" : "dynamic.ifi.api.opportunity_notifiy",
+       "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
+    },
+    # "Purchase Receipt": {
+    #     "validate": "dynamic.ifi.api.email_supplier_invoice",
+    #  },Installations Furniture
+    # "Installations Furniture": {
+    #     "before_submit": "dynamic.ifi.api.check_child_table_qty",
+    #  },
 }
 
 override_doctype_class = {
@@ -122,6 +135,9 @@ scheduler_events = {
         ] ,
         "0 13 * * *" :[
             "dynamic.product_bundle.doctype.packed_item.new_packed_item.get_old_invocie"
+        ],
+        "* 8 * * *":[
+            "dynamic.ifi.api.daily_opportunity_notify"
         ]
     },
     # 	"all": [
@@ -179,6 +195,7 @@ domains = {
     'Product Bundle': 'dynamic.domains.product_bundle',
     'Cheques': 'dynamic.domains.cheques',
     'Terra': 'dynamic.domains.tera',
+    'IFI': 'dynamic.domains.ifi'
 }
 
 # domain Conatin

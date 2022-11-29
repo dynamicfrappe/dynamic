@@ -1149,7 +1149,7 @@ def get_valuation_rate(
 	allow_zero_rate=False,
 	currency=None,
 	company=None,
-	raise_error_if_no_rate=True,
+	raise_error_if_no_rate=True, 
 ):
 
 	if not company:
