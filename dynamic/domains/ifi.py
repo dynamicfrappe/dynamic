@@ -132,6 +132,15 @@ data = {
         "value": "1",
         "default_value":1
         },
+        {
+        "doctype": "Sales Invoice",
+        "doctype_or_field": "DocField",
+        "fieldname": "shipping_rule",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
         # {
         # "doctype": "Sales Order Item",
         # "doctype_or_field": "DocField",

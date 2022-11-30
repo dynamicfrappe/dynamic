@@ -242,7 +242,7 @@ domains = {
     'Product Bundle': 'dynamic.domains.product_bundle',
     'Cheques': 'dynamic.domains.cheques',
     'Terra': 'dynamic.domains.tera',
-    'IFI': 'dynamic.domains.ifi'
+    'IFI': 'dynamic.domains.ifi',
 }
 
 # domain Conatin
