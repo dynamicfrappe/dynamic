@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from . import __version__ as app_version
-from pathlib import Path
+# from . import JSON as json
+# from . import PATH as Path
+# from . import OS as os
 
-import json
-import os
 
-
-BASE_DIR = ''
-DOCTYPE_JS_FILE_PATH = ''
-
-BASE_DIR = Path(__file__).resolve().parent
+# import json
+# import os
+# from pathlib import Path
+# BASE_DIR = Path(__file__).resolve().parent
 # print ("BASE_DIR ====> " , BASE_DIR)
+# DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
 
 
-DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
-
+DOCTYPE_JS_FILE_PATH = "../apps/dynamic/dynamic/override_doctype_js.json"
 
 
 
@@ -83,10 +82,16 @@ doctype_js = {
 #     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
 #     "Delivery Note": "public/js/delivery_note.js"
 # }
+
+
+# added in terra only comment it in another domains
+doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
+
+
 # override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
 # doctype_js = json.load(override_doctype_js)
 
-# print("doctype_js Payment Entry ===========> " , doctype_js.get("Payment Entry"))
+# print("doctype_js ===========> " , doctype_js.get("Payment Entry"))
 
 doc_events = {
     "Payment Entry":{
@@ -152,12 +157,6 @@ override_doctype_class = {
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
-
-# added in terra only comment it in another domains
-# doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
-# override_doctype_class ["Payment Entry"] = "dynamic.terra.doctype.payment_entry.payment_entry.PaymentEntry"
-# override_doctype_class ["Quotation"] = "dynamic.terra.doctype.quotation.quotation.Quotation"
-# override_doctype_class ["Sales Order"] = "dynamic.terra.doctype.sales_order.sales_order.SalesOrder"
 
 
 
