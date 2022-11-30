@@ -11,7 +11,12 @@ frappe.ui.form.on("Sales Order", {
   //     }
   // });
   // },
-  setup(frm) {
+  before_load:function(frm){
+    console.log('bload')
+  },
+  setup:function(frm) {
+    console.log('setup')
+    frm.events.update_grid(frm)
     frm.custom_make_buttons = {
       "Installation Request": "Installation Request",
       "Cheque": "Cheque",
@@ -45,6 +50,24 @@ frappe.ui.form.on("Sales Order", {
 				filters:{"item_code":row.item_code}
 			};
 		});
+  },
+  update_grid:function(frm){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("IFI")) {
+            frm.get_field('items').grid.editable_fields = [
+              {fieldname: 'item_code', columns: 1},
+              // {fieldname: 'item_name', columns: 1},
+              {fieldname: 'qty', columns: 1},
+              {fieldname: 'rate', columns: 1},
+              {fieldname: 'amount', columns: 1},
+              {fieldname: 'supplier', columns: 1}
+            ];
+          }
+      }}
+  })
   },
   // comparison: function (frm) {
   //   // console.log("com");
@@ -472,11 +495,13 @@ make_furniture_installation_order(frm) {
 
 });
 
-frappe.ui.form.on("Sales Order Item", {
+frappe.ui.form.on("Sales Order Item", { 
   item_warehouse: function (frm, cdt, cdn) {
     var row = frappe.get_doc(cdt, cdn);
     frappe.model.set_value(cdt, cdn, "warehouse", row.item_warehouse);
   },
+  
+ 
 });
 
 frappe.ui.form.on(

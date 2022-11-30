@@ -106,14 +106,41 @@ data = {
         "default_value":1
         },
         {
-        "doctype": "Sales Order Item",
+        "doctype": "Sales Order",
         "doctype_or_field": "DocField",
-        "fieldname": "delivery_date",
-        "property": "in_list_view",
+        "fieldname": "payment_terms_template",
+        "property": "allow_on_submit",
         "property_type": "Check",
-        "value": 0,
-        "default_value":0
+        "value": "1",
+        "default_value":1
         },
+        {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "payment_schedule",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "shipping_rule",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        # {
+        # "doctype": "Sales Order Item",
+        # "doctype_or_field": "DocField",
+        # "fieldname": "item_code",
+        # "property": "columns",
+        # "property_type": "Text",
+        # "value": 2,
+        # "default_value":2
+        # },
         
     ],
   

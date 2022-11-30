@@ -10,11 +10,11 @@ import os
 BASE_DIR = ''
 DOCTYPE_JS_FILE_PATH = ''
 
-# BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent
 # print ("BASE_DIR ====> " , BASE_DIR)
 
 
-# DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
+DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
 
 
 

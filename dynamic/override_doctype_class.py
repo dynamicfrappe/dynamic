@@ -22,7 +22,10 @@ doctype_js = {
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
-    "Delivery Note": "public/js/delivery_note.js"
+    "Delivery Note": "public/js/delivery_note.js",
+    "Lead":"public/js/lead.js",
+    "Supplier":"public/js/supplier.js",
+    "Customer":"public/js/customer.js",
 }
 
 active_domains = frappe.get_active_domains()
@@ -71,7 +74,7 @@ if "Terra" in active_domains:
 
 
 from dynamic.hooks import DOCTYPE_JS_FILE_PATH
-
+# frappe.msgprint(f'data-->{str(doctype_js)}')
 with open(DOCTYPE_JS_FILE_PATH, "w") as write_file:
     
     json.dump(doctype_js, write_file, indent=4)
