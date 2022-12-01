@@ -24,7 +24,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Item Code",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "item_name",
@@ -76,13 +77,15 @@
    "depends_on": "request_status == \"approved\"",
    "fieldname": "standard_rate",
    "fieldtype": "Currency",
-   "label": "Standard Selling Rate"
+   "label": "Standard Selling Rate",
+   "no_copy": 1
   },
   {
    "fieldname": "request_status",
    "fieldtype": "Select",
    "hidden": 1,
    "label": "Request Status",
+   "no_copy": 1,
    "options": "\npending\napproved\nrejected",
    "read_only": 1
   }
@@ -90,7 +93,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-01 10:23:02.262689",
+ "modified": "2022-12-01 12:12:27.853282",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Item Request",
@@ -106,6 +109,33 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock User",
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

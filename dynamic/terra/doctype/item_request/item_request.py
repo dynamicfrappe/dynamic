@@ -16,4 +16,10 @@ class ItemRequest(Document):
 		# item.valuation_rate = self.valuation_rate
 		item.standard_rate  = self.standard_rate
 		item.uoms           = self.uoms
-		item.save()
+		item.save(ignore_permissions=True)
+
+	
+	@frappe.whitelist()
+	def can_approve_item(self,*args, **kwargs):
+		role = frappe.db.get_single_value("Terra Seeting","item_approver")
+		return role 

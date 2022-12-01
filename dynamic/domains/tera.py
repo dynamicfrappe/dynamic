@@ -665,6 +665,57 @@ data = {
                 "label": "Cutting Type",
                 "options":"Cutting Type"
             }
+        ],
+        "Mode of Payment":[
+            {
+                "fieldname":"deduction_secion",
+                "insert_after":"accounts",
+                "fieldtype": "Section Break",
+                "label":"Deduction Section"
+            },
+            {
+                "fieldname": "has_deduct",
+                "fieldtype": "Check",
+                "insert_after": "deduction_secion",
+                "label": "Has Deduct"
+            },
+            {
+                "fieldname": "deduct_percentage",
+                "fieldtype": "Float",
+                "insert_after": "has_deduct",
+                "label": "Deduction Percentage",
+                "mandatory_depends_on":"eval:doc.has_deduct==1",
+                "default":""
+            },
+            {
+                "fieldname":"deduct_column_break",
+                "insert_after":"deduct_percentage",
+                "fieldtype": "Column Break"
+            },
+            {
+                "fieldname": "recived_account",
+                "fieldtype": "Link",
+                "insert_after": "deduct_column_break",
+                "label": "Recive Account",
+                "options":"Account",
+                "mandatory_depends_on":"eval:doc.has_deduct==1"
+            },
+            {
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "deduct_column_break",
+                "label": "Cost Center",
+                "options":"Cost Center",
+                "mandatory_depends_on":"eval:doc.has_deduct==1"
+            }
+        ],
+        "Payment Entry Deduction":[
+            {
+                "fieldname": "Percentage",
+                "fieldtype": "Float",
+                "insert_after": "amount",
+                "label": "Percentage",
+            }
         ]
 
 

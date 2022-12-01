@@ -649,7 +649,50 @@ def create_material_request_script():
         """
     doc.save()
 
-
+def create_payment_entry():
+    name = "Payment Entry-Form"
+    if frappe.db.exists("Client Script",name) :
+        doc = frappe.get_doc("Client Script",name)
+    else :
+        doc = frappe.new_doc("Client Script")
+    doc.dt      = "Payment Entry"
+    doc.view    = "Form"
+    doc.enabled = 1
+    doc.script = """    
+                frappe.ui.form.on('Payment Entry', {
+                paid_amount:(frm)=>{
+                    frm.events.get_deduct_amount(frm);
+                },
+                mode_of_payment:(frm)=>{
+                    frm.events.get_deduct_amount(frm);
+                },
+                get_deduct_amount:(frm)=>{
+                    cur_frm.clear_table("deductions");
+                    frm.refresh_fields("deductions");
+                    frappe.call({
+                        "method": "frappe.client.get",
+                            args: {
+                                doctype: "Mode of Payment",
+                                name: frm.doc.mode_of_payment
+                            },callback(r){
+                                if(r.message){
+                                    let res = r.message;
+                                    if(res.has_deduct){
+                                        var row = cur_frm.add_child("deductions")
+                                        row.account = res.recived_account;
+                                        row.percentage = res.deduct_percentage;
+                                        row.cost_center = res.cost_center
+                                        row.amount = frm.doc.paid_amount * (res.deduct_percentage/100);
+                                        frm.refresh_fields("deductions");
+                                    }
+                                }
+                            }
+                    })
+                }
+            })
+        
+        """
+    doc.save()
 # def create_item_script():
 #     name = "Item-Form"
 #     if frappe.db.exists("Client Script",name) :
