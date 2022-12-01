@@ -13,7 +13,7 @@ class ItemRequest(Document):
 		item.item_name      = self.item_name
 		item.item_group     = self.item_group
 		item.stock_uom      = self.stock_uom
-		item.valuation_rate = self.valuation_rate
+		# item.valuation_rate = self.valuation_rate
 		item.standard_rate  = self.standard_rate
 		item.uoms           = self.uoms
 		item.save()
