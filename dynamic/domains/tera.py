@@ -707,6 +707,13 @@ data = {
                 "label": "Cost Center",
                 "options":"Cost Center",
                 "mandatory_depends_on":"eval:doc.has_deduct==1"
+            },
+            {
+                "fieldname":"naming",
+                "fieldtype":"Select",
+                "label":"Naming Template",
+                "insertafter":"type",
+                "options":"\nCash-.YYYY.-\nBank-.YYYY.-"
             }
         ],
         "Payment Entry Deduction":[
@@ -715,10 +722,18 @@ data = {
                 "fieldtype": "Float",
                 "insert_after": "amount",
                 "label": "Percentage",
+            },
+        
+        ],
+        "Payment Entry":[
+            {
+                "fieldname":"mode_of_payment_naming",
+                "fieldtype":"Data",
+                "insert_after":"title",
+                "hidden":1,
+                "no_copy":1
             }
         ]
-
-
 
     },
     # "properties": [

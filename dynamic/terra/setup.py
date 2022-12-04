@@ -649,22 +649,38 @@ def create_material_request_script():
         """
     doc.save()
 
-def create_payment_entry():
+def create_payment_entry_script():
     name = "Payment Entry-Form"
     if frappe.db.exists("Client Script",name) :
         doc = frappe.get_doc("Client Script",name)
     else :
         doc = frappe.new_doc("Client Script")
-    doc.dt      = "Payment Entry"
-    doc.view    = "Form"
-    doc.enabled = 1
+        doc.dt      = "Payment Entry"
+        doc.view    = "Form"
+        doc.enabled = 1
     doc.script = """    
+                f    
                 frappe.ui.form.on('Payment Entry', {
                 paid_amount:(frm)=>{
                     frm.events.get_deduct_amount(frm);
                 },
                 mode_of_payment:(frm)=>{
-                    frm.events.get_deduct_amount(frm);
+                    if(frm.doc.mode_of_payment !=''){
+                        frm.events.get_deduct_amount(frm);
+                        frappe.call({
+                        "method":"dynamic.api.validate_mode_of_payment_naming",
+                        args:{
+                            old_naming:frm.doc.mode_of_payment_naming,
+                            mode_of_payment:frm.doc.mode_of_payment
+                        },callback(r){
+                            if(!r.message){
+                                frm.set_value("mode_of_payment",'');
+                                frappe.throw(__("Different naming template"))
+                            }
+                        }
+                    })
+                    }
+                    
                 },
                 get_deduct_amount:(frm)=>{
                     cur_frm.clear_table("deductions");
@@ -902,6 +918,10 @@ def create_terra_scripts():
     try:
         create_material_request_script()
     except:
+        pass
+    try:
+        create_payment_entry_script()
+    except Exception as ex:
         pass
     try:
         install_action()
