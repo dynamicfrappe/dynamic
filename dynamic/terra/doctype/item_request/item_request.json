@@ -12,6 +12,10 @@
   "item_group",
   "stock_uom",
   "column_break_5",
+  "color",
+  "size",
+  "specification",
+  "cutting_type",
   "standard_rate",
   "units_of_measure_section",
   "uoms",
@@ -88,12 +92,35 @@
    "no_copy": 1,
    "options": "\npending\napproved\nrejected",
    "read_only": 1
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Link",
+   "label": "Color",
+   "options": "Color"
+  },
+  {
+   "fieldname": "size",
+   "fieldtype": "Link",
+   "label": "Size",
+   "options": "Size"
+  },
+  {
+   "fieldname": "specification",
+   "fieldtype": "Data",
+   "label": "Specification"
+  },
+  {
+   "fieldname": "cutting_type",
+   "fieldtype": "Link",
+   "label": "Cutting Type",
+   "options": "Cutting Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-01 12:12:27.853282",
+ "modified": "2022-12-04 13:50:32.652869",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Item Request",
