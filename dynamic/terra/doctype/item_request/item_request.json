@@ -12,10 +12,14 @@
   "item_group",
   "stock_uom",
   "column_break_5",
-  "valuation_rate",
+  "color",
+  "size",
+  "specification",
+  "cutting_type",
   "standard_rate",
   "units_of_measure_section",
   "uoms",
+  "request_status",
   "amended_from"
  ],
  "fields": [
@@ -24,7 +28,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Item Code",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "item_name",
@@ -53,11 +58,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "valuation_rate",
-   "fieldtype": "Currency",
-   "label": "Valuation Rate"
-  },
-  {
    "fieldname": "units_of_measure_section",
    "fieldtype": "Section Break",
    "label": "Units of Measure"
@@ -78,15 +78,49 @@
    "read_only": 1
   },
   {
+   "depends_on": "request_status == \"approved\"",
    "fieldname": "standard_rate",
    "fieldtype": "Currency",
-   "label": "Standard Selling Rate"
+   "label": "Standard Selling Rate",
+   "no_copy": 1
+  },
+  {
+   "fieldname": "request_status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Request Status",
+   "no_copy": 1,
+   "options": "\npending\napproved\nrejected",
+   "read_only": 1
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Link",
+   "label": "Color",
+   "options": "Color"
+  },
+  {
+   "fieldname": "size",
+   "fieldtype": "Link",
+   "label": "Size",
+   "options": "Size"
+  },
+  {
+   "fieldname": "specification",
+   "fieldtype": "Data",
+   "label": "Specification"
+  },
+  {
+   "fieldname": "cutting_type",
+   "fieldtype": "Link",
+   "label": "Cutting Type",
+   "options": "Cutting Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-28 14:56:35.163579",
+ "modified": "2022-12-04 13:50:32.652869",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Item Request",
@@ -102,6 +136,33 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock User",
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

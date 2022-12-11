@@ -19,6 +19,7 @@ from dynamic.cheques.doctype.cheque.cheque import add_row_cheque_tracks
 from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
 from erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import repost_entries
 from dynamic.gebco.doctype.sales_invocie.utils import set_complicated_pundel_list
+from datetime import date
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -641,3 +642,35 @@ def validate_whats_app_settings(data , *args ,**kwargs) :
             msg.fromm = profile[-1].get("name")
             msg.save()
             # frappe.throw(i.get("name"))
+
+
+
+
+
+# @frappe.whitelist()
+def modeofpaymentautoname(self,fun=''):
+    print("************************************************** ")
+    #frappe.throw("----------------------------------------------")
+    if "Terra" in DOMAINS:
+        mode_of_payment = frappe.get_doc("Mode of Payment",self.mode_of_payment)
+        if mode_of_payment.naming:
+            sql = "select count(*) as 'c' from `tabPayment Entry` WHERE mode_of_payment='%s'"%self.mode_of_payment
+            last_id = frappe.db.sql(sql,as_dict=1)
+            todays_date = date.today()
+            year = todays_date.year
+            id = int(last_id[0].get("c")) +1
+            if mode_of_payment.naming == "Cash-.YYYY.-":
+                self.name = "Cash"+"-"+str(year)+"-" + str(id)
+            elif mode_of_payment.naming == "Bank-.YYYY.-":
+                self.name = "Bank"+"-"+str(year)+"-" + str(id)
+
+            self.mode_of_payment_naming = mode_of_payment.naming
+
+@frappe.whitelist()
+def validate_mode_of_payment_naming(old_naming=None,mode_of_payment=None,*args, **kwargs):
+    if not mode_of_payment or not old_naming:
+        return True
+    doc = frappe.get_doc("Mode of Payment",mode_of_payment)
+    if doc.naming == old_naming:
+        return True
+    return False

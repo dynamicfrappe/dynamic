@@ -141,6 +141,9 @@ doc_events = {
     #    "validate" : "dynamic.ifi.api.opportunity_notifiy",
        "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
     },
+    "Payment Entry":{
+        "autoname":"dynamic.api.modeofpaymentautoname"
+    }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
     #  },Installations Furniture
