@@ -33,14 +33,14 @@
    "type": "Link"
   }
  ],
- "modified": "2022-08-07 17:45:37.589871",
+ "modified": "2022-12-01 12:07:15.984423",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Terra",
  "onboarding": "",
  "owner": "Administrator",
  "pin_to_bottom": 0,
- "pin_to_top": 0,
+ "pin_to_top": 1,
  "restrict_to_domain": "Terra",
  "shortcuts": [
   {

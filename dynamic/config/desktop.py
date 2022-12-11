@@ -10,5 +10,13 @@ def get_data():
 			"icon": "octicon octicon-file-directory",
 			"type": "module",
 			"label": _("Dynamic")
-		}
+		},
+		# {
+		# "module_name": "ifi",
+		# "color": "#8e44ad",
+		# "icon": "fa fa-puzzle-piece",
+		# # "icon": "octicon octicon-rocket",
+		# "type": "module",
+		# "label": _("IFI")
+		# },
 	]

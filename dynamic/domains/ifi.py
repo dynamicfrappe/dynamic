@@ -15,9 +15,11 @@ data = {
          'Quotation':[
             {
                 "fieldname": "crean",
-                "fieldtype": "Check",
+                "fieldtype": "Select",
+                "options":"\nYes\nNo",
                 "insert_after": "customer_name",
                 "label": "Crean",
+                "reqd":1
             },
          ],
          'Opportunity':[
@@ -39,6 +41,14 @@ data = {
                 "insert_after": "more_info",
                 "read_only" : 1,
                 "allow_on_submit": 1    
+            },
+            {
+                "fieldname": "crean",
+                "fieldtype": "Select",
+                "options":"\nYes\nNo",
+                "insert_after": "order_type",
+                "label": "Crean",
+                "reqd":1
             },
          ],
          'Lead':[
@@ -97,13 +107,12 @@ data = {
         "value": "1"
         },
         {
-        "doctype": "Item",
+        "doctype":"Item",
         "doctype_or_field": "DocField",
-        "fieldname": "delivered_by_supplier",
+        "fieldname":"delivered_by_supplier",
         "property": "default",
         "property_type": "Text",
-        "value": "1",
-        "default_value":1
+        "value": "1"
         },
         {
         "doctype": "Sales Order",

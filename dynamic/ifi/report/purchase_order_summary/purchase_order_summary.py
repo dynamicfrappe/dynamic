@@ -48,17 +48,25 @@ class PurchaseOrderSummary(object):
 		if self.filters.get("purchase_order"):
 			conditions += " and tpo.name = '%s'"%self.filters.get("purchase_order")
 		sql_query_new = f"""
-				SELECT * , (`data`.`purchase_amount` - `data`.`total_paid`)outstanding FROM(
-						select `tpo`.`name` purchase_order,tpo.supplier, SUM(`tge`.`debit`) as total_paid,`tpo`.`grand_total` purchase_amount
+				SELECT * , (`data`.`purchase_amount` - `data`.`total_paid`)outstanding 
+				FROM(
+						select `tpo`.`name` purchase_order,`tpo`.`supplier`, SUM(`tge`.`debit`) as total_paid,`tpo`.`grand_total` purchase_amount
 						from `tabPurchase Order` tpo
-						INNER JOIN `tabGL Entry` tge
-						ON tge.against_voucher = tpo.name AND tge.voucher_type ='Payment Entry'
-						WHERE {conditions}
+						LEFT JOIN `tabGL Entry` tge
+						ON
+						(
+						(tge.against_voucher = tpo.name  AND tge.voucher_type ='Payment Entry') 
+						OR 
+						(tge.against_voucher IS NULL AND tge.voucher_type IS NULL )
+						)
+						WHERE {conditions} AND tpo.docstatus=1
 						GROUP  BY `tpo`.`name`
 						) as data
+	
 		""".format(conditions=conditions)
+		frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
-		# frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
+		frappe.errprint(f"sql_query_new is ==> {sql_data}")
 		return sql_data
 
 	def get_columns(self):

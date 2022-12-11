@@ -15,6 +15,7 @@
   "customer",
   "customer_name",
   "customer_phone_number",
+  "url",
   "column_break_2",
   "delegate",
   "delegate_name",
@@ -36,8 +37,8 @@
   "installation_team_detail",
   "notes_section",
   "notes",
-  "amended_from",
-  "ref_status"
+  "ref_status",
+  "amended_from"
  ],
  "fields": [
   {
@@ -262,12 +263,18 @@
    "fieldtype": "Datetime",
    "label": "To Time",
    "reqd": 1
+  },
+  {
+   "fetch_from": "customer.url",
+   "fieldname": "url",
+   "fieldtype": "Data",
+   "label": "URL"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-28 13:38:40.628924",
+ "modified": "2022-12-01 12:14:16.034509",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "Installations Furniture",

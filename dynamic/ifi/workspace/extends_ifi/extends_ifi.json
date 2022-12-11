@@ -1,33 +1,34 @@
 {
  "category": "Modules",
  "charts": [],
- "creation": "2022-10-03 10:50:33.660201",
+ "creation": "2022-12-01 11:54:15.521006",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
  "doctype": "Workspace",
- "extends": "Accounting",
+ "extends": "CRM",
  "extends_another_page": 1,
  "hide_custom": 0,
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "Extends Accounts Report",
+ "label": "Extends IFI",
  "links": [],
- "modified": "2022-12-01 12:03:08.461438",
+ "modified": "2022-12-01 11:54:15.521006",
  "modified_by": "Administrator",
- "module": "Dynamic Accounts",
- "name": "Extends Accounts Report",
- "onboarding": "Accounts",
+ "module": "IFI",
+ "name": "Extends IFI",
+ "onboarding": "CRM",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
+ "restrict_to_domain": "IFI",
  "shortcuts": [
   {
-   "doc_view": "Report Builder",
-   "label": "Trial Balance Date",
-   "link_to": "Trial Balance Date",
-   "type": "Report"
+   "doc_view": "List",
+   "label": "Installations Furniture",
+   "link_to": "Installations Furniture",
+   "type": "DocType"
   }
  ]
 }
