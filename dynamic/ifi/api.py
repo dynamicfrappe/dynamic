@@ -6,6 +6,9 @@ from frappe.utils import getdate
 from datetime import datetime
 from frappe.utils.background_jobs import  enqueue
 from frappe.model.mapper import get_mapped_doc
+from erpnext.selling.doctype.quotation.quotation import _make_customer
+from frappe.utils import flt, getdate, nowdate
+
 
 DOMAINS = frappe.get_active_domains()
 
@@ -109,8 +112,70 @@ def create_furniture_installation_order(source_name, target_doc=None):
     return doclist
     
 
-# def check_child_table_qty(self,*args, **kwargs):
-#     frappe.errprint(f'--{self}->{args}-->>{kwargs}')
-#     frappe.errprint(f'--{self.items[0].item_code}')
-#     frappe.throw('stop')
-#     ...
+@frappe.whitelist()
+def make_sales_order(source_name, target_doc=None):
+	quotation = frappe.db.get_value(
+		"Quotation", source_name, ["transaction_date", "valid_till"], as_dict=1
+	)
+	if quotation.valid_till and (
+		quotation.valid_till < quotation.transaction_date or quotation.valid_till < getdate(nowdate())
+	):
+		frappe.throw(_("Validity period of this quotation has ended."))
+	return _make_sales_order(source_name, target_doc)
+
+
+def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
+	customer = _make_customer(source_name, ignore_permissions)
+
+	def set_missing_values(source, target):
+		if customer:
+			target.customer = customer.name
+			target.customer_name = customer.customer_name
+		if source.referral_sales_partner:
+			target.sales_partner = source.referral_sales_partner
+			target.commission_rate = frappe.get_value(
+				"Sales Partner", source.referral_sales_partner, "commission_rate"
+			)
+		target.flags.ignore_permissions = ignore_permissions
+		target.run_method("set_missing_values")
+		target.run_method("calculate_taxes_and_totals")
+
+	def update_item(obj, target, source_parent):
+		target.stock_qty = flt(obj.qty) * flt(obj.conversion_factor)
+
+		if obj.against_blanket_order:
+			target.against_blanket_order = obj.against_blanket_order
+			target.blanket_order = obj.blanket_order
+			target.blanket_order_rate = obj.blanket_order_rate
+
+	doclist = get_mapped_doc(
+		"Quotation",
+		source_name,
+		{
+			"Quotation": {
+                "doctype": "Sales Order",
+                "field_map": {
+                    "crean": "crean",
+                    "crean_amount": "crean_amount",
+                },
+                "validation": 
+                {"docstatus": ["=", 1]}
+                },
+			"Quotation Item": {
+				"doctype": "Sales Order Item",
+				"field_map": {"parent": "prevdoc_docname"},
+				"postprocess": update_item,
+			},
+			"Sales Taxes and Charges": {"doctype": "Sales Taxes and Charges", "add_if_empty": True},
+			"Sales Team": {"doctype": "Sales Team", "add_if_empty": True},
+			"Payment Schedule": {"doctype": "Payment Schedule", "add_if_empty": True},
+		},
+		target_doc,
+		set_missing_values,
+		ignore_permissions=ignore_permissions,
+	)
+
+	# postprocess: fetch shipping address, set missing values
+	doclist.set_onload("ignore_price_list", True)
+
+	return doclist

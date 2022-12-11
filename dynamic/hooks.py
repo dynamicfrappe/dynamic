@@ -70,6 +70,7 @@ doctype_js = {
     "Lead":"public/js/lead.js",
     "Supplier":"public/js/supplier.js",
     "Customer":"public/js/customer.js",
+    "Quotation":"public/js/quotation.js",
 }
 # doctype_js = {
 #     "Sales Invoice": "public/js/sales_invoice.js",
