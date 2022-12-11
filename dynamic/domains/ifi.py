@@ -21,6 +21,12 @@ data = {
                 "label": "Crean",
                 "reqd":1
             },
+            {
+                "fieldname": "crean_amount",
+                "fieldtype": "Float",
+                "insert_after": "crean",
+                "label": "Crean Amount",
+            },
          ],
          'Opportunity':[
             {
@@ -49,6 +55,12 @@ data = {
                 "insert_after": "order_type",
                 "label": "Crean",
                 "reqd":1
+            },
+            {
+                "fieldname": "crean_amount",
+                "fieldtype": "Float",
+                "insert_after": "crean",
+                "label": "Crean Amount",
             },
          ],
          'Lead':[
@@ -133,6 +145,33 @@ data = {
         "default_value":1
         },
         {
+        "doctype": "Purchase Invoice",
+        "doctype_or_field": "DocField",
+        "fieldname": "payment_schedule",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Sales Invoice",
+        "doctype_or_field": "DocField",
+        "fieldname": "payment_schedule",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "payment_schedule",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
         "doctype": "Sales Order",
         "doctype_or_field": "DocField",
         "fieldname": "shipping_rule",
@@ -150,15 +189,24 @@ data = {
         "value": "1",
         "default_value":1
         },
-        # {
-        # "doctype": "Sales Order Item",
-        # "doctype_or_field": "DocField",
-        # "fieldname": "item_code",
-        # "property": "columns",
-        # "property_type": "Text",
-        # "value": 2,
-        # "default_value":2
-        # },
+        {
+        "doctype": "Purchase Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "shipping_rule",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Lead",
+        "doctype_or_field": "DocField",
+        "fieldname": "email_id",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":"1"
+        },
         
     ],
   
