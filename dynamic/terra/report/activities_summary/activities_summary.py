@@ -35,13 +35,13 @@ class ActivitiesSummary(object):
 
 	def get_new_opportunity(self,conditions):
 		if self.filters.get("from_date"):
-			conditions += " and opport.creation >= '%s'"%self.filters.get("from_date")
+			conditions += " and active.creation >= '%s'"%self.filters.get("from_date")
 		if self.filters.get("to_date"):
-			conditions += " and opport.creation <= '%s'"%self.filters.get("to_date")
+			conditions += " and active.creation <= '%s'"%self.filters.get("to_date")
 		if self.filters.get("source"):
-			conditions += " and opport.creation <= '%s'"%self.filters.get("source")
+			conditions += " and active.local_source <= '%s'"%self.filters.get("source")
 		if self.filters.get("branch"):
-			conditions += " and opport.creation <= '%s'"%self.filters.get("branch")
+			conditions += " and active.branch <= '%s'"%self.filters.get("branch")
 		sql_query_new = f"""
 						select active.name as activity, active.type, active.local_source, active.branch,
 						active.customer,active.creation,active.phone_no

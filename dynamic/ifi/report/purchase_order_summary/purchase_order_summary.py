@@ -55,16 +55,15 @@ class PurchaseOrderSummary(object):
 						LEFT JOIN `tabGL Entry` tge
 						ON
 						(
-						(tge.against_voucher = tpo.name  AND tge.voucher_type ='Payment Entry') 
-						OR 
-						(tge.against_voucher IS NULL AND tge.voucher_type IS NULL )
+						(tge.against_voucher = tpo.name or tge.against_voucher IS NULL  
+						AND tge.voucher_type ='Payment Entry' or tge.voucher_type IS NULL) 
 						)
 						WHERE {conditions} AND tpo.docstatus=1
 						GROUP  BY `tpo`.`name`
 						) as data
 	
 		""".format(conditions=conditions)
-		frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
+		# frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 		frappe.errprint(f"sql_query_new is ==> {sql_data}")
 		return sql_data
