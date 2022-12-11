@@ -13,7 +13,7 @@
  "is_standard": 1,
  "label": "IFI",
  "links": [],
- "modified": "2022-12-01 12:08:23.211194",
+ "modified": "2022-12-11 14:23:14.280519",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "IFI",
@@ -27,6 +27,12 @@
    "label": "Installations Furniture",
    "link_to": "Installations Furniture",
    "type": "DocType"
+  },
+  {
+   "doc_view": "Report Builder",
+   "label": "Purchase Order Summary",
+   "link_to": "Purchase Order Summary",
+   "type": "Report"
   }
  ]
 }
