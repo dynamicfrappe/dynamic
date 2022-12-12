@@ -25,6 +25,7 @@ class InstallationsFurniture(Document):
 					if sales_order_sorted_items[i].get('name') == installation_sorted_items[j].get('ref_name'):
 						if sales_order_sorted_items[i].get('qty') != installation_sorted_items[j].get('qty'):
 							frappe.throw(f'Not match row no. {installation_sorted_items[j].get("idx")} with SO no. {sales_order_sorted_items[i].get("idx")} -- item code {installation_sorted_items[j].get("item_code")}')
+		self.preprare_notify()
 	
 	def update_so_inst_status(self,delete=False):
 		if delete:
