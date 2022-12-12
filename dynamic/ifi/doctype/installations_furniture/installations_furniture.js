@@ -52,7 +52,7 @@ frappe.ui.form.on('Installations Furniture', {
 		}
 	},
 	check_exist_interval(frm){
-		if(frm.doc.docstatus != 0){
+		if(frm.doc.__islocal === 1 ){
 			frappe.throw("Save First")
 		}
 		frm.call({
