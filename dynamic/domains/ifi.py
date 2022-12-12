@@ -207,6 +207,78 @@ data = {
         "value": "1",
         "default_value":"1"
         },
+        {
+        "doctype": "Payment Schedule",
+        "doctype_or_field": "DocField",
+        "fieldname": "payment_term",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Payment Schedule",
+        "doctype_or_field": "DocField",
+        "fieldname": "description",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Payment Schedule",
+        "doctype_or_field": "DocField",
+        "fieldname": "due_date",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Payment Schedule",
+        "doctype_or_field": "DocField",
+        "fieldname": "invoice_portion",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Payment Schedule",
+        "doctype_or_field": "DocField",
+        "fieldname": "payment_amount",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Payment Schedule",
+        "doctype_or_field": "DocField",
+        "fieldname": "discount_type",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Payment Schedule",
+        "doctype_or_field": "DocField",
+        "fieldname": "discount",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Payment Schedule",
+        "doctype_or_field": "DocField",
+        "fieldname": "base_payment_amount",
+        "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
         
     ],
   
