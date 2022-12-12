@@ -52,6 +52,9 @@ frappe.ui.form.on('Installations Furniture', {
 		}
 	},
 	check_exist_interval(frm){
+		if(frm.doc.docstatus != 0){
+			frappe.throw("Save First")
+		}
 		frm.call({
 			method:"check_employee_busy",
 			doc:frm.doc,

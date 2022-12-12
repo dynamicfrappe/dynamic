@@ -139,9 +139,7 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Items",
-   "options": "Installation Furniture Item",
-   "read_only": 1,
-   "reqd": 1
+   "options": "Installation Furniture Item"
   },
   {
    "fieldname": "totals_section",
@@ -255,14 +253,12 @@
   {
    "fieldname": "from_time",
    "fieldtype": "Datetime",
-   "label": "From Time",
-   "reqd": 1
+   "label": "From Time"
   },
   {
    "fieldname": "to_time",
    "fieldtype": "Datetime",
-   "label": "To Time",
-   "reqd": 1
+   "label": "To Time"
   },
   {
    "fetch_from": "customer.url",
@@ -274,7 +270,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-01 12:14:16.034509",
+ "modified": "2022-12-12 15:02:08.554062",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "Installations Furniture",
