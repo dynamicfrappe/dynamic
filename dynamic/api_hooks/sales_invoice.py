@@ -29,6 +29,7 @@ def count_total_item_group_qty_amount(invoice):
         if not sales_person :
             
             return 0 
+            
         target_ietm_group =[]
         for target in sales_person.targets :
             tem_name= frappe.db.sql(""" SELECT name FROM 

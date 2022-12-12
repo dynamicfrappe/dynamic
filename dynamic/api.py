@@ -7,6 +7,7 @@ import codecs
 import json
 import erpnext
 import base64
+from frappe.utils.data import add_days, add_months  
 #from .product_bundle.doctype.packed_item.packed_item import  make_packing_list
 from dynamic.product_bundle.doctype.packed_item.new_packed_item import make_packing_list
 from erpnext import get_default_company, get_default_cost_center
@@ -674,3 +675,77 @@ def validate_mode_of_payment_naming(old_naming=None,mode_of_payment=None,*args, 
     if doc.naming == old_naming:
         return True
     return False
+
+from dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion import  update_month_previous_logs_for_person
+
+@frappe.whitelist()
+def validate_active_domains_cancel(doc ,*args,**kwargs):
+    if  'Moyate' in DOMAINS: 
+        # Clear Invoice Commision Amount 
+        #1 - remove commition log 
+        # 2 -update old logs  
+
+        #get invocie log  
+        invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
+        # frappe.throw(str(invoice_log))
+        if invoice_log and len(invoice_log) > 0 :
+            for l in invoice_log :
+                log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
+                
+                first_day  = log.from_date
+                last_day = log.to_date 
+                person = log.sales_person
+                item_group = log.item__group
+                # log.remove_raw()
+                frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
+                frappe.db.commit()
+                update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
+
+
+     
+
+        # first_day = datetime.today().replace(day=1)
+        # last_day = add_days(add_months(first_day, 1),-1) 
+
+        # sql = f"""
+        #             select
+        #                 name ,
+        #                 sales_person ,
+        #                 item__group ,
+        #                 commission_template ,
+        #                 commission_amount ,
+        #                 invoice_qty ,
+        #                 from_date ,
+        #                 to_date
+        #             from
+        #                 `tabSales Person Commetion` t1
+        #             where
+        #                 t1.name = (
+        #                 select
+        #                     t2.name
+        #                 from
+        #                     `tabSales Person Commetion` t2
+        #                 where
+        #                     t2.from_date = date('{first_day}')
+        #                     and t2.to_date = date('{last_day}')
+        #                     and t1.sales_person = t2.sales_person
+        #                     and t1.item__group = t2.item__group
+        #                     and t1.commission_template = t2.commission_template
+        #                 ORDER BY
+        #                     t2.sales_person ,
+        #                     t2.item__group ,
+        #                     t2.commission_template ,
+        #                     t2.creation DESC
+        #                 limit 1
+        #             )
+        #             ORDER BY
+        #                 t1.sales_person ,
+        #                 t1.item__group ,
+        #                 t1.commission_template ,
+        #                     t1.creation DESC
+        #     """
+        # logs = frappe.db.sql(sql,as_dict=1) or []
+    
+        # for row in logs :
+        #     doc = frappe.get_doc("Sales Person Commetion" , row.name)
+        #     doc.save()

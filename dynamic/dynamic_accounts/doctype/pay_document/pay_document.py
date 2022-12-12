@@ -56,8 +56,7 @@ class PayDocument(Document):
         je.company = self.company
         je.cheque_no = self.reference_no
         je.cheque_date = self.reference_date
-        je.remark = f'Payment against {self.doctype}: ' + \
-            self.name + '\n' + (getattr(self, 'notes', "") or "")
+        je.remark = f' { self.name } وثيقة دفع ' 
 
         account_currency = get_account_currency(self.account)
         account_exchange_rate = flt(self.exchange_rate)
@@ -109,7 +108,7 @@ class PayDocument(Document):
                 "debit_in_account_currency":  flt(amount_in_account_row_currency),
                 "debit_in_company_currency": flt(account_row.base_amount),
                 "reference_type": self.doctype,
-                "user_remark": getattr(account_row, "note", (self.notes or "")),
+                "user_remark": str(account_row.note or ""),
                 "reference_name": self.name,
                 "party_type": account_row.party_type,
                 "party": account_row.party,
