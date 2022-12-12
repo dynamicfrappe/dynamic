@@ -84,15 +84,15 @@ def get_data(filters):
 	if filters.get("item_group"):
 		conditions += " and item__group = '%s'"%filters.get("item_group")
 	if filters.get("from_date"):
-		conditions += " and from_date >= '%s'"%filters.get("from_date")
+		conditions += " and date >=date('%s')"%filters.get("from_date")
 	if filters.get("to_date"):
-		conditions += " and to_date  <= '%s'"%filters.get("to_date")
+		conditions += " and date  <= date('%s')"%filters.get("to_date")
 	sql = f"""
 	
 	  select * from `tabSales Person Commetion`
 	  {conditions}
 	"""
-	print("sql ==================> ",sql)
+	print(sql)
 	res = frappe.db.sql(sql,as_dict=1)
 
 	return res

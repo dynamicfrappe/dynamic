@@ -91,7 +91,8 @@ class SalesPersonCommetion(Document):
 				for d in docs:
 					doc = frappe.get_doc("Sales Person Commetion",d.name)
 					re_result = self.re_caculate_qty_amount(doc)
-					sql = """ update `tabSales Person Commetion` set amount={},commission_amount={},commission_percent={}  where name ='{}'""".format(re_result,self.commission_amount,self.commission_percent,d.name)
+					sql = """ update `tabSales Person Commetion` set amount={},commission_amount={},
+					commission_percent={}  where name ='{}'""".format(re_result,self.commission_amount,self.commission_percent,d.name)
 					frappe.db.sql(sql)
 					frappe.db.commit()
 
@@ -114,6 +115,8 @@ class SalesPersonCommetion(Document):
 		self.update_monthly_commetions()
 		
 	
+	def remove_raw(self) :
+		frappe.throw("Remove")
 
 	def re_caculate_qty_amount(self,doc):
 		if doc.date :
@@ -186,6 +189,55 @@ def update_month_previous_logs():
 						`tabSales Person Commetion` t2
 					where
 						t2.from_date = date('{first_day}')
+						and t2.to_date = date('{last_day}')
+						and t1.sales_person = t2.sales_person
+						and t1.item__group = t2.item__group
+						and t1.commission_template = t2.commission_template
+					ORDER BY
+						t2.sales_person ,
+						t2.item__group ,
+						t2.commission_template ,
+						t2.creation DESC
+					limit 1
+				)
+				ORDER BY
+					t1.sales_person ,
+					t1.item__group ,
+					t1.commission_template ,
+					t1.creation DESC
+	"""
+	logs = frappe.db.sql(sql,as_dict=1) or []
+
+	for row in logs :
+		doc = frappe.get_doc("Sales Person Commetion" , row.name)
+		doc.save()
+
+
+
+@frappe.whitelist()
+def update_month_previous_logs_for_person(first_day , last_day , item_group , person ):
+
+	sql = f"""
+				select
+					name ,
+					sales_person ,
+					item__group ,
+					commission_template ,
+					commission_amount ,
+					invoice_qty ,
+					from_date ,
+					to_date
+				from
+					`tabSales Person Commetion` t1
+				where
+					t1.name = (
+					select
+						t2.name
+					from
+						`tabSales Person Commetion` t2
+					where
+						t2.from_date = date('{first_day}')
+						and t1.sales_person ='{person}' and t1.item__group ='{item_group}'
 						and t2.to_date = date('{last_day}')
 						and t1.sales_person = t2.sales_person
 						and t1.item__group = t2.item__group
