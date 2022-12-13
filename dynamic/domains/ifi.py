@@ -190,7 +190,7 @@ data = {
         "default_value":1
         },
         {
-        "doctype": "Purchase Order",
+        "doctype": "Sales Order",
         "doctype_or_field": "DocField",
         "fieldname": "shipping_rule",
         "property": "reqd",

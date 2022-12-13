@@ -13,7 +13,7 @@
  "is_standard": 1,
  "label": "IFI",
  "links": [],
- "modified": "2022-12-11 14:23:14.280519",
+ "modified": "2022-12-13 10:16:13.553108",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "IFI",
@@ -33,6 +33,12 @@
    "label": "Purchase Order Summary",
    "link_to": "Purchase Order Summary",
    "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "IFI Settings",
+   "link_to": "IFI Settings",
+   "type": "DocType"
   }
  ]
 }
