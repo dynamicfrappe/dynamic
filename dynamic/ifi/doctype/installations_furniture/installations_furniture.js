@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('Installations Furniture', {
 	refresh: function(frm) {
-		if (frm.doc.docstatus > 0) {
+		if (!frm.doc.rate && frm.doc.docstatus > 0) {
 			frm.add_custom_button(
 			  __("Customer Feedback"),
 			  function () {
@@ -29,7 +29,20 @@ frappe.ui.form.on('Installations Furniture', {
 						frm.set_value("rate",values.rate);
 						frm.set_value("feedback",values.feedback);
 						frm.save()
-						frm.submit()
+						// frm.submit()
+						frappe.call({
+							"method": "frappe.client.submit",
+							"args": {
+								  "doctype": "Installations Furniture",
+								  "docname":frm.doc.name,
+								  "doc": frm.doc
+							},callback(r){
+								frm.reload_doc();
+								//frm.refresh_field("docstatus");
+								//cur_frm.refresh();
+								//frm.reload();
+							}
+						})
 						cur_frm.reload_doc();
 					}
 				});
