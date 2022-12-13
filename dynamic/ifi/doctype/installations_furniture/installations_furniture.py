@@ -9,8 +9,7 @@ from frappe.utils.background_jobs import  enqueue
 class InstallationsFurniture(Document):
 	def before_save(self):
 		self.update_so_inst_status()
-		# self.preprare_notify()
-		# self.check_employee_busy()
+		self.check_employee_busy()
 
 	def on_trash(self):
 		self.update_so_inst_status(delete=True)
@@ -70,6 +69,18 @@ class InstallationsFurniture(Document):
 			if len(sql_data):
 				frappe.throw(f'Exists in interval for employee {employee.employee} In Installation {sql_data[0].parent}')
 
+	@frappe.whitelist()
+	def get_team(self):
+		if self.team:
+			team_doc = frappe.get_doc('Installation Team', self.team)
+			# self.team = []
+			for row in team_doc.employees:
+				self.append('installation_team_detail', {
+					"employee": row.employee,
+					"employee_name": row.employee_name,
+					"employee_email": row.employee_email,
+				})
+
 @frappe.whitelist()
 def get_events(start, end, filters=None):
 	"""Returns events for Gantt / Calendar view rendering.
@@ -82,7 +93,7 @@ def get_events(start, end, filters=None):
 	conditions = get_event_conditions("Installations Furniture", filters)
 	data = frappe.db.sql("""
 		select
-			distinct `tabInstallations Furniture`.name, `tabInstallations Furniture`.customer_name, `tabInstallations Furniture`.ref_status,
+			distinct `tabInstallations Furniture`.name, `tabInstallations Furniture`.customer_name, `tabInstallations Furniture`.ref_status,`tabInstallations Furniture`.team,
 			`tabInstallations Furniture`.from_time as from_time, `tabInstallations Furniture`.to_time as to_time
 		from
 			`tabInstallations Furniture`, `tabInstallation Furniture Item`

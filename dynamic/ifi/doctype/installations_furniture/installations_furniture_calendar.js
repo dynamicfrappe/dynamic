@@ -8,9 +8,29 @@ frappe.views.calendar["Installations Furniture"] = {
 		"end": "to_time",
 		"id": "name",
 		"title": "name",
+		"subtitle":"name",
+		"details-container":"name",
+		"description":"team",
 		"allDay": "allDay"
 	},
+// 	style_map: {
+// 		"team": "success",
+// 		"description": "xxx",
+
+// },
 	gantt: true,
+	// gantt: {
+	// 	field_map: {
+	// 		"start": "from_time",
+	// 		"end": "to_time",
+	// 		"id": "team",
+	// 	"description":"team",
+	// 	"subtitle":"team",
+	// 	"details-container":"team",
+	// 		"title": "name",
+	// 		"allDay": "allDay"
+	// 	}
+	// },
 	filters: [
 		{
 			"fieldtype": "Link",
