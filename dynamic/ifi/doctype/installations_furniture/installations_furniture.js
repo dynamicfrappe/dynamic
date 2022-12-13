@@ -3,22 +3,30 @@
 
 frappe.ui.form.on('Installations Furniture', {
 	refresh: function(frm) {
-		if (!frm.doc.__islocal &&  frappe.user.has_role("Auditor")){
-			if(frm.doc.ref_status==='Pending'){
-				frm.add_custom_button(__("Start"), function() {
-					frm.events.change_status(frm)
-			})}
-			if(frm.doc.ref_status==='Start'){
-				frm.add_custom_button(__("Inprogress"), function() {
-					frm.events.change_status(frm)
-					
-			})}
-			if(frm.doc.ref_status==='Inprogress'){
-				frm.add_custom_button(__("Completed"), function() {
-					frm.events.change_status(frm)
-			})
-		}
-	}},
+	
+		frappe.db.get_single_value('IFI Settings','role_installation_button').then(value => {
+			if(value) {{
+				console.log('value-->',value)
+				if (!frm.doc.__islocal &&  frappe.user.has_role(value)){
+					if(frm.doc.ref_status==='Pending'){
+						frm.add_custom_button(__("Start"), function() {
+							frm.events.change_status(frm)
+					})}
+					if(frm.doc.ref_status==='Start'){
+						frm.add_custom_button(__("Inprogress"), function() {
+							frm.events.change_status(frm)
+							
+					})}
+					if(frm.doc.ref_status==='Inprogress'){
+						frm.add_custom_button(__("Completed"), function() {
+							frm.events.change_status(frm)
+					})
+				}
+			}
+			}}
+		})
+		
+},
 	from_time:function(frm){
 		frm.events.check_date_valid(frm)
 		$.each(frm.doc.items || [], function(i, d) {

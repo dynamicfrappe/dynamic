@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe import _
 from frappe.utils.background_jobs import  enqueue
+import json
 
 class InstallationsFurniture(Document):
 	def before_save(self):
@@ -89,12 +90,15 @@ def get_events(start, end, filters=None):
 	:param end: End date-time.
 	:param filters: Filters (JSON).
 	"""
+	from erpnext.controllers.queries import get_match_cond
 	from frappe.desk.calendar import get_event_conditions
+	filters = json.loads(filters)
 	conditions = get_event_conditions("Installations Furniture", filters)
+	events = []
 	data = frappe.db.sql("""
 		select
-			distinct `tabInstallations Furniture`.name, `tabInstallations Furniture`.customer_name, `tabInstallations Furniture`.ref_status,`tabInstallations Furniture`.team,
-			`tabInstallations Furniture`.from_time as from_time, `tabInstallations Furniture`.to_time as to_time
+			distinct `tabInstallations Furniture`.name as name, `tabInstallations Furniture`.customer_name, `tabInstallations Furniture`.ref_status,`tabInstallations Furniture`.team as team,`tabInstallations Furniture`.customer as customer,
+			`tabInstallations Furniture`.from_time as start, `tabInstallations Furniture`.to_time as end
 		from
 			`tabInstallations Furniture`, `tabInstallation Furniture Item`
 		where `tabInstallations Furniture`.name = `tabInstallation Furniture Item`.parent
@@ -103,7 +107,19 @@ def get_events(start, end, filters=None):
 		""".format(conditions=conditions), {
 			"start": start,
 			"end": end
-		}, as_dict=True)
+		}, as_dict=True,
+		update={"allDay": 0},)
+		
+	for row in data:
+		job_card_data = {
+            "start": row.start,
+            "planned_end_date": row.end,
+            "name": row.name,
+            "subject": row.customer,
+            "color":'#D3D3D3',
+        }
+		events.append(job_card_data)
+
 	return data
 
 @frappe.whitelist()
