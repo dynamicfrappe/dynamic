@@ -676,6 +676,7 @@ def validate_mode_of_payment_naming(old_naming=None,mode_of_payment=None,*args, 
         return True
     return False
 
+<<<<<<< HEAD
 from dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion import  update_month_previous_logs_for_person
 
 @frappe.whitelist()
@@ -749,3 +750,13 @@ def validate_active_domains_cancel(doc ,*args,**kwargs):
         # for row in logs :
         #     doc = frappe.get_doc("Sales Person Commetion" , row.name)
         #     doc.save()
+=======
+@frappe.whitelist()
+def get_item_price(item_code,price_list):
+    sql = f"select price_list_rate from `tabItem Price` where price_list = '{price_list}' and item_code='{item_code}'"
+    res = frappe.db.sql(sql,as_dict=1)
+    print("----------------------------------------------",len(res))
+    if len(res) >0:
+        return res[0].get("price_list_rate") or 0
+    return 0
+>>>>>>> a36dcb2 (batch barcode)

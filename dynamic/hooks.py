@@ -248,6 +248,7 @@ domains = {
     'Cheques': 'dynamic.domains.cheques',
     'Terra': 'dynamic.domains.tera',
     'IFI': 'dynamic.domains.ifi',
+    'textile' :'dynamic.domains.textile'
 }
 
 # domain Conatin
