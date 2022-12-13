@@ -140,8 +140,8 @@ doc_events = {
         "on_submit": "dynamic.api.submit_purchase_invoice",
      },
      "Opportunity":{
-    #    "validate" : "dynamic.ifi.api.opportunity_notifiy",
-       "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
+       "validate" : "dynamic.ifi.api.opportunity_notifiy",
+    #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname"

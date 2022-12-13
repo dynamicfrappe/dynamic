@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('Installations Furniture', {
 	refresh: function(frm) {
-		if (!frm.doc.__islocal){
+		if (!frm.doc.__islocal &&  frappe.user.has_role("Auditor")){
 			if(frm.doc.ref_status==='Pending'){
 				frm.add_custom_button(__("Start"), function() {
 					frm.events.change_status(frm)
@@ -25,7 +25,7 @@ frappe.ui.form.on('Installations Furniture', {
 			d.from_time = frm.doc.from_time;
 		});
 		refresh_field("items");
-		frm.events.check_exist_interval(frm)
+		// frm.events.check_exist_interval(frm)
 	},
 	to_time:function(frm){
 		frm.events.check_date_valid(frm)
@@ -35,13 +35,20 @@ frappe.ui.form.on('Installations Furniture', {
 		refresh_field("items");
 	},
 	change_status(frm){
-		frm.call({
-			method:"change_status",
-			doc:frm.doc,
-			callback:function(r){
-				frm.refresh()
-			}
+		frappe.confirm('Are you sure you want to proceed?',
+		() => {
+			// action to perform if Yes is selected
+			frm.call({
+				method:"change_status",
+				doc:frm.doc,
+				callback:function(r){
+					frm.refresh()
+				}
+			})
+		}, () => {
+			// action to perform if No is selected
 		})
+		
 	},
 	check_date_valid(frm){
 		if(frm.doc.from_time && frm.doc.to_time){
@@ -52,6 +59,9 @@ frappe.ui.form.on('Installations Furniture', {
 		}
 	},
 	check_exist_interval(frm){
+		if(frm.doc.__islocal === 1 ){
+			frappe.throw("Save First")
+		}
 		frm.call({
 			method:"check_employee_busy",
 			doc:frm.doc,
@@ -59,5 +69,16 @@ frappe.ui.form.on('Installations Furniture', {
 			frm.refresh()
 		}
 		})
-	}
+	},
+	team: function (frm) {
+		if (frm.doc.team) {
+		  frappe.call({
+			method: "get_team",
+			doc: frm.doc,
+			callback: function () {
+			  frm.refresh_fields();
+			},
+		  });
+		}
+	  },
 });

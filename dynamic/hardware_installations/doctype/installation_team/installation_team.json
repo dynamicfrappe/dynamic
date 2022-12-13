@@ -29,7 +29,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-02 16:28:52.715085",
+ "modified": "2022-12-12 17:10:22.015981",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Installation Team",
@@ -48,7 +48,6 @@
    "write": 1
   }
  ],
- "restrict_to_domain": "Gebco",
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1

@@ -11,9 +11,7 @@ frappe.ui.form.on("Sales Order", {
   //     }
   // });
   // },
-  before_load:function(frm){
-    console.log('bload')
-  },
+ 
   setup:function(frm) {
     console.log('setup')
     frm.events.update_grid(frm)
