@@ -3,7 +3,39 @@
 
 frappe.ui.form.on('Installations Furniture', {
 	refresh: function(frm) {
-	
+		if (frm.doc.docstatus > 0) {
+			frm.add_custom_button(
+			  __("Customer Feedback"),
+			  function () {
+				let d = new frappe.ui.Dialog({
+					title: 'Enter details',
+					fields: [
+						{
+							label: 'Rate',
+							fieldname: 'rate',
+							fieldtype: 'Rating',
+							reqd:1
+						},
+						{
+							label: 'Note',
+							fieldname: 'feedback',
+							fieldtype: 'Small Text'
+						}
+					],
+					primary_action_label: 'Submit',
+					primary_action(values) {
+						console.log(values);
+						d.hide();
+						frm.set_value("rate",values.rate);
+						frm.set_value("feedback",values.feedback);
+						frm.save()
+					}
+				});
+				
+				d.show();
+			  }
+			);
+		  }
 		frappe.db.get_single_value('IFI Settings','role_installation_button').then(value => {
 			if(value) {{
 				console.log('value-->',value)

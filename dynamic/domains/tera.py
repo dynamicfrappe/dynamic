@@ -712,7 +712,7 @@ data = {
                 "fieldname":"naming",
                 "fieldtype":"Select",
                 "label":"Naming Template",
-                "insertafter":"type",
+                "insert_after":"type",
                 "options":"\nCash-.YYYY.-\nBank-.YYYY.-"
             }
         ],
