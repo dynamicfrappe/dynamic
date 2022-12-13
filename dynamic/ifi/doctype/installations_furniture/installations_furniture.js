@@ -29,8 +29,6 @@ frappe.ui.form.on('Installations Furniture', {
 						frm.set_value("rate",values.rate);
 						frm.set_value("feedback",values.feedback);
 						frm.save()
-						frm.submit()
-						cur_frm.reload_doc();
 					}
 				});
 				
