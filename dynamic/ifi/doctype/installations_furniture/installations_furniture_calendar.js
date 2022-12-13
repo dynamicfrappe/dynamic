@@ -3,14 +3,14 @@
 // License: GNU General Public License v3. See license.txt
 
 frappe.views.calendar["Installations Furniture"] = {
-	field_map: {
-		"start": "start",
-		"end": "end",
-		"title": "name",
-		"customer":"customer",
-		"id":"team",
-		"allDay": "allDay"
-	},
+		field_map: {
+			"start": "start",
+			"end": "end",
+			"id": "name",
+			"title": "description",
+			"allDay": "allDay",
+		},
+
 	// style_map: {
 	// 	"0": "info",
 	// 	"1": "standard",
