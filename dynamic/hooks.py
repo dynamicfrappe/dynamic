@@ -227,7 +227,7 @@ override_whitelisted_methods = {
 
 override_doctype_dashboards = {
     "Sales Invoice": "dynamic.public.dashboard.sales_invoice_dashboard.get_data",
-    "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
+     "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
     "Purchase Invoice": "dynamic.public.dashboard.purchase_invoice_dashboard.get_data",
     "Purchase Order": "dynamic.public.dashboard.purchase_order_dashboard.get_data",
     "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data"
