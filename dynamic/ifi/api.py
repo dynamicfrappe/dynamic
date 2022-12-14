@@ -230,9 +230,11 @@ def override_make_purchase_order(source_name, selected_items=None, target_doc=No
 					"doctype": "Purchase Order",
 					"field_map": {
 						"customer":"customer_so",
+						
 						},
 					"field_no_map": [
 						"address_display",
+						"shipping_rule",
 						"contact_display",
 						"contact_mobile",
 						"contact_email",

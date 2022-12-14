@@ -554,6 +554,8 @@ frappe.ui.form.on(
   }
 );
 
+
+
 // frappe.ui.form.on("Installation Furniture Item", {
 // items_add: function (frm, cdt, cdn) {
 //   console.log('row_added')
