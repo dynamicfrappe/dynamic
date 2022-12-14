@@ -1,6 +1,18 @@
 import frappe 
 
 
+
+
+def create_property_setter():
+    if not frappe.db.exists("Property Setter","Batch-main-search_fields"):
+        doc = frappe.new_doc("Property Setter")
+        doc.doctype_or_field = "DocType"
+        doc.doc_type = "Batch"
+        doc.property = "search_fields"
+        doc.property_type = "Data"
+        doc.value = "barcode"
+        doc.save()
+
 def create_sales_invoice_script():
     name = "Sales Invoice-Form"
     if frappe.db.exists("Client Script",name) :
@@ -143,6 +155,7 @@ def create_purchase_recipt_script():
                                     row.stock_uom=res.stock_uom;
                                     row.item_name = res.item_name;
                                     row.conversion_factor=1;
+                                    row.description = res.item_name;
                                     row.qty=1;
                                     frappe.call({
                                         "method":"dynamic.api.get_item_price",
@@ -362,5 +375,9 @@ def create_scripts():
         pass
     try:
         create_stock_entry_script()
+    except:
+        pass
+    try:
+        create_property_setter()
     except:
         pass

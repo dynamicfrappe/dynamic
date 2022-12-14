@@ -9,7 +9,9 @@ data = {
             "fieldname":"barcode",
             "fieldtype":"Data",
             "insert_after":"item",
-            "label":"Barcode"
+            "label":"Barcode",
+            "in_global_search": 1,
+            "in_standard_filter": 1
         }
        ],
        "Sales Invoice":[
@@ -79,16 +81,17 @@ data = {
     "properties": [
        
     ],
-    "property_setters": [
-        { 
-        "doc_type": "Batch",
-        "doctype_or_field": "DocType",
-        "name": "Batch-main-search_fields",
-        "property": "search_fields",
-        "property_type": "Data",
-        "value": "barcode"
-        }
- ],
+#     "property_setters": [
+#     {
+#         "doc_type": "Batch",
+#         "doctype_or_field": "DocType",
+#         "name": "Batch-main-search_fields",
+#         "owner": "Administrator",
+#         "property": "search_fields",
+#         "property_type": "Data",
+#         "value": "barcode"
+#     }
+#  ],
   
    'on_setup': 'dynamic.doctor_textile.setup.create_scripts'
 }
