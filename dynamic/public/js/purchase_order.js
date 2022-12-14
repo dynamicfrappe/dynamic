@@ -65,6 +65,19 @@ frappe.ui.form.on("Purchase Order", {
   },
 });
 
+
+// frappe.ui.form.on("Purchase Order", "onload", function(frm) {
+//   console.log('onload')
+//   frm.set_query("shipping_rule", function() {
+//       return {
+//           filters: [
+//             ["shipping_rule_type", "in", ,['Selling','Buying']],
+           
+//           ],
+//       };
+//   });
+// });
+
 // cur_frm.set_query("shipping_rule",function(){
 //   return{
 //     "filters":{
