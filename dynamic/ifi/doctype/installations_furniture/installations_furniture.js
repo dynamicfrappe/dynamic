@@ -51,7 +51,7 @@ frappe.ui.form.on('Installations Furniture', {
 			  }
 			);
 		  }
-		  if(frm.doc.docstatus == 0){
+		  if(frm.doc.docstatus === 1){
 			  frappe.db.get_single_value('IFI Settings','role_installation_button').then(value => {
 				  if(value) {{
 					  if (!frm.doc.__islocal &&  frappe.user.has_role(value)){
