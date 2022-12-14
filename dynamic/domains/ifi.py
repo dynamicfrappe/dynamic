@@ -208,6 +208,15 @@ data = {
         "default_value":1
         },
         {
+        "doctype": "Purchase Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "shipping_rule",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
         "doctype": "Lead",
         "doctype_or_field": "DocField",
         "fieldname": "email_id",
