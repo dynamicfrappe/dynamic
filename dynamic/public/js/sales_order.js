@@ -36,9 +36,36 @@ frappe.ui.form.on("Sales Order", {
 				})
 			});
 		}
- 
-    // frm.events.domian_valid()
   },
+
+  // refresh: function(frm, dt, dn) {
+	// 	var me = this;
+  //   if(frm.doc.status !== 'Closed') {
+  //     if(frm.doc.status !== 'On Hold') {
+  //       // Make Purchase Order
+  //       frappe.call({
+  //         method: "dynamic.api.get_active_domains",
+  //         callback: function (r) {
+  //           console.log(r)
+  //           if (r.message && r.message.length) {
+  //             if (r.message.includes("IFI")) {
+  //              // Make Purchase Order
+  //              console.log('in check ifi script js')
+  //                 if (!frm.doc.is_internal_customer) {
+  //                   frm.remove_custom_button(__('Purchase Order'),__('Create'));
+  //                   // frm.add_custom_button(__('Purchase Order'), (frm) => test(frm)
+                    
+  //                   // , __('Create'));
+  //                 }
+  //             }
+  //         }}
+  //     })
+					
+  //     }
+  //   }
+  // },
+  
+
   onload: function (frm) {
     // console.log("over Write ");
     frm.set_query('item_purchase_order', 'items', function(doc, cdt, cdn) {
@@ -526,6 +553,8 @@ frappe.ui.form.on(
     }
   }
 );
+
+
 
 // frappe.ui.form.on("Installation Furniture Item", {
 // items_add: function (frm, cdt, cdn) {

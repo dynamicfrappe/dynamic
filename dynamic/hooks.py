@@ -70,7 +70,6 @@ doctype_js = {
     "Lead":"public/js/lead.js",
     "Supplier":"public/js/supplier.js",
     "Customer":"public/js/customer.js",
-    "Quotation":"public/js/quotation.js",
 }
 # doctype_js = {
 #     "Sales Invoice": "public/js/sales_invoice.js",
@@ -101,8 +100,7 @@ doc_events = {
 
     "Sales Invoice": {
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
-        "validate": "dynamic.api.validate_active_domains" ,
-        "before_cancel" : "dynamic.api.validate_active_domains_cancel" ,
+        "validate": "dynamic.api.validate_active_domains"
     },
     "Item": {
         "autoname": "dynamic.api.autoname",
@@ -140,11 +138,11 @@ doc_events = {
         "on_submit": "dynamic.api.submit_purchase_invoice",
      },
      "Opportunity":{
-       "validate" : "dynamic.ifi.api.opportunity_notifiy",
-    #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
+    #    "validate" : "dynamic.ifi.api.opportunity_notifiy",
+       "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
     },
     "Payment Entry":{
-        "autoname":"dynamic.api.modeofpaymentautoname"
+        "autoname":"dynamic.api.modeofpaymentautoname",
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
@@ -217,9 +215,10 @@ scheduler_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
-# }
+override_whitelisted_methods = {
+	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
+    "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order":"dynamic.ifi.api.override_make_purchase_order"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
