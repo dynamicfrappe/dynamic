@@ -12,6 +12,15 @@ installation_status = [
 data = {
 
     'custom_fields': {
+        'Purchase Order':[
+             {
+                "fieldname": "customer_so",
+                "fieldtype": "Link",
+                "options":"Customer",
+                "insert_after": "more_info",
+                "label": "Customer SO",
+            },
+        ],
          'Quotation':[
             {
                 "fieldname": "crean",

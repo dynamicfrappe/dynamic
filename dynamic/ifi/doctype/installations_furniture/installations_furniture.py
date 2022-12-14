@@ -10,6 +10,7 @@ import json
 class InstallationsFurniture(Document):
 	def validate(self):
 		self.concat_for_calendar()
+
 	def before_save(self):
 		self.update_so_inst_status()
 		self.check_employee_busy()
@@ -40,6 +41,7 @@ class InstallationsFurniture(Document):
 		self.description= "ID : %s"%self.name + "\n"
 		self.description+= "Team : %s"%self.team + "\n"
 		self.description+= "Status : %s"%self.ref_status + "\n"
+		
 	@frappe.whitelist()
 	def change_status(self):
 		if(self.ref_status=="Pending"):
