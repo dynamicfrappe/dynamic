@@ -37,6 +37,7 @@ frappe.ui.form.on('Quotation', {
 	},
 
 	refresh: function(frm) {
+		console.log('555')
 		frm.trigger("set_label");
 		frm.trigger("set_dynamic_field_label");
 	},
