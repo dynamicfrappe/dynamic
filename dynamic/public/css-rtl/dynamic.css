@@ -21,7 +21,7 @@ a {
 
 /* Navigation Bar */
 .navbar-expand .navbar-nav>li>a{
-	color:#fff;
+	color:#fff !important;
 }
 .navbar-expand .navbar-nav>li>a:hover{
 	color:#ddd;
@@ -148,3 +148,7 @@ background-color: #ebeef0;
 input[type=checkbox]:checked:before {
     color: #0e4194;
 }
+
+/* .disabled{
+    color: white;
+} */
