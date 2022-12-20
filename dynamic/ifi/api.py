@@ -11,16 +11,19 @@ from frappe.utils import flt, getdate, nowdate
 from erpnext.selling.doctype.sales_order.sales_order import make_purchase_order, is_product_bundle, set_delivery_date
 from six import string_types
 import json
-
+from frappe.core.doctype.communication.email import make
+from frappe.desk.form.load import get_attachments
+from frappe.utils import get_url
 
 DOMAINS = frappe.get_active_domains()
 
 @frappe.whitelist()
 def opportunity_notifiy(self, *args, **kwargs):
-    if "IFI" in DOMAINS:
-        get_alert_dict(self)
-        #reciever
-        email_quotation(self, *args, **kwargs)
+	if "IFI" in DOMAINS:
+		get_alert_dict(self)
+		#reciever
+		email_quotation(self, *args, **kwargs)
+		# supplier_rfq_mail(self)
         
 @frappe.whitelist()
 def daily_opportunity_notify(self, *args, **kwargs ):
@@ -187,7 +190,6 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 @frappe.whitelist()
 def override_make_purchase_order(source_name, selected_items=None, target_doc=None):
 	if "IFI" in DOMAINS:
-		print('\n\n\n\n/////*****from scripy****')
 		if not selected_items:
 			return
 
@@ -301,3 +303,57 @@ def override_make_purchase_order(source_name, selected_items=None, target_doc=No
 	make_purchase_order(source_name, selected_items=None, target_doc=None)
 	# print('\n\n\n\n/////*********')
 	# print(source_name)
+
+def supplier_rfq_mail(self,preview=False):
+		# full_name = get_user_fullname(frappe.session["user"])
+		# if full_name == "Guest":
+		# 	full_name = "Administrator"
+
+		# send document dict and some important data from suppliers row
+		# to render message_for_supplier from any template
+		doc_args = self.as_dict()
+		doc_args.update({"party": self.party_name,"test":2222})
+
+		args = {
+			"message": frappe.render_template("hello from other side", doc_args),
+			"rfq_link": get_link(self),
+			"user_fullname": "abanoub moubir full name",
+			"supplier_name": self.party_name,
+			"supplier_salutation": "Dear Mx.",
+		}
+
+		subject = _("Request for Opportunity")
+		template = "templates/emails/opportunity.html"
+		sender = "abanoubmounir07@gmail.com"
+		message = "message body for mail ---> %s" % args.get('rfq_link') #frappe.get_template(template).render(args)
+
+		if preview:
+			return message
+
+		attachments = get_attachments2(self)
+
+		send_email(self, sender, subject, message, attachments)
+
+def send_email(self, sender, subject, message, attachments):
+		make(
+			subject=subject,
+			content=message,
+			recipients="abanoub.mounir9@gmail.com",
+			sender=sender,
+			attachments=attachments,
+			send_email=True,
+			doctype=self.doctype,
+			name=self.name,
+		)["name"]
+
+		frappe.msgprint(_("Email Sent to Supplier {0}").format(self.party_name))
+
+def get_attachments2(self,name=None):
+		# frappe.errprint(f'self-***->{self}')
+		attachments = [d.name for d in get_attachments(self.doctype, self.name)]
+		attachments.append(frappe.attach_print(self.doctype, self.name, doc=self))
+		return attachments
+
+def get_link(self):
+		# RFQ link for supplier portal
+		return get_url("/app/opportunity/" + self.name)

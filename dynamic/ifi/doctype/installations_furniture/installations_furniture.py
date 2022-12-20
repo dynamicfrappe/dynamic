@@ -93,7 +93,6 @@ class InstallationsFurniture(Document):
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
-	print("-----------------------------starttttttt",start,end)
 	"""Returns events for Gantt / Calendar view rendering.
 	frappe
 	:param start: Start date-time.

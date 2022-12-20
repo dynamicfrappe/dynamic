@@ -4,6 +4,8 @@ frappe.ui.form.on("Purchase Order", {
     frm.events.add_cheque_button(frm);
     
     frm.events.get_linked_doctypes(frm)
+
+   
   },
   
   get_linked_doctypes(frm) {
@@ -65,10 +67,31 @@ frappe.ui.form.on("Purchase Order", {
   },
 });
 
+
+// frappe.ui.form.on("Purchase Order", "refresh", function(frm) {
+//   console.log('refresh')
+//   frm.set_query("shipping_rule", function(){
+//     return {
+//         "filters": [
+//             ["shipping_rule_type", "=", ["Selling","Buying"]],
+//         ]
+//     };
+// });
+  // frm.set_query("shipping_rule", function() {
+  //     return {
+  //         filters: [
+  //           ["shipping_rule_type", "in", ,['Selling','Buying']],
+           
+  //         ],
+  //     };
+  // });
+// });
+
 // cur_frm.set_query("shipping_rule",function(){
+//   console.log('test')
 //   return{
 //     "filters":{
-//       "company": "test"
+//       "tset": "IFI"
 //     }
 //   };
 // });

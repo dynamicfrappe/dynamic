@@ -6,7 +6,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "item_approver"
+  "item_approver",
+  "column_break_2",
+  "sales_order_approver"
  ],
  "fields": [
   {
@@ -14,12 +16,22 @@
    "fieldtype": "Link",
    "label": "Item Approver",
    "options": "Role"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sales_order_approver",
+   "fieldtype": "Link",
+   "label": "Sales Order Approver",
+   "options": "Role"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-12-01 10:28:24.935446",
+ "modified": "2022-12-14 12:45:28.215741",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Terra Seeting",

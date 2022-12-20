@@ -4,6 +4,58 @@ import frappe
 # DOMAINS = frappe.get_active_domains()
 
 
+
+def create_workflow_status():
+    if not frappe.db.exists("Workflow State","Submited"):
+        submited_doc = frappe.new_doc("Workflow State")
+        submited_doc.workflow_state_name = "Submited"
+        submited_doc.save()
+    if not frappe.db.exists("Workflow State","Approvd pending"):
+        doc = frappe.new_doc("Workflow State")
+        doc.workflow_state_name = "Approvd pending"
+        doc.save()
+
+def create_sales_order_work_flow():
+    if not frappe.db.exists("Workflow","Sales Order Approval"):
+        doc = frappe.new_doc("Workflow")
+        doc.workflow_name = "Sales Order Approval"
+        doc.document_type = "Sales Order"
+        doc.is_active=1
+        doc.append("states",{
+            "state":"Approvd pending",
+            "doc_status":0,
+            "allow_edit":"Sales Manager"
+        })
+        doc.append("states",{
+            "state":"Rejected",
+            "doc_status":0,
+            "allow_edit":"Sales Manager"
+        })
+        doc.append("states",{
+            "state":"Rejected",
+            "doc_status":0,
+            "allow_edit":"Sales Manager"
+        })
+        doc.append("states",{
+            "state":"Submited",
+            "doc_status":1,
+            "allow_edit":"Sales Manager"
+        })
+
+        doc.append("transitions",{
+                "state":"Approvd pending",
+                "action":"Approve",
+                "next_state":"Submited",
+                "allowed":"Sales Manager"
+        })
+        doc.append("transitions",{
+                "state":"Approvd pending",
+                "action":"Reject",
+                "next_state":"Rejected",
+                "allowed":"Sales Manager"
+        })
+        doc.save()
+
 def create_sales_invoice_script():
     name = "Sales Invoice-Form"
     if frappe.db.exists("Client Script",name) :
@@ -658,8 +710,7 @@ def create_payment_entry_script():
         doc.dt      = "Payment Entry"
         doc.view    = "Form"
         doc.enabled = 1
-    doc.script = """    
-                f    
+    doc.script = """   
                 frappe.ui.form.on('Payment Entry', {
                 paid_amount:(frm)=>{
                     frm.events.get_deduct_amount(frm);
@@ -927,6 +978,18 @@ def create_terra_scripts():
         install_action()
     except Exception as ex:
         print("----------------------- install_actioninstall_actioninstall_action",str(ex))
+    # try:
+    #     create_workflow_status()
+    # except:
+    #     pass 
+    # try:
+    #     create_sales_order_work_flow()
+    # except:
+    #     pass
+
+    
+    create_workflow_status()
+    create_sales_order_work_flow()
 
 
 

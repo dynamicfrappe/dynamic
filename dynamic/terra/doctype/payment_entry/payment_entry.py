@@ -1003,7 +1003,7 @@ class PaymentEntry(AccountsController):
 		if self.payment_type in ("Receive", "Pay") and self.party:
 			for d in self.get("references"):
 				if d.allocated_amount and d.reference_doctype in (
-					"Quotation",
+					# "Quotation",
 					"Sales Order",
 					"Purchase Order",
 					"Employee Advance",
