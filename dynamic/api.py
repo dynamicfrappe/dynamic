@@ -757,3 +757,16 @@ def get_item_price(item_code,price_list):
     if len(res) >0:
         return res[0].get("price_list_rate") or 0
     return 0
+
+
+
+@frappe.whitelist()
+def add_cost_center_to_asset(doc,*args, **kwargs):
+    for item in doc.assets:
+        asset = frappe.get_doc("Asset",item.asset)
+        if item.get("cost_center"):
+            if item.get("cost_center") !=asset.get("cost_center") : 
+                sql = f""" update tabAsset set cost_center = '{item.cost_center}' where name = '{asset.name}'"""
+                frappe.db.sql(sql)
+                frappe.db.commit()
+
