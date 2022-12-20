@@ -146,8 +146,8 @@ doc_events = {
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
-        "on_cancel":"dynamic.terra.api.cancel_amount_quotation",
-        "on_submit":"dynamic.terra.api.add_paid_amount"
+        # "on_cancel":"dynamic.terra.api.cancel_amount_quotation",
+        # "on_submit":"dynamic.terra.api.add_paid_amount"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
