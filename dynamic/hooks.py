@@ -7,8 +7,9 @@ from . import __version__ as app_version
 
 
 # import json
-# import os
-# from pathlib import Path
+import os
+from pathlib import Path
+
 # BASE_DIR = Path(__file__).resolve().parent
 # print ("BASE_DIR ====> " , BASE_DIR)
 # DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
@@ -19,7 +20,7 @@ DOCTYPE_JS_FILE_PATH = "../apps/dynamic/dynamic/override_doctype_js.json"
 
 
 
-
+ 
 
 app_name = "dynamic"
 app_title = "Dynamic"
@@ -37,6 +38,7 @@ app_logo_url = "/assets/dynamic/images/dynamic-logo.png"
 # include js, css files in header of desk.html
 app_include_css = "/assets/dynamic/css/dynamic.css"
 app_include_js = "/assets/js/dynamic.min.js"
+
 
 
 
@@ -86,7 +88,7 @@ doctype_js = {
 
 
 # added in terra only comment it in another domains
-doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
+# doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
 
 
 # override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
@@ -144,6 +146,8 @@ doc_events = {
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
+        "on_cancel":"dynamic.terra.api.cancel_amount_quotation",
+        "on_submit":"dynamic.terra.api.add_paid_amount"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",

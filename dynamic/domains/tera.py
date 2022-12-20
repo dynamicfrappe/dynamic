@@ -28,6 +28,16 @@ data = {
                 'no_copy' : 1 ,
                 'allow_on_submit' : 1 ,
             },
+            {
+                "fieldname": "outstand_amount",
+                "fieldtype": "Float",
+                "insert_after": "source",
+                "label": "Outstand Amount",
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
         ],
         
         "Sales Order":[
