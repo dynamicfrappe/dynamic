@@ -733,6 +733,15 @@ data = {
                 "hidden":1,
                 "no_copy":1
             }
+        ],
+        "Asset Movement Item":[
+            {
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "to_employee",
+                "label": "Cost Center",
+                "options":"Cost Center"
+            },
         ]
 
     },

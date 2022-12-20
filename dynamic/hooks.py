@@ -144,6 +144,9 @@ doc_events = {
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
+    },
+    "Asset Movement":{
+        "on_submit":"dynamic.api.add_cost_center_to_asset"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
