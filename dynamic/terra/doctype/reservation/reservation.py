@@ -48,7 +48,7 @@ class Reservation(Document):
 			row.current_available_qty = stock_sql[0].get("qty") 
 			row.reserved_qty = self.reservation_amount
 			row.available_qty_atfer___reservation = stock_sql[0].get("qty") - self.reservation_amount
-		if  not stock_sql and len(stock_sql) == 0 :
+		if  not stock_sql or len(stock_sql) == 0 :
 			frappe.throw(_(f""" no stock value in warehouse {self.warehouse_source} for item {self.item_code}  """))
 
 	def stock_sql(self):
@@ -138,6 +138,7 @@ class Reservation(Document):
 			row.bin = data.get("bin") 
 			row.warehouse = self.warehouse_source
 			row.reserved_qty = self.reservation_amount
+			# self.validate_warehouse()
 		if target== 'pur':
 			self.reservation_purchase_order = [] #?add row
 			row = self.append('reservation_purchase_order', {})
@@ -145,6 +146,7 @@ class Reservation(Document):
 			row.purchase_order = self.order_source
 			row.qty = float(data.get("qty"))
 			row.reserved_qty = self.reservation_amount
+			# self.validate_purchase_order()
 		row.item = self.item_code
 		row.current_available_qty = float(data.get("qty"))
 		row.available_qty_atfer___reservation = data.get("qty") - self.reservation_amount
@@ -161,7 +163,14 @@ class Reservation(Document):
 			total_put_order += float(row.reserved_qty)
 		self.db_set('total_purchase_order_reserved_qty',total_put_order)
 
-
+	def validate(self):
+		target ='warehouse' if not self.order_source else 'pur'
+		if target == 'warehouse' :
+			data = self.validate_warehouse()
+		if target == 'pur':
+			data = self.validate_purchase_order
+		self.total_warehouse_reseved()
+		self.total_purchase_order_reseved()
 	#?another query for validate purchase order
 	# def validate_purchase_order_two(self):
 	# 	order =  frappe.db.sql(f"""

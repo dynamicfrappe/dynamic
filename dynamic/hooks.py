@@ -138,13 +138,17 @@ doc_events = {
     "Purchase Invoice": {
         "on_submit": "dynamic.api.submit_purchase_invoice",
      },
+     "Stock Entry":{
+        # In This Target check the branches data in cost center  
+         "on_submit" : "dynamic.api.submit_stock_entry"
+     },
      "Opportunity":{
        "validate" : "dynamic.ifi.api.opportunity_notifiy",
     #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
-    }
+    } 
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
     #  },Installations Furniture
