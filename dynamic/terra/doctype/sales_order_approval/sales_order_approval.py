@@ -130,7 +130,8 @@ def make_delivery_note(source_name, target_doc=None, skip_item_mapping=False):
 		"doctype": "Delivery Note Item",
 		"field_map": {
 				"against_sales_order": "against_sales_order",
-				"qty":"qty"
+				"qty":"qty",
+				"parent":"sales_order_approval"
 		},
 		"postprocess": update_item
 	}
@@ -140,3 +141,21 @@ def make_delivery_note(source_name, target_doc=None, skip_item_mapping=False):
 	target_doc.set_onload("ignore_price_list", True)
 
 	return target_doc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+on sales order  -----> deliverd ,remaining,
+
+"""

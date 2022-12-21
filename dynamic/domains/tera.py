@@ -515,6 +515,14 @@ data = {
                 "label": "QTY As Per Sub Uom",
                 "read_only":1
             
+            },
+            {
+                "fieldname": "sales_order_approval",
+                "fieldtype": "Link",
+                "insert_after": "pick_list_item",
+                "label": "Sales Order Approval",
+                "options":"Sales Order Approval",
+                "read_only":1
             }
         ],
 
