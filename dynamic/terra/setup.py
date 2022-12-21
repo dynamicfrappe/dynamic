@@ -493,6 +493,22 @@ def create_sales_order_scipt():
         doc.view    = "Form"
         doc.enabled = 1
     doc.script = """
+            
+            frappe.ui.form.on('Sales Order',{
+               refresh:(frm)=>{
+                    if(frm.doc.docstatus==1){
+                        frm.add_custom_button(
+                    __("Sales Order Approval"),
+                    function () {
+                        frappe.model.open_mapped_doc({
+        			method: "dynamic.terra.doctype.sales_order_approval.sales_order_approval.make_sales_order_approval",
+        			frm: frm
+        		})
+                    },
+                    __("Create")
+                );
+                }} 
+            });
             frappe.ui.form.on('Sales Order Item', {
                 qty:(frm,cdt,cdn)=>{
                     var row = locals[cdt][cdn];
@@ -988,8 +1004,8 @@ def create_terra_scripts():
     #     pass
 
     
-    create_workflow_status()
-    create_sales_order_work_flow()
+    # create_workflow_status()
+    # create_sales_order_work_flow()
 
 
 
