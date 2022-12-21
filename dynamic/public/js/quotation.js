@@ -13,7 +13,7 @@ frappe.ui.form.on("Quotation",{
                     }
                 }
                 //? for ifi domain
-                cur_frm.page.remove_inner_button('Sales Order','Create')
+                // cur_frm.page.remove_inner_button('Sales Order','Create')
 
                 if (r.message.includes("IFI")) {
                     console.log('ifi')
