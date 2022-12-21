@@ -1,10 +1,13 @@
-
 frappe.ui.form.on("Quotation",{
-    refresh:function(frm){
+    onload:function(frm) {
+        frm.events.refresh(frm)
+    },
+    onload:function(frm){
+        console.log("over ride work")
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
-                console.log("iver ride work")
+                
               if (r.message && r.message.length) {
                 if (r.message.includes("Terra")) {
                     if (frm.doc.docstatus == 1){
@@ -13,7 +16,7 @@ frappe.ui.form.on("Quotation",{
                     }
                 }
                 //? for ifi domain
-                // cur_frm.page.remove_inner_button('Sales Order','Create')
+               
 
                 if (r.message.includes("IFI")) {
                     console.log('ifi')
@@ -33,7 +36,7 @@ frappe.ui.form.on("Quotation",{
     })
     },
     onload_post_render:function(frm){
-        
+        console.log("This")
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
@@ -72,3 +75,5 @@ cur_frm.cscript['Make Payment Entry'] = function() {
         frm: cur_frm,
       });
 }
+
+

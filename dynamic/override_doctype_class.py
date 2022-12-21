@@ -48,7 +48,7 @@ if "Terra" in active_domains:
 
 
     # override doctype js
-    doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
+    #doctype_js["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
 
 
 
@@ -74,7 +74,7 @@ if "Terra" in active_domains:
 
 
 from dynamic import hooks
-hooks.doctype_js = doctype_js
+# hooks.doctype_js = doctype_js
 
 # with open(DOCTYPE_JS_FILE_PATH, "w") as write_file:
     
