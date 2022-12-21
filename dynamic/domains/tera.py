@@ -125,6 +125,17 @@ data = {
                 'no_copy' : 1 ,
                 'allow_on_submit' : 1 ,
             },
+
+            {
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "invoice_payment",
+                "label": "Outstanding Amount",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
             
         ],
         
