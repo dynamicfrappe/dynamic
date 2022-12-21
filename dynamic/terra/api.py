@@ -2,6 +2,7 @@ import frappe
 
 from frappe.utils import add_days, nowdate, today
 from dynamic.terra.doctype.payment_entry.payment_entry import get_party_details
+Domains = frappe.get_active_domains()
 
 @frappe.whitelist()
 def get_iem_sub_uom(item_code,uom,qty):
@@ -135,4 +136,22 @@ def get_all_apyment_for_quotation(qutation_name):
     '''
     data = frappe.db.sql(sql,as_dict=1)
     return data[0]
-    
+
+
+@frappe.whitelist()
+def add_paid_amount(payment,*args,**Kwargs):
+    if 'Terra' in Domains:
+        if(payment.references[0].get('reference_doctype')=='Quotation'):
+            outstand_amount = frappe.db.get_value('Quotation', payment.references[0].get('reference_name'),'outstand_amount') or 0
+            frappe.db.set_value('Quotation', payment.references[0].get('reference_name'),'outstand_amount',outstand_amount + payment.total_allocated_amount )
+        
+
+@frappe.whitelist()
+def cancel_amount_quotation(payment,*args,**Kwargs):
+    if 'Terra' in Domains:
+        if(payment.references[0].get('reference_doctype')=='Quotation'):
+            outstand_amount = frappe.db.get_value('Quotation', payment.references[0].get('reference_name'),'outstand_amount') or 0
+            frappe.db.set_value('Quotation', payment.references[0].get('reference_name'),'outstand_amount',outstand_amount - payment.total_allocated_amount )
+        #     frappe.errprint(f'outstand_amount-->{outstand_amount}')
+        #     frappe.errprint(f'payment.total_allocated_amount-->{payment.total_allocated_amount}')
+        # ...

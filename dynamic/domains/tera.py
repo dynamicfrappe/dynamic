@@ -28,6 +28,16 @@ data = {
                 'no_copy' : 1 ,
                 'allow_on_submit' : 1 ,
             },
+            {
+                "fieldname": "outstand_amount",
+                "fieldtype": "Float",
+                "insert_after": "source",
+                "label": "Outstand Amount",
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
         ],
         
         "Sales Order":[
@@ -733,6 +743,15 @@ data = {
                 "hidden":1,
                 "no_copy":1
             }
+        ],
+        "Asset Movement Item":[
+            {
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "to_employee",
+                "label": "Cost Center",
+                "options":"Cost Center"
+            },
         ]
 
     },
