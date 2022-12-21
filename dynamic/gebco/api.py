@@ -55,6 +55,39 @@ def validate_delivery_note(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         # frappe.throw('Validate delivery Note')
         minus_delivery_qty_from_reservation(doc,*args,**kwargs)
+        check_so_approval(doc)
+
+def check_so_approval(doc):
+    """
+    1 - update approval line qty 
+    2- update so line qty 
+    """
+    for item in doc.items:
+        if item.get("sales_order_approval"):
+            item_remining_qty = frappe.db.sql(f"""select qty,approved_qty from `tabSales Order Item` where parent= '{item.against_sales_order}' and item_code='{item.item_code}' limit 1""",as_dict=1)
+            if item.qty > (item_remining_qty[0].qty - item_remining_qty[0].approved_qty):
+                frappe.throw(_("Approval Remaining Qty '%s'"%item_remining_qty[0].remaining_qty))
+            #approval_doc = frappe.get_doc("Sales Order Approval",item.get("sales_order_approval"))
+            # update approval 
+            sql = f"""
+             update `tabSales Order Approval Item`
+             set approved_qty = approved_qty + {item.qty},
+              remaining_qty = sales_order_qty - approved_qty
+             where item_code = '{item.item_code}' and parent = '{item.sales_order_approval}'
+            """
+            frappe.db.sql(sql)
+            frappe.db.commit()
+
+            # update sales order qtys
+
+            so_sql = f"""
+             update `tabSales Order Item`
+             set approved_qty = approved_qty + {item.qty},
+              remaining_qty = qty - approved_qty
+             where item_code = '{item.item_code}' and parent = '{item.against_sales_order}'
+            """
+            frappe.db.sql(so_sql)
+            frappe.db.commit()
 
 
 def minus_delivery_qty_from_reservation(doc,*args,**kwargs):

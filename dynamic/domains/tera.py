@@ -463,7 +463,28 @@ data = {
                 "label": "QTY As Per Sub Uom",
                 "read_only":1
             
+            },
+            {
+                "fieldname": "so_approved_qty",
+                "fieldtype": "Section Break",
+                "insert_after": "stock_qty",
+                "label": "Approved Qty",
+            },
+            {
+                "fieldname": "approved_qty",
+                "fieldtype": "Float",
+                "insert_after": "so_approved_qty",
+                "label": "Approved QTY",
+                "read_only":1
+            },
+            {
+                "fieldname": "remaining_qty",
+                "fieldtype": "Float",
+                "insert_after": "approved_qty",
+                "label": "Remaining Qty",
+                "read_only":1
             }
+
         ], 
         "Purchase Order Item":[
              {
