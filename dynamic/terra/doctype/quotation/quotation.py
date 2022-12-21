@@ -172,6 +172,10 @@ class Quotation(SellingController):
 		self.update_opportunity("Open")
 		self.update_lead()
 
+		# unlink payment entries on cancel quotation
+		from erpnext.accounts.utils import unlink_ref_doc_from_payment_entries
+		unlink_ref_doc_from_payment_entries(self)
+
 	def print_other_charges(self, docname):
 		print_lst = []
 		for d in self.get("taxes"):
