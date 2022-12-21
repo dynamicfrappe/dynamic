@@ -166,7 +166,7 @@ doc_events = {
 override_doctype_class = {
     "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
     "Payment Entry" : "dynamic.override_doctype_class.PaymentEntry",
-    # "Quotation" : "dynamic.override_doctype_class.Quotation",
+    "Quotation" : "dynamic.override_doctype_class.Quotation",
     "Sales Order" : "dynamic.override_doctype_class.SalesOrder"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
