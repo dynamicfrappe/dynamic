@@ -10,7 +10,13 @@ from frappe.utils import add_days, cint, cstr, flt, get_link_to_form, getdate, n
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 class SalesOrderApproval(Document):
-	pass  
+	def on_submit(self):
+		for item in self.items:
+			if item.get("against_sales_order"):
+				sql = f"""update `tabSales Order Item` set approved_qty = approved_qty + {item.qty} ,remaining_qty =remaining_qty + {item.qty}  where parent='{item.against_sales_order}' and item_code = '{item.item_code}'"""
+				frappe.db.sql(sql)
+				frappe.db.commit()
+
 
 
 @frappe.whitelist()
@@ -130,6 +136,7 @@ def make_delivery_note(source_name, target_doc=None, skip_item_mapping=False):
 		"doctype": "Delivery Note Item",
 		"field_map": {
 				"against_sales_order": "against_sales_order",
+				"so_detail":"so_detail",
 				"qty":"qty",
 				"parent":"sales_order_approval"
 		},
