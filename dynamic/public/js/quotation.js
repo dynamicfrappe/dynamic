@@ -4,6 +4,7 @@ frappe.ui.form.on("Quotation",{
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
+                console.log("iver ride work")
               if (r.message && r.message.length) {
                 if (r.message.includes("Terra")) {
                     if (frm.doc.docstatus == 1){

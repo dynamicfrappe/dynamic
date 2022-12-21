@@ -175,6 +175,8 @@ class Quotation(SellingController):
 		self.valid_till = None
 
 	def set_total_advance_paid(self):
+
+		
 		dr_or_cr = "credit_in_account_currency"
 		rev_dr_or_cr = "debit_in_account_currency"
 		party = self.party_name

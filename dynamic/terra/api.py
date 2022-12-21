@@ -107,12 +107,14 @@ def get_payment_entry_quotation(source_name):
     pe.party = qutation_doc.party_name
     pe.party_name = qutation_doc.customer_name
     cash_detail = get_all_apyment_for_quotation(source_name)
-    pe.paid_amount = cash_detail.get("outstand") #modify to outstand amount
+    #modify to outstand amount
     row = pe.append('references',{})
     row.reference_doctype = "Quotation"
     row.reference_name = source_name
     row.total_amount = qutation_doc.grand_total
-    row.outstanding_amount = cash_detail.get("outstand") #modify to outstand amount
+    if cash_detail!= False :
+        pe.paid_amount = cash_detail.get("outstand")
+        row.outstanding_amount = cash_detail.get("outstand") #modify to outstand amount
     cst_account = get_party_details(company=qutation_doc.company,date=None,
     party_type=qutation_doc.quotation_to, 
     party=qutation_doc.party_name,
@@ -135,7 +137,11 @@ def get_all_apyment_for_quotation(qutation_name):
             GROUP by tper.reference_name
     '''
     data = frappe.db.sql(sql,as_dict=1)
-    return data[0]
+    if len(data) > 0 :
+
+        return data[0]
+    else :
+        return False
 
 
 @frappe.whitelist()
