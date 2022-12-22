@@ -9,6 +9,7 @@ from frappe.model.utils import get_fetch_values
 from frappe.utils import add_days, cint, cstr, flt, get_link_to_form, getdate, nowdate, strip_html
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
+from frappe  import _
 class SalesOrderApproval(Document):
 	def validate(self):
 		for item in self.items:
@@ -22,6 +23,42 @@ class SalesOrderApproval(Document):
 				frappe.db.commit()
 
 
+	def on_cancel(self):
+		try : 
+			# 1
+			#self.cancel_delivery_note()
+			#2
+			self.reset_qtys()
+		except Exception as ex :
+			frappe.throw(_(str(ex)))
+
+
+	def cancel_delivery_note(self):
+		# get all delivery note linked with this approval
+		sql = f""" select parent from `tabDelivery Note Item` where sales_order_approval = '{self.name}'"""
+		res = frappe.db.sql(sql,as_dict=1)
+		for r in res:
+			doc = frappe.get_doc("Delivery Note",r.parent)
+			doc.cancel()
+
+
+
+	def reset_qtys(self):
+		# we must cancel delivery note if exist
+
+		# decrease so approved qty and so increase remaining qty  with cancelled approval qty 
+		
+		for item in self.items:
+			sql = f"""
+				update `tabSales Order Item` 
+				set approved_qty = approved_qty - {item.qty},
+				remaining_qty = remaining_qty + {item.qty}
+				where parent = '{item.against_sales_order}' and item_code = '{item.item_code}'
+			"""
+			frappe.db.sql(sql)
+			frappe.db.commit()
+
+		
 
 @frappe.whitelist()
 def make_sales_order_approval(source_name, target_doc=None, skip_item_mapping=False):
