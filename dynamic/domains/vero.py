@@ -31,5 +31,5 @@ data = {
 #     }
 #  ],
   
-   'on_setup': 'dynamic.doctor_textile.setup.create_scripts'
+   #'on_setup': 'dynamic.doctor_textile.setup.create_scripts'
 }
