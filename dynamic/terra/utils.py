@@ -3,7 +3,7 @@ import frappe
 import erpnext 
 from frappe import _, throw
 
-
+from frappe.utils import cstr, flt, get_link_to_form
 
 
 def reconcile_against_document(args):
@@ -116,3 +116,38 @@ def check_if_advance_entry_modified(args):
 
     if not ret:
         throw(_("""Payment Entry has been modified after you pulled it. Please pull it again."""))
+
+
+def update_reimbursed_amount(doc, amount):
+
+	doc.total_amount_reimbursed += amount
+	frappe.db.set_value(
+		"Expense Claim", doc.name, "total_amount_reimbursed", doc.total_amount_reimbursed
+	)
+
+	doc.set_status()
+	frappe.db.set_value("Expense Claim", doc.name, "status", doc.status)
+
+
+def get_outstanding_amount_for_claim(claim):
+	if isinstance(claim, str):
+		claim = frappe.db.get_value(
+			"Expense Claim",
+			claim,
+			(
+				"total_sanctioned_amount",
+				"total_taxes_and_charges",
+				"total_amount_reimbursed",
+				"total_advance_amount",
+			),
+			as_dict=True,
+		)
+
+	outstanding_amt = (
+		flt(claim.total_sanctioned_amount)
+		+ flt(claim.total_taxes_and_charges)
+		- flt(claim.total_amount_reimbursed)
+		- flt(claim.total_advance_amount)
+	)
+
+	return outstanding_amt

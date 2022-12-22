@@ -30,10 +30,18 @@ from erpnext.controllers.accounts_controller import (
 	get_supplier_block_status,
 	validate_taxes_and_charges,
 )
-from erpnext.hr.doctype.expense_claim.expense_claim import (
+
+try :
+	from erpnext.hr.doctype.expense_claim.expense_claim import (
 	get_outstanding_amount_for_claim,
 	update_reimbursed_amount,
-)
+	)
+except :
+	from dynamic.terra.utils import (
+	get_outstanding_amount_for_claim,
+	update_reimbursed_amount,
+	)
+
 from erpnext.setup.utils import get_exchange_rate
 
 
@@ -995,7 +1003,7 @@ class PaymentEntry(AccountsController):
 		if self.payment_type in ("Receive", "Pay") and self.party:
 			for d in self.get("references"):
 				if d.allocated_amount and d.reference_doctype in (
-					"Quotation",
+					# "Quotation",
 					"Sales Order",
 					"Purchase Order",
 					"Employee Advance",

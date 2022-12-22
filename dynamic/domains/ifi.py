@@ -12,6 +12,15 @@ installation_status = [
 data = {
 
     'custom_fields': {
+        'Purchase Order':[
+             {
+                "fieldname": "customer_so",
+                "fieldtype": "Link",
+                "options":"Customer",
+                "insert_after": "more_info",
+                "label": "Customer SO",
+            },
+        ],
          'Quotation':[
             {
                 "fieldname": "crean",
@@ -185,6 +194,15 @@ data = {
         "doctype_or_field": "DocField",
         "fieldname": "shipping_rule",
         "property": "allow_on_submit",
+        "property_type": "Check",
+        "value": "1",
+        "default_value":1
+        },
+        {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "shipping_rule",
+        "property": "reqd",
         "property_type": "Check",
         "value": "1",
         "default_value":1

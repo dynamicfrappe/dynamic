@@ -1,7 +1,8 @@
 import frappe
 
 from frappe.utils import add_days, nowdate, today
-
+from dynamic.terra.doctype.payment_entry.payment_entry import get_party_details
+Domains = frappe.get_active_domains()
 
 @frappe.whitelist()
 def get_iem_sub_uom(item_code,uom,qty):
@@ -96,3 +97,61 @@ def get_quotation_item(quotation,*args,**Kwargs):
     doc = frappe.get_doc("Quotation",quotation)
     return doc.items
     
+@frappe.whitelist()
+def get_payment_entry_quotation(source_name):
+    qutation_doc = frappe.get_doc('Quotation',source_name)
+    pe = frappe.new_doc("Payment Entry")
+    pe.payment_type = "Receive"
+    pe.mode_of_payment = "Cash"
+    pe.party_type = qutation_doc.quotation_to
+    pe.party = qutation_doc.party_name
+    pe.party_name = qutation_doc.customer_name
+    cash_detail = get_all_apyment_for_quotation(source_name)
+    pe.paid_amount = cash_detail.get("outstand") #modify to outstand amount
+    row = pe.append('references',{})
+    row.reference_doctype = "Quotation"
+    row.reference_name = source_name
+    row.total_amount = qutation_doc.grand_total
+    row.outstanding_amount = cash_detail.get("outstand") #modify to outstand amount
+    cst_account = get_party_details(company=qutation_doc.company,date=None,
+    party_type=qutation_doc.quotation_to, 
+    party=qutation_doc.party_name,
+    cost_center=None)
+    pe.part_balance = cst_account.get('party_balance')
+    pe.paid_from = cst_account.get('party_account')
+    pe.paid_from_account_currency = cst_account.get('party_account_currency')
+    pe.paid_from_account_balance = cst_account.get('account_balance')
+    return pe
+
+
+
+def get_all_apyment_for_quotation(qutation_name):
+    sql=f'''
+            select tper.parent,tper.reference_name ,tper.total_amount, 
+            IFNULL(SUM(tper.allocated_amount),0) total_paid,
+            (tper.total_amount-IFNULL(SUM(tper.allocated_amount),0))outstand
+            from `tabPayment Entry Reference` tper
+            where tper.reference_name='{qutation_name}' 
+            GROUP by tper.reference_name
+    '''
+    data = frappe.db.sql(sql,as_dict=1)
+    return data[0]
+
+
+@frappe.whitelist()
+def add_paid_amount(payment,*args,**Kwargs):
+    if 'Terra' in Domains:
+        if(payment.references[0].get('reference_doctype')=='Quotation'):
+            outstand_amount = frappe.db.get_value('Quotation', payment.references[0].get('reference_name'),'outstand_amount') or 0
+            frappe.db.set_value('Quotation', payment.references[0].get('reference_name'),'outstand_amount',outstand_amount + payment.total_allocated_amount )
+        
+
+@frappe.whitelist()
+def cancel_amount_quotation(payment,*args,**Kwargs):
+    if 'Terra' in Domains:
+        if(payment.references[0].get('reference_doctype')=='Quotation'):
+            outstand_amount = frappe.db.get_value('Quotation', payment.references[0].get('reference_name'),'outstand_amount') or 0
+            frappe.db.set_value('Quotation', payment.references[0].get('reference_name'),'outstand_amount',outstand_amount - payment.total_allocated_amount )
+        #     frappe.errprint(f'outstand_amount-->{outstand_amount}')
+        #     frappe.errprint(f'payment.total_allocated_amount-->{payment.total_allocated_amount}')
+        # ...

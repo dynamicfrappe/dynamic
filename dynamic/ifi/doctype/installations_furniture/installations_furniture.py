@@ -5,8 +5,12 @@ import frappe
 from frappe.model.document import Document
 from frappe import _
 from frappe.utils.background_jobs import  enqueue
+import json
 
 class InstallationsFurniture(Document):
+	def validate(self):
+		self.concat_for_calendar()
+
 	def before_save(self):
 		self.update_so_inst_status()
 		self.check_employee_busy()
@@ -31,6 +35,12 @@ class InstallationsFurniture(Document):
 			frappe.db.set_value('Sales Order',self.sales_order,'sales_installation','')
 		if not delete :
 			frappe.db.set_value('Sales Order',self.sales_order,'sales_installation',self.ref_status)
+	
+
+	def concat_for_calendar(self):
+		self.description= "ID : %s"%self.name + "\n"
+		self.description+= "Team : %s"%self.team + "\n"
+		self.description+= "Status : %s"%self.ref_status + "\n"
 		
 	@frappe.whitelist()
 	def change_status(self):
@@ -89,21 +99,42 @@ def get_events(start, end, filters=None):
 	:param end: End date-time.
 	:param filters: Filters (JSON).
 	"""
+	from erpnext.controllers.queries import get_match_cond
 	from frappe.desk.calendar import get_event_conditions
+	filters = json.loads(filters)
 	conditions = get_event_conditions("Installations Furniture", filters)
+	events = []
 	data = frappe.db.sql("""
 		select
-			distinct `tabInstallations Furniture`.name, `tabInstallations Furniture`.customer_name, `tabInstallations Furniture`.ref_status,`tabInstallations Furniture`.team,
-			`tabInstallations Furniture`.from_time as from_time, `tabInstallations Furniture`.to_time as to_time
+			`tabInstallations Furniture`.name as name,
+			 `tabInstallations Furniture`.customer_name,
+			  `tabInstallations Furniture`.ref_status,
+			  concat(name,'-team:',`tabInstallations Furniture`.team )as team,
+			  `tabInstallations Furniture`.customer as customer,
+			`tabInstallations Furniture`.from_time as start,
+			 `tabInstallations Furniture`.to_time as end,
+			 description
+
 		from
-			`tabInstallations Furniture`, `tabInstallation Furniture Item`
-		where `tabInstallations Furniture`.name = `tabInstallation Furniture Item`.parent
-			and `tabInstallations Furniture`.docstatus < 2
+			`tabInstallations Furniture`
+			
 			{conditions}
 		""".format(conditions=conditions), {
 			"start": start,
 			"end": end
-		}, as_dict=True)
+		}, as_dict=True,
+		update={"allDay": 0},)
+		
+	# for row in data:
+	# 	job_card_data = {
+    #         "start": row.start,
+    #         "planned_end_date": row.end,
+    #         "name": row.name,
+    #         "subject": row.customer,
+    #         "color":'#D3D3D3',
+    #     }
+	# 	events.append(job_card_data)
+
 	return data
 
 @frappe.whitelist()
@@ -138,3 +169,8 @@ def email_employee_send(self,receiver=None):
 			enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
 		else:
 			frappe.msgprint(_("{0}: Next Employee By User Has No Mail, hence email not sent").format(self.contact_by))
+
+
+
+
+

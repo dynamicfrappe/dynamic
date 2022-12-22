@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "creation": "2022-12-01 12:08:23.211194",
+ "creation": "2022-12-20 14:02:17.879540",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_standard": 1,
  "label": "IFI",
  "links": [],
- "modified": "2022-12-11 14:23:14.280519",
+ "modified": "2022-12-20 14:02:17.879540",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "IFI",
@@ -21,6 +21,7 @@
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 1,
+ "restrict_to_domain": "IFI",
  "shortcuts": [
   {
    "doc_view": "List",
@@ -33,6 +34,12 @@
    "label": "Purchase Order Summary",
    "link_to": "Purchase Order Summary",
    "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "IFI Settings",
+   "link_to": "IFI Settings",
+   "type": "DocType"
   }
  ]
 }

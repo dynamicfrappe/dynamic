@@ -7,8 +7,9 @@ from . import __version__ as app_version
 
 
 # import json
-# import os
-# from pathlib import Path
+#import os
+#from pathlib import Path
+
 # BASE_DIR = Path(__file__).resolve().parent
 # print ("BASE_DIR ====> " , BASE_DIR)
 # DOCTYPE_JS_FILE_PATH = os.path.join(BASE_DIR , 'override_doctype_js.json')
@@ -19,7 +20,7 @@ DOCTYPE_JS_FILE_PATH = "../apps/dynamic/dynamic/override_doctype_js.json"
 
 
 
-
+ 
 
 app_name = "dynamic"
 app_title = "Dynamic"
@@ -37,6 +38,7 @@ app_logo_url = "/assets/dynamic/images/dynamic-logo.png"
 # include js, css files in header of desk.html
 app_include_css = "/assets/dynamic/css/dynamic.css"
 app_include_js = "/assets/js/dynamic.min.js"
+
 
 
 
@@ -86,7 +88,7 @@ doctype_js = {
 
 
 # added in terra only comment it in another domains
-doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
+# doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
 
 
 # override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
@@ -101,8 +103,7 @@ doc_events = {
 
     "Sales Invoice": {
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
-        "validate": "dynamic.api.validate_active_domains" ,
-        "before_cancel" : "dynamic.api.validate_active_domains_cancel" ,
+        "validate": "dynamic.api.validate_active_domains"
     },
     "Item": {
         "autoname": "dynamic.api.autoname",
@@ -144,7 +145,12 @@ doc_events = {
     #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
     },
     "Payment Entry":{
-        "autoname":"dynamic.api.modeofpaymentautoname"
+        "autoname":"dynamic.api.modeofpaymentautoname",
+        # "on_cancel":"dynamic.terra.api.cancel_amount_quotation",
+        # "on_submit":"dynamic.terra.api.add_paid_amount"
+    },
+    "Asset Movement":{
+        "on_submit":"dynamic.api.add_cost_center_to_asset"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
@@ -157,7 +163,7 @@ doc_events = {
 override_doctype_class = {
     "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
     "Payment Entry" : "dynamic.override_doctype_class.PaymentEntry",
-    "Quotation" : "dynamic.override_doctype_class.Quotation",
+    # "Quotation" : "dynamic.override_doctype_class.Quotation",
     "Sales Order" : "dynamic.override_doctype_class.SalesOrder"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
@@ -217,9 +223,10 @@ scheduler_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
-# }
+override_whitelisted_methods = {
+	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
+    "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order":"dynamic.ifi.api.override_make_purchase_order"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
@@ -228,7 +235,7 @@ scheduler_events = {
 
 override_doctype_dashboards = {
     "Sales Invoice": "dynamic.public.dashboard.sales_invoice_dashboard.get_data",
-    "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
+     "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
     "Purchase Invoice": "dynamic.public.dashboard.purchase_invoice_dashboard.get_data",
     "Purchase Order": "dynamic.public.dashboard.purchase_order_dashboard.get_data",
     "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data"
@@ -248,6 +255,7 @@ domains = {
     'Cheques': 'dynamic.domains.cheques',
     'Terra': 'dynamic.domains.tera',
     'IFI': 'dynamic.domains.ifi',
+    'textile' :'dynamic.domains.textile'
 }
 
 # domain Conatin

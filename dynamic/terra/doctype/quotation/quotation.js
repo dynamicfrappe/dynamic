@@ -37,6 +37,7 @@ frappe.ui.form.on('Quotation', {
 	},
 
 	refresh: function(frm) {
+		console.log('555')
 		frm.trigger("set_label");
 		frm.trigger("set_dynamic_field_label");
 	},
@@ -82,11 +83,14 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 				this.frm.set_value('valid_till', frappe.datetime.add_months(doc.transaction_date, 1));
 			}
 		}
-
 		if(doc.docstatus == 1 && !(['Lost', 'Ordered']).includes(doc.status)) {
 			if(!doc.valid_till || frappe.datetime.get_diff(doc.valid_till, frappe.datetime.get_today()) >= 0) {
 				cur_frm.add_custom_button(__('Sales Order'),
 					cur_frm.cscript['Make Sales Order'], __('Create'));
+
+				cur_frm.add_custom_button(__('Payment Entry'),
+						cur_frm.cscript['Make Payment Entry'], __('Create'));
+			
 			}
 
 			if(doc.status!=="Ordered") {
@@ -234,3 +238,11 @@ frappe.ui.form.on("Quotation Item", "stock_balance", function(frm, cdt, cdn) {
 	frappe.route_options = {"item_code": d.item_code};
 	frappe.set_route("query-report", "Stock Balance");
 })
+
+
+cur_frm.cscript['Make Payment Entry'] = function() {
+	frappe.model.open_mapped_doc({
+		method: "erpnext.accounts.doctype.payment_entry.payment_entry.get_payment_entry",
+		frm: cur_frm
+	})
+}

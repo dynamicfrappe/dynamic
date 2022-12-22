@@ -40,33 +40,31 @@ class PurchaseOrderSummary(object):
 	def get_new_opportunity(self,conditions):
 		item_group = ''
 		if self.filters.get("from_date"):
-			conditions += " and tge.creation >= '%s'"%self.filters.get("from_date")
+			conditions += " and tpo.creation >= '%s'"%self.filters.get("from_date")
 		if self.filters.get("to_date"):
-			conditions += " and tge.creation <= '%s'"%self.filters.get("to_date")
+			conditions += " and tpo.creation <= '%s'"%self.filters.get("to_date")
 		if self.filters.get("supplier"):
 			conditions += " and tpo.supplier = '%s'"%self.filters.get("supplier")
 		if self.filters.get("purchase_order"):
 			conditions += " and tpo.name = '%s'"%self.filters.get("purchase_order")
 		sql_query_new = f"""
-				SELECT * , (`data`.`purchase_amount` - `data`.`total_paid`)outstanding 
-				FROM(
-						select `tpo`.`name` purchase_order,`tpo`.`supplier`, SUM(`tge`.`debit`) as total_paid,`tpo`.`grand_total` purchase_amount
-						from `tabPurchase Order` tpo
-						LEFT JOIN `tabGL Entry` tge
-						ON
-						(
-						(tge.against_voucher = tpo.name or tge.against_voucher IS NULL  
-						AND tge.voucher_type ='Payment Entry' or tge.voucher_type IS NULL) 
-						)
-						WHERE {conditions} AND tpo.docstatus=1
-						GROUP  BY `tpo`.`name`
-						) as data
-	
+					select tpo.supplier,
+					tpo.name purchase_order,
+					tper.parent,
+					IFNULL(tper.total_amount,tpo.grand_total) purchase_amount ,
+					IFNULL(SUM(tper.allocated_amount),0)total_paid,
+					(IFNULL(tper.total_amount,0) -(IFNULL(SUM(tper.allocated_amount),0)))outstanding
+					from `tabPurchase Order` tpo
+					left join `tabPayment Entry Reference` tper 
+					on tpo.name=tper.reference_name 
+					WHERE {conditions} AND tpo.docstatus=1
+					GROUP BY tpo.name
 		""".format(conditions=conditions)
-		# frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 		frappe.errprint(f"sql_query_new is ==> {sql_data}")
 		return sql_data
+
+
 
 	def get_columns(self):
 		# add columns wich appear data
@@ -128,3 +126,26 @@ class PurchaseOrderSummary(object):
             #     "width": 130,
             # },
 		]
+
+
+"""
+SELECT * , (`data`.`purchase_amount` - `data`.`total_paid`)outstanding 
+				FROM(
+						select `tpo`.`name` purchase_order,`tpo`.`supplier`,
+						IFNULL(SUM(`tge`.`debit`),0) as total_paid,`tpo`.`grand_total` purchase_amount
+						from `tabPurchase Order` tpo
+						LEFT JOIN `tabGL Entry` tge
+						ON
+						(
+						(tge.against_voucher = tpo.name or tge.against_voucher IS NULL)
+						AND
+						(tge.voucher_type ='Payment Entry' or tge.voucher_type IS NULL) 
+						AND
+						(tge.against_voucher_type ='Payment Entry' or tge.against_voucher_type IS NULL) 
+						)
+						WHERE {conditions} AND tpo.docstatus=1 
+						GROUP  BY `tpo`.`name`
+						) as data
+
+
+"""

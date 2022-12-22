@@ -38,7 +38,12 @@
   "notes_section",
   "notes",
   "ref_status",
-  "amended_from"
+  "customer_feedback_section",
+  "rate",
+  "column_break_34",
+  "feedback",
+  "amended_from",
+  "description"
  ],
  "fields": [
   {
@@ -216,24 +221,6 @@
    "label": "Notes"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Installation Order",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Installation Order",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "default": "Pending",
    "fieldname": "ref_status",
    "fieldtype": "Select",
@@ -265,12 +252,54 @@
    "fieldname": "url",
    "fieldtype": "Data",
    "label": "URL"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "customer_feedback_section",
+   "fieldtype": "Section Break",
+   "label": "Customer Feedback"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "rate",
+   "fieldtype": "Rating",
+   "label": "Rate",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_34",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "feedback",
+   "fieldtype": "Small Text",
+   "label": "Notes",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Installations Furniture",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "hidden": 1,
+   "label": "description",
+   "print_hide": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-12 15:02:08.554062",
+ "modified": "2022-12-13 16:40:43.016152",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "Installations Furniture",
