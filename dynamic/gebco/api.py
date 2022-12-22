@@ -65,14 +65,15 @@ def check_so_approval(doc):
     #return
     for item in doc.items:
         if item.get("sales_order_approval"):
-            item_remining_qty = frappe.db.sql(f"""select delivered_qty,approved_qty,remaining_qty from `tabSales Order Item` where parent= '{item.against_sales_order}' and item_code='{item.item_code}' limit 1""",as_dict=1)
+            remaing_sql = f"""select remaining_qty from `tabSales Order Approval Item` where parent= '{item.sales_order_approval}' and item_code='{item.item_code}' limit 1"""
+            item_remining_qty = frappe.db.sql(remaing_sql,as_dict=1)
             if item.qty > item_remining_qty[0].remaining_qty:
                 frappe.throw(_("Approval Remaining Qty '%s'"%item_remining_qty[0].remaining_qty))
             #approval_doc = frappe.get_doc("Sales Order Approval",item.get("sales_order_approval"))
             # update approval 
             sql = f"""
              update `tabSales Order Approval Item`
-             set remaining_qty = approved_qty - qty
+             set remaining_qty = remaining_qty - {item.qty}
              where item_code = '{item.item_code}' and parent = '{item.sales_order_approval}'
             """
             frappe.db.sql(sql)
@@ -80,13 +81,13 @@ def check_so_approval(doc):
 
             # update sales order qtys
 
-            so_sql = f"""
-             update `tabSales Order Item`
-             set remaining_qty = approved_qty - delivered_qty
-             where item_code = '{item.item_code}' and parent = '{item.against_sales_order}'
-            """
-            frappe.db.sql(so_sql)
-            frappe.db.commit()
+            # so_sql = f"""
+            #  update `tabSales Order Item`
+            #  set remaining_qty = approved_qty - delivered_qty
+            #  where item_code = '{item.item_code}' and parent = '{item.against_sales_order}'
+            # """
+            # frappe.db.sql(so_sql)
+            # frappe.db.commit()
 
 
 def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
