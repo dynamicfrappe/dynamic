@@ -2,6 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
+from erpnext.accounts.party import get_party_account
+from erpnext.controllers.accounts_controller import get_advance_journal_entries, get_advance_payment_entries
 import frappe
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
@@ -35,6 +37,13 @@ class Quotation(SellingController):
 		from erpnext.stock.doctype.packed_item.packed_item import make_packing_list
 
 		make_packing_list(self)
+
+
+		# New functions
+		self.is_return = 0
+		self.clear_unallocated_advances("Sales Invoice Advance", "advances")
+		self.calculate_total_advance()
+	
 
 	def validate_valid_till(self):
 		if self.valid_till and getdate(self.valid_till) < getdate(self.transaction_date):
@@ -151,6 +160,7 @@ class Quotation(SellingController):
 		# update enquiry status
 		self.update_opportunity("Quotation")
 		self.update_lead()
+		self.update_against_document_in_jv()
 
 	def on_cancel(self):
 		if self.lost_reasons:
@@ -161,6 +171,10 @@ class Quotation(SellingController):
 		self.set_status(update=True)
 		self.update_opportunity("Open")
 		self.update_lead()
+
+		# unlink payment entries on cancel quotation
+		from erpnext.accounts.utils import unlink_ref_doc_from_payment_entries
+		unlink_ref_doc_from_payment_entries(self)
 
 	def print_other_charges(self, docname):
 		print_lst = []
@@ -174,6 +188,9 @@ class Quotation(SellingController):
 	def on_recurring(self, reference_doc, auto_repeat_doc):
 		self.valid_till = None
 
+
+
+	# new Quotaion Payment function
 	def set_total_advance_paid(self):
 
 		
@@ -225,6 +242,108 @@ class Quotation(SellingController):
 				)
 
 			frappe.db.set_value(self.doctype, self.name, "advance_paid", advance_paid)
+
+	def get_advance_entries(self, include_unallocated=True):
+		party_type = self.quotation_to
+		party = self.party_name
+		party_account = get_party_account(party_type, party=party, company=self.company)
+		amount_field = "credit_in_account_currency"
+		order_field = None
+		order_doctype = None
+
+		order_list = []
+
+		journal_entries = get_advance_journal_entries(
+			party_type, party, party_account, amount_field, order_doctype, order_list, include_unallocated
+		)
+
+		payment_entries = get_advance_payment_entries(
+			party_type, party, party_account, order_doctype, order_list, include_unallocated
+		)
+
+		res = journal_entries + payment_entries
+
+		return res
+	
+
+	def update_against_document_in_jv(self):
+		party_type = self.quotation_to
+		party = self.party_name
+		party_account = get_party_account(party_type, party=party, company=self.company)
+		dr_or_cr = "credit_in_account_currency"
+		lst = []
+		for d in self.get("advances"):
+			if flt(d.allocated_amount) > 0:
+				args = frappe._dict(
+					{
+						"voucher_type": d.reference_type,
+						"voucher_no": d.reference_name,
+						"voucher_detail_no": d.reference_row,
+						"against_voucher_type": self.doctype,
+						"against_voucher": self.name,
+						"account": party_account,
+						"party_type": party_type,
+						"party": party,
+						"is_advance": "Yes",
+						"dr_or_cr": dr_or_cr,
+						"unadjusted_amount": flt(d.advance_amount),
+						"allocated_amount": flt(d.allocated_amount),
+						"precision": d.precision("advance_amount"),
+						"exchange_rate": (
+							self.conversion_rate if self.party_account_currency != self.company_currency else 1
+						),
+						"grand_total": (
+							self.base_grand_total
+							if self.party_account_currency == self.company_currency
+							else self.grand_total
+						),
+						"outstanding_amount": self.outstanding_amount,
+						"difference_account": frappe.db.get_value(
+							"Company", self.company, "exchange_gain_loss_account"
+						),
+						"exchange_gain_loss": flt(d.get("exchange_gain_loss")),
+					}
+				)
+				lst.append(args)
+
+		if lst:
+			# from erpnext.accounts.utils import reconcile_against_document
+			from dynamic.terra.utils import reconcile_against_document
+			reconcile_against_document(lst)
+
+	def calculate_total_advance(self):
+		if self.docstatus < 2:
+			total_allocated_amount = sum(
+				flt(adv.allocated_amount, adv.precision("allocated_amount"))
+				for adv in self.get("advances")
+			)			
+			self.total_advance = flt(total_allocated_amount, self.precision("total_advance"))
+			grand_total = self.rounded_total or self.grand_total
+
+			if self.party_account_currency == self.currency:
+				invoice_total = flt(
+					grand_total - flt(self.write_off_amount), self.precision("grand_total")
+				)
+			else:
+				base_write_off_amount = flt(
+					flt(self.write_off_amount) * self.conversion_rate,
+					self.precision("base_write_off_amount"),
+				)
+				invoice_total = (
+					flt(grand_total * self.conversion_rate, self.precision("grand_total"))
+					- base_write_off_amount
+				)
+
+			if invoice_total > 0 and self.total_advance > invoice_total:
+				frappe.throw(
+					_("Advance amount cannot be greater than {0} {1}").format(
+						self.party_account_currency, invoice_total
+					)
+				)
+
+			if self.docstatus == 0:
+				if self.get("write_off_outstanding_amount_automatically"):
+					self.write_off_amount = 0
 
 
 def get_list_context(context=None):

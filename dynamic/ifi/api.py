@@ -145,6 +145,9 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 		target.flags.ignore_permissions = ignore_permissions
 		target.run_method("set_missing_values")
 		target.run_method("calculate_taxes_and_totals")
+		#Get the advance paid Journal Entries in Sales Invoice Advance
+		if target.get("allocate_advances_automatically"):
+			target.set_advances()
 
 	def update_item(obj, target, source_parent):
 		target.stock_qty = flt(obj.qty) * flt(obj.conversion_factor)
@@ -163,6 +166,7 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
                 "field_map": {
                     "crean": "crean",
                     "crean_amount": "crean_amount",
+					"allocate_advances_automatically":"allocate_advances_automatically"
                 },
                 "validation": 
                 {"docstatus": ["=", 1]}
@@ -175,6 +179,7 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 			"Sales Taxes and Charges": {"doctype": "Sales Taxes and Charges", "add_if_empty": True},
 			"Sales Team": {"doctype": "Sales Team", "add_if_empty": True},
 			"Payment Schedule": {"doctype": "Payment Schedule", "add_if_empty": True},
+			"Sales Invoice Advance": {"doctype": "Sales Invoice Advance", "add_if_empty": True},
 		},
 		target_doc,
 		set_missing_values,

@@ -168,7 +168,11 @@ def validate_delivery_note(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         # frappe.throw('Validate delivery Note')
         validate_delivery_notes_sal_ord(doc)
-        
+        #check_so_approval(doc)
+
+
+
+
 
 @frappe.whitelist()       
 def cancel_delivery_note(doc,*args,**kwargs):
