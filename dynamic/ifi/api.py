@@ -120,6 +120,7 @@ def create_furniture_installation_order(source_name, target_doc=None):
 
 @frappe.whitelist()
 def make_sales_order(source_name, target_doc=None):
+	print('\n\n\n\n*****************')
 	quotation = frappe.db.get_value(
 		"Quotation", source_name, ["transaction_date", "valid_till"], as_dict=1
 	)
@@ -349,7 +350,6 @@ def send_email(self, sender, subject, message, attachments):
 		frappe.msgprint(_("Email Sent to Supplier {0}").format(self.party_name))
 
 def get_attachments2(self,name=None):
-		# frappe.errprint(f'self-***->{self}')
 		attachments = [d.name for d in get_attachments(self.doctype, self.name)]
 		attachments.append(frappe.attach_print(self.doctype, self.name, doc=self))
 		return attachments
