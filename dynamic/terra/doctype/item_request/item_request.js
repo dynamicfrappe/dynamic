@@ -2,6 +2,26 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Item Request', {
+	// item_group(frm){
+	// 	if(frm.doc.item_group && frm.doc.__islocal){
+	// 		frappe.call({
+	// 			method:'dynamic.api.generate_item_code',
+	// 			args:{
+	// 				'item_group':frm.doc.item_group
+	// 			},callback(r){
+	// 				if(r.message){
+	// 					if(r.message == 'false'){
+	// 						frm.set_value("item_group","")
+	// 						frm.refresh_field('item_group')
+	// 					}else{
+	// 					frm.set_value('item_code',r.message)
+	// 					frm.refresh_field('item_code')
+	// 					}
+	// 				}
+	// 			}
+	// 		})
+	// 	}
+	// },
 	validate:(frm)=>{
 		let bext = $('.primary-action').text();
 		if(bext != "Save"){
