@@ -7,8 +7,8 @@ from . import __version__ as app_version
 
 
 # import json
-import os
-from pathlib import Path
+# import os
+# from pathlib import Path
 
 # BASE_DIR = Path(__file__).resolve().parent
 # print ("BASE_DIR ====> " , BASE_DIR)
@@ -149,7 +149,8 @@ doc_events = {
      },
      "Stock Entry":{
         # In This Target check the branches data in cost center  
-         "on_submit" : "dynamic.api.submit_stock_entry"
+        "validate" :"dynamic.api.validate_stock_entry",
+        "on_submit" : "dynamic.api.submit_stock_entry"
      },
      "Opportunity":{
        "validate" : "dynamic.ifi.api.opportunity_notifiy",
@@ -161,6 +162,10 @@ doc_events = {
       ,
     "Asset Movement":{
         "on_submit":"dynamic.api.add_cost_center_to_asset"
+    } ,
+    "Supplier Quotation" :{
+         "validate" : "dynamic.terra.api.submit_supplier_quotation",
+          "on_submit":"dynamic.terra.api.submit_supplier_quotation"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",

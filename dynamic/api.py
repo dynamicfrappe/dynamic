@@ -631,8 +631,11 @@ def validate_whatsApp(*args , **kwargs) :
       if  'Moyate' in DOMAINS: 
         """   Validate Sales Commition With Moyate """
         return True
-
-
+@frappe.whitelist()
+def validate_terra_domain(*args , **kwargs) :
+      if  'Terra' in DOMAINS: 
+        """   Validate Tera ui customization  """
+        return True
 @frappe.whitelist()
 def validate_whats_app_settings(data , *args ,**kwargs) :
     json_data = json.loads(data)
@@ -821,4 +824,26 @@ def add_cost_center_to_asset(doc,*args, **kwargs):
                 sql = f""" update tabAsset set cost_center = '{item.cost_center}' where name = '{asset.name}'"""
                 frappe.db.sql(sql)
                 frappe.db.commit()
+
+
+
+@frappe.whitelist()
+def validate_stock_entry(doc,*args,**kwargs):
+    if isinstance(doc, str)  :
+        data = json.loads(doc)
+        if data.get("name") :
+             doc = frappe.get_doc("Stock Entry" , data.get('name'))
+        
+        else :
+            doc =False 
+            target = data.get("outgoing_stock_entry")
+            return target
+
+    if  'Terra' in DOMAINS:
+        if doc != False :
+            if doc.outgoing_stock_entry :
+                target =  frappe.db.get_value('Stock Entry', f'{doc.outgoing_stock_entry}', 'ds_warehouse')
+                doc.to_warehouse = target
+                return target
+
 

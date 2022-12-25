@@ -12,17 +12,32 @@ from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 from frappe  import _
 class SalesOrderApproval(Document):
 	def validate(self):
+		self.validate_qty_against_sales_order()
 		for item in self.items:
 			item.approved_qty = item.qty
 			item.remaining_qty = item.qty
 	def on_submit(self):
+		self.validate_qty_against_sales_order()
 		for item in self.items:
 			if item.get("against_sales_order"):
 				sql = f"""update `tabSales Order Item` set approved_qty = approved_qty + {item.qty} ,remaining_qty =qty - approved_qty  where parent='{item.against_sales_order}' and item_code = '{item.item_code}'"""
 				frappe.db.sql(sql)
 				frappe.db.commit()
 
-
+	def validate_qty_against_sales_order(self):
+		for item in self.items :
+			qty =  0
+			item_sales_order_qty = frappe.db.sql(f""" select approved_qty , remaining_qty , qty from `tabSales Order Item`
+												 WHERE name = '{item.so_detail}' """ ,as_dict =1)
+			if not item_sales_order_qty or len(item_sales_order_qty) ==0 :
+				frappe.throw("Can Not Complete Proccess")
+			if item_sales_order_qty[0].get("approved_qty") :
+				qty = float(item_sales_order_qty[0].get("remaining_qty") ) 
+			if not  item_sales_order_qty[0].get("approved_qty") :
+				qty = 	item_sales_order_qty[0].get("qty") 		
+			# frappe.throw(str(qty))
+			if item.qty > qty :
+				frappe.throw(f""" Order Qty is {item_sales_order_qty[0].get("qty")}   And approved Qty {item_sales_order_qty[0].get("approved_qty")} you can not approve {item.qty}""")
 	def on_cancel(self):
 		try : 
 			# 1

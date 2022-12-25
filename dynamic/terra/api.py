@@ -161,3 +161,10 @@ def cancel_amount_quotation(payment,*args,**Kwargs):
         #     frappe.errprint(f'outstand_amount-->{outstand_amount}')
         #     frappe.errprint(f'payment.total_allocated_amount-->{payment.total_allocated_amount}')
         # ...
+
+@frappe.whitelist()
+def submit_supplier_quotation(doc ,*args ,**kwargs) :
+      if 'Terra' in Domains:
+      
+        from dynamic.terra.doctype.supplier_quotation.supplier_quotation import submit_supplier_quotation as tera_submit_quotation
+        tera_submit_quotation(doc) 

@@ -484,11 +484,22 @@ data = {
             {
                 "fieldname": "quotation",
                 "fieldtype": "Link",
-                "options": "Quotation",
+                "options": "Supplier Quotation",
                 "insert_after": "project_name",
-                "label": "Quotation",
-                "depends_on":"eval:doc.material_request_type=='Purchase'"
+                "label": "Supplier Quotation",
+                "read_only" :1 ,
+           
+            },
+             {
+                "fieldname": "has_quotation",
+                "fieldtype": "Check",
+                "insert_after": "quotation",
+                "label": "Has Quotation",
+                "read_only" :1 ,
+                "in_list_view" :1 ,
+                "in_standard_filter" :1
             }
+
         ],
 
         'Sales Order Item':[
@@ -709,6 +720,21 @@ data = {
             
             }
         ],
+          "Stock Entry":[
+             {
+                "fieldname": "ds_warehouse",
+                "fieldtype": "Link",
+                "insert_after": "stock_entry_type",
+                "label": "Target WareHouse",
+                "options" : 'Warehouse',
+                "depends_on":"eval:doc.add_to_transit=='1'",
+                "read_only":0,
+            
+            },
+
+          ],
+        
+
         "Stock Entry Detail":[
             {
                 "fieldname": "sub_uom",
@@ -912,6 +938,14 @@ data = {
         "property": "read_only",
         "property_type": "Check",
         "value": "0"
+        },
+        {
+        "doctype": "Material Request",
+        "doctype_or_field": "DocField",
+        "fieldname": "status",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nDraft\nSubmitted\nStopped\nCancelled\nPending\nRequested\nPartially Ordered\nPartially Received\nOrdered\nIssued\nTransferred\nReceived"
         },
     ],
   
