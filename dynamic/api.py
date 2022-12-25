@@ -168,7 +168,11 @@ def validate_delivery_note(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         # frappe.throw('Validate delivery Note')
         validate_delivery_notes_sal_ord(doc)
-        
+        #check_so_approval(doc)
+
+
+
+
 
 @frappe.whitelist()       
 def cancel_delivery_note(doc,*args,**kwargs):
@@ -627,8 +631,11 @@ def validate_whatsApp(*args , **kwargs) :
       if  'Moyate' in DOMAINS: 
         """   Validate Sales Commition With Moyate """
         return True
-
-
+@frappe.whitelist()
+def validate_terra_domain(*args , **kwargs) :
+      if  'Terra' in DOMAINS: 
+        """   Validate Tera ui customization  """
+        return True
 @frappe.whitelist()
 def validate_whats_app_settings(data , *args ,**kwargs) :
     json_data = json.loads(data)
@@ -666,7 +673,55 @@ def modeofpaymentautoname(self,fun=''):
                 self.name = "Bank"+"-"+str(year)+"-" + str(id)
 
             self.mode_of_payment_naming = mode_of_payment.naming
+@frappe.whitelist()           
+def submit_stock_entry(doc ,*args,**kwargs) :
 
+    if "Terra"  in DOMAINS :
+        # validate against terra branches settings  
+        user_list = []
+        acceess_target = []
+        acccess_source = []
+        target_types = ["Material Issue" , "Material Transfer" ,"Send to Subcontractor"]
+        recive_types = ["Material Receipt" , "Material Transfer"]
+        user = frappe.session.user
+        target_w = False
+        source_w = False
+        if doc.from_warehouse :
+            target_w = frappe.get_doc("Warehouse" ,doc.from_warehouse)
+        if doc.to_warehouse:
+            source_w = frappe.get_doc("Warehouse" ,doc.to_warehouse)
+        entry_type = frappe.get_doc("Stock Entry Type" ,doc.stock_entry_type).purpose
+        
+        if target_w and entry_type in target_types and  not target_w.warehouse_type   :
+                # frappe.throw(str("case@ happend"))
+                cost_center = frappe.db.sql(f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.from_warehouse}' """ ,as_dict=1)
+                if cost_center and len(cost_center) > 0 :
+                    for obj in cost_center :
+                        acceess_target.append(obj.get("name"))
+                
+        if source_w and  entry_type in recive_types and not  source_w.warehouse_type:
+                cost_center = frappe.db.sql(f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.to_warehouse}' """ ,as_dict=1)
+                if cost_center and len(cost_center) > 0 :
+                    for obj in cost_center :
+                         acccess_source.append(obj.get("name"))
+        access_group =    acceess_target +  acccess_source 
+        if len(access_group) > 0 :
+            for access in access_group :
+                # frappe.throw(str(access))
+                users = frappe.db.sql(f""" SELECT branch_manager FROM `tabBranch Managers` WHERE parenttype ='Cost Center'
+                and parent = '{access}' 
+                   """)
+                # frappe.throw(str(users))
+                for usr in users :
+                    user_list.append(usr[0])
+            
+       
+        #validate user access 
+        if user not in user_list :
+            frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
+       
+            
+    
 @frappe.whitelist()
 def validate_mode_of_payment_naming(old_naming=None,mode_of_payment=None,*args, **kwargs):
     if not mode_of_payment or not old_naming:
@@ -769,4 +824,26 @@ def add_cost_center_to_asset(doc,*args, **kwargs):
                 sql = f""" update tabAsset set cost_center = '{item.cost_center}' where name = '{asset.name}'"""
                 frappe.db.sql(sql)
                 frappe.db.commit()
+
+
+
+@frappe.whitelist()
+def validate_stock_entry(doc,*args,**kwargs):
+    if isinstance(doc, str)  :
+        data = json.loads(doc)
+        if data.get("name") :
+             doc = frappe.get_doc("Stock Entry" , data.get('name'))
+        
+        else :
+            doc =False 
+            target = data.get("outgoing_stock_entry")
+            return target
+
+    if  'Terra' in DOMAINS:
+        if doc != False :
+            if doc.outgoing_stock_entry :
+                target =  frappe.db.get_value('Stock Entry', f'{doc.outgoing_stock_entry}', 'ds_warehouse')
+                doc.to_warehouse = target
+                return target
+
 

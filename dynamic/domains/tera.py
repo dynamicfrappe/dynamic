@@ -38,6 +38,105 @@ data = {
                 'no_copy' : 1 ,
                 'allow_on_submit' : 1 ,
             },
+             # quotation payment fields
+            {
+                "fieldname": "advance_payments",
+                "fieldtype": "Section Break",
+                "insert_after": "terms",
+                "label": "Advance Payments",
+            },
+            {
+                "fieldname": "allocate_advances_automatically",
+                "fieldtype": "Check",
+                "insert_after": "advance_payments",
+                "label": "Allocate Advances Automatically (FIFO)",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 0 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 0 ,
+            },
+            {
+                "fieldname": "get_advances",
+                "fieldtype": "Button",
+                "insert_after": "allocate_advances_automatically",
+                "label": "Get Advances Received",
+                'hidden' : 0 ,
+                'read_only' : 0 ,
+                'no_copy' : 0 ,
+                'allow_on_submit' : 0 ,
+            },
+            {
+                "fieldname": "advances",
+                "fieldtype": "Table",
+                "insert_after": "get_advances",
+                "options":"Sales Invoice Advance",
+                "label": "Advances",
+                'hidden' : 0 ,
+                'read_only' : 0 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 0 ,
+            },
+            {
+                "fieldname": "base_write_off_amount",
+                "fieldtype": "Currency",
+                "insert_after": "base_rounded_total",
+                "options":"Company:company:default_currency",
+                "label": "Write Off Amount (Company Currency)",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "total_advance",
+                "fieldtype": "Currency",
+                "insert_after": "rounded_total",
+                "options":"party_account_currency",
+                "label": "Total Advance",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "write_off_amount",
+                "fieldtype": "Currency",
+                "insert_after": "total_advance",
+                "options":"currency",
+                "label": "Write Off Amount",
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "is_return",
+                "fieldtype": "Check",
+                "insert_after": "write_off_amount",
+                "options":"currency",
+                "label": "is Return",
+                'default' : '0' ,
+                'hidden' : 1 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+
+            {
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "invoice_payment",
+                "label": "Outstanding Amount",
+                "read_only" : 1,
+                "no_copy" : 1,
+                "allow_on_submit":1,
+                "default":0
+            },
+            
         ],
         
         "Sales Order":[
@@ -385,11 +484,22 @@ data = {
             {
                 "fieldname": "quotation",
                 "fieldtype": "Link",
-                "options": "Quotation",
+                "options": "Supplier Quotation",
                 "insert_after": "project_name",
-                "label": "Quotation",
-                "depends_on":"eval:doc.material_request_type=='Purchase'"
+                "label": "Supplier Quotation",
+                "read_only" :1 ,
+           
+            },
+             {
+                "fieldname": "has_quotation",
+                "fieldtype": "Check",
+                "insert_after": "quotation",
+                "label": "Has Quotation",
+                "read_only" :1 ,
+                "in_list_view" :1 ,
+                "in_standard_filter" :1
             }
+
         ],
 
         'Sales Order Item':[
@@ -463,7 +573,30 @@ data = {
                 "label": "QTY As Per Sub Uom",
                 "read_only":1
             
+            },
+            {
+                "fieldname": "so_approved_qty",
+                "fieldtype": "Section Break",
+                "insert_after": "stock_qty",
+                "label": "Approved Qty",
+            },
+            {
+                "fieldname": "approved_qty",
+                "fieldtype": "Float",
+                "insert_after": "so_approved_qty",
+                "label": "Approved QTY",
+                "read_only":1,
+                "no_copy":1
+            },
+            {
+                "fieldname": "remaining_qty",
+                "fieldtype": "Float",
+                "insert_after": "approved_qty",
+                "label": "Remaining Qty",
+                "read_only":1,
+                "no_copy":1
             }
+
         ], 
         "Purchase Order Item":[
              {
@@ -515,6 +648,14 @@ data = {
                 "label": "QTY As Per Sub Uom",
                 "read_only":1
             
+            },
+            {
+                "fieldname": "sales_order_approval",
+                "fieldtype": "Link",
+                "insert_after": "pick_list_item",
+                "label": "Sales Order Approval",
+                "options":"Sales Order Approval",
+                "read_only":1
             }
         ],
 
@@ -579,6 +720,21 @@ data = {
             
             }
         ],
+          "Stock Entry":[
+             {
+                "fieldname": "ds_warehouse",
+                "fieldtype": "Link",
+                "insert_after": "stock_entry_type",
+                "label": "Target WareHouse",
+                "options" : 'Warehouse',
+                "depends_on":"eval:doc.add_to_transit=='1'",
+                "read_only":0,
+            
+            },
+
+          ],
+        
+
         "Stock Entry Detail":[
             {
                 "fieldname": "sub_uom",
@@ -782,6 +938,14 @@ data = {
         "property": "read_only",
         "property_type": "Check",
         "value": "0"
+        },
+        {
+        "doctype": "Material Request",
+        "doctype_or_field": "DocField",
+        "fieldname": "status",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nDraft\nSubmitted\nStopped\nCancelled\nPending\nRequested\nPartially Ordered\nPartially Received\nOrdered\nIssued\nTransferred\nReceived"
         },
     ],
   

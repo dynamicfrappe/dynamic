@@ -7,8 +7,8 @@ from . import __version__ as app_version
 
 
 # import json
-import os
-from pathlib import Path
+# import os
+# from pathlib import Path
 
 # BASE_DIR = Path(__file__).resolve().parent
 # print ("BASE_DIR ====> " , BASE_DIR)
@@ -57,7 +57,14 @@ after_migrate = "dynamic.install.after_install"
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
-
+override_doctype_class = {
+    "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
+    "Payment Entry" : "dynamic.override_doctype_class.PaymentEntry",
+    "Quotation" : "dynamic.override_doctype_class.Quotation",
+    "Sales Order" : "dynamic.override_doctype_class.SalesOrder"
+    # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
+    # "Sales Order": "dynamic.terra.sales_order"
+}
 
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
@@ -87,8 +94,8 @@ doctype_js = {
 # }
 
 
-# added in terra only comment it in another domains
-# doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
+ # added in terra only comment it in another domains
+#doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
 
 
 # override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
@@ -140,17 +147,25 @@ doc_events = {
     "Purchase Invoice": {
         "on_submit": "dynamic.api.submit_purchase_invoice",
      },
+     "Stock Entry":{
+        # In This Target check the branches data in cost center  
+        "validate" :"dynamic.api.validate_stock_entry",
+        "on_submit" : "dynamic.api.submit_stock_entry"
+     },
      "Opportunity":{
        "validate" : "dynamic.ifi.api.opportunity_notifiy",
     #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
-        # "on_cancel":"dynamic.terra.api.cancel_amount_quotation",
-        # "on_submit":"dynamic.terra.api.add_paid_amount"
-    },
+    } 
+      ,
     "Asset Movement":{
         "on_submit":"dynamic.api.add_cost_center_to_asset"
+    } ,
+    "Supplier Quotation" :{
+         "validate" : "dynamic.terra.api.submit_supplier_quotation",
+          "on_submit":"dynamic.terra.api.submit_supplier_quotation"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
@@ -160,14 +175,7 @@ doc_events = {
     #  },
 }
 
-override_doctype_class = {
-    "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
-    "Payment Entry" : "dynamic.override_doctype_class.PaymentEntry",
-    # "Quotation" : "dynamic.override_doctype_class.Quotation",
-    "Sales Order" : "dynamic.override_doctype_class.SalesOrder"
-    # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
-    # "Sales Order": "dynamic.terra.sales_order"
-}
+
 
 
 
@@ -255,7 +263,8 @@ domains = {
     'Cheques': 'dynamic.domains.cheques',
     'Terra': 'dynamic.domains.tera',
     'IFI': 'dynamic.domains.ifi',
-    'textile' :'dynamic.domains.textile'
+    'textile' :'dynamic.domains.textile',
+    'vero':'dynamic.domains.vero'
 }
 
 # domain Conatin

@@ -14,8 +14,8 @@
  "is_standard": 1,
  "label": "Extends Accounts Report",
  "links": [],
- "modified": "2022-12-01 12:03:08.461438",
- "modified_by": "Administrator",
+ "modified": "2022-12-21 14:39:23.700613",
+ "modified_by": "abdallah.shokri@gmail.com",
  "module": "Dynamic Accounts",
  "name": "Extends Accounts Report",
  "onboarding": "Accounts",
@@ -27,6 +27,12 @@
    "doc_view": "Report Builder",
    "label": "Trial Balance Date",
    "link_to": "Trial Balance Date",
+   "type": "Report"
+  },
+  {
+   "doc_view": "Report Builder",
+   "label": " Budget Variance Report",
+   "link_to": "Budget Variance Report",
    "type": "Report"
   }
  ]

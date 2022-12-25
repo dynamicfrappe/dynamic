@@ -55,6 +55,7 @@ frappe.ui.form.on('Quotation', {
 
 erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 	onload: function(doc, dt, dn) {
+		console.log("Terrra AAPPAPAP")
 		var me = this;
 		this._super(doc, dt, dn);
 
