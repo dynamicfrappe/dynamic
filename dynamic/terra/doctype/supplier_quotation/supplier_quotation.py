@@ -9,7 +9,7 @@ def submit_supplier_quotation(self) :
             requested.append(item.material_request)
     for matrial_request in requested  :
         frappe.db.sql(f""" 
-        update `tabMaterial Request` set status= 'Requested'  , quotation ='{self.name}' , has_quotation = 1 ,
+        update `tabMaterial Request` set status= 'Requested'  , quotation ='{self.name}' , has_quotation = 1 
         WHERE name ='{matrial_request}' and material_request_type = "Purchase"  and status <> "Partially Ordered" and status <> "Ordered"
         
                 """)
