@@ -717,6 +717,43 @@ def create_material_request_script():
         """
     doc.save()
 
+def create_mode_of_payment_script():
+    name = "Mode of Payment-Form"
+    if frappe.db.exists("Client Script",name) :
+        doc = frappe.get_doc("Client Script",name)
+    else :
+        doc = frappe.new_doc("Client Script")
+        doc.dt      = "Mode of Payment"
+        doc.view    = "Form"
+        doc.enabled = 1
+    doc.script = """   
+                   
+                
+                frappe.ui.form.on('Mode of Payment', {
+                        refresh:()=>{
+                        frm.set_query('recived_account', function() {
+                        return {
+                            filters: {
+                                "company": doc.company,
+                                "is_group": 0
+                            }
+                        };
+                    });
+                    frm.set_query('cost_center', function() {
+                        return {
+                            filters: {
+                                "company": doc.company,
+                                "is_group": 0
+                            }
+                        };
+                    });
+                
+            }
+            });
+         
+        """
+    doc.save()
+
 def create_payment_entry_script():
     name = "Payment Entry-Form"
     if frappe.db.exists("Client Script",name) :
@@ -727,6 +764,7 @@ def create_payment_entry_script():
         doc.view    = "Form"
         doc.enabled = 1
     doc.script = """   
+                   
                 frappe.ui.form.on('Payment Entry', {
                 paid_amount:(frm)=>{
                     frm.events.get_deduct_amount(frm);
@@ -750,8 +788,8 @@ def create_payment_entry_script():
                     
                 },
                 get_deduct_amount:(frm)=>{
-                    cur_frm.clear_table("deductions");
-                    frm.refresh_fields("deductions");
+                    cur_frm.clear_table("taxes");
+                    frm.refresh_fields("taxes");
                     frappe.call({
                         "method": "frappe.client.get",
                             args: {
@@ -761,18 +799,23 @@ def create_payment_entry_script():
                                 if(r.message){
                                     let res = r.message;
                                     if(res.has_deduct){
-                                        var row = cur_frm.add_child("deductions")
-                                        row.account = res.recived_account;
-                                        row.percentage = res.deduct_percentage;
-                                        row.cost_center = res.cost_center
-                                        row.amount = frm.doc.paid_amount * (res.deduct_percentage/100);
-                                        frm.refresh_fields("deductions");
+                                        var row = cur_frm.add_child("taxes")
+                                        row.charge_type = "Actual";
+                                        row.account_head = res.recived_account;
+                                        row.description = res.recived_account;
+                                        // row.percentage = res.deduct_percentage;
+                                        //row.cost_center = res.cost_center
+                                        row.rate =res.deduct_percentage; //frm.doc.paid_amount * (res.deduct_percentage/100);
+                                        row.tax_amount = frm.doc.paid_amount * (res.deduct_percentage/100);
+                                        frm.refresh_fields("taxes");
                                     }
                                 }
                             }
                     })
                 }
             })
+        
+        
         
         """
     doc.save()
@@ -994,6 +1037,10 @@ def create_terra_scripts():
         install_action()
     except Exception as ex:
         print("----------------------- install_actioninstall_actioninstall_action",str(ex))
+    try:
+        create_mode_of_payment_script()
+    except:
+        pass
     # try:
     #     create_workflow_status()
     # except:
