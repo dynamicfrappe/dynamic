@@ -730,22 +730,20 @@ def create_mode_of_payment_script():
                    
                 
                 frappe.ui.form.on('Mode of Payment', {
-                        refresh:()=>{
-                        frm.set_query('recived_account', function() {
-                        return {
-                            filters: {
-                                "company": doc.company,
-                                "is_group": 0
-                            }
-                        };
+                        refresh:(frm)=>{
+                    frm.set_query("recived_account", function () {
+                    return {
+                        filters: [
+                        ["is_group", "=", 0]
+                        ],
+                    };
                     });
-                    frm.set_query('cost_center', function() {
-                        return {
-                            filters: {
-                                "company": doc.company,
-                                "is_group": 0
-                            }
-                        };
+                    frm.set_query("cost_center", function () {
+                    return {
+                        filters: [
+                        ["is_group", "=", 0]
+                        ],
+                    };
                     });
                 
             }
