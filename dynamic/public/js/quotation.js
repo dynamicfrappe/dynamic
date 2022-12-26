@@ -3,7 +3,6 @@ frappe.ui.form.on("Quotation",{
         frm.events.refresh(frm)
     },
     onload:function(frm){
-        console.log("over ride work")
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
@@ -77,7 +76,6 @@ cur_frm.cscript['Make Payment Entry'] = function() {
 }
 
 
-<<<<<<< HEAD
 
 //check
 // const qutation_extend = erpnext.selling.QuotationController.extend({
@@ -111,5 +109,3 @@ cur_frm.cscript['Make Payment Entry'] = function() {
 // 	cur_frm.cscript,
 // 	new qutation_extend({frm: cur_frm}),
 // );
-=======
->>>>>>> b9e914455f882992c35ceecc35d6680726ed2b35
