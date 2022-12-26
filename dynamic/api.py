@@ -243,7 +243,8 @@ def create_new_appointment(source_name, target_doc=None):
     doc = frappe.get_doc("Lead", source_name)
     appointment_doc = frappe.new_doc("Appointment")
     appointment_doc.customer_name = doc.lead_name
-    appointment_doc.customer_phone_number = doc.get('phone_no','') 
+    if 'Terra' in DOMAINS:
+        appointment_doc.customer_phone_number = doc.get('phone_no','') 
     appointment_doc.appointment_with = "Lead"
     appointment_doc.party = doc.name
     appointment_doc.customer_email = doc.email_id
