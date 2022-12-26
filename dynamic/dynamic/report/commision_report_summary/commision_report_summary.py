@@ -81,6 +81,13 @@ def get_data(filters):
 	if filters.get("sales_person"):
 		conditions += " and sales_person = '%s'"%filters.get("sales_person")
 
+	data = filters.get("from_date")
+	if data :
+		conditions += f" and from_date >= date('{data}') "
+
+	data = filters.get("to_date")
+	if data :
+		conditions += f" and to_date <= date('{data}') "
 
 	sql = f"""
 	
