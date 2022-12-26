@@ -372,6 +372,7 @@
   {
    "fieldname": "rate",
    "fieldtype": "Currency",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Rate",
    "oldfieldname": "export_rate",
@@ -383,6 +384,7 @@
   {
    "fieldname": "amount",
    "fieldtype": "Currency",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Amount",
    "oldfieldname": "export_amount",
@@ -553,7 +555,6 @@
   {
    "fieldname": "warehouse",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Warehouse",
    "oldfieldname": "warehouse",
    "oldfieldtype": "Link",
@@ -652,6 +653,7 @@
   {
    "fieldname": "batch_no",
    "fieldtype": "Link",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Batch No",
    "oldfieldname": "batch_no",
@@ -662,7 +664,6 @@
   {
    "fieldname": "serial_no",
    "fieldtype": "Text",
-   "in_list_view": 1,
    "label": "Serial No",
    "no_copy": 1,
    "oldfieldname": "serial_no",
@@ -812,7 +813,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-12-22 17:19:05.698073",
+ "modified": "2022-12-26 10:00:59.866631",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Sales Order Approval Item",
