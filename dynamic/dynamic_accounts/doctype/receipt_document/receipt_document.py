@@ -80,6 +80,7 @@ class ReceiptDocument(Document):
 
 		je.append("accounts", {
 			"account": self.account,
+            "against_account" : " , ".join([x.account for x in self.accounts]),
 			"account_currency": account_currency,
 			"exchange_rate": flt(account_exchange_rate),
 			"debit_in_account_currency": flt(amount_in_account_currency),
