@@ -19,14 +19,9 @@ def setup_reach():
     tr2.translated_text = 'دفعات'
     tr2.save()
 
-    tr3=frappe.new_doc('Translation')
-    tr3.language = 'en-US'
-    tr3.source_text = 'PrePaid'
-    tr3.translated_text = 'أجل'
-    tr3.save()
 
     tr4=frappe.new_doc('Translation')
-    tr4.language = 'en-US'
+    tr4.language = 'ar'
     tr4.source_text = 'PrePaid'
     tr4.translated_text = 'أجل'
     tr4.save()

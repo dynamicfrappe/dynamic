@@ -20,6 +20,7 @@ DOMAINS = frappe.get_active_domains()
 @frappe.whitelist()
 def opportunity_notifiy(self, *args, **kwargs):
 	if "IFI" in DOMAINS:
+		# print('\n\n\n******** notifssssy')
 		get_alert_dict(self)
 		#reciever
 		email_quotation(self, *args, **kwargs)

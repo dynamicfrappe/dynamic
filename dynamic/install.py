@@ -3,6 +3,7 @@ import os
 import json
 def after_install():
 	print("+dynamic")
+	create_domain_list()
 	# try:
 	# 	frappe.db.sql("""delete from tabWorkspace where name in ("HR","Loans","Payroll","Quality","Projects","Support")""")
 	# 	frappe.db.commit()
@@ -52,3 +53,10 @@ def install_uom():
 			except Exception as e:
 				pass
 				# print (str(e))
+
+def create_domain_list():
+	if not frappe.db.exists("Domain", "IFI"):
+		dm1 = frappe.new_doc("Domain")
+		dm1.domain = 'IFI'
+		dm1.insert()
+

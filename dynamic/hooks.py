@@ -40,13 +40,15 @@ app_include_css = "/assets/dynamic/css/dynamic.css"
 app_include_js = "/assets/js/dynamic.min.js"
 
 
-
-
 # include js in doctype views
 # doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
 # 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
-# doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+# doctype_calendar_js = {"doctype" : "public/js/appointment.js"}
+
+
+# calendars = ["Appointment"]
+
 doctype_list_js = {
                     "Customer" : "public/js/customer_list.js"
             
@@ -94,7 +96,7 @@ doctype_js = {
 # }
 
 
- # added in terra only comment it in another domains
+ #! added in terra only comment it in another domains
 #doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
 
 
