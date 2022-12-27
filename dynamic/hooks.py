@@ -45,8 +45,8 @@ app_include_js = "/assets/js/dynamic.min.js"
 # 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 doctype_calendar_js = {
-    # "doctype" : "public/js/appointment.js"
     "Appointment":"public/js/appointment_calendar.js"
+    # "doctype" : "public/js/appointment.js"
     }
 
 
