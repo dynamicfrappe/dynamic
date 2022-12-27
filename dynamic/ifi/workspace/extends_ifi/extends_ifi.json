@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "creation": "2022-12-01 11:54:15.521006",
+ "creation": "2022-12-27 11:43:45.171739",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -24,7 +24,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-12-27 11:20:52.401669",
+ "modified": "2022-12-27 11:43:45.171739",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "Extends IFI",
