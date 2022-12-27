@@ -31,7 +31,7 @@ def create_lead_script():
                     __("New Appointment"),
                     function () {
                     frappe.model.open_mapped_doc({
-                        method:"dynamic.api.create_new_appointment_ifi",
+                        method:"dynamic.ifi.api.create_new_appointment_ifi",
                         frm: frm
                     });
                     },

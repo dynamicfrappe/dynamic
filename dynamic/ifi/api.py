@@ -363,3 +363,14 @@ def get_attachments2(self,name=None):
 def get_link(self):
 		# RFQ link for supplier portal
 		return get_url("/app/opportunity/" + self.name)
+
+@frappe.whitelist()
+def create_new_appointment_ifi(source_name, target_doc=None):
+    doc = frappe.get_doc("Lead", source_name)
+    appointment_doc = frappe.new_doc("Appointment")
+    appointment_doc.customer_name = doc.lead_name
+    appointment_doc.customer_phone_number = doc.get('phone_no1','') 
+    appointment_doc.appointment_with = "Lead"
+    appointment_doc.party = doc.name
+    appointment_doc.customer_email = doc.email_id
+    return appointment_doc
