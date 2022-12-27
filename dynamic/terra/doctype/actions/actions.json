@@ -43,8 +43,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Action",
-   "options": "Action",
-   "reqd": 1
+   "options": "Action"
   },
   {
    "fieldname": "section_break_4",
@@ -139,7 +138,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-07-26 13:40:53.534420",
+ "modified": "2022-12-27 15:46:55.718064",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Actions",
