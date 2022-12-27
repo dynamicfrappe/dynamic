@@ -374,3 +374,44 @@ def create_new_appointment_ifi(source_name, target_doc=None):
     appointment_doc.party = doc.name
     appointment_doc.customer_email = doc.email_id
     return appointment_doc
+
+@frappe.whitelist()
+def get_events(start, end, filters=None):
+	"""Returns events for Gantt / Calendar view rendering.
+	frappe
+	:param start: Start date-time.
+	:param end: End date-time.
+	:param filters: Filters (JSON).
+	"""
+	from erpnext.controllers.queries import get_match_cond
+	from frappe.desk.calendar import get_event_conditions
+	filters = json.loads(filters)
+	conditions = get_event_conditions("Installations Furniture", filters)
+	events = []
+	data = frappe.db.sql("""
+		select
+			`tabAppointment`.name as name,
+			 `tabAppointment`.customer_name as cst,
+			  `tabAppointment`.scheduled_time as start,
+			 ADDTIME(`tabAppointment`.scheduled_time,'2:00:00') as end,
+			 concat(`tabAppointment`.customer_name,'--',`tabAppointment`.scheduled_time )as description
+		from
+			`tabAppointment`
+			{conditions}
+		""".format(conditions=conditions), {
+			"start": start,
+			"end": end
+		}, as_dict=True,
+		update={"allDay": 0},)
+		
+	# for row in data:
+	# 	job_card_data = {
+    #         "start": row.start,
+    #         "planned_end_date": row.end,
+    #         "name": row.name,
+    #         "subject": row.customer,
+    #         "color":'#D3D3D3',
+    #     }
+	# 	events.append(job_card_data)
+
+	return data

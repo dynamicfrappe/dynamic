@@ -44,14 +44,16 @@ app_include_js = "/assets/js/dynamic.min.js"
 # doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
 # 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
-# doctype_calendar_js = {"doctype" : "public/js/appointment.js"}
+doctype_calendar_js = {
+    # "doctype" : "public/js/appointment.js"
+    "Appointment":"public/js/appointment_calendar.js"
+    }
 
 
 # calendars = ["Appointment"]
 
 doctype_list_js = {
                     "Customer" : "public/js/customer_list.js"
-            
                     }
 
 after_install = "dynamic.install.after_install"

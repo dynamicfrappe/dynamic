@@ -22,18 +22,9 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Acticites Report",
-   "link_to": "Activities Summary",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
   }
  ],
- "modified": "2022-12-26 11:57:22.947943",
+ "modified": "2022-12-27 11:20:52.401669",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "Extends IFI",
@@ -48,6 +39,18 @@
    "label": "Appointment",
    "link_to": "Appointment",
    "type": "DocType"
+  },
+  {
+   "doc_view": "Calendar",
+   "label": "Appointment Calendar",
+   "link_to": "Appointment",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "Report Builder",
+   "label": "Action Report",
+   "link_to": "Actions Report",
+   "type": "Report"
   }
  ]
 }
