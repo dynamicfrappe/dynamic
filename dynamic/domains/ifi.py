@@ -74,6 +74,12 @@ data = {
          ],
          'Lead':[
             {
+            "label": "Phone No.",
+            "fieldname": "phone_no1",
+            "fieldtype": "Data",
+            "insert_after": "contact_by",
+            },
+            {
                 "label": "URL",
                 "fieldname": "url",
                 "fieldtype": "Data",
@@ -86,6 +92,8 @@ data = {
                 "fieldtype": "Button",
                 "insert_after": "url",
             },
+            
+           
          ],
          'Customer':[
             {
