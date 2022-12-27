@@ -8,7 +8,7 @@ frappe.views.calendar['Appointment'] = {
     },
 
 
-gantt: true,
+gantt: false,
 
 // filters: [test
 //     {

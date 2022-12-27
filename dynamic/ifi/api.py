@@ -386,7 +386,9 @@ def get_events(start, end, filters=None):
 	from erpnext.controllers.queries import get_match_cond
 	from frappe.desk.calendar import get_event_conditions
 	filters = json.loads(filters)
-	conditions = get_event_conditions("Installations Furniture", filters)
+	# conditions = get_event_conditions("Appointment", filters)
+	conditions = get_event_conditions("Appointment", filters)
+	
 	events = []
 	data = frappe.db.sql("""
 		select
@@ -397,9 +399,14 @@ def get_events(start, end, filters=None):
 			 concat(`tabAppointment`.customer_name,'--',`tabAppointment`.scheduled_time )as description
 		from
 			`tabAppointment`
+			where
+			(`tabAppointment`.scheduled_time between %(start)s and %(end)s)
 			{conditions}
-		""".format(conditions=conditions),  as_dict=True,
-		update={"allDay": 0},)
+		""".format(conditions=conditions),
+		{"start": start, "end": end},
+		as_dict=True,
+		update={"allDay": 0},
+	)
 		
 	# for row in data:
 	# 	job_card_data = {
