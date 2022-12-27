@@ -398,10 +398,7 @@ def get_events(start, end, filters=None):
 		from
 			`tabAppointment`
 			{conditions}
-		""".format(conditions=conditions), {
-			"start": start,
-			"end": end
-		}, as_dict=True,
+		""".format(conditions=conditions),  as_dict=True,
 		update={"allDay": 0},)
 		
 	# for row in data:
