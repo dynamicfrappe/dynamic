@@ -1,17 +1,37 @@
 frappe.ui.form.on("Quotation",{
-    onload:function(frm) {
-        frm.events.refresh(frm)
-    },
-    onload:function(frm){
+    // onload:function(frm) {
+    //     frm.events.refresh(frm)
+    // },
+    refresh:function(frm){
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
                 
               if (r.message && r.message.length) {
                 if (r.message.includes("Terra")) {
-                    if (frm.doc.docstatus == 1){
+                    if (frm.doc.docstatus == 1) {
+                        if (frm.doc.quotation_to == "Lead"){
+                            frappe.db.get_value("Customer", {"lead_name": frm.doc.party_name}, "name", (r) => {
+                                if(!r.name){
+                                cur_frm.add_custom_button(__('Customer'),function(){
+                                    frappe.call({
+                                        method:"dynamic.terra.doctype.quotation.quotation.make_customer",
+                                        args:{
+                                            source_name:frm.doc.name,
+                                        },
+                                        callback:function(r){
+                                            frm.refresh()
+                                        }
+        
+                                    })
+                                }
+                                , __('Create'));	
+                                }						
+                            });
+                            }
                         cur_frm.add_custom_button(__('Payment Entry'),
                                 cur_frm.cscript['Make Payment Entry'], __('Create'));
+                       
                     }
                 }               
             }
