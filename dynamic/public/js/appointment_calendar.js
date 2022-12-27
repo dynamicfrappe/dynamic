@@ -10,7 +10,7 @@ frappe.views.calendar['Appointment'] = {
 
 gantt: true,
 
-// filters: [
+// filters: [test
 //     {
 //         "fieldtype": "Link",
 //         "fieldname": "sales_order",
