@@ -1,3 +1,4 @@
+from erpnext.accounts.doctype.account.account import get_account_currency
 import frappe
 
 from frappe.utils import add_days, nowdate, today
@@ -100,27 +101,56 @@ def get_quotation_item(quotation,*args,**Kwargs):
 @frappe.whitelist()
 def get_payment_entry_quotation(source_name):
     qutation_doc = frappe.get_doc('Quotation',source_name)
+
+    party_type = qutation_doc.quotation_to
+    party = qutation_doc.party_name
+
+    if qutation_doc.quotation_to == "Lead" :
+        party_type = "Customer"
+        party = frappe.db.get_value("Customer" , {"lead_name":qutation_doc.party_name},'name')
+        
+        if not party :
+            from dynamic.terra.doctype.quotation.quotation import make_customer
+            customer = make_customer(source_name,ignore_permissions=True)
+            if customer :
+                party = customer.name
+
+
+
+    from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
+    # from erpnext.accounts.party import get_party_account
     pe = frappe.new_doc("Payment Entry")
     pe.payment_type = "Receive"
     pe.mode_of_payment = "Cash"
-    pe.party_type = qutation_doc.quotation_to
-    pe.party = qutation_doc.party_name
+    pe.company = qutation_doc.company
+    pe.paid_to = (get_bank_cash_account(pe.mode_of_payment,pe.company) or {}).get("account")
+    if pe.paid_to :
+        pe.paid_to_account_currency = get_account_currency(pe.paid_to)
+    pe.party_type = party_type
+    pe.party = party
     pe.party_name = qutation_doc.customer_name
-    cash_detail = get_all_apyment_for_quotation(source_name)
+
+    pe.paid_amount = (qutation_doc.base_rounded_total or qutation_doc.base_grand_total) - (getattr(qutation_doc,'advance_paid',0))
+    pe.received_amount = pe.paid_amount
+    pe.received_amount_after_tax = pe.paid_amount
+    # cash_detail = get_all_apyment_for_quotation(source_name)
     #modify to outstand amount
     row = pe.append('references',{})
     row.reference_doctype = "Quotation"
     row.reference_name = source_name
-    row.total_amount = qutation_doc.grand_total
-    if cash_detail!= False :
-        pe.paid_amount = cash_detail.get("outstand")
-        row.outstanding_amount = cash_detail.get("outstand") #modify to outstand amount
+    
+    row.outstanding_amount = pe.paid_amount
+    row.allocated_amount = pe.paid_amount
+    # if cash_detail!= False :
+        # pe.paid_amount = cash_detail.get("outstand")
+        # row.outstanding_amount = cash_detail.get("outstand") #modify to outstand amount
     cst_account = get_party_details(company=qutation_doc.company,date=None,
-    party_type=qutation_doc.quotation_to, 
-    party=qutation_doc.party_name,
+    party_type=party_type, 
+    party=party,
     cost_center=None)
     pe.part_balance = cst_account.get('party_balance')
     pe.paid_from = cst_account.get('party_account')
+    # pe.paid_from = get_party_account(pe.party_type,pe.party , pe.company)#cst_account.get('party_account')
     pe.paid_from_account_currency = cst_account.get('party_account_currency')
     pe.paid_from_account_balance = cst_account.get('account_balance')
     return pe
