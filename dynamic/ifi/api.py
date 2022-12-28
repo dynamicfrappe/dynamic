@@ -419,3 +419,35 @@ def get_events(start, end, filters=None):
 	# 	events.append(job_card_data)
 
 	return data
+
+
+
+
+@frappe.whitelist()
+def create_action_lead(source_name, target_doc=None):
+    doc = frappe.get_doc("Lead", source_name)
+    adction = frappe.new_doc("Actions")
+    adction.customer_type = 'Lead'
+    adction.date = doc.get('contact_date','').date() 
+    adction.time =doc.get('contact_date','').time() 
+    # adction.party = doc.name
+    # adction.customer_email = doc.email_id
+    return adction
+
+@frappe.whitelist()
+def create_action_cst(source_name, target_doc=None):
+	doc = frappe.get_doc("Customer", source_name)
+	action = frappe.new_doc("Actions")
+	action.customer_type = 'Customer'
+	action.customer = doc.get('name','') 
+	
+	return action
+
+@frappe.whitelist()
+def create_action_opportunity(source_name, target_doc=None):
+	doc = frappe.get_doc("Opportunity", source_name)
+	action = frappe.new_doc("Actions")
+	action.customer_type = 'Opportunity'
+	action.customer = doc.get('name','') 
+	
+	return action

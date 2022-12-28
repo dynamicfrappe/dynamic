@@ -13,7 +13,6 @@ frappe.ui.form.on("Sales Order", {
   // },
  
   setup:function(frm) {
-    console.log('setup')
     frm.events.update_grid(frm)
     frm.custom_make_buttons = {
       "Installation Request": "Installation Request",

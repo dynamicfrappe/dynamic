@@ -31,7 +31,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-20 13:04:02.244148",
+ "modified": "2022-12-28 11:01:35.414439",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Action",
@@ -51,5 +51,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "title_field": "action_name"
 }
