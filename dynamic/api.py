@@ -623,7 +623,11 @@ def change_row_after_submit(doc , *args ,**kwargs):
                 for reservation in sql_reserv_list:
                     frappe.db.set_value('Reservation',reservation,{'status':'Invalid'})
     
-
+@frappe.whitelist()
+def appointment_validate(doc,*args,**kwargs) :
+    if "Terra" in DOMAINS :
+        #add created date 
+        doc.created_on = today()
 
 #add Whats App Message send Button 
 @frappe.whitelist()

@@ -5,6 +5,18 @@ data = {
 
     'custom_fields': {
         'Quotation' :[
+
+
+             {
+                "fieldname": "material_reuqest",
+                "fieldtype": "Link",
+                "insert_after": "customer_name",
+                "label": "Material Request",
+                "options" : "Material Request" , 
+                "read_only" : 0,
+                "allow_on_submit":0,
+                
+            },
             {
                 "fieldname": "advance_paid",
                 "fieldtype": "Currency",
@@ -136,6 +148,7 @@ data = {
                 "allow_on_submit":1,
                 "default":0
             },
+            
             
         ],
         
@@ -474,6 +487,7 @@ data = {
                 "read_only":1,
                 "default":"__user"
             },
+
             {
                 "fieldname": "cost_center",
                 "fieldtype": "Link",
@@ -500,6 +514,18 @@ data = {
                 "in_standard_filter" :1
             }
 
+        ],
+        "Appointment":[
+
+             {
+                "fieldname": "created_on",
+                "fieldtype": "Date",
+                "insert_after": "calendar_event",
+                "label": "Created On",
+                "read_only" :1 ,
+                "in_list_view" :1 ,
+                "in_standard_filter" :1
+            }
         ],
 
         'Sales Order Item':[
@@ -946,6 +972,14 @@ data = {
         "property": "options",
         "property_type": "Text",
         "value": "\nDraft\nSubmitted\nStopped\nCancelled\nPending\nRequested\nPartially Ordered\nPartially Received\nOrdered\nIssued\nTransferred\nReceived"
+        },
+          {
+        "doctype": "Material Request",
+        "doctype_or_field": "DocField",
+        "fieldname": "material_request_type",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nPurchase\nMaterial Transfer\nMaterial Issue\nManufacture\nCustomer Provided\nPrice Request"
         },
     ],
   

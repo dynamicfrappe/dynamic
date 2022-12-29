@@ -1,7 +1,17 @@
 frappe.ui.form.on("Quotation",{
-    onload:function(frm) {
-        frm.events.refresh(frm)
+    setup_tera:function(frm){
+        console.log("function Run")
+        frm.set_query("material_reuqest",  function() {
+            return {
+                query: "dynamic.terra.doctype.quotation.quotation.matrerial_request_query",
+                filters: [frm.doc.items] ,
+                txt :"hrllo"
+                  
+            };
+        });
+        frm.refresh_field("material_reuqest")
     },
+
     onload:function(frm){
         frappe.call({
             method: "dynamic.api.get_active_domains",
@@ -9,6 +19,7 @@ frappe.ui.form.on("Quotation",{
                 
               if (r.message && r.message.length) {
                 if (r.message.includes("Terra")) {
+                    frm.events.setup_tera(frm)
                     if (frm.doc.docstatus == 1){
                         cur_frm.add_custom_button(__('Payment Entry'),
                                 cur_frm.cscript['Make Payment Entry'], __('Create'));

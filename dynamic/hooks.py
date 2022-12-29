@@ -170,6 +170,10 @@ doc_events = {
     "Supplier Quotation" :{
          "validate" : "dynamic.terra.api.submit_supplier_quotation",
           "on_submit":"dynamic.terra.api.submit_supplier_quotation"
+    } ,
+    "Appointment" :{
+        "validate":"dynamic.api.appointment_validate"
+
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
