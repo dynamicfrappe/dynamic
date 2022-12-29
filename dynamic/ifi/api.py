@@ -386,7 +386,9 @@ def get_events(start, end, filters=None):
 	from erpnext.controllers.queries import get_match_cond
 	from frappe.desk.calendar import get_event_conditions
 	filters = json.loads(filters)
-	conditions = get_event_conditions("Installations Furniture", filters)
+	# conditions = get_event_conditions("Appointment", filters)
+	conditions = get_event_conditions("Appointment", filters)
+	
 	events = []
 	data = frappe.db.sql("""
 		select
@@ -397,12 +399,14 @@ def get_events(start, end, filters=None):
 			 concat(`tabAppointment`.customer_name,'--',`tabAppointment`.scheduled_time )as description
 		from
 			`tabAppointment`
+			where
+			(`tabAppointment`.scheduled_time between %(start)s and %(end)s)
 			{conditions}
-		""".format(conditions=conditions), {
-			"start": start,
-			"end": end
-		}, as_dict=True,
-		update={"allDay": 0},)
+		""".format(conditions=conditions),
+		{"start": start, "end": end},
+		as_dict=True,
+		update={"allDay": 0},
+	)
 		
 	# for row in data:
 	# 	job_card_data = {
@@ -415,3 +419,34 @@ def get_events(start, end, filters=None):
 	# 	events.append(job_card_data)
 
 	return data
+
+
+
+
+@frappe.whitelist()
+def create_action_lead(source_name, target_doc=None):
+    doc = frappe.get_doc("Lead", source_name)
+    adction = frappe.new_doc("Actions")
+    adction.customer_type = 'Lead'
+    adction.date = doc.get('contact_date','').date() 
+    adction.time =doc.get('contact_date','').time() 
+    # adction.party = doc.name
+    # adction.customer_email = doc.email_id
+    return adction
+
+@frappe.whitelist()
+def create_action_cst(source_name, target_doc=None):
+	doc = frappe.get_doc("Customer", source_name)
+	action = frappe.new_doc("Actions")
+	action.customer_type = 'Customer'
+	action.customer = doc.get('name','') 
+	return action
+
+@frappe.whitelist()
+def create_action_opportunity(source_name, target_doc=None):
+	doc = frappe.get_doc("Opportunity", source_name)
+	action = frappe.new_doc("Actions")
+	action.customer_type = 'Opportunity'
+	action.customer = doc.get('name','') 
+	
+	return action

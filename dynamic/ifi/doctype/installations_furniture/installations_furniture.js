@@ -24,7 +24,6 @@ frappe.ui.form.on('Installations Furniture', {
 					],
 					primary_action_label: 'Submit',
 					primary_action(values) {
-						console.log(values);
 						d.hide();
 						frm.set_value("rate",values.rate);
 						frm.set_value("feedback",values.feedback);

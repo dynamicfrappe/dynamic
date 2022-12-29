@@ -114,7 +114,8 @@ doc_events = {
 
     "Sales Invoice": {
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
-        "validate": "dynamic.api.validate_active_domains"
+        "validate": "dynamic.api.validate_active_domains",
+        "on_cancel" :"dynamic.api.validate_active_domains_cancel"
     },
     "Item": {
         "autoname": "dynamic.api.autoname",

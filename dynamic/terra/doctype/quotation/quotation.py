@@ -197,6 +197,13 @@ class Quotation(SellingController):
 		dr_or_cr = "credit_in_account_currency"
 		rev_dr_or_cr = "debit_in_account_currency"
 		party = self.party_name
+
+
+
+		if self.quotation_to == "Lead" :
+			party_type = "Customer"
+			party = frappe.db.get_value("Customer" , {"lead_name":self.party_name},'name')
+			
 		
 		advance = frappe.db.sql(
 			"""
@@ -244,8 +251,14 @@ class Quotation(SellingController):
 			frappe.db.set_value(self.doctype, self.name, "advance_paid", advance_paid)
 
 	def get_advance_entries(self, include_unallocated=True):
+		
 		party_type = self.quotation_to
 		party = self.party_name
+
+		if self.quotation_to == "Lead" :
+			party_type = "Customer"
+			party = frappe.db.get_value("Customer" , {"lead_name":self.party_name},'name')
+		
 		party_account = get_party_account(party_type, party=party, company=self.company)
 		amount_field = "credit_in_account_currency"
 		order_field = None
@@ -494,6 +507,10 @@ def _make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
 	doclist.set_onload("ignore_price_list", True)
 
 	return doclist
+
+@frappe.whitelist()
+def make_customer(source_name, ignore_permissions=False):
+	return  _make_customer(source_name, ignore_permissions)
 
 
 def _make_customer(source_name, ignore_permissions=False):
