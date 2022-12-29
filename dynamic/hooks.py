@@ -84,6 +84,8 @@ doctype_js = {
     "Supplier":"public/js/supplier.js",
     "Customer":"public/js/customer.js",
     "Quotation":"public/js/quotation.js",
+    "Material Request" :"public/js/material_request.js"
+    
 }
 # doctype_js = {
 #     "Sales Invoice": "public/js/sales_invoice.js",
@@ -169,7 +171,7 @@ doc_events = {
         "on_submit":"dynamic.api.add_cost_center_to_asset"
     } ,
     "Supplier Quotation" :{
-         "validate" : "dynamic.terra.api.submit_supplier_quotation",
+        #  "validate" : "dynamic.terra.api.submit_supplier_quotation",
           "on_submit":"dynamic.terra.api.submit_supplier_quotation"
     } ,
     "Appointment" :{
