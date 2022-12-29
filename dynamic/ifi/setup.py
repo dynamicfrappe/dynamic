@@ -143,7 +143,7 @@ def install_action():
 
         ]
     for i in data :
-        if not frappe.db.exists("Action",i.get("action_name")) :
+        if not frappe.db.exists("Action",{"action_name":i.get("action_name")}) :
             frappe.get_doc({
                 "doctype":"Action",
                 "type":i.get("type"),

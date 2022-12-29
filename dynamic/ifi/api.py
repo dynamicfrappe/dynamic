@@ -440,7 +440,6 @@ def create_action_cst(source_name, target_doc=None):
 	action = frappe.new_doc("Actions")
 	action.customer_type = 'Customer'
 	action.customer = doc.get('name','') 
-	
 	return action
 
 @frappe.whitelist()
