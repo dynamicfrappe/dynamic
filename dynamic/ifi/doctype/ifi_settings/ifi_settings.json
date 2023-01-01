@@ -6,7 +6,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "role_installation_button"
+  "role_installation_button",
+  "email_group_quotation"
  ],
  "fields": [
   {
@@ -14,12 +15,18 @@
    "fieldtype": "Link",
    "label": "Role Installation Button",
    "options": "Role"
+  },
+  {
+   "fieldname": "email_group_quotation",
+   "fieldtype": "Link",
+   "label": "Email Group Quotation ",
+   "options": "Email Group"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-12-13 10:14:40.443778",
+ "modified": "2023-01-01 09:50:51.131553",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "IFI Settings",

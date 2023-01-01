@@ -416,7 +416,24 @@ def check_source_item(self,*args , **kwargs):
                 def_warhouse = check_delivery_warehosue(item.item_purchase_order,item.item_code,'')
                 item.db_set('warehouse',def_warhouse)
 
-    
+@frappe.whitelist()
+def add_crean_in_taxes(self,*args , **kwargs):
+    if "IFI" in DOMAINS and self.crean=='Yes':
+        crean_account = frappe.db.get_value('Company',self.company,'crean_income_account')
+        if not crean_account:
+            frappe.throw(_("Please Add Crean Account in company"))
+        total_tax=0
+        for tax in self.taxes:
+            if tax.total or tax.tax_amount:
+                total_tax += tax.total or tax.tax_amount
+        self.append('taxes',{
+            "charge_type":"Actual",
+            "account_head":crean_account,
+            "tax_amount":self.crean_amount,
+            "description":"Crean Charges",
+            "total":total_tax + self.crean_amount
+        })
+        
 
 @frappe.whitelist()
 def create_reservation_validate(self,*args , **kwargs):

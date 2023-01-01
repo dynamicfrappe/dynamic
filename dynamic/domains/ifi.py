@@ -12,6 +12,15 @@ installation_status = [
 data = {
 
     'custom_fields': {
+        'Company':[
+            {
+                "label":"Crean Income Account",
+                "fieldname":"crean_income_account",
+                "fieldtype":"Link",
+                "options":'Account',
+                "insert_after":"monthly_sales_target"
+            },
+        ],
         'Purchase Order':[
              {
                 "fieldname": "customer_so",
@@ -20,6 +29,12 @@ data = {
                 "insert_after": "more_info",
                 "label": "Customer SO",
             },
+            {
+                "label": "Delivery Date",
+                "fieldname": "delivery_date",
+                "fieldtype": "Date",
+                "insert_after": "schedule_date",
+            }
         ],
          'Quotation':[
             {
@@ -35,6 +50,14 @@ data = {
                 "fieldtype": "Float",
                 "insert_after": "crean",
                 "label": "Crean Amount",
+            },
+            {
+                "label": "Assigned To",
+                "fieldname": "assigned_to",
+                "fieldtype": "Link",
+                "options": "User",
+                "insert_after": "order_type",
+                "reqd":1
             },
          ],
          'Opportunity':[
@@ -125,6 +148,22 @@ data = {
                 "insert_after": "url",
             },
          ],
+         'Purchase Order':[
+             {
+                "fieldname": "crean",
+                "fieldtype": "Select",
+                "options":"\nYes\nNo",
+                "insert_after": "apply_tds",
+                "label": "Crean",
+                "reqd":1
+            },
+            {
+                "fieldname": "crean_amount",
+                "fieldtype": "Float",
+                "insert_after": "crean",
+                "label": "Crean Amount",
+            },
+         ]
     },
       "properties": [
         {
@@ -134,6 +173,62 @@ data = {
         "property": "allow_on_submit",
         "property_type": "Check",
         "value": "1"
+        },
+        {
+        "doctype": "Sales Invoice",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Purchase Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Purchase Invoice",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "order_type",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nSales\nMaintenance\nShopping Cart\nAccessories" 
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "status",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nDraft\nOpen\nReplied\nOrdered\nLost\nCancelled\nExpired\nRejected" 
         },
         {
         "doctype":"Item",

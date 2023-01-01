@@ -53,7 +53,8 @@ doctype_calendar_js = {
 # calendars = ["Appointment"]
 
 doctype_list_js = {
-                    "Customer" : "public/js/customer_list.js"
+                    "Customer" : "public/js/customer_list.js",
+                    "Quotation" : "public/js/quotation_list.js"
                     }
 
 after_install = "dynamic.install.after_install"
@@ -131,8 +132,10 @@ doc_events = {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
+        "before_submit": "dynamic.api.add_crean_in_taxes",
         "on_submit": "dynamic.api.create_reservation_validate",
-        "before_save": "dynamic.api.check_source_item",
+        "before_save":[
+            "dynamic.api.check_source_item"],
         "on_cancel":"dynamic.api.cancel_reservation",
         "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
@@ -159,7 +162,7 @@ doc_events = {
      },
      "Opportunity":{
        "validate" : "dynamic.ifi.api.opportunity_notifiy",
-    #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
+    #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy" 
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
@@ -171,6 +174,15 @@ doc_events = {
     "Supplier Quotation" :{
          "validate" : "dynamic.terra.api.submit_supplier_quotation",
           "on_submit":"dynamic.terra.api.submit_supplier_quotation"
+    },
+    "Item Price":{
+        "before_save":"dynamic.ifi.api.check_buying_price"
+    },
+    "Quotation":{
+        "before_save":"dynamic.ifi.api.quotation_send_email_cc", 
+    },
+    "Purchase Order":{
+        "before_save":"dynamic.ifi.api.send_mail_supplier_ifi_po"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",

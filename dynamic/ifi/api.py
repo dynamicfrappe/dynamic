@@ -20,37 +20,59 @@ DOMAINS = frappe.get_active_domains()
 @frappe.whitelist()
 def opportunity_notifiy(self, *args, **kwargs):
 	if "IFI" in DOMAINS:
-		# print('\n\n\n******** notifssssy')
 		get_alert_dict(self)
 		#reciever
 		email_quotation(self, *args, **kwargs)
 		# supplier_rfq_mail(self)
-        
+
+
+@frappe.whitelist()
+def quotation_send_email_cc (self, *args, **kwargs):
+	if 'IFI' in DOMAINS:
+		email_group = frappe.db.get_single_value('IFI Settings','email_group_quotation')
+		if email_group:
+			cc_emails = frappe.db.get_list('Email Group Member',filters={'email_group':email_group},fields=['email'],pluck='email')
+			if self.assigned_to:
+					email_args = {
+						"recipients": [self.assigned_to],
+						"cc": cc_emails,
+						"message": _("Quotation Appointement"),
+						"subject": 'Quotation Valid Till Date'.format(self.valid_till),
+						"message": "test quotation",
+						"attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+						"reference_doctype": self.doctype,
+						"reference_name": self.name
+						}
+					enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
+			else:
+				frappe.msgprint(_("{0}: Assigned To Has No Mail, hence email not sent").format(self.assigned_to))
+
 @frappe.whitelist()
 def daily_opportunity_notify(self, *args, **kwargs ):
-    # date_now =getdate()
-    today = datetime.now().strftime('%Y-%m-%d')
-    sql = f"""
-        select name,contact_by,customer_name,contact_date,'Opportunity' as doctype from tabOpportunity to2 
-		where CAST(contact_date AS DATE) ='{today}'
-    """
-    data = frappe.db.sql(sql,as_dict=1)
-    for opprt in data:
-        get_alert_dict(opprt)          
+	if 'IFI' in DOMAINS:
+		# date_now =getdate()
+		today = datetime.now().strftime('%Y-%m-%d')
+		sql = f"""
+			select name,contact_by,customer_name,contact_date,'Opportunity' as doctype from tabOpportunity to2 
+			where CAST(contact_date AS DATE) ='{today}'
+		"""
+		data = frappe.db.sql(sql,as_dict=1)
+		for opprt in data:
+			get_alert_dict(opprt)          
 
 @frappe.whitelist()
 def get_alert_dict(self):
-    owner_name = self.contact_by
-    customer_name = self.customer_name
-    contact_date = self.contact_date
-    notif_doc = frappe.new_doc('Notification Log')
-    notif_doc.subject = f"{owner_name} Contact to {customer_name} at {contact_date}"
-    notif_doc.for_user = owner_name
-    notif_doc.type = "Mention"
-    notif_doc.document_type = self.doctype
-    notif_doc.document_name = self.name
-    notif_doc.from_user = frappe.session.user
-    notif_doc.insert(ignore_permissions=True)
+	owner_name = self.contact_by
+	customer_name = self.customer_name
+	contact_date = self.contact_date
+	notif_doc = frappe.new_doc('Notification Log')
+	notif_doc.subject = f"{owner_name} Contact to {customer_name} at {contact_date}"
+	notif_doc.for_user = owner_name
+	notif_doc.type = "Mention"
+	notif_doc.document_type = self.doctype
+	notif_doc.document_name = self.name
+	notif_doc.from_user = frappe.session.user
+	notif_doc.insert(ignore_permissions=True)
 
 
 
@@ -63,7 +85,7 @@ def email_quotation(self,*args, **kwargs):
 				"recipients": [receiver],
 				"message": _("Quotation Appointement"),
 				"subject": 'Quotation Appointement At Date'.format(self.contact_date),
-                # "message": self.get_message(),
+				# "message": self.get_message(),
 				# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
 				"reference_doctype": self.doctype,
 				"reference_name": self.name
@@ -91,45 +113,45 @@ def email_supplier_invoice(self,*args, **kwargs):
 
 @frappe.whitelist()
 def create_furniture_installation_order(source_name, target_doc=None):
-    doclist = get_mapped_doc("Sales Order", source_name, {
-        "Sales Order": {
-            "doctype": "Installations Furniture",
-            "field_map": {
-                "name": "sales_order",
-                "customer": "customer"
-            },
-            "validation": {
-                "docstatus": ["=", 1]
-            }
-        },
-        "Sales Order Item": {
-            "doctype": "Installation Furniture Item",
-            "field_map": {
-                "name":"ref_name",
-                "item_code": "item_code",
-                "item_name": "item_name",
-                "qty": "qty",
-                "rate": "rate",
-                "amount": "amount",
-                "delivery_date":"delivery_date",
-            }
-        }
-    }, target_doc)
-    
-    return doclist
-    
+	doclist = get_mapped_doc("Sales Order", source_name, {
+		"Sales Order": {
+			"doctype": "Installations Furniture",
+			"field_map": {
+				"name": "sales_order",
+				"customer": "customer"
+			},
+			"validation": {
+				"docstatus": ["=", 1]
+			}
+		},
+		"Sales Order Item": {
+			"doctype": "Installation Furniture Item",
+			"field_map": {
+				"name":"ref_name",
+				"item_code": "item_code",
+				"item_name": "item_name",
+				"qty": "qty",
+				"rate": "rate",
+				"amount": "amount",
+				"delivery_date":"delivery_date",
+			}
+		}
+	}, target_doc)
+	
+	return doclist
+	
 
 @frappe.whitelist()
 def make_sales_order(source_name, target_doc=None):
-	print('\n\n\n\n*****************')
-	quotation = frappe.db.get_value(
-		"Quotation", source_name, ["transaction_date", "valid_till"], as_dict=1
-	)
-	if quotation.valid_till and (
-		quotation.valid_till < quotation.transaction_date or quotation.valid_till < getdate(nowdate())
-	):
-		frappe.throw(_("Validity period of this quotation has ended."))
-	return _make_sales_order(source_name, target_doc)
+	if 'IFI' in DOMAINS:
+		quotation = frappe.db.get_value(
+			"Quotation", source_name, ["transaction_date", "valid_till"], as_dict=1
+		)
+		if quotation.valid_till and (
+			quotation.valid_till < quotation.transaction_date or quotation.valid_till < getdate(nowdate())
+		):
+			frappe.throw(_("Validity period of this quotation has ended."))
+		return _make_sales_order(source_name, target_doc)
 
 
 def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
@@ -164,15 +186,15 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 		source_name,
 		{
 			"Quotation": {
-                "doctype": "Sales Order",
-                "field_map": {
-                    "crean": "crean",
-                    "crean_amount": "crean_amount",
+				"doctype": "Sales Order",
+				"field_map": {
+					"crean": "crean",
+					"crean_amount": "crean_amount",
 					"allocate_advances_automatically":"allocate_advances_automatically"
-                },
-                "validation": 
-                {"docstatus": ["=", 1]}
-                },
+				},
+				"validation": 
+				{"docstatus": ["=", 1]}
+				},
 			"Quotation Item": {
 				"doctype": "Sales Order Item",
 				"field_map": {"parent": "prevdoc_docname"},
@@ -366,14 +388,15 @@ def get_link(self):
 
 @frappe.whitelist()
 def create_new_appointment_ifi(source_name, target_doc=None):
-    doc = frappe.get_doc("Lead", source_name)
-    appointment_doc = frappe.new_doc("Appointment")
-    appointment_doc.customer_name = doc.lead_name
-    appointment_doc.customer_phone_number = doc.get('phone_no1','') 
-    appointment_doc.appointment_with = "Lead"
-    appointment_doc.party = doc.name
-    appointment_doc.customer_email = doc.email_id
-    return appointment_doc
+	if 'IFI' in DOMAINS:
+		doc = frappe.get_doc("Lead", source_name)
+		appointment_doc = frappe.new_doc("Appointment")
+		appointment_doc.customer_name = doc.lead_name
+		appointment_doc.customer_phone_number = doc.get('phone_no1','') 
+		appointment_doc.appointment_with = "Lead"
+		appointment_doc.party = doc.name
+		appointment_doc.customer_email = doc.email_id
+		return appointment_doc
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
@@ -410,12 +433,12 @@ def get_events(start, end, filters=None):
 		
 	# for row in data:
 	# 	job_card_data = {
-    #         "start": row.start,
-    #         "planned_end_date": row.end,
-    #         "name": row.name,
-    #         "subject": row.customer,
-    #         "color":'#D3D3D3',
-    #     }
+	#         "start": row.start,
+	#         "planned_end_date": row.end,
+	#         "name": row.name,
+	#         "subject": row.customer,
+	#         "color":'#D3D3D3',
+	#     }
 	# 	events.append(job_card_data)
 
 	return data
@@ -425,14 +448,14 @@ def get_events(start, end, filters=None):
 
 @frappe.whitelist()
 def create_action_lead(source_name, target_doc=None):
-    doc = frappe.get_doc("Lead", source_name)
-    adction = frappe.new_doc("Actions")
-    adction.customer_type = 'Lead'
-    adction.date = doc.get('contact_date','').date() 
-    adction.time =doc.get('contact_date','').time() 
-    # adction.party = doc.name
-    # adction.customer_email = doc.email_id
-    return adction
+	doc = frappe.get_doc("Lead", source_name)
+	adction = frappe.new_doc("Actions")
+	adction.customer_type = 'Lead'
+	adction.date = doc.get('contact_date','').date() 
+	adction.time =doc.get('contact_date','').time() 
+	# adction.party = doc.name
+	# adction.customer_email = doc.email_id
+	return adction
 
 @frappe.whitelist()
 def create_action_cst(source_name, target_doc=None):
@@ -448,5 +471,45 @@ def create_action_opportunity(source_name, target_doc=None):
 	action = frappe.new_doc("Actions")
 	action.customer_type = 'Opportunity'
 	action.customer = doc.get('name','') 
-	
 	return action
+
+@frappe.whitelist()
+def check_buying_price(self,*args , **kwargs):
+	if 'IFI' in DOMAINS:
+		if self.buying:
+			buying_rate = self.price_list_rate
+			if buying_rate > 0.0:
+				selling_prices = frappe.db.get_list('Item Price',filters={"selling":1,"item_code":self.item_code},fields=['name','price_list_rate'])
+				for price in selling_prices:
+					if buying_rate > price.price_list_rate:
+						frappe.throw(_(f"Item Price {buying_rate} has value more than {price.name} "))
+
+@frappe.whitelist()
+def reject_quotation_ifi(source_name):
+	try:
+		frappe.db.set_value("Quotation",source_name,"status","Rejected")
+		return True
+	except Exception as ex:
+		return str(ex)
+		print("exception",str(ex)) 
+
+
+@frappe.whitelist()
+def send_mail_supplier_ifi_po(self,*args,**kwargs):
+	if 'IFI' in DOMAINS: 
+		if self.supplier:
+			email_id = frappe.db.get_value('Supplier',self.supplier,'email_id')
+			if email_id:
+					email_args = {
+						"recipients": email_id,
+						"message": _("Purchase Order Notify"),
+						"subject": 'Purchase Order',
+						"message": "test Purchase Order",
+						# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+						"reference_doctype": self.doctype,
+						"reference_name": self.name
+						}
+					enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
+			else:
+				frappe.msgprint(_("{0}:Supplier Has No Mail").format(self.supplier))
+
