@@ -32,9 +32,10 @@ def quotation_send_email_cc (self, *args, **kwargs):
 		email_group = frappe.db.get_single_value('IFI Settings','email_group_quotation')
 		if email_group:
 			cc_emails = frappe.db.get_list('Email Group Member',filters={'email_group':email_group},fields=['email'],pluck='email')
-			if self.assigned_to:
+			email_id = frappe.db.get_value('Supplier',self.party_name,'email_id')
+			if self.email_id:
 					email_args = {
-						"recipients": [self.assigned_to],
+						"recipients": email_id,#
 						"cc": cc_emails,
 						"message": _("Quotation Appointement"),
 						"subject": 'Quotation Valid Till Date'.format(self.valid_till),
@@ -45,7 +46,7 @@ def quotation_send_email_cc (self, *args, **kwargs):
 						}
 					enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
 			else:
-				frappe.msgprint(_("{0}: Assigned To Has No Mail, hence email not sent").format(self.assigned_to))
+				frappe.msgprint(_("{0}: Customer  Has No Mail, hence email not sent"))
 
 @frappe.whitelist()
 def daily_opportunity_notify(self, *args, **kwargs ):

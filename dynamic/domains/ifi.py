@@ -163,7 +163,23 @@ data = {
                 "insert_after": "crean",
                 "label": "Crean Amount",
             },
-         ]
+         ],
+         'Purchase Invoice':[
+             {
+                "fieldname": "crean",
+                "fieldtype": "Select",
+                "options":"\nYes\nNo",
+                "insert_after": "due_date",
+                "label": "Crean",
+                "reqd":1
+            },
+            {
+                "fieldname": "crean_amount",
+                "fieldtype": "Float",
+                "insert_after": "crean",
+                "label": "Crean Amount",
+            },
+         ],
     },
       "properties": [
         {
