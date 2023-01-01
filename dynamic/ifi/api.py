@@ -33,7 +33,7 @@ def quotation_send_email_cc (self, *args, **kwargs):
 		if email_group:
 			cc_emails = frappe.db.get_list('Email Group Member',filters={'email_group':email_group},fields=['email'],pluck='email')
 			email_id = frappe.db.get_value('Supplier',self.party_name,'email_id')
-			if self.email_id:
+			if email_id:
 					email_args = {
 						"recipients": email_id,#
 						"cc": cc_emails,

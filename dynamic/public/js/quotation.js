@@ -36,7 +36,12 @@ frappe.ui.form.on("Quotation",{
                 if (r.message.includes("IFI")) {
                     if (frm.doc.docstatus == 1 && frm.doc.status !== "Rejected") {
                         frm.add_custom_button(__('Reject'),()=>{
-                            frm.events.reject_quotation(frm)
+                            frappe.confirm('Are you sure you want to Reject',
+                                () => {
+                                    frm.events.reject_quotation(frm)
+                                }, () => {
+                                    // action to perform if No is selected
+                                })
                         },__('Create'))
                     }};
                    
@@ -52,6 +57,8 @@ frappe.ui.form.on("Quotation",{
             },
             callback:function(r){
                 frm.refresh()
+                frm.reload_doc()
+
             }
 
         })
