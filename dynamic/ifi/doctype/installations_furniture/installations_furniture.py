@@ -174,3 +174,9 @@ def email_employee_send(self,receiver=None):
 
 
 
+
+
+
+@frappe.whitelist()
+def reject_quotation_ifi(source_name):
+	frappe.db.set_value("Quotation",source_name,"status","Rejected")

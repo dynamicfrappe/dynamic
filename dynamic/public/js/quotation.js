@@ -56,13 +56,12 @@ frappe.ui.form.on("Quotation",{
     },
     reject_quotation(frm){
         frappe.call({
-            method:"dynamic.ifi.api.reject_quotation_ifi",
+            method:"dynamic.ifi.doctype.installations_furniture.installations_furniture.reject_quotation_ifi",
             args:{
                 source_name:frm.doc.name, 
             },
             callback:function(r){
                 frm.reload_doc()
-
             }
 
         })
