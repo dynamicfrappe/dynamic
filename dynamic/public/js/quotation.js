@@ -44,11 +44,11 @@ frappe.ui.form.on("Quotation",{
                                 })
                         },__('Create'))
 
-                        frm.add_custom_button(__('Reject2'),()=>{                    
-                                    frm.events.reject_quotation2(frm)
+                    //     frm.add_custom_button(__('Reject2'),()=>{                    
+                    //                 frm.events.reject_quotation2(frm)
                                
-                        },__('Create'))
-                    }};
+                    //     },__('Create'))
+                    // }};
                    
             }
         }
