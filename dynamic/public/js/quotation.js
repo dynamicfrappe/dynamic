@@ -43,6 +43,11 @@ frappe.ui.form.on("Quotation",{
                                     // action to perform if No is selected
                                 })
                         },__('Create'))
+
+                        frm.add_custom_button(__('Reject2'),()=>{                    
+                                    frm.events.reject_quotation2(frm)
+                               
+                        },__('Create'))
                     }};
                    
             }
@@ -50,6 +55,20 @@ frappe.ui.form.on("Quotation",{
     })
     },
     reject_quotation(frm){
+        frappe.call({
+            method:"dynamic.ifi.api.reject_quotation_ifi",
+            args:{
+                source_name:frm.doc.name, 
+            },
+            callback:function(r){
+                frm.reload_doc()
+
+            }
+
+        })
+    },
+
+    reject_quotation2(frm){
         frappe.call({
             method:"dynamic.ifi.api.reject_quotation_ifi",
             args:{
