@@ -55,8 +55,8 @@ frappe.ui.form.on("Quotation",{
     })
     },
     reject_quotation(frm){
-        frappe.call({
-            method:"dynamic.ifi.doctype.installations_furniture.installations_furniture.reject_quotation_ifi",
+        frm.call({
+            method:"dynamic.ifi.doctype.installations_furniture.installations_furniture.reqject_quotation",
             args:{
                 source_name:frm.doc.name, 
             },
@@ -67,19 +67,7 @@ frappe.ui.form.on("Quotation",{
         })
     },
 
-    reject_quotation2(frm){
-        frappe.call({
-            method:"dynamic.ifi.api.reject_quotation_ifi",
-            args:{
-                source_name:frm.doc.name, 
-            },
-            callback:function(r){
-                frm.reload_doc()
-
-            }
-
-        })
-    },
+ 
 })
 
 
