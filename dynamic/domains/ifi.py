@@ -241,6 +241,14 @@ data = {
         {
         "doctype": "Quotation",
         "doctype_or_field": "DocField",
+        "fieldname": "order_type",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nSales\nMaintenance\nShopping Cart\nAccessories" 
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
         "fieldname": "status",
         "property": "options",
         "property_type": "Text",
