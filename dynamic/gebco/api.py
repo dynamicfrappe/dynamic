@@ -139,3 +139,9 @@ def create_installation_request(sales_order):
     installation_request_doc.save()
     return installation_request_doc
     
+
+
+@frappe.whitelist()
+def get_gebco_items(doc):
+    items = frappe.db.get_list("Item",filters={"item_group","Queclink devices"},fields=['name'],pluck='name')
+    return items

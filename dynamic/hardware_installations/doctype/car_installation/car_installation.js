@@ -41,6 +41,14 @@ frappe.ui.form.on("Car Installation", {
       };
     });
 
+    frm.set_query("gps_item_code_alt", function () {
+      return {
+        filters: [
+          ["item_group", "=", "Queclink devices"],
+        ],
+      };
+    });
+
     frm.set_query("gps_serial_number", function () {
       return {
         filters: [

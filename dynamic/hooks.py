@@ -303,7 +303,8 @@ jenv = {
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",
-        "get_balance_on:erpnext.accounts.utils.get_balance_on"
+        "get_balance_on:erpnext.accounts.utils.get_balance_on",
+        "get_gebco_items:dynamic.gebco.api.get_gebco_items",
     ],
     "filters": []
 }
