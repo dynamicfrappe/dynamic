@@ -56,7 +56,6 @@ frappe.ui.form.on("Quotation",{
                 source_name:frm.doc.name, 
             },
             callback:function(r){
-                frm.refresh()
                 frm.reload_doc()
 
             }

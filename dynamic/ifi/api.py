@@ -525,9 +525,9 @@ def get_alert_dict_quotation(self):
 
 @frappe.whitelist()
 def reject_quotation_ifi(source_name):
-	try:
-		frappe.db.set_value("Quotation",source_name,"status","Rejected")
-		return True
-	except Exception as ex:
-		return str(ex)
-		print("exception",str(ex)) 
+	frappe.db.set_value("Quotation",source_name,"status","Rejected")
+	# try:
+	# 	return True
+	# except Exception as ex:
+	# 	return str(ex)
+	# 	print("exception",str(ex)) 
