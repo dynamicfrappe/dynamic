@@ -485,14 +485,7 @@ def check_buying_price(self,*args , **kwargs):
 					if buying_rate > price.price_list_rate:
 						frappe.throw(_(f"Item Price {buying_rate} has value more than {price.name} "))
 
-@frappe.whitelist()
-def reject_quotation_ifi(source_name):
-	try:
-		frappe.db.set_value("Quotation",source_name,"status","Rejected")
-		return True
-	except Exception as ex:
-		return str(ex)
-		print("exception",str(ex)) 
+
 
 
 @frappe.whitelist()
@@ -514,3 +507,11 @@ def send_mail_supplier_ifi_po(self,*args,**kwargs):
 			else:
 				frappe.msgprint(_("{0}:Supplier Has No Mail").format(self.supplier))
 
+@frappe.whitelist()
+def reject_quotation_ifi(source_name):
+	try:
+		frappe.db.set_value("Quotation",source_name,"status","Rejected")
+		return True
+	except Exception as ex:
+		return str(ex)
+		print("exception",str(ex)) 
