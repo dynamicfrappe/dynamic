@@ -85,6 +85,7 @@ doctype_js = {
     "Supplier":"public/js/supplier.js",
     "Customer":"public/js/customer.js",
     "Quotation":"public/js/quotation.js",
+    "Opportunity":"public/js/opportunity.js",
     "Material Request" :"public/js/material_request.js"
     
 }
