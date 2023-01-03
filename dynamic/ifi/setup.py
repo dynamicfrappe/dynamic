@@ -62,7 +62,7 @@ def create_lead_script():
         doc.save()
 
 def create_customer_script():
-    name = "customer-IFI-Form"
+    name = "Customer-Form"
     if frappe.db.exists("Client Script",name) :
         doc = frappe.get_doc("Client Script",name)
     else :
