@@ -31,9 +31,22 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "action",
+   "link_to": "Actions",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
+<<<<<<< HEAD
  "modified": "2023-01-03 10:53:31.603568",
+=======
+ "modified": "2023-01-03 11:06:06.864012",
+>>>>>>> local
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "CRM Extend",

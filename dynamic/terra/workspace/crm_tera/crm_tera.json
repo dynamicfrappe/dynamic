@@ -44,6 +44,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+<<<<<<< HEAD
    "label": "Actions Report",
    "link_to": "Actions Report",
    "link_type": "Report",
@@ -53,6 +54,8 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+=======
+>>>>>>> local
    "label": "Item Request",
    "link_to": "Item Request",
    "link_type": "DocType",
@@ -62,6 +65,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+<<<<<<< HEAD
    "label": "Actions",
    "link_to": "Actions",
    "link_type": "DocType",
@@ -81,10 +85,14 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Actions Report",
+=======
+   "label": "Activities Report",
+>>>>>>> local
    "link_to": "Actions Report",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+<<<<<<< HEAD
   },
   {
    "hidden": 0,
@@ -97,9 +105,15 @@
   }
  ],
  "modified": "2023-03-08 15:48:47.900272",
+=======
+  }
+ ],
+ "modified": "2023-01-03 11:17:46.078563",
+>>>>>>> local
  "modified_by": "Administrator",
  "module": "terra",
  "name": "CRM Tera",
+ "onboarding": "CRM",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
