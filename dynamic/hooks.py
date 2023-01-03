@@ -182,7 +182,7 @@ doc_events = {
         "before_save":"dynamic.ifi.api.check_buying_price"
     },
     "Quotation":{
-        "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
+        "validate":"dynamic.ifi.api.quotation_send_email_cc", 
     },
     "Purchase Order":{
         "before_save":"dynamic.ifi.api.send_mail_supplier_ifi_po"
