@@ -34,7 +34,22 @@ data = {
                 "fieldname": "delivery_date",
                 "fieldtype": "Date",
                 "insert_after": "schedule_date",
-            }
+            },
+            {
+                "fieldname": "crean",
+                "fieldtype": "Select",
+                "options":"\nYes\nNo",
+                "insert_after": "apply_tds",
+                "label": "Crean",
+                "reqd":1
+            },
+            {
+                "fieldname": "crean_amount",
+                "fieldtype": "Float",
+                "insert_after": "crean",
+                "label": "Crean Amount",
+            },
+
         ],
          'Quotation':[
             {
@@ -146,22 +161,6 @@ data = {
                 "fieldname": "check_url",
                 "fieldtype": "Button",
                 "insert_after": "url",
-            },
-         ],
-         'Purchase Order':[
-             {
-                "fieldname": "crean",
-                "fieldtype": "Select",
-                "options":"\nYes\nNo",
-                "insert_after": "apply_tds",
-                "label": "Crean",
-                "reqd":1
-            },
-            {
-                "fieldname": "crean_amount",
-                "fieldtype": "Float",
-                "insert_after": "crean",
-                "label": "Crean Amount",
             },
          ],
          'Purchase Invoice':[
