@@ -82,7 +82,7 @@ const QuotationController_Extend = erpnext.selling.QuotationController.extend({
               if (r.message && r.message.length) {
                 if (r.message.includes("IFI")) {
                     cur_frm.cscript['Make Sales Order'] = create_ifi_sales_order
-                    cur_frm.cscript['Make Payment Entry'] = create_ifi_payment_entry
+                    // cur_frm.cscript['Make Payment Entry'] = create_ifi_payment_entry
                     if(doc.docstatus == 1 && doc.status!=='Lost') {
                         if(!doc.valid_till || frappe.datetime.get_diff(doc.valid_till, frappe.datetime.get_today()) >= 0) {
                             cur_frm.page.remove_inner_button('Sales Order','Create')
@@ -113,20 +113,20 @@ var create_ifi_sales_order = function() {
 }
 
 
-var create_ifi_payment_entry = function() {
-    frappe.model.open_mapped_doc({
-        method:
-        "dynamic.terra.api.get_payment_entry_quotation",
-        frm: cur_frm,
-      });
-}
-
-
-
-// cur_frm.cscript['Make Payment Entry'] = function() {
+// var create_ifi_payment_entry = function() {
 //     frappe.model.open_mapped_doc({
 //         method:
 //         "dynamic.terra.api.get_payment_entry_quotation",
 //         frm: cur_frm,
 //       });
 // }
+
+
+
+cur_frm.cscript['Make Payment Entry'] = function() {
+    frappe.model.open_mapped_doc({
+        method:
+        "dynamic.terra.api.get_payment_entry_quotation",
+        frm: cur_frm,
+      });
+}
