@@ -198,3 +198,18 @@ def submit_supplier_quotation(doc ,*args ,**kwargs) :
       
         from dynamic.terra.doctype.supplier_quotation.supplier_quotation import submit_supplier_quotation as tera_submit_quotation
         tera_submit_quotation(doc) 
+
+
+
+
+
+@frappe.whitelist()
+def create_action_doc(source_name ,target_doc=None ):
+    doctype = frappe.flags.args.doctype
+    # source_doc = frappe.get_doc(doctype,docname)
+    target_doc = frappe.new_doc("Actions")
+    target_doc.customer_type = doctype
+    target_doc.customer = source_name
+    return target_doc
+
+
