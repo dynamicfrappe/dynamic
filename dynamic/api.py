@@ -655,7 +655,7 @@ def validate_whats_app_settings(data , *args ,**kwargs) :
 
 
 
-# @frappe.whitelist()
+@frappe.whitelist()
 def modeofpaymentautoname(self,fun=''):
     print("************************************************** ")
     #frappe.throw("----------------------------------------------")
