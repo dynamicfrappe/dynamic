@@ -857,3 +857,7 @@ def create_new_appointment_ifi(source_name, target_doc=None):
     appointment_doc.party = doc.name
     appointment_doc.customer_email = doc.email_id
     return appointment_doc
+
+@frappe.whitelist()
+def add_crean_in_taxes(doc,*args,**kwargs):
+    ...
