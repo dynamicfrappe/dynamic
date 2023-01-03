@@ -157,7 +157,7 @@ doc_events = {
     },
     "Purchase Invoice": {
         "on_submit": "dynamic.api.submit_purchase_invoice",
-        "validate": ["dynamic.api.check_crean_amount_after_mapped_doc_pi"],
+        "validate": ["dynamic.api.check_crean_amount_after_mapped_doc_pi",],
      },
      "Stock Entry":{
         # In This Target check the branches data in cost center  
