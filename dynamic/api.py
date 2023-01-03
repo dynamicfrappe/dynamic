@@ -858,6 +858,103 @@ def create_new_appointment_ifi(source_name, target_doc=None):
     appointment_doc.customer_email = doc.email_id
     return appointment_doc
 
+
+from erpnext import get_company_currency, get_default_company
+
 @frappe.whitelist()
 def add_crean_in_taxes(doc,*args,**kwargs):
-    ...
+    company = get_default_company()
+    if 'IFI' in DOMAINS:
+        if(doc.crean=='Yes' and doc.crean_amount >0):
+            amount = 0
+            if len(doc.taxes):
+                for row in doc.taxes:
+                    amount += row.total
+
+            crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
+            doc.append("taxes",{
+                "charge_type":"Actual",
+                "account_head":crean_account,
+                "tax_amount":doc.crean_amount,
+                "total":doc.crean_amount + amount,
+                "description":crean_account
+            })
+            doc.total_taxes_and_charges = doc.crean_amount + amount
+
+@frappe.whitelist()    
+def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
+    if 'IFI' in DOMAINS:
+        if(doc.crean=='Yes' and doc.crean_amount >0):
+            crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
+            flage_crean_tax = True
+            amount = 0
+            if len(doc.taxes):
+                for row in doc.taxes:
+                    amount += row.tax_amount
+                    if row.account_head == crean_account:
+                        row.tax_amount = doc.crean_amount
+                        flage_crean_tax = False
+                else:
+                    if  flage_crean_tax:
+                        doc.append("taxes",{
+                        "charge_type":"Actual",
+                        "account_head":crean_account,
+                        "tax_amount":doc.crean_amount,
+                        "total":doc.crean_amount + amount,
+                        "description":crean_account
+                    })
+                    # doc.total_taxes_and_charges = doc.crean_amount + amount
+                 
+
+
+
+
+@frappe.whitelist()
+def add_crean_in_taxes_po(doc,*args,**kwargs):
+    company = get_default_company()
+    if 'IFI' in DOMAINS:
+        if(doc.crean=='Yes' and doc.crean_amount >0):
+            amount = 0
+            if len(doc.taxes):
+                for row in doc.taxes:
+                    amount = row.total
+
+            crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
+            doc.append("taxes",{
+                "charge_type":"Actual",
+                "account_head":crean_account,
+                "tax_amount":doc.crean_amount,
+                "total":doc.crean_amount + amount,
+                "description":crean_account,
+                "category":"Total",
+                "add_deduct_tax":"Add",
+            })
+            doc.total_taxes_and_charges = doc.crean_amount + amount
+
+@frappe.whitelist()    
+def check_crean_amount_after_mapped_doc_pi(doc,*args,**kwargs):
+    if 'IFI' in DOMAINS:
+        if(doc.crean=='Yes' and doc.crean_amount >0):
+            crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
+            flage_crean_tax = True
+            amount = 0
+            total_tax = 0
+            if len(doc.taxes):
+                for row in doc.taxes:
+                    total_tax = row.total
+                    amount += row.tax_amount
+                    if row.account_head == crean_account:
+                        row.tax_amount = doc.crean_amount
+                        flage_crean_tax = False
+                else:
+                    if  flage_crean_tax:
+                        doc.append("taxes",{
+                        "charge_type":"Actual",
+                        "account_head":crean_account,
+                        "tax_amount":doc.crean_amount,
+                        "total":doc.crean_amount + total_tax,
+                        "description":crean_account,
+                        "category":"Total",
+                        "add_deduct_tax":"Add",
+                    })
+                    # doc.total_taxes_and_charges = doc.crean_amount + amount

@@ -34,21 +34,35 @@ frappe.ui.form.on("Quotation",{
                     }
                 }
                 if (r.message.includes("IFI")) {
-                    if (frm.doc.docstatus == 1 && frm.doc.status !== "Rejected") {
-                        frm.add_custom_button(__('Reject'),()=>{
-                            frappe.confirm('Are you sure you want to Reject',
-                                () => {
-                                    frm.events.reject_quotation(frm)
-                                }, () => {
-                                    // action to perform if No is selected
-                                })
-                        },__('Create'))
+                    // if (frm.doc.crean == 'Yes' && frm.doc.crean_amount > 0) {
+                    //     frappe.call({
+                    //         method:"",
+                    //         args:{
+                    //             frm:frm.doc.name,
+                    //             crean_amount:frm.doccrean_amount
+                    //         },
+                    //         callback:function(r){
+                    //             frm.refresh()
+                    //         }
+                    //     })
 
-                        // frm.add_custom_button(__('Reject2'),()=>{                    
-                        //             frm.events.reject_quotation2(frm)
+                    // }
+                    // if (frm.doc.docstatus == 1 && frm.doc.status !== "Rejected") {
+                    //     frm.add_custom_button(__('Reject'),()=>{
+                    //         frappe.confirm('Are you sure you want to Reject',
+                    //             () => {
+                    //                 frm.events.reject_quotation(frm)
+                    //             }, () => {
+                    //                 // action to perform if No is selected
+                    //             })
+                    //     },__('Create'))
+
+                    //     // frm.add_custom_button(__('Reject2'),()=>{                    
+                    //     //             frm.events.reject_quotation2(frm)
                                
-                        // },__('Create'))
-                    }};
+                    //     // },__('Create'))
+                    // }
+                };
                    
             }
         }
