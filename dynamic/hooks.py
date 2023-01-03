@@ -135,7 +135,7 @@ doc_events = {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
-        "validate": ["dynamic.api.check_crean_amount_after_mapped_doc"],
+        "validate": "dynamic.api.check_crean_amount_after_mapped_doc",
         "on_submit": "dynamic.api.create_reservation_validate",
         "before_save":[
             "dynamic.api.check_source_item"],
