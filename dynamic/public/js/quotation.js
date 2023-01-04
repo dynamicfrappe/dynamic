@@ -34,6 +34,7 @@ frappe.ui.form.on("Quotation",{
                     }
                 }
                 if (r.message.includes("IFI")) {
+                    
                     // if (frm.doc.crean == 'Yes' && frm.doc.crean_amount > 0) {
                     //     frappe.call({
                     //         method:"",
