@@ -784,3 +784,17 @@ def make_purchase_order(source_name, selected_items=None, target_doc=None):
 	set_delivery_date(doc.items, source_name)
 
 	return doc
+
+
+from six import string_types
+
+@frappe.whitelist()
+def get_doc(frm_name):
+	meta = frappe.get_meta("Attendance Rule")
+	frappe.errprint(f'\n\n\n\n-in if-meta> {meta}',)
+	# if isinstance("Attendance Rule", string_types):
+	# 	target_doc = frappe.get_doc(json.loads("Attendance Rule"))
+	# 	frappe.errprint('\n\n\n\n-in if-target_doc>',target_doc)
+	# frappe.errprint('\n\n\n\n--out if>')
+	
+	...

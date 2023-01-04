@@ -880,18 +880,21 @@ def add_crean_in_taxes(doc,*args,**kwargs):
                 "total":doc.crean_amount + total,
                 "description":crean_account
             })
+            total = doc.crean_amount + total
             doc.total_taxes_and_charges = doc.crean_amount + total
         elif  doc.doctype == "Purchase Order" and crean_account:
             doc.append("taxes",{
                 "charge_type":"Actual",
                 "account_head":crean_account,
                 "tax_amount":doc.crean_amount,
-                "total":doc.crean_amount + total,
+                "total":doc.crean_amount + total,		
+                "tax_amount_after_discount_amount":doc.crean_amount,		
                 "description":crean_account,
                 "category":"Total",
                 "add_deduct_tax":"Add",
             })
-            doc.total_taxes_and_charges = doc.crean_amount + total
+            total = doc.crean_amount + total
+            doc.total_taxes_and_charges =  total
 
 @frappe.whitelist()    
 def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
@@ -903,10 +906,8 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
             if len(doc.taxes):
                 for row in doc.taxes:
                     total = row.total
-                    print('\n\n\n total ??--?',total)
                     if row.account_head == crean_account:
                         row.tax_amount = doc.crean_amount
-                        print('\n\n\n row',doc.crean_amount , row.total)
                         row.total =  row.total
                         flage_crean_tax = False
                 else:
@@ -928,7 +929,6 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                         "category":"Total",
                         "add_deduct_tax":"Add",
                     })
-                print('\n\n\n total',total)
                 doc.total_taxes_and_charges = doc.crean_amount + total
                  
 
