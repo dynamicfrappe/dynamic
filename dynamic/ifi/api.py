@@ -28,16 +28,17 @@ def opportunity_notifiy(self, *args, **kwargs):
 
 @frappe.whitelist()
 def quotation_send_email_cc (self, *args, **kwargs):
-	get_alert_dict_quotation(self)
 	if 'IFI' in DOMAINS:
+		get_alert_dict_quotation(self)
 		email_group = frappe.db.get_single_value('IFI Settings','email_group_quotation')
 		email_id = frappe.db.get_value('Customer',self.party_name,'email_id')
+		cc_emails=[]
 		if email_group:
 			cc_emails = frappe.db.get_list('Email Group Member',filters={'email_group':email_group},fields=['email'],pluck='email')
 		if email_id:
 				email_args = {
 					"recipients": email_id,#
-					"cc": cc_emails if cc_emails else [],
+					"cc": cc_emails if len(cc_emails) else [],
 					"message": _("Quotation Appointement"),
 					"subject": 'Quotation Valid Till Date'.format(self.valid_till),
 					"message": "test quotation",
@@ -786,15 +787,6 @@ def make_purchase_order(source_name, selected_items=None, target_doc=None):
 	return doc
 
 
-from six import string_types
 
-@frappe.whitelist()
-def get_doc(frm_name):
-	meta = frappe.get_meta("Attendance Rule")
-	frappe.errprint(f'\n\n\n\n-in if-meta> {meta}',)
-	# if isinstance("Attendance Rule", string_types):
-	# 	target_doc = frappe.get_doc(json.loads("Attendance Rule"))
-	# 	frappe.errprint('\n\n\n\n-in if-target_doc>',target_doc)
-	# frappe.errprint('\n\n\n\n--out if>')
-	
-	...
+
+

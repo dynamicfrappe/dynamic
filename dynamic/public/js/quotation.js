@@ -34,14 +34,7 @@ frappe.ui.form.on("Quotation",{
                     }
                 }
                 if (r.message.includes("IFI")) {
-                    frappe.call({
-                        method:"dynamic.ifi.api.get_doc", 
-                        args:{
-                            frm_name:frm.doc.name 
-                        },
-                        callback:function(r){
-                        }
-                    })
+                    
                     // if (frm.doc.crean == 'Yes' && frm.doc.crean_amount > 0) {
                     //     frappe.call({
                     //         method:"",
