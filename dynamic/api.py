@@ -865,8 +865,8 @@ from erpnext import get_company_currency, get_default_company
 @frappe.whitelist()
 def add_crean_in_taxes(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
+        total = 0
         if(doc.crean=='Yes' and doc.crean_amount >0):
-            total = 0
             if len(doc.taxes):
                 for row in doc.taxes:
                     total  = row.total
