@@ -673,6 +673,7 @@ def modeofpaymentautoname(self,fun=''):
                 self.name = "Bank"+"-"+str(year)+"-" + str(id)
 
             self.mode_of_payment_naming = mode_of_payment.naming
+            
 @frappe.whitelist()           
 def submit_stock_entry(doc ,*args,**kwargs) :
 
@@ -863,23 +864,34 @@ from erpnext import get_company_currency, get_default_company
 
 @frappe.whitelist()
 def add_crean_in_taxes(doc,*args,**kwargs):
-    company = get_default_company()
     if 'IFI' in DOMAINS:
         if(doc.crean=='Yes' and doc.crean_amount >0):
-            amount = 0
+            total = 0
             if len(doc.taxes):
                 for row in doc.taxes:
-                    amount += row.total
-
-            crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
+                    total  = row.total
+        crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
+        if doc.doctype == "Quotation" and crean_account:
+            company = get_default_company()
             doc.append("taxes",{
                 "charge_type":"Actual",
                 "account_head":crean_account,
                 "tax_amount":doc.crean_amount,
-                "total":doc.crean_amount + amount,
+                "total":doc.crean_amount + total,
                 "description":crean_account
             })
-            doc.total_taxes_and_charges = doc.crean_amount + amount
+            doc.total_taxes_and_charges = doc.crean_amount + total
+        elif  doc.doctype == "Purchase Order" and crean_account:
+            doc.append("taxes",{
+                "charge_type":"Actual",
+                "account_head":crean_account,
+                "tax_amount":doc.crean_amount,
+                "total":doc.crean_amount + total,
+                "description":crean_account,
+                "category":"Total",
+                "add_deduct_tax":"Add",
+            })
+            doc.total_taxes_and_charges = doc.crean_amount + total
 
 @frappe.whitelist()    
 def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
@@ -887,49 +899,40 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
         if(doc.crean=='Yes' and doc.crean_amount >0):
             crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
             flage_crean_tax = True
-            amount = 0
+            total = 0
             if len(doc.taxes):
                 for row in doc.taxes:
-                    amount += row.tax_amount
+                    total = row.total
+                    print('\n\n\n total ??--?',total)
                     if row.account_head == crean_account:
                         row.tax_amount = doc.crean_amount
+                        print('\n\n\n row',doc.crean_amount , row.total)
+                        row.total =  row.total
                         flage_crean_tax = False
                 else:
-                    if  flage_crean_tax:
+                    if  flage_crean_tax and  doc.doctype == "Sales Order":
                         doc.append("taxes",{
                         "charge_type":"Actual",
                         "account_head":crean_account,
                         "tax_amount":doc.crean_amount,
-                        "total":doc.crean_amount + amount,
+                        "total":doc.crean_amount + total,
                         "description":crean_account
                     })
-                    # doc.total_taxes_and_charges = doc.crean_amount + amount
+                    elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
+                        doc.append("taxes",{
+                        "charge_type":"Actual",
+                        "account_head":crean_account,
+                        "tax_amount":doc.crean_amount,
+                        "total":doc.crean_amount + total,
+                        "description":crean_account,
+                        "category":"Total",
+                        "add_deduct_tax":"Add",
+                    })
+                print('\n\n\n total',total)
+                doc.total_taxes_and_charges = doc.crean_amount + total
                  
 
 
-
-
-@frappe.whitelist()
-def add_crean_in_taxes_po(doc,*args,**kwargs):
-    company = get_default_company()
-    if 'IFI' in DOMAINS:
-        if(doc.crean=='Yes' and doc.crean_amount >0):
-            amount = 0
-            if len(doc.taxes):
-                for row in doc.taxes:
-                    amount = row.total
-
-            crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
-            doc.append("taxes",{
-                "charge_type":"Actual",
-                "account_head":crean_account,
-                "tax_amount":doc.crean_amount,
-                "total":doc.crean_amount + amount,
-                "description":crean_account,
-                "category":"Total",
-                "add_deduct_tax":"Add",
-            })
-            doc.total_taxes_and_charges = doc.crean_amount + amount
 
 @frappe.whitelist()    
 def check_crean_amount_after_mapped_doc_pi(doc,*args,**kwargs):
@@ -937,12 +940,11 @@ def check_crean_amount_after_mapped_doc_pi(doc,*args,**kwargs):
         if(doc.crean=='Yes' and doc.crean_amount >0):
             crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
             flage_crean_tax = True
-            amount = 0
-            total_tax = 0
+            total = 0
             if len(doc.taxes):
                 for row in doc.taxes:
-                    total_tax = row.total
-                    amount += row.tax_amount
+                    total = row.total
+                    # amount += row.tax_amount
                     if row.account_head == crean_account:
                         row.tax_amount = doc.crean_amount
                         flage_crean_tax = False
@@ -952,7 +954,7 @@ def check_crean_amount_after_mapped_doc_pi(doc,*args,**kwargs):
                         "charge_type":"Actual",
                         "account_head":crean_account,
                         "tax_amount":doc.crean_amount,
-                        "total":doc.crean_amount + total_tax,
+                        "total":doc.crean_amount + total,
                         "description":crean_account,
                         "category":"Total",
                         "add_deduct_tax":"Add",

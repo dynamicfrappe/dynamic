@@ -135,7 +135,7 @@ doc_events = {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
-        "validate": "dynamic.api.check_crean_amount_after_mapped_doc",
+        "before_submit": "dynamic.api.check_crean_amount_after_mapped_doc",
         "on_submit": "dynamic.api.create_reservation_validate",
         "before_save":[
             "dynamic.api.check_source_item"],
@@ -157,7 +157,7 @@ doc_events = {
     },
     "Purchase Invoice": {
         "on_submit": "dynamic.api.submit_purchase_invoice",
-        "validate": ["dynamic.api.check_crean_amount_after_mapped_doc_pi",],
+        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
      },
      "Stock Entry":{
         # In This Target check the branches data in cost center  
@@ -170,8 +170,7 @@ doc_events = {
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
-    } 
-      ,
+    },
     "Asset Movement":{
         "on_submit":"dynamic.api.add_cost_center_to_asset"
     } ,
@@ -188,7 +187,7 @@ doc_events = {
     },
     "Purchase Order":{
         "before_save":"dynamic.ifi.api.send_mail_supplier_ifi_po",
-        "validate": "dynamic.api.add_crean_in_taxes_po",
+        "before_submit": "dynamic.api.add_crean_in_taxes",
     } ,
     "Appointment" :{
         "validate":"dynamic.api.appointment_validate"
