@@ -118,7 +118,11 @@ def get_events(start, end, filters=None):
 			`tabInstallations Furniture`.to_time as end,
 			 
 			 `tabInstallations Furniture`.description ,
-			 concat("ID :",name,CHAR(13),'Status :',ref_status,CHAR(13),"Team :",team) desc2
+			 concat("ID :",name,CHAR(13),
+			 'Status :',ref_status,CHAR(13),
+			 "Team :",team,ref_status,CHAR(13),
+			 "Install: ",installation_type
+			 ) desc2
 			 
 
 		from
