@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "autoname": "field:role_name",
  "creation": "2020-12-03 17:18:02.724118",
  "doctype": "DocType",
@@ -596,7 +597,9 @@
    "label": "Deduct Less time minutes From Permissions"
   }
  ],
- "modified": "2022-08-22 16:43:29.508822",
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-01-04 10:35:26.789568",
  "modified_by": "Administrator",
  "module": "Dynamic HR",
  "name": "Attendance Rule",
