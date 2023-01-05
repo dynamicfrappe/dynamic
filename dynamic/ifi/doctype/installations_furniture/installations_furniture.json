@@ -9,6 +9,7 @@
  "field_order": [
   "sales_order",
   "naming_series",
+  "installation_type",
   "column_break_1",
   "posting_date",
   "section_break_3",
@@ -294,12 +295,18 @@
    "hidden": 1,
    "label": "description",
    "print_hide": 1
+  },
+  {
+   "fieldname": "installation_type",
+   "fieldtype": "Select",
+   "label": "Installation Type",
+   "options": "Export\nInstallation"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-13 16:40:43.016152",
+ "modified": "2023-01-05 11:45:27.182535",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "Installations Furniture",

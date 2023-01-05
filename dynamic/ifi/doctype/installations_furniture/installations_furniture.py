@@ -46,12 +46,15 @@ class InstallationsFurniture(Document):
 	def change_status(self):
 		if(self.ref_status=="Pending"):
 			self.db_set('ref_status','Start')
+			self.concat_for_calendar()
 			self.update_so_inst_status()
 		elif(self.ref_status=="Start"):
 			self.db_set('ref_status','Inprogress')
+			self.concat_for_calendar()
 			self.update_so_inst_status()
 		elif(self.ref_status=="Inprogress"):
 			self.db_set('ref_status','Completed')
+			self.concat_for_calendar()
 			self.update_so_inst_status()
 	
 	def preprare_notify(self):
@@ -108,12 +111,14 @@ def get_events(start, end, filters=None):
 		select
 			`tabInstallations Furniture`.name as name,
 			 `tabInstallations Furniture`.customer_name,
-			  `tabInstallations Furniture`.ref_status,
+			  `tabInstallations Furniture`.ref_status as status,
 			  concat(name,'-team:',`tabInstallations Furniture`.team )as team,
 			  `tabInstallations Furniture`.customer as customer,
 			`tabInstallations Furniture`.from_time as start,
-			 `tabInstallations Furniture`.to_time as end,
-			 description
+			 
+			 `tabInstallations Furniture`.description ,
+			 concat("ID :",name,CHAR(13),'Status :',ref_status,CHAR(13),"Team :",team) desc2
+			 
 
 		from
 			`tabInstallations Furniture`
@@ -124,7 +129,6 @@ def get_events(start, end, filters=None):
 			"end": end
 		}, as_dict=True,
 		update={"allDay": 0},)
-		
 	# for row in data:
 	# 	job_card_data = {
     #         "start": row.start,
