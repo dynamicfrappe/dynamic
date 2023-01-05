@@ -115,6 +115,7 @@ def get_events(start, end, filters=None):
 			  concat(name,'-team:',`tabInstallations Furniture`.team )as team,
 			  `tabInstallations Furniture`.customer as customer,
 			`tabInstallations Furniture`.from_time as start,
+			`tabInstallations Furniture`.to_time as end,
 			 
 			 `tabInstallations Furniture`.description ,
 			 concat("ID :",name,CHAR(13),'Status :',ref_status,CHAR(13),"Team :",team) desc2
