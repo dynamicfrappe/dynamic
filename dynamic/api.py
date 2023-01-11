@@ -847,7 +847,19 @@ def validate_stock_entry(doc,*args,**kwargs):
                 doc.to_warehouse = target
                 return target
 
+    # Add vana validate 
 
+    if 'Vana' in DOMAINS :
+        caculate_vana_price(doc)
+#caculate vana stock entry sales price 
+#    
+def caculate_vana_price(doc): 
+    total_sales = 0
+    for item in doc.items : 
+        if float(item.get("sales_price") or  0)  > 0 :
+            item.total_sales_price = item.qty * item.sales_price 
+            total_sales += float(item.total_sales_price or 0 )
+    doc.total_entry_sales_price = total_sales
 @frappe.whitelist()
 def create_new_appointment_ifi(source_name, target_doc=None):
     doc = frappe.get_doc("Lead", source_name)

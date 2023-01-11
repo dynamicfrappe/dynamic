@@ -294,6 +294,7 @@ domains = {
     'textile' :'dynamic.domains.textile',
     'vero':'dynamic.domains.vero',
     'Reach Group':'dynamic.domains.reach_group',
+    'Vana' : 'dynamic.domains.vana',
 }
 
 # domain Conatin
