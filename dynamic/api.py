@@ -963,6 +963,7 @@ def check_crean_amount_after_mapped_doc_pi(doc,*args,**kwargs):
 
 @frappe.whitelist()   
 def onsave_account_settings(doc,*args,**kwargs):
+    print("from save function in hook +++++++++++++++++++++++++++++++++++++++++++++++++")
     if 'Merge Entries' in DOMAINS:
         x = "merge_entries=True"
         y = "merge_entries=False"
