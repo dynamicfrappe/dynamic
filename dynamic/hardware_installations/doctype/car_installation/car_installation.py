@@ -142,9 +142,11 @@ class CarInstallation(Document):
         if self.car:
             car_doc = frappe.get_doc("Car", self.car)
             # car_model = frappe
-            self.db_set("car_type", car_doc.get('car_type'))
-            self.db_set("car_model", car_doc.get('car_model'))
-            self.db_set("car_brand", car_doc.get('car_brand'))
+            self.db_set("car_type", car_doc.get('car_type') or '')
+            self.db_set("car_model", car_doc.get('car_model') or '')
+            self.db_set("car_brand", car_doc.get('car_brand') or '')
+            self.db_set("chasis_no", car_doc.get('chasis_no') or '')
+            self.db_set("motor_no", car_doc.get('motor_no') or '')
 
     @frappe.whitelist()
     def get_cst_delgate(self):

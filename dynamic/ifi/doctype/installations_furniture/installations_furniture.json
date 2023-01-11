@@ -299,6 +299,7 @@
   {
    "fieldname": "installation_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Installation Type",
    "options": "Export\nInstallation"
   }
@@ -306,7 +307,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 11:45:27.182535",
+ "modified": "2023-01-11 15:09:46.763449",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "Installations Furniture",

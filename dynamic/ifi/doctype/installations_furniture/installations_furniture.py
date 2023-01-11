@@ -120,7 +120,8 @@ def get_events(start, end, filters=None):
 			 `tabInstallations Furniture`.description ,
 			 concat("ID :",name,CHAR(13),
 			 'Status :',ref_status,CHAR(13),
-			 "Team :",team
+			 "Team :",team,CHAR(13),
+			 "Type :",ifnull(installation_type , '')
 			 ) desc2
 			 
 
