@@ -9,7 +9,7 @@ data = {
             "fieldname":"merge_entries",
             "fieldtype":"Check",
             "insert_after":"enable_discount_accounting",
-            "label":"Merge Entries",
+            "label":"Dont Merge Entries",
         }
        ]
     }
