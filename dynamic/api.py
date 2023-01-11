@@ -960,3 +960,21 @@ def check_crean_amount_after_mapped_doc_pi(doc,*args,**kwargs):
                         "add_deduct_tax":"Add",
                     })
                     # doc.total_taxes_and_charges = doc.crean_amount + amount
+
+@frappe.whitelist()   
+def onsave_account_settings(doc,*args,**kwargs):
+    if 'Merge Entries' in DOMAINS:
+        x = "merge_entries=True"
+        y = "merge_entries=False"
+        if  doc.merge_entries:
+            with open("../apps/erpnext/erpnext/accounts/general_ledger.py", 'r') as file:
+                data = file.read()
+                data = data.replace(x, y)
+            with open("../apps/erpnext/erpnext/accounts/general_ledger.py", 'w') as file:
+                file.write(data)
+        else:
+            with open("../apps/erpnext/erpnext/accounts/general_ledger.py", 'r') as file:
+                data = file.read()
+                data = data.replace(y,x)
+            with open("../apps/erpnext/erpnext/accounts/general_ledger.py", 'w') as file:
+                file.write(data)

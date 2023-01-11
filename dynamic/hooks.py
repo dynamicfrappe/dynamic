@@ -193,6 +193,9 @@ doc_events = {
     "Appointment" :{
         "validate":"dynamic.api.appointment_validate"
 
+    },
+    "Accounts Settings":{
+        "validate" : "dynamic.api.onsave_account_settings"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
@@ -294,6 +297,7 @@ domains = {
     'textile' :'dynamic.domains.textile',
     'vero':'dynamic.domains.vero',
     'Reach Group':'dynamic.domains.reach_group',
+    'Merge Entries':'dynamic.domains.merge_entries'
 }
 
 # domain Conatin
