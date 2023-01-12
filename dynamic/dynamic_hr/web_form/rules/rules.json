@@ -21,7 +21,7 @@
  "is_standard": 1,
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-01-04 16:22:03.877172",
+ "modified": "2023-01-05 09:36:36.194143",
  "modified_by": "Administrator",
  "module": "Dynamic HR",
  "name": "rules",
@@ -77,7 +77,7 @@
   },
   {
    "allow_read_on_all_link_options": 0,
-   "fieldname": "working_details_section",
+   "fieldname": "",
    "fieldtype": "Section Break",
    "hidden": 0,
    "label": "Working Details",
