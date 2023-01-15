@@ -251,7 +251,7 @@
   {
    "fetch_from": "customer.url",
    "fieldname": "url",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "URL"
   },
   {
@@ -299,7 +299,6 @@
   {
    "fieldname": "installation_type",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "Installation Type",
    "options": "Export\nInstallation"
   }
@@ -307,7 +306,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-11 15:09:46.763449",
+ "modified": "2023-01-15 12:35:09.379538",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "Installations Furniture",

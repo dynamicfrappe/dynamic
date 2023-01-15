@@ -79,7 +79,7 @@ def validate_item_code(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         if doc.is_new():
             create_item_serial_doc(doc)
-    create_item_specs(doc)
+            create_item_specs(doc)
 
 
 

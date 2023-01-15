@@ -120,7 +120,7 @@ data = {
             {
                 "label": "URL",
                 "fieldname": "url",
-                "fieldtype": "Data",
+                "fieldtype": "Small Text",
                 "insert_after": "email_id",
                 "allow_on_submit": 1    
             },
@@ -137,7 +137,7 @@ data = {
             {
                 "label": "URL",
                 "fieldname": "url",
-                "fieldtype": "Data",
+                "fieldtype": "Small Text",
                 "insert_after": "opportunity_name",
                 "allow_on_submit": 1    
             },
@@ -152,7 +152,7 @@ data = {
             {
                 "label": "URL",
                 "fieldname": "url",
-                "fieldtype": "Data",
+                "fieldtype": "Small Text",
                 "insert_after": "tax_withholding_category",
                 "allow_on_submit": 1    
             },
@@ -422,6 +422,14 @@ data = {
         "property_type": "Check",
         "value": "1",
         "default_value":1
+        },
+        {
+        "doctype": "Address",
+        "doctype_or_field": "DocField",
+        "fieldname": "address_type",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nOffice\nSite"
         },
         
     ],

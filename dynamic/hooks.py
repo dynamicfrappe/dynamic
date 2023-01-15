@@ -196,6 +196,9 @@ doc_events = {
     },
     "Accounts Settings":{
         "validate" : "dynamic.api.onsave_account_settings"
+    },
+    "Lead":{
+        "validate":"dynamic.ifi.api.lead_contact_by_email"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",

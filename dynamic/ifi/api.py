@@ -56,6 +56,24 @@ def quotation_send_email_cc (self, *args, **kwargs):
 			frappe.msgprint(_("{0}: Customer  Has No Mail, hence email not sent"))
 
 @frappe.whitelist()
+def lead_contact_by_email(self, *args, **kwargs):
+	receiver = self.contact_by
+	if receiver:
+		email_args = {
+			"recipients": [receiver],
+			"message": _("Lead Date"),
+			"subject": 'Lead Next Contatct Date :'.format(self.contact_date),
+			# "message": self.get_message(),
+			# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+			"reference_doctype": self.doctype,
+			"reference_name": self.name
+			}
+		enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
+	else:
+		frappe.msgprint(_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
+
+
+@frappe.whitelist()
 def daily_opportunity_notify(self, *args, **kwargs ):
 	if 'IFI' in DOMAINS:
 		# date_now =getdate()
