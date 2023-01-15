@@ -426,7 +426,9 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 		"Quotation",
 		source_name,
 		{
-			"Quotation": {"doctype": "Sales Order", "validation": {"docstatus": ["=", 1]}},
+			"Quotation": {"doctype": "Sales Order", "validation": {"docstatus": ["=", 1]},
+			"field_map": {"allocate_advances_automatically": "allocate_advances_automatically"}
+			},
 			"Quotation Item": {
 				"doctype": "Sales Order Item",
 				"field_map": {"parent": "prevdoc_docname"},
