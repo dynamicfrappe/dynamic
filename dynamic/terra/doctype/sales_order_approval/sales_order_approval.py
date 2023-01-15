@@ -19,6 +19,11 @@ class SalesOrderApproval(Document):
 		self.status = "Draft"
 	def before_submit(self):
 		self.status ="To Deliver"
+		# frappe.db.sql(f"""
+		# update `tabSales Order` set status='To Deliver' where name='{item.against_sales_order}'
+		# """)
+		# frappe.db.commit()
+		
 	def on_submit(self):
 		self.validate_qty_against_sales_order()
 		for item in self.items:
