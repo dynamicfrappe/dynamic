@@ -8,6 +8,7 @@ frappe.ui.form.on("Quotation",{
             callback: function (r) {
               if (r.message && r.message.length) {
                 if (r.message.includes("Terra")) {
+                    cur_frm.cscript['Make Sales Order'] = create_terra_sales_order
                     if (frm.doc.docstatus == 1) {
                         if (frm.doc.quotation_to == "Lead"){
                             frappe.db.get_value("Customer", {"lead_name": frm.doc.party_name}, "name", (r) => {
@@ -139,6 +140,17 @@ var create_ifi_sales_order = function() {
 		frm: cur_frm
 	})
 }
+
+var create_terra_sales_order = function() {
+
+    frappe.model.open_mapped_doc({
+		method: "dynamic.terra.doctype.quotation.quotation.make_sales_order",
+		frm: cur_frm
+	})
+}
+
+
+
 
 
 // var create_ifi_payment_entry = function() {

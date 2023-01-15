@@ -67,6 +67,7 @@
   "product_bundle_help",
   "section_break_31",
   "total_qty",
+  "total_delivered_qty",
   "base_total",
   "base_net_total",
   "column_break_33",
@@ -1067,6 +1068,7 @@
    "label": "Status"
   },
   {
+   "allow_on_submit": 1,
    "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -1075,7 +1077,7 @@
    "no_copy": 1,
    "oldfieldname": "status",
    "oldfieldtype": "Select",
-   "options": "\nDraft\nTo Bill\nCompleted\nReturn Issued\nCancelled\nClosed",
+   "options": "\nDraft\nTo Deliver\nPartial Delivered\nTo Bill\nCompleted",
    "print_hide": 1,
    "print_width": "150px",
    "read_only": 1,
@@ -1313,12 +1315,19 @@
    "options": "Sales Order Approval",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_delivered_qty",
+   "fieldtype": "Float",
+   "label": "Total Delivered Qty",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-21 11:03:40.520557",
+ "modified": "2023-01-15 11:28:24.919542",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Sales Order Approval",
