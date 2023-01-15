@@ -16,6 +16,9 @@ class SalesOrderApproval(Document):
 		for item in self.items:
 			item.approved_qty = item.qty
 			item.remaining_qty = item.qty
+		self.status = "Draft"
+	def before_submit(self):
+		self.status ="To Deliver"
 	def on_submit(self):
 		self.validate_qty_against_sales_order()
 		for item in self.items:
@@ -23,6 +26,10 @@ class SalesOrderApproval(Document):
 				sql = f"""update `tabSales Order Item` set approved_qty = approved_qty + {item.qty} ,remaining_qty =qty - approved_qty  where parent='{item.against_sales_order}' and item_code = '{item.item_code}'"""
 				frappe.db.sql(sql)
 				frappe.db.commit()
+		# frappe.db.sql(f"""
+		# update `tabSales Order` set status='To Deliver' where name='{item.against_sales_order}'
+		# """)
+		# frappe.db.commit()
 
 	def validate_qty_against_sales_order(self):
 		for item in self.items :
