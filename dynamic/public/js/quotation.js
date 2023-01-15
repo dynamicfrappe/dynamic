@@ -34,19 +34,19 @@ frappe.ui.form.on("Quotation",{
                     }
                 }
                 if (r.message.includes("IFI")) {
-                    frm.add_custom_button("test qt1",()=>{
-                        frappe.call({
-                            method:"dynamic.ifi.api.testalert",//"dynamic.ifi.api.testalert",
-                            args:{
-                                frm_name:frm.doc.name,
-                            },
-                            callback:function(r){
-                                // frm.refresh()
-                            }
+                    // frm.add_custom_button("test qt1",()=>{
+                    //     frappe.call({
+                    //         method:"dynamic.ifi.api.testalert",//"dynamic.ifi.api.testalert",
+                    //         args:{
+                    //             frm_name:frm.doc.name,
+                    //         },
+                    //         callback:function(r){
+                    //             // frm.refresh()
+                    //         }
 
-                        })
+                    //     })
 
-                    })
+                    // })
                     
                     // if (frm.doc.crean == 'Yes' && frm.doc.crean_amount > 0) {
                     //     frappe.call({

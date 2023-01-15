@@ -28,19 +28,18 @@ def opportunity_notifiy(self, *args, **kwargs):
 
 @frappe.whitelist()
 def quotation_send_email_cc (self, *args, **kwargs):
-	frappe.msgprint('in method')
+	# frappe.msgprint('in method')
 	if 'IFI' in DOMAINS:
-		frappe.msgprint('in ifi mail')
-
+		# frappe.msgprint('in ifi mail')
 		get_alert_dict_quotation(self)
 		email_group = frappe.db.get_single_value('IFI Settings','email_group_quotation')
 		email_id = frappe.db.get_value('Customer',self.party_name,'email_id')
-		frappe.msgprint(str(email_id))
+		# frappe.msgprint(str(email_id))
 		cc_emails=[]
 		if email_group:
 			cc_emails = frappe.db.get_list('Email Group Member',filters={'email_group':email_group},fields=['email'],pluck='email')
 		if email_id:
-				frappe.msgprint('send it')
+				# frappe.msgprint('send it')
 				email_args = {
 					"recipients": email_id,#
 					"cc": cc_emails if len(cc_emails) else [],
@@ -53,7 +52,7 @@ def quotation_send_email_cc (self, *args, **kwargs):
 					}
 				enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
 		else:
-			frappe.msgprint('error')
+			# frappe.msgprint('error')
 			frappe.msgprint(_("{0}: Customer  Has No Mail, hence email not sent"))
 
 @frappe.whitelist()
@@ -494,43 +493,6 @@ def check_buying_price(self,*args , **kwargs):
 						frappe.throw(_(f"Item Price {buying_rate} has value more than {price.name} "))
 
 
-@frappe.whitelist()
-def teset22(frm_name):
-	frappe.msgprint("Supplier test ")
-	print('\n\n\n\n ---> test')
-
-@frappe.whitelist()
-def testalert(frm_name):
-	print('\n\n\n\n ---> test')
-	self = frappe.get_doc('Quotation',frm_name)
-	frappe.msgprint("Supplier test ")
-	frappe.msgprint('in method')
-	if 'IFI' in DOMAINS:
-		frappe.msgprint('in ifi mail')
-
-		get_alert_dict_quotation(self)
-		email_group = frappe.db.get_single_value('IFI Settings','email_group_quotation')
-		email_id = frappe.db.get_value('Customer',self.party_name,'email_id')
-		frappe.msgprint(str(email_id))
-		cc_emails=[]
-		if email_group:
-			cc_emails = frappe.db.get_list('Email Group Member',filters={'email_group':email_group},fields=['email'],pluck='email')
-		if email_id:
-				frappe.msgprint('send it')
-				email_args = {
-					"recipients": email_id,#
-					"cc": cc_emails if len(cc_emails) else [],
-					"message": _("Quotation Appointement"),
-					"subject": 'Quotation Valid Till Date'.format(self.valid_till),
-					"message": "test quotation",
-					"attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-					"reference_doctype": self.doctype,
-					"reference_name": self.name
-					}
-				enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
-		else:
-			frappe.msgprint('error')
-			frappe.msgprint(_("{0}: Customer  Has No Mail, hence email not sent"))
 
 
 @frappe.whitelist()
