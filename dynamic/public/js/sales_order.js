@@ -17,6 +17,7 @@ frappe.ui.form.on("Sales Order", {
   // },
  
   setup:function(frm) {
+    frm.events.domian_valid(frm)
     frm.events.update_grid(frm)
     frm.custom_make_buttons = {
       "Installation Request": "Installation Request",
@@ -363,6 +364,7 @@ frappe.ui.form.on("Sales Order", {
         async: false,
         callback:function (r){
          if (r.message.includes("Terra")) {
+          cur_frm.cscript['make_sales_invoice'] = create_terra_sales_invoice
             cur_frm.page.remove_inner_button(__('Update Items'))
             }
         }
@@ -808,6 +810,13 @@ frappe.ui.form.on(
 // 	new extend_sales_order({frm: cur_frm}),
 // );
 
+var create_terra_sales_invoice = function() {
+
+  frappe.model.open_mapped_doc({
+  method: "dynamic.terra.doctype.sales_order.sales_order.make_sales_invoice",
+  frm: cur_frm
+})
+}
 var create_ifi_purchase_order = function() {
   let pending_items = cur_frm.doc.items.some((item) =>{
     let pending_qty = flt(item.stock_qty) - flt(item.ordered_qty);
