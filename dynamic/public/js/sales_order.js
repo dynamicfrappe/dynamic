@@ -40,7 +40,44 @@ frappe.ui.form.on("Sales Order", {
 			});
 		}
   },
+  get_advancess:function(frm){
+    if(!frm.is_return) {
+			frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("IFI")) {
+              return frappe.call({
+                method: "dynamic.ifi.api.get_advanced_so_ifi",//get_advanced_so_ifi
+                args:{
+                  doc_name: frm.doc.name,
+                },
+                callback: function(r, rt) {
+                  // console.log(r,rt)
+                  r.message.forEach(row => {
+                    // console.log(row)
+                    let child = frm.add_child("advancess");
+                    child.reference_type = row.reference_type,
+                    child.reference_name = row.reference_name,
+                    child.reference_row = row.reference_row,
+                    child.remarks = row.remarks,
+                    child.advance_amount = flt(row.amount),
+                    child.allocated_amount = row.allocated_amount,
+                    child.ref_exchange_rate = flt(row.exchange_rate)
+                  });
+                  refresh_field("advancess");
+                }
+              })
+            }
+        }}
+    })
 
+      
+		}
+  },
+  
+
+  
   // refresh: function(frm, dt, dn) {
 	// 	var me = this;
   //   if(frm.doc.status !== 'Closed') {

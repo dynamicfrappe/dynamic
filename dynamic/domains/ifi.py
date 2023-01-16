@@ -107,7 +107,28 @@ data = {
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
-                "label": "Crean Amount",
+                "label": "Crean Amount"
+            },
+            {
+                "label": "Advance Paymentstest",
+                "fieldname": "advance_paymentss",
+                "fieldtype": "Section Break",
+                "insert_after": "payment_schedule"
+            },
+            {
+                "label": "Get Advances Receivedd",
+                "fieldname": "get_advancess",
+                "fieldtype": "Button",
+                "insert_after": "advance_paymentss",
+                "allow_on_submit":1
+            },
+            {
+                "label": "Advances",
+                "fieldname": "advancess",
+                "fieldtype": "Table",
+                "options":"Sales Invoice Advance",
+                "insert_after": "get_advancess",
+                "allow_on_submit":1
             },
          ],
          'Lead':[

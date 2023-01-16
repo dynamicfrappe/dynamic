@@ -1,10 +1,11 @@
 
 
+from erpnext.controllers.accounts_controller import get_advance_journal_entries, get_advance_payment_entries
 import frappe
 from frappe import _
 from frappe.utils import getdate
 from datetime import datetime
-from frappe.utils.background_jobs import  enqueue
+from frappe.utils.background_jobs import enqueue
 from frappe.model.mapper import get_mapped_doc
 from erpnext.selling.doctype.quotation.quotation import _make_customer
 from frappe.utils import flt, getdate, nowdate
@@ -17,429 +18,451 @@ from frappe.utils import get_url
 
 DOMAINS = frappe.get_active_domains()
 
+
 @frappe.whitelist()
 def opportunity_notifiy(self, *args, **kwargs):
-	if "IFI" in DOMAINS:
-		get_alert_dict(self)
-		#reciever
-		email_quotation(self, *args, **kwargs)
-		# supplier_rfq_mail(self)
+    if "IFI" in DOMAINS:
+        get_alert_dict(self)
+        # reciever
+        email_quotation(self, *args, **kwargs)
+        # supplier_rfq_mail(self)
 
 
 @frappe.whitelist()
-def quotation_send_email_cc (self, *args, **kwargs):
-	# frappe.msgprint('in method')
-	if 'IFI' in DOMAINS:
-		# frappe.msgprint('in ifi mail')
-		get_alert_dict_quotation(self)
-		email_group = frappe.db.get_single_value('IFI Settings','email_group_quotation')
-		email_id = frappe.db.get_value('Customer',self.party_name,'email_id')
-		# frappe.msgprint(str(email_id))
-		cc_emails=[]
-		if email_group:
-			cc_emails = frappe.db.get_list('Email Group Member',filters={'email_group':email_group},fields=['email'],pluck='email')
-		if email_id:
-				# frappe.msgprint('send it')
-				email_args = {
-					"recipients": email_id,#
-					"cc": cc_emails if len(cc_emails) else [],
-					"message": _("Quotation Appointement"),
-					"subject": 'Quotation Valid Till Date'.format(self.valid_till),
-					"message": "test quotation",
-					"attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-					"reference_doctype": self.doctype,
-					"reference_name": self.name
-					}
-				enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
-		else:
-			# frappe.msgprint('error')
-			frappe.msgprint(_("{0}: Customer  Has No Mail, hence email not sent"))
+def quotation_send_email_cc(self, *args, **kwargs):
+    # frappe.msgprint('in method')
+    if 'IFI' in DOMAINS:
+        # frappe.msgprint('in ifi mail')
+        get_alert_dict_quotation(self)
+        email_group = frappe.db.get_single_value(
+            'IFI Settings', 'email_group_quotation')
+        email_id = frappe.db.get_value('Customer', self.party_name, 'email_id')
+        # frappe.msgprint(str(email_id))
+        cc_emails = []
+        if email_group:
+            cc_emails = frappe.db.get_list('Email Group Member', filters={
+                                           'email_group': email_group}, fields=['email'], pluck='email')
+        if email_id:
+            # frappe.msgprint('send it')
+            email_args = {
+                "recipients": email_id,
+                "cc": cc_emails if len(cc_emails) else [],
+                "message": _("Quotation Appointement"),
+                "subject": 'Quotation Valid Till Date'.format(self.valid_till),
+                "message": "test quotation",
+                "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+                "reference_doctype": self.doctype,
+                "reference_name": self.name
+            }
+            enqueue(method=frappe.sendmail, queue="short",
+                    timeout=300, now=True, is_async=True, **email_args)
+        else:
+            # frappe.msgprint('error')
+            frappe.msgprint(
+                _("{0}: Customer  Has No Mail, hence email not sent"))
+
 
 @frappe.whitelist()
 def lead_contact_by_email(self, *args, **kwargs):
-	receiver = self.contact_by
-	if receiver:
-		email_args = {
-			"recipients": [receiver],
-			"message": _("Lead Date"),
-			"subject": 'Lead Next Contatct Date :'.format(self.contact_date),
-			# "message": self.get_message(),
-			# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-			"reference_doctype": self.doctype,
-			"reference_name": self.name
-			}
-		enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
-	else:
-		frappe.msgprint(_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
+    receiver = self.contact_by
+    if receiver:
+        email_args = {
+            "recipients": [receiver],
+            "message": _("Lead Date"),
+            "subject": 'Lead Next Contatct Date :'.format(self.contact_date),
+            # "message": self.get_message(),
+            # "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+            "reference_doctype": self.doctype,
+            "reference_name": self.name
+        }
+        enqueue(method=frappe.sendmail, queue="short",
+                timeout=300, now=True, is_async=True, **email_args)
+    else:
+        frappe.msgprint(
+            _("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
 
 
 @frappe.whitelist()
-def daily_opportunity_notify(self, *args, **kwargs ):
-	if 'IFI' in DOMAINS:
-		# date_now =getdate()
-		today = datetime.now().strftime('%Y-%m-%d')
-		sql = f"""
+def daily_opportunity_notify(self, *args, **kwargs):
+    if 'IFI' in DOMAINS:
+        # date_now =getdate()
+        today = datetime.now().strftime('%Y-%m-%d')
+        sql = f"""
 			select name,contact_by,customer_name,contact_date,'Opportunity' as doctype from tabOpportunity to2 
 			where CAST(contact_date AS DATE) ='{today}'
 		"""
-		data = frappe.db.sql(sql,as_dict=1)
-		for opprt in data:
-			get_alert_dict(opprt)          
+        data = frappe.db.sql(sql, as_dict=1)
+        for opprt in data:
+            get_alert_dict(opprt)
+
 
 @frappe.whitelist()
 def get_alert_dict(self):
-	owner_name = self.contact_by
-	customer_name = self.customer_name
-	contact_date = self.contact_date
-	notif_doc = frappe.new_doc('Notification Log')
-	notif_doc.subject = f"{owner_name} Contact to {customer_name} at {contact_date}"
-	notif_doc.for_user = owner_name
-	notif_doc.type = "Mention"
-	notif_doc.document_type = self.doctype
-	notif_doc.document_name = self.name
-	notif_doc.from_user = frappe.session.user
-	notif_doc.insert(ignore_permissions=True)
-
-
-
-@frappe.whitelist()
-def email_quotation(self,*args, **kwargs): 
-		receiver = frappe.db.get_value("User", self.contact_by, "email")
-		if receiver:
-			email_args = {
-				"recipients": [receiver],
-				"message": _("Quotation Appointement"),
-				"subject": 'Quotation Appointement At Date'.format(self.contact_date),
-				# "message": self.get_message(),
-				# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-				"reference_doctype": self.doctype,
-				"reference_name": self.name
-				}
-			enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
-		else:
-			frappe.msgprint(_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
+    owner_name = self.contact_by
+    customer_name = self.customer_name
+    contact_date = self.contact_date
+    notif_doc = frappe.new_doc('Notification Log')
+    notif_doc.subject = f"{owner_name} Contact to {customer_name} at {contact_date}"
+    notif_doc.for_user = owner_name
+    notif_doc.type = "Mention"
+    notif_doc.document_type = self.doctype
+    notif_doc.document_name = self.name
+    notif_doc.from_user = frappe.session.user
+    notif_doc.insert(ignore_permissions=True)
 
 
 @frappe.whitelist()
-def email_supplier_invoice(self,*args, **kwargs): 
-		receiver = frappe.db.get_value("Supplier", self.supplier, "email_id")
-		if receiver:
-			email_args = {
-				"recipients": [receiver],
-				"message": _("Please GET Notify "),
-				"subject": 'Purchase Receipt - IN'.format(self.posting_date),
-				# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-				"reference_doctype": self.doctype,
-				"reference_name": self.name
-				}
-			enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
-		else:
-			frappe.msgprint(_("{0}: Supplier ha no mail, hence email not sent").format(self.supplier))
+def email_quotation(self, *args, **kwargs):
+    receiver = frappe.db.get_value("User", self.contact_by, "email")
+    if receiver:
+        email_args = {
+            "recipients": [receiver],
+            "message": _("Quotation Appointement"),
+            "subject": 'Quotation Appointement At Date'.format(self.contact_date),
+            # "message": self.get_message(),
+            # "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+            "reference_doctype": self.doctype,
+            "reference_name": self.name
+        }
+        enqueue(method=frappe.sendmail, queue="short",
+                timeout=300, now=True, is_async=True, **email_args)
+    else:
+        frappe.msgprint(
+            _("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
+
+
+@frappe.whitelist()
+def email_supplier_invoice(self, *args, **kwargs):
+    receiver = frappe.db.get_value("Supplier", self.supplier, "email_id")
+    if receiver:
+        email_args = {
+            "recipients": [receiver],
+            "message": _("Please GET Notify "),
+            "subject": 'Purchase Receipt - IN'.format(self.posting_date),
+            # "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+            "reference_doctype": self.doctype,
+            "reference_name": self.name
+        }
+        enqueue(method=frappe.sendmail, queue="short",
+                timeout=300, now=True, is_async=True, **email_args)
+    else:
+        frappe.msgprint(
+            _("{0}: Supplier ha no mail, hence email not sent").format(self.supplier))
+
 
 @frappe.whitelist()
 def create_furniture_installation_order(source_name, target_doc=None):
-	doclist = get_mapped_doc("Sales Order", source_name, {
-		"Sales Order": {
-			"doctype": "Installations Furniture",
-			"field_map": {
-				"name": "sales_order",
-				"customer": "customer"
-			},
-			"validation": {
-				"docstatus": ["=", 1]
-			}
-		},
-		"Sales Order Item": {
-			"doctype": "Installation Furniture Item",
-			"field_map": {
-				"name":"ref_name",
-				"item_code": "item_code",
-				"item_name": "item_name",
-				"qty": "qty",
-				"rate": "rate",
-				"amount": "amount",
-				"delivery_date":"delivery_date",
-			}
-		}
-	}, target_doc)
-	
-	return doclist
-	
+    doclist = get_mapped_doc("Sales Order", source_name, {
+        "Sales Order": {
+            "doctype": "Installations Furniture",
+            "field_map": {
+                "name": "sales_order",
+                        "customer": "customer"
+            },
+            "validation": {
+                "docstatus": ["=", 1]
+            }
+        },
+        "Sales Order Item": {
+            "doctype": "Installation Furniture Item",
+            "field_map": {
+                "name": "ref_name",
+                "item_code": "item_code",
+                "item_name": "item_name",
+                "qty": "qty",
+                "rate": "rate",
+                "amount": "amount",
+                "delivery_date": "delivery_date",
+            }
+        }
+    }, target_doc)
+
+    return doclist
+
 
 @frappe.whitelist()
 def make_sales_order(source_name, target_doc=None):
-	if 'IFI' in DOMAINS:
-		quotation = frappe.db.get_value(
-			"Quotation", source_name, ["transaction_date", "valid_till"], as_dict=1
-		)
-		if quotation.valid_till and (
-			quotation.valid_till < quotation.transaction_date or quotation.valid_till < getdate(nowdate())
-		):
-			frappe.throw(_("Validity period of this quotation has ended."))
-		return _make_sales_order(source_name, target_doc)
+    if 'IFI' in DOMAINS:
+        quotation = frappe.db.get_value(
+            "Quotation", source_name, ["transaction_date", "valid_till"], as_dict=1
+        )
+        if quotation.valid_till and (
+                quotation.valid_till < quotation.transaction_date or quotation.valid_till < getdate(
+                    nowdate())
+        ):
+            frappe.throw(_("Validity period of this quotation has ended."))
+        return _make_sales_order(source_name, target_doc)
 
 
 def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
-	customer = _make_customer(source_name, ignore_permissions)
+    customer = _make_customer(source_name, ignore_permissions)
 
-	def set_missing_values(source, target):
-		if customer:
-			target.customer = customer.name
-			target.customer_name = customer.customer_name
-		if source.referral_sales_partner:
-			target.sales_partner = source.referral_sales_partner
-			target.commission_rate = frappe.get_value(
-				"Sales Partner", source.referral_sales_partner, "commission_rate"
-			)
-		target.flags.ignore_permissions = ignore_permissions
-		target.run_method("set_missing_values")
-		target.run_method("calculate_taxes_and_totals")
-		#Get the advance paid Journal Entries in Sales Invoice Advance
-		if target.get("allocate_advances_automatically"):
-			target.set_advances()
+    def set_missing_values(source, target):
+        if customer:
+            target.customer = customer.name
+            target.customer_name = customer.customer_name
+        if source.referral_sales_partner:
+            target.sales_partner = source.referral_sales_partner
+            target.commission_rate = frappe.get_value(
+                "Sales Partner", source.referral_sales_partner, "commission_rate"
+            )
+        target.flags.ignore_permissions = ignore_permissions
+        target.run_method("set_missing_values")
+        target.run_method("calculate_taxes_and_totals")
+        # Get the advance paid Journal Entries in Sales Invoice Advance
+        if target.get("allocate_advances_automatically"):
+            target.set_advances()
 
-	def update_item(obj, target, source_parent):
-		target.stock_qty = flt(obj.qty) * flt(obj.conversion_factor)
+    def update_item(obj, target, source_parent):
+        target.stock_qty = flt(obj.qty) * flt(obj.conversion_factor)
 
-		if obj.against_blanket_order:
-			target.against_blanket_order = obj.against_blanket_order
-			target.blanket_order = obj.blanket_order
-			target.blanket_order_rate = obj.blanket_order_rate
+        if obj.against_blanket_order:
+            target.against_blanket_order = obj.against_blanket_order
+            target.blanket_order = obj.blanket_order
+            target.blanket_order_rate = obj.blanket_order_rate
 
-	doclist = get_mapped_doc(
-		"Quotation",
-		source_name,
-		{
-			"Quotation": {
-				"doctype": "Sales Order",
-				"field_map": {
-					"crean": "crean",
-					"crean_amount": "crean_amount",
-					"allocate_advances_automatically":"allocate_advances_automatically",
-					"order_type":"order_type"
-				},
-				"validation": 
-				{"docstatus": ["=", 1]}
-				},
-			"Quotation Item": {
-				"doctype": "Sales Order Item",
-				"field_map": {"parent": "prevdoc_docname"},
-				"postprocess": update_item,
-			},
-			"Sales Taxes and Charges": {"doctype": "Sales Taxes and Charges", "add_if_empty": True},
-			"Sales Team": {"doctype": "Sales Team", "add_if_empty": True},
-			"Payment Schedule": {"doctype": "Payment Schedule", "add_if_empty": True},
-			"Sales Invoice Advance": {"doctype": "Sales Invoice Advance", "add_if_empty": True},
-		},
-		target_doc,
-		set_missing_values,
-		ignore_permissions=ignore_permissions,
-	)
+    doclist = get_mapped_doc(
+        "Quotation",
+        source_name,
+        {
+            "Quotation": {
+                "doctype": "Sales Order",
+                "field_map": {
+                    "crean": "crean",
+                    "crean_amount": "crean_amount",
+                    "allocate_advances_automatically": "allocate_advances_automatically",
+                    "order_type": "order_type"
+                },
+                "validation":
+                    {"docstatus": ["=", 1]}
+            },
+            "Quotation Item": {
+                "doctype": "Sales Order Item",
+                "field_map": {"parent": "prevdoc_docname"},
+                    "postprocess": update_item,
+            },
+            "Sales Taxes and Charges": {"doctype": "Sales Taxes and Charges", "add_if_empty": True},
+            "Sales Team": {"doctype": "Sales Team", "add_if_empty": True},
+            "Payment Schedule": {"doctype": "Payment Schedule", "add_if_empty": True},
+            "Sales Invoice Advance": {"doctype": "Sales Invoice Advance", "add_if_empty": True},
+        },
+        target_doc,
+        set_missing_values,
+        ignore_permissions=ignore_permissions,
+    )
 
-	# postprocess: fetch shipping address, set missing values
-	doclist.set_onload("ignore_price_list", True)
+    # postprocess: fetch shipping address, set missing values
+    doclist.set_onload("ignore_price_list", True)
 
-	return doclist
+    return doclist
 
 
 @frappe.whitelist()
 def override_make_purchase_order(source_name, selected_items=None, target_doc=None):
-	if "IFI" in DOMAINS:
-		if not selected_items:
-			return
+    if "IFI" in DOMAINS:
+        if not selected_items:
+            return
 
-		if isinstance(selected_items, string_types):
-			selected_items = json.loads(selected_items)
+        if isinstance(selected_items, string_types):
+            selected_items = json.loads(selected_items)
 
-		items_to_map = [
-			item.get("item_code")
-			for item in selected_items
-			if item.get("item_code") and item.get("item_code")
-		]
-		items_to_map = list(set(items_to_map))
+        items_to_map = [
+            item.get("item_code")
+            for item in selected_items
+            if item.get("item_code") and item.get("item_code")
+        ]
+        items_to_map = list(set(items_to_map))
 
-		def set_missing_values(source, target):
-			target.supplier = ""
-			target.apply_discount_on = ""
-			target.additional_discount_percentage = 0.0
-			target.discount_amount = 0.0
-			target.inter_company_order_reference = ""
-			target.customer = ""
-			target.customer_name = ""
-			target.run_method("set_missing_values")
-			target.run_method("calculate_taxes_and_totals")
+        def set_missing_values(source, target):
+            target.supplier = ""
+            target.apply_discount_on = ""
+            target.additional_discount_percentage = 0.0
+            target.discount_amount = 0.0
+            target.inter_company_order_reference = ""
+            target.customer = ""
+            target.customer_name = ""
+            target.run_method("set_missing_values")
+            target.run_method("calculate_taxes_and_totals")
 
-		def update_item(source, target, source_parent):
-			target.schedule_date = source.delivery_date
-			target.qty = flt(source.qty) - (flt(source.ordered_qty) / flt(source.conversion_factor))
-			target.stock_qty = flt(source.stock_qty) - flt(source.ordered_qty)
-			target.project = source_parent.project
+        def update_item(source, target, source_parent):
+            target.schedule_date = source.delivery_date
+            target.qty = flt(
+                source.qty) - (flt(source.ordered_qty) / flt(source.conversion_factor))
+            target.stock_qty = flt(source.stock_qty) - flt(source.ordered_qty)
+            target.project = source_parent.project
 
-		def update_item_for_packed_item(source, target, source_parent):
-			target.qty = flt(source.qty) - flt(source.ordered_qty)
+        def update_item_for_packed_item(source, target, source_parent):
+            target.qty = flt(source.qty) - flt(source.ordered_qty)
 
-		# po = frappe.get_list("Purchase Order", filters={"sales_order":source_name, "supplier":supplier, "docstatus": ("<", "2")})
-		doc = get_mapped_doc(
-			"Sales Order",
-			source_name,
-			{
-				"Sales Order": {
-					"doctype": "Purchase Order",
-					"field_map": {
-						"customer":"customer_so",
-						
-						},
-					"field_no_map": [
-						"address_display",
-						"shipping_rule",
-						"contact_display",
-						"contact_mobile",
-						"contact_email",
-						"contact_person",
-						"taxes_and_charges",
-						"shipping_address",
-						"terms",
-					],
-					"validation": {"docstatus": ["=", 1]},
-				},
-				"Sales Order Item": {
-					"doctype": "Purchase Order Item",
-					"field_map": [
-						["name", "sales_order_item"],
-						["parent", "sales_order"],
-						["stock_uom", "stock_uom"],
-						["uom", "uom"],
-						["conversion_factor", "conversion_factor"],
-						["delivery_date", "schedule_date"],
-					],
-					"field_no_map": [
-						"rate",
-						"price_list_rate",
-						"item_tax_template",
-						"discount_percentage",
-						"discount_amount",
-						"supplier",
-						"pricing_rules",
-					],
-					"postprocess": update_item,
-					"condition": lambda doc: doc.ordered_qty < doc.stock_qty
-					and doc.item_code in items_to_map
-					and not is_product_bundle(doc.item_code),
-				},
-				"Packed Item": {
-					"doctype": "Purchase Order Item",
-					"field_map": [
-						["name", "sales_order_packed_item"],
-						["parent", "sales_order"],
-						["uom", "uom"],
-						["conversion_factor", "conversion_factor"],
-						["parent_item", "product_bundle"],
-						["rate", "rate"],
-					],
-					"field_no_map": [
-						"price_list_rate",
-						"item_tax_template",
-						"discount_percentage",
-						"discount_amount",
-						"supplier",
-						"pricing_rules",
-					],
-					"postprocess": update_item_for_packed_item,
-					"condition": lambda doc: doc.parent_item in items_to_map,
-				},
-			},
-			target_doc,
-			set_missing_values,
-		)
+        # po = frappe.get_list("Purchase Order", filters={"sales_order":source_name, "supplier":supplier, "docstatus": ("<", "2")})
+        doc = get_mapped_doc(
+            "Sales Order",
+            source_name,
+            {
+                "Sales Order": {
+                    "doctype": "Purchase Order",
+                    "field_map": {
+                        "customer": "customer_so",
 
-		set_delivery_date(doc.items, source_name)
+                    },
+                    "field_no_map": [
+                        "address_display",
+                        "shipping_rule",
+                        "contact_display",
+                        "contact_mobile",
+                        "contact_email",
+                        "contact_person",
+                        "taxes_and_charges",
+                        "shipping_address",
+                        "terms",
+                    ],
+                    "validation": {"docstatus": ["=", 1]},
+                },
+                "Sales Order Item": {
+                    "doctype": "Purchase Order Item",
+                    "field_map": [
+                        ["name", "sales_order_item"],
+                        ["parent", "sales_order"],
+                        ["stock_uom", "stock_uom"],
+                        ["uom", "uom"],
+                        ["conversion_factor", "conversion_factor"],
+                        ["delivery_date", "schedule_date"],
+                    ],
+                    "field_no_map": [
+                        "rate",
+                        "price_list_rate",
+                        "item_tax_template",
+                        "discount_percentage",
+                        "discount_amount",
+                        "supplier",
+                        "pricing_rules",
+                    ],
+                    "postprocess": update_item,
+                    "condition": lambda doc: doc.ordered_qty < doc.stock_qty
+                    and doc.item_code in items_to_map
+                    and not is_product_bundle(doc.item_code),
+                },
+                "Packed Item": {
+                    "doctype": "Purchase Order Item",
+                    "field_map": [
+                        ["name", "sales_order_packed_item"],
+                        ["parent", "sales_order"],
+                        ["uom", "uom"],
+                        ["conversion_factor", "conversion_factor"],
+                        ["parent_item", "product_bundle"],
+                        ["rate", "rate"],
+                    ],
+                    "field_no_map": [
+                        "price_list_rate",
+                        "item_tax_template",
+                        "discount_percentage",
+                        "discount_amount",
+                        "supplier",
+                        "pricing_rules",
+                    ],
+                    "postprocess": update_item_for_packed_item,
+                    "condition": lambda doc: doc.parent_item in items_to_map,
+                },
+            },
+            target_doc,
+            set_missing_values,
+        )
 
-		return doc
-	make_purchase_order(source_name, selected_items=None, target_doc=None)
-	# print('\n\n\n\n/////*********')
-	# print(source_name)
+        set_delivery_date(doc.items, source_name)
 
-def supplier_rfq_mail(self,preview=False):
-		# full_name = get_user_fullname(frappe.session["user"])
-		# if full_name == "Guest":
-		# 	full_name = "Administrator"
+        return doc
+    make_purchase_order(source_name, selected_items=None, target_doc=None)
+    # print('\n\n\n\n/////*********')
+    # print(source_name)
 
-		# send document dict and some important data from suppliers row
-		# to render message_for_supplier from any template
-		doc_args = self.as_dict()
-		doc_args.update({"party": self.party_name,"test":2222})
 
-		args = {
-			"message": frappe.render_template("hello from other side", doc_args),
-			"rfq_link": get_link(self),
-			"user_fullname": "abanoub moubir full name",
-			"supplier_name": self.party_name,
-			"supplier_salutation": "Dear Mx.",
-		}
+def supplier_rfq_mail(self, preview=False):
+    # full_name = get_user_fullname(frappe.session["user"])
+    # if full_name == "Guest":
+    # 	full_name = "Administrator"
 
-		subject = _("Request for Opportunity")
-		template = "templates/emails/opportunity.html"
-		sender = "abanoubmounir07@gmail.com"
-		message = "message body for mail ---> %s" % args.get('rfq_link') #frappe.get_template(template).render(args)
+    # send document dict and some important data from suppliers row
+    # to render message_for_supplier from any template
+    doc_args = self.as_dict()
+    doc_args.update({"party": self.party_name, "test": 2222})
 
-		if preview:
-			return message
+    args = {
+        "message": frappe.render_template("hello from other side", doc_args),
+        "rfq_link": get_link(self),
+        "user_fullname": "abanoub moubir full name",
+        "supplier_name": self.party_name,
+        "supplier_salutation": "Dear Mx.",
+    }
 
-		attachments = get_attachments2(self)
+    subject = _("Request for Opportunity")
+    template = "templates/emails/opportunity.html"
+    sender = "abanoubmounir07@gmail.com"
+    # frappe.get_template(template).render(args)
+    message = "message body for mail ---> %s" % args.get('rfq_link')
 
-		send_email(self, sender, subject, message, attachments)
+    if preview:
+        return message
+
+    attachments = get_attachments2(self)
+
+    send_email(self, sender, subject, message, attachments)
+
 
 def send_email(self, sender, subject, message, attachments):
-		make(
-			subject=subject,
-			content=message,
-			recipients="abanoub.mounir9@gmail.com",
-			sender=sender,
-			attachments=attachments,
-			send_email=True,
-			doctype=self.doctype,
-			name=self.name,
-		)["name"]
+    make(
+        subject=subject,
+        content=message,
+        recipients="abanoub.mounir9@gmail.com",
+        sender=sender,
+        attachments=attachments,
+        send_email=True,
+        doctype=self.doctype,
+        name=self.name,
+    )["name"]
 
-		frappe.msgprint(_("Email Sent to Supplier {0}").format(self.party_name))
+    frappe.msgprint(_("Email Sent to Supplier {0}").format(self.party_name))
 
-def get_attachments2(self,name=None):
-		attachments = [d.name for d in get_attachments(self.doctype, self.name)]
-		attachments.append(frappe.attach_print(self.doctype, self.name, doc=self))
-		return attachments
+
+def get_attachments2(self, name=None):
+    attachments = [d.name for d in get_attachments(self.doctype, self.name)]
+    attachments.append(frappe.attach_print(self.doctype, self.name, doc=self))
+    return attachments
+
 
 def get_link(self):
-		# RFQ link for supplier portal
-		return get_url("/app/opportunity/" + self.name)
+    # RFQ link for supplier portal
+    return get_url("/app/opportunity/" + self.name)
+
 
 @frappe.whitelist()
 def create_new_appointment_ifi(source_name, target_doc=None):
-	if 'IFI' in DOMAINS:
-		doc = frappe.get_doc("Lead", source_name)
-		appointment_doc = frappe.new_doc("Appointment")
-		appointment_doc.customer_name = doc.lead_name
-		appointment_doc.customer_phone_number = doc.get('phone_no1','') 
-		appointment_doc.appointment_with = "Lead"
-		appointment_doc.party = doc.name
-		appointment_doc.customer_email = doc.email_id
-		return appointment_doc
+    if 'IFI' in DOMAINS:
+        doc = frappe.get_doc("Lead", source_name)
+        appointment_doc = frappe.new_doc("Appointment")
+        appointment_doc.customer_name = doc.lead_name
+        appointment_doc.customer_phone_number = doc.get('phone_no1', '')
+        appointment_doc.appointment_with = "Lead"
+        appointment_doc.party = doc.name
+        appointment_doc.customer_email = doc.email_id
+        return appointment_doc
+
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
-	"""Returns events for Gantt / Calendar view rendering.
-	frappe
-	:param start: Start date-time.
-	:param end: End date-time.
-	:param filters: Filters (JSON).
-	"""
-	from erpnext.controllers.queries import get_match_cond
-	from frappe.desk.calendar import get_event_conditions
-	filters = json.loads(filters)
-	# conditions = get_event_conditions("Appointment", filters)
-	conditions = get_event_conditions("Appointment", filters)
-	
-	events = []
-	data = frappe.db.sql("""
+    """Returns events for Gantt / Calendar view rendering.
+    frappe
+    :param start: Start date-time.
+    :param end: End date-time.
+    :param filters: Filters (JSON).
+    """
+    from erpnext.controllers.queries import get_match_cond
+    from frappe.desk.calendar import get_event_conditions
+    filters = json.loads(filters)
+    # conditions = get_event_conditions("Appointment", filters)
+    conditions = get_event_conditions("Appointment", filters)
+
+    events = []
+    data = frappe.db.sql("""
 		select
 			`tabAppointment`.name as name,
 			 `tabAppointment`.customer_name as cst,
@@ -452,364 +475,434 @@ def get_events(start, end, filters=None):
 			(`tabAppointment`.scheduled_time between %(start)s and %(end)s)
 			{conditions}
 		""".format(conditions=conditions),
-		{"start": start, "end": end},
-		as_dict=True,
-		update={"allDay": 0},
-	)
-		
-	# for row in data:
-	# 	job_card_data = {
-	#         "start": row.start,
-	#         "planned_end_date": row.end,
-	#         "name": row.name,
-	#         "subject": row.customer,
-	#         "color":'#D3D3D3',
-	#     }
-	# 	events.append(job_card_data)
+        {"start": start, "end": end},
+        as_dict=True,
+        update={"allDay": 0},
+    )
 
-	return data
+    # for row in data:
+    # 	job_card_data = {
+    #         "start": row.start,
+    #         "planned_end_date": row.end,
+    #         "name": row.name,
+    #         "subject": row.customer,
+    #         "color":'#D3D3D3',
+    #     }
+    # 	events.append(job_card_data)
 
-
+    return data
 
 
 @frappe.whitelist()
 def create_action_lead(source_name, target_doc=None):
-	doc = frappe.get_doc("Lead", source_name)
-	adction = frappe.new_doc("Actions")
-	adction.customer_type = 'Lead'
-	adction.date = doc.get('contact_date','').date() 
-	adction.time =doc.get('contact_date','').time() 
-	# adction.party = doc.name
-	# adction.customer_email = doc.email_id
-	return adction
+    doc = frappe.get_doc("Lead", source_name)
+    adction = frappe.new_doc("Actions")
+    adction.customer_type = 'Lead'
+    adction.date = doc.get('contact_date', '').date()
+    adction.time = doc.get('contact_date', '').time()
+    # adction.party = doc.name
+    # adction.customer_email = doc.email_id
+    return adction
+
 
 @frappe.whitelist()
 def create_action_cst(source_name, target_doc=None):
-	doc = frappe.get_doc("Customer", source_name)
-	action = frappe.new_doc("Actions")
-	action.customer_type = 'Customer'
-	action.customer = doc.get('name','') 
-	return action
+    doc = frappe.get_doc("Customer", source_name)
+    action = frappe.new_doc("Actions")
+    action.customer_type = 'Customer'
+    action.customer = doc.get('name', '')
+    return action
+
 
 @frappe.whitelist()
 def create_action_opportunity(source_name, target_doc=None):
-	doc = frappe.get_doc("Opportunity", source_name)
-	action = frappe.new_doc("Actions")
-	action.customer_type = 'Opportunity'
-	action.customer = doc.get('name','') 
-	return action
-
-@frappe.whitelist()
-def check_buying_price(self,*args , **kwargs):
-	if 'IFI' in DOMAINS:
-		if self.buying:
-			buying_rate = self.price_list_rate
-			if buying_rate > 0.0:
-				selling_prices = frappe.db.get_list('Item Price',filters={"selling":1,"item_code":self.item_code},fields=['name','price_list_rate'])
-				for price in selling_prices:
-					if buying_rate > price.price_list_rate:
-						frappe.throw(_(f"Item Price {buying_rate} has value more than {price.name} "))
-
-
+    doc = frappe.get_doc("Opportunity", source_name)
+    action = frappe.new_doc("Actions")
+    action.customer_type = 'Opportunity'
+    action.customer = doc.get('name', '')
+    return action
 
 
 @frappe.whitelist()
-def send_mail_supplier_ifi_po(self,*args,**kwargs):
-	if 'IFI' in DOMAINS: 
-		if self.supplier:
-			email_id = frappe.db.get_value('Supplier',self.supplier,'email_id')
-			if email_id:
-					email_args = {
-						"recipients": email_id,
-						"message": _("Purchase Order Notify"),
-						"subject": 'Purchase Order',
-						"message": "test Purchase Order",
-						# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-						"reference_doctype": self.doctype,
-						"reference_name": self.name
-						}
-					enqueue(method=frappe.sendmail, queue="short", timeout=300,now=True, is_async=True,**email_args)
-			else:
-				frappe.msgprint(_("{0}:Supplier Has No Mail").format(self.supplier))
+def check_buying_price(self, *args, **kwargs):
+    if 'IFI' in DOMAINS:
+        if self.buying:
+            buying_rate = self.price_list_rate
+            if buying_rate > 0.0:
+                selling_prices = frappe.db.get_list('Item Price', filters={
+                                                    "selling": 1, "item_code": self.item_code}, fields=['name', 'price_list_rate'])
+                for price in selling_prices:
+                    if buying_rate > price.price_list_rate:
+                        frappe.throw(
+                            _(f"Item Price {buying_rate} has value more than {price.name} "))
+
+
+@frappe.whitelist()
+def send_mail_supplier_ifi_po(self, *args, **kwargs):
+    if 'IFI' in DOMAINS:
+        if self.supplier:
+            email_id = frappe.db.get_value(
+                'Supplier', self.supplier, 'email_id')
+            if email_id:
+                email_args = {
+                    "recipients": email_id,
+                    "message": _("Purchase Order Notify"),
+                    "subject": 'Purchase Order',
+                    "message": "test Purchase Order",
+                    # "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+                    "reference_doctype": self.doctype,
+                    "reference_name": self.name
+                }
+                enqueue(method=frappe.sendmail, queue="short",
+                        timeout=300, now=True, is_async=True, **email_args)
+            else:
+                frappe.msgprint(
+                    _("{0}:Supplier Has No Mail").format(self.supplier))
 
 
 @frappe.whitelist()
 def get_alert_dict_quotation(self):
-	owner_name = self.assigned_to
-	customer_name = self.party_name
-	contact_date = self.valid_till
-	notif_doc = frappe.new_doc('Notification Log')
-	notif_doc.subject = f"{owner_name} Has Quotation with {customer_name} at {contact_date}"
-	notif_doc.for_user = owner_name
-	notif_doc.type = "Mention"
-	notif_doc.document_type = self.doctype
-	notif_doc.document_name = self.name
-	notif_doc.from_user = frappe.session.user
-	notif_doc.insert(ignore_permissions=True)
+    owner_name = self.assigned_to
+    customer_name = self.party_name
+    contact_date = self.valid_till
+    notif_doc = frappe.new_doc('Notification Log')
+    notif_doc.subject = f"{owner_name} Has Quotation with {customer_name} at {contact_date}"
+    notif_doc.for_user = owner_name
+    notif_doc.type = "Mention"
+    notif_doc.document_type = self.doctype
+    notif_doc.document_name = self.name
+    notif_doc.from_user = frappe.session.user
+    notif_doc.insert(ignore_permissions=True)
+
 
 @frappe.whitelist()
 def reject_quotation_ifi(source_name):
-	frappe.db.set_value("Quotation",source_name,"status","Rejected")
-	# try:
-	# 	return True
-	# except Exception as ex:
-	# 	return str(ex)
-	# 	print("exception",str(ex)) 
-
+    frappe.db.set_value("Quotation", source_name, "status", "Rejected")
+    # try:
+    # 	return True
+    # except Exception as ex:
+    # 	return str(ex)
+    # 	print("exception",str(ex))
 
 
 @frappe.whitelist()
 def make_purchase_order_for_default_supplier(source_name, selected_items=None, target_doc=None):
-	"""Creates Purchase Order for each Supplier. Returns a list of doc objects."""
-	if not selected_items:
-		return
+    """Creates Purchase Order for each Supplier. Returns a list of doc objects."""
+    if not selected_items:
+        return
 
-	if isinstance(selected_items, string_types):
-		selected_items = json.loads(selected_items)
+    if isinstance(selected_items, string_types):
+        selected_items = json.loads(selected_items)
 
-	def set_missing_values(source, target):
-		target.supplier = supplier
-		target.apply_discount_on = ""
-		target.additional_discount_percentage = 0.0
-		target.discount_amount = 0.0
-		target.inter_company_order_reference = ""
+    def set_missing_values(source, target):
+        target.supplier = supplier
+        target.apply_discount_on = ""
+        target.additional_discount_percentage = 0.0
+        target.discount_amount = 0.0
+        target.inter_company_order_reference = ""
 
-		default_price_list = frappe.get_value("Supplier", supplier, "default_price_list")
-		if default_price_list:
-			target.buying_price_list = default_price_list
+        default_price_list = frappe.get_value(
+            "Supplier", supplier, "default_price_list")
+        if default_price_list:
+            target.buying_price_list = default_price_list
 
-		if any(item.delivered_by_supplier == 1 for item in source.items):
-			if source.shipping_address_name:
-				target.shipping_address = source.shipping_address_name
-				target.shipping_address_display = source.shipping_address
-			else:
-				target.shipping_address = source.customer_address
-				target.shipping_address_display = source.address_display
+        if any(item.delivered_by_supplier == 1 for item in source.items):
+            if source.shipping_address_name:
+                target.shipping_address = source.shipping_address_name
+                target.shipping_address_display = source.shipping_address
+            else:
+                target.shipping_address = source.customer_address
+                target.shipping_address_display = source.address_display
 
-			target.customer_contact_person = source.contact_person
-			target.customer_contact_display = source.contact_display
-			target.customer_contact_mobile = source.contact_mobile
-			target.customer_contact_email = source.contact_email
+            target.customer_contact_person = source.contact_person
+            target.customer_contact_display = source.contact_display
+            target.customer_contact_mobile = source.contact_mobile
+            target.customer_contact_email = source.contact_email
 
-		else:
-			target.customer = ""
-			target.customer_name = ""
+        else:
+            target.customer = ""
+            target.customer_name = ""
 
-		target.run_method("set_missing_values")
-		target.run_method("calculate_taxes_and_totals")
+        target.run_method("set_missing_values")
+        target.run_method("calculate_taxes_and_totals")
 
-	def update_item(source, target, source_parent):
-		target.schedule_date = source.delivery_date
-		target.qty = flt(source.qty) - (flt(source.ordered_qty) / flt(source.conversion_factor))
-		target.stock_qty = flt(source.stock_qty) - flt(source.ordered_qty)
-		target.project = source_parent.project
+    def update_item(source, target, source_parent):
+        target.schedule_date = source.delivery_date
+        target.qty = flt(source.qty) - (flt(source.ordered_qty) /
+                                        flt(source.conversion_factor))
+        target.stock_qty = flt(source.stock_qty) - flt(source.ordered_qty)
+        target.project = source_parent.project
 
-	suppliers = [item.get("supplier") for item in selected_items if item.get("supplier")]
-	suppliers = list(dict.fromkeys(suppliers))  # remove duplicates while preserving order
+    suppliers = [item.get("supplier")
+                 for item in selected_items if item.get("supplier")]
+    # remove duplicates while preserving order
+    suppliers = list(dict.fromkeys(suppliers))
 
-	items_to_map = [item.get("item_code") for item in selected_items if item.get("item_code")]
-	items_to_map = list(set(items_to_map))
+    items_to_map = [item.get("item_code")
+                    for item in selected_items if item.get("item_code")]
+    items_to_map = list(set(items_to_map))
 
-	if not suppliers:
-		frappe.throw(
-			_("Please set a Supplier against the Items to be considered in the Purchase Order.")
-		)
+    if not suppliers:
+        frappe.throw(
+            _("Please set a Supplier against the Items to be considered in the Purchase Order.")
+        )
 
-	purchase_orders = []
-	for supplier in suppliers:
-		doc = get_mapped_doc(
-			"Sales Order",
-			source_name,
-			{
-				"Sales Order": {
-					"doctype": "Purchase Order",
-					"field_no_map": [
-						"address_display",
-						"contact_display",
-						"contact_mobile",
-						"contact_email",
-						"contact_person",
-						"taxes_and_charges",
-						"shipping_address",
-						"terms",
-						"shipping_rule"
-					],
-					"validation": {"docstatus": ["=", 1]},
-				},
-				"Sales Order Item": {
-					"doctype": "Purchase Order Item",
-					"field_map": [
-						["name", "sales_order_item"],
-						["parent", "sales_order"],
-						["stock_uom", "stock_uom"],
-						["uom", "uom"],
-						["conversion_factor", "conversion_factor"],
-						["delivery_date", "schedule_date"],
-					],
-					"field_no_map": [
-						"rate",
-						"price_list_rate",
-						"item_tax_template",
-						"discount_percentage",
-						"discount_amount",
-						"pricing_rules",
-					],
-					"postprocess": update_item,
-					"condition": lambda doc: doc.ordered_qty < doc.stock_qty
-					and doc.supplier == supplier
-					and doc.item_code in items_to_map,
-				},
-				"Sales Taxes and Charges":{
-				"doctype": "Purchase Taxes and Charges",
-				# "field_map": [
-				# 	["charge_type", "charge_type"],
-				# 	["account_head", "account_head"],
-				# 	["rate", "rate"],
-				# 	["amount", "amount"],
-				# 	["total", "total"],
-				# 	["description", "description"],
-				# 	# ["cost_center", "cost_center"],
-				# 	# ["cost_center", "cost_center"],
-				# ],
-			},
-			},
-			target_doc,
-			set_missing_values,
-		)
+    purchase_orders = []
+    for supplier in suppliers:
+        doc = get_mapped_doc(
+            "Sales Order",
+            source_name,
+            {
+                "Sales Order": {
+                    "doctype": "Purchase Order",
+                    "field_no_map": [
+                        "address_display",
+                        "contact_display",
+                        "contact_mobile",
+                        "contact_email",
+                        "contact_person",
+                        "taxes_and_charges",
+                        "shipping_address",
+                        "terms",
+                        "shipping_rule"
+                    ],
+                    "validation": {"docstatus": ["=", 1]},
+                },
+                "Sales Order Item": {
+                    "doctype": "Purchase Order Item",
+                    "field_map": [
+                        ["name", "sales_order_item"],
+                        ["parent", "sales_order"],
+                        ["stock_uom", "stock_uom"],
+                        ["uom", "uom"],
+                        ["conversion_factor", "conversion_factor"],
+                        ["delivery_date", "schedule_date"],
+                    ],
+                    "field_no_map": [
+                        "rate",
+                        "price_list_rate",
+                        "item_tax_template",
+                        "discount_percentage",
+                        "discount_amount",
+                        "pricing_rules",
+                    ],
+                    "postprocess": update_item,
+                    "condition": lambda doc: doc.ordered_qty < doc.stock_qty
+                    and doc.supplier == supplier
+                    and doc.item_code in items_to_map,
+                },
+                "Sales Taxes and Charges": {
+                    "doctype": "Purchase Taxes and Charges",
+                    # "field_map": [
+                    # 	["charge_type", "charge_type"],
+                    # 	["account_head", "account_head"],
+                    # 	["rate", "rate"],
+                    # 	["amount", "amount"],
+                    # 	["total", "total"],
+                    # 	["description", "description"],
+                    # 	# ["cost_center", "cost_center"],
+                    # 	# ["cost_center", "cost_center"],
+                    # ],
+                },
+            },
+            target_doc,
+            set_missing_values,
+        )
 
-		doc.insert()
-		frappe.db.commit()
-		purchase_orders.append(doc)
+        doc.insert()
+        frappe.db.commit()
+        purchase_orders.append(doc)
 
-	return purchase_orders
-
-
+    return purchase_orders
 
 
 @frappe.whitelist()
 def make_purchase_order(source_name, selected_items=None, target_doc=None):
-	if not selected_items:
-		return
+    if not selected_items:
+        return
 
-	if isinstance(selected_items, string_types):
-		selected_items = json.loads(selected_items)
+    if isinstance(selected_items, string_types):
+        selected_items = json.loads(selected_items)
 
-	items_to_map = [
-		item.get("item_code")
-		for item in selected_items
-		if item.get("item_code") and item.get("item_code")
-	]
-	items_to_map = list(set(items_to_map))
+    items_to_map = [
+        item.get("item_code")
+        for item in selected_items
+        if item.get("item_code") and item.get("item_code")
+    ]
+    items_to_map = list(set(items_to_map))
 
-	def set_missing_values(source, target):
-		target.supplier = ""
-		target.apply_discount_on = ""
-		target.additional_discount_percentage = 0.0
-		target.discount_amount = 0.0
-		target.inter_company_order_reference = ""
-		target.customer = ""
-		target.customer_name = ""
-		target.run_method("set_missing_values")
-		target.run_method("calculate_taxes_and_totals")
+    def set_missing_values(source, target):
+        target.supplier = ""
+        target.apply_discount_on = ""
+        target.additional_discount_percentage = 0.0
+        target.discount_amount = 0.0
+        target.inter_company_order_reference = ""
+        target.customer = ""
+        target.customer_name = ""
+        target.run_method("set_missing_values")
+        target.run_method("calculate_taxes_and_totals")
 
-	def update_item(source, target, source_parent):
-		target.schedule_date = source.delivery_date
-		target.qty = flt(source.qty) - (flt(source.ordered_qty) / flt(source.conversion_factor))
-		target.stock_qty = flt(source.stock_qty) - flt(source.ordered_qty)
-		target.project = source_parent.project
+    def update_item(source, target, source_parent):
+        target.schedule_date = source.delivery_date
+        target.qty = flt(source.qty) - (flt(source.ordered_qty) /
+                                        flt(source.conversion_factor))
+        target.stock_qty = flt(source.stock_qty) - flt(source.ordered_qty)
+        target.project = source_parent.project
 
-	def update_item_for_packed_item(source, target, source_parent):
-		target.qty = flt(source.qty) - flt(source.ordered_qty)
+    def update_item_for_packed_item(source, target, source_parent):
+        target.qty = flt(source.qty) - flt(source.ordered_qty)
 
-	# po = frappe.get_list("Purchase Order", filters={"sales_order":source_name, "supplier":supplier, "docstatus": ("<", "2")})
-	doc = get_mapped_doc(
-		"Sales Order",
-		source_name,
-		{
-			"Sales Order": {
-				"doctype": "Purchase Order",
-				"field_no_map": [
-					"address_display",
-					"contact_display",
-					"contact_mobile",
-					"contact_email",
-					"contact_person",
-					"taxes_and_charges",
-					"shipping_address",
-					"terms",
-					"shipping_rule",
-					
-				],
-				"validation": {"docstatus": ["=", 1]},
-			},
-			"Sales Order Item": {
-				"doctype": "Purchase Order Item",
-				"field_map": [
-					["name", "sales_order_item"],
-					["parent", "sales_order"],
-					["stock_uom", "stock_uom"],
-					["uom", "uom"],
-					["conversion_factor", "conversion_factor"],
-					["delivery_date", "schedule_date"],
-				],
-				"field_no_map": [
-					"rate",
-					"price_list_rate",
-					"item_tax_template",
-					"discount_percentage",
-					"discount_amount",
-					"supplier",
-					"pricing_rules",
-				],
-				"postprocess": update_item,
-				"condition": lambda doc: doc.ordered_qty < doc.stock_qty
-				and doc.item_code in items_to_map
-				and not is_product_bundle(doc.item_code),
-			},
-			"Sales Taxes and Charges":{
-				"doctype": "Purchase Taxes and Charges",
-				# "field_map": [
-				# 	["charge_type", "charge_type"],
-				# 	["account_head", "account_head"],
-				# 	["rate", "rate"],
-				# 	["amount", "amount"],
-				# 	["total", "total"],
-				# 	["description", "description"],
-				# 	# ["cost_center", "cost_center"],
-				# 	# ["cost_center", "cost_center"],
-				# ],
-			},
-			"Packed Item": {
-				"doctype": "Purchase Order Item",
-				"field_map": [
-					["name", "sales_order_packed_item"],
-					["parent", "sales_order"],
-					["uom", "uom"],
-					["conversion_factor", "conversion_factor"],
-					["parent_item", "product_bundle"],
-					["rate", "rate"],
-				],
-				"field_no_map": [
-					"price_list_rate",
-					"item_tax_template",
-					"discount_percentage",
-					"discount_amount",
-					"supplier",
-					"pricing_rules",
-				],
-				"postprocess": update_item_for_packed_item,
-				"condition": lambda doc: doc.parent_item in items_to_map,
-			},
-		},
-		target_doc,
-		set_missing_values,
-	)
+    # po = frappe.get_list("Purchase Order", filters={"sales_order":source_name, "supplier":supplier, "docstatus": ("<", "2")})
+    doc = get_mapped_doc(
+        "Sales Order",
+        source_name,
+        {
+            "Sales Order": {
+                "doctype": "Purchase Order",
+                "field_no_map": [
+                    "address_display",
+                    "contact_display",
+                    "contact_mobile",
+                    "contact_email",
+                    "contact_person",
+                    "taxes_and_charges",
+                    "shipping_address",
+                    "terms",
+                    "shipping_rule",
 
-	set_delivery_date(doc.items, source_name)
+                ],
+                "validation": {"docstatus": ["=", 1]},
+            },
+            "Sales Order Item": {
+                "doctype": "Purchase Order Item",
+                "field_map": [
+                    ["name", "sales_order_item"],
+                    ["parent", "sales_order"],
+                    ["stock_uom", "stock_uom"],
+                    ["uom", "uom"],
+                    ["conversion_factor", "conversion_factor"],
+                    ["delivery_date", "schedule_date"],
+                ],
+                "field_no_map": [
+                    "rate",
+                    "price_list_rate",
+                    "item_tax_template",
+                    "discount_percentage",
+                    "discount_amount",
+                    "supplier",
+                    "pricing_rules",
+                ],
+                "postprocess": update_item,
+                "condition": lambda doc: doc.ordered_qty < doc.stock_qty
+                and doc.item_code in items_to_map
+                and not is_product_bundle(doc.item_code),
+            },
+            "Sales Taxes and Charges": {
+                "doctype": "Purchase Taxes and Charges",
+                # "field_map": [
+                # 	["charge_type", "charge_type"],
+                # 	["account_head", "account_head"],
+                # 	["rate", "rate"],
+                # 	["amount", "amount"],
+                # 	["total", "total"],
+                # 	["description", "description"],
+                # 	# ["cost_center", "cost_center"],
+                # 	# ["cost_center", "cost_center"],
+                # ],
+            },
+            "Packed Item": {
+                "doctype": "Purchase Order Item",
+                "field_map": [
+                    ["name", "sales_order_packed_item"],
+                    ["parent", "sales_order"],
+                    ["uom", "uom"],
+                    ["conversion_factor", "conversion_factor"],
+                    ["parent_item", "product_bundle"],
+                    ["rate", "rate"],
+                ],
+                "field_no_map": [
+                    "price_list_rate",
+                    "item_tax_template",
+                    "discount_percentage",
+                    "discount_amount",
+                    "supplier",
+                    "pricing_rules",
+                ],
+                "postprocess": update_item_for_packed_item,
+                "condition": lambda doc: doc.parent_item in items_to_map,
+            },
+        },
+        target_doc,
+        set_missing_values,
+    )
 
-	return doc
+    set_delivery_date(doc.items, source_name)
 
-
-
+    return doc
 
 
+@frappe.whitelist()
+def get_advanced_so_ifi(doc_name):
+    """Returns list of advances against Account, Party, Reference"""
+    self = frappe.get_doc('Sales Order', doc_name)
+    res = get_advance_entries(self)
+    print('\n\n\n res===>', res)
+    self.set("advancess", [])
+    advance_allocated = 0
+    for d in res:
+        if d.against_order:
+            allocated_amount = flt(d.amount)
+            d['allocated_amount'] = allocated_amount
+        else:
+            if self.get("party_account_currency") == self.company_currency:
+                amount = self.get(
+                    "base_rounded_total") or self.base_grand_total
+            else:
+                amount = self.get("rounded_total") or self.grand_total
+
+            allocated_amount = min(amount - advance_allocated, d.amount)
+        advance_allocated += flt(allocated_amount)
+        d['allocated_amount'] = allocated_amount
+
+        print('\n\n res-->', res)
+        # self.append("advancess", advance_row)
+        return res
+
+
+
+def get_advance_entries(self, include_unallocated=True):
+    if self.doctype == "Sales Invoice":
+        party_account = self.debit_to
+        party_type = "Customer"
+        party = self.customer
+        amount_field = "credit_in_account_currency"
+        order_field = "sales_order"
+        order_doctype = "Sales Order"
+    elif self.doctype == "Sales Order":
+        party_account = 'Debtors - IFI'
+        party_type = "Customer"
+        party = self.customer
+        amount_field = "credit_in_account_currency"
+        order_field = "sales_order"
+        order_doctype = "Sales Order"
+    else:
+        party_account = self.credit_to
+        party_type = "Supplier"
+        party = self.supplier
+        amount_field = "debit_in_account_currency"
+        order_field = "purchase_order"
+        order_doctype = "Purchase Order"
+
+    # list(set(d.get(order_field) for d in self.get("items") if d.get(order_field)))
+    order_list = [self.name, ]
+    journal_entries = get_advance_journal_entries(
+        party_type, party, party_account, amount_field, order_doctype, order_list, include_unallocated
+    )
+
+    payment_entries = get_advance_payment_entries(
+        party_type, party, party_account, order_doctype, order_list, include_unallocated
+    )
+
+    res = journal_entries + payment_entries
+
+    return res
