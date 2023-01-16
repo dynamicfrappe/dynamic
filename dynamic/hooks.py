@@ -190,10 +190,10 @@ doc_events = {
         # "before_submit": "dynamic.api.add_crean_in_taxes",
         "before_save": "dynamic.api.add_crean_in_taxes",
     } ,
-    "Appointment" :{
-        "validate":"dynamic.api.appointment_validate"
+    # "Appointment" :{
+    #     "validate":"dynamic.api.appointment_validate"
 
-    },
+    # },
     "Accounts Settings":{
         "validate" : "dynamic.api.onsave_account_settings"
     },
