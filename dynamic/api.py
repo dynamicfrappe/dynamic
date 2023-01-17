@@ -2,6 +2,8 @@ from datetime import datetime
 from warnings import filters
 from dynamic.dynamic_accounts.print_format.invoice_tax.invoice_tax import get_invoice_tax_data
 import frappe 
+from erpnext.accounts.party import get_party_account
+from frappe.utils import add_days, cint, cstr, flt, get_link_to_form, getdate, nowdate, strip_html
 from frappe import _
 import codecs
 import json
@@ -415,8 +417,55 @@ def check_source_item(self,*args , **kwargs):
             if (not item.warehouse and item.item_purchase_order):
                 def_warhouse = check_delivery_warehosue(item.item_purchase_order,item.item_code,'')
                 item.db_set('warehouse',def_warhouse)
+    if 'IFI' in DOMAINS:
+        print('\n\n\n-->in reconslation**')
+        update_against_document_in_jv(self)
 
     
+def update_against_document_in_jv(self):
+		party_type = "Customer"
+		party = self.customer
+		party_account = get_party_account(party_type, party=party, company=self.company)
+		dr_or_cr = "credit_in_account_currency"
+		lst = []
+		for d in self.get("advancess"):
+			if flt(d.allocated_amount) > 0:
+				args = frappe._dict(
+					{
+						"voucher_type": d.reference_type,
+						"voucher_no": d.reference_name,
+						"voucher_detail_no": d.reference_row,
+						"against_voucher_type": self.doctype,
+						"against_voucher": self.name,
+						"account": party_account,
+						"party_type": party_type,
+						"party": party,
+						"is_advance": "Yes",
+						"dr_or_cr": dr_or_cr,
+						"unadjusted_amount": flt(d.advance_amount),
+						"allocated_amount": flt(d.allocated_amount),
+						"precision": d.precision("advance_amount"),
+						"exchange_rate": (
+							self.conversion_rate if self.party_account_currency != self.company_currency else 1
+						),
+						"grand_total": (
+							self.base_grand_total
+							if self.party_account_currency == self.company_currency
+							else self.grand_total
+						),
+						"outstanding_amount": 0.0, #self.outstanding_amount,
+						"difference_account": frappe.db.get_value(
+							"Company", self.company, "exchange_gain_loss_account"
+						),
+						"exchange_gain_loss": flt(d.get("exchange_gain_loss")),
+					}
+				)
+				lst.append(args)
+
+		if lst:
+			# from erpnext.accounts.utils import reconcile_against_document
+			from dynamic.terra.utils import reconcile_against_document
+			reconcile_against_document(lst)
 
 @frappe.whitelist()
 def create_reservation_validate(self,*args , **kwargs):

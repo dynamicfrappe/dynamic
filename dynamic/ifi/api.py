@@ -64,22 +64,26 @@ def quotation_send_email_cc(self, *args, **kwargs):
 
 @frappe.whitelist()
 def lead_contact_by_email(self, *args, **kwargs):
-	receiver = self.contact_by
-	if receiver:
-		email_args = {
-			"recipients": [receiver],
-			"message": _("Lead Date"),
-			"subject": 'Lead Next Contatct Date :'.format(self.contact_date),
-			# "message": self.get_message(),
-			# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-			"reference_doctype": self.doctype,
-			"reference_name": self.name
-		}
-		enqueue(method=frappe.sendmail, queue="short",
-				timeout=300, now=True, is_async=True, **email_args)
-	else:
-		frappe.msgprint(
-			_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
+	if "IFI" in DOMAINS:
+		if self.phone_no1 and len(self.phone_no1) != 11:
+			frappe.throw(_("phone number must be 11 digits"))
+			
+		receiver = self.contact_by
+		if receiver:
+			email_args = {
+				"recipients": [receiver],
+				"message": _("Lead Date"),
+				"subject": 'Lead Next Contatct Date :'.format(self.contact_date),
+				# "message": self.get_message(),
+				# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+				"reference_doctype": self.doctype,
+				"reference_name": self.name
+			}
+			enqueue(method=frappe.sendmail, queue="short",
+					timeout=300, now=True, is_async=True, **email_args)
+		else:
+			frappe.msgprint(
+				_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
 
 
 @frappe.whitelist()
@@ -543,7 +547,10 @@ def send_mail_supplier_ifi_po(self, *args, **kwargs):
 		if self.supplier:
 			email_id = frappe.db.get_value(
 				'Supplier', self.supplier, 'email_id')
+			frappe.msgprint('test')
 			if email_id:
+				frappe.msgprint('sending')
+
 				email_args = {
 					"recipients": email_id,
 					"message": _("Purchase Order Notify"),

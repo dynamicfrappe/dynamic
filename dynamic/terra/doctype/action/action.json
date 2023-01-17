@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "ACT.######",
+ "autoname": "action_name",
  "creation": "2022-06-22 16:59:24.979749",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -28,10 +28,9 @@
    "unique": 1
   }
  ],
- "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-12-28 11:01:35.414439",
+ "modified": "2023-01-16 15:56:47.758822",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Action",
