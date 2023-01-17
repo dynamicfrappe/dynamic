@@ -547,10 +547,7 @@ def send_mail_supplier_ifi_po(self, *args, **kwargs):
 		if self.supplier:
 			email_id = frappe.db.get_value(
 				'Supplier', self.supplier, 'email_id')
-			frappe.msgprint('test')
 			if email_id:
-				frappe.msgprint('sending')
-
 				email_args = {
 					"recipients": email_id,
 					"message": _("Purchase Order Notify"),

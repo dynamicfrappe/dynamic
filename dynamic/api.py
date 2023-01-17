@@ -135,7 +135,7 @@ def check_item_valuation_rate(doc):
         )
         if(value_rate):
             if(item.rate < value_rate):
-                frappe.throw(_("Selling Rate cann't Be Less Than Value Rate "))
+                frappe.throw(_(f"Selling Rate cann't Be Less Than Value Rate {value_rate}"))
 
 @frappe.whitelist()
 def validate_active_domains_invocie(doc,*args,**kwargs):
