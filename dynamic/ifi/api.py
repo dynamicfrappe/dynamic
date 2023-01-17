@@ -80,10 +80,24 @@ def lead_contact_by_email(self, *args, **kwargs):
 			}
 			enqueue(method=frappe.sendmail, queue="short",
 					timeout=300, now=True, is_async=True, **email_args)
+			get_alert_dict_lead(self)
 		else:
 			frappe.msgprint(
 				_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
 
+@frappe.whitelist()
+def get_alert_dict_lead(self):
+	owner_name = self.contact_by
+	customer_name = self.lead_name
+	contact_date = self.contact_date
+	notif_doc = frappe.new_doc('Notification Log')
+	notif_doc.subject = f"{owner_name} Contact to {customer_name} at {contact_date}"
+	notif_doc.for_user = owner_name
+	notif_doc.type = "Mention"
+	notif_doc.document_type = self.doctype
+	notif_doc.document_name = self.name
+	notif_doc.from_user = frappe.session.user
+	notif_doc.insert(ignore_permissions=True)
 
 @frappe.whitelist()
 def daily_opportunity_notify(self, *args, **kwargs):
