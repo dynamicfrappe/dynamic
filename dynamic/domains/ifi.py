@@ -461,14 +461,14 @@ data = {
         "value": "Site\nOffice\nShipping\nPersonal\nPlant\nPostal\nShop\nSubsidiary\nWarehouse\nCurrent\nPermanent\nOther\nBilling",
         "default":"Site"
         },
-        # {
-        # "doctype": "Sales Order",
-        # "doctype_or_field": "DocField",
-        # "fieldname": "delivery_date",
-        # "property": "in_standard_filter",
-        # "property_type": "Check",
-        # "value": "1"
-        # },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "shipping_rule",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1",
+        },
         
     ],
   

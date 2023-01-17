@@ -33,7 +33,6 @@ def quotation_send_email_cc(self, *args, **kwargs):
 	# frappe.msgprint('in method')
 	if 'IFI' in DOMAINS:
 		# frappe.msgprint('in ifi mail')
-		get_alert_dict_quotation(self)
 		email_group = frappe.db.get_single_value(
 			'IFI Settings', 'email_group_quotation')
 		email_id = frappe.db.get_value('Customer', self.party_name, 'email_id')
@@ -564,19 +563,6 @@ def send_mail_supplier_ifi_po(self, *args, **kwargs):
 					_("{0}:Supplier Has No Mail").format(self.supplier))
 
 
-@frappe.whitelist()
-def get_alert_dict_quotation(self):
-	owner_name = self.assigned_to
-	customer_name = self.party_name
-	contact_date = self.valid_till
-	notif_doc = frappe.new_doc('Notification Log')
-	notif_doc.subject = f"{owner_name} Has Quotation with {customer_name} at {contact_date}"
-	notif_doc.for_user = owner_name
-	notif_doc.type = "Mention"
-	notif_doc.document_type = self.doctype
-	notif_doc.document_name = self.name
-	notif_doc.from_user = frappe.session.user
-	notif_doc.insert(ignore_permissions=True)
 
 
 @frappe.whitelist()
