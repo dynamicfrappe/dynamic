@@ -82,6 +82,8 @@ class Analytics(object):
 					"width": 100,
 				}
 			)
+			
+		if self.filters.tree_type == "Warehouse":
 			self.columns.append(
 				{
 					"label": _("Warehouse"),
@@ -91,7 +93,6 @@ class Analytics(object):
 					"width": 140,
 				}
 			)
-
 		for end_date in self.periodic_daterange:
 			period = self.get_period(end_date)
 			self.columns.append(
@@ -109,6 +110,10 @@ class Analytics(object):
 
 		elif self.filters.tree_type == "Item":
 			self.get_sales_transactions_based_on_items()
+			self.get_rows()
+
+		elif self.filters.tree_type == "Warehouse":
+			self.get_sales_transactions_based_on_warehouse()
 			self.get_rows()
 
 		elif self.filters.tree_type in ["Customer Group", "Supplier Group", "Territory"]:
@@ -198,6 +203,32 @@ class Analytics(object):
 		self.entity_names = {}
 		for d in self.entries:
 			self.entity_names.setdefault(d.entity, d.entity_name)
+		print('\n\n\n self.entity_names:-->',self.entity_names)
+		
+	def get_sales_transactions_based_on_warehouse(self):
+
+		if self.filters["value_quantity"] == "Value":
+			value_field = "base_amount"
+		else:
+			value_field = "stock_qty"
+
+		self.entries = frappe.db.sql(
+			"""
+			select i.item_code as entity,i.warehouse, i.item_name as entity_name, i.stock_uom, i.{value_field} as value_field, s.{date_field}
+			from `tab{doctype} Item` i , `tab{doctype}` s	
+			where s.name = i.parent and i.docstatus = 1 and s.company = %s
+			and s.{date_field} between %s and %s
+		""".format(
+				date_field=self.date_field, value_field=value_field, doctype=self.filters.doc_type
+			),
+			(self.filters.company, self.filters.from_date, self.filters.to_date),
+			as_dict=1,
+		)
+		print('\n\n\n get_sales_transactions_based_on_items:-->',self.entries)
+		self.entity_names = {}
+		for d in self.entries:
+			self.entity_names.setdefault(d.entity, d.entity_name)
+		print('\n\n\n self.entity_names:-->',self.entity_names)
 
 	def get_sales_transactions_based_on_customer_or_territory_group(self):
 		if self.filters["value_quantity"] == "Value":
@@ -274,6 +305,7 @@ class Analytics(object):
 				"entity_name": self.entity_names.get(entity) if hasattr(self, "entity_names") else None,
 			}
 			total = 0
+			# print('\n\n self.periodic_daterange-->',self.periodic_daterange)
 			for end_date in self.periodic_daterange:
 				period = self.get_period(end_date)
 				amount = flt(period_data.get(period, 0.0))
@@ -286,6 +318,7 @@ class Analytics(object):
 				row["stock_uom"] = period_data.get("stock_uom")
 
 			self.data.append(row)
+		print('\n\n self data item-->',self.data,'\n\n')
 
 	def get_rows_by_group(self):
 		self.get_periodic_data()
@@ -314,12 +347,18 @@ class Analytics(object):
 		for d in self.entries:
 			if self.filters.tree_type == "Supplier Group":
 				d.entity = self.parent_child_map.get(d.entity)
+
 			period = self.get_period(d.get(self.date_field))
-			self.entity_periodic_data.setdefault(d.entity, frappe._dict()).setdefault(period, 0.0)
-			self.entity_periodic_data[d.entity][period] += flt(d.value_field)
+			# self.entity_periodic_data.setdefault(d.entity, frappe._dict()).setdefault(period, 0.0)
+			self.entity_periodic_data.setdefault(d.entity, frappe._dict()).setdefault(period, frappe._dict()).setdefault('warehouse_'+d.warehouse, 0.0)
+			self.entity_periodic_data.setdefault(d.entity, frappe._dict()).setdefault(period, frappe._dict()).setdefault('period_', 0.0)
+			# self.entity_periodic_data.setdefault(d.entity, frappe._dict()).setdefault('warehouse', 0.0)
+			self.entity_periodic_data[d.entity][period]['period_'] += flt(d.value_field)
+			self.entity_periodic_data[d.entity][period]['warehouse_'+d.warehouse] += flt(d.value_field)
 
 			if self.filters.tree_type == "Item":
 				self.entity_periodic_data[d.entity]["stock_uom"] = d.stock_uom
+		print('\n\n self.entity_periodic_data-->',self.entity_periodic_data)
 
 	def get_period(self, posting_date):
 		if self.filters.range == "Weekly":

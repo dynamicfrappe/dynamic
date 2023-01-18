@@ -551,7 +551,16 @@ def check_buying_price(self, *args, **kwargs):
 				for price in selling_prices:
 					if buying_rate > price.price_list_rate:
 						frappe.throw(
-							_(f"Item Price {buying_rate} has value more than {price.name} "))
+							_(f"Item Price {buying_rate} has value more than {price.name} - {price.price_list_rate} "))
+		if self.selling:
+			selling_rate = self.price_list_rate
+			if selling_rate > 0.0:
+				buying_prices = frappe.db.get_list('Item Price', filters={
+													"buying": 1, "item_code": self.item_code}, fields=['name', 'price_list_rate'])
+				for buying_price in buying_prices:
+					if selling_rate < buying_price.price_list_rate:
+						frappe.throw(
+							_(f"Item Price {selling_rate} has value less than {buying_price.name}-{buying_price.price_list_rate} "))
 
 
 @frappe.whitelist()

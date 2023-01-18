@@ -981,6 +981,14 @@ data = {
         "property_type": "Text",
         "value": "\nPurchase\nMaterial Transfer\nMaterial Issue\nManufacture\nCustomer Provided\nPrice Request"
         },
+        # {
+        # "doctype": "Lead",
+        # "doctype_or_field": "DocField",
+        # "fieldname": "type",
+        # "property": "options",
+        # "property_type": "Text",
+        # "value": "Client\nChannel Partner\nProfessional\nEnd User"
+        # },
     ],
   
     'on_setup': 'dynamic.terra.setup.create_terra_scripts'
