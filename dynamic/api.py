@@ -220,6 +220,7 @@ def get_sales_return_account():
 def autoname(self,fun=''):
     if 'Terra' in DOMAINS:
         #series = "Tax-Inv-.DD.-.MM.-.YYYY.-.###." if getattr(self,'tax_auth' , 0) else self.naming_series
+        self.item_code=generate_item_code(self.item_group)
         self.name = self.item_code
 
 
