@@ -15,6 +15,7 @@ import json
 from frappe.core.doctype.communication.email import make
 from frappe.desk.form.load import get_attachments
 from frappe.utils import get_url
+from erpnext.accounts.party import get_party_account
 
 DOMAINS = frappe.get_active_domains()
 
@@ -888,7 +889,7 @@ def get_advance_entries(self, include_unallocated=True):
 		order_field = "sales_order"
 		order_doctype = "Sales Order"
 	elif self.doctype == "Sales Order":
-		party_account = 'Debtors - IFI'
+		party_account = get_party_account("Customer", party=self.customer, company=self.company)
 		party_type = "Customer"
 		party = self.customer
 		amount_field = "credit_in_account_currency"
@@ -902,7 +903,8 @@ def get_advance_entries(self, include_unallocated=True):
 		order_field = "purchase_order"
 		order_doctype = "Purchase Order"
 
-	# list(set(d.get(order_field) for d in self.get("items") if d.get(order_field)))
+	# print('\n\n-->party_type',party_account)
+	# order_list = list(set(d.get(order_field) for d in self.get("items") if d.get(order_field)))
 	order_list = [self.name, ]
 	journal_entries = get_advance_journal_entries(
 		party_type, party, party_account, amount_field, order_doctype, order_list, include_unallocated

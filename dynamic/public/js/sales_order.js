@@ -54,7 +54,7 @@ frappe.ui.form.on("Sales Order", {
                   doc_name: frm.doc.name,
                 },
                 callback: function(r, rt) {
-                  // console.log(r,rt)
+                  console.log(r,rt)
                   r.message.forEach(row => {
                     // console.log(row)
                     let child = frm.add_child("advancess");
