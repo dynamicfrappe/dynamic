@@ -189,7 +189,9 @@ def create_furniture_installation_order(source_name, target_doc=None):
 			}
 		}
 	}, target_doc)
-
+	so_doc =frappe.get_doc("Sales Order",source_name)
+	cust_addresss = frappe.db.get_value('Customer',so_doc.customer,'url')
+	doclist.url = cust_addresss
 	return doclist
 
 
