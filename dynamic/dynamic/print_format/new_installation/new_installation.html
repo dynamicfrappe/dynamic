@@ -157,19 +157,19 @@
                   <thead>
                     <tr>
                       <th  style="text-align: right; width:20% ;">{{_("ماركة")}}</th>
-                      <th  style="text-align: right; width:20% ;">{{doc.car_brand}}</th>
+                      <th  style="text-align: right; width:20% ;">{{doc.car_brand or ''}}</th>
                       <th  style="text-align: right; width:20% ;">{{_("موديل")}}</th>
                       <th  style="text-align: right; width:15% ;">{{doc.car_model}}</th>
                       <th  style="text-align: right; width:15% ;">{{_("اللون")}}</th>
-                      <th  style="text-align: right; width:10% ;">{{doc.car_color}}</th>
+                      <th  style="text-align: right; width:10% ;">{{doc.car_color or ''}}</th>
                     </tr>
                     <tr>
                       <th  style="text-align: right; width:20% ;">{{_("رقم اللوحه")}}</th>
-                      <th  style="text-align: right; width:20% ;">{{doc.car}}</th>
+                      <th  style="text-align: right; width:20% ;">{{doc.car or ''}}</th>
                       <th  style="text-align: right; width:20% ;">{{_("شاسية")}}</th>
-                      <th  style="text-align: right; width:15% ;">{{doc.chasis_no}}</th>
+                      <th  style="text-align: right; width:15% ;">{{doc.chasis_no or ''}}</th>
                       <th  style="text-align: right; width:15% ;">{{_("الموتور")}}</th>
-                      <th  style="text-align: right; width:10% ;">{{doc.motor_no}}</th>
+                      <th  style="text-align: right; width:10% ;">{{doc.motor_no or ''}}</th>
                     </tr>
                   </thead>
                   <tbody>
