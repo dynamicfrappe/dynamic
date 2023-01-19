@@ -933,65 +933,71 @@ def add_crean_in_taxes(doc,*args,**kwargs):
                 for row in doc.taxes:
                     total  = row.total
         crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
-        if doc.doctype == "Quotation" and crean_account:
-            company = get_default_company()
-            doc.append("taxes",{
-                "charge_type":"Actual",
-                "account_head":crean_account,
-                "tax_amount":doc.crean_amount,
-                "total":doc.crean_amount + total,
-                "description":crean_account
-            })
-            total = doc.crean_amount + total
-            doc.total_taxes_and_charges = doc.crean_amount + total
-        elif  doc.doctype == "Purchase Order" and crean_account:
-            doc.append("taxes",{
-                "charge_type":"Actual",
-                "account_head":crean_account,
-                "tax_amount":doc.crean_amount,
-                "total":doc.crean_amount + total,		
-                "tax_amount_after_discount_amount":doc.crean_amount,		
-                "description":crean_account,
-                "category":"Total",
-                "add_deduct_tax":"Add",
-            })
-            total = doc.crean_amount + total
-            doc.total_taxes_and_charges =  total
+        if(crean_account):
+            if doc.doctype == "Quotation" and crean_account:
+                company = get_default_company()
+                doc.append("taxes",{
+                    "charge_type":"Actual",
+                    "account_head":crean_account,
+                    "tax_amount":doc.crean_amount,
+                    "total":doc.crean_amount + total,
+                    "description":crean_account
+                })
+                total = doc.crean_amount + total
+                doc.total_taxes_and_charges = doc.crean_amount + total
+            elif  doc.doctype == "Purchase Order" and crean_account:
+                doc.append("taxes",{
+                    "charge_type":"Actual",
+                    "account_head":crean_account,
+                    "tax_amount":doc.crean_amount,
+                    "total":doc.crean_amount + total,		
+                    "tax_amount_after_discount_amount":doc.crean_amount,		
+                    "description":crean_account,
+                    "category":"Total",
+                    "add_deduct_tax":"Add",
+                })
+                total = doc.crean_amount + total
+                doc.total_taxes_and_charges =  total
+        if(not crean_account):
+            frappe.msgprint(_("Company Has No Crane Account"))
 
 @frappe.whitelist()    
 def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
         if(doc.crean=='Yes' and doc.crean_amount >0):
             crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
-            flage_crean_tax = True
-            total = 0
-            if len(doc.taxes):
-                for row in doc.taxes:
-                    total = row.total
-                    if row.account_head == crean_account:
-                        row.tax_amount = doc.crean_amount
-                        row.total =  row.total
-                        flage_crean_tax = False
-                else:
-                    if  flage_crean_tax and  doc.doctype == "Sales Order":
-                        doc.append("taxes",{
-                        "charge_type":"Actual",
-                        "account_head":crean_account,
-                        "tax_amount":doc.crean_amount,
-                        "total":doc.crean_amount + total,
-                        "description":crean_account
-                    })
-                    elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
-                        doc.append("taxes",{
-                        "charge_type":"Actual",
-                        "account_head":crean_account,
-                        "tax_amount":doc.crean_amount,
-                        "total":doc.crean_amount + total,
-                        "description":crean_account,
-                        "category":"Total",
-                        "add_deduct_tax":"Add",
-                    })
-                doc.total_taxes_and_charges = doc.crean_amount + total
+            if(crean_account):
+                flage_crean_tax = True
+                total = 0
+                if len(doc.taxes):
+                    for row in doc.taxes:
+                        total = row.total
+                        if row.account_head == crean_account:
+                            row.tax_amount = doc.crean_amount
+                            row.total =  row.total
+                            flage_crean_tax = False
+                    else:
+                        if  flage_crean_tax and  doc.doctype == "Sales Order":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account
+                        })
+                        elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account,
+                            "category":"Total",
+                            "add_deduct_tax":"Add",
+                        })
+                    doc.total_taxes_and_charges = doc.crean_amount + total
+            if(not crean_account):
+                frappe.msgprint(_("Company Has No Crane Account"))
                  
 
 
@@ -1001,27 +1007,29 @@ def check_crean_amount_after_mapped_doc_pi(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
         if(doc.crean=='Yes' and doc.crean_amount >0):
             crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
-            flage_crean_tax = True
-            total = 0
-            if len(doc.taxes):
-                for row in doc.taxes:
-                    total = row.total
-                    # amount += row.tax_amount
-                    if row.account_head == crean_account:
-                        row.tax_amount = doc.crean_amount
-                        flage_crean_tax = False
-                else:
-                    if  flage_crean_tax:
-                        doc.append("taxes",{
-                        "charge_type":"Actual",
-                        "account_head":crean_account,
-                        "tax_amount":doc.crean_amount,
-                        "total":doc.crean_amount + total,
-                        "description":crean_account,
-                        "category":"Total",
-                        "add_deduct_tax":"Add",
-                    })
-                    # doc.total_taxes_and_charges = doc.crean_amount + amount
+            if(crean_account):
+                flage_crean_tax = True
+                total = 0
+                if len(doc.taxes):
+                    for row in doc.taxes:
+                        total = row.total
+                        # amount += row.tax_amount
+                        if row.account_head == crean_account:
+                            row.tax_amount = doc.crean_amount
+                            flage_crean_tax = False
+                    else:
+                        if  flage_crean_tax:
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account,
+                            "category":"Total",
+                            "add_deduct_tax":"Add",
+                        })
+            if(not crean_account):
+                frappe.msgprint(_("Company Has No Crane Account"))
 
 @frappe.whitelist()   
 def onsave_account_settings(doc,*args,**kwargs):

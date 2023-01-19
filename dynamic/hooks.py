@@ -188,7 +188,7 @@ doc_events = {
     "Purchase Order":{
         "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
         # "before_submit": "dynamic.api.add_crean_in_taxes",
-        "before_save": "dynamic.api.add_crean_in_taxes",
+        "before_submit": "dynamic.api.add_crean_in_taxes",
     } ,
     # "Appointment" :{
     #     "validate":"dynamic.api.appointment_validate"
