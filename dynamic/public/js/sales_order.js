@@ -567,6 +567,27 @@ frappe.ui.form.on("Sales Order Item", {
     var row = frappe.get_doc(cdt, cdn);
     frappe.model.set_value(cdt, cdn, "warehouse", row.item_warehouse);
   },
+  supplier:function(frm,cdt,cdn){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("IFI")) {
+            let row = locals[cdt][cdn]
+            if(row.supplier){
+              row.delivered_by_supplier = 1
+            }
+            else if(!row.supplier){
+              row.delivered_by_supplier = 0
+
+            }
+            frm.refresh()
+          }
+        }
+      }
+    })
+    
+  }
   
  
 });
