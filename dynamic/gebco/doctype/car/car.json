@@ -11,6 +11,7 @@
   "device_type",
   "customer",
   "car_brand",
+  "car_color",
   "car_model",
   "chasis_no",
   "column_break_4",
@@ -121,11 +122,17 @@
    "fieldname": "motor_no",
    "fieldtype": "Data",
    "label": "Motor NO"
+  },
+  {
+   "fieldname": "car_color",
+   "fieldtype": "Link",
+   "label": "Car Color",
+   "options": "Car Color"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-25 15:05:06.800754",
+ "modified": "2023-01-19 16:34:40.674777",
  "modified_by": "Administrator",
  "module": "gebco",
  "name": "Car",
