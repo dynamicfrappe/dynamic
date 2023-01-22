@@ -151,3 +151,14 @@ frappe.ui.form.on('Installations Furniture', {
         }
     },
 });
+
+
+frappe.ui.form.on('Installation Furniture Item', {
+	items_add(frm, cdt, cdn) { 
+        let row = locals[cdt][cdn]
+		row.from_time = frm.doc.from_time
+		row.to_time = frm.doc.to_time
+		frm.refresh_fields();
+    }
+})
+
