@@ -279,7 +279,9 @@ override_doctype_dashboards = {
      "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
     "Purchase Invoice": "dynamic.public.dashboard.purchase_invoice_dashboard.get_data",
     "Purchase Order": "dynamic.public.dashboard.purchase_order_dashboard.get_data",
-    "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data"
+    "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data" ,
+    "Work Order" :"dynamic.public.dashboard.work_order.get_data" ,
+    "Job Card" :"dynamic.public.dashboard.job_card.get_data"
 }
 
 # exempt linked doctypes from being automatically cancelled
