@@ -6,10 +6,23 @@ from frappe.model.document import Document
 from frappe import _
 from frappe.utils.background_jobs import  enqueue
 import json
+from frappe.utils import (
+    DATE_FORMAT,
+    add_days,
+    add_to_date,
+    cint,
+    comma_and,
+    date_diff,
+    flt,
+    getdate,
+    nowdate,
+    get_link_to_form
+)
 
 class InstallationsFurniture(Document):
 	def validate(self):
 		self.concat_for_calendar()
+		self.check_employee_busy()
 
 	def before_save(self):
 		self.update_so_inst_status()
@@ -69,18 +82,27 @@ class InstallationsFurniture(Document):
 	@frappe.whitelist()
 	def check_employee_busy(self):
 		for employee in self.installation_team_detail:
-			sql_busy = f'''
-				select DISTINCT `titd`.`parent`  from `tabInstallation Team Detail` titd 
-				INNER JOIN `tabInstallation Furniture Item` insta
-				ON insta.parent=titd.parent
-				where `titd`.`parent` <> '{self.name}'
-				AND '{self.from_time}' <= insta.to_time
-				 AND titd.employee='{employee.employee}'
-			'''
+			# sql_busy = f'''
+			# 	select DISTINCT `titd`.`parent`  from `tabInstallation Team Detail` titd 
+			# 	INNER JOIN `tabInstallation Furniture Item` insta
+			# 	ON insta.parent=titd.parent
+			# 	where `titd`.`parent` <> '{self.name}'
+			# 	AND '{self.from_time}' <= insta.to_time
+			# 	 AND titd.employee='{employee.employee}'
+			# '''
+			sql_busy = f"""
+				SELECT inst.name, team.employee FROM `tabInstallations Furniture` inst
+				INNER JOIN `tabInstallation Team Detail` team
+				ON team.parent <> '{self.name}' AND team.employee = (select employee from `tabInstallation Team Detail` team2 where team2.parent= '{self.name}')
+				WHERE inst.docstatus=1
+				AND inst.to_time >= '{self.from_time}' AND inst.from_time <= '{self.to_time}'
+			"""
 			sql_data = frappe.db.sql(sql_busy,as_dict=1)
-			# frappe.errprint(f'data-->{sql_data}')  AND insta.parent<>'{self.name}' 
+			# print(f'\n\n\n\n-**********-->{sql_data}')
+			# frappe.errprint(f'data-->{sql_data}')  #AND insta.parent<>'{self.name}' 
 			if len(sql_data):
-				frappe.throw(f'Exists in interval for employee {employee.employee} In Installation {sql_data[0].parent}')
+				form_link = get_link_to_form('Installations Furniture', sql_data[0].name)
+				frappe.throw(f'Exists in interval for employee {employee.employee} In Installation {sql_data[0].name} {form_link}')
 
 	@frappe.whitelist()
 	def get_team(self):

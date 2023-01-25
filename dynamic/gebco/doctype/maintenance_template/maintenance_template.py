@@ -86,14 +86,15 @@ class MaintenanceTemplate(Document):
 	def update_contract_visits(self):
 		if self.maintenance_contract:
 			contract = frappe.get_doc("Maintenance Contract",self.maintenance_contract)
-			total_visits = float(contract.number_of_visits or 0)
-			#print("aaaaaasddddddddddddddddddfggggggggg==============",contract.remainig_visits)
-			if float(contract.completed_visits or 0) < total_visits: 
-				contract.completed_visits = float(contract.completed_visits or 0) + 1
-				contract.remainig_visits = float(contract.remainig_visits or 0) -1 
-				contract.save()
-			else:
-				frappe.throw(f"This Customer Completed his {total_visits} visits")
+			if contract.visits == "Limited" :
+				total_visits = float(contract.number_of_visits or 0)
+				#print("aaaaaasddddddddddddddddddfggggggggg==============",contract.remainig_visits)
+				if float(contract.completed_visits or 0) < total_visits: 
+					contract.completed_visits = float(contract.completed_visits or 0) + 1
+					contract.remainig_visits = float(contract.remainig_visits or 0) -1 
+					contract.save()
+				else:
+					frappe.throw(f"This Customer Completed his {total_visits} visits")
 		else:
 			pass
 	

@@ -17,6 +17,7 @@
   "customer_name",
   "customer_phone_number",
   "url",
+  "check_url",
   "column_break_2",
   "delegate",
   "delegate_name",
@@ -301,12 +302,17 @@
    "fieldtype": "Select",
    "label": "Installation Type",
    "options": "Export\nInstallation"
+  },
+  {
+   "fieldname": "check_url",
+   "fieldtype": "Button",
+   "label": "Check Url"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-15 12:35:09.379538",
+ "modified": "2023-01-19 16:20:39.921933",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "Installations Furniture",

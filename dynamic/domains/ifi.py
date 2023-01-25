@@ -28,12 +28,15 @@ data = {
                 "options":"Customer",
                 "insert_after": "more_info",
                 "label": "Customer SO",
+                "in_standard_filter":1
             },
             {
                 "label": "Delivery Date",
                 "fieldname": "delivery_date",
                 "fieldtype": "Date",
                 "insert_after": "schedule_date",
+                "in_standard_filter":1
+
             },
             {
                 "fieldname": "crean",
@@ -66,14 +69,7 @@ data = {
                 "insert_after": "crean",
                 "label": "Crean Amount",
             },
-            {
-                "label": "Assigned To",
-                "fieldname": "assigned_to",
-                "fieldtype": "Link",
-                "options": "User",
-                "insert_after": "order_type",
-                "reqd":1
-            },
+           
          ],
          'Opportunity':[
             {
@@ -93,7 +89,9 @@ data = {
                 "default":"",
                 "insert_after": "more_info",
                 "read_only" : 1,
-                "allow_on_submit": 1    
+                "allow_on_submit": 1,
+                "in_standard_filter":1,
+                "in_list_view":1
             },
             {
                 "fieldname": "crean",
@@ -137,6 +135,8 @@ data = {
             "fieldname": "phone_no1",
             "fieldtype": "Data",
             "insert_after": "contact_by",
+            "unique":1,
+            "reqd":1
             },
             {
                 "label": "URL",
@@ -451,6 +451,23 @@ data = {
         "property": "options",
         "property_type": "Text",
         "value": "\nOffice\nSite"
+        },
+        {
+        "doctype": "Lead",
+        "doctype_or_field": "DocField",
+        "fieldname": "address_type",
+        "property": "options",
+        "property_type": "Text",
+        "value": "Site\nOffice\nShipping\nPersonal\nPlant\nPostal\nShop\nSubsidiary\nWarehouse\nCurrent\nPermanent\nOther\nBilling",
+        "default":"Site"
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "shipping_rule",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1",
         },
         
     ],

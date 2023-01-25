@@ -15,6 +15,7 @@ import json
 from frappe.core.doctype.communication.email import make
 from frappe.desk.form.load import get_attachments
 from frappe.utils import get_url
+from erpnext.accounts.party import get_party_account
 
 DOMAINS = frappe.get_active_domains()
 
@@ -30,20 +31,15 @@ def opportunity_notifiy(self, *args, **kwargs):
 
 @frappe.whitelist()
 def quotation_send_email_cc(self, *args, **kwargs):
-	# frappe.msgprint('in method')
 	if 'IFI' in DOMAINS:
-		# frappe.msgprint('in ifi mail')
-		get_alert_dict_quotation(self)
 		email_group = frappe.db.get_single_value(
 			'IFI Settings', 'email_group_quotation')
 		email_id = frappe.db.get_value('Customer', self.party_name, 'email_id')
-		# frappe.msgprint(str(email_id))
 		cc_emails = []
 		if email_group:
 			cc_emails = frappe.db.get_list('Email Group Member', filters={
 										   'email_group': email_group}, fields=['email'], pluck='email')
 		if email_id:
-			# frappe.msgprint('send it')
 			email_args = {
 				"recipients": email_id,
 				"cc": cc_emails if len(cc_emails) else [],
@@ -57,30 +53,47 @@ def quotation_send_email_cc(self, *args, **kwargs):
 			enqueue(method=frappe.sendmail, queue="short",
 					timeout=300, now=True, is_async=True, **email_args)
 		else:
-			# frappe.msgprint('error')
 			frappe.msgprint(
 				_("{0}: Customer  Has No Mail, hence email not sent"))
 
 
 @frappe.whitelist()
 def lead_contact_by_email(self, *args, **kwargs):
-	receiver = self.contact_by
-	if receiver:
-		email_args = {
-			"recipients": [receiver],
-			"message": _("Lead Date"),
-			"subject": 'Lead Next Contatct Date :'.format(self.contact_date),
-			# "message": self.get_message(),
-			# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-			"reference_doctype": self.doctype,
-			"reference_name": self.name
-		}
-		enqueue(method=frappe.sendmail, queue="short",
-				timeout=300, now=True, is_async=True, **email_args)
-	else:
-		frappe.msgprint(
-			_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
+	if "IFI" in DOMAINS:
+		if self.phone_no1 and len(self.phone_no1) != 11:
+			frappe.throw(_("phone number must be 11 digits"))
+			
+		receiver = self.contact_by
+		if receiver:
+			email_args = {
+				"recipients": [receiver],
+				"message": _("Lead Date"),
+				"subject": 'Lead Next Contatct Date :'.format(self.contact_date),
+				# "message": self.get_message(),
+				# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+				"reference_doctype": self.doctype,
+				"reference_name": self.name
+			}
+			enqueue(method=frappe.sendmail, queue="short",
+					timeout=300, now=True, is_async=True, **email_args)
+			get_alert_dict_lead(self)
+		else:
+			frappe.msgprint(
+				_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
 
+@frappe.whitelist()
+def get_alert_dict_lead(self):
+	owner_name = self.contact_by
+	customer_name = self.lead_name
+	contact_date = self.contact_date
+	notif_doc = frappe.new_doc('Notification Log')
+	notif_doc.subject = f"{owner_name} Contact to {customer_name} at {contact_date}"
+	notif_doc.for_user = owner_name
+	notif_doc.type = "Mention"
+	notif_doc.document_type = self.doctype
+	notif_doc.document_name = self.name
+	notif_doc.from_user = frappe.session.user
+	notif_doc.insert(ignore_permissions=True)
 
 @frappe.whitelist()
 def daily_opportunity_notify(self, *args, **kwargs):
@@ -176,7 +189,9 @@ def create_furniture_installation_order(source_name, target_doc=None):
 			}
 		}
 	}, target_doc)
-
+	so_doc =frappe.get_doc("Sales Order",source_name)
+	cust_addresss = frappe.db.get_value('Customer',so_doc.customer,'url')
+	doclist.url = cust_addresss
 	return doclist
 
 
@@ -534,7 +549,16 @@ def check_buying_price(self, *args, **kwargs):
 				for price in selling_prices:
 					if buying_rate > price.price_list_rate:
 						frappe.throw(
-							_(f"Item Price {buying_rate} has value more than {price.name} "))
+							_(f"Item Price {buying_rate} has value more than {price.name} - {price.price_list_rate} "))
+		if self.selling:
+			selling_rate = self.price_list_rate
+			if selling_rate > 0.0:
+				buying_prices = frappe.db.get_list('Item Price', filters={
+													"buying": 1, "item_code": self.item_code}, fields=['name', 'price_list_rate'])
+				for buying_price in buying_prices:
+					if selling_rate < buying_price.price_list_rate:
+						frappe.throw(
+							_(f"Item Price {selling_rate} has value less than {buying_price.name}-{buying_price.price_list_rate} "))
 
 
 @frappe.whitelist()
@@ -560,19 +584,6 @@ def send_mail_supplier_ifi_po(self, *args, **kwargs):
 					_("{0}:Supplier Has No Mail").format(self.supplier))
 
 
-@frappe.whitelist()
-def get_alert_dict_quotation(self):
-	owner_name = self.assigned_to
-	customer_name = self.party_name
-	contact_date = self.valid_till
-	notif_doc = frappe.new_doc('Notification Log')
-	notif_doc.subject = f"{owner_name} Has Quotation with {customer_name} at {contact_date}"
-	notif_doc.for_user = owner_name
-	notif_doc.type = "Mention"
-	notif_doc.document_type = self.doctype
-	notif_doc.document_name = self.name
-	notif_doc.from_user = frappe.session.user
-	notif_doc.insert(ignore_permissions=True)
 
 
 @frappe.whitelist()
@@ -880,7 +891,7 @@ def get_advance_entries(self, include_unallocated=True):
 		order_field = "sales_order"
 		order_doctype = "Sales Order"
 	elif self.doctype == "Sales Order":
-		party_account = 'Debtors - IFI'
+		party_account = get_party_account("Customer", party=self.customer, company=self.company)
 		party_type = "Customer"
 		party = self.customer
 		amount_field = "credit_in_account_currency"
@@ -894,7 +905,8 @@ def get_advance_entries(self, include_unallocated=True):
 		order_field = "purchase_order"
 		order_doctype = "Purchase Order"
 
-	# list(set(d.get(order_field) for d in self.get("items") if d.get(order_field)))
+	# print('\n\n-->party_type',party_account)
+	# order_list = list(set(d.get(order_field) for d in self.get("items") if d.get(order_field)))
 	order_list = [self.name, ]
 	journal_entries = get_advance_journal_entries(
 		party_type, party, party_account, amount_field, order_doctype, order_list, include_unallocated

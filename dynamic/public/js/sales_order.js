@@ -54,7 +54,7 @@ frappe.ui.form.on("Sales Order", {
                   doc_name: frm.doc.name,
                 },
                 callback: function(r, rt) {
-                  // console.log(r,rt)
+                  console.log(r,rt)
                   r.message.forEach(row => {
                     // console.log(row)
                     let child = frm.add_child("advancess");
@@ -567,6 +567,27 @@ frappe.ui.form.on("Sales Order Item", {
     var row = frappe.get_doc(cdt, cdn);
     frappe.model.set_value(cdt, cdn, "warehouse", row.item_warehouse);
   },
+  supplier:function(frm,cdt,cdn){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("IFI")) {
+            let row = locals[cdt][cdn]
+            if(row.supplier){
+              row.delivered_by_supplier = 1
+            }
+            else if(!row.supplier){
+              row.delivered_by_supplier = 0
+
+            }
+            frm.refresh()
+          }
+        }
+      }
+    })
+    
+  }
   
  
 });
@@ -597,219 +618,6 @@ frappe.ui.form.on(
 );
 
 
-
-// frappe.ui.form.on("Installation Furniture Item", {
-// items_add: function (frm, cdt, cdn) {
-//   console.log('row_added')
-//   // frm.events.set_totals(frm);
-// },
-// items_remove: function (frm, cdt, cdn) {
-//   console.log('row_deleted')
-//   // frm.events.set_totals(frm);
-// },
-
-// set_totals(frm) {
-//   frappe.call({
-//     method: "dynamic.ifi.api.set_total",
-//     frm: frm,
-//     callback: function () {
-//       frm.refresh_fields(["items", "total_cars"]);
-//     },
-//   });
-// }
-// });
-
-// frappe.ui.form.on("Sales Order Item",{
-//     items_remove:function(frm,cdt,cdn){
-//       console.log('qty changed standard')
-//     },
-    
-// })
-
-
-// const extend_sales_order = erpnext.selling.SalesOrderController.extend({
-
-//   onload: function(doc, dt, dn) {
-// 		this._super();
-// 	},
-
-//   refresh: function(doc, dt, dn) {
-// 		var me = this;
-// 		this._super(doc);
-// 		let allow_delivery = false;
-//     if(doc.status !== 'Closed') { 
-//       if(doc.status !== 'On Hold') {
-//         allow_delivery = doc.items.some(item => item.delivered_by_supplier === 0 && item.qty > flt(item.delivered_qty))
-//           // Make Purchase Order
-// 					if (!doc.is_internal_customer) {
-//             frappe.call({
-//               method: "dynamic.api.get_active_domains", 
-//               callback: function (r) {
-//                 if (r.message && r.message.length) {
-//                   if (r.message.includes("IFI")) {
-//                       // cur_frm.cscript['Make Purchase Order'] = create_ifi_purchase_order
-//                       cur_frm.page.remove_inner_button('Purchase Order','Create')
-//                       cur_frm.add_custom_button(__('Purchase Order'), () => me.make_purchase_order_ifi(), __('Create'));
-                          
-                      
-//                   }
-//                 }
-//               }
-//               })
-//           }
-//       }
-//    }
-//   },
-
-//   make_purchase_order_ifi: function(){
-// 		let pending_items = this.frm.doc.items.some((item) =>{
-// 			let pending_qty = flt(item.stock_qty) - flt(item.ordered_qty);
-// 			return pending_qty > 0;
-// 		})
-// 		if(!pending_items){
-// 			frappe.throw({message: __("Purchase Order already created for all Sales Order items"), title: __("Note")});
-// 		}
-
-// 		var me = this;
-// 		var dialog = new frappe.ui.Dialog({
-// 			title: __("Select Items"),
-// 			size: "large",
-// 			fields: [
-// 				{
-// 					"fieldtype": "Check",
-// 					"label": __("Against Default Supplier"),
-// 					"fieldname": "against_default_supplier",
-// 					"default": 0
-// 				},
-// 				{
-// 					fieldname: 'items_for_po', fieldtype: 'Table', label: 'Select Items',
-// 					fields: [
-// 						{
-// 							fieldtype:'Data',
-// 							fieldname:'item_code',
-// 							label: __('Item'),
-// 							read_only:1,
-// 							in_list_view:1
-// 						},
-// 						{
-// 							fieldtype:'Data',
-// 							fieldname:'item_name',
-// 							label: __('Item name'),
-// 							read_only:1,
-// 							in_list_view:1
-// 						},
-// 						{
-// 							fieldtype:'Float',
-// 							fieldname:'pending_qty',
-// 							label: __('Pending Qty'),
-// 							read_only: 1,
-// 							in_list_view:1
-// 						},
-// 						{
-// 							fieldtype:'Link',
-// 							read_only:1,
-// 							fieldname:'uom',
-// 							label: __('UOM'),
-// 							in_list_view:1,
-// 						},
-// 						{
-// 							fieldtype:'Data',
-// 							fieldname:'supplier',
-// 							label: __('Supplier'),
-// 							read_only:1,
-// 							in_list_view:1
-// 						},
-// 					]
-// 				}
-// 			],
-// 			primary_action_label: 'Create Purchase Order',
-// 			primary_action (args) {
-// 				if (!args) return;
-
-// 				let selected_items = dialog.fields_dict.items_for_po.grid.get_selected_children();
-// 				if(selected_items.length == 0) {
-// 					frappe.throw({message: 'Please select Items from the Table', title: __('Items Required'), indicator:'blue'})
-// 				}
-
-// 				dialog.hide();
-
-// 				var method = args.against_default_supplier ? "make_purchase_order_for_default_supplier" : "make_purchase_order"
-// 				return frappe.call({
-// 					method: "dynamic.ifi.api." + method,
-// 					freeze: true,
-// 					freeze_message: __("Creating Purchase Order ..."),
-// 					args: {
-// 						"source_name": me.frm.doc.name,
-// 						"selected_items": selected_items
-// 					},
-// 					freeze: true,
-// 					callback: function(r) {
-// 						if(!r.exc) {
-// 							if (!args.against_default_supplier) {
-// 								frappe.model.sync(r.message);
-// 								frappe.set_route("Form", r.message.doctype, r.message.name);
-// 							}
-// 							else {
-// 								frappe.route_options = {
-// 									"sales_order": me.frm.doc.name
-// 								}
-// 								frappe.set_route("List", "Purchase Order");
-// 							}
-// 						}
-// 					}
-// 				})
-// 			}
-// 		});
-
-// 		dialog.fields_dict["against_default_supplier"].df.onchange = () => set_po_items_data(dialog);
-
-// 		function set_po_items_data (dialog) {
-// 			var against_default_supplier = dialog.get_value("against_default_supplier");
-// 			var items_for_po = dialog.get_value("items_for_po");
-
-// 			if (against_default_supplier) {
-// 				let items_with_supplier = items_for_po.filter((item) => item.supplier)
-
-// 				dialog.fields_dict["items_for_po"].df.data = items_with_supplier;
-// 				dialog.get_field("items_for_po").refresh();
-// 			} else {
-// 				let po_items = [];
-// 				cur_frm.doc.items.forEach(d => {
-// 					let ordered_qty = me.get_ordered_qty(d, cur_frm.doc);
-// 					let pending_qty = (flt(d.stock_qty) - ordered_qty) / flt(d.conversion_factor);
-// 					if (pending_qty > 0) {
-// 						po_items.push({
-// 							"doctype": "Sales Order Item",
-// 							"name": d.name,
-// 							"item_name": d.item_name,
-// 							"item_code": d.item_code,
-// 							"pending_qty": pending_qty,
-// 							"uom": d.uom,
-// 							"supplier": d.supplier
-// 						});
-// 					}
-// 				});
-
-// 				dialog.fields_dict["items_for_po"].df.data = po_items;
-// 				dialog.get_field("items_for_po").refresh();
-// 			}
-// 		}
-
-// 		set_po_items_data(dialog);
-// 		dialog.get_field("items_for_po").grid.only_sortable();
-// 		dialog.get_field("items_for_po").refresh();
-// 		dialog.wrapper.find('.grid-heading-row .grid-row-check').click();
-// 		dialog.show();
-// 	},
-
-// })//end class
-
-// // this tell current form to use this override script
-// $.extend(
-// 	cur_frm.cscript,
-// 	new extend_sales_order({frm: cur_frm}),
-// );
-
 var create_terra_sales_invoice = function() {
 
   frappe.model.open_mapped_doc({
@@ -817,6 +625,7 @@ var create_terra_sales_invoice = function() {
   frm: cur_frm
 })
 }
+
 var create_ifi_purchase_order = function() {
   let pending_items = cur_frm.doc.items.some((item) =>{
     let pending_qty = flt(item.stock_qty) - flt(item.ordered_qty);
@@ -880,7 +689,6 @@ var create_ifi_purchase_order = function() {
     ],
     primary_action_label: 'Create Purchase Order',
     primary_action (args) {
-      console.log('show---222-')
       if (!args) return;
 
       let selected_items = dialog.fields_dict.items_for_po.grid.get_selected_children();

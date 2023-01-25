@@ -182,7 +182,6 @@ class SalesOrder(SellingController):
 				lst.append(args)
 
 		if lst:
-			# from erpnext.accounts.utils import reconcile_against_document
 			from dynamic.terra.utils import reconcile_against_document
 			reconcile_against_document(lst)
 
