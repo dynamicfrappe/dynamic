@@ -1,25 +1,34 @@
 frappe.ui.form.on("Request for Quotation", {
     get_stock_uom:function(frm){
         if (frm.doc.items) {
-            frm.doc.items.forEach(element => {
-                if(element.item_code){
-                    frappe.call({
-                        method:"frappe.client.get_value",
-                        args:{
-                            doctype:"Item",
-                            fieldname:"stock_uom",
-                            "filters": {
-                                'name': element.item_code,
-                              
-                              },
-                        },
-                        callback:function(r){
-                            element.stock_uom = r.message.stock_uom
+            frappe.call({
+                method: "dynamic.api.get_active_domains",
+                callback: function (r) {
+                    if (r.message && r.message.length) {
+                        if (r.message.includes("IFI")) {
+                            frm.doc.items.forEach(element => {
+                                if(element.item_code){
+                                    frappe.call({
+                                        method:"frappe.client.get_value",
+                                        args:{
+                                            doctype:"Item",
+                                            fieldname:"stock_uom",
+                                            "filters": {
+                                                'name': element.item_code,
+                                              
+                                              },
+                                        },
+                                        callback:function(r){
+                                            element.stock_uom = r.message.stock_uom
+                                        }
+                                    })
+                                }
+                                frm.refresh()
+                            });
                         }
-                    })
+                    }
                 }
-                frm.refresh()
-            });
+            })
         }
     }
 })
