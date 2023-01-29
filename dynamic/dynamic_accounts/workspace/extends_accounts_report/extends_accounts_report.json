@@ -34,14 +34,14 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Purchase Invoice Payment",
-   "link_to": "Purchase Invoice Payment",
+   "label": "Purchase Invoice Payments",
+   "link_to": "Purchase Invoice Payments",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2023-01-29 13:56:40.495015",
+ "modified": "2023-01-29 14:47:03.788016",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Extends Accounts Report",
