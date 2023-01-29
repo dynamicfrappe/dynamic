@@ -75,7 +75,7 @@ def get_data(filters):
 				when invoice.disable_rounded_total = 1 then invoice.base_grand_total
 				else invoice.base_rounded_total
 			end) as total_amount ,
-			SUM(IFNULL(gl_entry.credit, 0)) as paid_amount
+			SUM(IFNULL(gl_entry.debit, 0)) as paid_amount
 		from
 			`tabPurchase Invoice` invoice
 		left join  
@@ -84,7 +84,7 @@ def get_data(filters):
 			and gl_entry.against_voucher_type = 'Purchase Invoice'
 			and gl_entry.docstatus = 1
 			and gl_entry.is_cancelled = 1
-			and gl_entry.credit > 0
+			and gl_entry.debit > 0
 			and gl_entry.voucher_type in ('Payment Entry' , 'Journal Entry')
 		where
 			invoice.docstatus = 1
