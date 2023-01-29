@@ -133,4 +133,6 @@ class PayDocument(Document):
 
             })
             for gl in gl_entries:
-                frappe.get_doc("GL Entry", gl).cancel()
+                doc = frappe.get_doc("GL Entry", gl)
+                doc.flags.ignore_permissions = True
+                doc.cancel()
