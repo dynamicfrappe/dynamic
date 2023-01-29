@@ -4,6 +4,7 @@ from frappe import _
 from dynamic.terra.landed_cost import validate_cost ,get_doctype_info
 from dynamic.terra.sales_invoice import check_return_account ,validate_sales_invoices
 from dynamic.terra.item import create_item_serial_doc
+# from dynamic.api import generate_item_code
 DOMAINS = frappe.get_active_domains()
 
 def validate_landed_cost(doc,*args,**kwargs):
@@ -75,11 +76,33 @@ def create_item_specs(doc):
         doc.description += "-"+doc.get("cutting_type")
 
 
+
+def generate_item_code(item_group):
+    group_doc = frappe.get_doc("Item Group",item_group)
+    group_code = group_doc.code
+    if not group_code:
+        frappe.msgprint(_("Item Group Doesnt Have Code"))
+        return 'false'
+    sql = f"""
+    select count(*) +1 as 'serial' from `tabitem code serial` where item_group= '{group_doc.name}'
+    """
+    res = frappe.db.sql(sql,as_dict=1)
+
+    serial = str(group_code or '')+'-' + str(res[0].serial or '')
+
+    return serial
+
 def validate_item_code(doc,*args,**kwargs):
+    print("mohsen22")
     if 'Terra' in DOMAINS:
+        print("mohsen33")
         if doc.is_new():
+            
+            item_code = generate_item_code(doc.item_group)
+            print("mohsen44",item_code)
+            doc.item_code = item_code
             create_item_serial_doc(doc)
-    create_item_specs(doc)
+            create_item_specs(doc)
 
 
 

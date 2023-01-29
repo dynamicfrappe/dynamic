@@ -7,7 +7,7 @@ frappe.views.calendar["Installations Furniture"] = {
 			"start": "start",
 			"end": "end",
 			"id": "name",
-			"title": "description",
+			"title": "desc2",
 			"allDay": "allDay",
 		},
 

@@ -11,7 +11,7 @@ frappe.provide("erpnext.accounts.dimensions");
 
 frappe.ui.form.on('Sales Order Approval', {
 	refresh:function(frm){
-		if (frm.doc.docstatus==1) {
+		if (frm.doc.docstatus==1 && frm.doc.status != "Completed") {
 			frm.add_custom_button(__('Delivery Note'), function() {
 				frappe.model.open_mapped_doc({
         			method: "dynamic.terra.doctype.sales_order_approval.sales_order_approval.make_delivery_note",

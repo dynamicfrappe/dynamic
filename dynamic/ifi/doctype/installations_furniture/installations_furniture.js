@@ -24,7 +24,6 @@ frappe.ui.form.on('Installations Furniture', {
 					],
 					primary_action_label: 'Submit',
 					primary_action(values) {
-						console.log(values);
 						d.hide();
 						frm.set_value("rate",values.rate);
 						frm.set_value("feedback",values.feedback);
@@ -137,4 +136,29 @@ frappe.ui.form.on('Installations Furniture', {
 		  });
 		}
 	  },
+	  check_url: function (frm) {
+        if (frm.doc.url) {
+            frappe.call({
+                method: "dynamic.api.get_active_domains",
+                callback: function (r) {
+                    if (r.message && r.message.length) {
+                        if (r.message.includes("IFI")) {
+                            window.open(frappe.model.scrub(frm.doc.url));
+                        }
+                    }
+                }
+            })
+        }
+    },
 });
+
+
+frappe.ui.form.on('Installation Furniture Item', {
+	items_add(frm, cdt, cdn) { 
+        let row = locals[cdt][cdn]
+		row.from_time = frm.doc.from_time
+		row.to_time = frm.doc.to_time
+		frm.refresh_fields();
+    }
+})
+

@@ -1,3 +1,7 @@
+
+{% include 'erpnext/selling/sales_common.js' %}
+
+
 frappe.ui.form.on("Sales Order", {
   // validate: function(frm) {
   //   console.log('validate1111111111111111')
@@ -13,7 +17,7 @@ frappe.ui.form.on("Sales Order", {
   // },
  
   setup:function(frm) {
-    console.log('setup')
+    frm.events.domian_valid(frm)
     frm.events.update_grid(frm)
     frm.custom_make_buttons = {
       "Installation Request": "Installation Request",
@@ -37,7 +41,44 @@ frappe.ui.form.on("Sales Order", {
 			});
 		}
   },
+  get_advancess:function(frm){
+    if(!frm.is_return) {
+			frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("IFI")) {
+              return frappe.call({
+                method: "dynamic.ifi.api.get_advanced_so_ifi",//get_advanced_so_ifi
+                args:{
+                  doc_name: frm.doc.name,
+                },
+                callback: function(r, rt) {
+                  console.log(r,rt)
+                  r.message.forEach(row => {
+                    // console.log(row)
+                    let child = frm.add_child("advancess");
+                    child.reference_type = row.reference_type,
+                    child.reference_name = row.reference_name,
+                    child.reference_row = row.reference_row,
+                    child.remarks = row.remarks,
+                    child.advance_amount = flt(row.amount),
+                    child.allocated_amount = row.allocated_amount,
+                    child.ref_exchange_rate = flt(row.exchange_rate)
+                  });
+                  refresh_field("advancess");
+                }
+              })
+            }
+        }}
+    })
 
+      
+		}
+  },
+  
+
+  
   // refresh: function(frm, dt, dn) {
 	// 	var me = this;
   //   if(frm.doc.status !== 'Closed') {
@@ -323,6 +364,7 @@ frappe.ui.form.on("Sales Order", {
         async: false,
         callback:function (r){
          if (r.message.includes("Terra")) {
+          cur_frm.cscript['make_sales_invoice'] = create_terra_sales_invoice
             cur_frm.page.remove_inner_button(__('Update Items'))
             }
         }
@@ -525,6 +567,27 @@ frappe.ui.form.on("Sales Order Item", {
     var row = frappe.get_doc(cdt, cdn);
     frappe.model.set_value(cdt, cdn, "warehouse", row.item_warehouse);
   },
+  supplier:function(frm,cdt,cdn){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("IFI")) {
+            let row = locals[cdt][cdn]
+            if(row.supplier){
+              row.delivered_by_supplier = 1
+            }
+            else if(!row.supplier){
+              row.delivered_by_supplier = 0
+
+            }
+            frm.refresh()
+          }
+        }
+      }
+    })
+    
+  }
   
  
 });
@@ -555,32 +618,157 @@ frappe.ui.form.on(
 );
 
 
+var create_terra_sales_invoice = function() {
 
-// frappe.ui.form.on("Installation Furniture Item", {
-// items_add: function (frm, cdt, cdn) {
-//   console.log('row_added')
-//   // frm.events.set_totals(frm);
-// },
-// items_remove: function (frm, cdt, cdn) {
-//   console.log('row_deleted')
-//   // frm.events.set_totals(frm);
-// },
+  frappe.model.open_mapped_doc({
+  method: "dynamic.terra.doctype.sales_order.sales_order.make_sales_invoice",
+  frm: cur_frm
+})
+}
 
-// set_totals(frm) {
-//   frappe.call({
-//     method: "dynamic.ifi.api.set_total",
-//     frm: frm,
-//     callback: function () {
-//       frm.refresh_fields(["items", "total_cars"]);
-//     },
-//   });
-// }
-// });
+var create_ifi_purchase_order = function() {
+  let pending_items = cur_frm.doc.items.some((item) =>{
+    let pending_qty = flt(item.stock_qty) - flt(item.ordered_qty);
+    return pending_qty > 0;
+  })
+  if(!pending_items){
+    frappe.throw({message: __("Purchase Order already created for all Sales Order items"), title: __("Note")});
+  }
 
-// frappe.ui.form.on("Sales Order Item",{
-//     items_remove:function(frm,cdt,cdn){
-//       console.log('qty changed standard')
-//     },
-    
+  var me = this;
+  var dialog = new frappe.ui.Dialog({
+    title: __("Select Items"),
+    size: "large",
+    fields: [
+      {
+        "fieldtype": "Check",
+        "label": __("Against Default Supplier"),
+        "fieldname": "against_default_supplier",
+        "default": 0
+      },
+      {
+        fieldname: 'items_for_po', fieldtype: 'Table', label: 'Select Items',
+        fields: [
+          {
+            fieldtype:'Data',
+            fieldname:'item_code',
+            label: __('Item'),
+            read_only:1,
+            in_list_view:1
+          },
+          {
+            fieldtype:'Data',
+            fieldname:'item_name',
+            label: __('Item name'),
+            read_only:1,
+            in_list_view:1
+          },
+          {
+            fieldtype:'Float',
+            fieldname:'pending_qty',
+            label: __('Pending Qty'),
+            read_only: 1,
+            in_list_view:1
+          },
+          {
+            fieldtype:'Link',
+            read_only:1,
+            fieldname:'uom',
+            label: __('UOM'),
+            in_list_view:1,
+          },
+          {
+            fieldtype:'Data',
+            fieldname:'supplier',
+            label: __('Supplier'),
+            read_only:1,
+            in_list_view:1
+          },
+        ]
+      }
+    ],
+    primary_action_label: 'Create Purchase Order',
+    primary_action (args) {
+      if (!args) return;
+
+      let selected_items = dialog.fields_dict.items_for_po.grid.get_selected_children();
+      if(selected_items.length == 0) {
+        frappe.throw({message: 'Please select Items from the Table', title: __('Items Required'), indicator:'blue'})
+      }
+
+      dialog.hide();
+
+      var method = args.against_default_supplier ? "make_purchase_order_for_default_supplier" : "make_purchase_order"
+      return frappe.call({
+        method: "erpnext.selling.doctype.sales_order.sales_order." + method,
+        freeze: true,
+        freeze_message: __("Creating Purchase Order ..."),
+        args: {
+          "source_name": cur_frm.doc.name,
+          "selected_items": selected_items
+        },
+        freeze: true,
+        callback: function(r) {
+          if(!r.exc) {
+            if (!args.against_default_supplier) {
+              frappe.model.sync(r.message);
+              frappe.set_route("Form", r.message.doctype, r.message.name);
+            }
+            else {
+              frappe.route_options = {
+                "sales_order": cur_frm.doc.name
+              }
+              frappe.set_route("List", "Purchase Order");
+            }
+          }
+        }
+      })
+    }
+  });
+
+  dialog.fields_dict["against_default_supplier"].df.onchange = () => set_po_items_data(dialog);
+
+  function set_po_items_data (dialog) {
+    var against_default_supplier = dialog.get_value("against_default_supplier");
+    var items_for_po = dialog.get_value("items_for_po");
+
+    if (against_default_supplier) {
+      let items_with_supplier = items_for_po.filter((item) => item.supplier)
+
+      dialog.fields_dict["items_for_po"].df.data = items_with_supplier;
+      dialog.get_field("items_for_po").refresh();
+    } else {
+      let po_items = [];
+      cur_frm.doc.items.forEach(d => {
+        let ordered_qty = cur_frm.get_ordered_qty(d, cur_frm.doc);
+        let pending_qty = (flt(d.stock_qty) - ordered_qty) / flt(d.conversion_factor);
+        if (pending_qty > 0) {
+          po_items.push({
+            "doctype": "Sales Order Item",
+            "name": d.name,
+            "item_name": d.item_name,
+            "item_code": d.item_code,
+            "pending_qty": pending_qty,
+            "uom": d.uom,
+            "supplier": d.supplier
+          });
+        }
+      });
+
+      dialog.fields_dict["items_for_po"].df.data = po_items;
+      dialog.get_field("items_for_po").refresh();
+    }
+  }
+
+  set_po_items_data(dialog);
+  dialog.get_field("items_for_po").grid.only_sortable();
+  dialog.get_field("items_for_po").refresh();
+  dialog.wrapper.find('.grid-heading-row .grid-row-check').click();
+  dialog.show();
+}
+
+
+//   frappe.model.open_mapped_doc({
+//   method: "dynamic.ifi.api.make_sales_order",
+//   frm: cur_frm
 // })
-

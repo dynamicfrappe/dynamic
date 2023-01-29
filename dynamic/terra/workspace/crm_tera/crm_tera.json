@@ -1,57 +1,84 @@
 {
- "category": "Modules",
- "charts": [],
- "creation": "2022-07-26 12:28:44.812059",
- "developer_mode_only": 0,
- "disable_user_customization": 0,
- "docstatus": 0,
- "doctype": "Workspace",
- "extends": "CRM",
- "extends_another_page": 1,
- "hide_custom": 0,
- "idx": 0,
- "is_default": 0,
- "is_standard": 1,
- "label": "CRM Tera",
- "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Calendar View",
-   "link_to": "Calendar View",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Task",
-   "link_to": "Task",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  }
- ],
- "modified": "2022-07-26 12:30:06.032045",
- "modified_by": "Administrator",
- "module": "terra",
- "name": "CRM Tera",
- "owner": "Administrator",
- "pin_to_bottom": 0,
- "pin_to_top": 0,
- "shortcuts": [
-  {
-   "doc_view": "Calendar",
-   "label": "Calender",
-   "link_to": "Calendar View",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "List",
-   "label": "Task",
-   "link_to": "Task",
-   "type": "DocType"
-  }
- ]
-}
+    "category": "Modules",
+    "charts": [],
+    "creation": "2022-07-26 12:28:44.812059",
+    "developer_mode_only": 0,
+    "disable_user_customization": 0,
+    "docstatus": 0,
+    "doctype": "Workspace",
+    "extends": "CRM",
+    "extends_another_page": 1,
+    "hide_custom": 0,
+    "idx": 0,
+    "is_default": 0,
+    "is_standard": 1,
+    "label": "CRM Tera",
+    "links": [
+     {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Calendar View",
+      "link_to": "Calendar View",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+     },
+     {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Task",
+      "link_to": "Task",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+     },
+     {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Activities",
+      "link_to": "Actions",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+     },
+     {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Actions Report",
+      "link_to": "Actions Report",
+      "link_type": "Report",
+      "onboard": 0,
+      "type": "Link"
+     },
+     {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Item Request",
+      "link_to": "Item Request",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+     }
+    ],
+    "modified": "2023-01-03 11:11:37.563048",
+    "modified_by": "Administrator",
+    "module": "terra",
+    "name": "CRM Tera",
+    "owner": "Administrator",
+    "pin_to_bottom": 0,
+    "pin_to_top": 0,
+    "shortcuts": [
+     {
+      "doc_view": "Calendar",
+      "label": "Calender",
+      "link_to": "Calendar View",
+      "type": "DocType"
+     },
+     {
+      "doc_view": "List",
+      "label": "Task",
+      "link_to": "Task",
+      "type": "DocType"
+     }
+    ]
+   }

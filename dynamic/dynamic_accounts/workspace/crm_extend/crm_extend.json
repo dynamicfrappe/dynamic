@@ -17,22 +17,23 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Maintenance",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Asset Maintenance Team",
    "link_to": "Asset Maintenance Team",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Access Log",
+   "link_to": "Access Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2021-12-07 17:08:22.385003",
+ "modified": "2023-01-03 10:53:31.603568",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "CRM Extend",

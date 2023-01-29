@@ -28,8 +28,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Item Code",
-   "reqd": 1,
-   "unique": 1
+   "read_only": 1
   },
   {
    "fieldname": "item_name",
@@ -120,7 +119,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-04 13:50:32.652869",
+ "modified": "2023-01-03 12:33:57.799620",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Item Request",

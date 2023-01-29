@@ -139,7 +139,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-07-26 13:40:53.534420",
+ "modified": "2023-01-17 12:37:08.580249",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Actions",
@@ -158,7 +158,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC"
 }

@@ -182,7 +182,6 @@ class SalesOrder(SellingController):
 				lst.append(args)
 
 		if lst:
-			# from erpnext.accounts.utils import reconcile_against_document
 			from dynamic.terra.utils import reconcile_against_document
 			reconcile_against_document(lst)
 
@@ -887,9 +886,11 @@ def make_delivery_note(source_name, target_doc=None, skip_item_mapping=False):
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
+	# frappe.msgprint('sad')
 	def postprocess(source, target):
 		set_missing_values(source, target)
 		# Get the advance paid Journal Entries in Sales Invoice Advance
+		target.allocate_advances_automatically = source.allocate_advances_automatically
 		if target.get("allocate_advances_automatically"):
 			target.set_advances()
 
@@ -940,6 +941,7 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
 				"field_map": {
 					"party_account_currency": "party_account_currency",
 					"payment_terms_template": "payment_terms_template",
+					"allocate_advances_automatically": "allocate_advances_automatically"
 				},
 				"field_no_map": ["payment_terms_template"],
 				"validation": {"docstatus": ["=", 1]},

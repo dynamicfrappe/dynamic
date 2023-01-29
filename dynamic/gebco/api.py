@@ -63,6 +63,8 @@ def check_so_approval(doc):
     2- update so line qty 
     """
     #return
+    sales_order_approval_name = ""
+    total_qty =0
     for item in doc.items:
         if item.get("sales_order_approval"):
             remaing_sql = f"""select remaining_qty from `tabSales Order Approval Item` where parent= '{item.sales_order_approval}' and item_code='{item.item_code}' limit 1"""
@@ -78,6 +80,26 @@ def check_so_approval(doc):
             """
             frappe.db.sql(sql)
             frappe.db.commit()
+            total_qty += item.qty
+           
+            sales_order_approval_name = item.sales_order_approval
+
+     # update sales order qty 
+    sql = f"""update `tabSales Order Approval` set total_delivered_qty = total_delivered_qty + {total_qty}"""       
+    frappe.db.sql(sql)
+    frappe.db.commit()
+    so_approval_doc = frappe.get_doc("Sales Order Approval",sales_order_approval_name)
+    total_delived_qty =0
+    #total_delivered_qty
+    
+    if so_approval_doc.total_qty == so_approval_doc.total_delivered_qty:
+        so_approval_doc.status = "Completed"
+        so_approval_doc.save()
+    elif so_approval_doc.total_qty >so_approval_doc.total_delivered_qty and so_approval_doc.total_delivered_qty != 0:
+        so_approval_doc.status ="Partial Delivered"
+        so_approval_doc.save()
+
+
 
             # update sales order qtys
 
@@ -139,3 +161,9 @@ def create_installation_request(sales_order):
     installation_request_doc.save()
     return installation_request_doc
     
+
+
+# @frappe.whitelist()
+# def get_gebco_items(doc):
+#     items = frappe.db.get_list("Item",filters={"item_group","Queclink devices"},fields=['name'],pluck='name')
+#     return items

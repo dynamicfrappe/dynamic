@@ -197,6 +197,13 @@ class Quotation(SellingController):
 		dr_or_cr = "credit_in_account_currency"
 		rev_dr_or_cr = "debit_in_account_currency"
 		party = self.party_name
+
+
+
+		if self.quotation_to == "Lead" :
+			party_type = "Customer"
+			party = frappe.db.get_value("Customer" , {"lead_name":self.party_name},'name')
+			
 		
 		advance = frappe.db.sql(
 			"""
@@ -244,8 +251,14 @@ class Quotation(SellingController):
 			frappe.db.set_value(self.doctype, self.name, "advance_paid", advance_paid)
 
 	def get_advance_entries(self, include_unallocated=True):
+		
 		party_type = self.quotation_to
 		party = self.party_name
+
+		if self.quotation_to == "Lead" :
+			party_type = "Customer"
+			party = frappe.db.get_value("Customer" , {"lead_name":self.party_name},'name')
+		
 		party_account = get_party_account(party_type, party=party, company=self.company)
 		amount_field = "credit_in_account_currency"
 		order_field = None
@@ -397,6 +410,8 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 			)
 		target.flags.ignore_permissions = ignore_permissions
 		target.run_method("set_missing_values")
+		if source.allocate_advances_automatically :
+			target.run_method("set_advances")
 		target.run_method("calculate_taxes_and_totals")
 
 	def update_item(obj, target, source_parent):
@@ -413,7 +428,9 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 		"Quotation",
 		source_name,
 		{
-			"Quotation": {"doctype": "Sales Order", "validation": {"docstatus": ["=", 1]}},
+			"Quotation": {"doctype": "Sales Order", "validation": {"docstatus": ["=", 1]},
+			"field_map": {"allocate_advances_automatically": "allocate_advances_automatically"}
+			},
 			"Quotation Item": {
 				"doctype": "Sales Order Item",
 				"field_map": {"parent": "prevdoc_docname"},
@@ -495,6 +512,10 @@ def _make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
 
 	return doclist
 
+@frappe.whitelist()
+def make_customer(source_name, ignore_permissions=False):
+	return  _make_customer(source_name, ignore_permissions)
+
 
 def _make_customer(source_name, ignore_permissions=False):
 	quotation = frappe.db.get_value(
@@ -546,3 +567,38 @@ def _make_customer(source_name, ignore_permissions=False):
 				return customer_name
 		else:
 			return frappe.get_doc("Customer", quotation.get("party_name"))
+
+
+
+
+from collections import defaultdict
+from frappe.desk.reportview import get_filters_cond, get_match_cond
+from frappe.utils import nowdate, unique
+
+
+
+def get_fields(doctype, fields=None):
+	if fields is None:
+		fields = []
+	meta = frappe.get_meta(doctype)
+	fields.extend(meta.get_search_fields())
+
+	if meta.title_field and not meta.title_field.strip() in fields:
+		fields.insert(1, meta.title_field.strip())
+
+	return unique(fields)
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def matrerial_request_query(doctype, txt, searchfield, start, page_len, filters, as_dict=False):
+	doctype = "Material Request"
+	conditions = []
+	name_sql  =  frappe.db.sql("""SELECT A.name FROM `tabMaterial Request` A 
+				 INNER JOIN `tabMaterial Request Item` B 
+				 ON A.name = B.parent
+				 WHERE A.docstatus = "1" AND A.has_quotation="1"
+				 """)
+	return name_sql 
+
+	
+
+

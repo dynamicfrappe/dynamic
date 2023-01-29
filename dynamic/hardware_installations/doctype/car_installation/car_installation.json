@@ -28,11 +28,13 @@
   "column_break_17",
   "car_type",
   "car_brand",
+  "car_color",
   "motor_no",
   "accessories_section",
   "installation_accessories",
   "gps_details_section",
   "gps_type",
+  "gps_item_code_alt",
   "gps_item_code",
   "gps_serial_number",
   "gps_warehouse",
@@ -335,12 +337,26 @@
    "fieldname": "motor_no",
    "fieldtype": "Data",
    "label": "Motor NO"
+  },
+  {
+   "depends_on": "eval:doc.gps_type == \"External\"",
+   "fieldname": "gps_item_code_alt",
+   "fieldtype": "Link",
+   "label": "GPS Item Alt",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "car.car_color",
+   "fieldname": "car_color",
+   "fieldtype": "Link",
+   "label": "Car Color",
+   "options": "Car Color"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-25 15:09:18.980050",
+ "modified": "2023-01-19 16:36:43.178219",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",

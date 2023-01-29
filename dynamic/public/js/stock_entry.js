@@ -13,6 +13,60 @@ frappe.ui.form.on("Stock Entry", {
     //   })
        
     // },
+    trea_setup(frm){
+      frappe.call({
+        method:"dynamic.api.validate_terra_domain",
+        callback:function(r) {
+          if (r.message){
+            frm.events.terra_stock_etnrty(frm)
+          }
+        }
+       })
+  
+    },
+    terra_stock_etnrty(frm){
+      console.log("tera")
+      if (frm.doc.docstatus === 1){
+        if (frm.doc.stock_entry_type == "Transfer") {
+          frm.remove_custom_button(__('End Transit')) 
+        }
+         
+        }
+      if (frm.doc.__islocal && frm.doc.outgoing_stock_entry) {
+
+
+        frappe.call({
+          method: 'frappe.client.get_value',
+          "args":{
+            "doctype": 'Stock Entry',
+            "fieldname": "ds_warehouse",
+            "filters": {
+              'name': frm.doc.outgoing_stock_entry,
+            
+            },
+          },
+          callback: function (data) {
+             frm.set_value("to_warehouse" ,  data.message.ds_warehouse )
+             frm.set_df_property("to_warehouse", 'read_only', 1);
+             frm.refresh_field("to_warehouse")
+          }
+
+        })
+       
+        
+
+      }
+      
+    },
+    onload:function(frm) {
+    //  add tarra customization 
+    
+     frm.events.trea_setup(frm)
+     
+    },
+    refresh:function(frm){
+      frm.events.trea_setup(frm)
+    },
     comparison : function (frm) {
         if(frm.doc.against_comparison){
 
@@ -56,3 +110,4 @@ frappe.ui.form.on("Stock Entry", {
 
 
 })
+

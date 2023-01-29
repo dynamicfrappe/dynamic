@@ -12,6 +12,15 @@ installation_status = [
 data = {
 
     'custom_fields': {
+        'Company':[
+            {
+                "label":"Crean Income Account",
+                "fieldname":"crean_income_account",
+                "fieldtype":"Link",
+                "options":'Account',
+                "insert_after":"monthly_sales_target"
+            },
+        ],
         'Purchase Order':[
              {
                 "fieldname": "customer_so",
@@ -19,7 +28,31 @@ data = {
                 "options":"Customer",
                 "insert_after": "more_info",
                 "label": "Customer SO",
+                "in_standard_filter":1
             },
+            {
+                "label": "Delivery Date",
+                "fieldname": "delivery_date",
+                "fieldtype": "Date",
+                "insert_after": "schedule_date",
+                "in_standard_filter":1
+
+            },
+            {
+                "fieldname": "crean",
+                "fieldtype": "Select",
+                "options":"\nYes\nNo",
+                "insert_after": "apply_tds",
+                "label": "Crean",
+                "reqd":1
+            },
+            {
+                "fieldname": "crean_amount",
+                "fieldtype": "Float",
+                "insert_after": "crean",
+                "label": "Crean Amount",
+            },
+
         ],
          'Quotation':[
             {
@@ -36,6 +69,7 @@ data = {
                 "insert_after": "crean",
                 "label": "Crean Amount",
             },
+           
          ],
          'Opportunity':[
             {
@@ -55,7 +89,9 @@ data = {
                 "default":"",
                 "insert_after": "more_info",
                 "read_only" : 1,
-                "allow_on_submit": 1    
+                "allow_on_submit": 1,
+                "in_standard_filter":1,
+                "in_list_view":1
             },
             {
                 "fieldname": "crean",
@@ -69,14 +105,43 @@ data = {
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
-                "label": "Crean Amount",
+                "label": "Crean Amount"
+            },
+            {
+                "label": "Advance Paymentstest",
+                "fieldname": "advance_paymentss",
+                "fieldtype": "Section Break",
+                "insert_after": "payment_schedule"
+            },
+            {
+                "label": "Get Advances Receivedd",
+                "fieldname": "get_advancess",
+                "fieldtype": "Button",
+                "insert_after": "advance_paymentss",
+                "allow_on_submit":1
+            },
+            {
+                "label": "Advances",
+                "fieldname": "advancess",
+                "fieldtype": "Table",
+                "options":"Sales Invoice Advance",
+                "insert_after": "get_advancess",
+                "allow_on_submit":1
             },
          ],
          'Lead':[
             {
+            "label": "Phone No.",
+            "fieldname": "phone_no1",
+            "fieldtype": "Data",
+            "insert_after": "contact_by",
+            "unique":1,
+            "reqd":1
+            },
+            {
                 "label": "URL",
                 "fieldname": "url",
-                "fieldtype": "Data",
+                "fieldtype": "Small Text",
                 "insert_after": "email_id",
                 "allow_on_submit": 1    
             },
@@ -86,12 +151,14 @@ data = {
                 "fieldtype": "Button",
                 "insert_after": "url",
             },
+            
+           
          ],
          'Customer':[
             {
                 "label": "URL",
                 "fieldname": "url",
-                "fieldtype": "Data",
+                "fieldtype": "Small Text",
                 "insert_after": "opportunity_name",
                 "allow_on_submit": 1    
             },
@@ -106,7 +173,7 @@ data = {
             {
                 "label": "URL",
                 "fieldname": "url",
-                "fieldtype": "Data",
+                "fieldtype": "Small Text",
                 "insert_after": "tax_withholding_category",
                 "allow_on_submit": 1    
             },
@@ -115,6 +182,22 @@ data = {
                 "fieldname": "check_url",
                 "fieldtype": "Button",
                 "insert_after": "url",
+            },
+         ],
+         'Purchase Invoice':[
+             {
+                "fieldname": "crean",
+                "fieldtype": "Select",
+                "options":"\nYes\nNo",
+                "insert_after": "due_date",
+                "label": "Crean",
+                "reqd":1
+            },
+            {
+                "fieldname": "crean_amount",
+                "fieldtype": "Float",
+                "insert_after": "crean",
+                "label": "Crean Amount",
             },
          ],
     },
@@ -126,6 +209,70 @@ data = {
         "property": "allow_on_submit",
         "property_type": "Check",
         "value": "1"
+        },
+        {
+        "doctype": "Sales Invoice",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Purchase Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Purchase Invoice",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "taxes_and_charges",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "order_type",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nSales\nMaintenance\nShopping Cart\nAccessories" 
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "order_type",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nSales\nMaintenance\nShopping Cart\nAccessories" 
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "status",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nDraft\nOpen\nReplied\nOrdered\nLost\nCancelled\nExpired\nRejected" 
         },
         {
         "doctype":"Item",
@@ -296,6 +443,31 @@ data = {
         "property_type": "Check",
         "value": "1",
         "default_value":1
+        },
+        {
+        "doctype": "Address",
+        "doctype_or_field": "DocField",
+        "fieldname": "address_type",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nOffice\nSite"
+        },
+        {
+        "doctype": "Lead",
+        "doctype_or_field": "DocField",
+        "fieldname": "address_type",
+        "property": "options",
+        "property_type": "Text",
+        "value": "Site\nOffice\nShipping\nPersonal\nPlant\nPostal\nShop\nSubsidiary\nWarehouse\nCurrent\nPermanent\nOther\nBilling",
+        "default":"Site"
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "shipping_rule",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1",
         },
         
     ],

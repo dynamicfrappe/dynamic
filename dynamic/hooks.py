@@ -40,16 +40,21 @@ app_include_css = "/assets/dynamic/css/dynamic.css"
 app_include_js = "/assets/js/dynamic.min.js"
 
 
-
-
 # include js in doctype views
 # doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
 # 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
-# doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+doctype_calendar_js = {
+    "Appointment":"public/js/appointment_calendar.js"
+    # "doctype" : "public/js/appointment.js"
+    }
+
+
+# calendars = ["Appointment"]
+
 doctype_list_js = {
-                    "Customer" : "public/js/customer_list.js"
-            
+                    "Customer" : "public/js/customer_list.js",
+                    "Quotation" : "public/js/quotation_list.js"
                     }
 
 after_install = "dynamic.install.after_install"
@@ -80,6 +85,11 @@ doctype_js = {
     "Supplier":"public/js/supplier.js",
     "Customer":"public/js/customer.js",
     "Quotation":"public/js/quotation.js",
+    "Opportunity":"public/js/opportunity.js",
+    "Material Request" :"public/js/material_request.js",
+    "Work Order":"public/js/work_order.js",
+    "Job Card":"public/js/job_card.js"
+    
 }
 # doctype_js = {
 #     "Sales Invoice": "public/js/sales_invoice.js",
@@ -94,7 +104,7 @@ doctype_js = {
 # }
 
 
- # added in terra only comment it in another domains
+ #! added in terra only comment it in another domains
 #doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
 
 
@@ -110,7 +120,8 @@ doc_events = {
 
     "Sales Invoice": {
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
-        "validate": "dynamic.api.validate_active_domains"
+        "validate": "dynamic.api.validate_active_domains",
+        "on_cancel" :"dynamic.api.validate_active_domains_cancel"
     },
     "Item": {
         "autoname": "dynamic.api.autoname",
@@ -126,8 +137,10 @@ doc_events = {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
+        "before_submit": "dynamic.api.check_crean_amount_after_mapped_doc",
         "on_submit": "dynamic.api.create_reservation_validate",
-        "before_save": "dynamic.api.check_source_item",
+        "before_save":[
+            "dynamic.api.check_source_item"],
         "on_cancel":"dynamic.api.cancel_reservation",
         "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
@@ -146,21 +159,48 @@ doc_events = {
     },
     "Purchase Invoice": {
         "on_submit": "dynamic.api.submit_purchase_invoice",
+        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
      },
      "Stock Entry":{
         # In This Target check the branches data in cost center  
-         "on_submit" : "dynamic.api.submit_stock_entry"
+        "validate" :"dynamic.api.validate_stock_entry",
+        "on_submit" : "dynamic.api.submit_stock_entry"
      },
      "Opportunity":{
        "validate" : "dynamic.ifi.api.opportunity_notifiy",
-    #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
+    #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy" 
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
-    } 
-      ,
+    },
     "Asset Movement":{
         "on_submit":"dynamic.api.add_cost_center_to_asset"
+    } ,
+    "Supplier Quotation" :{
+        #  "validate" : "dynamic.terra.api.submit_supplier_quotation",
+          "on_submit":"dynamic.terra.api.submit_supplier_quotation"
+    },
+    "Item Price":{
+        "before_save":"dynamic.ifi.api.check_buying_price"
+    },
+    "Quotation":{
+        "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
+        "before_submit": "dynamic.api.add_crean_in_taxes",
+    },
+    "Purchase Order":{
+        "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
+        # "before_submit": "dynamic.api.add_crean_in_taxes",
+        "before_submit": "dynamic.api.add_crean_in_taxes",
+    } ,
+    # "Appointment" :{
+    #     "validate":"dynamic.api.appointment_validate"
+
+    # },
+    "Accounts Settings":{
+        "validate" : "dynamic.api.onsave_account_settings"
+    },
+    "Lead":{
+        "validate":"dynamic.ifi.api.lead_contact_by_email"
     }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
@@ -241,7 +281,9 @@ override_doctype_dashboards = {
      "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
     "Purchase Invoice": "dynamic.public.dashboard.purchase_invoice_dashboard.get_data",
     "Purchase Order": "dynamic.public.dashboard.purchase_order_dashboard.get_data",
-    "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data"
+    "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data" ,
+    "Work Order" :"dynamic.public.dashboard.work_order.get_data" ,
+    "Job Card" :"dynamic.public.dashboard.job_card.get_data"
 }
 
 # exempt linked doctypes from being automatically cancelled
@@ -252,6 +294,7 @@ override_doctype_dashboards = {
 domains = {
     'Dynamic Accounts': 'dynamic.domains.dynamic_accounts',
     'Dynamic HR': 'dynamic.domains.dynamic_hr',
+    'Dynamic Payroll': 'dynamic.domains.dynamic_payroll',
     'Gebco': 'dynamic.domains.gebco',
     "Moyate": 'dynamic.domains.moyate',
     'Product Bundle': 'dynamic.domains.product_bundle',
@@ -259,7 +302,10 @@ domains = {
     'Terra': 'dynamic.domains.tera',
     'IFI': 'dynamic.domains.ifi',
     'textile' :'dynamic.domains.textile',
-    'vero':'dynamic.domains.vero'
+    'vero':'dynamic.domains.vero',
+    'Reach Group':'dynamic.domains.reach_group',
+    'Vana' : 'dynamic.domains.vana',
+    'Merge Entries':'dynamic.domains.merge_entries'
 }
 
 # domain Conatin
@@ -274,7 +320,7 @@ jenv = {
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",
-        "get_balance_on:erpnext.accounts.utils.get_balance_on"
+        "get_balance_on:erpnext.accounts.utils.get_balance_on",
     ],
     "filters": []
 }

@@ -341,6 +341,8 @@ class PaymentEntry(AccountsController):
 
 					if d.reference_doctype != "Journal Entry":
 						if d.reference_doctype == "Quotation" :
+								if ref_doc.quotation_to == "Lead" :
+									ref_doc.party_name = frappe.db.get_value("Customer" , {"lead_name":ref_doc.party_name},'name') or ref_doc.party_name
 								setattr(ref_doc,scrub(self.party_type) , ref_doc.party_name)
 
 						if self.party != ref_doc.get(scrub(self.party_type)):
