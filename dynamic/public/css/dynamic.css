@@ -60,7 +60,7 @@ a {
     color: white;
 }
 .selected{
-    color: white;
+    color: white !important;
     font-weight: 800;
     background: linear-gradient(to right, #0e4194, #2490ef) !important; 
 }

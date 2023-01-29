@@ -13,9 +13,36 @@
  "is_default": 0,
  "is_standard": 1,
  "label": "Extends Accounts Report",
- "links": [],
- "modified": "2022-12-21 14:39:23.700613",
- "modified_by": "abdallah.shokri@gmail.com",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Invoice Payment",
+   "link_to": "Sales Invoice Payment",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Invoice Payment",
+   "link_to": "Purchase Invoice Payment",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2023-01-29 13:56:40.495015",
+ "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Extends Accounts Report",
  "onboarding": "Accounts",
