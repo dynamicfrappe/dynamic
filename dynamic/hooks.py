@@ -88,7 +88,8 @@ doctype_js = {
     "Opportunity":"public/js/opportunity.js",
     "Material Request" :"public/js/material_request.js",
     "Work Order":"public/js/work_order.js",
-    "Job Card":"public/js/job_card.js"
+    "Job Card":"public/js/job_card.js",
+    "Request for Quotation":"public/js/request_for_quotation.js",
     
 }
 # doctype_js = {
