@@ -42,6 +42,23 @@
   },
   {
    "hidden": 0,
+   "is_query_report": 0,
+   "label": "Investment Equation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Investment Equation Report Settings",
+   "link_to": "Investment Equation Report Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
    "is_query_report": 1,
    "label": "Investment Equation",
    "link_to": "Investment Equation Report",
@@ -50,7 +67,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-01-31 14:09:49.083560",
+ "modified": "2023-01-31 16:18:05.533006",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Extends Accounts Report",

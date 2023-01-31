@@ -1,5 +1,5 @@
 {
- "add_total_row": 1,
+ "add_total_row": 0,
  "columns": [],
  "creation": "2023-01-31 14:07:44.713896",
  "disable_prepared_report": 0,
@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2023-01-31 14:08:10.186959",
+ "modified": "2023-01-31 16:09:01.346569",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Investment Equation Report",
