@@ -35,6 +35,7 @@ frappe.ui.form.on("Lead", {
         }
     },
     refresh(frm) {
+
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {

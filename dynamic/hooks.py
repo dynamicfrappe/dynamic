@@ -141,7 +141,8 @@ doc_events = {
         "before_submit": "dynamic.api.check_crean_amount_after_mapped_doc",
         "on_submit": "dynamic.api.create_reservation_validate",
         "before_save":[
-            "dynamic.api.check_source_item"],
+            "dynamic.api.check_source_item", 
+            ],
         "on_cancel":"dynamic.api.cancel_reservation",
         "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
@@ -185,12 +186,12 @@ doc_events = {
         "before_save":"dynamic.ifi.api.check_buying_price"
     },
     "Quotation":{
-        "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
+        # "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
         "before_submit": "dynamic.api.add_crean_in_taxes",
     },
     "Purchase Order":{
-        "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
-        # "before_submit": "dynamic.api.add_crean_in_taxes",
+        # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
+        # "before_save": "dynamic.api.add_crean_in_taxes",
         "before_submit": "dynamic.api.add_crean_in_taxes",
     } ,
     # "Appointment" :{
@@ -200,9 +201,9 @@ doc_events = {
     "Accounts Settings":{
         "validate" : "dynamic.api.onsave_account_settings"
     },
-    "Lead":{
-        "validate":"dynamic.ifi.api.lead_contact_by_email"
-    }
+    # "Lead":{
+    #     "validate":"dynamic.ifi.api.lead_contact_by_email"
+    # }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
     #  },Installations Furniture
@@ -246,7 +247,8 @@ scheduler_events = {
     # 		"dynamic.tasks.all"
     # 	],
     	"daily": [
-    		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs"
+    		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
+            # "dynamic.ifi.api.send_mail_daily_opportunity_lead"
     	],
     # 	"hourly": [
     # 		"dynamic.tasks.hourly"

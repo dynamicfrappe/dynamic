@@ -958,6 +958,7 @@ def add_crean_in_taxes(doc,*args,**kwargs):
                 })
                 total = doc.crean_amount + total
                 doc.total_taxes_and_charges =  total
+            doc.run_method("calculate_taxes_and_totals")
         if(not crean_account):
             frappe.msgprint(_("Company Has No Crane Account"))
 
@@ -996,6 +997,7 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                             "add_deduct_tax":"Add",
                         })
                     doc.total_taxes_and_charges = doc.crean_amount + total
+            doc.run_method("calculate_taxes_and_totals")
             if(not crean_account):
                 frappe.msgprint(_("Company Has No Crane Account"))
                  
@@ -1028,6 +1030,7 @@ def check_crean_amount_after_mapped_doc_pi(doc,*args,**kwargs):
                             "category":"Total",
                             "add_deduct_tax":"Add",
                         })
+            doc.run_method("calculate_taxes_and_totals")
             if(not crean_account):
                 frappe.msgprint(_("Company Has No Crane Account"))
 

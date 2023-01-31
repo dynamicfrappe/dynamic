@@ -297,7 +297,7 @@ frappe.ui.form.on("Sales Order", {
   },
   make_installation_request(frm) {
     frappe.model.open_mapped_doc({
-      // installation_request_doc
+      // installation_request_doc 
       method: "dynamic.gebco.api.create_installation_request",
       frm: frm,
       // args: {
@@ -747,7 +747,7 @@ var create_ifi_purchase_order = function() {
             "doctype": "Sales Order Item",
             "name": d.name,
             "item_name": d.item_name,
-            "item_code": d.item_code,
+            "item_code": d.item_code, 
             "pending_qty": pending_qty,
             "uom": d.uom,
             "supplier": d.supplier

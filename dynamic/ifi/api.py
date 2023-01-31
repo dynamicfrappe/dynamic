@@ -25,7 +25,7 @@ def opportunity_notifiy(self, *args, **kwargs):
 	if "IFI" in DOMAINS:
 		get_alert_dict(self)
 		# reciever
-		email_quotation(self, *args, **kwargs)
+		# email_quotation(self, *args, **kwargs)
 		# supplier_rfq_mail(self)
 
 
@@ -124,43 +124,43 @@ def get_alert_dict(self):
 	notif_doc.insert(ignore_permissions=True)
 
 
-@frappe.whitelist()
-def email_quotation(self, *args, **kwargs):
-	receiver = frappe.db.get_value("User", self.contact_by, "email")
-	if receiver:
-		email_args = {
-			"recipients": [receiver],
-			"message": _("Quotation Appointement"),
-			"subject": 'Quotation Appointement At Date'.format(self.contact_date),
-			# "message": self.get_message(),
-			# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-			"reference_doctype": self.doctype,
-			"reference_name": self.name
-		}
-		enqueue(method=frappe.sendmail, queue="short",
-				timeout=300, now=True, is_async=True, **email_args)
-	else:
-		frappe.msgprint(
-			_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
+# @frappe.whitelist()
+# def email_quotation(self, *args, **kwargs):
+# 	receiver = frappe.db.get_value("User", self.contact_by, "email")
+# 	if receiver:
+# 		email_args = {
+# 			"recipients": [receiver],
+# 			"message": _("Quotation Appointement"),
+# 			"subject": 'Quotation Appointement At Date'.format(self.contact_date),
+# 			# "message": self.get_message(),
+# 			# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+# 			"reference_doctype": self.doctype,
+# 			"reference_name": self.name
+# 		}
+# 		enqueue(method=frappe.sendmail, queue="short",
+# 				timeout=300, now=True, is_async=True, **email_args)
+# 	else:
+# 		frappe.msgprint(
+# 			_("{0}: Next Contatct By User Has No Mail, hence email not sent").format(self.contact_by))
 
 
-@frappe.whitelist()
-def email_supplier_invoice(self, *args, **kwargs):
-	receiver = frappe.db.get_value("Supplier", self.supplier, "email_id")
-	if receiver:
-		email_args = {
-			"recipients": [receiver],
-			"message": _("Please GET Notify "),
-			"subject": 'Purchase Receipt - IN'.format(self.posting_date),
-			# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-			"reference_doctype": self.doctype,
-			"reference_name": self.name
-		}
-		enqueue(method=frappe.sendmail, queue="short",
-				timeout=300, now=True, is_async=True, **email_args)
-	else:
-		frappe.msgprint(
-			_("{0}: Supplier ha no mail, hence email not sent").format(self.supplier))
+# @frappe.whitelist()
+# def email_supplier_invoice(self, *args, **kwargs):
+# 	receiver = frappe.db.get_value("Supplier", self.supplier, "email_id")
+# 	if receiver:
+# 		email_args = {
+# 			"recipients": [receiver],
+# 			"message": _("Please GET Notify "),
+# 			"subject": 'Purchase Receipt - IN'.format(self.posting_date),
+# 			# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+# 			"reference_doctype": self.doctype,
+# 			"reference_name": self.name
+# 		}
+# 		enqueue(method=frappe.sendmail, queue="short",
+# 				timeout=300, now=True, is_async=True, **email_args)
+# 	else:
+# 		frappe.msgprint(
+# 			_("{0}: Supplier ha no mail, hence email not sent").format(self.supplier))
 
 
 @frappe.whitelist()
@@ -561,27 +561,27 @@ def check_buying_price(self, *args, **kwargs):
 							_(f"Item Price {selling_rate} has value less than {buying_price.name}-{buying_price.price_list_rate} "))
 
 
-@frappe.whitelist()
-def send_mail_supplier_ifi_po(self, *args, **kwargs):
-	if 'IFI' in DOMAINS:
-		if self.supplier:
-			email_id = frappe.db.get_value(
-				'Supplier', self.supplier, 'email_id')
-			if email_id:
-				email_args = {
-					"recipients": email_id,
-					"message": _("Purchase Order Notify"),
-					"subject": 'Purchase Order',
-					"message": "test Purchase Order",
-					# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
-					"reference_doctype": self.doctype,
-					"reference_name": self.name
-				}
-				enqueue(method=frappe.sendmail, queue="short",
-						timeout=300, now=True, is_async=True, **email_args)
-			else:
-				frappe.msgprint(
-					_("{0}:Supplier Has No Mail").format(self.supplier))
+# @frappe.whitelist()
+# def send_mail_supplier_ifi_po(self, *args, **kwargs):
+# 	if 'IFI' in DOMAINS:
+# 		if self.supplier:
+# 			email_id = frappe.db.get_value(
+# 				'Supplier', self.supplier, 'email_id')
+# 			if email_id:
+# 				email_args = {
+# 					"recipients": email_id,
+# 					"message": _("Purchase Order Notify"),
+# 					"subject": 'Purchase Order',
+# 					"message": "test Purchase Order",
+# 					# "attachments": [frappe.attach_print(self.doctype, self.name, file_name=self.name)],
+# 					"reference_doctype": self.doctype,
+# 					"reference_name": self.name
+# 				}
+# 				enqueue(method=frappe.sendmail, queue="short",
+# 						timeout=300, now=True, is_async=True, **email_args)
+# 			else:
+# 				frappe.msgprint(
+# 					_("{0}:Supplier Has No Mail").format(self.supplier))
 
 
 
@@ -919,3 +919,41 @@ def get_advance_entries(self, include_unallocated=True):
 	res = journal_entries + payment_entries
 
 	return res
+
+
+@frappe.whitelist()
+def send_mail_daily_opportunity_lead():
+	send_to_lead()
+	send_to_opportunity()
+
+@frappe.whitelist()
+def send_to_lead():
+	sql = "SELECT q.name,q.contact_date,q.contact_by, 'Lead' as doctype FROM `tabLead` q WHERE q.docstatus=0 AND q.contact_date >= NOW() "
+	data = frappe.db.sql(sql,as_dict=1)
+	send_mail_opport_and_lead(data)
+
+@frappe.whitelist()
+def send_to_opportunity():
+	sql = "SELECT q.name,q.contact_date,q.contact_by, 'Opportunity' as doctype FROM `tabOpportunity` q WHERE q.docstatus=0 AND q.contact_date >= NOW()"
+	data = frappe.db.sql(sql,as_dict=1)
+	send_mail_opport_and_lead(data)
+
+
+def send_mail_opport_and_lead(data):
+	# print('\n\n\n\n--->data',data,'\n')
+	recipients = []
+	for row in data:
+		recipients.append(row.contact_by)
+	print('\n\n\n\n--->recipients',recipients,'\n')
+	email_args = {
+			"recipients": recipients,
+			"message": _("Please GET Notify"),
+			"subject": 'Contact In {contact_date}'.format(contact_date=row.contact_date),
+			"attachments": [frappe.attach_print(row.doctype, row.name, file_name=row.name)],
+			"reference_doctype": row.doctype,
+			"reference_name": row.name
+		}
+	
+	enqueue(method=frappe.sendmail, queue="short",
+			timeout=300, now=True, is_async=True, **email_args)
+
