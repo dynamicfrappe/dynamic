@@ -469,6 +469,22 @@ data = {
         "property_type": "Check",
         "value": "1",
         },
+        {
+        "doctype": "Request for Quotation Supplier",
+        "doctype_or_field": "DocField",
+        "fieldname": "send_email",
+        "property": "in_list_view",
+        "property_type": "Check",
+        "value": "0",
+        },
+        {
+        "doctype": "Request for Quotation Supplier",
+        "doctype_or_field": "DocField",
+        "fieldname": "send_email",
+        "property": "default",
+        "property_type": "Text",
+        "value": "0",
+        },
         
     ],
   

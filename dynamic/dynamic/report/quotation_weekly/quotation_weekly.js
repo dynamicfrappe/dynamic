@@ -63,8 +63,8 @@ frappe.query_reports["Quotation Weekly"] = {
 			reqd: 1
 		},
 		{
-			fieldname:"Orderd",
-			label: __("ordered"),
+			label: __("Orderd"),
+			fieldname:"orderd",
 			fieldtype: "Select",
 			options: [
 				{ "value": "Yes", "label": __("Yes") },

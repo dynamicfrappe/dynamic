@@ -139,9 +139,18 @@ class Analytics(object):
 		# 	self.get_sales_transactions_based_on_project()
 		# 	self.get_rows()
 	def get_data_quotation(self):
+		condition = "WHERE 1=1 AND docstatus = 1 "
+		if self.filters.get("orderd") == "Yes":
+			condition += "AND status = '%s' "%("Ordered")
+		if self.filters.get("from_date") and self.filters.get("to_date"):
+			if(self.filters.get("from_date") > self.filters.get("to_date")):
+				frappe.throw(_("From Date must be before To Date"))
+			condition += "AND {date_field} between '{from_date}' and '{to_date}".format(date_field=self.date_field,from_date = self.filters.from_date, to_date = self.filters.to_date)
+
+
 		sql = """SELECT name as entity,quotation_to,{date_field}, 1 as value_field  FROM `tabQuotation`
-			WHERE  {date_field} between '{from_date}' and '{to_date}'
-		""".format(date_field=self.date_field,from_date = self.filters.from_date, to_date = self.filters.to_date)
+			{condition}'
+		""".format(condition=condition,date_field=self.date_field)
 		self.entries = frappe.db.sql(sql,as_dict=1)
 		self.entity_names = {}
 		for d in self.entries:

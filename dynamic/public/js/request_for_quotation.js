@@ -9,18 +9,6 @@ frappe.ui.form.on("Request for Quotation", {
                             frm.doc.items.forEach(element => {
                                 if(element.item_code){
                                     frappe.call({
-                                        method: "erpnext.stock.get_item_details.get_item_details",
-                                        args: {
-                                            args: {
-                                                item_code: element.item_code,
-                                                company: frm.doc.company
-                                            }},
-                                        
-                                        callback:function(r){
-                                            console.log("items_details",r)
-                                        }
-                                    })
-                                    frappe.call({
                                         method:"frappe.client.get_value",
                                         args:{
                                             doctype:"Item",
