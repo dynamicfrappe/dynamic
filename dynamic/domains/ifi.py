@@ -79,6 +79,13 @@ data = {
                 "options":"Opportunity Status",
                 "insert_after": "expected_closing",
             },
+            {
+                "label": "Campaign Name",
+                "fieldname": "campaign_name",
+                "fieldtype": "Link",
+                "options":"Campaign",
+                "insert_after": "source",
+            },
          ],
          'Sales Order':[
             {
@@ -151,6 +158,7 @@ data = {
                 "fieldtype": "Button",
                 "insert_after": "url",
             },
+            
             
            
          ],

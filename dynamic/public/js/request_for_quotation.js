@@ -8,20 +8,37 @@ frappe.ui.form.on("Request for Quotation", {
                         if (r.message.includes("IFI")) {
                             frm.doc.items.forEach(element => {
                                 if(element.item_code){
-                                    frappe.call({
-                                        method:"frappe.client.get_value",
-                                        args:{
-                                            doctype:"Item",
-                                            fieldname:"stock_uom",
-                                            "filters": {
-                                                'name': element.item_code,
-                                              
-                                              },
+                                    frappe.run_serially([
+                                        () => {
+                                            frappe.call({
+                                                method:"frappe.client.get_value",
+                                                args:{
+                                                    doctype:"Item",
+                                                    fieldname:"stock_uom",
+                                                    "filters": {
+                                                        'name': element.item_code,
+                                                      
+                                                      },
+                                                },
+                                                callback:function(r){
+                                                    element.stock_uom = r.message.stock_uom
+                                                }
+                                            })
                                         },
-                                        callback:function(r){
-                                            element.stock_uom = r.message.stock_uom
+                                        () => {
+                                            frappe.call({
+                                                method:"frappe.client.get_single_value",
+                                                args:{
+                                                    doctype:"Stock Settings",
+                                                    field:"default_warehouse",
+                                                },
+                                                callback:function(r){
+                                                    element.warehouse  = r.message
+                                                }
+                                            })
                                         }
-                                    })
+                                    ])
+                                    
                                 }
                                 frm.refresh()
                             });

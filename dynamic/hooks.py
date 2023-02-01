@@ -240,7 +240,8 @@ scheduler_events = {
             "dynamic.product_bundle.doctype.packed_item.new_packed_item.get_old_invocie"
         ],
         "* 8 * * *":[
-            "dynamic.ifi.api.daily_opportunity_notify"
+            "dynamic.ifi.api.send_mail_daily_opportunity_lead",
+            # "dynamic.ifi.api.daily_opportunity_notify"
         ]
     },
     # 	"all": [
@@ -248,7 +249,7 @@ scheduler_events = {
     # 	],
     	"daily": [
     		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
-            # "dynamic.ifi.api.send_mail_daily_opportunity_lead"
+            
     	],
     # 	"hourly": [
     # 		"dynamic.tasks.hourly"

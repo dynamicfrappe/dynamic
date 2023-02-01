@@ -18,7 +18,6 @@ frappe.listview_settings['Quotation'] = {
 	},
 
 	get_indicator: function(doc) {
-		console.log('test');
 
 		if(doc.status==="Open") {
 			return [__("Open"), "orange", "status,=,Open"];

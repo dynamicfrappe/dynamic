@@ -22,8 +22,23 @@ frappe.ui.form.on("Opportunity", {
                             __("Create")
                         );
                     }
+                    if (r.message.includes("IFI")) {
+                        frm.remove_custom_button('Quotation','Create')
+                        frm.add_custom_button(__('Quotation'),
+                        function() {
+                            frm.events.create_quotation(frm)
+                        }, __('Create'));
+                    }
+
                 }
             }
         })
-    }
+    },
+
+    create_quotation: function(frm) {
+		frappe.model.open_mapped_doc({
+			method: "dynamic.ifi.api.make_quotation",
+			frm: cur_frm
+		})
+	},
 })

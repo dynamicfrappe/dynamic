@@ -61,3 +61,48 @@ frappe.ui.form.on("Lead", {
         })
     }
 })
+
+
+
+const LeadController_Extend = erpnext.LeadController.extend({
+  
+	refresh: function() {
+		this._super();
+        let doc = this.frm.doc;
+        frappe.call({
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+                if (r.message && r.message.length) {
+                    if (r.message.includes("IFI")) {
+                        if (!this.frm.is_new() && doc.__onload && !doc.__onload.is_customer) {
+                            cur_frm.page.remove_inner_button('Opportunity','Create')
+                            this.frm.add_custom_button(__("Opportunity"), this.make_opportunity, __("Create"));
+                        }
+                    }
+                }
+            }
+        })
+        
+     
+	},
+        make_opportunity: function () {
+            frappe.model.open_mapped_doc({
+                method: "dynamic.ifi.api.make_opportunity",
+                frm: cur_frm
+            })
+        }
+   
+})
+
+$.extend(
+	cur_frm.cscript,
+	new LeadController_Extend({frm: cur_frm}),
+);
+
+var create_ifi_sales_order = function() {
+
+    frappe.model.open_mapped_doc({
+		method: "dynamic.ifi.api.make_sales_order",
+		frm: cur_frm
+	})
+}

@@ -16,6 +16,10 @@ from frappe.core.doctype.communication.email import make
 from frappe.desk.form.load import get_attachments
 from frappe.utils import get_url
 from erpnext.accounts.party import get_party_account
+from erpnext.crm.doctype.lead.lead import _set_missing_values
+from erpnext.accounts.party import get_party_account_currency
+from erpnext.setup.utils import get_exchange_rate
+
 
 DOMAINS = frappe.get_active_domains()
 
@@ -943,17 +947,118 @@ def send_mail_opport_and_lead(data):
 	# print('\n\n\n\n--->data',data,'\n')
 	recipients = []
 	for row in data:
-		recipients.append(row.contact_by)
-	print('\n\n\n\n--->recipients',recipients,'\n')
-	email_args = {
-			"recipients": recipients,
-			"message": _("Please GET Notify"),
-			"subject": 'Contact In {contact_date}'.format(contact_date=row.contact_date),
-			"attachments": [frappe.attach_print(row.doctype, row.name, file_name=row.name)],
-			"reference_doctype": row.doctype,
-			"reference_name": row.name
-		}
-	
-	enqueue(method=frappe.sendmail, queue="short",
-			timeout=300, now=True, is_async=True, **email_args)
+		if row.contact_by:
+			email_args = {
+					"recipients": row.contact_by,
+					"message": _("Please GET Notify For %s"%row.doctype),
+					"subject": 'Contact In {contact_date}'.format(contact_date=row.contact_date),
+					"attachments": [frappe.attach_print(row.doctype, row.name, file_name=row.name)],
+					"reference_doctype": row.doctype,
+					"reference_name": row.name
+				}
+			try:
+				enqueue(method=frappe.sendmail, queue="short",
+					timeout=300, now=True, is_async=True, **email_args)
+			except Exception as e:
+				frappe.throw(_(f"Error in send mail {str(e)}"))
 
+
+@frappe.whitelist()
+def make_opportunity(source_name, target_doc=None):
+	def set_missing_values(source, target):
+		_set_missing_values(source, target)
+	target_doc = get_mapped_doc(
+		"Lead",
+		source_name,
+		{
+			"Lead": {
+				"doctype": "Opportunity",
+				"field_map": {
+					"campaign_name": "campaign",
+					"doctype": "opportunity_from",
+					"name": "party_name",
+					"lead_name": "contact_display",
+					"company_name": "customer_name",
+					"email_id": "contact_email",
+					"mobile_no": "contact_mobile",
+					"campaign_name":"campaign_name",
+					"source":"source",
+				},
+			}
+		},
+		target_doc,
+		set_missing_values,
+	)
+
+	return target_doc
+
+
+@frappe.whitelist()
+def make_quotation(source_name, target_doc=None):
+	print("\n\n\n************** new")
+
+	def set_missing_values(source, target):
+		from erpnext.controllers.accounts_controller import get_default_taxes_and_charges
+
+		quotation = frappe.get_doc(target)
+
+		company_currency = frappe.get_cached_value("Company", quotation.company, "default_currency")
+
+		if quotation.quotation_to == "Customer" and quotation.party_name:
+			party_account_currency = get_party_account_currency(
+				"Customer", quotation.party_name, quotation.company
+			)
+		else:
+			party_account_currency = company_currency
+
+		quotation.currency = party_account_currency or company_currency
+
+		if company_currency == quotation.currency:
+			exchange_rate = 1
+		else:
+			exchange_rate = get_exchange_rate(
+				quotation.currency, company_currency, quotation.transaction_date, args="for_selling"
+			)
+
+		quotation.conversion_rate = exchange_rate
+
+		# get default taxes
+		taxes = get_default_taxes_and_charges(
+			"Sales Taxes and Charges Template", company=quotation.company
+		)
+		if taxes.get("taxes"):
+			quotation.update(taxes)
+
+		quotation.run_method("set_missing_values")
+		quotation.run_method("calculate_taxes_and_totals")
+		if not source.with_items:
+			quotation.opportunity = source.name
+
+	doclist = get_mapped_doc(
+		"Opportunity",
+		source_name,
+		{
+			"Opportunity": {
+				"doctype": "Quotation",
+				"field_map": {
+					"opportunity_from": "quotation_to",
+					"name": "enq_no",
+					"campaign_name":"campaign",
+					# "source":"source",
+				},
+			},
+			"Opportunity Item": {
+				"doctype": "Quotation Item",
+				"field_map": {
+					"parent": "prevdoc_docname",
+					"parenttype": "prevdoc_doctype",
+					"uom": "stock_uom",
+				},
+				"add_if_empty": True,
+			},
+		},
+		target_doc,
+		set_missing_values,
+	)
+
+	return doclist
