@@ -15,7 +15,8 @@ frappe.query_reports["Quotation Weekly"] = {
 			// 	{ "value": "Yearly", "label": __("Yearly") }
 			// ],
 			default: "Weekly",
-			reqd: 1
+			reqd: 1,
+			hidden:1,
 		},
 		{
 			fieldname: "tree_type",
@@ -23,16 +24,18 @@ frappe.query_reports["Quotation Weekly"] = {
 			fieldtype: "Select",
 			options: ["Customer Group", "Customer", "Item Group", "Item", "Territory", "Order Type", "Project","Warehouse"],
 			default: "Customer",
-			reqd: 1
+			reqd: 1,
+			hidden:1,
+			read_only:1
 		},
-		{
-			fieldname: "doc_type",
-			label: __("based_on"),
-			fieldtype: "Select",
-			options: ["Sales Order","Delivery Note","Sales Invoice"],
-			default: "Sales Invoice",
-			reqd: 1
-		},
+		// {
+		// 	fieldname: "doc_type",
+		// 	label: __("based_on"),
+		// 	fieldtype: "Select",
+		// 	options: ["Sales Order","Delivery Note","Sales Invoice"],
+		// 	default: "Sales Invoice",
+		// 	reqd: 1
+		// },
 		{
 			fieldname: "value_quantity",
 			label: __("Value Or Qty"),
@@ -42,30 +45,41 @@ frappe.query_reports["Quotation Weekly"] = {
 				{ "value": "Quantity", "label": __("Quantity") },
 			],
 			default: "Value",
-			reqd: 1
+			reqd: 1,
+			hidden:1
 		},
 		{
 			fieldname: "from_date",
 			label: __("From Date"),
 			fieldtype: "Date",
-			default: frappe.defaults.get_user_default("year_start_date"),
+			default:frappe.datetime.add_months(frappe.datetime.get_today(), 0),// frappe.defaults.get_user_default("year_start_date"),
 			reqd: 1
 		},
 		{
 			fieldname:"to_date",
 			label: __("To Date"),
 			fieldtype: "Date",
-			default: frappe.defaults.get_user_default("year_end_date"),
+			default: frappe.datetime.add_months(frappe.datetime.get_today(), 1),
 			reqd: 1
 		},
 		{
-			fieldname: "company",
-			label: __("Company"),
-			fieldtype: "Link",
-			options: "Company",
-			default: frappe.defaults.get_user_default("Company"),
-			reqd: 1
+			fieldname:"Orderd",
+			label: __("ordered"),
+			fieldtype: "Select",
+			options: [
+				{ "value": "Yes", "label": __("Yes") },
+				{ "value": "No", "label": __("No") },
+			],
+			default: "Yes",
 		},
+		// {
+		// 	fieldname: "company",
+		// 	label: __("Company"),
+		// 	fieldtype: "Link",
+		// 	options: "Company",
+		// 	default: frappe.defaults.get_user_default("Company"),
+		// 	reqd: 1
+		// },
 
 	]
 };
