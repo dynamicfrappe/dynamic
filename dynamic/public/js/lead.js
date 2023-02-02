@@ -1,3 +1,6 @@
+
+frappe.provide("erpnext");
+
 frappe.ui.form.on("Lead", {
     check_url: function (frm) {
         if (frm.doc.url) {
@@ -59,6 +62,12 @@ frappe.ui.form.on("Lead", {
                 }
             }
         })
+    },
+    make_opportunity(frm) {
+        frappe.model.open_mapped_doc({
+            method: "dynamic.ifi.api.make_opportunity",
+            frm: cur_frm
+        })
     }
 })
 
@@ -66,17 +75,19 @@ frappe.ui.form.on("Lead", {
 
 const LeadController_Extend = erpnext.LeadController.extend({
   
-	refresh: function() {
-		this._super();
-        let doc = this.frm.doc;
+	refresh: function(frm) {
+		this._super()
+        // let doc = this.frm.doc
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
                 if (r.message && r.message.length) {
                     if (r.message.includes("IFI")) {
-                        if (!this.frm.is_new() && doc.__onload && !doc.__onload.is_customer) {
+                        if (!frm.__islocal && frm.__onload && !frm.__onload.is_customer) {
                             cur_frm.page.remove_inner_button('Opportunity','Create')
-                            this.frm.add_custom_button(__("Opportunity"), this.make_opportunity, __("Create"));
+                            cur_frm.add_custom_button(__("Opportunity"), function(){
+                                cur_frm.events.make_opportunity(cur_frm)   
+                            }, __("Create"));
                         }
                     }
                 }
@@ -85,12 +96,7 @@ const LeadController_Extend = erpnext.LeadController.extend({
         
      
 	},
-        make_opportunity: function () {
-            frappe.model.open_mapped_doc({
-                method: "dynamic.ifi.api.make_opportunity",
-                frm: cur_frm
-            })
-        }
+        
    
 })
 

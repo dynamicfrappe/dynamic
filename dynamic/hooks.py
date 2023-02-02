@@ -242,7 +242,7 @@ scheduler_events = {
         ],
         "* 8 * * *":[
             "dynamic.ifi.api.send_mail_daily_opportunity_lead",
-            # "dynamic.ifi.api.daily_opportunity_notify"
+            "dynamic.ifi.api.daily_opportunity_notify"
         ]
     },
     # 	"all": [
