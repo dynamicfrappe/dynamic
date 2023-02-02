@@ -63,15 +63,32 @@ frappe.query_reports["Quotation Weekly"] = {
 			reqd: 1
 		},
 		{
+			label: __("Quotation"),
+			fieldname:"quotation",
+			fieldtype: "Link",
+			options: "Quotation",
+			"get_query": function() {
+				return {
+					filters: {"docstatus": ["!=", ["2"]]}
+				}
+			},
+		},
+		{
 			label: __("Orderd"),
 			fieldname:"orderd",
 			fieldtype: "Select",
 			options: [
-				{ "value": "Yes", "label": __("Yes") },
-				{ "value": "No", "label": __("No") },
-			],
-			default: "Yes",
+				"",
+				"Yes",
+				"No"
+			  ],
+			// options: [
+			// 	{ "value": "Yes", "label": __("Yes") },
+			// 	{ "value": "No", "label": __("No") },
+			// ],
+			default: " ",
 		},
+		
 		// {
 		// 	fieldname: "company",
 		// 	label: __("Company"),

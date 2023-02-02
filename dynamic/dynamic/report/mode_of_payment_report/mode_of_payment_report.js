@@ -1,8 +1,12 @@
-// Copyright (c) 2023, Dynamic and contributors
-// For license information, please see license.txt
-/* eslint-disable */
+
 
 frappe.query_reports["Mode Of Payment Report"] = {
+    onload: function(report){
+		if(frappe.query_report.get_filter_value('make_hidden') == 1)
+        {
+            $('[data-fieldname=mode_of_payment]').attr("disabled", true);
+        }
+	},
 	"filters": [
 		{
             "fieldname": "company",
@@ -37,8 +41,23 @@ frappe.query_reports["Mode Of Payment Report"] = {
             "label": __("Mode Of Payment"),
             "fieldtype": "Link",
             "options": "Mode of Payment",
-           
             "reqd": 0
+        },
+        {
+            "fieldname": "make_hidden",
+            "label": __("make_hidden"),
+            "fieldtype": "Select",
+            "options": "0\n1",
+            "default": "0",
+            "hidden": "1",
+            // on_change: function() {
+            //     console.log("changed")
+            //     console.log(frappe.query_report)
+            //     // frappe.query_report.filters[3].readonly = 1
+            //     $('[data-fieldname=mode_of_payment]').attr("disabled", true);
+            //     frappe.query_report.refresh()
+				
+			// }
         },
 		{
             "fieldname": "account_type",
@@ -46,8 +65,20 @@ frappe.query_reports["Mode Of Payment Report"] = {
             "fieldtype": "Select",
             "options": "Cash\nBank",
             "default": "Cash",
-            "reqd":0
+            "reqd":0,
         },
         
 	]
 };
+
+
+
+// if(frappe.query_report.get_filter_value('make_hidden') == 1){
+//     $('[data-fieldname=mode_of_payment]').attr("disabled", true);
+//     console.log("yeeeeeeeeeeeeees")
+
+
+// }else{
+//     console.log("not")
+
+// }

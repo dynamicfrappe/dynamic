@@ -145,11 +145,12 @@ class Analytics(object):
 		if self.filters.get("from_date") and self.filters.get("to_date"):
 			if(self.filters.get("from_date") > self.filters.get("to_date")):
 				frappe.throw(_("From Date must be before To Date"))
-			condition += "AND {date_field} between '{from_date}' and '{to_date}".format(date_field=self.date_field,from_date = self.filters.from_date, to_date = self.filters.to_date)
-
+			condition += "AND {date_field} between '{from_date}' and '{to_date}' ".format(date_field=self.date_field,from_date = self.filters.from_date, to_date = self.filters.to_date)
+		if self.filters.get("quotation"):
+			condition += " AND name = '%s' "%(self.filters.get("quotation"))
 
 		sql = """SELECT name as entity,quotation_to,{date_field}, 1 as value_field  FROM `tabQuotation`
-			{condition}'
+			{condition}
 		""".format(condition=condition,date_field=self.date_field)
 		self.entries = frappe.db.sql(sql,as_dict=1)
 		self.entity_names = {}
@@ -193,7 +194,7 @@ class Analytics(object):
 
 	def get_periodic_data(self):
 		self.entity_periodic_data = frappe._dict()
-		print('\n\n self.entries-->',self.entries)
+		# print('\n\n self.entries-->',self.entries)
 		#{'entity': 'SAL-QTN-2022-00005', 'quotation_to': 'Lead', 'date_field': datetime.date(2022, 12, 28), 'value_field': 1}
 		for d in self.entries:
 			if self.filters.tree_type == "Supplier Group":

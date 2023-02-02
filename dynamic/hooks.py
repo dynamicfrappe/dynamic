@@ -90,6 +90,7 @@ doctype_js = {
     "Work Order":"public/js/work_order.js",
     "Job Card":"public/js/job_card.js",
     "Request for Quotation":"public/js/request_for_quotation.js",
+    "Mode of Payment":"public/js/mode_of_payment.js",
     
 }
 # doctype_js = {
