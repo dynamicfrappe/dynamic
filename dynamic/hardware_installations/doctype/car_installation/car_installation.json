@@ -46,6 +46,7 @@
   "sim_supplier_name",
   "column_break_37",
   "sim_number",
+  "sim_provider",
   "sim_serial",
   "team_details_section",
   "team",
@@ -351,12 +352,19 @@
    "fieldtype": "Link",
    "label": "Car Color",
    "options": "Car Color"
+  },
+  {
+   "default": "Etisalat",
+   "fieldname": "sim_provider",
+   "fieldtype": "Select",
+   "label": "SIM Provider",
+   "options": "Vodafone\nOrange\nEtisalat"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-19 16:36:43.178219",
+ "modified": "2023-02-05 15:35:15.476219",
  "modified_by": "Administrator",
  "module": "Hardware Installations",
  "name": "Car Installation",

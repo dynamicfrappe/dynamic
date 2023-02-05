@@ -69,6 +69,7 @@ class CarInstallation(Document):
         car_doc.device_type = 'GEBCO' if self.gps_type == 'Internal' else "External"
         car_doc.serial_no =  self.gps_serial_number if self.gps_type == 'Internal' else ""
         car_doc.sim_number = self.sim_number or car_doc.sim_number
+        car_doc.sim_provider = self.sim_provider or car_doc.sim_provider
         car_doc.car_color = self.car_color or car_doc.car_color
         car_doc.save()
 
