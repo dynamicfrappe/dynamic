@@ -311,7 +311,8 @@ domains = {
     'Reach Group':'dynamic.domains.reach_group',
     'Vana' : 'dynamic.domains.vana',
     'Merge Entries':'dynamic.domains.merge_entries' ,
-    'WEH' :"dynamic.domains.weh"
+    'WEH' :"dynamic.domains.weh",
+    'Owais' :"dynamic.domains.owais",
 }
 
 # domain Conatin
