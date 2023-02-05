@@ -22,9 +22,18 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Order Summary",
+   "link_to": "Purchase Order Summary",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-10-03 10:49:49.132135",
+ "modified": "2023-02-05 13:51:12.797817",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "extend acount",
@@ -32,5 +41,12 @@
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
- "shortcuts": []
+ "shortcuts": [
+  {
+   "doc_view": "Report Builder",
+   "label": "Purchase Order Summary",
+   "link_to": "Purchase Order Summary",
+   "type": "Report"
+  }
+ ]
 }
