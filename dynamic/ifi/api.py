@@ -565,6 +565,19 @@ def check_buying_price(self, *args, **kwargs):
 							_(f"Item Price {selling_rate} has value less than {buying_price.name}-{buying_price.price_list_rate} "))
 
 
+
+@frappe.whitelist()
+def validate_payemnt_entry(doc) :
+	if doc.payment_type in ["Pay" , "Internal Transfer"] :
+		#validate account balance > 0 :
+		if doc.paid_from_account_balance <= 0 :
+			frappe.throw(_(f""" No Credit avaliable in Account {doc.paid_from} """))
+
+		# validate account balance equal paid amount 
+
+		if doc.base_paid_amount >   doc.paid_from_account_balance  :
+			frappe.throw(_(f"""Account {doc.paid_from} balance is { doc.base_paid_amount} and you try to Transfer {doc.base_paid_amount}"""))
+
 # @frappe.whitelist()
 # def send_mail_supplier_ifi_po(self, *args, **kwargs):
 # 	if 'IFI' in DOMAINS:

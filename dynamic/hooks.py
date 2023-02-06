@@ -175,6 +175,7 @@ doc_events = {
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
+        "validate" :"dynamic.api.validate_paymentrntry"
     },
     "Asset Movement":{
         "on_submit":"dynamic.api.add_cost_center_to_asset"
@@ -194,6 +195,8 @@ doc_events = {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
         # "before_save": "dynamic.api.add_crean_in_taxes",
         "before_submit": "dynamic.api.add_crean_in_taxes",
+        "after_inser" :  "dynamic.api.calculate_orderd_qty",
+        "on_submit":  "dynamic.api.calculate_orderd_qty",
     } ,
     # "Appointment" :{
     #     "validate":"dynamic.api.appointment_validate"
