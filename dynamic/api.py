@@ -1085,3 +1085,5 @@ def onsave_account_settings(doc,*args,**kwargs):
                 data = data.replace(y,x)
             with open("../apps/erpnext/erpnext/accounts/general_ledger.py", 'w') as file:
                 file.write(data)
+
+
