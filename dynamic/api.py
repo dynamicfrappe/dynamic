@@ -23,6 +23,8 @@ from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
 from erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import repost_entries
 from dynamic.gebco.doctype.sales_invocie.utils import set_complicated_pundel_list
 from datetime import date
+
+from dynamic.ifi.api import validate_payemnt_entry
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -559,6 +561,10 @@ def submit_payment(doc,*args,**kwargs):
      if "Terra" in DOMAINS:
           submit_payment_for_terra(doc)
 
+@frappe.whitelist()
+def validate_paymentrntry(doc , *args,**kwargs) :
+    if "IFI" in DOMAINS :
+        validate_payemnt_entry(doc)
 
 @frappe.whitelist()
 def submit_payment_for_terra(doc , *args ,**kwargs):
@@ -925,6 +931,33 @@ def create_new_appointment_ifi(source_name, target_doc=None):
 from erpnext import get_company_currency, get_default_company
 
 @frappe.whitelist()
+def calculate_orderd_qty(doc,*args , **kwargs) :
+    if 'IFI' in DOMAINS:
+       
+        for item_o in doc.items:
+            if item_o.sales_order : 
+                # calculate_orderd_qty(item.sales_order)
+                sales_order = frappe.get_doc("Sales Order" ,item_o.sales_order)
+                order_qty , sales_qty = 0  , 0 
+                for item in sales_order.items :
+                    sales_qty = sales_qty + float(item.qty)
+                    order_qty = order_qty + float(item.ordered_qty)
+                per_orderd = (order_qty / sales_qty) *100
+                
+                sales_order.per_orderd = per_orderd
+
+                sales_order.save()
+               
+                frappe.db.sql(f""" 
+                UPDATE `tabSales Order` SET per_orderd={per_orderd} 
+                WHERE name ='{item_o.sales_order}'
+                
+                """)
+                frappe.db.commit()
+            # frappe.throw(f"{sales_order.per_orderd}")
+            
+
+@frappe.whitelist()
 def add_crean_in_taxes(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
         total = 0
@@ -961,7 +994,7 @@ def add_crean_in_taxes(doc,*args,**kwargs):
             doc.run_method("calculate_taxes_and_totals")
         if(not crean_account):
             frappe.msgprint(_("Company Has No Crane Account"))
-
+       
 @frappe.whitelist()    
 def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:

@@ -135,6 +135,13 @@ data = {
                 "insert_after": "get_advancess",
                 "allow_on_submit":1
             },
+             {
+                "label": "% Orderd",
+                "fieldname": "per_orderd",
+                "fieldtype": "Percent",
+                "insert_after": "per_delivered",
+                "allow_on_submit":1
+            },
          ],
          'Lead':[
             {
