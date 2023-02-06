@@ -43,6 +43,7 @@ class Analytics(object):
 		self.get_columns()
 		self.get_data()
 		self.get_chart_data()
+		# self.get_chart_data(self.filters,self.columns,self.data)
 
 		# Skipping total row for tree-view reports
 		skip_total_row = 0
@@ -139,7 +140,7 @@ class Analytics(object):
 		# 	self.get_sales_transactions_based_on_project()
 		# 	self.get_rows()
 	def get_data_quotation(self):
-		condition = "WHERE 1=1 AND docstatus = 1 "
+		condition = "WHERE 1=1 AND docstatus = 1  "
 		if self.filters.get("orderd") == "Yes":
 			condition += "AND status = '%s' "%("Ordered")
 		if self.filters.get("from_date") and self.filters.get("to_date"):
@@ -149,7 +150,7 @@ class Analytics(object):
 		if self.filters.get("quotation"):
 			condition += " AND name = '%s' "%(self.filters.get("quotation"))
 
-		sql = """SELECT name as entity,quotation_to,{date_field}, 1 as value_field  FROM `tabQuotation`
+		sql = """SELECT name as entity,quotation_to,{date_field}, 1 as value_field ,status FROM `tabQuotation`
 			{condition}
 		""".format(condition=condition,date_field=self.date_field)
 		self.entries = frappe.db.sql(sql,as_dict=1)
@@ -160,36 +161,54 @@ class Analytics(object):
 	def get_rows(self):
 		self.data = []
 		self.get_periodic_data()
-		#self.entity_periodic_data--> {'Week 5 2023': {'qty': 2.0}, 'Week 6 2023': {'qty': 1.0}}
+		#?{'Week 5 2023': {'status': {'Open': {'qty': 2.0, 'key': 'Open'}}}, 'Week 6 2023': {'status': {'Open': {'qty': 1.0, 'key': 'Open'}}}, 'Week 7 2023': {'status': {'Ordered': {'qty': 1.0, 'key': 'Ordered'}}}}
 		# print('\n\n self.periodic_daterange-->',self.periodic_daterange)
 		for entity, period_data in iteritems(self.entity_periodic_data):
-			# print('\n\n ##&&& entity, period_data',entity, period_data)
+			print('\n\n ##&&& entity',entity)
+			print('\n\n ##&&&, period_data', period_data,'\n')
+			#? period_data {'Week 5 2023': {'status': {'Open': {'qty': 2.0, 'key': 'Open'}}}, 'Week 6 2023': {'status': {'Open': {'qty': 1.0, 'key': 'Open'}}}, 'Week 7 2023': {'status': {'Ordered': {'qty': 1.0, 'key': 'Ordered'}}}}
 			row = {
 				"entity": entity,
 				# "entity_name": self.entity_names.get(entity) if hasattr(self, "entity_names") else None,
 			}
 
-			# amount = flt(period_data.get('qty', 0.0))
-			# row[scrub(entity)] = amount
+
+
 			total = 0
+			#period_data {'Week 5 2023': {'status': {'Open': {'qty': 1.0, 'key': 'Open'}, 'Lost': {'qty': 1.0, 'key': 'Lost'}}}, 'Week 6 2023': {'status': {'Replied': {'qty': 1.0, 'key': 'Replied'}}}, 'Week 7 2023': {'status': {'Ordered': {'qty': 1.0, 'key': 'Ordered'}}}} 
 			for end_date in self.periodic_daterange: #? total week
 				period = self.get_period(end_date)
-				# print(f'\n\n**period, \"{period}\",\n',type(period_data))
+				print(f'\n\n**period, \"{period}\",\n',) # **period, "Week 5 2023",
+				
 				if not period_data.get(period):
-					period_data.update({period: {'qty':0}})
-					# period_data['period'] = setdefault(year, frappe._dict())
-				amount = flt(period_data.get(period,period).get('qty', 0.0))
+					period_data.setdefault(period, frappe._dict()).setdefault('status', frappe._dict())
+				date_row = period_data.get(period,period).get('status')
+				#**{'Open': {'qty': 1.0, 'key': 'Open'}, 'Lost': {'qty': 1.0, 'key': 'Lost'}}}
+				print(f'\n\n**---date_row, \"{date_row}\",\n')
+				for status_row, status_data in date_row.items():
+					# print(f'\n\n**status_row, \"{status_row}\",\n')
+					print(f'\n\n**status_row, \"{status_data}\",\n')
+					row['week'] = period
+					row[status_row] = status_data.get('qty',0)
+					total = status_data.get('qty',0)
+					row['total'] = total
+				self.data.append(row)
+
+				# if not period_data.get(period):
+				# 	period_data.update({period:{'status':{period_data:{'qty':0}}}})
+				# 	# period_data['period'] = setdefault(year, frappe._dict())
+				# amount = flt(period_data.get(period,period).get('qty', 0.0))
 				# print('\n\n end_date--period-->amount',end_date,period,amount)
-				row[scrub(period)] = amount
-				total += amount
+				# row[scrub(period)] = amount
+				# total += amount
 
-			row["total"] = total
+			# row["total"] = total
 
-			if self.filters.tree_type == "Item":
-				row["stock_uom"] = period_data.get("stock_uom")
+			# if self.filters.tree_type == "Item":
+			# 	row["stock_uom"] = period_data.get("stock_uom")
 
-			self.data.append(row)
-		# print('\n\n **/// self.data.item-->',self.data,'\n\n')
+			# self.data.append(row)
+		print('\n\n **/// self.data.item-->',self.data,'\n\n')
 
 
 	def get_periodic_data(self):
@@ -197,20 +216,40 @@ class Analytics(object):
 		# print('\n\n self.entries-->',self.entries)
 		#{'entity': 'SAL-QTN-2022-00005', 'quotation_to': 'Lead', 'date_field': datetime.date(2022, 12, 28), 'value_field': 1}
 		for d in self.entries:
-			if self.filters.tree_type == "Supplier Group":
-				d.entity = self.parent_child_map.get(d.entity)
+			# if self.filters.tree_type == "Supplier Group":
+			# 	d.entity = self.parent_child_map.get(d.entity)
 			#! change row data here
 			year = (d.get(self.date_field)).isocalendar()[0]
-			period = self.get_period(d.get(self.date_field))
-			self.entity_periodic_data.setdefault(year, frappe._dict()).setdefault(period, frappe._dict()).setdefault('qty', 0.0)
-			self.entity_periodic_data[year][period]['qty'] += flt(d.value_field)
+			period = self.get_period(d.get(self.date_field)) #? get week name
+			#{'Week 5 2023': {'qty': 2.0}, 'Week 6 2023': {'qty': 1.0}}
+			# self.entity_periodic_data.setdefault(year, frappe._dict()).setdefault(period, frappe._dict()).setdefault('qty', 0.0)
+			# self.entity_periodic_data[year][period]['qty'] += flt(d.value_field)
 
+			#? {2023: {'Week 5 2023': {'status': {'Open': {'qty': 2.0}}}, 'Week 6 2023': {'status': {'Open': {'qty': 1.0}}}}} 
+			#!add status to key
+			status = [
+				"Draft",
+				"Open",
+				"Replied",
+				"Ordered",
+				"Lost",
+				"Cancelled",
+				"Expired",
+				"Rejected",
+			]
+			x = 0
+			self.entity_periodic_data.setdefault(year, frappe._dict()).setdefault(period, frappe._dict()).setdefault('status', frappe._dict()).setdefault(d.status,frappe._dict()).setdefault('qty', 0.0)
+			self.entity_periodic_data.setdefault(year, frappe._dict()).setdefault(period, frappe._dict()).setdefault('status', frappe._dict()).setdefault(d.status,frappe._dict()).setdefault('key', d.status)
+	
+			self.entity_periodic_data[year][period]['status'][d.status]['qty'] += flt(d.value_field)
+		
+			# self.entity_periodic_data[year][period]['status']['qty'] += flt(d.value_field)
 			# self.entity_periodic_data.setdefault(d.entity, frappe._dict()).setdefault(period, 0.0)
 			# self.entity_periodic_data[d.entity][period] += flt(d.value_field)
 
-			if self.filters.tree_type == "Item":
-				self.entity_periodic_data[d.entity]["stock_uom"] = d.stock_uom
-		# print('\n\n---##$$$ self.entity_periodic_data-->',self.entity_periodic_data)
+			# if self.filters.tree_type == "Item":
+			# 	self.entity_periodic_data[d.entity]["stock_uom"] = d.stock_uom
+		print('\n\n---##$$$### self.entity_periodic_data-->',self.entity_periodic_data,'\n\n')
 
 	def get_period(self, posting_date):
 		# period = "Week " + str(posting_date.isocalendar()[1]) + " " + str(posting_date.year)
@@ -280,6 +319,37 @@ class Analytics(object):
 		}
 		self.chart["fieldtype"] = "Currency"
 
+	# def get_chart_data(filters, columns, income, expense, net_profit_loss):
+	# 	labels = [d.get("label") for d in columns[2:]]
+
+	# 	income_data, expense_data, net_profit = [], [], []
+
+	# 	for p in columns[2:]:
+	# 		if income:
+	# 			income_data.append(income[-2].get(p.get("fieldname")))
+	# 		if expense:
+	# 			expense_data.append(expense[-2].get(p.get("fieldname")))
+	# 		if net_profit_loss:
+	# 			net_profit.append(net_profit_loss.get(p.get("fieldname")))
+
+	# 	datasets = []
+	# 	if income_data:
+	# 		datasets.append({"name": _("Income"), "values": income_data})
+	# 	if expense_data:
+	# 		datasets.append({"name": _("Expense"), "values": expense_data})
+	# 	if net_profit:
+	# 		datasets.append({"name": _("Net Profit/Loss"), "values": net_profit})
+
+	# 	chart = {"data": {"labels": labels, "datasets": datasets}}
+
+	# 	if not filters.accumulated_values:
+	# 		chart["type"] = "bar"
+	# 	else:
+	# 		chart["type"] = "line"
+
+	# 	chart["fieldtype"] = "Currency"
+
+	# 	return chart
 	# def get_groups(self):
 	# 	if self.filters.tree_type == "Territory":
 	# 		parent = "parent_territory"
