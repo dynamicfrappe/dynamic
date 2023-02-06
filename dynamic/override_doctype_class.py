@@ -4,12 +4,20 @@ import frappe
 from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry as ERPNextPaymentEntry
 from erpnext.selling.doctype.sales_order.sales_order import SalesOrder as ERPNextSalesOrder
 from erpnext.selling.doctype.quotation.quotation import Quotation as ERPNextQuotation
+from erpnext.payroll.doctype.salary_slip.salary_slip import SalarySlip as ERPNextSalarySlip
 
 
 # Default ERP Class
 PaymentEntry = ERPNextPaymentEntry
 SalesOrder = ERPNextSalesOrder
 Quotation = ERPNextQuotation
+SalarySlip = ERPNextSalarySlip
+
+
+
+
+
+
 
 
 # doctype js override
@@ -45,6 +53,34 @@ if "Terra" in active_domains:
     SalesOrder = TerraSalesOrder
 
     Quotation = TerraQuotation
+
+
+
+
+if "Dynamic HR" in active_domains :
+    pass
+
+
+if "Dynamic Payroll" in active_domains :
+    from dynamic.dynamic_payroll.doctype.salary_slip.salary_slip import SalarySlip as PayrollSalarySlip
+
+    SalarySlip = PayrollSalarySlip
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     # override doctype js

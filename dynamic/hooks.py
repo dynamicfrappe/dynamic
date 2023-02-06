@@ -66,7 +66,8 @@ override_doctype_class = {
     "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
     "Payment Entry" : "dynamic.override_doctype_class.PaymentEntry",
     "Quotation" : "dynamic.override_doctype_class.Quotation",
-    "Sales Order" : "dynamic.override_doctype_class.SalesOrder"
+    "Sales Order" : "dynamic.override_doctype_class.SalesOrder",
+    "Salary Slip" : "dynamic.override_doctype_class.SalarySlip"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
