@@ -98,7 +98,7 @@ data = {
             "fieldname": "item_code",
             "property": "columns",
             "property_type": "Int",
-            "value": "3"
+            "value": "2"
         },
         {
             "doctype": "Sales Order Item",
@@ -106,7 +106,7 @@ data = {
             "fieldname": "item_name",
             "property": "columns",
             "property_type": "Int",
-            "value": "2"
+            "value": "1"
         },
         {
             "doctype": "Sales Order Item",
@@ -179,7 +179,7 @@ data = {
         "property": "in_list_view",
         "property_type": "Check",
         "value": "1",
-        },
+        }, 
         {
         "doctype": "Sales Order Item",
         "doctype_or_field": "DocField",
