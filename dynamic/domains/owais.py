@@ -98,7 +98,15 @@ data = {
             "fieldname": "item_code",
             "property": "columns",
             "property_type": "Int",
-            "value": "1"
+            "value": "3"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "item_name",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "2"
         },
         {
             "doctype": "Sales Order Item",
