@@ -91,6 +91,7 @@ data = {
         "property_type": "Text",
         "value": "1",
         }, 
+
         # Sales order Item 
         {
             "doctype": "Sales Order Item",
@@ -98,7 +99,7 @@ data = {
             "fieldname": "item_code",
             "property": "columns",
             "property_type": "Int",
-            "value": "2"
+            "value": "1"
         },
         # {
         #     "doctype": "Sales Order Item",
