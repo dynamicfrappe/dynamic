@@ -206,6 +206,14 @@ data = {
         "property_type": "Int",
         "value": "1"
         }, 
+        {
+        "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "amount",
+        "property": "columns",
+        "property_type": "Int",
+        "value": "1"
+        }, 
     ],
   
     'on_setup': 'dynamic.owais.setup.setup_owais'
