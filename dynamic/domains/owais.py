@@ -100,14 +100,14 @@ data = {
             "property_type": "Int",
             "value": "2"
         },
-        {
-            "doctype": "Sales Order Item",
-            "doctype_or_field": "DocField",
-            "fieldname": "item_name",
-            "property": "columns",
-            "property_type": "Int",
-            "value": "1"
-        },
+        # {
+        #     "doctype": "Sales Order Item",
+        #     "doctype_or_field": "DocField",
+        #     "fieldname": "item_name",
+        #     "property": "columns",
+        #     "property_type": "Int",
+        #     "value": "1"
+        # },
         {
             "doctype": "Sales Order Item",
             "doctype_or_field": "DocField",
@@ -138,7 +138,7 @@ data = {
             "fieldname": "rate",
             "property": "columns",
             "property_type": "Int",
-            "value": "2"
+            "value": "1"
         },
         {
             "doctype": "Sales Order Item",
@@ -159,19 +159,36 @@ data = {
         {
             "doctype": "Sales Order Item",
             "doctype_or_field": "DocField",
+            "fieldname": "supplier",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
             "fieldname": "warehouse",
             "property": "in_list_view",
             "property_type": "Check",
+            "value": "0"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "warehouse",
+            "property": "columns",
+            "property_type": "Int",
             "value": "1"
         },
         {
             "doctype": "Sales Order Item",
             "doctype_or_field": "DocField",
             "fieldname": "delivery_date",
-            "property": "in_list_view",
-            "property_type": "Check",
-            "value": "0"
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
         },
+        
         {
         "doctype": "Sales Order Item",
         "doctype_or_field": "DocField",
