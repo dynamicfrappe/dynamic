@@ -111,6 +111,14 @@ data = {
         {
             "doctype": "Sales Order Item",
             "doctype_or_field": "DocField",
+            "fieldname": "uom",
+            "property": "in_list_view",
+            "property_type": "Check",
+            "value": "1"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
             "fieldname": "qty",
             "property": "columns",
             "property_type": "Int",
@@ -163,7 +171,15 @@ data = {
         "fieldname": "actual_qty",
         "property": "columns",
         "property_type": "Int",
-        "value": "2"
+        "value": "1"
+        }, 
+        {
+        "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "delivery_date",
+        "property": "in_list_view",
+        "property_type": "Check",
+        "value": "0"
         }, 
     ],
   
