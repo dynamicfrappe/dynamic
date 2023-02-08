@@ -33,7 +33,9 @@ from erpnext.loan_management.doctype.loan_repayment.loan_repayment import (
 from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 	process_loan_interest_accrual_for_term_loans,
 )
-from erpnext.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
+# from erpnext.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
+from dynamic.dynamic_payroll.doctype.additional_salary.additional_salary import get_additional_salaries
+
 from erpnext.payroll.doctype.employee_benefit_application.employee_benefit_application import (
 	get_benefit_component_amount,
 )
@@ -687,7 +689,7 @@ class SalarySlip(TransactionBase):
 
 		return data
 
-	def eval_condition_and_formula(self, d, data):
+	def eval_condition_and_formula(self, d, data , precision=1):
 		try:
 			condition = d.condition.strip().replace("\n", " ") if d.condition else None
 			if condition:
@@ -697,7 +699,10 @@ class SalarySlip(TransactionBase):
 			if d.amount_based_on_formula:
 				formula = d.formula.strip().replace("\n", " ") if d.formula else None
 				if formula:
-					amount = flt(frappe.safe_eval(formula, self.whitelisted_globals, data), d.precision("amount"))
+					if precision :
+						amount = flt(frappe.safe_eval(formula, self.whitelisted_globals, data), d.precision("amount"))
+					else :
+						amount = flt(frappe.safe_eval(formula, self.whitelisted_globals, data))
 			if amount:
 				data[d.abbr] = amount
 
@@ -759,11 +764,22 @@ class SalarySlip(TransactionBase):
 		additional_salaries = get_additional_salaries(
 			self.employee, self.start_date, self.end_date, component_type
 		)
-
+		# frappe.msgprint(str(additional_salaries))
+		data = self.get_data_for_eval()
 		for additional_salary in additional_salaries:
+			amount = 1
+			# additional_salary.condition=""
+			# if 1 :
+			try :
+				amount = self.eval_condition_and_formula(additional_salary, data,precision=0)
+				# if additional_salary.amount_based_on_formula and additional_salary.formula :
+
+			except Exception as e: 
+				frappe.msgprint(_("Error While add Additional Salary {} , {}").format(additional_salary.additional_salary.component , _(str(e))))
+			amount *= additional_salary.amount
 			self.update_component_row(
 				get_salary_component_data(additional_salary.component),
-				additional_salary.amount,
+				amount,
 				component_type,
 				additional_salary,
 				is_recurring=additional_salary.is_recurring,

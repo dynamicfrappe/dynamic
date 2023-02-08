@@ -61,7 +61,8 @@ data = {
                 "insert_after": "formula_section_break",
                 "label": "Amount based on Formula",
                 "fetch_from" :"salary_component.amount_based_on_formula",
-                "fetch_if_empty" : 1
+                "fetch_if_empty" : 1,
+                "allow_on_submit" : 1
             },
             {
                 "fieldname": "formula",
@@ -71,6 +72,7 @@ data = {
                 "fetch_from" :"salary_component.formula",
                 "fetch_if_empty" : 1,
                 "depends_on": "eval:doc.amount_based_on_formula==1",
+                "allow_on_submit" : 1
             },
         ],
         'Salary Component' :[
@@ -78,7 +80,7 @@ data = {
                 "fieldname": "is_additional_salary",
                 "fieldtype": "Check",
                 "insert_after": "column_break_4",
-                "label": "Is Additional Salary",
+                "label": "Is Additional Salary"
             },
             {
                 "fieldname": "consider_in_hour_rate",
@@ -88,7 +90,16 @@ data = {
                 "default":1,
             },
 
-        ]
+        ],
+        'Payroll Settings' : [
+            {
+                "fieldname": "absent_component",
+                "fieldtype": "Link",
+                "insert_after": "show_leave_balances_in_salary_slip",
+                "options":"Salary Component",
+                "label": "Absent Component",
+            },
+        ],
 
 
     },
