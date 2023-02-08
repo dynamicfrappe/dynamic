@@ -4,6 +4,9 @@
 import frappe
 from frappe.model.document import Document
 import json
+from frappe import _
+
+from frappe.utils.data import get_link_to_form
 class EmployeePenalty(Document):
 	
 	@frappe.whitelist()
@@ -25,6 +28,8 @@ def create_addtional_salary(source_name):
 	addtionall_salary_doc.ref_docname = penalty_doc.get('name')
 	addtionall_salary_doc.overwrite_salary_structure_amount = 0
 	addtionall_salary_doc.submit()
+	lnk = get_link_to_form(addtionall_salary_doc.doctype, addtionall_salary_doc.name)
+	frappe.msgprint(_("{} {} was Created").format(addtionall_salary_doc.doctype, lnk))
 
 
 

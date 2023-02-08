@@ -482,7 +482,7 @@ data = {
             "fieldname": "reference_type",
             "property": "options",
             "property_type": "Text",
-            "value": "\nPayment Entry\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay and Receipt Document\nComparison\nClearance\nTender"
+            "value": "\nPayment Entry\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nPay Document\nReceipt Document\nComparison\nClearance\nTender"
         },
     ],
     'on_setup': 'dynamic.cheques.setup.install'
