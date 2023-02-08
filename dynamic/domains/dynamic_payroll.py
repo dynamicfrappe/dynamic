@@ -132,8 +132,8 @@ data = {
         {
             "doctype": "Salary Structure",
             "doctype_or_field": "DocField",
-            "fieldname": "variable",
-            "property": "earnings",
+            "fieldname": "earnings",
+            "property": "allow_on_submit",
             "property_type": "Check",
             "value": "1"
         },
