@@ -49,6 +49,29 @@ data = {
                 "default":0,
                 "read_only":1
             },
+            {
+                "fieldname": "formula_section_break",
+                "fieldtype": "Section Break",
+                "insert_after": "overwrite_salary_structure_amount",
+                "label": "Formula",
+            },
+            {
+                "fieldname": "amount_based_on_formula",
+                "fieldtype": "Check",
+                "insert_after": "formula_section_break",
+                "label": "Amount based on Formula",
+                "fetch_from" :"salary_component.amount_based_on_formula",
+                "fetch_if_empty" : 1
+            },
+            {
+                "fieldname": "formula",
+                "fieldtype": "Code",
+                "insert_after": "amount_based_on_formula",
+                "label": "Formula",
+                "fetch_from" :"salary_component.formula",
+                "fetch_if_empty" : 1,
+                "depends_on": "eval:doc.amount_based_on_formula==1",
+            },
         ],
         'Salary Component' :[
             {
