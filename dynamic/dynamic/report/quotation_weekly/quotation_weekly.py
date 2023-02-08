@@ -17,7 +17,11 @@ def execute(filters=None):
 class Analytics(object):
 	def __init__(self, filters=None):
 		self.filters = frappe._dict(filters or {})
-		self.date_field = "transaction_date"
+		self.date_field = (
+			"transaction_date"
+			if self.filters.doc_type in ["Sales Order", "Purchase Order"]
+			else "posting_date"
+		)
 
 		
 		self.get_period_date_ranges()
