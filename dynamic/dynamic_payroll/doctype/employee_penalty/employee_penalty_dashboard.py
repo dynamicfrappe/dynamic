@@ -9,6 +9,6 @@ def get_data():
 		},
 		"transactions": [
 			
-			{"label": _("Addtional Salary"), "items": ["Additional Salary"]},
+			{"label": _("Additional Salary"), "items": ["Additional Salary"]},
 		],
 	}

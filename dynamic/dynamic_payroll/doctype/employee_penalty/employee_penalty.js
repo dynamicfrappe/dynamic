@@ -4,8 +4,7 @@
 frappe.ui.form.on('Employee Penalty', {
 	setup:function(frm){
 		frm.custom_make_buttons = {
-			// "employee_penalty_dashboard": "Create Addtional Salary",
-			"Create Addtional Salary":"Employee Penalty Dashboard",
+			"Additional Salary":"Additional Salary",
 		  };
 	},
 	onload:function(frm){
@@ -13,7 +12,7 @@ frappe.ui.form.on('Employee Penalty', {
 	},
 	refresh: function(frm) {
 		if(frm.doc.docstatus == 1 && frm.doc.additional_salary == null){
-			frm.add_custom_button("Create Addtional Salary",()=>{
+			frm.add_custom_button("Additional Salary",()=>{
 				frm.events.create_addtional_salary(frm)
 			},
 			__("Create"))
