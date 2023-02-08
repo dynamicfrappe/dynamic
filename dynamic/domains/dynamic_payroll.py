@@ -90,13 +90,23 @@ data = {
                 "default": "1" ,
             },
         ],
-        'Payroll Settings' : [
+        # 'Payroll Settings' : [
+        #     {
+        #         "fieldname": "absent_component",
+        #         "fieldtype": "Link",
+        #         "insert_after": "show_leave_balances_in_salary_slip",
+        #         "options":"Salary Component",
+        #         "label": "Absent Component",
+        #     },
+        # ],
+        'Salary Structure Assignment' : [
             {
                 "fieldname": "absent_component",
                 "fieldtype": "Link",
-                "insert_after": "show_leave_balances_in_salary_slip",
+                "insert_after": "currency",
                 "options":"Salary Component",
                 "label": "Absent Component",
+                "allow_on_submit" : "1"
             },
         ],
 

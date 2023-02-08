@@ -665,6 +665,7 @@ class SalarySlip(TransactionBase):
 			order_by="from_date desc",
 			as_dict=True,
 		)
+		self.salary_structure_assignment = salary_structure_assignment
 
 		if not salary_structure_assignment:
 			frappe.throw(
@@ -787,7 +788,10 @@ class SalarySlip(TransactionBase):
 				is_recurring=additional_salary.is_recurring,
 			)
 	def add_absent_days(self):
-		absent_component = frappe.db.get_single_value("Payroll Settings" , 'absent_component')
+		# absent_component = frappe.db.get_single_value("Payroll Settings" , 'absent_component')
+		if not getattr(self,'salary_structure_assignment') :
+			return
+		absent_component = getattr(self.salary_structure_assignment,'absent_component')
 		if absent_component and self.absent_days :
 			data = self.get_data_for_eval()
 			component = get_salary_component_data(absent_component)
