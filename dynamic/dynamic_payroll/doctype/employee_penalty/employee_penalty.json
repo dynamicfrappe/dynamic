@@ -31,7 +31,8 @@
   "amount_condition",
   "notes_section",
   "notes",
-  "additional_salary"
+  "additional_salary",
+  "amended_from"
  ],
  "fields": [
   {
@@ -189,11 +190,21 @@
    "label": "Additional Salary",
    "options": "Additional Salary",
    "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Penalty",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2023-02-08 10:25:58.579955",
+ "modified": "2023-02-08 10:35:58.865754",
  "modified_by": "Administrator",
  "module": "Dynamic Payroll",
  "name": "Employee Penalty",

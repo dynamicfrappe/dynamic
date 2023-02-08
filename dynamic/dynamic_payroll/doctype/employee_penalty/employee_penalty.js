@@ -2,8 +2,16 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Employee Penalty', {
-	refresh: function(frm) {
+	onload:function(frm){
 		frm.events.set_frm_query(frm)
+	},
+	refresh: function(frm) {
+		if(frm.doc.docstatus == 1 && frm.doc.additional_salary == null){
+			frm.add_custom_button("Create Addtional Salary",()=>{
+				frm.events.create_addtional_salary(frm)
+			},
+			__("Create"))
+		}
 		
 	},
 	set_frm_query(frm){
@@ -14,5 +22,12 @@ frappe.ui.form.on('Employee Penalty', {
 			  ],
 			};
 		  })
+	},
+	create_addtional_salary(frm){
+		frappe.model.open_mapped_doc({
+            method:
+              "dynamic.dynamic_payroll.doctype.employee_penalty.employee_penalty.create_addtional_salary",
+              frm: frm, //this.frm
+          });
 	}
 });
