@@ -27,8 +27,8 @@
   "payroll_effect_date",
   "total_amount",
   "condition_and_formula_section",
-  "condition",
-  "amount_condition",
+  "amount_based_on_formula",
+  "formula",
   "notes_section",
   "notes",
   "additional_salary",
@@ -163,20 +163,6 @@
    "label": "Condition and Formula"
   },
   {
-   "fetch_from": "salary_component.condition",
-   "fieldname": "condition",
-   "fieldtype": "Small Text",
-   "label": "Condition",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "salary_component.amount",
-   "fieldname": "amount_condition",
-   "fieldtype": "Currency",
-   "label": "Amount Condition",
-   "read_only": 1
-  },
-  {
    "fetch_from": "employee.company",
    "fieldname": "company",
    "fieldtype": "Link",
@@ -199,12 +185,27 @@
    "options": "Employee Penalty",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "salary_component.amount_based_on_formula",
+   "fieldname": "amount_based_on_formula",
+   "fieldtype": "Check",
+   "label": "Amount based on formula",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "salary_component.formula",
+   "fieldname": "formula",
+   "fieldtype": "Code",
+   "label": "Formula",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-08 10:35:58.865754",
+ "modified": "2023-02-08 12:36:09.385643",
  "modified_by": "Administrator",
  "module": "Dynamic Payroll",
  "name": "Employee Penalty",

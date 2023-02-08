@@ -23,7 +23,8 @@ def create_addtional_salary(source_name):
 	addtionall_salary_doc.amount = penalty_doc.amount 
 	addtionall_salary_doc.ref_doctype = "Employee Penalty"
 	addtionall_salary_doc.ref_docname = penalty_doc.get('name')
-	return addtionall_salary_doc
+	addtionall_salary_doc.overwrite_salary_structure_amount = 0
+	addtionall_salary_doc.submit()
 
 
 

@@ -29,10 +29,17 @@ frappe.ui.form.on('Employee Penalty', {
 		  })
 	},
 	create_addtional_salary(frm){
-		frappe.model.open_mapped_doc({
-            method:
+		frappe.call({
+			method:
               "dynamic.dynamic_payroll.doctype.employee_penalty.employee_penalty.create_addtional_salary",
-              frm: frm, //this.frm
-          });
+              args: {
+				source_name:frm.doc.name
+			}, //this.frm
+		})
+		// frappe.model.open_mapped_doc({
+        //     method:
+        //       "dynamic.dynamic_payroll.doctype.employee_penalty.employee_penalty.create_addtional_salary",
+        //       frm: frm, //this.frm
+        //   });
 	}
 });
