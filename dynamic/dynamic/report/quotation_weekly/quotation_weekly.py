@@ -17,9 +17,10 @@ def execute(filters=None):
 class Analytics(object):
 	def __init__(self, filters=None):
 		self.filters = frappe._dict(filters or {})
+		self.date_field = "transaction_date"
 		self.date_field = (
 			"transaction_date"
-			if self.filters.doc_type in ["Sales Order", "Purchase Order"]
+			if self.filters.doc_type in ["Sales Order", "Purchase Order","Quotation"]
 			else "posting_date"
 		)
 
@@ -41,16 +42,17 @@ class Analytics(object):
 		self.columns = [
 			{"label": _('Week'), "fieldname": ('week'), "fieldtype": "Data", "width": 120}
 		]
-		self._status = [
-				"Draft",
-				"Open",
-				"Replied",
-				"Ordered",
-				"Lost",
-				"Cancelled",
-				"Expired",
-				"Rejected",
-			]
+		if self.filters.doc_type == "Quotation":
+			self._status = [
+					"Draft",
+					"Open",
+					"Replied",
+					"Ordered",
+					"Lost",
+					"Cancelled",
+					"Expired",
+					"Rejected",
+				]
 		for status in self._status:
 			self.columns.append(
 				{"label": _(status), "fieldname": (status), "fieldtype": "Float", "width": 120,"default":0}
