@@ -145,6 +145,22 @@ data = {
             "property_type": "Check",
             "value": "1"
         },
+        {
+            "doctype": "Salary Structure",
+            "doctype_or_field": "DocField",
+            "fieldname": "total_earning",
+            "property": "allow_on_submit",
+            "property_type": "Check",
+            "value": "1"
+        },
+        {
+            "doctype": "Salary Structure",
+            "doctype_or_field": "DocField",
+            "fieldname": "total_deduction",
+            "property": "allow_on_submit",
+            "property_type": "Check",
+            "value": "1"
+        },
     ],
     "property_setters": [
 
