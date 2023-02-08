@@ -87,9 +87,8 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "do_not_include_in_total",
                 "label": "Consider In Hour Rate",
-                "default":1,
+                "default": "1" ,
             },
-
         ],
         'Payroll Settings' : [
             {

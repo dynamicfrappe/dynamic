@@ -617,7 +617,9 @@ class SalarySlip(TransactionBase):
 		payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
 
 		self.add_structure_components(component_type)
+		self.add_absent_days()
 		self.add_additional_salary_components(component_type)
+		
 		if component_type == "earnings":
 			self.add_employee_benefits(payroll_period)
 		else:
@@ -775,7 +777,7 @@ class SalarySlip(TransactionBase):
 				# if additional_salary.amount_based_on_formula and additional_salary.formula :
 
 			except Exception as e: 
-				frappe.msgprint(_("Error While add Additional Salary {} , {}").format(additional_salary.additional_salary.component , _(str(e))))
+				frappe.msgprint(_("Error While add Additional Salary {} , {}").format(additional_salary.component , _(str(e))))
 			amount *= additional_salary.amount
 			self.update_component_row(
 				get_salary_component_data(additional_salary.component),
@@ -784,6 +786,20 @@ class SalarySlip(TransactionBase):
 				additional_salary,
 				is_recurring=additional_salary.is_recurring,
 			)
+	def add_absent_days(self):
+		absent_component = frappe.db.get_single_value("Payroll Settings" , 'absent_component')
+		if absent_component and self.absent_days :
+			data = self.get_data_for_eval()
+			component = get_salary_component_data(absent_component)
+			amount = 1
+			component.amount = 0
+			try :
+				amount = self.eval_condition_and_formula(component, data,precision=0)
+			except Exception as e: 
+				frappe.msgprint(_("Error While add Absent Salary {} , {}").format(component.salary_component, _(str(e))))
+			
+			amount *= self.absent_days
+			self.update_component_row(component, amount, "deductions")
 
 	def add_tax_components(self, payroll_period):
 		# Calculate variable_based_on_taxable_salary after all components updated in salary slip
@@ -1719,6 +1735,8 @@ def get_salary_component_data(component):
 			"is_tax_applicable",
 			"is_flexible_benefit",
 			"variable_based_on_taxable_salary",
+			"amount_based_on_formula",
+			"formula",
 		],
 		as_dict=1,
 	)
