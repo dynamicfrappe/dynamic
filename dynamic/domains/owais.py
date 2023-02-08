@@ -41,7 +41,7 @@ data = {
             "fieldname": "rate",
             "property": "columns",
             "property_type": "Int",
-            "value": "2"
+            "value": "1"
         },
         {
             "doctype": "Sales Invoice Item",
@@ -92,14 +92,14 @@ data = {
         "value": "1",
         }, 
 
-        # Sales order Item 
+        #! Sales order Item 
         {
             "doctype": "Sales Order Item",
             "doctype_or_field": "DocField",
             "fieldname": "item_code",
             "property": "columns",
             "property_type": "Int",
-            "value": "1"
+            "value": "2"
         },
         # {
         #     "doctype": "Sales Order Item",
