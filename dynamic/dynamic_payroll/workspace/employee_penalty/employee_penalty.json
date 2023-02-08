@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "creation": "2023-02-08 12:26:43.809082",
+ "creation": "2023-02-08 13:17:57.010593",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -12,7 +12,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "Employee Pentaly",
+ "label": "Employee Penalty",
  "links": [
   {
    "hidden": 0,
@@ -26,6 +26,15 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Penalty Type",
+   "link_to": "Penalty Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Employee Penalty",
    "link_to": "Employee Penalty",
    "link_type": "DocType",
@@ -33,12 +42,13 @@
    "type": "Link"
   }
  ],
- "modified": "2023-02-08 13:01:33.872352",
+ "modified": "2023-02-08 13:17:57.010593",
  "modified_by": "Administrator",
  "module": "Dynamic Payroll",
- "name": "Employee Pentaly",
+ "name": "Employee Penalty",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
+ "restrict_to_domain": "Dynamic Payroll",
  "shortcuts": []
 }
