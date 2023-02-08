@@ -1,7 +1,7 @@
 {
  "add_total_row": 0,
  "columns": [],
- "creation": "2023-01-30 12:56:17.773329",
+ "creation": "2023-02-08 14:30:54.370774",
  "disable_prepared_report": 0,
  "disabled": 0,
  "docstatus": 0,
@@ -9,14 +9,14 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2023-01-30 12:56:17.773329",
+ "modified": "2023-02-08 14:30:54.370774",
  "modified_by": "Administrator",
  "module": "dynamic",
- "name": "Quotation Weekly",
+ "name": "Sales Order Weekly",
  "owner": "Administrator",
  "prepared_report": 0,
- "ref_doctype": "Quotation",
- "report_name": "Quotation Weekly",
+ "ref_doctype": "Sales Order",
+ "report_name": "Sales Order Weekly",
  "report_type": "Script Report",
  "roles": [
   {

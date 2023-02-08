@@ -957,13 +957,12 @@ def send_to_opportunity():
 
 
 def send_mail_opport_and_lead(data):
-	# print('\n\n\n\n--->data',data,'\n')
 	recipients = []
 	for row in data:
 		if row.contact_by:
 			email_args = {
 					"recipients": row.contact_by,
-					"message": _("Please GET Notify For %s"%row.doctype),
+					"message": _("Please GET Notify For _Daily_ %s"%row.doctype),
 					"subject": 'Contact In {contact_date}'.format(contact_date=row.contact_date),
 					"attachments": [frappe.attach_print(row.doctype, row.name, file_name=row.name)],
 					"reference_doctype": row.doctype,

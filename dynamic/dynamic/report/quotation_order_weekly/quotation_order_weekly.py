@@ -18,6 +18,11 @@ class Analytics(object):
 	def __init__(self, filters=None):
 		self.filters = frappe._dict(filters or {})
 		self.date_field = "transaction_date"
+		self.date_field = (
+			"transaction_date"
+			if self.filters.doc_type in ["Sales Order", "Purchase Order","Quotation"]
+			else "posting_date"
+		)
 
 		
 		self.get_period_date_ranges()
@@ -37,16 +42,27 @@ class Analytics(object):
 		self.columns = [
 			{"label": _('Week'), "fieldname": ('week'), "fieldtype": "Data", "width": 120}
 		]
-		self._status = [
-				"Draft",
-				"Open",
-				"Replied",
-				"Ordered",
-				"Lost",
-				"Cancelled",
-				"Expired",
-				"Rejected",
-			]
+		if self.filters.doc_type == "Quotation":
+			self._status = [
+					"Draft",
+					"Open",
+					"Replied",
+					"Ordered",
+					"Lost",
+					"Cancelled",
+					"Expired",
+					"Rejected",
+				]
+		elif self.filters.doc_type == "Sales Order":
+			self._status = [
+					"On Hold",
+					"To Deliver and Bill",
+					"To Bill",
+					"To Deliver",
+					"Completed",
+					"Cancelled",
+					"Closed",
+				]
 		for status in self._status:
 			self.columns.append(
 				{"label": _(status), "fieldname": (status), "fieldtype": "Float", "width": 120,"default":0}
@@ -68,12 +84,22 @@ class Analytics(object):
 			if(self.filters.get("from_date") > self.filters.get("to_date")):
 				frappe.throw(_("From Date must be before To Date"))
 			condition += "AND {date_field} between '{from_date}' and '{to_date}' ".format(date_field=self.date_field,from_date = self.filters.from_date, to_date = self.filters.to_date)
-		if self.filters.get("quotation"):
-			condition += " AND name = '%s' "%(self.filters.get("quotation"))
 
-		sql = """SELECT name as entity,quotation_to,{date_field}, 1 as value_field ,status FROM `tabQuotation`
+		if self.filters.get("doc_type") == "Quotation":
+			sql = """SELECT name as entity,quotation_to,{date_field}, 1 as value_field ,status FROM `tabQuotation`"""
+			if self.filters.get("docname"):
+				condition += " AND name = '%s' "%(self.filters.get("docname"))
+		if self.filters.get("doc_type") == "Sales Order":
+			sql = """SELECT name as entity,{date_field}, 1 as value_field ,status FROM `tabSales Order`"""
+			if self.filters.get("docname"):
+				condition += " AND name = '%s' "%(self.filters.get("docname"))
+
+		# te1 = str(sql + condition)
+		# print('\n\nn\->>***>',te1)
+		# te1.format(date_field=self.date_field)
+		sql = f"""{sql}
 			{condition}
-		""".format(condition=condition,date_field=self.date_field)
+		""".format(date_field=self.date_field)
 		self.entries = frappe.db.sql(sql,as_dict=1)
 		self.entity_names = {}
 		for d in self.entries:
@@ -82,11 +108,6 @@ class Analytics(object):
 	def get_rows(self):
 		self.data = []
 		self.get_periodic_data()
-		#?  period_data {
-		# ? 'Week 5 2023': {'status': {'Open': {'qty': 1.0, 'key': 'Open'}, 'Lost': {'qty': 1.0, 'key': 'Lost'}}},
-		# ? 'Week 6 2023': {'status': {'Replied': {'qty': 1.0, 'key': 'Replied'}}}, 
-		# ? 'Week 7 2023': {'status': {'Ordered': {'qty': 1.0, 'key': 'Ordered'}}}} 
-		# print('\n\n self.periodic_daterange-->',self.periodic_daterange)
 		self.labels_chart = []
 		
 		for entity, period_data in iteritems(self.entity_periodic_data):

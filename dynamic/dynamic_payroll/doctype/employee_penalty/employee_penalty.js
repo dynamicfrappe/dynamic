@@ -39,10 +39,5 @@ frappe.ui.form.on('Employee Penalty', {
 				frm.refresh()
 			}
 		})
-		// frappe.model.open_mapped_doc({
-		//     method:
-		//       "dynamic.dynamic_payroll.doctype.employee_penalty.employee_penalty.create_addtional_salary",
-		//       frm: frm, //this.frm
-		//   });
 	}
 });

@@ -2,18 +2,17 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Quotation Weekly"] = {
+// Copyright (c) 2023, Dynamic and contributors
+// For license information, please see license.txt
+/* eslint-disable */
+
+frappe.query_reports["Sales Order Weekly"] = {
 	"filters": [
 		{
 			fieldname: "range",
 			label: __("Range"),
 			fieldtype: "Data",
-			// options: [
-			// 	{ "value": "Weekly", "label": __("Weekly") },
-			// 	{ "value": "Monthly", "label": __("Monthly") },
-			// 	{ "value": "Quarterly", "label": __("Quarterly") },
-			// 	{ "value": "Yearly", "label": __("Yearly") }
-			// ],
+
 			default: "Weekly",
 			reqd: 1,
 			hidden:1,
@@ -63,10 +62,10 @@ frappe.query_reports["Quotation Weekly"] = {
 			reqd: 1
 		},
 		// {
-		// 	label: __("Quotation"),
-		// 	fieldname:"quotation",
+		// 	label: __("Sales Order"),
+		// 	fieldname:"sales_order",
 		// 	fieldtype: "Link",
-		// 	options: "Quotation",
+		// 	options: "Sales Order",
 		// 	"get_query": function() {
 		// 		return {
 		// 			filters: {"docstatus": ["!=", ["2"]]}

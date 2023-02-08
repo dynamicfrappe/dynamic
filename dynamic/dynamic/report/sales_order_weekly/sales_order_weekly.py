@@ -69,9 +69,9 @@ class Analytics(object):
 				frappe.throw(_("From Date must be before To Date"))
 			condition += "AND {date_field} between '{from_date}' and '{to_date}' ".format(date_field=self.date_field,from_date = self.filters.from_date, to_date = self.filters.to_date)
 		if self.filters.get("quotation"):
-			condition += " AND name = '%s' "%(self.filters.get("quotation"))
+			condition += " AND name = '%s' "%(self.filters.get("sales_order"))
 
-		sql = """SELECT name as entity,quotation_to,{date_field}, 1 as value_field ,status FROM `tabQuotation`
+		sql = """SELECT name as entity,{date_field}, 1 as value_field ,status FROM `tabSales Order`
 			{condition}
 		""".format(condition=condition,date_field=self.date_field)
 		self.entries = frappe.db.sql(sql,as_dict=1)
@@ -82,11 +82,7 @@ class Analytics(object):
 	def get_rows(self):
 		self.data = []
 		self.get_periodic_data()
-		#?  period_data {
-		# ? 'Week 5 2023': {'status': {'Open': {'qty': 1.0, 'key': 'Open'}, 'Lost': {'qty': 1.0, 'key': 'Lost'}}},
-		# ? 'Week 6 2023': {'status': {'Replied': {'qty': 1.0, 'key': 'Replied'}}}, 
-		# ? 'Week 7 2023': {'status': {'Ordered': {'qty': 1.0, 'key': 'Ordered'}}}} 
-		# print('\n\n self.periodic_daterange-->',self.periodic_daterange)
+
 		self.labels_chart = []
 		
 		for entity, period_data in iteritems(self.entity_periodic_data):
@@ -103,7 +99,6 @@ class Analytics(object):
 					row_test[status] = status_qty["qty"]
 					row_test['total'] = row_test.get('total',0) + status_qty["qty"]
 				self.data.append(row_test)
-		# print('\n\nn\n self data -->',self.data)
 		
 
 
@@ -123,7 +118,6 @@ class Analytics(object):
 	
 			self.entity_periodic_data[year][period]['status'][d.status]['qty'] += flt(d.value_field)
 
-		# print('\n\n---##$$$### self.entity_periodic_data-->',self.entity_periodic_data,'\n\n')
 
 	def get_period(self, posting_date):
 		# period = "Week " + str(posting_date.isocalendar()[1]) + " " + str(posting_date.year)
@@ -192,5 +186,4 @@ class Analytics(object):
 		chart["type"] = "bar"
 
 		chart["fieldtype"] = "Currency"
-		# print('dtat as -->all$$$$\n\n\n',self.data)
 		self.chart = chart
