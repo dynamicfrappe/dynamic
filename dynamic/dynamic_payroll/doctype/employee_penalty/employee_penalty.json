@@ -10,6 +10,7 @@
   "posting_date",
   "column_break_2",
   "naming_series",
+  "company",
   "employee_details_section",
   "employee",
   "employee_name",
@@ -25,8 +26,12 @@
   "column_break_15",
   "payroll_effect_date",
   "total_amount",
+  "condition_and_formula_section",
+  "condition",
+  "amount_condition",
   "notes_section",
-  "notes"
+  "notes",
+  "additional_salary"
  ],
  "fields": [
   {
@@ -114,9 +119,9 @@
   {
    "fieldname": "amount_type",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Amount Type",
-   "options": "Factor\nAmount",
-   "reqd": 1
+   "options": "Factor\nAmount"
   },
   {
    "default": "0",
@@ -129,6 +134,7 @@
    "default": "0",
    "fieldname": "total_amount",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Total Amount",
    "read_only": 1
   },
@@ -149,11 +155,45 @@
   {
    "fieldname": "column_break_11",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "condition_and_formula_section",
+   "fieldtype": "Section Break",
+   "label": "Condition and Formula"
+  },
+  {
+   "fetch_from": "salary_component.condition",
+   "fieldname": "condition",
+   "fieldtype": "Small Text",
+   "label": "Condition",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "salary_component.amount",
+   "fieldname": "amount_condition",
+   "fieldtype": "Currency",
+   "label": "Amount Condition",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "additional_salary",
+   "fieldtype": "Link",
+   "label": "Additional Salary",
+   "options": "Additional Salary",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-07 17:07:02.501840",
+ "modified": "2023-02-08 10:25:58.579955",
  "modified_by": "Administrator",
  "module": "Dynamic Payroll",
  "name": "Employee Penalty",
