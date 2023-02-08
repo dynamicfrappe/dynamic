@@ -2,6 +2,12 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Employee Penalty', {
+	setup:function(frm){
+		frm.custom_make_buttons = {
+			// "employee_penalty_dashboard": "Create Addtional Salary",
+			"Create Addtional Salary":"Employee Penalty Dashboard",
+		  };
+	},
 	onload:function(frm){
 		frm.events.set_frm_query(frm)
 	},
