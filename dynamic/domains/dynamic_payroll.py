@@ -161,6 +161,14 @@ data = {
             "property_type": "Check",
             "value": "1"
         },
+        {
+            "doctype": "Salary Structure",
+            "doctype_or_field": "DocField",
+            "fieldname": "net_pay",
+            "property": "allow_on_submit",
+            "property_type": "Check",
+            "value": "1"
+        },
     ],
     "property_setters": [
 

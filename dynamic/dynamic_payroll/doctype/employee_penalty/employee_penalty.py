@@ -14,6 +14,9 @@ class EmployeePenalty(Document):
 	def before_save(self):
 		if self.amount <= 0:
 			frappe.throw(_("Amount must be greate than '0.0' "))
+	
+	def on_submit(self):
+		create_addtional_salary(self.name)
 
 
 
