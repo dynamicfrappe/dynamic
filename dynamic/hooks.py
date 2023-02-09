@@ -327,6 +327,7 @@ domains = {
 
 jenv = {
     "methods": [
+        "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",

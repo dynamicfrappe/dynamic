@@ -249,3 +249,16 @@ doc.customer)-%} {%- set qr_code_data = encode_invoice_data(doc.name) -%}
     </div>
   </div>
 </div>
+
+
+<table class="table table-bordered">
+  <tr>
+    <th style="text-align: center">{{_('Component')}}</th>
+    <th style="text-align: center">{{_('Amount')}}</th>
+  </tr>
+  <tr>
+      <td style="text-align: center">{{_(row.salary_component)}}</td>
+      <td style="text-align: center">{{ frappe.utils.fmt_money(row.amount,currency=doc.currency) }}</td>
+  </tr>
+
+</table>
