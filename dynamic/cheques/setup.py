@@ -7,4 +7,4 @@ def install():
         add_properties()
     except Exception as e:
         frappe.throw(_(str(e)))
-    return
+    pass

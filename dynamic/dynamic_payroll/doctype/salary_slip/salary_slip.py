@@ -791,8 +791,12 @@ class SalarySlip(TransactionBase):
 		# absent_component = frappe.db.get_single_value("Payroll Settings" , 'absent_component')
 		if not getattr(self,'salary_structure_assignment') :
 			return
+		absent_days = self.absent_days or 0
 		absent_component = getattr(self.salary_structure_assignment,'absent_component')
-		if absent_component and self.absent_days :
+		absent_deduction = getattr(self.salary_structure_assignment,'absent_deduction')
+		if absent_deduction == "Payment Days" :
+			absent_days = 30 - (self.payment_days or 0)
+		if absent_component and absent_days :
 			data = self.get_data_for_eval()
 			component = get_salary_component_data(absent_component)
 			amount = 1
@@ -802,7 +806,7 @@ class SalarySlip(TransactionBase):
 			except Exception as e: 
 				frappe.msgprint(_("Error While add Absent Salary {} , {}").format(component.salary_component, _(str(e))))
 			
-			amount *= self.absent_days
+			amount *= absent_days
 			self.update_component_row(component, amount, "deductions")
 
 	def add_tax_components(self, payroll_period):
