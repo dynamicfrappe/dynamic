@@ -28,7 +28,7 @@ def add_properties():
 		doc.save()
 	except Exception as e:
 		frappe.throw(_(str(e)))
-	return
+	pass
 
 	try:
 		name = "Journal Entry Account-reference_type-options"
