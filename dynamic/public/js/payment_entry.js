@@ -8,15 +8,15 @@ frappe.ui.form.on("Payment Entry", {
         ],
       };
     });
-    frm.set_query("endorsed_party_account", function () {
-      return {
-        filters: [
-          ["company", "=", frm.doc.company],
-          ["is_group", "=", 0],
-          ["disabled", "=", 0],
-        ],
-      };
-    });
+    // frm.set_query("endorsed_party_account", function () {
+    //   return {
+    //     filters: [
+    //       ["company", "=", frm.doc.company],
+    //       ["is_group", "=", 0],
+    //       ["disabled", "=", 0],
+    //     ],
+    //   };
+    // });
   },
   get_party_account: function (frm, callback) {
     if (
