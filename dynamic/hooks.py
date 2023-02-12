@@ -176,7 +176,9 @@ doc_events = {
     },
     "Payment Entry":{
         "autoname":"dynamic.api.modeofpaymentautoname",
-        "validate" :"dynamic.api.validate_paymentrntry"
+        "validate" :"dynamic.api.validate_paymentrntry",
+        "on_update_after_submit" : "dynamic.api.update_paymentrntry",
+       
     },
     "Asset Movement":{
         "on_submit":"dynamic.api.add_cost_center_to_asset"

@@ -107,6 +107,15 @@ def make_cheque_endorsement(payment_entry):
         frappe.throw(_("Please Set Endorsed Party Name"))
     if not payment_entry.endorsed_party_account:
         frappe.throw(_("Please Set Endorsed Party Account"))
+
+
+    #validate party account with part type 
+    #  
+    party_type_account_type = frappe.get_doc("Party Type" , payment_entry.endorsed_party_type).account_type
+    part_account_type  = frappe.get_doc("Account" ,payment_entry.endorsed_party_account ).account_type
+   
+    if party_type_account_type != part_account_type :
+        frappe.throw(_(f" Endorsed Party Account type is {party_type_account_type} and party type {part_account_type} "))
     je = frappe.new_doc("Journal Entry")
     je.posting_date = payment_entry.posting_date
     je.voucher_type = 'Bank Entry'

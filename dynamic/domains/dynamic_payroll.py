@@ -108,6 +108,15 @@ data = {
                 "label": "Absent Component",
                 "allow_on_submit": "1"
             },
+            {
+                "fieldname": "absent_deduction",
+                "fieldtype": "Select",
+                "insert_after": "absent_component",
+                "options": "Absent Days\nPayment Days",
+                "default" : "Absent Days" ,
+                "label": "Absent Deduction depends on",
+                "allow_on_submit": "1"
+            },
         ],
 
 
