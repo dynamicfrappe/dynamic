@@ -11,9 +11,6 @@ def create_ifi_scripts():
         create_lead_script()
         create_customer_script()
         create_opportunity_script()
-    except:
-        pass
-    try:
         install_action()
     except Exception as ex:
         pass
@@ -63,9 +60,7 @@ def create_lead_script():
 
 def create_customer_script():
     name = "Customer-Form"
-    if frappe.db.exists("Client Script",name) :
-        doc = frappe.get_doc("Client Script",name)
-    else :
+    if not frappe.db.exists("Client Script",name) :
         doc = frappe.new_doc("Client Script")
         doc.dt      = "Customer"
         doc.view    = "Form"
@@ -93,10 +88,8 @@ def create_customer_script():
         doc.save()
 
 def create_opportunity_script():
-    name = "Opportunity-IFI-Form"
-    if frappe.db.exists("Client Script",name) :
-        doc = frappe.get_doc("Client Script",name)
-    else :
+    name = "Opportunity-Form"
+    if not frappe.db.exists("Client Script",name) :
         doc = frappe.new_doc("Client Script")
         doc.dt      = "Opportunity"
         doc.view    = "Form"

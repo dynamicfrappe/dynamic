@@ -148,6 +148,17 @@ data = {
                 "allow_on_submit":1,
                 "default":0
             },
+            {
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "order_type",
+                "options" : "Cost Center" , 
+                "read_only" : 0,
+                "allow_on_submit":0,
+                "reqd":1
+                
+            },
             
             
         ],
@@ -440,7 +451,18 @@ data = {
             "fetch_if_empty": 1,
             "reqd": 1,
             "fetch_from": "party_name.phone_no" 
-            }
+            },
+            {
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "phone_no",
+                "options" : "Cost Center" , 
+                "read_only" : 0,
+                "allow_on_submit":0,
+                "reqd":1
+                
+            },
         ],
         'Stock Settings':[
             {
@@ -512,7 +534,7 @@ data = {
                 "read_only" :1 ,
                 "in_list_view" :1 ,
                 "in_standard_filter" :1
-            }
+            },
 
         ],
         "Appointment":[
@@ -973,13 +995,37 @@ data = {
         "property_type": "Text",
         "value": "\nDraft\nSubmitted\nStopped\nCancelled\nPending\nRequested\nPartially Ordered\nPartially Received\nOrdered\nIssued\nTransferred\nReceived"
         },
-          {
+        {
         "doctype": "Material Request",
         "doctype_or_field": "DocField",
         "fieldname": "material_request_type",
         "property": "options",
         "property_type": "Text",
         "value": "\nPurchase\nMaterial Transfer\nMaterial Issue\nManufacture\nCustomer Provided\nPrice Request"
+        },
+        {
+        "doctype": "Sales Order",
+        "doctype_or_field": "DocField",
+        "fieldname": "cost_center",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Sales Invoice",
+        "doctype_or_field": "DocField",
+        "fieldname": "cost_center",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Material Request",
+        "doctype_or_field": "DocField",
+        "fieldname": "cost_center",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "1"
         },
     ],
   
