@@ -5,8 +5,6 @@ data = {
 
     'custom_fields': {
         'Quotation' :[
-
-
              {
                 "fieldname": "material_reuqest",
                 "fieldtype": "Link",
@@ -1026,6 +1024,46 @@ data = {
         "property": "reqd",
         "property_type": "Check",
         "value": "1"
+        },
+        {
+        "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "discount_amount",
+        "property": "in_list_view",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "discount_amount",
+        "property": "columns",
+        "property_type": "Int",
+        "value": "1"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "qty",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "rate",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+        "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "amount",
+        "property": "columns",
+        "property_type": "Int",
+        "value": "2"
         },
     ],
   
