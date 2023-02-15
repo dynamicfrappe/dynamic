@@ -31,7 +31,10 @@ def opportunity_notifiy(self, *args, **kwargs):
 		# reciever
 		# email_quotation(self, *args, **kwargs)
 		# supplier_rfq_mail(self)
-
+	if "Terra" in DOMAINS :
+		if self.opportunity_from == "Customer" :
+			self.customer = self.party_name
+	
 
 @frappe.whitelist()
 def quotation_send_email_cc(self, *args, **kwargs):

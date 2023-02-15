@@ -298,6 +298,14 @@ data = {
                 'no_copy' : 1 ,
                 'allow_on_submit' : 1 ,
             },
+             {
+                "fieldname": "opportunity",
+                "fieldtype": "Link",
+                "insert_after": "source",
+                "label": "Opportunity",
+                'options' : 'Opportunity' ,
+                "reqd" : 1
+            },
             
             
          ],
@@ -437,6 +445,16 @@ data = {
             }
         ],
         'Opportunity':[
+
+            {
+                 "fieldname": "customer",
+                 "fieldtype": "Link",
+                  "insert_after": "party_name",
+                 "label" :"Custom" ,
+                 "options" :"Customer", 
+                 "read_only" : 1
+                
+            },
              {
             "fieldname": "phone_no",
             "fieldtype": "Data",
@@ -966,6 +984,14 @@ data = {
         "doctype_or_field": "DocField",
         "fieldname": "item_code",
         "property": "read_only",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "opportunity",
+        "property": "reqd",
         "property_type": "Check",
         "value": "1"
         },

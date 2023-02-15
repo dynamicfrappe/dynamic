@@ -57,6 +57,7 @@ def create_sales_order_from_opportunity(source_name, target_doc=None):
     doc = frappe.new_doc("Sales Order")
     if source_doc.opportunity_from == "Customer":
         doc.customer = source_doc.party_name
+        doc.opportunity = source_doc.name
     if len(source_doc.items)> 0:
         for item in source_doc.items:
             item_doc = frappe.get_doc("Item",item.item_code)
