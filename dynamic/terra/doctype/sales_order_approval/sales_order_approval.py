@@ -28,10 +28,14 @@ class SalesOrderApproval(Document):
 		self.validate_qty_against_sales_order()
 		for item in self.items:
 			if item.get("against_sales_order"):
-				sql = f"""update `tabSales Order Item` set approved_qty = approved_qty + {item.qty} ,remaining_qty =qty - approved_qty  where parent='{item.against_sales_order}' and item_code = '{item.item_code}'"""
+				sql = f"""
+				update `tabSales Order Item` set approved_qty = approved_qty + {item.qty},
+				remaining_qty = qty - approved_qty  where parent='{item.against_sales_order}' 
+				and item_code = '{item.item_code}' 
+				"""
 				frappe.db.sql(sql)
 				frappe.db.commit()
-		# frappe.db.sql(f"""
+		# frappe.db.sql(f""" AND name = '{item.so_detail}'
 		# update `tabSales Order` set status='To Deliver' where name='{item.against_sales_order}'
 		# """)
 		# frappe.db.commit()

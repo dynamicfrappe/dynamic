@@ -1,4 +1,5 @@
 import frappe
+from dynamic.dynamic_accounts.setup import add_properties_journal_auto
 
 
 # DOMAINS = frappe.get_active_domains()
@@ -956,6 +957,7 @@ def create_terra_scripts():
     create_trans()
     try:
         create_sales_invoice_script()
+        add_properties_journal_auto()
     except:
         print("error in create sales order script")
 
