@@ -26,11 +26,10 @@ frappe.ui.form.on("Stock Entry", {
     },
     terra_stock_etnrty(frm){
       console.log("tera")
-      if (frm.doc.docstatus === 1){
-        if (frm.doc.stock_entry_type == "Transfer") {
+      if (frm.doc.add_to_transit === 0){
+      
           frm.remove_custom_button(__('End Transit')) 
-        }
-         
+        
         }
       if (frm.doc.__islocal && frm.doc.outgoing_stock_entry) {
 

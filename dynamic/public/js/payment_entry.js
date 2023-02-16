@@ -18,7 +18,7 @@ frappe.ui.form.on("Payment Entry", {
     //   };
     // });
   },
-  get_party_account: function (frm, callback) {
+  get_party_account_ch: function (frm, callback) {
     if (
       frm.doc.company &&
       frm.doc.endorsed_party_type &&
@@ -27,8 +27,8 @@ frappe.ui.form.on("Payment Entry", {
       frappe.call({
         method: "erpnext.accounts.party.get_party_account",
         args: {
-          party_type: frm.doc.party_type,
-          party: frm.doc.party,
+          party_type: frm.doc.endorsed_party_type,
+          party: frm.doc.endorsed_party_name,
           company: frm.doc.company,
         },
         callback: (response) => {
@@ -38,11 +38,20 @@ frappe.ui.form.on("Payment Entry", {
     }
   },
   endorsed_party_name: function (frm) {
-    frm.events.get_party_account(frm, function (r) {
+    frm.events. get_party_account_ch(frm, function (r) {
       if (r.message) {
         frm.set_value("endorsed_party_account", r.message);
       }
     });
+  },
+  target_exchange_rate(frm){
+    if (frm.doc.target_exchange_rate != 1) {
+      var paid_amount = frm.doc.target_exchange_rate * frm.doc.received_amount
+      frm.set_value("paid_amount",paid_amount)
+      frm.refresh_field("paid_amount")
+      console.log("hellow",paid_amount)
+    }
+   
   },
   refresh(frm) {
     // your code here

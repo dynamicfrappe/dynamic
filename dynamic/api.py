@@ -104,7 +104,7 @@ def validate_active_domains(doc,*args,**kwargs):
         set_complicated_pundel_list(doc)
     
     if 'Terra' in DOMAINS:
-        #validate_sales_invoice(doc)
+        validate_sales_invoice(doc)
         pass
     if 'Gebco' in DOMAINS:
         if doc.maintenance_template:
