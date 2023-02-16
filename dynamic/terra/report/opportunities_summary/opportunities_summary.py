@@ -43,11 +43,11 @@ class opportunitiesummary(object):
 		if self.filters.get("to_date"):
 			conditions += " and oprt.creation <= '%s'"%self.filters.get("to_date")
 		sql_query_new = f"""
-				SELECT 'new' as type,Count(*) as Total, 
+				SELECT 'new' as type,Sum(IF(oprt.status IN ('Open','Converted','Lost'),1,0)) as Total, 
 				SUM(CASE
 				WHEN oprt.status='Open' THEN 1
 				ELSE 0
-				END) AS pending,
+				END)  AS pending,
 				SUM(CASE
 				WHEN oprt.status='Converted' THEN 1
 				ELSE 0
@@ -68,11 +68,11 @@ class opportunitiesummary(object):
 		if self.filters.get("from_date"):
 			conditions += " and oprt.creation < '%s'"%self.filters.get("from_date")
 		sql_query_new = f"""
-				SELECT 'previous' as type,Count(*) as Total, 
+				SELECT 'previous' as type,Sum(IF(oprt.status IN ('Open','Converted','Lost'),1,0)) as Total, 
 				SUM(CASE
 				WHEN oprt.status='Open' THEN 1
 				ELSE 0
-				END) AS pending,
+				END) AS pending ,
 				SUM(CASE
 				WHEN oprt.status='Converted' THEN 1
 				ELSE 0
