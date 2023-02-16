@@ -43,23 +43,23 @@ class opportunitiesummary(object):
 		if self.filters.get("to_date"):
 			conditions += " and oprt.creation <= '%s'"%self.filters.get("to_date")
 		sql_query_new = f"""
-				SELECT 'new' as type,Sum(IF(oprt.status IN ('Open','Converted','Lost'),1,0)) as Total, 
-				SUM(CASE
+				SELECT 'new' as type,COALESCE(COUNT(*), 0) as Total, 
+				COALESCE(SUM(CASE
 				WHEN oprt.status='Open' THEN 1
 				ELSE 0
-				END)  AS pending,
-				SUM(CASE
+				END),0)  AS pending,
+				COALESCE(SUM(CASE
 				WHEN oprt.status='Converted' THEN 1
 				ELSE 0
-				END) AS Converted,
-				SUM(CASE
+				END),0) AS Converted,
+				COALESCE(SUM(CASE
 				WHEN oprt.status='Lost' THEN 1
 				ELSE 0
-				END) AS Lost
+				END),0) AS Lost
 				FROM tabOpportunity as oprt
 				LEFT JOIN tabLead as lead
 				ON oprt.party_name=lead.name
-				WHERE {conditions}
+				WHERE {conditions} AND oprt.status IN ('Open','Converted','Lost')
 		""".format(conditions=conditions)
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 		return sql_data
@@ -68,23 +68,23 @@ class opportunitiesummary(object):
 		if self.filters.get("from_date"):
 			conditions += " and oprt.creation < '%s'"%self.filters.get("from_date")
 		sql_query_new = f"""
-				SELECT 'previous' as type,Sum(IF(oprt.status IN ('Open','Converted','Lost'),1,0)) as Total, 
-				SUM(CASE
+				SELECT 'previous' as type,COALESCE(COUNT(*), 0) as Total, 
+				COALESCE(SUM(CASE
 				WHEN oprt.status='Open' THEN 1
 				ELSE 0
-				END) AS pending ,
-				SUM(CASE
+				END),0 )AS pending ,
+				COALESCE(SUM(CASE
 				WHEN oprt.status='Converted' THEN 1
 				ELSE 0
-				END) AS Converted,
-				SUM(CASE
+				END), 0) AS Converted,
+				COALESCE(SUM(CASE
 				WHEN oprt.status='Lost' THEN 1
 				ELSE 0
-				END) AS Lost
+				END), 0) AS Lost
 				FROM tabOpportunity as oprt
 				LEFT JOIN tabLead as lead
 				ON oprt.party_name=lead.name
-				WHERE {conditions}
+				WHERE {conditions} AND oprt.status IN ('Open','Converted','Lost')
 		""".format(conditions=conditions)
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 		return sql_data

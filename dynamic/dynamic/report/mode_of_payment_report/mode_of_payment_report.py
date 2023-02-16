@@ -15,7 +15,7 @@ def get_balance(row, balance, debit_field, credit_field):
 
 	return balance
 
-def get_result_as_list(data, filters):
+def get_result_as_list(data, filters,oppening_balance=None):
 	balance, balance_in_account_currency = 0, 0
 	
 	for d in data:
@@ -25,13 +25,20 @@ def get_result_as_list(data, filters):
 		balance = get_balance(d, balance, 'debit', 'credit')
 		d['balance'] = balance
 
-		
-		
+	if oppening_balance:
+		oppening_balance_total = 0
+		for row in oppening_balance:
+			oppening_balance_total += (row.get('debit', 0) -  row.get('credit', 0))
+	
+		row = {"balance":oppening_balance_total,"voucher_type":"Opening"}
+		data.insert(0,row)
+		frappe.errprint(f'-{oppening_balance}->-\n-=={oppening_balance_total}')
 	return data
 
 
 
 def get_data(filters=None):
+	oppening_balance = ''
 	if filters.from_date > filters.to_date:
 		frappe.throw(_("From Date must be before To Date"))
 	gl_type=  filters.get("account_type") 
@@ -41,12 +48,19 @@ def get_data(filters=None):
 							`tabMode of Payment Account` WHERE parent = '{filters.get("mode_of_payment")}' )"""
 	
 	date_qyery = f"""  AND posting_date between date('{filters.from_date }')  AND  date('{filters.to_date }') """
-	sql_qery = f"""SELECT name as gl_entry , posting_date ,account , debit ,credit ,0 as balance  ,voucher_type 
+
+	base_query = f"""SELECT name as gl_entry , posting_date ,account , debit ,credit ,0 as balance  ,voucher_type 
 				FROM `tabGL Entry`  
-				 WHERE account in {accounts}
-	   """ +date_qyery
+				 WHERE account in {accounts} 
+	   """ 
+	sql_qery = base_query+date_qyery + "ORDER BY posting_date"
 	data = frappe.db.sql(sql_qery ,as_dict=1)
-	return (get_result_as_list(data , filters) )
+
+	if filters.get("mode_of_payment") :
+		oppening_balance = base_query + f"""  AND posting_date < '{filters.from_date }' """ + "ORDER BY posting_date"
+		oppening_balance = frappe.db.sql(oppening_balance ,as_dict=1)
+
+	return (get_result_as_list(data , filters,oppening_balance) )
 
 def get_columns(filters=None) :
 	currency = get_company_currency(filters["company"]) if filters else get_default_company()
@@ -89,7 +103,7 @@ def get_columns(filters=None) :
 			"fieldtype": "Float",
 			"width": 130
 		},
-			{
+		{
 			"label": _("Voucher Type"),
 			"fieldname": "voucher_type",
 			"width": 180
