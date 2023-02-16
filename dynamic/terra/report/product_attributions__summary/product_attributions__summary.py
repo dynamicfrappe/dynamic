@@ -49,8 +49,9 @@ class ProductAttributeSummary(object):
 			conditions += " and sinv_item.warehouse <= '%s'"%self.filters.get("warehouse")
 		if self.filters.get("item_group"):
 			conditions += " and sinv_item.item_group <= '%s'"%self.filters.get("item_group")
-			item_group += f',{self.filters.get("item_group")}'
-		sql_query_new = f"""
+			item_group = ', "%s"'%(self.filters.get("item_group"))
+
+		sql_query_new =  f"""
 				select sales_team.sales_person ,sales_team.parent,bin.actual_qty,
 				sinv_item.item_code,sinv_item.item_name,SUM(sinv_item.amount)as`Net_Sales`,SUM(sinv_item.qty)qty,COUNT(sales_team.parent)as `no.invoices`,
 				sinv_item.rate,sinv_item.amount 
@@ -64,7 +65,9 @@ class ProductAttributeSummary(object):
 				ON bin.item_code=sinv_item.item_code AND sinv_item.warehouse=bin.warehouse
 				WHERE {conditions}
 				group BY sales_team.sales_person {item_group}
-		""".format(conditions=conditions)
+		"""
+		frappe.errprint(sql_query_new)
+		# sql_query_new =sql_query_new.format(conditions=conditions)
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 		return sql_data
 		

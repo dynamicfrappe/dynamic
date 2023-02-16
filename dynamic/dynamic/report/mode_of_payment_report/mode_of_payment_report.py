@@ -17,7 +17,14 @@ def get_balance(row, balance, debit_field, credit_field):
 
 def get_result_as_list(data, filters,oppening_balance=None):
 	balance, balance_in_account_currency = 0, 0
+	oppening_balance_total = 0
+	if oppening_balance:
+		for row in oppening_balance:
+			oppening_balance_total += (row.get('debit', 0) -  row.get('credit', 0))
 	
+	row = {"balance":oppening_balance_total,"voucher_type":"Opening"}
+	balance = oppening_balance_total or 0
+
 	for d in data:
 		if not d.get('posting_date'):
 			balance, balance_in_account_currency = 0, 0
@@ -25,14 +32,7 @@ def get_result_as_list(data, filters,oppening_balance=None):
 		balance = get_balance(d, balance, 'debit', 'credit')
 		d['balance'] = balance
 
-	if oppening_balance:
-		oppening_balance_total = 0
-		for row in oppening_balance:
-			oppening_balance_total += (row.get('debit', 0) -  row.get('credit', 0))
-	
-		row = {"balance":oppening_balance_total,"voucher_type":"Opening"}
-		data.insert(0,row)
-		frappe.errprint(f'-{oppening_balance}->-\n-=={oppening_balance_total}')
+	data.insert(0,row)
 	return data
 
 
