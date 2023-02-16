@@ -66,4 +66,3 @@ def add_properties_journal_auto():
 		doc.save()
 	except Exception as e:
 		frappe.throw(_(str(e)))
-	pass
