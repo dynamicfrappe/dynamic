@@ -55,7 +55,7 @@ class SalesTarget(object):
 						,COUNT(distinct sinv_items.item_code) no_items
 						,SUM(sinv_items.qty) total_items_qty
 						,SUM(DISTINCT sinv.grand_total) net_sales
-						(SUM(DISTINCT sinv.grand_total)/COUNT(COUNT(DISTINCT sinv.name)))atv
+						,(SUM(DISTINCT sinv.grand_total)/COUNT(DISTINCT sinv.name))atv
 						,SUM(CASE 
 							WHEN sinv.docstatus = 1 AND  sinv.status<>'Return'
 							THEN `sales_team`.`allocated_amount`

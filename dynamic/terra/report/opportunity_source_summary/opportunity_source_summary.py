@@ -31,7 +31,7 @@ class OpportuntiySourceSummary(object):
 		conditions = "  1=1 "
 		get_new = self.get_new_opportunity(conditions)
 
-		frappe.errprint(f"all is ==> {get_new}")
+		# frappe.errprint(f"all is ==> {get_new}")
 		
 		return get_new
 	
@@ -61,7 +61,7 @@ class OpportuntiySourceSummary(object):
 				GROUP  BY Quotation.`source`,sales_person.`sales_person`
 		""".format(conditions=conditions)
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
-		frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
+		# frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
 		return sql_data
 	
 	def get_columns(self):

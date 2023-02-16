@@ -32,7 +32,7 @@ class ProductAttributeSummary(object):
 		conditions = "  1=1 "
 		get_new = self.get_new_opportunity(conditions)
 
-		frappe.errprint(f"all is ==> {get_new}")
+		# frappe.errprint(f"all is ==> {get_new}")
 		return get_new
 	
 	def get_new_opportunity(self,conditions):
@@ -55,7 +55,7 @@ class ProductAttributeSummary(object):
 				sinv_item.item_code,sinv_item.item_name,SUM(sinv_item.amount)as`Net_Sales`,SUM(sinv_item.qty)qty,COUNT(sales_team.parent)as `no.invoices`,
 				sinv_item.rate,sinv_item.amount 
 				,sinv_item.qty ,sinv_item.item_group,sinv_item.cost_center,sinv_item.warehouse
-				from `tabSales Person` sales_team 
+				from `tabSales Team` sales_team 
 				INNER JOIN `tabSales Invoice` invoice
 				ON invoice.name=sales_team.parent 
 				INNER JOIN `tabSales Invoice Item` sinv_item 
