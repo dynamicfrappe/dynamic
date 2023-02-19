@@ -1125,5 +1125,40 @@ def lead_before_insert(doc,fun=''):
     if "Elevana" in active_domains :
         from dynamic.elevana.api import elevana_lead_before_insert
         elevana_lead_before_insert(doc,fun)
+@frappe.whitelist()  
+def recalculate_delivered_qty():
+    sql = """ select name from `tabSales Order Approval` where status not in ('Draft','Cancelled')"""
+    data = frappe.db.sql(sql,as_dict=1)
+    for d in data:
+        doc = frappe.get_doc("Sales Order Approval",d.name)
+        total_delivered_qty = 0
+        for item in doc.items:
+            delivered_qty = item.approved_qty - item.remaining_qty
+            total_delivered_qty += delivered_qty
+        # update delivered qty
+        update_sql = f""" update `tabSales Order Approval` set total_delivered_qty='{total_delivered_qty}' where name='{d.name}'"""
+        frappe.db.sql(update_sql)
+        frappe.db.commit()
+
+
+
+    # updae status
+    res = frappe.db.sql("""select name,total_delivered_qty,total_qty from `tabSales Order Approval` where status not in ('Draft','Cancelled') """,as_dict=1)
+    for r in res:
+        update_status_sql = ""
+        if  float(r.total_delivered_qty or 0) == 0:
+            print("from delivered if")
+            update_status_sql  = f""" update `tabSales Order Approval` set status='To Deliver' where name='{r.name}'"""
+        elif  r.total_qty == r.total_delivered_qty and r.total_delivered_qty !=0:
+            print("from completed if")
+            update_status_sql  = f""" update `tabSales Order Approval` set status='Completed' where name='{r.name}'"""
+        elif r.total_delivered_qty < r.total_qty and r.total_delivered_qty !=0:
+            update_status_sql  = f""" update `tabSales Order Approval` set status='Partial Delivered' where name='{r.name}' """
+        
+        frappe.db.sql(update_status_sql)
+        frappe.db.commit()
+    return {"status":"success"}
+
+
 
 
