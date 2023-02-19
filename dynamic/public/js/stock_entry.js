@@ -74,6 +74,7 @@ frappe.ui.form.on("Stock Entry", {
     set_property(frm){
       var ds_warehouse_reqrd = (frm.doc.add_to_transit == 1) ? 1:0
       frm.set_df_property("ds_warehouse", "reqd", ds_warehouse_reqrd )
+      frm.refresh()
     },
     comparison : function (frm) {
         if(frm.doc.against_comparison){
