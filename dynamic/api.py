@@ -478,7 +478,14 @@ def create_reservation_validate(self,*args , **kwargs):
 def add_row_for_reservation(self):
     # if not self.reservation:
     for item in self.items:
-        if not item.reservation:
+        sql = f"""
+        select soi.reservation from `tabSales Order` so
+        INNER JOIN`tabSales Order Item` soi 
+        ON soi.parent = '{self.name}' AND soi.item_code= '{item.item_code}' limit 1
+        """
+        sql_reserv = frappe.db.sql(sql)
+        print('\n\n\nxxxx--->',sql_reserv,'\n\n')
+        if not item.reservation or not len(sql_reserv):
             reserv_doc = frappe.new_doc('Reservation')
             reserv_doc.item_code = item.item_code
             reserv_doc.status = 'Active'
@@ -491,9 +498,6 @@ def add_row_for_reservation(self):
             reserv_doc.save()
             item.db_set('reservation' ,reserv_doc.name )
             item.db_set('reservation_status' ,reserv_doc.status )
-            # item.reservation = reserv_doc.name
-            # item.reservation_status = reserv_doc.status
-            # item.save()
             reserv_doc.db_set('sales_order',self.name)
             frappe.db.commit()
 

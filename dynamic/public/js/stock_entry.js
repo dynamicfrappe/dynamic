@@ -1,5 +1,6 @@
 
 frappe.ui.form.on("Stock Entry", {
+
     // setup :function(frm){
 
     //   frappe.call({
@@ -65,6 +66,14 @@ frappe.ui.form.on("Stock Entry", {
     },
     refresh:function(frm){
       frm.events.trea_setup(frm)
+      frm.events.set_property(frm)
+    },
+    add_to_transit : function (frm) {
+      frm.events.set_property(frm)
+    },
+    set_property(frm){
+      var ds_warehouse_reqrd = (frm.doc.add_to_transit == 1) ? 1:0
+      frm.set_df_property("ds_warehouse", "reqd", ds_warehouse_reqrd )
     },
     comparison : function (frm) {
         if(frm.doc.against_comparison){
