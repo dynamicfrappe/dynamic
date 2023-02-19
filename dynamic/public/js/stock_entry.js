@@ -34,7 +34,6 @@ frappe.ui.form.on("Stock Entry", {
         }
       if (frm.doc.__islocal && frm.doc.outgoing_stock_entry) {
 
-
         frappe.call({
           method: 'frappe.client.get_value',
           "args":{
@@ -74,7 +73,7 @@ frappe.ui.form.on("Stock Entry", {
     set_property(frm){
       var ds_warehouse_reqrd = (frm.doc.add_to_transit == 1) ? 1:0
       frm.set_df_property("ds_warehouse", "reqd", ds_warehouse_reqrd )
-      frm.refresh()
+      frm.refresh_field("ds_warehouse")
     },
     comparison : function (frm) {
         if(frm.doc.against_comparison){
