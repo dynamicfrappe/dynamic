@@ -1191,7 +1191,7 @@ def lead_before_insert(doc,fun=''):
         
 @frappe.whitelist()  
 def recalculate_delivered_qty():
-    sql = """ select name from `tabSales Order Approval` where status not in ('Draft','Cancelled')"""
+    sql = """ select name from `tabSales Order Approval` where status not in ('Draft','Cancelled','Completed')"""
     data = frappe.db.sql(sql,as_dict=1)
     for d in data:
         doc = frappe.get_doc("Sales Order Approval",d.name)
@@ -1207,7 +1207,7 @@ def recalculate_delivered_qty():
 
 
     # updae status
-    res = frappe.db.sql("""select name,total_delivered_qty,total_qty from `tabSales Order Approval` where status not in ('Draft','Cancelled') """,as_dict=1)
+    res = frappe.db.sql("""select name,total_delivered_qty,total_qty from `tabSales Order Approval` where status not in ('Draft','Cancelled','Completed') """,as_dict=1)
     for r in res:
         update_status_sql = ""
         if  float(r.total_delivered_qty or 0) == 0:
