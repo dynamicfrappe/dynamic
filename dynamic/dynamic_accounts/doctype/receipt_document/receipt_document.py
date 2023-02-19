@@ -119,6 +119,7 @@ class ReceiptDocument(Document):
 				"reference_name": self.name,
 				"party_type": account_row.party_type,
 				"party": account_row.party,
+				"cost_center": account_row.cost_center,
 			})
 
 		je.multi_currency = 1

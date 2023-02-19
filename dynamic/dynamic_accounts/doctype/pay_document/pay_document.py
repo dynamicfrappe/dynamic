@@ -71,7 +71,6 @@ class PayDocument(Document):
                     account_currency, company_currency, self.posting_date)
                 amount_in_account_currency = flt(
                     self.amount) * flt(account_exchange_rate)
-
         je.append("accounts", {
             "account": self.account,
             "against_account" : " , ".join([x.account for x in self.accounts]),
@@ -113,6 +112,7 @@ class PayDocument(Document):
                 "reference_name": self.name,
                 "party_type": account_row.party_type,
                 "party": account_row.party,
+                "cost_center": account_row.cost_center,
             })
 
         je.multi_currency = 1

@@ -481,10 +481,10 @@ def add_row_for_reservation(self):
         sql = f"""
         select soi.reservation from `tabSales Order` so
         INNER JOIN`tabSales Order Item` soi 
-        ON soi.parent = '{self.name}' AND soi.item_code= '{item.item_code}' limit 1
+        ON soi.parent = '{self.name}' AND soi.item_code= '{item.item_code}'
+        where so.name = '{self.name}'
         """
         sql_reserv = frappe.db.sql(sql)
-        print('\n\n\nxxxx--->',sql_reserv,'\n\n')
         if not item.reservation or not len(sql_reserv):
             reserv_doc = frappe.new_doc('Reservation')
             reserv_doc.item_code = item.item_code

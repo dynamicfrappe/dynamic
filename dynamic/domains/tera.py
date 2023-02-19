@@ -972,6 +972,17 @@ data = {
                 "label": "Cost Center",
                 "options":"Cost Center"
             },
+        ],
+        "Pay and Receipt Account":[
+             {
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "amount",
+                "options":"Cost Center",
+                "in_list_view":1,
+                "columns":1
+            },
         ]
 
     },
