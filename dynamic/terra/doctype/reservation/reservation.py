@@ -14,7 +14,6 @@ class Reservation(Document):
 		stock_sql = self.stock_sql()
 		if stock_sql and len(stock_sql) > 0 :
 			if stock_sql[0].get("qty") == 0 or float( stock_sql[0].get("qty")  or 0 ) < self.reservation_amount  :
-				# return {'falge':False,'msg':""" no stock value in warehouse {self.warehouse_source} for item {self.item_code}  """}
 				frappe.throw(_(f""" stock value in warehouse {self.warehouse_source} = {stock_sql[0].get("qty")} 
 				  and you requires  {self.reservation_amount} for ITem {self.item_code}  """))
 			self.warehouse = [] #?add row
@@ -27,7 +26,7 @@ class Reservation(Document):
 			row.available_qty_atfer___reservation = stock_sql[0].get("qty") - self.reservation_amount
 		if  not stock_sql or len(stock_sql) == 0 :
 			# return {'falge':False,'msg':""" no stock value in warehouse {self.warehouse_source} for item {self.item_code}  """}
-			frappe.throw(_(f""" xxxno stock value in warehouse {self.warehouse_source} for item {self.item_code}  """))
+			frappe.throw(_(f"""no stock value in warehouse {self.warehouse_source} for item {self.item_code}  """))
 
 	def stock_sql(self):
 		"""get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
@@ -51,6 +50,13 @@ class Reservation(Document):
                     AND c.name <> "{self.name}"
 					
 					""" ,as_dict=1)
+		
+		if data and len(data) > 0 :
+			if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < self.reservation_amount  :
+				frappe.throw(_(f""" stock value in warehouse {self.warehouse_source} = {data[0].get("qty")} 
+				  and you requires  {self.reservation_amount} for ITem {self.item_code}  """))
+		if  not data or len(data) == 0 :
+			frappe.throw(_(f"""no stock value in warehouse {self.warehouse_source} for item {self.item_code}  """))
 
 		return data
 
@@ -114,7 +120,6 @@ class Reservation(Document):
 		target ='warehouse' if not self.order_source else 'pur'
 		if target == 'warehouse' :
 			data = self.validate_warehouse()
-			print('\n\n\n',data)
 		if target == 'pur':
 			data = self.validate_purchase_order()
 		self.total_warehouse_reseved()
