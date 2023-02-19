@@ -21,6 +21,9 @@
   "country",
   "column_break_13",
   "address_line",
+  "item_groups_section",
+  "item_groups",
+  "section_break_17",
   "amended_from"
  ],
  "fields": [
@@ -120,12 +123,27 @@
    "in_list_view": 1,
    "label": "Marketer Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "item_groups_section",
+   "fieldtype": "Section Break",
+   "label": "Item Groups"
+  },
+  {
+   "fieldname": "item_groups",
+   "fieldtype": "Table",
+   "label": "Item Groups",
+   "options": "Item Group Detail"
+  },
+  {
+   "fieldname": "section_break_17",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-19 14:47:58.765189",
+ "modified": "2023-02-19 16:18:19.080215",
  "modified_by": "Administrator",
  "module": "Elevana",
  "name": "Marketer Request",

@@ -15,6 +15,7 @@ frappe.ui.form.on('Marketer Request', {
 			"city",
 			"country",
 			"address_line",
+			"item_groups"
 		]
 		required_fields.forEach((field) => {
 			frm.set_df_property(field, "reqd", frm.doc.docstatus == 0)

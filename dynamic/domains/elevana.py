@@ -67,7 +67,20 @@ data = {
                 "label": "Reference Name",
                 "options": "ref_doctype",
                 "read_only": "1",
-            }
+            },
+            {
+                "fieldname": "item_groups_section_break",
+                "fieldtype": "Section Break",
+                "insert_after": "targets",
+                "label": "Item Groups",
+            },
+            {
+                "fieldname": "item_groups",
+                "fieldtype": "Table",
+                "insert_after": "item_groups_section_break",
+                "label": "Item Groups",
+                "options": "Item Group Detail",
+            },
         ],
         'Quotation': [
             {
