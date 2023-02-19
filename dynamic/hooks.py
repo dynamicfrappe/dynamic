@@ -67,7 +67,8 @@ override_doctype_class = {
     "Payment Entry" : "dynamic.override_doctype_class.PaymentEntry",
     "Quotation" : "dynamic.override_doctype_class.Quotation",
     "Sales Order" : "dynamic.override_doctype_class.SalesOrder",
-    "Salary Slip" : "dynamic.override_doctype_class.SalarySlip"
+    "Salary Slip" : "dynamic.override_doctype_class.SalarySlip",
+    # "Lead" : "dynamic.override_doctype_class.Lead"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
@@ -207,9 +208,10 @@ doc_events = {
     "Accounts Settings":{
         "validate" : "dynamic.api.onsave_account_settings"
     },
-    # "Lead":{
-    #     "validate":"dynamic.ifi.api.lead_contact_by_email"
-    # }
+    "Lead":{
+        # "validate":"dynamic.ifi.api.lead_contact_by_email"
+        "before_insert" :"dynamic.api.lead_before_insert"
+    }
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
     #  },Installations Furniture
@@ -319,6 +321,7 @@ domains = {
     'Merge Entries':'dynamic.domains.merge_entries' ,
     'WEH' :"dynamic.domains.weh",
     'Owais' :"dynamic.domains.owais",
+    'Elevana' :"dynamic.domains.elevana",
 }
 
 # domain Conatin

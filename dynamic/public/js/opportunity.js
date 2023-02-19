@@ -8,7 +8,7 @@ frappe.ui.form.on("Opportunity", {
                 if (r.message && r.message.length) {
                     if (r.message.includes("Terra")) {
                         frm.add_custom_button(
-                            __("Action"),
+                            __("Action","Elevana"),
                             function () {
                                 frappe.model.open_mapped_doc({
                                     method:

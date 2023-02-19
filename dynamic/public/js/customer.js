@@ -19,7 +19,7 @@ frappe.ui.form.on("Customer", {
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
                 if (r.message && r.message.length) {
-                    if (r.message.includes("Terra")) {
+                    if (r.message.includes("Terra") || r.message.includes("Elevana")) {
                         frm.add_custom_button(
                             __("Action"),
                             function () {

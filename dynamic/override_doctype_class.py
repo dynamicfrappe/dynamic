@@ -5,6 +5,7 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry as
 from erpnext.selling.doctype.sales_order.sales_order import SalesOrder as ERPNextSalesOrder
 from erpnext.selling.doctype.quotation.quotation import Quotation as ERPNextQuotation
 from erpnext.payroll.doctype.salary_slip.salary_slip import SalarySlip as ERPNextSalarySlip
+from erpnext.crm.doctype.lead.lead import Lead as ERPNextLead
 
 
 # Default ERP Class
@@ -12,6 +13,7 @@ PaymentEntry = ERPNextPaymentEntry
 SalesOrder = ERPNextSalesOrder
 Quotation = ERPNextQuotation
 SalarySlip = ERPNextSalarySlip
+Lead = ERPNextLead
 
 
 
@@ -59,6 +61,13 @@ if "Terra" in active_domains:
 
 if "Dynamic HR" in active_domains :
     pass
+
+
+
+# if "Elevana" in active_domains :
+
+#     from dynamic.elevana.doctype.lead.lead import Lead as ElevanaLead
+#     Lead = ElevanaLead
 
 
 if "Dynamic Payroll" in active_domains :

@@ -11,7 +11,7 @@ frappe.ui.form.on("Lead", {
                         if (r.message.includes("IFI")) {
                             window.open(frappe.model.scrub(frm.doc.url));
                         }
-                        if (r.message.includes("Terra")) {
+                        if (r.message.includes("Terra") || r.message.includes("Elevana")) {
                             frm.add_custom_button(
                                 __("Action"),
                                 function () {
@@ -42,7 +42,7 @@ frappe.ui.form.on("Lead", {
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
                 if (r.message && r.message.length) {
-                    if (r.message.includes("Terra")) {
+                    if (r.message.includes("Terra") || r.message.includes("Elevana")) {
                         frm.add_custom_button(
                             __("Action"),
                             function () {
@@ -68,15 +68,21 @@ frappe.ui.form.on("Lead", {
             method: "dynamic.ifi.api.make_opportunity",
             frm: cur_frm
         })
+    },
+    make_quotation_elevana(frm) {
+        frappe.model.open_mapped_doc({
+            method: "dynamic.elevana.api.make_quotation",
+            frm: cur_frm
+        })
     }
 })
 
 
 
 const LeadController_Extend = erpnext.LeadController.extend({
-  
-	refresh: function(frm) {
-		this._super()
+
+    refresh: function (frm) {
+        this._super()
         // let doc = this.frm.doc
         frappe.call({
             method: "dynamic.api.get_active_domains",
@@ -84,31 +90,39 @@ const LeadController_Extend = erpnext.LeadController.extend({
                 if (r.message && r.message.length) {
                     if (r.message.includes("IFI")) {
                         if (!frm.__islocal && frm.__onload && !frm.__onload.is_customer) {
-                            cur_frm.page.remove_inner_button('Opportunity','Create')
-                            cur_frm.add_custom_button(__("Opportunity"), function(){
-                                cur_frm.events.make_opportunity(cur_frm)   
+                            cur_frm.page.remove_inner_button('Opportunity', 'Create')
+                            cur_frm.add_custom_button(__("Opportunity"), function () {
+                                cur_frm.events.make_opportunity(cur_frm)
+                            }, __("Create"));
+                        }
+                    }
+                    if (r.message.includes("Elevana")) {
+                        if (!frm.__islocal && frm.__onload && !frm.__onload.is_customer) {
+                            cur_frm.page.remove_inner_button('Quotation', 'Create')
+                            cur_frm.add_custom_button(__("Quotation"), function () {
+                                cur_frm.events.make_quotation_elevana(cur_frm)
                             }, __("Create"));
                         }
                     }
                 }
             }
         })
-        
-     
-	},
-        
-   
+
+
+    },
+
+
 })
 
 $.extend(
-	cur_frm.cscript,
-	new LeadController_Extend({frm: cur_frm}),
+    cur_frm.cscript,
+    new LeadController_Extend({ frm: cur_frm }),
 );
 
-var create_ifi_sales_order = function() {
+var create_ifi_sales_order = function () {
 
     frappe.model.open_mapped_doc({
-		method: "dynamic.ifi.api.make_sales_order",
-		frm: cur_frm
-	})
+        method: "dynamic.ifi.api.make_sales_order",
+        frm: cur_frm
+    })
 }

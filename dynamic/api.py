@@ -3,6 +3,7 @@ from warnings import filters
 from dynamic.dynamic_accounts.print_format.invoice_tax.invoice_tax import get_invoice_tax_data
 import frappe 
 from erpnext.accounts.party import get_party_account
+from frappe.model.mapper import get_mapped_doc
 from frappe.utils import add_days, cint, cstr, flt, get_link_to_form, getdate, nowdate, strip_html
 from frappe import _
 import codecs
@@ -173,7 +174,6 @@ def validate_delivery_note(doc,*args,**kwargs):
         # frappe.throw('Validate delivery Note')
         validate_delivery_notes_sal_ord(doc)
         #check_so_approval(doc)
-
 
 
 
@@ -1115,5 +1115,15 @@ def onsave_account_settings(doc,*args,**kwargs):
                 data = data.replace(y,x)
             with open("../apps/erpnext/erpnext/accounts/general_ledger.py", 'w') as file:
                 file.write(data)
+
+
+
+
+
+def lead_before_insert(doc,fun=''):
+    active_domains = frappe.get_active_domains()
+    if "Elevana" in active_domains :
+        from dynamic.elevana.api import elevana_lead_before_insert
+        elevana_lead_before_insert(doc,fun)
 
 
