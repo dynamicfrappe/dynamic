@@ -1125,6 +1125,9 @@ def lead_before_insert(doc,fun=''):
     if "Elevana" in active_domains :
         from dynamic.elevana.api import elevana_lead_before_insert
         elevana_lead_before_insert(doc,fun)
+
+
+        
 @frappe.whitelist()  
 def recalculate_delivered_qty():
     sql = """ select name from `tabSales Order Approval` where status not in ('Draft','Cancelled')"""
