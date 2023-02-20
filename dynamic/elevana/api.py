@@ -102,7 +102,7 @@ def get_customer_name (*args , **kwargs)  :
             return
         
         if user_extension :
-            user = frappe.db.get_value("User" , {"extension" : user_extension})
+            user = frappe.db.get_value("User" , {"extension" : user_extension},'name')
             if user :
                 phone_call = frappe.new_doc("Phone Call")
                 phone_call.posting_date = nowdate()
