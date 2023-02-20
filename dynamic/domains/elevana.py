@@ -24,6 +24,15 @@ data = {
                 # "permlevel":"1"
             }
         ],
+        'User' :[
+            {
+                "fieldname": "extension",
+                "fieldtype": "Data",
+                "insert_after": "last_name",
+                "label": "User Extension",
+                "unique": "1",
+            },
+        ],
         'Customer': [
             {
                 "fieldname": "sales_person",
@@ -36,7 +45,7 @@ data = {
             {
                 "fieldname": "ref_doctype",
                 "fieldtype": "Link",
-                "insert_after": "sales_person",
+                "insert_after": "extension",
                 "label": "Reference Type",
                 "options": "DocType",
                 "read_only": "1",
