@@ -158,8 +158,18 @@ data = {
                 "label": "Default Marketer Customer Group",
                 "options": "Customer Group"
             }
+        ],
+        'Loyalty Program Collection' :[
+            {
+                "fieldname": "return_collection_factor",
+                "fieldtype": "Currency",
+                "insert_after": "collection_factor",
+                "label": "Return Collection Factor (=1 LP)",
+                "reqd":"1",
+                "in_list_view":"1",
+                "columns" : "3"
+            }
         ]
-
     },
     "properties": [
         {

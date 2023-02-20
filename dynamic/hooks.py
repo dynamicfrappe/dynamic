@@ -68,6 +68,7 @@ override_doctype_class = {
     "Quotation" : "dynamic.override_doctype_class.Quotation",
     "Sales Order" : "dynamic.override_doctype_class.SalesOrder",
     "Salary Slip" : "dynamic.override_doctype_class.SalarySlip",
+    "Sales Invoice": "dynamic.override_doctype_class.SalesInvoice",
     # "Lead" : "dynamic.override_doctype_class.Lead"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
