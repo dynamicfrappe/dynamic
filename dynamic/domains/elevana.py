@@ -82,6 +82,25 @@ data = {
                 "options": "Item Group Detail",
             },
         ],
+        'Coupon Code': [
+            {
+                "fieldname": "ref_doctype",
+                "fieldtype": "Link",
+                "insert_after": "amended_from",
+                "label": "Reference Type",
+                "options": "DocType",
+                "read_only": "1",
+            },
+            {
+                "fieldname": "ref_docname",
+                "fieldtype": "Dynamic Link",
+                "insert_after": "ref_doctype",
+                "label": "Reference Name",
+                "options": "ref_doctype",
+                "read_only": "1",
+            }
+        ],
+        
         'Quotation': [
             {
                 "fieldname": "sales_team_section_break",
