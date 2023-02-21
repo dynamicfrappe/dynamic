@@ -39,9 +39,26 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Items and Pricing",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Coupon Group",
+   "link_to": "Coupon Group",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-02-19 14:46:48.089692",
+ "modified": "2023-02-20 12:07:28.414156",
  "modified_by": "Administrator",
  "module": "Elevana",
  "name": "Elevana",

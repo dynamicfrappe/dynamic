@@ -1,6 +1,7 @@
 import json
 import frappe
 
+from erpnext.accounts.doctype.sales_invoice.sales_invoice import SalesInvoice as ERPNextSalesInvoice
 from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry as ERPNextPaymentEntry
 from erpnext.selling.doctype.sales_order.sales_order import SalesOrder as ERPNextSalesOrder
 from erpnext.selling.doctype.quotation.quotation import Quotation as ERPNextQuotation
@@ -14,6 +15,7 @@ SalesOrder = ERPNextSalesOrder
 Quotation = ERPNextQuotation
 SalarySlip = ERPNextSalarySlip
 Lead = ERPNextLead
+SalesInvoice = ERPNextSalesInvoice
 
 
 
@@ -64,10 +66,10 @@ if "Dynamic HR" in active_domains :
 
 
 
-# if "Elevana" in active_domains :
+if "Elevana" in active_domains :
 
-#     from dynamic.elevana.doctype.lead.lead import Lead as ElevanaLead
-#     Lead = ElevanaLead
+    from dynamic.elevana.doctype.sales_invoice.sales_invoice import SalesInvoice as ElevanaSalesInvoice
+    SalesInvoice = ElevanaSalesInvoice
 
 
 if "Dynamic Payroll" in active_domains :

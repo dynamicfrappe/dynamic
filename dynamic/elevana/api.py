@@ -5,6 +5,8 @@ from werkzeug.wrappers import Response
 
 import json
 
+from frappe.utils.data import nowdate
+
 def elevana_lead_before_insert(doc,fun=''):
     set_sales_person(doc)
 
@@ -91,13 +93,28 @@ def get_customer_name (*args , **kwargs)  :
 
     if data :
         #check phone number 
-        if not data.get("phone"):
+        phone_number = data.get("phone")
+        user_extension = data.get("user_extension")
+        if not phone_number:
             # frappe.local.response['message'] = "Customer name required"
             # frappe.local.response['http_status_code'] = 400 
             respone.data = "error!"
             return
+        
+        if user_extension :
+            user = frappe.db.get_value("User" , {"extension" : user_extension},'name')
+            if user :
+                phone_call = frappe.new_doc("Phone Call")
+                phone_call.posting_date = nowdate()
+                phone_call.naming_series = 'PHN-CLL-.####'
+                phone_call.user = user
+                phone_call.phone_number = phone_number
+                phone_call.save()
         sql = frappe.db.sql(f""" SELECT link_title FROM 
-            `tabDynamic Link` WHERE parent in  (SELECT parent From `tabContact Phone` WHERE phone =  "{data.get('phone')}" ) """ ,as_dict =1)
+            `tabDynamic Link` WHERE parent in  (SELECT parent From `tabContact Phone` WHERE phone =  "{phone_number}" ) """ ,as_dict =1)
+        
         if sql and len(sql) > 0:
             respone.data = str(sql[-1].get("link_title"))
-            return respone
+        else :
+            respone.data = str(phone_number)
+        return respone
