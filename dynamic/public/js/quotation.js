@@ -35,19 +35,27 @@ frappe.ui.form.on("Quotation",{
                     }
                 }
                 if (r.message.includes("IFI")) {
-                    // frm.add_custom_button("test qt1",()=>{
-                    //     frappe.call({
-                    //         method:"dynamic.ifi.api.testalert",//"dynamic.ifi.api.testalert",
-                    //         args:{
-                    //             frm_name:frm.doc.name,
-                    //         },
-                    //         callback:function(r){
-                    //             // frm.refresh()
-                    //         }
-
-                    //     })
-
-                    // })
+                    if(frm.doc.docstatus == 1){
+                        frm.add_custom_button("Potential",()=>{
+                            frappe.confirm('Are you sure you want to Potential quotation',
+                                () => {
+                                    frappe.call({
+                                        method:"dynamic.ifi.api.set_potential_status",
+                                        args:{
+                                            frm_name:frm.doc.name,
+                                        },
+                                        callback:function(r){
+                                             frm.refresh()
+                                        }
+            
+                                    })
+                                }, () => {
+                                    // action to perform if No is selected
+                                })
+    
+                        })
+                    }
+                    
                     
                     // if (frm.doc.crean == 'Yes' && frm.doc.crean_amount > 0) {
                     //     frappe.call({
@@ -64,12 +72,12 @@ frappe.ui.form.on("Quotation",{
                     // }
                     // if (frm.doc.docstatus == 1 && frm.doc.status !== "Rejected") {
                     //     frm.add_custom_button(__('Reject'),()=>{
-                    //         frappe.confirm('Are you sure you want to Reject',
-                    //             () => {
-                    //                 frm.events.reject_quotation(frm)
-                    //             }, () => {
-                    //                 // action to perform if No is selected
-                    //             })
+                            // frappe.confirm('Are you sure you want to Reject',
+                            //     () => {
+                            //         frm.events.reject_quotation(frm)
+                            //     }, () => {
+                            //         // action to perform if No is selected
+                            //     })
                     //     },__('Create'))
 
                     //     // frm.add_custom_button(__('Reject2'),()=>{                    

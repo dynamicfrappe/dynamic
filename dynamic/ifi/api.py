@@ -1077,3 +1077,9 @@ def make_quotation(source_name, target_doc=None):
 	)
 
 	return doclist
+
+@frappe.whitelist()
+def set_potential_status(frm_name):
+	doc = frappe.get_doc('Quotation',frm_name)
+	doc.db_set('status','Potential')
+	return True

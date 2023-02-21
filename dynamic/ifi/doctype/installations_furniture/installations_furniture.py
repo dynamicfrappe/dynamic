@@ -31,6 +31,8 @@ class InstallationsFurniture(Document):
 	def on_trash(self):
 		self.update_so_inst_status(delete=True)
 
+
+
 	def before_submit(self):
 		if self.sales_order:
 			sales_order_doc = frappe.get_doc('Sales Order',self.sales_order)

@@ -500,8 +500,24 @@ data = {
         "property_type": "Text",
         "value": "0",
         },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "status",
+        "property": "options",
+        "property_type": "Text",
+        "value": "\nDraft\nOpen\nReplied\nOrdered\nLost\nCancelled\nExpired\nPotential",
+
+        },
         
     ],
   
     'on_setup': 'dynamic.ifi.setup.setup_ifi'
 }
+
+
+
+
+
+
+
