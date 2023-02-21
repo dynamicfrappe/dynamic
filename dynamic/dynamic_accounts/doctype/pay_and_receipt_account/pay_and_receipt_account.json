@@ -10,6 +10,7 @@
   "party_type",
   "party",
   "amount",
+  "cost_center",
   "column_break_3",
   "currency",
   "base_amount",
@@ -89,12 +90,18 @@
    "in_standard_filter": 1,
    "label": "Party",
    "options": "party_type"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-03-21 11:32:22.483212",
+ "modified": "2023-02-21 15:56:28.906071",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Pay and Receipt Account",

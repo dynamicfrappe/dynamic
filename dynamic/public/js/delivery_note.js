@@ -49,15 +49,3 @@ frappe.ui.form.on("Delivery Note", {
 
 
 
-
-// $.extend(erpnext.delivery_note, {
-//   setup: function(doc) {
-// 		this._super(doc);
-// 		console.log('3333')
-// 	},
-// 	refresh: function(doc, dt, dn) {
-// 		var me = this;
-// 		this._super();
-// 		console.log('44444')
-//   }
-// })
