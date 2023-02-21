@@ -24,7 +24,15 @@ frappe.ui.form.on("Sales Order", {
       "Cheque": "Cheque",
     };
   },
-  refresh: function (frm) {
+  refresh: function (frm) {    
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message.includes("Terra") && frm.doc.docstatus == 2) {
+            frm.page.clear_primary_action();  
+        }
+      }
+    })
     frm.events.add_cheque_button(frm);
     frm.events.add_installation_button(frm);
     frm.events.add_furniture_installation_button(frm);
