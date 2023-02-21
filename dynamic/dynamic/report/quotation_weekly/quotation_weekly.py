@@ -43,8 +43,6 @@ class Analytics(object):
 				"Ordered",
 				"Lost",
 				"Cancelled",
-				"Expired",
-				"Rejected",
 				"Potential"
 			]
 		for status in self._status:
@@ -72,7 +70,7 @@ class Analytics(object):
 			condition += " AND name = '%s' "%(self.filters.get("quotation"))
 
 		sql = """SELECT name as entity,quotation_to,{date_field}, 1 as value_field ,status FROM `tabQuotation`
-			{condition} AND status IN('Draft','Open','Ordered','Lost','Rejected','Potential')
+			{condition} AND status IN('Draft','Open','Ordered','Lost','Potential')
 		""".format(condition=condition,date_field=self.date_field)
 		self.entries = frappe.db.sql(sql,as_dict=1)
 		self.entity_names = {}
