@@ -323,6 +323,7 @@ domains = {
     'WEH' :"dynamic.domains.weh",
     'Owais' :"dynamic.domains.owais",
     'Elevana' :"dynamic.domains.elevana",
+    'Homrany' :"dynamic.domains.homrany",
 }
 
 # domain Conatin
