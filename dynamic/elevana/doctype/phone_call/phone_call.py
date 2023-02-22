@@ -125,7 +125,7 @@ def create_customer(source_name, target_doc=None, ignore_permissions=False):
 	contact = frappe.new_doc("Contact")
 	contact.first_name = customer.customer_name
 	contact.phone = source.phone_number
-	contact.mobile_no = source.mobile_no
+	contact.mobile_no = source.phone_number
 	contact.set("phone_nos", [])
 	contact.append("phone_nos", {
 		"phone": source.phone_number
