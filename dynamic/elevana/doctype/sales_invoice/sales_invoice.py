@@ -1634,12 +1634,15 @@ class SalesInvoice(SellingController):
 			and (not lp_details.to_date or getdate(lp_details.to_date) >= getdate(self.posting_date))
 		):
 			# frappe.msgprint(str(is_return))
-			if not is_return :
-				collection_factor = lp_details.return_collection_factor if lp_details.return_collection_factor else 1.0
-			else :
-				collection_factor = lp_details.collection_factor if lp_details.collection_factor else 1.0
+			# if is_return :
+			return_collection_factor = lp_details.return_collection_factor if lp_details.return_collection_factor else 1.0
+			# else :
+			collection_factor = lp_details.collection_factor if lp_details.collection_factor else 1.0
 			# frappe.throw(str(collection_factor))
-			points_earned = cint(eligible_amount / collection_factor)
+			points_earned = cint(current_amount / collection_factor) - cint(returned_amount / collection_factor)
+			frappe.msgprint(str(eligible_amount))
+			frappe.msgprint(str(points_earned))
+			frappe.msgprint(str(collection_factor))
 
 			doc = frappe.get_doc(
 				{
