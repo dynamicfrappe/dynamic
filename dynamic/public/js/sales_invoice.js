@@ -60,6 +60,7 @@ frappe.ui.form.on("Sales Invoice", {
         "view Item Shortage"
       );
     }
+    
   },
 
 
