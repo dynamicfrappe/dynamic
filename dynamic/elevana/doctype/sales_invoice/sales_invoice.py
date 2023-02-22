@@ -1639,10 +1639,14 @@ class SalesInvoice(SellingController):
 			# else :
 			collection_factor = lp_details.collection_factor if lp_details.collection_factor else 1.0
 			# frappe.throw(str(collection_factor))
-			points_earned = cint(current_amount / collection_factor) - cint(returned_amount / return_collection_factor)
+			if eligible_amount :
+				points_earned = cint(current_amount / collection_factor) - cint(returned_amount / return_collection_factor)
+			else :
+				eligible_amount = cint(current_amount / collection_factor)
 			frappe.msgprint(str(eligible_amount))
 			frappe.msgprint(str(points_earned))
 			frappe.msgprint(str(collection_factor))
+			frappe.msgprint(str(return_collection_factor))
 
 			doc = frappe.get_doc(
 				{
