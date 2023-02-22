@@ -23,9 +23,10 @@ from six import iteritems
 import erpnext
 from erpnext.accounts.deferred_revenue import validate_service_stop_date
 from erpnext.accounts.doctype.loyalty_program.loyalty_program import (
-	get_loyalty_program_details_with_points,
+	# get_loyalty_program_details_with_points,
 	validate_loyalty_points,
 )
+from dynamic.elevana.doctype.loyalty_program.loyalty_program import get_loyalty_program_details_with_points
 from erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category import (
 	get_party_tax_withholding_details,
 )
@@ -1632,10 +1633,12 @@ class SalesInvoice(SellingController):
 			and getdate(lp_details.from_date) <= getdate(self.posting_date)
 			and (not lp_details.to_date or getdate(lp_details.to_date) >= getdate(self.posting_date))
 		):
-			if is_return :
+			# frappe.msgprint(str(is_return))
+			if not is_return :
 				collection_factor = lp_details.return_collection_factor if lp_details.return_collection_factor else 1.0
 			else :
 				collection_factor = lp_details.collection_factor if lp_details.collection_factor else 1.0
+			# frappe.throw(str(collection_factor))
 			points_earned = cint(eligible_amount / collection_factor)
 
 			doc = frappe.get_doc(
