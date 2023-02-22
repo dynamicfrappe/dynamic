@@ -56,6 +56,7 @@ def validate_delivery_note(doc,*args,**kwargs):
         # frappe.throw('Validate delivery Note')
         minus_delivery_qty_from_reservation(doc,*args,**kwargs)
         check_so_approval(doc)
+        recalculate_delivered_qty()
 
 
 @frappe.whitelist()  
@@ -119,19 +120,19 @@ def check_so_approval(doc):
             sales_order_approval_name = item.sales_order_approval
 
      # update sales order qty 
-    sql = f"""update `tabSales Order Approval` set total_delivered_qty = total_delivered_qty + {total_qty}"""       
-    frappe.db.sql(sql)
-    frappe.db.commit()
-    so_approval_doc = frappe.get_doc("Sales Order Approval",sales_order_approval_name)
-    total_delived_qty =0
-    #total_delivered_qty
+    # sql = f"""update `tabSales Order Approval` set total_delivered_qty = total_delivered_qty + {total_qty}"""       
+    # frappe.db.sql(sql)
+    # frappe.db.commit()
+    # so_approval_doc = frappe.get_doc("Sales Order Approval",sales_order_approval_name)
+    # total_delived_qty =0
+    # #total_delivered_qty
     
-    if so_approval_doc.total_qty == so_approval_doc.total_delivered_qty:
-        so_approval_doc.status = "Completed"
-        so_approval_doc.save()
-    elif so_approval_doc.total_qty >so_approval_doc.total_delivered_qty and so_approval_doc.total_delivered_qty != 0:
-        so_approval_doc.status ="Partial Delivered"
-        so_approval_doc.save()
+    # if so_approval_doc.total_qty == so_approval_doc.total_delivered_qty:
+    #     so_approval_doc.status = "Completed"
+    #     so_approval_doc.save()
+    # elif so_approval_doc.total_qty >so_approval_doc.total_delivered_qty and so_approval_doc.total_delivered_qty != 0:
+    #     so_approval_doc.status ="Partial Delivered"
+    #     so_approval_doc.save()
 
 
 
@@ -144,7 +145,7 @@ def check_so_approval(doc):
             # """
             # frappe.db.sql(so_sql)
             # frappe.db.commit()
-    recalculate_delivered_qty()
+    
 
 def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
     #1-qty deliverd from delivery note

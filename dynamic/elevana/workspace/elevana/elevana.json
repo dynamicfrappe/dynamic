@@ -43,6 +43,15 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Phone Call",
+   "link_to": "Phone Call",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Items and Pricing",
    "link_type": "DocType",
    "onboard": 0,
@@ -58,7 +67,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-02-20 12:07:28.414156",
+ "modified": "2023-02-22 11:10:44.562334",
  "modified_by": "Administrator",
  "module": "Elevana",
  "name": "Elevana",

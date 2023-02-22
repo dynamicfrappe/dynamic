@@ -134,7 +134,7 @@ data = {
                 "label": "Distributor & Marketer",
             },
             {
-                "fieldname": "default_distributor_territory",
+                "fieldname": "default_distributer_territory",
                 "fieldtype": "Link",
                 "insert_after": "defatults_distributor_marketer_section_break",
                 "label": "Default Distributor Territory",
@@ -143,14 +143,14 @@ data = {
             {
                 "fieldname": "default_distributer_customer_group",
                 "fieldtype": "Link",
-                "insert_after": "default_distributor_territory",
+                "insert_after": "default_distributer_territory",
                 "label": "Default Distributor Customer Group",
                 "options": "Customer Group"
             },
             {
                 "fieldname": "defatults_distributor_marketer_column_break",
                 "fieldtype": "Column Break",
-                "insert_after": "default_distributor_territory",
+                "insert_after": "default_distributer_customer_group",
                 "label": "",
             },
             {
