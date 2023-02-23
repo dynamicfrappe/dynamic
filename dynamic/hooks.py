@@ -37,7 +37,7 @@ app_logo_url = "/assets/dynamic/images/dynamic-logo.png"
 
 # include js, css files in header of desk.html
 app_include_css = "/assets/dynamic/css/dynamic.css"
-app_include_js = "/assets/js/dynamic.min.js"
+app_include_js = ["/assets/js/dynamic.min.js",]
 
 
 # include js in doctype views
@@ -94,6 +94,7 @@ doctype_js = {
     "Job Card":"public/js/job_card.js",
     "Request for Quotation":"public/js/request_for_quotation.js",
     "Mode of Payment":"public/js/mode_of_payment.js",
+    # "Assign To":"public/sidebar/assign_to.js",
     
 }
 # doctype_js = {
