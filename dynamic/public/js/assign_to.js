@@ -155,11 +155,6 @@ frappe.ui.form.AssignToDialog = Class.extend({
 				default: 0,
 				onchange: () => me.assign_to_me()
 			},
-			{//new
-				label: __("Test"),
-				fieldname: 'Test',
-				fieldtype: 'Data',				
-			},
 			{
 				fieldtype: 'MultiSelectPills',
 				fieldname: 'assign_to',
