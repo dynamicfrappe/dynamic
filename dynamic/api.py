@@ -24,7 +24,7 @@ from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
 from erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import repost_entries
 from dynamic.gebco.doctype.sales_invocie.utils import set_complicated_pundel_list
 from datetime import date
-
+from dateutil import parser
 from dynamic.ifi.api import validate_payemnt_entry
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -1226,3 +1226,9 @@ def recalculate_delivered_qty():
 
 
 
+@frappe.whitelist()
+def get_hijri_date(posting_date):
+    from hijri_converter import Hijri, Gregorian
+    hijri_date = str(Gregorian.fromdate(parser.parse(str(posting_date)).date()).to_hijri())
+    hijri_date = parser.parse(str(hijri_date)).date().strftime("%d / %m / %Y")
+    return hijri_date
