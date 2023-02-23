@@ -60,11 +60,25 @@ def get_columns(filters):
             "width": 250
         },
         {
+            "label": _("Customer"),
+            "fieldname": "customer",
+            "fieldtype": "Link",
+			"options": "Customer",
+            "width": 120
+        },
+        {
             "label": _("Item Code"),
             "fieldname": "item_code",
             "fieldtype": "Link",
             "options": "Item",
             "width": 200
+        },
+        {
+            "label": _("Item Group"),
+            "fieldname": "item_group",
+            "fieldtype": "Link",
+			"options": "Item Group",
+            "width": 120
         },
         {
             "label": _("Invoice Date"),
@@ -91,7 +105,7 @@ def get_columns(filters):
             "width": 120
         },
         {
-            "label": _("Cost"),
+            "label": _("Cost(Valuation Rate)"),
             "fieldname": "cost",
             "fieldtype": "Float",
             "width": 120
@@ -108,13 +122,7 @@ def get_columns(filters):
             "fieldtype": "Float",
             "width": 120
         },
-		{
-            "label": _("Customer"),
-            "fieldname": "customer",
-            "fieldtype": "Link",
-			"options": "Customer",
-            "width": 120
-        },
+
 		{
             "label": _("Sales Person"),
             "fieldname": "sales_person",
@@ -128,13 +136,7 @@ def get_columns(filters):
             "fieldtype": "Data",
             "width": 120
         },
-		{
-            "label": _("Item Group"),
-            "fieldname": "item_group",
-            "fieldtype": "Link",
-			"options": "Item Group",
-            "width": 120
-        },
+
     ]
 	return columns
 		

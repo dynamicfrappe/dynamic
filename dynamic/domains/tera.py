@@ -479,6 +479,14 @@ data = {
                 "reqd":1
                 
             },
+            {
+                 "label" :"Opportunity Name" ,
+                 "fieldname": "opportunity_name",
+                 "fieldtype": "Data",
+                 "insert_after": "customer_name",
+                 "in_global_search" :1, 
+                
+            },
         ],
         'Stock Settings':[
             {
