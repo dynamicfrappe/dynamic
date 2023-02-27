@@ -520,6 +520,8 @@ def create_action_lead(source_name, target_doc=None):
 	doc = frappe.get_doc("Lead", source_name)
 	adction = frappe.new_doc("Actions")
 	adction.customer_type = 'Lead'
+	if not doc.get('contact_date', ''):
+		frappe.throw(_('Add Next Contact Date'))
 	adction.date = doc.get('contact_date', '').date()
 	adction.time = doc.get('contact_date', '').time()
 	# adction.party = doc.name
