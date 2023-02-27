@@ -86,6 +86,18 @@ const QuotationController_Extend = erpnext.selling.QuotationController.extend({
   
 	refresh: function(doc, dt, dn) {
 		this._super(doc);
+        cur_frm.add_custom_button(__('test'),()=>{
+            frappe.call({
+                method: "dynamic.api.get_street_address_html",
+                args:{
+                    party_type:"Customer",
+                    party:"abanoub",
+                },
+            callback: function (r) {
+                console.log(r)
+            }
+            })
+        })
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {

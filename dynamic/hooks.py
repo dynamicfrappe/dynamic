@@ -342,6 +342,7 @@ jenv = {
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",
         "get_balance_on:erpnext.accounts.utils.get_balance_on",
         "get_hijri_date:dynamic.api.get_hijri_date",
+        "get_cst_address:dynamic.api.get_street_address_html",
     ],
     "filters": []
 }
