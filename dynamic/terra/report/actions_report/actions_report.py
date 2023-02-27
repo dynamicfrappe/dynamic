@@ -31,7 +31,7 @@ def get_data(filters):
 
 	sql = f"""
 	select * from tabActions 
-		{conditions}
+		{conditions} limit 1
 	"""
 
 	result = frappe.db.sql(sql,as_dict=1)
