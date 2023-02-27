@@ -130,10 +130,12 @@ def make_cheque_endorsement(payment_entry):
     je.append("accounts", {
         "account": payment_entry.paid_to,
         "credit_in_account_currency": flt(payment_entry.paid_amount),
-        "reference_type": payment_entry.doctype,
-        "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "reference_type": payment_entry.doctype,
+        # "reference_name": payment_entry.name,
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
+        "reference_type": payment_entry.party_type,
+        "reference_name": payment_entry.party
     })
     # debit
     je.append("accounts", {
