@@ -91,6 +91,7 @@ const QuotationController_Extend = erpnext.selling.QuotationController.extend({
             callback: function (r) {
               if (r.message && r.message.length) {
                 if (r.message.includes("IFI")) {
+                    cur_frm.page.remove_inner_button('Subscription','Create')
                     cur_frm.cscript['Make Sales Order'] = create_ifi_sales_order
                     // cur_frm.cscript['Make Payment Entry'] = create_ifi_payment_entry
                     if(doc.docstatus == 1 && doc.status!=='Lost') {

@@ -124,7 +124,7 @@ def get_alert_dict(self):
 	notif_doc = frappe.new_doc('Notification Log')
 	notif_doc.subject = f"{owner_name} Contact to {customer_name} at {contact_date}"
 	notif_doc.for_user = owner_name
-	notif_doc.type = "Mention"
+	notif_doc.type = "Alert"
 	notif_doc.document_type = self.doctype
 	notif_doc.document_name = self.name
 	notif_doc.from_user = frappe.session.user
