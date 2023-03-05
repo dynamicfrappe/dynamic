@@ -250,7 +250,7 @@ scheduler_events = {
             "dynamic.product_bundle.doctype.packed_item.new_packed_item.get_old_invocie"
         ],
         "* 8 * * *":[
-            "dynamic.ifi.api.send_mail_daily_opportunity_lead",
+            # "dynamic.ifi.api.send_mail_daily_opportunity_lead",
             # "dynamic.ifi.api.daily_opportunity_notify" 
         ]
     },
