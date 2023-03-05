@@ -26,17 +26,12 @@ def execute(filters=None):
 					d.name,
 					d.customer,
 					d.territory,
-					d.warehouse,
-					d.posting_date,
-					d.item_code,
-					item_details.get(d.item_code, {}).get("item_group"),
-					item_details.get(d.item_code, {}).get("brand"),
+					d.item_name,
 					d.stock_qty,
 					d.base_net_amount,
 					d.sales_person,
-					d.allocated_percentage,
-					d.contribution_amt,
-					company_currency,
+					# item_details.get(d.item_code, {}).get("item_group"),
+					# item_details.get(d.item_code, {}).get("brand"),
 				]
 			)
 
@@ -60,7 +55,7 @@ def get_columns(filters):
 			"width": 140,
 		},
 		{
-			"label": _("Customer"),
+			"label": _("Full Name"),
 			"options": "Customer",
 			"fieldname": "customer",
 			"fieldtype": "Link",
@@ -73,35 +68,12 @@ def get_columns(filters):
 			"fieldtype": "Link",
 			"width": 140,
 		},
-		# {
-		# 	"label": _("Warehouse"),
-		# 	"options": "Warehouse",
-		# 	"fieldname": "warehouse",
-		# 	"fieldtype": "Link",
-		# 	"width": 140,
-		# },
-		# {"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 140},
 		{
 			"label": _("Item Name"),
-			"options": "Item",
 			"fieldname": "item_name",
-			"fieldtype": "Link",
+			"fieldtype": "Data",
 			"width": 140,
 		},
-		# {
-		# 	"label": _("Item Group"),
-		# 	"options": "Item Group",
-		# 	"fieldname": "item_group",
-		# 	"fieldtype": "Link",
-		# 	"width": 140,
-		# },
-		# {
-		# 	"label": _("Brand"),
-		# 	"options": "Brand",
-		# 	"fieldname": "brand",
-		# 	"fieldtype": "Link",
-		# 	"width": 140,
-		# },
 		{"label": _("Qty"), "fieldname": "qty", "fieldtype": "Float", "width": 140},
 		{
 			"label": _("Amount"),
@@ -117,6 +89,37 @@ def get_columns(filters):
 			"fieldtype": "Link",
 			"width": 140,
 		},
+		# {
+		# 	"label": _("Warehouse"),
+		# 	"options": "Warehouse",
+		# 	"fieldname": "warehouse",
+		# 	"fieldtype": "Link",
+		# 	"width": 140,
+		# },
+		# {"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 140},
+		# {
+		# 	"label": _("Item Code"),
+		# 	"options": "Item",
+		# 	"fieldname": "item_code",
+		# 	"fieldtype": "Link",
+		# 	"width": 140,
+		# },
+		
+		# {
+		# 	"label": _("Item Group"),
+		# 	"options": "Item Group",
+		# 	"fieldname": "item_group",
+		# 	"fieldtype": "Link",
+		# 	"width": 140,
+		# },
+		# {
+		# 	"label": _("Brand"),
+		# 	"options": "Brand",
+		# 	"fieldname": "brand",
+		# 	"fieldtype": "Link",
+		# 	"width": 140,
+		# },
+		
 		# {"label": _("Contribution %"), "fieldname": "contribution", "fieldtype": "Float", "width": 140},
 		# {
 		# 	"label": _("Contribution Amount"),
@@ -149,8 +152,7 @@ def get_entries(filters):
 		"""
 		SELECT
 			dt.name, dt.customer, dt.territory, dt.%s as posting_date, dt_item.item_code
-			,dt_item.item_name
-			,st.sales_person, st.allocated_percentage, dt_item.warehouse,
+			,st.sales_person, st.allocated_percentage, dt_item.warehouse,`tabItem`.item_name,
 		CASE
 			WHEN dt.status = "Closed" THEN dt_item.%s * dt_item.conversion_factor
 			ELSE dt_item.stock_qty
@@ -164,10 +166,11 @@ def get_entries(filters):
 			ELSE dt_item.base_net_amount * st.allocated_percentage/100
 		END as contribution_amt
 		FROM
-			`tab%s` dt, `tab%s Item` dt_item, `tabSales Team` st
+			`tab%s` dt, `tab%s Item` dt_item, `tabSales Team` st,`tabItem`
 		WHERE
 			st.parent = dt.name and dt.name = dt_item.parent and st.parenttype = %s
-			and dt.docstatus = 1 %s order by st.sales_person, dt.name desc
+			and dt.docstatus = 1 %s AND dt_item.item_code = `tabItem`.item_code order by st.sales_person, dt.name desc
+			
 		"""
 		% (
 			date_field,
