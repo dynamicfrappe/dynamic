@@ -294,15 +294,18 @@ def loop_over_doc_items(doc):
             get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
 
 def get_po_reservation(purchase_order,item,target_warehouse):
-    reservation_list_sql = f"""SELECT r.name from `tabReservation` as r WHERE r.status <> 'Invalid' AND r.order_source='{purchase_order}' AND r.item_code = '{item}' AND sales_order <> 'Invalid' AND r.warehouse_source = '' """
+    reservation_list_sql = f"""SELECT `tabReservation`.name from `tabReservation` WHERE `tabReservation`.status <> 'Invalid'
+      AND `tabReservation`.order_source='{purchase_order}' AND `tabReservation`.item_code = '{item}' AND sales_order <> 'Invalid' AND `tabReservation`.warehouse_source = '' """
     data = frappe.db.sql(reservation_list_sql,as_dict=1)
     if data:
         for reservation in data:
             # make reserv over warehouse
             reserv_doc = frappe.get_doc('Reservation',reservation.get('name'))
             oldest_reservation = reserv_doc.reservation_purchase_order[0]
-            bin_data = frappe.db.get_value('Bin',{'item_code':item,'warehouse':target_warehouse},['name','warehouse','actual_qty','reserved_qty'],as_dict=1)
+            bin_data = frappe.db.get_value('Bin',{'item_code':item,'warehouse':target_warehouse}
+                        ,['name','warehouse','actual_qty','reserved_qty'],as_dict=1)
             reserv_doc.warehouse_source = target_warehouse
+            reserv_doc.order_source = ''
             reserv_doc.warehouse = [] #?add row
             row = reserv_doc.append('warehouse', {})
             row.item = item
