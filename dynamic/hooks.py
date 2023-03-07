@@ -213,7 +213,11 @@ doc_events = {
     "Lead":{
         # "validate":"dynamic.ifi.api.lead_contact_by_email"
         "before_insert" :"dynamic.api.lead_before_insert"
+    },
+    "Purchase Receipt":{
+         "on_submit" : "dynamic.api.submit_purchase_recipt"
     }
+
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
     #  },Installations Furniture
