@@ -120,8 +120,10 @@
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "source",
    "fieldtype": "Link",
+   "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Source",
    "options": "Lead Source",
@@ -139,7 +141,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-17 12:37:08.580249",
+ "modified": "2023-03-04 23:39:37.668328",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Actions",
