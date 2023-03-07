@@ -133,11 +133,11 @@ doc_events = {
         "autoname": "dynamic.api.autoname",
         "validate": "dynamic.dynamic.validation.validate_item_code"
     },
-    # "Delivery Note": {
-    #     "on_submit": "dynamic.gebco.api.validate_delivery_note",
-    #     "validate": "dynamic.api.validate_delivery_note",
-    #     "on_cancel": "dynamic.api.cancel_delivery_note",
-    # },
+    "Delivery Note": {
+        "on_submit": "dynamic.gebco.api.validate_delivery_note",
+        "validate": "dynamic.api.validate_delivery_note",
+        "on_cancel": "dynamic.api.cancel_delivery_note",
+    },
    
     "Journal Entry": {
         "on_submit": "dynamic.api.submit_journal_entry"
