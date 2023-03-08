@@ -9,6 +9,8 @@ from frappe.model.document import Document
 import erpnext
 from frappe.utils.data import flt
 from frappe.utils import get_link_to_form
+from erpnext.accounts.utils import get_balance_on
+DOMAINS = frappe.get_active_domains()
 
 
 class PayDocument(Document):
@@ -19,6 +21,10 @@ class PayDocument(Document):
             frappe.msgprint(
                 _("Total Difference is {}").format(self.difference))
             frappe.throw(_("Total Difference must be 0"))
+        if self.account and 'Teba' in DOMAINS:
+            balance = get_balance_on(account=self.account,cost_center=self.cost_center or None)
+            if balance < self.amount:
+                frappe.throw(_(f"Account {balance} balance Less Than Amount {self.amount}"))
 
     @frappe.whitelist()
     def get_conversion_rate(self):
@@ -44,6 +50,13 @@ class PayDocument(Document):
 
     def on_submit(self):
         self.create_journal_entry()
+    
+    # def before_submit(self):
+    #     if self.account and 'Teba' in DOMAINS:
+    #         balance = get_balance_on(account=self.account,cost_center=self.cost_center or None)
+    #         if balance < self.amount:
+    #             frappe.throw(_(f"Account {balance} balance Less Than Amount {self.amount}"))
+
 
     def on_cancel(self):
         self.cancel_journal_entry()

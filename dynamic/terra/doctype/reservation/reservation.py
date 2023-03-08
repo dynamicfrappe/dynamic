@@ -38,18 +38,18 @@ class Reservation(Document):
 	def stock_sql(self):
 		"""get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
 		data = frappe.db.sql(f""" 
-				      SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
+				    SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
 					CASE 
                          WHEN `tabReservation Warehouse`.reserved_qty > 0 AND `tabReservation`.status = "Active"
 						 then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
 						 ELSE `tabBin`.actual_qty 
 						 END  as qty
-					 FROM 
+					FROM 
 					`tabBin`
 					LEFT JOIN 
 				   `tabReservation Warehouse`
 					ON `tabBin`.name = `tabReservation Warehouse`.bin 
-                     LEFT JOIN 
+                    LEFT JOIN 
                     `tabReservation` 
                     ON `tabReservation Warehouse`.parent = `tabReservation`.name 
 					AND `tabBin`.name = `tabReservation Warehouse`.bin
@@ -71,9 +71,9 @@ class Reservation(Document):
 		order =  frappe.db.sql(f"""                   
 			SELECT `tabPurchase Order Item`.name as `name` ,`tabPurchase Order Item`.parent,`tabPurchase Order Item`.parenttype as doctype,
 			CASE
-			WHEN `tabReservation Purchase Order`.reserved_qty > 0 AND `tabReservation`.status <> "Invalid"
-			then (`tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty) - SUM(`tabReservation Purchase Order`.reserved_qty)
-			else `tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty
+				WHEN `tabReservation Purchase Order`.reserved_qty > 0 AND `tabReservation`.status <> "Invalid"
+				then (`tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty) - SUM(`tabReservation Purchase Order`.reserved_qty)
+				else `tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty
 			end as qty
 			from
 			`tabPurchase Order Item`
@@ -107,10 +107,7 @@ class Reservation(Document):
 		if not order or  len(order) == 0 :
 			frappe.throw(_(f"Invalid Purchase Order {self.order_source} don't have item {self.item_code}"))
 	
-		
 
-
-		
 	def total_warehouse_reseved(self):
 		total_warehouse=0
 		for row in self.warehouse:
@@ -124,7 +121,3 @@ class Reservation(Document):
 		self.db_set('total_purchase_order_reserved_qty',total_put_order)
 
 	
-
-
-
-	#?another query for validate purchase order

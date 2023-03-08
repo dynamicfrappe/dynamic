@@ -69,6 +69,7 @@ override_doctype_class = {
     "Sales Order" : "dynamic.override_doctype_class.SalesOrder",
     "Salary Slip" : "dynamic.override_doctype_class.SalarySlip",
     "Sales Invoice": "dynamic.override_doctype_class.SalesInvoice",
+    "Customer": "dynamic.teba.doctype.customer.CustomerController",
     # "Lead" : "dynamic.override_doctype_class.Lead"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
@@ -325,6 +326,7 @@ domains = {
     'Owais' :"dynamic.domains.owais",
     'Elevana' :"dynamic.domains.elevana",
     'Homrany' :"dynamic.domains.homrany",
+    'Teba' :"dynamic.domains.teba",
 }
 
 # domain Conatin

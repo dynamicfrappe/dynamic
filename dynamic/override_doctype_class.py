@@ -78,7 +78,10 @@ if "Dynamic Payroll" in active_domains :
     SalarySlip = PayrollSalarySlip
 
 
+if "Teba" in active_domains:
+    from dynamic.terra.doctype.payment_entry.payment_entry import PaymentEntry as TerraPaymentEntry
 
+    PaymentEntry = TerraPaymentEntry
 
 
 
