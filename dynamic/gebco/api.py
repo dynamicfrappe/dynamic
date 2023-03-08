@@ -50,10 +50,11 @@ def validate_delivery_note(doc,*args,**kwargs):
             m_temp = frappe.get_doc("Maintenance Template",doc.maintenance_template)
             m_temp.delivery_note = doc.name
             m_temp.save()
-        if len(doc.packed_items) > 0  :
+        if len(doc.packed_items) > 0  : 
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
     if 'Terra' in DOMAINS:
         # frappe.throw('Validate delivery Note')
+        submit_delivery_note(doc)
         minus_delivery_qty_from_reservation(doc,*args,**kwargs)
         check_so_approval(doc)
         recalculate_delivered_qty()
@@ -202,3 +203,37 @@ def create_installation_request(sales_order):
 # def get_gebco_items(doc):
 #     items = frappe.db.get_list("Item",filters={"item_group","Queclink devices"},fields=['name'],pluck='name')
 #     return items
+
+
+
+def submit_delivery_note(doc ,*args,**kwargs) :
+
+    if "Terra"  in DOMAINS :
+        # validate against terra branches settings  
+        user_list = []
+        acceess_target = []
+       
+        user = frappe.session.user
+        target_w = False
+        if doc.set_warehouse :
+            target_w = frappe.get_doc("Warehouse" ,doc.set_warehouse)
+        
+        if target_w and  not target_w.warehouse_type   :
+                #frappe.throw(str("case@ happend"))
+            cost_center = frappe.db.sql(f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.set_warehouse}' """ ,as_dict=1)
+            if cost_center and len(cost_center) > 0 :
+                for obj in cost_center :
+                    acceess_target.append(obj.get("name"))
+                
+        
+        access_group =    acceess_target 
+        if len(access_group) > 0 :
+            for access in access_group :
+                users = frappe.db.sql(f""" SELECT branch_manager FROM `tabBranch Managers` WHERE parenttype ='Cost Center'
+                and parent = '{access}' 
+                   """)
+                for usr in users :
+                    user_list.append(usr[0])
+        #validate user access 
+        if user not in user_list :
+            frappe.throw(f"you can Not Complete this action for Branch  { access_group}")

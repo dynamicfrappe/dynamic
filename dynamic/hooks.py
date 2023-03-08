@@ -134,11 +134,11 @@ doc_events = {
         "autoname": "dynamic.api.autoname",
         "validate": "dynamic.dynamic.validation.validate_item_code"
     },
-    # "Delivery Note": {
-    #     "on_submit": "dynamic.gebco.api.validate_delivery_note",
-    #     "validate": "dynamic.api.validate_delivery_note",
-    #     "on_cancel": "dynamic.api.cancel_delivery_note",
-    # },
+    "Delivery Note": {
+        "on_submit": "dynamic.gebco.api.validate_delivery_note",
+        "validate": "dynamic.api.validate_delivery_note",
+        "on_cancel": "dynamic.api.cancel_delivery_note",
+    },
    
     "Journal Entry": {
         "on_submit": "dynamic.api.submit_journal_entry"
@@ -214,7 +214,11 @@ doc_events = {
     "Lead":{
         # "validate":"dynamic.ifi.api.lead_contact_by_email"
         "before_insert" :"dynamic.api.lead_before_insert"
+    },
+    "Purchase Receipt":{
+         "on_submit" : "dynamic.api.submit_purchase_recipt"
     }
+
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
     #  },Installations Furniture
