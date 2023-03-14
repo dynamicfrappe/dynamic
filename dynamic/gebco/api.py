@@ -112,7 +112,7 @@ def check_so_approval(doc):
             sql = f"""
              update `tabSales Order Approval Item`
              set remaining_qty = remaining_qty - {item.qty}
-             where item_code = '{item.item_code}' and parent = '{item.sales_order_approval}'
+             where item_code = '{item.item_code}' and parent = '{item.sales_order_approval}' and warehouse='{item.warehouse}'
             """
             frappe.db.sql(sql)
             frappe.db.commit()
