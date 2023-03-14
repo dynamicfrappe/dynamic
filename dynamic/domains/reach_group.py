@@ -5,6 +5,14 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {
+        'Customer':[
+            {
+                "label": "Commercial Record",
+                "fieldname": "commercial_record",
+                "fieldtype": "Data",
+                "insert_after": "phone_no",
+            },
+        ]
     },
     "properties": [
         {
