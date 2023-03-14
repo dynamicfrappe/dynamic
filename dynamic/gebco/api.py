@@ -161,8 +161,9 @@ def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
                 reserv_doc.db_set('status','Partial Delivered')
             else:
                 reserv_doc.db_set('status','Closed')
-        item.reserved_qty = item.reserved_qty - row.qty
-        item.save()
+        new_reserved_qty = item.reserved_qty - row.qty
+        item.db_set('reserved_qty',new_reserved_qty)
+        # item.save()
     
 
 def validate_purchase_recipt(doc,*args,**kwargs):
@@ -220,7 +221,8 @@ def submit_delivery_note(doc ,*args,**kwargs) :
         
         if target_w and  not target_w.warehouse_type   :
                 #frappe.throw(str("case@ happend"))
-            cost_center = frappe.db.sql(f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.set_warehouse}' """ ,as_dict=1)
+            cost_center = frappe.db.sql(f""" 
+            SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.set_warehouse}' """ ,as_dict=1)
             if cost_center and len(cost_center) > 0 :
                 for obj in cost_center :
                     acceess_target.append(obj.get("name"))
