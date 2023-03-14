@@ -103,7 +103,7 @@ def check_so_approval(doc):
     total_qty =0
     for item in doc.items:
         if item.get("sales_order_approval"):
-            remaing_sql = f"""select remaining_qty from `tabSales Order Approval Item` where parent= '{item.sales_order_approval}' and item_code='{item.item_code}' limit 1"""
+            remaing_sql = f"""select remaining_qty from `tabSales Order Approval Item` where parent= '{item.sales_order_approval}' and item_code='{item.item_code}' and warehouse='{item.warehouse}' limit 1"""
             item_remining_qty = frappe.db.sql(remaing_sql,as_dict=1)
             if item.qty > item_remining_qty[0].remaining_qty:
                 frappe.throw(_("Approval Remaining Qty '%s'"%item_remining_qty[0].remaining_qty))
