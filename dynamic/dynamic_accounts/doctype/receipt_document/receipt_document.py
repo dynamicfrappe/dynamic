@@ -35,7 +35,7 @@ class ReceiptDocument(Document):
 		precision = frappe.get_precision("Pay and Receipt Account", "amount")
 		difference_precision = frappe.get_precision(self.doctype, "difference")
 		for item in getattr(self, 'accounts', []):
-			item.amount = (item.amount or 0 , precision)
+			item.amount = flt(item.amount or 0 , precision)
 			item.currency = self.currency
 			item.exchange_rate = self.exchange_rate
 			item.base_amount = item.amount * self.exchange_rate
