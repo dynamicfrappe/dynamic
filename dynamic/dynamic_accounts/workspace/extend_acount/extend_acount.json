@@ -31,9 +31,18 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "General Ledger Report",
+   "link_to": "General Ledger Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-02-05 13:51:12.797817",
+ "modified": "2023-03-15 11:50:29.373829",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "extend acount",
