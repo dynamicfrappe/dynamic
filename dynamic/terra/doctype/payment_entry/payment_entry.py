@@ -100,11 +100,11 @@ class PaymentEntry(AccountsController):
 		
 
 	def before_submit(self):
-		if self.account and 'Teba' in DOMAINS:
-			if self.payment_type == "Pay":
-				balance = get_balance_on(account=self.paid_from,cost_center=self.cost_center or None)
-				if balance < self.paid_amount:
-					frappe.throw(_(f"Account {balance} balance Less Than Amount {self.paid_amount}"))
+		if 'Teba' in DOMAINS and getattr(self,'account',None) :
+				if self.payment_type == "Pay":
+					balance = get_balance_on(account=self.paid_from,cost_center=self.cost_center or None)
+					if balance < self.paid_amount:
+						frappe.throw(_(f"Account {balance} balance Less Than Amount {self.paid_amount}"))
 
 	def on_submit(self):
 		if self.difference_amount:
