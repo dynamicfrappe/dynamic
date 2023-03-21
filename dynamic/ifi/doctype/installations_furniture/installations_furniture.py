@@ -77,7 +77,7 @@ class InstallationsFurniture(Document):
 			for employee in self.installation_team_detail:
 				if employee.employee_email:
 					get_alert_dict(self,employee)
-					email_employee_send(self,employee.employee_email)
+					# email_employee_send(self,employee.employee_email)
 				if not employee.employee_email:
 					frappe.msgprint(f'Employee - {employee.employee} Will not Get Notification Has No Email')
 
