@@ -10,7 +10,7 @@ data = {
                 "label": "Commercial Record",
                 "fieldname": "commercial_record",
                 "fieldtype": "Data",
-                "insert_after": "phone_no",
+                "insert_after": "tax_id",
             },
         ]
     },
