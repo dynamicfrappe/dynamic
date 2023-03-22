@@ -21,7 +21,7 @@ from frappe.utils import (
 
 class InstallationsFurniture(Document):
 	def validate(self):
-		self.concat_for_calendar()
+		# self.concat_for_calendar()
 		self.check_employee_busy()
 
 	def before_save(self):
@@ -52,24 +52,24 @@ class InstallationsFurniture(Document):
 			frappe.db.set_value('Sales Order',self.sales_order,'sales_installation',self.ref_status)
 	
 
-	def concat_for_calendar(self):
-		self.description= "ID : %s"%self.name + "\n"
-		self.description+= "Team : %s"%self.team + "\n"
-		self.description+= "Status : %s"%self.ref_status + "\n"
+	# def concat_for_calendar(self):
+	# 	self.description= "ID : %s"%self.name + "\n"
+	# 	self.description+= "Team : %s"%self.team + "\n"
+	# 	self.description+= "Status : %s"%self.ref_status + "\n"
 		
 	@frappe.whitelist()
 	def change_status(self):
 		if(self.ref_status=="Pending"):
 			self.db_set('ref_status','Start')
-			self.concat_for_calendar()
+			# self.concat_for_calendar()
 			self.update_so_inst_status()
 		elif(self.ref_status=="Start"):
 			self.db_set('ref_status','Inprogress')
-			self.concat_for_calendar()
+			# self.concat_for_calendar()
 			self.update_so_inst_status()
 		elif(self.ref_status=="Inprogress"):
 			self.db_set('ref_status','Completed')
-			self.concat_for_calendar()
+			# self.concat_for_calendar()
 			self.update_so_inst_status()
 	
 	def preprare_notify(self):
