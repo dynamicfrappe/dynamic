@@ -21,7 +21,7 @@ from frappe.utils import (
 
 class InstallationsFurniture(Document):
 	def validate(self):
-		self.concat_for_calendar()
+		# self.concat_for_calendar()
 		self.check_employee_busy()
 
 	def before_save(self):
@@ -52,24 +52,24 @@ class InstallationsFurniture(Document):
 			frappe.db.set_value('Sales Order',self.sales_order,'sales_installation',self.ref_status)
 	
 
-	def concat_for_calendar(self):
-		self.description= "ID : %s"%self.name + "\n"
-		self.description+= "Team : %s"%self.team + "\n"
-		self.description+= "Status : %s"%self.ref_status + "\n"
+	# def concat_for_calendar(self):
+	# 	self.description= "ID : %s"%self.name + "\n"
+	# 	self.description+= "Team : %s"%self.team + "\n"
+	# 	self.description+= "Status : %s"%self.ref_status + "\n"
 		
 	@frappe.whitelist()
 	def change_status(self):
 		if(self.ref_status=="Pending"):
 			self.db_set('ref_status','Start')
-			self.concat_for_calendar()
+			# self.concat_for_calendar()
 			self.update_so_inst_status()
 		elif(self.ref_status=="Start"):
 			self.db_set('ref_status','Inprogress')
-			self.concat_for_calendar()
+			# self.concat_for_calendar()
 			self.update_so_inst_status()
 		elif(self.ref_status=="Inprogress"):
 			self.db_set('ref_status','Completed')
-			self.concat_for_calendar()
+			# self.concat_for_calendar()
 			self.update_so_inst_status()
 	
 	def preprare_notify(self):
@@ -77,7 +77,7 @@ class InstallationsFurniture(Document):
 			for employee in self.installation_team_detail:
 				if employee.employee_email:
 					get_alert_dict(self,employee)
-					email_employee_send(self,employee.employee_email)
+					# email_employee_send(self,employee.employee_email)
 				if not employee.employee_email:
 					frappe.msgprint(f'Employee - {employee.employee} Will not Get Notification Has No Email')
 
@@ -143,6 +143,7 @@ def get_events(start, end, filters=None):
 			 
 			 `tabInstallations Furniture`.description ,
 			 concat("ID :",name,CHAR(13),
+			 "CST :",customer,CHAR(13),
 			 'Status :',ref_status,CHAR(13),
 			 "Team :",team,CHAR(13),
 			 "Type :",ifnull(installation_type , '')

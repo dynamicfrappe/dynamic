@@ -168,6 +168,16 @@ data = {
                 "options": "Customer Group"
             }
         ],
+        
+        'E Commerce Settings': [
+            {
+                "fieldname": "default_customer_territory",
+                "fieldtype": "Link",
+                "insert_after": "default_customer_group",
+                "label": "Default Customer Territory",
+                "options": "Territory"
+            }
+        ],
         'Loyalty Program Collection' :[
             {
                 "fieldname": "return_collection_factor",

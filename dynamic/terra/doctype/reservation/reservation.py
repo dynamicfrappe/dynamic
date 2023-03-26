@@ -38,25 +38,26 @@ class Reservation(Document):
 	def stock_sql(self):
 		"""get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
 		data = frappe.db.sql(f""" 
-				    SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
-					CASE 
-                         WHEN `tabReservation Warehouse`.reserved_qty > 0 AND `tabReservation`.status = "Active"
-						 then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
-						 ELSE `tabBin`.actual_qty 
-						 END  as qty
-					FROM 
-					`tabBin`
-					LEFT JOIN 
-				   `tabReservation Warehouse`
-					ON `tabBin`.name = `tabReservation Warehouse`.bin 
-                    LEFT JOIN 
-                    `tabReservation` 
-                    ON `tabReservation Warehouse`.parent = `tabReservation`.name 
-					AND `tabBin`.name = `tabReservation Warehouse`.bin
-					WHERE `tabBin`.warehouse = '{self.warehouse_source}'
-					AND `tabBin`.item_code = '{self.item_code}'
-                    AND `tabReservation`.name <> "{self.name}"
-					""" ,as_dict=1)
+				SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
+				CASE 
+						WHEN `tabReservation Warehouse`.reserved_qty > 0 AND `tabReservation`.status = "Active"
+						then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
+						ELSE `tabBin`.actual_qty 
+						END  as qty
+				FROM 
+				`tabBin`
+				LEFT JOIN 
+				`tabReservation Warehouse`
+				ON `tabBin`.name = `tabReservation Warehouse`.bin 
+				LEFT JOIN 
+				`tabReservation` 
+				ON `tabReservation Warehouse`.parent = `tabReservation`.name 
+				AND `tabBin`.name = `tabReservation Warehouse`.bin
+				WHERE `tabBin`.warehouse = '{self.warehouse_source}'
+				AND `tabBin`.item_code = '{self.item_code}'
+				AND `tabReservation`.name <> "{self.name}"
+				AND `tabReservation`.status = "Active"
+				""" ,as_dict=1)
 		
 		if data and len(data) > 0 :
 			if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < self.reservation_amount  :

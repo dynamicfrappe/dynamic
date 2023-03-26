@@ -511,34 +511,36 @@ def check_total_reservation(self):
             validate_warehouse_stock_reservation(item.item_code,item.item_warehouse,item.qty)
         if item.item_purchase_order:
             validate_purchase_order_reservation(item.item_code,item.item_purchase_order,item.qty)
-    
+
 def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_amount):
 		"""get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
 		data = frappe.db.sql(f""" 
-				      SELECT a.name as bin , 'Bin' as `doctype`,
+					SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
 					CASE 
-                         WHEN b.reserved_qty > 0 AND c.status = "Active"
-						 then a.actual_qty - SUM(b.reserved_qty)
-						 ELSE a.actual_qty 
-						 END  as qty
-					 FROM 
-					`tabBin` a
+							WHEN `tabReservation Warehouse`.reserved_qty > 0
+							then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
+							ELSE `tabBin`.actual_qty 
+							END  as qty
+					FROM 
+					`tabBin`
 					LEFT JOIN 
-				   `tabReservation Warehouse` b 
-					ON a.name = b.bin 
-                     LEFT JOIN 
-                    `tabReservation` c
-                    ON b.parent = c.name AND a.name = b.bin
-					WHERE a.warehouse = '{warehouse_source}'
-					AND a.item_code = '{item_code}'
+					`tabReservation Warehouse`
+					ON `tabBin`.name = `tabReservation Warehouse`.bin 
+					LEFT JOIN 
+					`tabReservation` 
+					ON `tabReservation Warehouse`.parent = `tabReservation`.name 
+					AND `tabBin`.name = `tabReservation Warehouse`.bin
+					WHERE `tabBin`.warehouse = '{warehouse_source}'
+					AND `tabBin`.item_code = '{item_code}'
+					AND `tabReservation`.status = "Active"
 					""" ,as_dict=1)
-		
 		if data and len(data) > 0 :
 			if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < reservation_amount  :
 				frappe.throw(_(f""" stock value in warehouse {warehouse_source} = {data[0].get("qty") or 0} 
-				  and you requires  {reservation_amount} for Item {item_code}  """))
+					and you requires  {reservation_amount} for Item {item_code}  """))
 		if  not data or len(data) == 0 :
-			frappe.throw(_(f"""no stock value in warehouse {warehouse_source} for item {item_code}  """))
+				frappe.throw(_(f"""no stock value in warehouse {warehouse_source} for item {item_code}  """))
+		return data
 
 def validate_purchase_order_reservation(item_code,order_source,reservation_amount):
 		order =  frappe.db.sql(f"""                   
