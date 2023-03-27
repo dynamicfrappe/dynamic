@@ -331,7 +331,8 @@ domains = {
     'Elevana' :"dynamic.domains.elevana",
     'Homrany' :"dynamic.domains.homrany",
     'Teba' :"dynamic.domains.teba",
-    'Sedia':"dynamic.domains.sedia"
+    'Sedia':"dynamic.domains.sedia",
+    'Majestey':"dynamic.domains.majestey",
 }
 
 # domain Conatin
