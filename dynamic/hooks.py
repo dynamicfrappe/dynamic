@@ -149,7 +149,7 @@ doc_events = {
             "dynamic.api.check_source_item", 
             ],
         "on_cancel":"dynamic.api.cancel_reservation",
-        "on_update_after_submit":"dynamic.api.change_row_after_submit"
+        # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
     "Purchase Receipt": {
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
