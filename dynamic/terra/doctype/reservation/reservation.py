@@ -72,7 +72,7 @@ class Reservation(Document):
 		order =  frappe.db.sql(f"""                   
 			SELECT `tabPurchase Order Item`.name as `name` ,`tabPurchase Order Item`.parent,`tabPurchase Order Item`.parenttype as doctype,
 			CASE
-				WHEN `tabReservation Purchase Order`.reserved_qty > 0 AND `tabReservation`.status <> "Invalid"
+				WHEN `tabReservation Purchase Order`.reserved_qty > 0 
 				then (`tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty) - SUM(`tabReservation Purchase Order`.reserved_qty)
 				else `tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty
 			end as qty
@@ -83,8 +83,11 @@ class Reservation(Document):
 			ON `tabReservation Purchase Order`.purchase_order_line=`tabPurchase Order Item`.name 
 			LEFT JOIN
 			`tabReservation`
-			ON `tabReservation Purchase Order`.parent = `tabReservation`.name AND `tabReservation`.name <> '{self.name}'
-			where `tabPurchase Order Item`.item_code = '{self.item_code}'  and `tabPurchase Order Item`.parent = '{self.order_source}' 
+			ON `tabReservation Purchase Order`.parent = `tabReservation`.name 
+			AND `tabReservation`.name <> '{self.name}'
+			where `tabPurchase Order Item`.item_code = '{self.item_code}'  
+			AND `tabPurchase Order Item`.parent = '{self.order_source}' 
+			AND  `tabReservation`.status <> "Invalid"
 			""",as_dict=1)
 		if order and len(order) > 0 :
 			if order[0].get("name") and float(order[0].get("qty")) > 0 :
