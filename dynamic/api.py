@@ -544,22 +544,26 @@ def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_
 
 def validate_purchase_order_reservation(item_code,order_source,reservation_amount):
 		order =  frappe.db.sql(f"""                   
-										SELECT a.name as `name` ,a.parent,a.parenttype as doctype,
-										CASE
-										WHEN b.reserved_qty > 0 AND c.status <> "Invalid"
-										then (a.qty - a.received_qty) - SUM(b.reserved_qty)
-										else a.qty - a.received_qty
-										end as qty
-										from
-										`tabPurchase Order Item` a
-										LEFT JOIN
-										`tabReservation Purchase Order` b
-										ON b.purchase_order_line=a.name 
-										LEFT JOIN
-										`tabReservation` c
-										ON b.parent = c.name 
-										where a.item_code = '{item_code}'  and a.parent = '{order_source}' 
-										""",as_dict=1)
+            SELECT `tabPurchase Order Item`.name as `name` 
+            ,`tabPurchase Order Item`.parent,`tabPurchase Order Item`.parenttype as doctype,
+            CASE
+            WHEN `tabReservation Purchase Order`.reserved_qty > 0 
+            then 
+            (`tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty) - SUM(`tabReservation Purchase Order`.reserved_qty)
+            else `tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty
+            end as qty
+            from
+            `tabPurchase Order Item` a
+            LEFT JOIN
+            `tabReservation Purchase Order` b
+            ON `tabReservation Purchase Order`.purchase_order_line=`tabPurchase Order Item`.name 
+            LEFT JOIN
+            `tabReservation` c
+            ON `tabReservation Purchase Order`.parent = `tabReservation`.name 
+            where `tabPurchase Order Item`.item_code = '{item_code}'  
+            AND `tabPurchase Order Item`.parent = '{order_source}' 
+            AND `tabReservation`.status <> "Invalid"
+            """,as_dict=1)
 		if order and len(order) > 0 :
 			if order[0].get("parent") and float(order[0].get("qty")) ==  0 :
 				frappe.throw(_(f"  Purchase Order {order_source} don't have {item_code} Qty and you requires  {reservation_amount}" ))
