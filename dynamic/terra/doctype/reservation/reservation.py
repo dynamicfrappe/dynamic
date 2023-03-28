@@ -40,7 +40,7 @@ class Reservation(Document):
 		data = frappe.db.sql(f""" 
 				SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
 				CASE 
-						WHEN `tabReservation Warehouse`.reserved_qty > 0 AND `tabReservation`.status = "Active"
+						WHEN `tabReservation Warehouse`.reserved_qty > 0 
 						then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
 						ELSE `tabBin`.actual_qty 
 						END  as qty
@@ -56,7 +56,7 @@ class Reservation(Document):
 				WHERE `tabBin`.warehouse = '{self.warehouse_source}'
 				AND `tabBin`.item_code = '{self.item_code}'
 				AND `tabReservation`.name <> "{self.name}"
-				AND `tabReservation`.status = "Active"
+				AND `tabReservation`.status  <> "Invalid"
 				""" ,as_dict=1)
 		
 		if data and len(data) > 0 :

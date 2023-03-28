@@ -532,7 +532,7 @@ def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_
 					AND `tabBin`.name = `tabReservation Warehouse`.bin
 					WHERE `tabBin`.warehouse = '{warehouse_source}'
 					AND `tabBin`.item_code = '{item_code}'
-					AND `tabReservation`.status = "Active"
+					AND `tabReservation`.status <> "Invalid"
 					""" ,as_dict=1)
 		if data and len(data) > 0 :
 			if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < reservation_amount  :
