@@ -1320,6 +1320,5 @@ def get_street_address_html(party_type, party):
 		city_state = city_state + doc.pincode if doc.pincode else city_state
 		city_state += ""
                 
-	# return '55555'
 	return street_address + ',' + city_state
 
