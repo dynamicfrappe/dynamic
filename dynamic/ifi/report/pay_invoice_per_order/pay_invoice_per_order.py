@@ -46,6 +46,11 @@ class PurchaseOrderSummary(object):
 		,`tabPayment Entry Reference`.reference_doctype
 		,`tabPayment Entry Reference`.reference_name
 		,`tabPayment Entry Reference`.allocated_amount 
+		,`tabPurchase Order`.grand_total po_order_amount
+		,`tabPurchase Invoice`.grand_total pi_invoice_amount
+		,`tabPayment Entry`.paid_amount
+		,`tabPayment Entry`.unallocated_amount
+		,`tabPayment Entry`.total_allocated_amount
 		FROM `tabPurchase Invoice Item`
 		INNER JOIN `tabPurchase Order`
 		ON `tabPurchase Invoice Item`.purchase_order=`tabPurchase Order`.name
@@ -56,6 +61,8 @@ class PurchaseOrderSummary(object):
 		)
 		INNER JOIN `tabPurchase Invoice` 
 		ON`tabPurchase Invoice Item`.parent=`tabPurchase Invoice`.name
+		INNER JOIN `tabPayment Entry` 
+		ON `tabPayment Entry`.name=`tabPayment Entry Reference`.parent
 		WHERE  {conditions} AND `tabPayment Entry Reference`.reference_doctype IN('Purchase Invoice','Purchase Order')
 		AND `tabPurchase Invoice`.docstatus<>2 
 		"""
@@ -88,6 +95,36 @@ class PurchaseOrderSummary(object):
 				"fieldtype": "Link",
 				"options": "Payment Entry",
 				"width": 180,
+			},
+			{
+				"label": _("Purchase Order Grand Total"),
+				"fieldname": "po_order_amount",
+				"fieldtype": "Currency",
+				"width": 120,
+			},
+			{
+				"label": _("Purchase Invoice Grand Total"),
+				"fieldname": "pi_invoice_amount",
+				"fieldtype": "Currency",
+				"width": 120,
+			},
+			{
+				"label": _("Paid Amount"),
+				"fieldname": "paid_amount",
+				"fieldtype": "Currency",
+				"width": 120,
+			},
+			{
+				"label": _("Unallocated Amount"),
+				"fieldname": "unallocated_amount",
+				"fieldtype": "Currency",
+				"width": 120,
+			},
+			{
+				"label": _("Total Allocated Amount"),
+				"fieldname": "total_allocated_amount",
+				"fieldtype": "Currency",
+				"width": 120,
 			},
 	
 		]
