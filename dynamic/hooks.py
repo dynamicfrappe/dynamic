@@ -287,7 +287,7 @@ scheduler_events = {
 #
 override_whitelisted_methods = {
 	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
-    # "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order":"dynamic.ifi.api.override_make_purchase_order"
+    "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order":"dynamic.ifi.api.override_make_purchase_order"
 }
 #
 # each overriding function accepts a `data` argument;
