@@ -40,7 +40,24 @@ class WarehouseReservationAvailQty(object):
 		if self.filters.get("to_date"):
 			conditions += " AND `tabPurchase Invoice`.creation <= '%s'"%self.filters.get("to_date")
 		sql_query_new = f"""
-		
+		SELECT `tabBin`.warehouse
+		,`tabBin`.item_code
+		,SUM(WHEN `tabReservation Warehouse`.reserved_qty > 0 
+			then `tabBin`.actual_qty - `tabReservation Warehouse`.reserved_qty
+			ELSE `tabBin`.actual_qty 
+			END) as qty
+		,SUM(WHEN `tabReservation Warehouse`.reserved_qty > 0 
+			then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
+			ELSE `tabBin`.actual_qty 
+			END) as qty2
+		FROM `tabBin`
+		LEFT JOIN `tabReservation Warehouse`
+		ON `tabReservation Warehouse`.item=`tabBin`.item_code 
+		AND `tabReservation Warehouse`.warehouse=`tabBin`.warehouse
+		INNER JOIN `tabReservation`
+		ON `tabReservation`.name=`tabReservation Warehouse`.parent
+		WHERE `tabReservation`.docstatus<>'Invalid'
+		GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		"""
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 
