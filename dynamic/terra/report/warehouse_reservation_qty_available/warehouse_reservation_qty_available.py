@@ -42,22 +42,27 @@ class WarehouseReservationAvailQty(object):
 		sql_query_new = f"""
 		SELECT `tabBin`.warehouse
 		,`tabBin`.item_code
-		,SUM(WHEN `tabReservation Warehouse`.reserved_qty > 0 
-			then `tabBin`.actual_qty - `tabReservation Warehouse`.reserved_qty
-			ELSE `tabBin`.actual_qty 
-			END) as qty
-		,SUM(WHEN `tabReservation Warehouse`.reserved_qty > 0 
+		,`tabBin`.actual_qty
+		,(`tabBin`.actual_qty-SUM(`tabReservation Warehouse`.reserved_qty))avail_qty
+		,CASE 
+			WHEN `tabReservation Warehouse`.reserved_qty > 0 
 			then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
 			ELSE `tabBin`.actual_qty 
-			END) as qty2
+			END as qty2
+		,SUM(CASE 
+			WHEN `tabReservation Warehouse`.reserved_qty > 0 
+			then `tabReservation Warehouse`.reserved_qty
+			ELSE 0
+			END) as reserved_qty
 		FROM `tabBin`
 		LEFT JOIN `tabReservation Warehouse`
 		ON `tabReservation Warehouse`.item=`tabBin`.item_code 
 		AND `tabReservation Warehouse`.warehouse=`tabBin`.warehouse
 		INNER JOIN `tabReservation`
 		ON `tabReservation`.name=`tabReservation Warehouse`.parent
-		WHERE `tabReservation`.docstatus<>'Invalid'
-		GROUP BY `tabBin`.warehouse,`tabBin`.item_code
+		AND `tabReservation`.item_code=`tabReservation Warehouse`.item
+		WHERE `tabReservation`.status<>'Invalid' 
+		GROUP BY  `tabBin`.warehouse,`tabBin`.item_code
 		"""
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 
@@ -69,54 +74,35 @@ class WarehouseReservationAvailQty(object):
 		# add columns wich appear data
 		self.columns = [
 			{
-				"label": _("Purchase Order"),
-				"fieldname": "purchase_order",
+				"label": _("Warehouse"),
+				"fieldname": "warehouse",
 				"fieldtype": "Link",
-				"options": "Purchase Order",
+				"options": "Warehouse",
 				"width": 180,
 			},
 			{
-				"label": _("Purchase Invoice"),
-				"fieldname": "purchase_invoice",
+				"label": _("Item"),
+				"fieldname": "item_code",
 				"fieldtype": "Link",
-				"options": "Purchase Invoice",
+				"options": "Item",
 				"width": 180,
 			},
 			{
-				"label": _("Payment Entry"),
-				"fieldname": "payment_entry",
-				"fieldtype": "Link",
-				"options": "Payment Entry",
+				"label": _("Acutal QTY"),
+				"fieldname": "actual_qty",
+				"fieldtype": "Float",
 				"width": 180,
 			},
 			{
-				"label": _("Purchase Order Grand Total"),
-				"fieldname": "po_order_amount",
-				"fieldtype": "Currency",
+				"label": _("Reserved QTY"),
+				"fieldname": "reserved_qty",
+				"fieldtype": "Float",
 				"width": 120,
 			},
 			{
-				"label": _("Purchase Invoice Grand Total"),
-				"fieldname": "pi_invoice_amount",
-				"fieldtype": "Currency",
-				"width": 120,
-			},
-			{
-				"label": _("Paid Amount"),
-				"fieldname": "paid_amount",
-				"fieldtype": "Currency",
-				"width": 120,
-			},
-			{
-				"label": _("Unallocated Amount"),
-				"fieldname": "unallocated_amount",
-				"fieldtype": "Currency",
-				"width": 120,
-			},
-			{
-				"label": _("Total Allocated Amount"),
-				"fieldname": "total_allocated_amount",
-				"fieldtype": "Currency",
+				"label": _("Available QTY"),
+				"fieldname": "avail_qty",
+				"fieldtype": "Float",
 				"width": 120,
 			},
 	
