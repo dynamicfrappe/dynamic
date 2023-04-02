@@ -636,179 +636,179 @@ var create_ifi_purchase_order = function() {
 
 
 
-// const extend_sales_order = erpnext.selling.SalesOrderController.extend({
+const extend_sales_order = erpnext.selling.SalesOrderController.extend({
 
-//   refresh: function(doc, dt, dn) {
-//     var me = this;
-// 		this._super(doc);
-//     if(doc.status !== 'Closed') {
-//       if(doc.status !== 'On Hold') {
-//         frappe.call({
-//           method: "dynamic.api.get_active_domains",
-//           callback: function (r) {
-//             if (r.message && r.message.length) {
-//               if (r.message.includes("IFI")){
-//                 // Make Purchase Order
-//                 if (!cur_frm.doc.is_internal_customer) {
-//                   cur_frm.page.remove_inner_button('Purchase Order', 'Create')
-//                   cur_frm.add_custom_button(__('Purchase Order'), () => me.frm.trigger("make_purchase_order_ifi"), __('Create'));
-//                 }
-//               }
-//             }
-//           }
-//         })
+  refresh: function(doc, dt, dn) {
+    var me = this;
+		this._super(doc);
+    if(doc.status !== 'Closed') {
+      if(doc.status !== 'On Hold') {
+        frappe.call({
+          method: "dynamic.api.get_active_domains",
+          callback: function (r) {
+            if (r.message && r.message.length) {
+              if (r.message.includes("IFI")){
+                // Make Purchase Order
+                if (!cur_frm.doc.is_internal_customer) {
+                  cur_frm.page.remove_inner_button('Purchase Order', 'Create')
+                  cur_frm.add_custom_button(__('Purchase Order'), () => me.frm.trigger("make_purchase_order_ifi"), __('Create'));
+                }
+              }
+            }
+          }
+        })
 
-//       }
-//     }
-//   },
-//   // make_purchase_order_ifi: function(){
-// 	// 	let pending_items = this.frm.doc.items.some((item) =>{
-// 	// 		let pending_qty = flt(item.stock_qty) - flt(item.ordered_qty);
-// 	// 		return pending_qty > 0;
-// 	// 	})
-// 	// 	if(!pending_items){
-// 	// 		frappe.throw({message: __("Purchase Order already created for all Sales Order items"), title: __("Note")});
-// 	// 	}
+      }
+    }
+  },
+  make_purchase_order_ifi: function(){
+		let pending_items = this.frm.doc.items.some((item) =>{
+			let pending_qty = flt(item.stock_qty) - flt(item.ordered_qty);
+			return pending_qty > 0;
+		})
+		if(!pending_items){
+			frappe.throw({message: __("Purchase Order already created for all Sales Order items"), title: __("Note")});
+		}
 
-// 	// 	var me = this;
-// 	// 	var dialog = new frappe.ui.Dialog({
-// 	// 		title: __("Select Items"),
-// 	// 		size: "large",
-// 	// 		fields: [
-// 	// 			{
-// 	// 				"fieldtype": "Check",
-// 	// 				"label": __("Against Default Supplier"),
-// 	// 				"fieldname": "against_default_supplier",
-// 	// 				"default": 0
-// 	// 			},
-// 	// 			{
-// 	// 				fieldname: 'items_for_po', fieldtype: 'Table', label: 'Select Items',
-// 	// 				fields: [
-// 	// 					{
-// 	// 						fieldtype:'Data',
-// 	// 						fieldname:'item_code',
-// 	// 						label: __('Item'),
-// 	// 						read_only:1,
-// 	// 						in_list_view:1
-// 	// 					},
-// 	// 					{
-// 	// 						fieldtype:'Data',
-// 	// 						fieldname:'item_name',
-// 	// 						label: __('Item name'),
-// 	// 						read_only:1,
-// 	// 						in_list_view:1
-// 	// 					},
-// 	// 					{
-// 	// 						fieldtype:'Float',
-// 	// 						fieldname:'pending_qty',
-// 	// 						label: __('Pending Qty'),
-// 	// 						read_only: 1,
-// 	// 						in_list_view:1
-// 	// 					},
-// 	// 					{
-// 	// 						fieldtype:'Link',
-// 	// 						read_only:1,
-// 	// 						fieldname:'uom',
-// 	// 						label: __('UOM'),
-// 	// 						in_list_view:1,
-// 	// 					},
-// 	// 					{
-// 	// 						fieldtype:'Data',
-// 	// 						fieldname:'supplier',
-// 	// 						label: __('Supplier'),
-// 	// 						read_only:1,
-// 	// 						in_list_view:1
-// 	// 					},
-// 	// 				]
-// 	// 			}
-// 	// 		],
-// 	// 		primary_action_label: 'Create Purchase Order',
-// 	// 		primary_action (args) {
-// 	// 			if (!args) return;
+		var me = this;
+		var dialog = new frappe.ui.Dialog({
+			title: __("Select Items"),
+			size: "large",
+			fields: [
+				{
+					"fieldtype": "Check",
+					"label": __("Against Default Supplier"),
+					"fieldname": "against_default_supplier",
+					"default": 0
+				},
+				{
+					fieldname: 'items_for_po', fieldtype: 'Table', label: 'Select Items',
+					fields: [
+						{
+							fieldtype:'Data',
+							fieldname:'item_code',
+							label: __('Item'),
+							read_only:1,
+							in_list_view:1
+						},
+						{
+							fieldtype:'Data',
+							fieldname:'item_name',
+							label: __('Item name'),
+							read_only:1,
+							in_list_view:1
+						},
+						{
+							fieldtype:'Float',
+							fieldname:'pending_qty',
+							label: __('Pending Qty'),
+							read_only: 1,
+							in_list_view:1
+						},
+						{
+							fieldtype:'Link',
+							read_only:1,
+							fieldname:'uom',
+							label: __('UOM'),
+							in_list_view:1,
+						},
+						{
+							fieldtype:'Data',
+							fieldname:'supplier',
+							label: __('Supplier'),
+							read_only:1,
+							in_list_view:1
+						},
+					]
+				}
+			],
+			primary_action_label: 'Create Purchase Order',
+			primary_action (args) {
+				if (!args) return;
 
-// 	// 			let selected_items = dialog.fields_dict.items_for_po.grid.get_selected_children();
-// 	// 			if(selected_items.length == 0) {
-// 	// 				frappe.throw({message: 'Please select Items from the Table', title: __('Items Required'), indicator:'blue'})
-// 	// 			}
+				let selected_items = dialog.fields_dict.items_for_po.grid.get_selected_children();
+				if(selected_items.length == 0) {
+					frappe.throw({message: 'Please select Items from the Table', title: __('Items Required'), indicator:'blue'})
+				}
 
-// 	// 			dialog.hide();
-//   //       // dynamic.ifi.api.override_make_purchase_order **
-// 	// 			var method = '' //args.against_default_supplier ? "make_purchase_order_for_default_supplier" : "override_make_purchase_order"
-//   //       if(args.against_default_supplier){
-//   //         method= "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order_for_default_supplier"
-//   //       }else{
-//   //         method= "dynamic.ifi.api.override_make_purchase_order"
-//   //       }
-// 	// 			return frappe.call({
-// 	// 				method:  method,
-// 	// 				freeze: true,
-// 	// 				freeze_message: __("Creating Purchase Order ..."),
-// 	// 				args: {
-// 	// 					"source_name": me.frm.doc.name,
-// 	// 					"selected_items": selected_items
-// 	// 				},
-// 	// 				freeze: true,
-// 	// 				callback: function(r) {
-// 	// 					if(!r.exc) {
-// 	// 						if (!args.against_default_supplier) {
-// 	// 							frappe.model.sync(r.message);
-// 	// 							frappe.set_route("Form", r.message.doctype, r.message.name);
-// 	// 						}
-// 	// 						else {
-// 	// 							frappe.route_options = {
-// 	// 								"sales_order": me.frm.doc.name
-// 	// 							}
-// 	// 							frappe.set_route("List", "Purchase Order");
-// 	// 						}
-// 	// 					}
-// 	// 				}
-// 	// 			})
-// 	// 		}
-// 	// 	});
+				dialog.hide();
+        // dynamic.ifi.api.override_make_purchase_order **
+				var method = '' //args.against_default_supplier ? "make_purchase_order_for_default_supplier" : "override_make_purchase_order"
+        if(args.against_default_supplier){
+          method= "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order_for_default_supplier"
+        }else{
+          method= "dynamic.ifi.api.override_make_purchase_order"
+        }
+				return frappe.call({
+					method:  method,
+					freeze: true,
+					freeze_message: __("Creating Purchase Order ..."),
+					args: {
+						"source_name": me.frm.doc.name,
+						"selected_items": selected_items
+					},
+					freeze: true,
+					callback: function(r) {
+						if(!r.exc) {
+							if (!args.against_default_supplier) {
+								frappe.model.sync(r.message);
+								frappe.set_route("Form", r.message.doctype, r.message.name);
+							}
+							else {
+								frappe.route_options = {
+									"sales_order": me.frm.doc.name
+								}
+								frappe.set_route("List", "Purchase Order");
+							}
+						}
+					}
+				})
+			}
+		});
 
-// 	// 	dialog.fields_dict["against_default_supplier"].df.onchange = () => set_po_items_data(dialog);
+		dialog.fields_dict["against_default_supplier"].df.onchange = () => set_po_items_data(dialog);
 
-// 	// 	function set_po_items_data (dialog) {
-// 	// 		var against_default_supplier = dialog.get_value("against_default_supplier");
-// 	// 		var items_for_po = dialog.get_value("items_for_po");
+		function set_po_items_data (dialog) {
+			var against_default_supplier = dialog.get_value("against_default_supplier");
+			var items_for_po = dialog.get_value("items_for_po");
 
-// 	// 		if (against_default_supplier) {
-// 	// 			let items_with_supplier = items_for_po.filter((item) => item.supplier)
+			if (against_default_supplier) {
+				let items_with_supplier = items_for_po.filter((item) => item.supplier)
 
-// 	// 			dialog.fields_dict["items_for_po"].df.data = items_with_supplier;
-// 	// 			dialog.get_field("items_for_po").refresh();
-// 	// 		} else {
-// 	// 			let po_items = [];
-// 	// 			me.frm.doc.items.forEach(d => {
-// 	// 				let ordered_qty = me.get_ordered_qty(d, me.frm.doc);
-// 	// 				let pending_qty = (flt(d.stock_qty) - ordered_qty) / flt(d.conversion_factor);
-// 	// 				if (pending_qty > 0) {
-// 	// 					po_items.push({
-// 	// 						"doctype": "Sales Order Item",
-// 	// 						"name": d.name,
-// 	// 						"item_name": d.item_name,
-// 	// 						"item_code": d.item_code,
-// 	// 						"pending_qty": pending_qty,
-// 	// 						"uom": d.uom,
-// 	// 						"supplier": d.supplier
-// 	// 					});
-// 	// 				}
-// 	// 			});
+				dialog.fields_dict["items_for_po"].df.data = items_with_supplier;
+				dialog.get_field("items_for_po").refresh();
+			} else {
+				let po_items = [];
+				me.frm.doc.items.forEach(d => {
+					let ordered_qty = me.get_ordered_qty(d, me.frm.doc);
+					let pending_qty = (flt(d.stock_qty) - ordered_qty) / flt(d.conversion_factor);
+					if (pending_qty > 0) {
+						po_items.push({
+							"doctype": "Sales Order Item",
+							"name": d.name,
+							"item_name": d.item_name,
+							"item_code": d.item_code,
+							"pending_qty": pending_qty,
+							"uom": d.uom,
+							"supplier": d.supplier
+						});
+					}
+				});
 
-// 	// 			dialog.fields_dict["items_for_po"].df.data = po_items;
-// 	// 			dialog.get_field("items_for_po").refresh();
-// 	// 		}
-// 	// 	}
+				dialog.fields_dict["items_for_po"].df.data = po_items;
+				dialog.get_field("items_for_po").refresh();
+			}
+		}
 
-// 	// 	set_po_items_data(dialog);
-// 	// 	dialog.get_field("items_for_po").grid.only_sortable();
-// 	// 	dialog.get_field("items_for_po").refresh();
-// 	// 	dialog.wrapper.find('.grid-heading-row .grid-row-check').click();
-// 	// 	dialog.show();
-// 	// },
-// })
+		set_po_items_data(dialog);
+		dialog.get_field("items_for_po").grid.only_sortable();
+		dialog.get_field("items_for_po").refresh();
+		dialog.wrapper.find('.grid-heading-row .grid-row-check').click();
+		dialog.show();
+	},
+})
 
-// $.extend(
-// 	cur_frm.cscript,
-// 	new extend_sales_order({frm: cur_frm}),
-// );
+$.extend(
+	cur_frm.cscript,
+	new extend_sales_order({frm: cur_frm}),
+);
