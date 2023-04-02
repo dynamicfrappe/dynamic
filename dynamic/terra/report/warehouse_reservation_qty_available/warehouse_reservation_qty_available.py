@@ -35,10 +35,14 @@ class WarehouseReservationAvailQty(object):
 		return get_new
 
 	def get_avail_qty(self,conditions):
-		if self.filters.get("from_date"):
-			conditions += " AND `tabPurchase Invoice`.creation >= '%s'"%self.filters.get("from_date")
-		if self.filters.get("to_date"):
-			conditions += " AND `tabPurchase Invoice`.creation <= '%s'"%self.filters.get("to_date")
+		# if self.filters.get("from_date"):
+		# 	conditions += " AND `tabPurchase Invoice`.creation >= '%s'"%self.filters.get("from_date")
+		# if self.filters.get("to_date"):
+		# 	conditions += " AND `tabPurchase Invoice`.creation <= '%s'"%self.filters.get("to_date")
+		if self.filters.get("warehouse"):
+			conditions += " AND `tabBin`.warehouse = '%s'"%self.filters.get("warehouse")
+		if self.filters.get("item_code"):
+			conditions += " AND `tabBin`.item_code = '%s'"%self.filters.get("item_code")
 		sql_query_new = f"""
 		SELECT `tabBin`.warehouse
 		,`tabBin`.item_code
@@ -61,7 +65,7 @@ class WarehouseReservationAvailQty(object):
 		INNER JOIN `tabReservation`
 		ON `tabReservation`.name=`tabReservation Warehouse`.parent
 		AND `tabReservation`.item_code=`tabReservation Warehouse`.item
-		WHERE `tabReservation`.status<>'Invalid' 
+		WHERE {conditions} AND `tabReservation`.status<>'Invalid' 
 		GROUP BY  `tabBin`.warehouse,`tabBin`.item_code
 		"""
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
