@@ -84,10 +84,9 @@ class Reservation(Document):
 			LEFT JOIN
 			`tabReservation`
 			ON `tabReservation Purchase Order`.parent = `tabReservation`.name 
-			AND `tabReservation`.name <> '{self.name}'
+			AND `tabReservation`.name <> '{self.name}' AND  `tabReservation`.status <> "Invalid"
 			where `tabPurchase Order Item`.item_code = '{self.item_code}'  
 			AND `tabPurchase Order Item`.parent = '{self.order_source}' 
-			AND  `tabReservation`.status <> "Invalid"
 			""",as_dict=1)
 		if order and len(order) > 0 :
 			if order[0].get("name") and float(order[0].get("qty")) > 0 :
