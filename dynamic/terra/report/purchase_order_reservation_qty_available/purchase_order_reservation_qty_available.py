@@ -35,34 +35,36 @@ class PurchaseOrderAvailREservedQth(object):
 		return get_new
 
 	def get_avail_qty(self,conditions):
-		# if self.filters.get("from_date"):
-		# 	conditions += " AND `tabPurchase Invoice`.creation >= '%s'"%self.filters.get("from_date")
-		# if self.filters.get("to_date"):
-		# 	conditions += " AND `tabPurchase Invoice`.creation <= '%s'"%self.filters.get("to_date")
+		if self.filters.get("item_code"):
+			conditions += " AND `tabPurchase Order Item`.item_code = '%s'"%self.filters.get("item_code")
+		if self.filters.get("purchase_order"):
+			conditions += " AND `tabPurchase Order Item`.parent = '%s'"%self.filters.get("purchase_order")
 		sql_query_new = f"""
-		SELECT `tabBin`.warehouse
-		,`tabBin`.item_code
-		,`tabBin`.actual_qty
-		,(`tabBin`.actual_qty-SUM(`tabReservation Warehouse`.reserved_qty))avail_qty
-		,CASE 
-			WHEN `tabReservation Warehouse`.reserved_qty > 0 
-			then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
-			ELSE `tabBin`.actual_qty 
-			END as qty2
-		,SUM(CASE 
-			WHEN `tabReservation Warehouse`.reserved_qty > 0 
-			then `tabReservation Warehouse`.reserved_qty
-			ELSE 0
-			END) as reserved_qty
-		FROM `tabBin`
-		LEFT JOIN `tabReservation Warehouse`
-		ON `tabReservation Warehouse`.item=`tabBin`.item_code 
-		AND `tabReservation Warehouse`.warehouse=`tabBin`.warehouse
-		INNER JOIN `tabReservation`
-		ON `tabReservation`.name=`tabReservation Warehouse`.parent
-		AND `tabReservation`.item_code=`tabReservation Warehouse`.item
-		WHERE `tabReservation`.status<>'Invalid' 
-		GROUP BY  `tabBin`.warehouse,`tabBin`.item_code
+		SELECT *,(base_qty - table1.available_qty) as reserved_qty
+		FROM (
+		SELECT `tabPurchase Order Item`.name as `line_name` 
+		,`tabPurchase Order Item`.item_code 
+		,`tabPurchase Order Item`.parent
+		,`tabPurchase Order Item`.parenttype as doctype
+		,`tabPurchase Order Item`.qty as `base_qty`
+		,CASE
+			WHEN `tabReservation Purchase Order`.reserved_qty > 0 
+			then (`tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty) - SUM(`tabReservation Purchase Order`.reserved_qty)
+			else `tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty
+		end as available_qty
+		from
+		`tabPurchase Order Item`
+		LEFT JOIN
+		`tabReservation Purchase Order`
+		ON `tabReservation Purchase Order`.purchase_order_line=`tabPurchase Order Item`.name 
+		AND `tabReservation Purchase Order`.item=`tabPurchase Order Item`.item_code 
+		LEFT JOIN
+		`tabReservation`
+		ON  `tabReservation Purchase Order`.parent = `tabReservation`.name 
+		AND `tabReservation`.status <> "Invalid"
+		WHERE {conditions}
+		GROUP BY `tabPurchase Order Item`.name,`tabPurchase Order Item`.item_code
+		) table1
 		"""
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 
@@ -74,10 +76,10 @@ class PurchaseOrderAvailREservedQth(object):
 		# add columns wich appear data
 		self.columns = [
 			{
-				"label": _("Warehouse"),
-				"fieldname": "warehouse",
+				"label": _("Purchase Order"),
+				"fieldname": "parent",
 				"fieldtype": "Link",
-				"options": "Warehouse",
+				"options": "Purchase Order",
 				"width": 180,
 			},
 			{
@@ -89,7 +91,7 @@ class PurchaseOrderAvailREservedQth(object):
 			},
 			{
 				"label": _("Acutal QTY"),
-				"fieldname": "actual_qty",
+				"fieldname": "base_qty",
 				"fieldtype": "Float",
 				"width": 180,
 			},
@@ -101,7 +103,7 @@ class PurchaseOrderAvailREservedQth(object):
 			},
 			{
 				"label": _("Available QTY"),
-				"fieldname": "avail_qty",
+				"fieldname": "available_qty",
 				"fieldtype": "Float",
 				"width": 120,
 			},

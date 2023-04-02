@@ -4,6 +4,18 @@
 
 frappe.query_reports["Purchase Order Reservation Qty Available"] = {
 	"filters": [
-
+		{
+			fieldname: "item_code",
+			label: __("Item"),
+			fieldtype: "Link",
+			options: "Item"
+		},
+		{
+			fieldname: "purchase_order",
+			label: __("Purchase Order"),
+			fieldtype: "Link",
+			options:"Purchase Order"
+			// reqd: 1
+		},
 	]
 };

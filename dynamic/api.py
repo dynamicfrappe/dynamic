@@ -513,64 +513,65 @@ def check_total_reservation(self):
             validate_purchase_order_reservation(item.item_code,item.item_purchase_order,item.qty)
 
 def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_amount):
-		"""get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
-		data = frappe.db.sql(f""" 
-					SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
-					CASE 
-							WHEN `tabReservation Warehouse`.reserved_qty > 0
-							then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
-							ELSE `tabBin`.actual_qty 
-							END  as qty
-					FROM 
-					`tabBin`
-					LEFT JOIN 
-					`tabReservation Warehouse`
-					ON `tabBin`.name = `tabReservation Warehouse`.bin 
-					LEFT JOIN 
-					`tabReservation` 
-					ON `tabReservation Warehouse`.parent = `tabReservation`.name 
-					AND `tabBin`.name = `tabReservation Warehouse`.bin
-					WHERE `tabBin`.warehouse = '{warehouse_source}'
-					AND `tabBin`.item_code = '{item_code}'
-					AND `tabReservation`.status <> "Invalid"
-					""" ,as_dict=1)
-		if data and len(data) > 0 :
-			if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < reservation_amount  :
-				frappe.throw(_(f""" stock value in warehouse {warehouse_source} = {data[0].get("qty") or 0} 
-					and you requires  {reservation_amount} for Item {item_code}  """))
-		if  not data or len(data) == 0 :
-				frappe.throw(_(f"""no stock value in warehouse {warehouse_source} for item {item_code}  """))
-		return data
+	"""get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
+	data = frappe.db.sql(f""" 
+				SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
+				CASE 
+						WHEN `tabReservation Warehouse`.reserved_qty > 0
+						then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
+						ELSE `tabBin`.actual_qty 
+						END  as qty
+				FROM 
+				`tabBin`
+				LEFT JOIN 
+				`tabReservation Warehouse`
+				ON `tabBin`.name = `tabReservation Warehouse`.bin 
+				LEFT JOIN 
+				`tabReservation` 
+				ON `tabReservation Warehouse`.parent = `tabReservation`.name 
+				AND `tabBin`.name = `tabReservation Warehouse`.bin
+				WHERE `tabBin`.warehouse = '{warehouse_source}'
+				AND `tabBin`.item_code = '{item_code}'
+				AND `tabReservation`.status <> "Invalid"
+				""" ,as_dict=1)
+	if data and len(data) > 0 :
+		if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < reservation_amount  :
+			frappe.throw(_(f""" stock value in warehouse {warehouse_source} = {data[0].get("qty") or 0} 
+				and you requires  {reservation_amount} for Item {item_code}  """))
+	if  not data or len(data) == 0 :
+			frappe.throw(_(f"""no stock value in warehouse {warehouse_source} for item {item_code}  """))
+	return data
 
 def validate_purchase_order_reservation(item_code,order_source,reservation_amount):
-		order =  frappe.db.sql(f"""                   
-            SELECT `tabPurchase Order Item`.name as `name` 
-            ,`tabPurchase Order Item`.parent,`tabPurchase Order Item`.parenttype as doctype,
-            CASE
-            WHEN `tabReservation Purchase Order`.reserved_qty > 0 
-            then 
-            (`tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty) - SUM(`tabReservation Purchase Order`.reserved_qty)
-            else `tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty
-            end as qty
-            from
-            `tabPurchase Order Item` a
-            LEFT JOIN
-            `tabReservation Purchase Order` b
-            ON `tabReservation Purchase Order`.purchase_order_line=`tabPurchase Order Item`.name 
-            LEFT JOIN
-            `tabReservation` c
-            ON `tabReservation Purchase Order`.parent = `tabReservation`.name 
-            where `tabPurchase Order Item`.item_code = '{item_code}'  
-            AND `tabPurchase Order Item`.parent = '{order_source}' 
-            AND `tabReservation`.status <> "Invalid"
-            """,as_dict=1)
-		if order and len(order) > 0 :
-			if order[0].get("parent") and float(order[0].get("qty")) ==  0 :
-				frappe.throw(_(f"  Purchase Order {order_source} don't have {item_code} Qty and you requires  {reservation_amount}" ))
-			if not order[0].get("parent") :
-				frappe.throw(_(f"  Purchase Order {order_source} don't have item {item_code}" ))	
-		if not order or  len(order) == 0 :
-			frappe.throw(_(f"Invalid Purchase Order {order_source} don't have item {item_code}"))
+	order =  frappe.db.sql(f"""                   
+		SELECT `tabPurchase Order Item`.name as `name` 
+		,`tabPurchase Order Item`.parent,`tabPurchase Order Item`.parenttype as doctype,
+		CASE
+		WHEN `tabReservation Purchase Order`.reserved_qty > 0 
+		then 
+		(`tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty) - SUM(`tabReservation Purchase Order`.reserved_qty)
+		else `tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty
+		end as qty
+		from
+		`tabPurchase Order Item` 
+		LEFT JOIN
+		`tabReservation Purchase Order` 
+		ON `tabReservation Purchase Order`.purchase_order_line=`tabPurchase Order Item`.name 
+		LEFT JOIN
+		`tabReservation` 
+		ON `tabReservation Purchase Order`.parent = `tabReservation`.name 
+        AND `tabReservation`.status <> "Invalid"
+		where `tabPurchase Order Item`.item_code = '{item_code}'  
+		AND `tabPurchase Order Item`.parent = '{order_source}' 
+		""",as_dict=1)
+	
+	if order and len(order) > 0 :
+		if order[0].get("parent") and float(order[0].get("qty")) ==  0 :
+			frappe.throw(_(f"  Purchase Order {order_source} don't have {item_code} Qty and you requires  {reservation_amount}" ))
+		if not order[0].get("parent") :
+			frappe.throw(_(f"  Purchase Order {order_source} don't have item {item_code}" ))	
+	if not order or  len(order) == 0 :
+		frappe.throw(_(f"Invalid Purchase Order {order_source} don't have item {item_code}"))
 
 @frappe.whitelist()
 def cancel_reservation(self,*args , **kwargs):
