@@ -227,7 +227,7 @@ def deposite_cheque_under_collection(payment_entry):
     if not payment_entry.drawn_account:
         frappe.throw(_("Bank Account is not Company Account"))
     je = frappe.new_doc("Journal Entry")
-    je.posting_date = payment_entry.posting_date
+    je.posting_date = frappe.utils.getdate()#payment_entry.posting_date
     je.voucher_type = 'Bank Entry'
     je.company = payment_entry.company
     je.cheque = payment_entry.cheque
@@ -427,7 +427,7 @@ def reject_cheque_under_collection(payment_entry):
     if not company.rejected_cheques_bank_account:
         frappe.throw(_("Please Set Rejected Cheques Bank Account in Company"))
     je = frappe.new_doc("Journal Entry")
-    je.posting_date = payment_entry.posting_date
+    je.posting_date = frappe.utils.getdate()
     je.cheque_status = "Rejected"
     je.voucher_type = 'Bank Entry'
     je.company = payment_entry.company
