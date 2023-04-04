@@ -654,6 +654,13 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
                   cur_frm.add_custom_button(__('Purchase Order'), () => me.frm.trigger("make_purchase_order_ifi"), __('Create'));
                 }
               }
+              if(r.message.includes("Kmina")){
+                // sales invoice
+              if(flt(doc.per_billed, 6) < 100) {
+                cur_frm.page.remove_inner_button('Sales Invoice', 'Create')
+                cur_frm.add_custom_button(__('Sales Invoice'), () => me.make_sales_invoice(), __('Create'));
+              }
+              }
             }
           }
         })
@@ -805,6 +812,12 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
 		dialog.get_field("items_for_po").refresh();
 		dialog.wrapper.find('.grid-heading-row .grid-row-check').click();
 		dialog.show();
+	},
+  make_sales_invoice: function() {
+		frappe.model.open_mapped_doc({
+			method: "dynamic.kmina.api.make_sales_invoice",
+			frm: this.frm
+		})
 	},
 })
 

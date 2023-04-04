@@ -333,6 +333,7 @@ domains = {
     'Teba' :"dynamic.domains.teba",
     'Sedia':"dynamic.domains.sedia",
     'Majestey':"dynamic.domains.majestey",
+    'Kmina':"dynamic.domains.kmina",
 }
 
 # domain Conatin

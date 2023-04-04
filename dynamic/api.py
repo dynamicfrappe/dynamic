@@ -906,7 +906,7 @@ def submit_purchase_recipt(doc ,*args,**kwargs) :
                     acceess_target.append(obj.get("name"))
                 
         
-        access_group =    acceess_target 
+        access_group =  acceess_target 
         if len(access_group) > 0 :
             for access in access_group :
                 # frappe.throw(str(access))
