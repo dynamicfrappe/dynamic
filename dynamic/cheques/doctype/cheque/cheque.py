@@ -283,6 +283,10 @@ def deposite_cheque_under_collection(payment_entry):
     je.submit() if cheque_submit else je.save()
     return je
 
+
+
+
+
 @frappe.whitelist()
 def return_cheque_xx(payment_entry):
     frappe.throw(_("Hellop"))

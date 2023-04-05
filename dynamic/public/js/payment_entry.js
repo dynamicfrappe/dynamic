@@ -105,14 +105,14 @@ frappe.ui.form.on("Payment Entry", {
           },
           __("Cheque Management")
         );
-        // deposite Cheque under collcttion
-        frm.add_custom_button(
-          __("Alert Test"),
-          function () {
-            frm.events.return_cheque_xx(frm);
-          },
-          __("Cheque Management")
-        );
+        // return_cheque_xx
+        // frm.add_custom_button(
+        //   __("Alert Test"),
+        //   function () {
+        //     frm.events.return_cheque_xx(frm);
+        //   },
+        //   __("Cheque Management")
+        // );
       }
       if (["New"].includes(frm.doc.cheque_status)) {
       }
