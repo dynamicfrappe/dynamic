@@ -105,6 +105,14 @@ frappe.ui.form.on("Payment Entry", {
           },
           __("Cheque Management")
         );
+        // deposite Cheque under collcttion
+        frm.add_custom_button(
+          __("Alert Test"),
+          function () {
+            frm.events.return_cheque_xx(frm);
+          },
+          __("Cheque Management")
+        );
       }
       if (["New"].includes(frm.doc.cheque_status)) {
       }
@@ -200,6 +208,21 @@ frappe.ui.form.on("Payment Entry", {
         frm.refresh();
         if (r && r.message) {
           frappe.set_route("Form", r.message.doctype, r.message.name);
+        }
+      },
+    });
+  },
+  return_cheque_xx(frm) {
+    frappe.call({
+      method:
+        "dynamic.cheques.doctype.cheque.cheque.return_cheque_xx",
+      args: {
+        payment_entry: frm.doc.name,
+      },
+      callback: function (r) {
+        // frm.refresh();
+        if (r && r.message) {
+          // frappe.set_route("Form", r.message.doctype, r.message.name);
         }
       },
     });
