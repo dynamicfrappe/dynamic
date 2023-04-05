@@ -117,7 +117,7 @@ def make_cheque_endorsement(payment_entry):
     if party_type_account_type != part_account_type :
         frappe.throw(_(f" Endorsed Party Account type is {party_type_account_type} and party type {part_account_type} "))
     je = frappe.new_doc("Journal Entry")
-    je.posting_date = payment_entry.posting_date
+    je.posting_date = frappe.utils.getdate()
     je.voucher_type = 'Bank Entry'
     je.company = payment_entry.company
     je.cheque_status = "Endorsed"
@@ -154,15 +154,14 @@ def make_cheque_endorsement(payment_entry):
 
 @frappe.whitelist()
 def make_cheque_pay(payment_entry):
-
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
-    
+    payment_entry.db_set('cheque_status','Paid')
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
 
     company = frappe.get_doc("Company", payment_entry.company)
     je = frappe.new_doc("Journal Entry")
-    je.posting_date = payment_entry.posting_date
+    je.posting_date = frappe.utils.getdate()
     je.voucher_type = 'Bank Entry'
     je.company = payment_entry.company
     je.cheque_status = "Paid"
@@ -221,6 +220,7 @@ def make_cheque_pay(payment_entry):
 @frappe.whitelist()
 def deposite_cheque_under_collection(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
+    payment_entry.db_set('cheque_status','Under Collect')
     company = frappe.get_doc("Company", payment_entry.company)
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
@@ -287,6 +287,7 @@ def deposite_cheque_under_collection(payment_entry):
 @frappe.whitelist()
 def collect_cheque_now(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
+    payment_entry.db_set('cheque_status','Collected')
     company = frappe.get_doc("Company", payment_entry.company)
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
@@ -296,7 +297,7 @@ def collect_cheque_now(payment_entry):
         frappe.throw(
             _("Please Set Incoming Wallet Account in Company settings"))
     je = frappe.new_doc("Journal Entry")
-    je.posting_date = payment_entry.posting_date
+    je.posting_date = frappe.utils.getdate()
     je.cheque_status = "Collected"
     je.voucher_type = 'Bank Entry'
     je.company = payment_entry.company
@@ -354,13 +355,14 @@ def collect_cheque_now(payment_entry):
 @frappe.whitelist()
 def collect_cheque_under_collection(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
+    payment_entry.db_set('cheque_status','Collected')
     company = frappe.get_doc("Company", payment_entry.company)
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
     if not payment_entry.drawn_account:
         frappe.throw(_("Bank Account is not Company Account"))
     je = frappe.new_doc("Journal Entry")
-    je.posting_date = payment_entry.posting_date
+    je.posting_date = frappe.utils.getdate()
     je.cheque_status = "Collected"
     je.voucher_type = 'Bank Entry'
     je.company = payment_entry.company
@@ -419,6 +421,7 @@ def collect_cheque_under_collection(payment_entry):
 @frappe.whitelist()
 def reject_cheque_under_collection(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
+    payment_entry.db_set('cheque_status','Rejected')
     company = frappe.get_doc("Company", payment_entry.company)
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
@@ -542,8 +545,9 @@ def add_row_cheque_tracks(payment_entry, new_cheque_status, old_status=None):
 @frappe.whitelist()
 def pay_cash_new(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
+    payment_entry.db_set('cheque_status','Paid')
     je = frappe.new_doc("Journal Entry")
-    je.posting_date = payment_entry.posting_date
+    je.posting_date = frappe.utils.getdate()
     je.voucher_type = 'Bank Entry'
     je.company = payment_entry.company
     je.cheque_status = "Paid"
