@@ -11,12 +11,12 @@ data = {
                 "insert_after": "customer",
             }
         ],
-        'Stock Reconciliation': [
+        'Stock Entry': [
             {
                 "label": "Voucher Number",
                 "fieldname": "voucher_number",
                 "fieldtype": "Data",
-                "insert_after": "purpose",
+                "insert_after": "stock_entry_type",
             }
         ],
 
