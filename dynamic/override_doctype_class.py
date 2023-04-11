@@ -23,6 +23,7 @@ SalesInvoice = ERPNextSalesInvoice
 
 
 
+
 # doctype js override
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
