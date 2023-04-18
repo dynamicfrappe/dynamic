@@ -293,6 +293,7 @@ def loop_over_doc_items(doc):
             #get all reservation for this purchase_order wiz this item
             get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
 
+
 def get_po_reservation(purchase_order,item,target_warehouse):
     reservation_list_sql = f"""SELECT r.name from `tabReservation` as r WHERE r.status <> 'Invalid' AND r.order_source='{purchase_order}' AND r.item_code = '{item}' AND sales_order <> 'Invalid' AND r.warehouse_source = '' """
     data = frappe.db.sql(reservation_list_sql,as_dict=1)

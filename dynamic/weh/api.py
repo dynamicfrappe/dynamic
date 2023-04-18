@@ -4,6 +4,8 @@ import json
 from frappe import _
 
 # url : /api/method/dynamic.weh.api.create_customer
+
+
 @frappe.whitelist()
 def customer(*args, **kwargs):
     try :
