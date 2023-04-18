@@ -114,9 +114,9 @@ frappe.ui.form.on("Cheque", {
     frm.refresh_field("reference_name")
   },
   mode_of_payment: function (frm) {
-    // get_payment_mode_account(frm, frm.doc.mode_of_payment, function (account) {
-    //   frm.set_value("account_paid_to", account);
-    // });
+    get_payment_mode_account(frm, frm.doc.mode_of_payment, function (account) {
+      frm.set_value("account_paid_to", account);
+    });
   },
   get_party_account: function (frm, callback) {
     if (frm.doc.company && frm.doc.party_type && frm.doc.party) {

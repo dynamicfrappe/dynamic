@@ -35,48 +35,29 @@ frappe.ui.form.on("Quotation",{
                     }
                 }
                 if (r.message.includes("IFI")) {
-                    // frm.add_custom_button("test qt1",()=>{
-                    //     frappe.call({
-                    //         method:"dynamic.ifi.api.testalert",//"dynamic.ifi.api.testalert",
-                    //         args:{
-                    //             frm_name:frm.doc.name,
-                    //         },
-                    //         callback:function(r){
-                    //             // frm.refresh()
-                    //         }
-
-                    //     })
-
-                    // })
+                    if(frm.doc.docstatus == 1){
+                        frm.add_custom_button("Potential",()=>{
+                            frappe.confirm('Are you sure you want to Potential quotation',
+                                () => {
+                                    frappe.call({
+                                        method:"dynamic.ifi.api.set_potential_status",
+                                        args:{
+                                            frm_name:frm.doc.name,
+                                        },
+                                        callback:function(r){
+                                             frm.refresh()
+                                        }
+            
+                                    })
+                                }, () => {
+                                    // action to perform if No is selected
+                                })
+    
+                        })
+                    }
                     
-                    // if (frm.doc.crean == 'Yes' && frm.doc.crean_amount > 0) {
-                    //     frappe.call({
-                    //         method:"",
-                    //         args:{
-                    //             frm:frm.doc.name,
-                    //             crean_amount:frm.doccrean_amount
-                    //         },
-                    //         callback:function(r){
-                    //             frm.refresh()
-                    //         }
-                    //     })
-
-                    // }
-                    // if (frm.doc.docstatus == 1 && frm.doc.status !== "Rejected") {
-                    //     frm.add_custom_button(__('Reject'),()=>{
-                    //         frappe.confirm('Are you sure you want to Reject',
-                    //             () => {
-                    //                 frm.events.reject_quotation(frm)
-                    //             }, () => {
-                    //                 // action to perform if No is selected
-                    //             })
-                    //     },__('Create'))
-
-                    //     // frm.add_custom_button(__('Reject2'),()=>{                    
-                    //     //             frm.events.reject_quotation2(frm)
-                               
-                    //     // },__('Create'))
-                    // }
+                    
+               
                 };
                    
             }
@@ -110,6 +91,7 @@ const QuotationController_Extend = erpnext.selling.QuotationController.extend({
             callback: function (r) {
               if (r.message && r.message.length) {
                 if (r.message.includes("IFI")) {
+                    cur_frm.page.remove_inner_button('Subscription','Create')
                     cur_frm.cscript['Make Sales Order'] = create_ifi_sales_order
                     // cur_frm.cscript['Make Payment Entry'] = create_ifi_payment_entry
                     if(doc.docstatus == 1 && doc.status!=='Lost') {

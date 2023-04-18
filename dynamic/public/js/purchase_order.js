@@ -65,51 +65,47 @@ frappe.ui.form.on("Purchase Order", {
       },
     });
   },
+  make_purchase_invoice: function(cur_frm) {
+		frappe.model.open_mapped_doc({
+			method: "dynamic.ifi.api.make_purchase_invoice",
+			frm: cur_frm
+		})
+	},
+
 });
 
 
-// frappe.ui.form.on("Purchase Order", "refresh", function(frm) {
-//   console.log('refresh')
-//   frm.set_query("shipping_rule", function(){
-//     return {
-//         "filters": [
-//             ["shipping_rule_type", "=", ["Selling","Buying"]],
-//         ]
-//     };
-// });
-  // frm.set_query("shipping_rule", function() {
-  //     return {
-  //         filters: [
-  //           ["shipping_rule_type", "in", ,['Selling','Buying']],
-           
-  //         ],
-  //     };
-  // });
-// });
+const purchase_order_extend = erpnext.buying.PurchaseOrderController.extend({
+  refresh: function(doc, dt, dn) {
+		var me = this;
+		this._super(doc);
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+          if (r.message && r.message.length) {
+              if (r.message.includes("IFI")) {
+                if(doc.docstatus == 1) {
+                  if(doc.status != "Closed") {
+                    if (doc.status != "On Hold") {
+                      if(flt(doc.per_billed) < 100)
+                      cur_frm.remove_custom_button('Purchase Invoice','Create')
+                      cur_frm.add_custom_button(__('Purchase Invoice'),
+                      ()=>cur_frm.events.make_purchase_invoice(cur_frm), __('Create'));
+                    }
+                  }
+                }
+              }
+            }
+          }
+          })
+   
+  },
 
-// cur_frm.set_query("shipping_rule",function(){
-//   console.log('test')
-//   return{
-//     "filters":{
-//       "tset": "IFI"
-//     }
-//   };
-// });
-// frm.set_query("shipping_rule", function() {
-//   console.log('doc ++++',doc)
-//   return {
-//     filters: {
-//       company:frm.doc.company
-//     }
-//   };
-// });
+})
 
-// frm.set_query("shipping_rule", function (doc) {
-//   console.log('doc',doc)
-//   return {
-//     filters: [
-//       ["company", "=",  frmdoc.company],
-//       ["docstatus", "=", 1]
-//   ],
-//   };
-// });
+$.extend(
+	cur_frm.cscript,
+	new purchase_order_extend({frm: cur_frm}),
+);
+
+

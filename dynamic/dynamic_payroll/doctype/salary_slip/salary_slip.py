@@ -796,7 +796,7 @@ class SalarySlip(TransactionBase):
 		absent_deduction = getattr(self.salary_structure_assignment,'absent_deduction')
 		if absent_deduction == "Payment Days" :
 			absent_days = 30 - (self.payment_days or 0)
-		if absent_component and absent_days :
+		if absent_component and absent_days > 0 :
 			data = self.get_data_for_eval()
 			component = get_salary_component_data(absent_component)
 			amount = 1

@@ -79,22 +79,6 @@ frappe.ui.form.on("Payment Entry", {
       );
       
     }
-    // if(frm.doc.cheque_status != "Rejected" && frm.doc.cheque_status != "Rejected In Bank"){
-    //   frm.add_custom_button(
-    //     __("Reject Cheque"),
-    //     function () {
-    //       frm.events.add_row_cheque_tracks(frm,"Rejected")
-    //     },
-    //     __("Cheque Management")
-    //   );
-      // frm.add_custom_button(
-      //   __("Reject Cheque In Bank"),
-      //   function () {
-      //     frm.events.add_row_cheque_tracks(frm,"Rejected In Bank")
-      //   },
-      //   __("Cheque Management")
-      // );
-    // }
     if (frm.doc.payment_type == "Receive") {
       if (["New"].includes(frm.doc.cheque_status)) {
         // cheque Endorsement
@@ -157,6 +141,14 @@ frappe.ui.form.on("Payment Entry", {
           },
           __("Cheque Under Collection")
         );
+        // return_cheque_xx
+        frm.add_custom_button(
+          __("Return Cheque"),
+          function () {
+            frm.events.return_cheque(frm);
+          },
+          __("Cheque Under Collection")
+        );
       }
 
       // Reject cheque under collction
@@ -214,6 +206,21 @@ frappe.ui.form.on("Payment Entry", {
       },
       callback: function (r) {
         frm.refresh();
+        if (r && r.message) {
+          frappe.set_route("Form", r.message.doctype, r.message.name);
+        }
+      },
+    });
+  },
+  return_cheque(frm) {
+    frappe.call({
+      method:
+        "dynamic.cheques.doctype.cheque.cheque.return_cheque",
+      args: {
+        payment_entry: frm.doc.name,
+      },
+      callback: function (r) {
+        // frm.refresh();
         if (r && r.message) {
           frappe.set_route("Form", r.message.doctype, r.message.name);
         }

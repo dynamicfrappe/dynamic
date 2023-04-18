@@ -50,12 +50,14 @@ def validate_delivery_note(doc,*args,**kwargs):
             m_temp = frappe.get_doc("Maintenance Template",doc.maintenance_template)
             m_temp.delivery_note = doc.name
             m_temp.save()
-        if len(doc.packed_items) > 0  :
+        if len(doc.packed_items) > 0  : 
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
     if 'Terra' in DOMAINS:
         # frappe.throw('Validate delivery Note')
+        submit_delivery_note(doc)
         minus_delivery_qty_from_reservation(doc,*args,**kwargs)
         check_so_approval(doc)
+        recalculate_delivered_qty()
 
 
 @frappe.whitelist()  
@@ -101,7 +103,7 @@ def check_so_approval(doc):
     total_qty =0
     for item in doc.items:
         if item.get("sales_order_approval"):
-            remaing_sql = f"""select remaining_qty from `tabSales Order Approval Item` where parent= '{item.sales_order_approval}' and item_code='{item.item_code}' limit 1"""
+            remaing_sql = f"""select remaining_qty from `tabSales Order Approval Item` where parent= '{item.sales_order_approval}' and item_code='{item.item_code}' and warehouse='{item.warehouse}' limit 1"""
             item_remining_qty = frappe.db.sql(remaing_sql,as_dict=1)
             if item.qty > item_remining_qty[0].remaining_qty:
                 frappe.throw(_("Approval Remaining Qty '%s'"%item_remining_qty[0].remaining_qty))
@@ -110,7 +112,7 @@ def check_so_approval(doc):
             sql = f"""
              update `tabSales Order Approval Item`
              set remaining_qty = remaining_qty - {item.qty}
-             where item_code = '{item.item_code}' and parent = '{item.sales_order_approval}'
+             where item_code = '{item.item_code}' and parent = '{item.sales_order_approval}' and warehouse='{item.warehouse}'
             """
             frappe.db.sql(sql)
             frappe.db.commit()
@@ -119,19 +121,19 @@ def check_so_approval(doc):
             sales_order_approval_name = item.sales_order_approval
 
      # update sales order qty 
-    sql = f"""update `tabSales Order Approval` set total_delivered_qty = total_delivered_qty + {total_qty}"""       
-    frappe.db.sql(sql)
-    frappe.db.commit()
-    so_approval_doc = frappe.get_doc("Sales Order Approval",sales_order_approval_name)
-    total_delived_qty =0
-    #total_delivered_qty
+    # sql = f"""update `tabSales Order Approval` set total_delivered_qty = total_delivered_qty + {total_qty}"""       
+    # frappe.db.sql(sql)
+    # frappe.db.commit()
+    # so_approval_doc = frappe.get_doc("Sales Order Approval",sales_order_approval_name)
+    # total_delived_qty =0
+    # #total_delivered_qty
     
-    if so_approval_doc.total_qty == so_approval_doc.total_delivered_qty:
-        so_approval_doc.status = "Completed"
-        so_approval_doc.save()
-    elif so_approval_doc.total_qty >so_approval_doc.total_delivered_qty and so_approval_doc.total_delivered_qty != 0:
-        so_approval_doc.status ="Partial Delivered"
-        so_approval_doc.save()
+    # if so_approval_doc.total_qty == so_approval_doc.total_delivered_qty:
+    #     so_approval_doc.status = "Completed"
+    #     so_approval_doc.save()
+    # elif so_approval_doc.total_qty >so_approval_doc.total_delivered_qty and so_approval_doc.total_delivered_qty != 0:
+    #     so_approval_doc.status ="Partial Delivered"
+    #     so_approval_doc.save()
 
 
 
@@ -144,7 +146,7 @@ def check_so_approval(doc):
             # """
             # frappe.db.sql(so_sql)
             # frappe.db.commit()
-    recalculate_delivered_qty()
+    
 
 def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
     #1-qty deliverd from delivery note
@@ -159,8 +161,9 @@ def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
                 reserv_doc.db_set('status','Partial Delivered')
             else:
                 reserv_doc.db_set('status','Closed')
-        item.reserved_qty = item.reserved_qty - row.qty
-        item.save()
+        new_reserved_qty = item.reserved_qty - row.qty
+        item.db_set('reserved_qty',new_reserved_qty)
+        # item.save()
     
 
 def validate_purchase_recipt(doc,*args,**kwargs):
@@ -201,3 +204,38 @@ def create_installation_request(sales_order):
 # def get_gebco_items(doc):
 #     items = frappe.db.get_list("Item",filters={"item_group","Queclink devices"},fields=['name'],pluck='name')
 #     return items
+
+
+
+def submit_delivery_note(doc ,*args,**kwargs) :
+
+    if "Terra"  in DOMAINS :
+        # validate against terra branches settings  
+        user_list = []
+        acceess_target = []
+       
+        user = frappe.session.user
+        target_w = False
+        if doc.set_warehouse :
+            target_w = frappe.get_doc("Warehouse" ,doc.set_warehouse)
+        
+        if target_w and  not target_w.warehouse_type   :
+                #frappe.throw(str("case@ happend"))
+            cost_center = frappe.db.sql(f""" 
+            SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.set_warehouse}' """ ,as_dict=1)
+            if cost_center and len(cost_center) > 0 :
+                for obj in cost_center :
+                    acceess_target.append(obj.get("name"))
+                
+        
+        access_group =    acceess_target 
+        if len(access_group) > 0 :
+            for access in access_group :
+                users = frappe.db.sql(f""" SELECT branch_manager FROM `tabBranch Managers` WHERE parenttype ='Cost Center'
+                and parent = '{access}' 
+                   """)
+                for usr in users :
+                    user_list.append(usr[0])
+        #validate user access 
+        if user not in user_list :
+            frappe.throw(f"you can Not Complete this action for Branch  { access_group}")

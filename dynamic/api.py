@@ -24,7 +24,7 @@ from dynamic.terra.delivery_note import validate_delivery_notes_sal_ord
 from erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import repost_entries
 from dynamic.gebco.doctype.sales_invocie.utils import set_complicated_pundel_list
 from datetime import date
-
+from dateutil import parser
 from dynamic.ifi.api import validate_payemnt_entry
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -295,15 +295,18 @@ def loop_over_doc_items(doc):
 
 
 def get_po_reservation(purchase_order,item,target_warehouse):
-    reservation_list_sql = f"""SELECT r.name from `tabReservation` as r WHERE r.status <> 'Invalid' AND r.order_source='{purchase_order}' AND r.item_code = '{item}' AND sales_order <> 'Invalid' AND r.warehouse_source = '' """
+    reservation_list_sql = f"""SELECT `tabReservation`.name from `tabReservation` WHERE `tabReservation`.status <> 'Invalid'
+      AND `tabReservation`.order_source='{purchase_order}' AND `tabReservation`.item_code = '{item}' AND sales_order <> 'Invalid' AND `tabReservation`.warehouse_source = '' """
     data = frappe.db.sql(reservation_list_sql,as_dict=1)
     if data:
         for reservation in data:
             # make reserv over warehouse
             reserv_doc = frappe.get_doc('Reservation',reservation.get('name'))
             oldest_reservation = reserv_doc.reservation_purchase_order[0]
-            bin_data = frappe.db.get_value('Bin',{'item_code':item,'warehouse':target_warehouse},['name','warehouse','actual_qty','reserved_qty'],as_dict=1)
+            bin_data = frappe.db.get_value('Bin',{'item_code':item,'warehouse':target_warehouse}
+                        ,['name','warehouse','actual_qty','reserved_qty'],as_dict=1)
             reserv_doc.warehouse_source = target_warehouse
+            reserv_doc.order_source = ''
             reserv_doc.warehouse = [] #?add row
             row = reserv_doc.append('warehouse', {})
             row.item = item
@@ -474,6 +477,7 @@ def update_against_document_in_jv(self):
 @frappe.whitelist()
 def create_reservation_validate(self,*args , **kwargs):
     if "Terra" in DOMAINS:
+        check_total_reservation(self)
         add_row_for_reservation(self)
        
 def add_row_for_reservation(self):
@@ -502,6 +506,73 @@ def add_row_for_reservation(self):
             reserv_doc.db_set('sales_order',self.name)
             frappe.db.commit()
 
+def check_total_reservation(self):
+    for item in self.items:
+        if item.item_warehouse:
+            validate_warehouse_stock_reservation(item.item_code,item.item_warehouse,item.qty)
+        if item.item_purchase_order:
+            validate_purchase_order_reservation(item.item_code,item.item_purchase_order,item.qty)
+
+def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_amount):
+	"""get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
+	data = frappe.db.sql(f""" 
+				SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
+				CASE 
+						WHEN `tabReservation Warehouse`.reserved_qty > 0
+						then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
+						ELSE `tabBin`.actual_qty 
+						END  as qty
+				FROM 
+				`tabBin`
+				LEFT JOIN 
+				`tabReservation Warehouse`
+				ON `tabBin`.name = `tabReservation Warehouse`.bin 
+				LEFT JOIN 
+				`tabReservation` 
+				ON `tabReservation Warehouse`.parent = `tabReservation`.name 
+				AND `tabBin`.name = `tabReservation Warehouse`.bin
+				WHERE `tabBin`.warehouse = '{warehouse_source}'
+				AND `tabBin`.item_code = '{item_code}'
+				AND `tabReservation`.status <> "Invalid"
+				""" ,as_dict=1)
+	if data and len(data) > 0 :
+		if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < reservation_amount  :
+			frappe.throw(_(f""" stock value in warehouse {warehouse_source} = {data[0].get("qty") or 0} 
+				and you requires  {reservation_amount} for Item {item_code}  """))
+	if  not data or len(data) == 0 :
+			frappe.throw(_(f"""no stock value in warehouse {warehouse_source} for item {item_code}  """))
+	return data
+
+def validate_purchase_order_reservation(item_code,order_source,reservation_amount):
+	order =  frappe.db.sql(f"""                   
+		SELECT `tabPurchase Order Item`.name as `name` 
+		,`tabPurchase Order Item`.parent,`tabPurchase Order Item`.parenttype as doctype,
+		CASE
+		WHEN `tabReservation Purchase Order`.reserved_qty > 0 
+		then 
+		(`tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty) - SUM(`tabReservation Purchase Order`.reserved_qty)
+		else `tabPurchase Order Item`.qty - `tabPurchase Order Item`.received_qty
+		end as qty
+		from
+		`tabPurchase Order Item` 
+		LEFT JOIN
+		`tabReservation Purchase Order` 
+		ON `tabReservation Purchase Order`.purchase_order_line=`tabPurchase Order Item`.name 
+		LEFT JOIN
+		`tabReservation` 
+		ON `tabReservation Purchase Order`.parent = `tabReservation`.name 
+        AND `tabReservation`.status <> "Invalid"
+		where `tabPurchase Order Item`.item_code = '{item_code}'  
+		AND `tabPurchase Order Item`.parent = '{order_source}' 
+		""",as_dict=1)
+	
+	if order and len(order) > 0 :
+		if order[0].get("parent") and float(order[0].get("qty")) ==  0 :
+			frappe.throw(_(f"  Purchase Order {order_source} don't have {item_code} Qty and you requires  {reservation_amount}" ))
+		if not order[0].get("parent") :
+			frappe.throw(_(f"  Purchase Order {order_source} don't have item {item_code}" ))	
+	if not order or  len(order) == 0 :
+		frappe.throw(_(f"Invalid Purchase Order {order_source} don't have item {item_code}"))
 
 @frappe.whitelist()
 def cancel_reservation(self,*args , **kwargs):
@@ -809,7 +880,49 @@ def submit_stock_entry(doc ,*args,**kwargs) :
             frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
        
             
-    
+@frappe.whitelist()           
+def submit_purchase_recipt(doc ,*args,**kwargs) :
+
+    if "Terra"  in DOMAINS :
+        # validate against terra branches settings  
+        user_list = []
+        acceess_target = []
+        acccess_source = []
+        # target_types = ["Material Issue" , "Material Transfer" ,"Send to Subcontractor"]
+        # recive_types = ["Material Receipt" , "Material Transfer"]
+        user = frappe.session.user
+        target_w = False
+        source_w = False
+        if doc.set_warehouse :
+            target_w = frappe.get_doc("Warehouse" ,doc.set_warehouse)
+        # if doc.to_warehouse:
+        #     source_w = frappe.get_doc("Warehouse" ,doc.set_warehouse)
+        # entry_type = frappe.get_doc("Stock Entry Type" ,doc.stock_entry_type).purpose
+        
+        if target_w and  not target_w.warehouse_type   :
+                #frappe.throw(str("case@ happend"))
+            cost_center = frappe.db.sql(f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.set_warehouse}' """ ,as_dict=1)
+            if cost_center and len(cost_center) > 0 :
+                for obj in cost_center :
+                    acceess_target.append(obj.get("name"))
+                
+        
+        access_group =  acceess_target 
+        if len(access_group) > 0 :
+            for access in access_group :
+                # frappe.throw(str(access))
+                users = frappe.db.sql(f""" SELECT branch_manager FROM `tabBranch Managers` WHERE parenttype ='Cost Center'
+                and parent = '{access}' 
+                   """)
+                # frappe.throw(str(users))
+                for usr in users :
+                    user_list.append(usr[0])
+            
+       
+        #validate user access 
+        if user not in user_list :
+            frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
+
 @frappe.whitelist()
 def validate_mode_of_payment_naming(old_naming=None,mode_of_payment=None,*args, **kwargs):
     if not mode_of_payment or not old_naming:
@@ -1165,4 +1278,46 @@ def recalculate_delivered_qty():
 
 
 
+
+@frappe.whitelist()
+def get_hijri_date(posting_date):
+    from hijri_converter import Hijri, Gregorian
+    hijri_date = str(Gregorian.fromdate(parser.parse(str(posting_date)).date()).to_hijri())
+    hijri_date = parser.parse(str(hijri_date)).date().strftime("%d / %m / %Y")
+    return hijri_date
+
+@frappe.whitelist()
+def get_street_address_html(party_type, party):
+    address_list = frappe.db.sql(
+        """
+        SELECT
+            link.parent
+        FROM
+            `tabDynamic Link` link,
+            `tabAddress` address
+        WHERE
+            link.parenttype = "Address"
+                AND link.link_name = %(party)s
+        ORDER BY
+            address.address_type="Postal" DESC,
+            address.address_type="Billing" DESC
+        LIMIT 1
+    """,
+        {"party": party},
+        as_dict=True,
+    )
+    street_address = city_state = ""
+    if address_list:
+        supplier_address = address_list[0]["parent"]
+        doc = frappe.get_doc("Address", supplier_address)
+        if doc.address_line2:
+            street_address = "First address :" +doc.address_line1 + " ,Second address :" + doc.address_line2 
+        else:
+            street_address = doc.address_line1 
+
+        city_state = " City: "+ doc.city + ", " if doc.city else ""
+        city_state = city_state + doc.state + " " if doc.state else city_state
+        city_state = city_state + doc.pincode if doc.pincode else city_state
+        city_state += ""
+    return street_address + ',' + city_state
 

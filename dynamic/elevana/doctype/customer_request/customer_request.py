@@ -14,9 +14,9 @@ class CustomerRequest(Document):
 
     def create_customer(self):
         default_customer_group = frappe.db.get_single_value(
-            "Selling Settings", "default_distributor_customer_group")
+            "Selling Settings", "default_distributer_customer_group")
         default_customer_territory = frappe.db.get_single_value(
-            "Selling Settings", "default_distributor_territory")
+            "Selling Settings", "default_distributer_territory")
 
         if not (default_customer_group and default_customer_territory):
             frappe.throw(

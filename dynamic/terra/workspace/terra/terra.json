@@ -25,7 +25,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Purchase Order Reservations",
    "link_to": "Purchase Order Reservations",
    "link_type": "Report",
@@ -34,16 +34,17 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Sales Target",
    "link_to": "Sales Target",
    "link_type": "Report",
-   "onboard": 0,
+   "onboard": 1,
+   "only_for": "",
    "type": "Link"
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Product Attributions  Summary",
    "link_to": "Product Attributions  Summary",
    "link_type": "Report",
@@ -52,7 +53,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Opportunities Summary",
    "link_to": "Opportunities Summary",
    "link_type": "Report",
@@ -61,7 +62,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Opportunity Source Summary",
    "link_to": "Opportunity Source Summary",
    "link_type": "Report",
@@ -70,7 +71,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Visits Analysis Summary",
    "link_to": "Visits Analysis Summary",
    "link_type": "Report",
@@ -79,7 +80,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Activities Summary",
    "link_to": "Activities Summary",
    "link_type": "Report",
@@ -88,7 +89,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Lost Oppotunity",
    "link_to": "Lost Oppotunity",
    "link_type": "Report",
@@ -96,7 +97,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-02-16 10:45:17.862179",
+ "modified": "2023-02-19 15:39:07.815334",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Terra",

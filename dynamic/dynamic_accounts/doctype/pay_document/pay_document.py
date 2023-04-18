@@ -9,6 +9,8 @@ from frappe.model.document import Document
 import erpnext
 from frappe.utils.data import flt
 from frappe.utils import get_link_to_form
+from erpnext.accounts.utils import get_balance_on
+DOMAINS = frappe.get_active_domains()
 
 
 class PayDocument(Document):
@@ -19,6 +21,10 @@ class PayDocument(Document):
             frappe.msgprint(
                 _("Total Difference is {}").format(self.difference))
             frappe.throw(_("Total Difference must be 0"))
+        if self.account and 'Teba' in DOMAINS:
+            balance = get_balance_on(account=self.account,cost_center=self.cost_center or None)
+            if balance < self.amount:
+                frappe.throw(_(f"Account {balance} balance Less Than Amount {self.amount}"))
 
     @frappe.whitelist()
     def get_conversion_rate(self):
@@ -31,19 +37,29 @@ class PayDocument(Document):
         self.amount = self.amount or 0
         self.total = 0
         self.difference = self.amount
+
+        precision = frappe.get_precision("Pay and Receipt Account", "amount")
+        difference_precision = frappe.get_precision(self.doctype, "difference")
         for item in getattr(self, 'accounts', []):
-            item.amount = item.amount or 0
+            item.amount = flt( item.amount or 0 , precision)
             item.currency = self.currency
             item.exchange_rate = self.exchange_rate
             item.base_amount = item.amount * self.exchange_rate
             self.total += item.amount
-        self.difference = self.amount - self.total
+        self.difference = flt(self.amount - self.total , difference_precision)
 
     def before_insert(self):
         self.journal_entry = ''
 
     def on_submit(self):
         self.create_journal_entry()
+    
+    # def before_submit(self):
+    #     if self.account and 'Teba' in DOMAINS:
+    #         balance = get_balance_on(account=self.account,cost_center=self.cost_center or None)
+    #         if balance < self.amount:
+    #             frappe.throw(_(f"Account {balance} balance Less Than Amount {self.amount}"))
+
 
     def on_cancel(self):
         self.cancel_journal_entry()

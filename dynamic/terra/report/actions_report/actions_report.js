@@ -62,3 +62,4 @@ frappe.query_reports["Actions Report"] = {
 		}
 	]
 };
+

@@ -55,31 +55,36 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Active\nClosed\nInvalid\nPartial Delivered",
+   "read_only": 1,
    "reqd": 1,
    "translatable": 1
   },
   {
    "fieldname": "reservation_amount",
    "fieldtype": "Float",
-   "label": "Reservation Amount"
+   "label": "Reservation Amount",
+   "read_only": 1
   },
   {
    "fieldname": "warehouse_source",
    "fieldtype": "Link",
    "label": "Warehouse Source",
-   "options": "Warehouse"
+   "options": "Warehouse",
+   "read_only": 1
   },
   {
    "fieldname": "order_source",
    "fieldtype": "Link",
    "label": "Order Source",
-   "options": "Purchase Order"
+   "options": "Purchase Order",
+   "read_only": 1
   },
   {
    "fieldname": "sales_order",
    "fieldtype": "Link",
    "label": "Sales Order",
-   "options": "Sales Order"
+   "options": "Sales Order",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_2",
@@ -94,6 +99,7 @@
    "in_standard_filter": 1,
    "label": "Item Code",
    "options": "Item",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -108,7 +114,8 @@
    "fetch_from": "item_code.description",
    "fieldname": "description",
    "fieldtype": "Text Editor",
-   "label": "Description"
+   "label": "Description",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_5",
@@ -124,7 +131,8 @@
    "fieldname": "warehouse",
    "fieldtype": "Table",
    "label": "Reservation Warehouse",
-   "options": "Reservation Warehouse"
+   "options": "Reservation Warehouse",
+   "read_only": 1
   },
   {
    "allow_in_quick_entry": 1,
@@ -147,8 +155,7 @@
    "allow_on_submit": 1,
    "fieldname": "valid_from",
    "fieldtype": "Date",
-   "label": "Valid From",
-   "read_only": 1
+   "label": "Valid From"
   },
   {
    "fieldname": "column_break_11",
@@ -203,9 +210,9 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-28 13:18:19.423687",
+ "modified": "2023-04-02 10:33:14.563138",
  "modified_by": "Administrator",
- "module": "terra",
+ "module": "Terra",
  "name": "Reservation",
  "owner": "Administrator",
  "permissions": [
@@ -224,5 +231,6 @@
  ],
  "quick_entry": 1,
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "track_changes": 1
 }

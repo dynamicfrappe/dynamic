@@ -45,14 +45,11 @@ class ActivitiesSummary(object):
 		sql_query_new = f"""
 						select active.name as activity, active.type, active.local_source, active.branch,
 						active.customer,active.creation,active.phone_no
-						from `tabActivities`active
+						from `tabActions`active
 						WHERE {conditions} 
-						GROUP  BY opport.name, items.item_code
-	
+						GROUP  BY active.name
 		""".format(conditions=conditions)
-		# frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
-		# frappe.errprint(f"sql_query_new is ==> {sql_data}")
 		return sql_data
 
 	def get_columns(self):

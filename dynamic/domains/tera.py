@@ -479,6 +479,14 @@ data = {
                 "reqd":1
                 
             },
+            {
+                 "label" :"Opportunity Name" ,
+                 "fieldname": "opportunity_name",
+                 "fieldtype": "Data",
+                 "insert_after": "customer_name",
+                 "in_global_search" :1, 
+                
+            },
         ],
         'Stock Settings':[
             {
@@ -974,15 +982,15 @@ data = {
             },
         ],
         "Pay and Receipt Account":[
-             {
-                "label": "Cost Center",
-                "fieldname": "cost_center",
-                "fieldtype": "Link",
-                "insert_after": "amount",
-                "options":"Cost Center",
-                "in_list_view":1,
-                "columns":1
-            },
+            #  {
+            #     "label": "Cost Center",
+            #     "fieldname": "cost_center",
+            #     "fieldtype": "Link",
+            #     "insert_after": "amount",
+            #     "options":"Cost Center",
+            #     "in_list_view":1,
+            #     "columns":1
+            # },
         ]
 
     },

@@ -37,7 +37,7 @@ app_logo_url = "/assets/dynamic/images/dynamic-logo.png"
 
 # include js, css files in header of desk.html
 app_include_css = "/assets/dynamic/css/dynamic.css"
-app_include_js = "/assets/js/dynamic.min.js"
+app_include_js = ["/assets/js/dynamic.min.js",]
 
 
 # include js in doctype views
@@ -68,6 +68,8 @@ override_doctype_class = {
     "Quotation" : "dynamic.override_doctype_class.Quotation",
     "Sales Order" : "dynamic.override_doctype_class.SalesOrder",
     "Salary Slip" : "dynamic.override_doctype_class.SalarySlip",
+    "Sales Invoice": "dynamic.override_doctype_class.SalesInvoice",
+    "Customer": "dynamic.teba.doctype.customer.CustomerController",
     # "Lead" : "dynamic.override_doctype_class.Lead"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
@@ -93,6 +95,7 @@ doctype_js = {
     "Job Card":"public/js/job_card.js",
     "Request for Quotation":"public/js/request_for_quotation.js",
     "Mode of Payment":"public/js/mode_of_payment.js",
+    # "Assign To":"public/sidebar/assign_to.js",
     
 }
 # doctype_js = {
@@ -146,7 +149,7 @@ doc_events = {
             "dynamic.api.check_source_item", 
             ],
         "on_cancel":"dynamic.api.cancel_reservation",
-        "on_update_after_submit":"dynamic.api.change_row_after_submit"
+        # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
     "Purchase Receipt": {
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
@@ -211,7 +214,11 @@ doc_events = {
     "Lead":{
         # "validate":"dynamic.ifi.api.lead_contact_by_email"
         "before_insert" :"dynamic.api.lead_before_insert"
+    },
+    "Purchase Receipt":{
+         "on_submit" : "dynamic.api.submit_purchase_recipt"
     }
+
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
     #  },Installations Furniture
@@ -248,7 +255,7 @@ scheduler_events = {
             "dynamic.product_bundle.doctype.packed_item.new_packed_item.get_old_invocie"
         ],
         "* 8 * * *":[
-            "dynamic.ifi.api.send_mail_daily_opportunity_lead",
+            # "dynamic.ifi.api.send_mail_daily_opportunity_lead",
             # "dynamic.ifi.api.daily_opportunity_notify" 
         ]
     },
@@ -280,7 +287,7 @@ scheduler_events = {
 #
 override_whitelisted_methods = {
 	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
-    "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order":"dynamic.ifi.api.override_make_purchase_order"
+    # "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order":"dynamic.ifi.api.override_make_purchase_order"
 }
 #
 # each overriding function accepts a `data` argument;
@@ -290,7 +297,7 @@ override_whitelisted_methods = {
 
 override_doctype_dashboards = {
     "Sales Invoice": "dynamic.public.dashboard.sales_invoice_dashboard.get_data",
-     "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
+    "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
     "Purchase Invoice": "dynamic.public.dashboard.purchase_invoice_dashboard.get_data",
     "Purchase Order": "dynamic.public.dashboard.purchase_order_dashboard.get_data",
     "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data" ,
@@ -322,6 +329,11 @@ domains = {
     'WEH' :"dynamic.domains.weh",
     'Owais' :"dynamic.domains.owais",
     'Elevana' :"dynamic.domains.elevana",
+    'Homrany' :"dynamic.domains.homrany",
+    'Teba' :"dynamic.domains.teba",
+    'Sedia':"dynamic.domains.sedia",
+    'Majestey':"dynamic.domains.majestey",
+    'Kmina':"dynamic.domains.kmina",
 }
 
 # domain Conatin
@@ -338,6 +350,8 @@ jenv = {
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",
         "get_balance_on:erpnext.accounts.utils.get_balance_on",
+        "get_hijri_date:dynamic.api.get_hijri_date",
+        "get_cst_address:dynamic.api.get_street_address_html",
     ],
     "filters": []
 }

@@ -24,6 +24,15 @@ data = {
                 # "permlevel":"1"
             }
         ],
+        'User' :[
+            {
+                "fieldname": "extension",
+                "fieldtype": "Data",
+                "insert_after": "last_name",
+                "label": "User Extension",
+                "unique": "1",
+            },
+        ],
         'Customer': [
             {
                 "fieldname": "sales_person",
@@ -36,7 +45,7 @@ data = {
             {
                 "fieldname": "ref_doctype",
                 "fieldtype": "Link",
-                "insert_after": "sales_person",
+                "insert_after": "extension",
                 "label": "Reference Type",
                 "options": "DocType",
                 "read_only": "1",
@@ -82,6 +91,25 @@ data = {
                 "options": "Item Group Detail",
             },
         ],
+        'Coupon Code': [
+            {
+                "fieldname": "ref_doctype",
+                "fieldtype": "Link",
+                "insert_after": "amended_from",
+                "label": "Reference Type",
+                "options": "DocType",
+                "read_only": "1",
+            },
+            {
+                "fieldname": "ref_docname",
+                "fieldtype": "Dynamic Link",
+                "insert_after": "ref_doctype",
+                "label": "Reference Name",
+                "options": "ref_doctype",
+                "read_only": "1",
+            }
+        ],
+        
         'Quotation': [
             {
                 "fieldname": "sales_team_section_break",
@@ -106,7 +134,7 @@ data = {
                 "label": "Distributor & Marketer",
             },
             {
-                "fieldname": "default_distributor_territory",
+                "fieldname": "default_distributer_territory",
                 "fieldtype": "Link",
                 "insert_after": "defatults_distributor_marketer_section_break",
                 "label": "Default Distributor Territory",
@@ -115,14 +143,14 @@ data = {
             {
                 "fieldname": "default_distributer_customer_group",
                 "fieldtype": "Link",
-                "insert_after": "default_distributor_territory",
+                "insert_after": "default_distributer_territory",
                 "label": "Default Distributor Customer Group",
                 "options": "Customer Group"
             },
             {
                 "fieldname": "defatults_distributor_marketer_column_break",
                 "fieldtype": "Column Break",
-                "insert_after": "default_distributor_territory",
+                "insert_after": "default_distributer_customer_group",
                 "label": "",
             },
             {
@@ -139,8 +167,28 @@ data = {
                 "label": "Default Marketer Customer Group",
                 "options": "Customer Group"
             }
+        ],
+        
+        'E Commerce Settings': [
+            {
+                "fieldname": "default_customer_territory",
+                "fieldtype": "Link",
+                "insert_after": "default_customer_group",
+                "label": "Default Customer Territory",
+                "options": "Territory"
+            }
+        ],
+        'Loyalty Program Collection' :[
+            {
+                "fieldname": "return_collection_factor",
+                "fieldtype": "Currency",
+                "insert_after": "collection_factor",
+                "label": "Return Collection Factor (=1 LP)",
+                "reqd":"1",
+                "in_list_view":"1",
+                "columns" : "3"
+            }
         ]
-
     },
     "properties": [
         {

@@ -30,6 +30,8 @@ from erpnext.controllers.accounts_controller import (
 	get_supplier_block_status,
 	validate_taxes_and_charges,
 )
+from erpnext.accounts.utils import get_balance_on
+DOMAINS = frappe.get_active_domains()
 
 try :
 	from erpnext.hr.doctype.expense_claim.expense_claim import (
@@ -95,6 +97,14 @@ class PaymentEntry(AccountsController):
 		self.validate_paid_invoices()
 		self.ensure_supplier_is_not_blocked()
 		self.set_status()
+		
+
+	def before_submit(self):
+		if 'Teba' in DOMAINS and getattr(self,'account',None) :
+				if self.payment_type == "Pay":
+					balance = get_balance_on(account=self.paid_from,cost_center=self.cost_center or None)
+					if balance < self.paid_amount:
+						frappe.throw(_(f"Account {balance} balance Less Than Amount {self.paid_amount}"))
 
 	def on_submit(self):
 		if self.difference_amount:

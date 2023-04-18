@@ -10,7 +10,7 @@ def create_currency_exchange_rate_script():
 			doc = frappe.new_doc("Client Script")
 			doc.dt      = "Payment Entry"
 			doc.view    = "Form"
-			doc.enabled = 1
+			doc.enabled = 0
 			doc.script = """
 				frappe.ui.form.on('Payment Entry', {
 					target_exchange_rate:(frm)=>{
