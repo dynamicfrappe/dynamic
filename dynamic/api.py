@@ -906,7 +906,7 @@ def submit_purchase_recipt(doc ,*args,**kwargs) :
                     acceess_target.append(obj.get("name"))
                 
         
-        access_group =    acceess_target 
+        access_group =  acceess_target 
         if len(access_group) > 0 :
             for access in access_group :
                 # frappe.throw(str(access))
@@ -1287,39 +1287,36 @@ def get_hijri_date(posting_date):
 
 @frappe.whitelist()
 def get_street_address_html(party_type, party):
-	address_list = frappe.db.sql(
-		"""
-		SELECT
-			link.parent
-		FROM
-			`tabDynamic Link` link,
-			`tabAddress` address
-		WHERE
-			link.parenttype = "Address"
-				AND link.link_name = %(party)s
-		ORDER BY
-			address.address_type="Postal" DESC,
-			address.address_type="Billing" DESC
-		LIMIT 1
-	""",
-		{"party": party},
-		as_dict=True,
-	)
+    address_list = frappe.db.sql(
+        """
+        SELECT
+            link.parent
+        FROM
+            `tabDynamic Link` link,
+            `tabAddress` address
+        WHERE
+            link.parenttype = "Address"
+                AND link.link_name = %(party)s
+        ORDER BY
+            address.address_type="Postal" DESC,
+            address.address_type="Billing" DESC
+        LIMIT 1
+    """,
+        {"party": party},
+        as_dict=True,
+    )
+    street_address = city_state = ""
+    if address_list:
+        supplier_address = address_list[0]["parent"]
+        doc = frappe.get_doc("Address", supplier_address)
+        if doc.address_line2:
+            street_address = "First address :" +doc.address_line1 + " ,Second address :" + doc.address_line2 
+        else:
+            street_address = doc.address_line1 
 
-	street_address = city_state = ""
-	if address_list:
-		supplier_address = address_list[0]["parent"]
-		doc = frappe.get_doc("Address", supplier_address)
-
-		if doc.address_line2:
-			street_address = "First address :" +doc.address_line1 + " ,Second address :" + doc.address_line2 
-		else:
-			street_address = doc.address_line1 
-
-		city_state = " City: "+ doc.city + ", " if doc.city else ""
-		city_state = city_state + doc.state + " " if doc.state else city_state
-		city_state = city_state + doc.pincode if doc.pincode else city_state
-		city_state += ""
-                
-	return street_address + ',' + city_state
+        city_state = " City: "+ doc.city + ", " if doc.city else ""
+        city_state = city_state + doc.state + " " if doc.state else city_state
+        city_state = city_state + doc.pincode if doc.pincode else city_state
+        city_state += ""
+    return street_address + ',' + city_state
 

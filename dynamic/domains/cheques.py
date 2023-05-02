@@ -10,6 +10,7 @@ cheque_status = [
     "Paid",
     "Rejected in Bank",
     "Rejected",
+    "Return"
 ]
 data = {
     'custom_fields': {

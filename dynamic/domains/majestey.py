@@ -11,6 +11,14 @@ data = {
                 "insert_after": "customer",
             }
         ],
+        'Stock Entry': [
+            {
+                "label": "Voucher Number",
+                "fieldname": "voucher_number",
+                "fieldtype": "Data",
+                "insert_after": "stock_entry_type",
+            }
+        ],
 
        
     },
