@@ -24,7 +24,7 @@ data = {
                 # "permlevel":"1"
             }
         ],
-        'User' :[
+        'User': [
             {
                 "fieldname": "extension",
                 "fieldtype": "Data",
@@ -59,7 +59,7 @@ data = {
                 "read_only": "1",
             }
         ],
-        
+
         'Sales Partner': [
             {
                 "fieldname": "ref_doctype",
@@ -109,7 +109,7 @@ data = {
                 "read_only": "1",
             }
         ],
-        
+
         'Quotation': [
             {
                 "fieldname": "sales_team_section_break",
@@ -168,7 +168,7 @@ data = {
                 "options": "Customer Group"
             }
         ],
-        
+
         'E Commerce Settings': [
             {
                 "fieldname": "default_customer_territory",
@@ -178,25 +178,53 @@ data = {
                 "options": "Territory"
             }
         ],
-        'Loyalty Program Collection' :[
+        'Loyalty Program Collection': [
             {
                 "fieldname": "return_collection_factor",
                 "fieldtype": "Currency",
                 "insert_after": "collection_factor",
                 "label": "Return Collection Factor (=1 LP)",
-                "reqd":"1",
-                "in_list_view":"1",
-                "columns" : "3"
+                "reqd": "1",
+                "in_list_view": "1",
+                "columns": "3"
+            }
+        ],
+        "Address": [
+            {
+                "fieldname": "building_no",
+                "fieldtype": "Data",
+                "insert_after": "tax_category",
+                "label": "Building No",
+            },
+            {
+                "fieldname": "floor_no",
+                "fieldtype": "Data",
+                "insert_after": "building_no",
+                "label": "Floor No",
+            },
+            {
+                "fieldname": "apartment_no",
+                "fieldtype": "Data",
+                "insert_after": "floor_no",
+                "label": "Apartment No",
+            }
+        ],
+        "Sales Order": [
+            {
+                "fieldname": "note",
+                "fieldtype": "Data",
+                "insert_after": "territory",
+                "label": "Note",
             }
         ]
     },
     "properties": [
         {
-            "doctype":"Customer",
-            "doctype_or_field":"DocField",
-            "fieldname":"customer_type",
-            "property":"options",
-            "property_type":"Text",
+            "doctype": "Customer",
+            "doctype_or_field": "DocField",
+            "fieldname": "customer_type",
+            "property": "options",
+            "property_type": "Text",
             "value": "\nCompany\nIndividual\nMarketer\nDistributor"
         }
     ],
