@@ -95,6 +95,7 @@ doctype_js = {
     "Job Card":"public/js/job_card.js",
     "Request for Quotation":"public/js/request_for_quotation.js",
     "Mode of Payment":"public/js/mode_of_payment.js",
+    "Purchase Receipt":"public/js/purchase_receipt.js",
     # "Assign To":"public/sidebar/assign_to.js",
     
 }
