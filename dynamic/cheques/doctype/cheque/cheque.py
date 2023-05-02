@@ -155,7 +155,6 @@ def make_cheque_endorsement(payment_entry):
 @frappe.whitelist()
 def make_cheque_pay(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
-    payment_entry.db_set('cheque_status','Paid')
     frappe.db.set_value("Cheque",payment_entry.cheque,'status','Paid')
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
@@ -215,13 +214,13 @@ def make_cheque_pay(payment_entry):
 
     cheque_submit = check_cheque_submit()
     je.submit() if cheque_submit else je.save()
+    payment_entry.db_set('cheque_status','Paid')
     return je
 
 
 @frappe.whitelist()
 def deposite_cheque_under_collection(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
-    payment_entry.db_set('cheque_status','Under Collect')
     frappe.db.set_value("Cheque",payment_entry.cheque,'status','Under Collect')
     company = frappe.get_doc("Company", payment_entry.company)
     if not payment_entry.drawn_bank_account:
@@ -283,6 +282,7 @@ def deposite_cheque_under_collection(payment_entry):
 
     cheque_submit = check_cheque_submit()
     je.submit() if cheque_submit else je.save()
+    payment_entry.db_set('cheque_status','Under Collect')
     return je
 
 
@@ -593,7 +593,6 @@ def add_row_cheque_tracks(payment_entry, new_cheque_status, old_status=None):
 @frappe.whitelist()
 def pay_cash_new(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
-    payment_entry.db_set('cheque_status','Paid')
     frappe.db.set_value("Cheque",payment_entry.cheque,'status','Paid')
     je = frappe.new_doc("Journal Entry")
     je.posting_date = frappe.utils.getdate()
@@ -614,7 +613,6 @@ def pay_cash_new(payment_entry):
             _(f"Please Set Default Account In  {cash_mod_of_payment} Cash Mode Of Payment"))
     # if(not cash_def_account):
     #     frappe.throw(_(f"Please Set Default Account In  {cash_mod_of_payment} Cash Mode Of Payment"))
-
     if payment_entry.cheque_status == "New":
         # credit
         je.append("accounts", {
@@ -637,7 +635,7 @@ def pay_cash_new(payment_entry):
             "party": payment_entry.party
 
         })
-    elif payment_entry.cheque_status == "Under Collect":
+    elif payment_entry.cheque_status == "Under Collect": 
         # credit
         je.append("accounts", {
             "account": payment_entry.cheques_receivable_account,
@@ -647,16 +645,19 @@ def pay_cash_new(payment_entry):
             "party_type": payment_entry.party_type,
             "party": payment_entry.party
         })
-
     # debit
     je.append("accounts", {
         "account":  cash_def_account,
         "debit_in_account_currency": flt(payment_entry.paid_amount),
+        "reference_type": payment_entry.doctype,
+        "reference_name": payment_entry.name,
         "party_type": payment_entry.party_type,
         "party": payment_entry.party
     })
+    # je.save()
     cheque_submit = check_cheque_submit()
     je.submit() if cheque_submit else je.save()
+    payment_entry.db_set('cheque_status','Paid')
     return je
 
 
