@@ -303,20 +303,15 @@ def get_columns(additional_table_columns, filters):
 			"options": "Cost Center",
 			"width": 100,
 		},
-		{"label": _("Stock Qty111"), "fieldname": "stock_qty", "fieldtype": "Float", "width": 100},
 		{
-			"label": _("Stock UOM222"),
+			"label": _("Stock UOM"),
 			"fieldname": "stock_uom",
 			"fieldtype": "Link",
 			"options": "UOM",
 			"width": 100,
 		},
-		# {
-		# 	"label": _("UOM Conversion Factor"),
-		# 	"fieldname": "conversion_factor",
-		# 	"fieldtype": "Flaot",
-		# 	"width": 100,
-		# },
+		{"label": _("Stock Qty"), "fieldname": "stock_qty", "fieldtype": "Float", "width": 100},
+		
 		{
 			"label": _("UOM"),
 			"fieldname": "uom",
@@ -324,6 +319,9 @@ def get_columns(additional_table_columns, filters):
 			# "options": "UOM",
 			"width": 100,
 		},
+		
+
+		
 		{
 			"label": _("QTY"),
 			"fieldname": "qty",

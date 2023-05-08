@@ -120,9 +120,10 @@ data = {
         #? purchase invoice
          'Purchase Invoice':[
             {
-                "label": "FOB",
-                "fieldname": "fob",
-                "fieldtype": "Small Text",
+                "label": "Inco Term",
+                "fieldname": "inco_term",
+                "fieldtype": "Select",
+                "options":"\nFOB",
                 "insert_after": "due_date",
             },
 
