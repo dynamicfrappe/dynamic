@@ -117,6 +117,17 @@ data = {
 
             },
         ],
+        #** purchase ORder
+         'Purchase Order':[
+            {
+                "label": "Inco Term",
+                "fieldname": "inco_term",
+                "fieldtype": "Select",
+                "options":"\nFOB",
+                "insert_after": "supplier",
+            },
+
+        ],
         #? purchase invoice
          'Purchase Invoice':[
             {
