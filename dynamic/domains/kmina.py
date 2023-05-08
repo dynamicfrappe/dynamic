@@ -19,6 +19,13 @@ data = {
                 "options":"\nAir Type\nSea Type",
                 "insert_after": "manufacturer_name",
             },
+            {
+                "label": "Inco Term",
+                "fieldname": "inco_term",
+                "fieldtype": "Select",
+                "options":"\nCIF",
+                "insert_after": "shipment_type",
+            },
         ],
          'Sales Order Item':[
              {
@@ -73,10 +80,11 @@ data = {
                 "options":"\nAir Type\nSea Type",
                 "insert_after": "manufacturer_name",
             },
-             {
-                "label": "CIF",
-                "fieldname": "cif",
-                "fieldtype": "Small Text",
+            {
+                "label": "Inco Term",
+                "fieldname": "inco_term",
+                "fieldtype": "Select",
+                "options":"\nCIF",
                 "insert_after": "shipment_type",
             },
 
