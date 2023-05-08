@@ -20,6 +20,33 @@ data = {
                 "insert_after": "manufacturer_name",
             },
         ],
+         'Sales Order Item':[
+             {
+                "label": "Batch KM",
+                "fieldname": "batch_km",
+                "fieldtype": "Data",
+                "insert_after": "amount",
+                "in_list_view": "1",
+                "columns":1
+            },
+              {
+                "label": "Manufacturing Date",
+                "fieldname": "manfacturing_date",
+                "fieldtype": "Date",
+                "insert_after": "batch_km",
+                "in_list_view": "1",
+                "columns":1
+            },
+             {
+                "label": "Expirtion Date",
+                "fieldname": "expiration_date",
+                "fieldtype": "Date",
+                "insert_after": "manfacturing_date",
+                "in_list_view": "1",
+                "columns":1
+
+            },
+        ],
         'Sales Invoice':[
              {
                 "label": "Manufacturer Name",
@@ -70,33 +97,72 @@ data = {
 
             },
         ],
+        #? purchase invoice
          'Purchase Invoice':[
-             {
-                "label": "Batch No",
-                "fieldname": "batch_no",
-                "fieldtype": "Data",
+            {
+                "label": "FOB",
+                "fieldname": "fob",
+                "fieldtype": "Small Text",
                 "insert_after": "due_date",
             },
+
+        ],
+        #? purchase invoice Item
+         'Purchase Invoice Item':[
              {
+                "label": "Batch KM",
+                "fieldname": "batch_km",
+                "fieldtype": "Data",
+                "insert_after": "amount",
+                "in_list_view": "1",
+                "columns":1
+            },
+              {
                 "label": "Manufacturing Date",
                 "fieldname": "manfacturing_date",
                 "fieldtype": "Date",
-                "insert_after": "batch_no",
+                "insert_after": "batch_km",
+                "in_list_view": "1",
+                "columns":1
             },
              {
                 "label": "Expirtion Date",
                 "fieldname": "expiration_date",
                 "fieldtype": "Date",
                 "insert_after": "manfacturing_date",
+                "in_list_view": "1",
+                "columns":1
+
+            },
+        ],
+        #? purchase Order Item
+         'Purchase Order Item':[
+             {
+                "label": "Batch KM",
+                "fieldname": "batch_km",
+                "fieldtype": "Data",
+                "insert_after": "amount",
+                "in_list_view": "1",
+                "columns":1
             },
             {
-                "label": "FOB",
-                "fieldname": "fob",
-                "fieldtype": "Small Text",
-                "insert_after": "expiration_date",
+                "label": "Manufacturing Date",
+                "fieldname": "manfacturing_date",
+                "fieldtype": "Date",
+                "insert_after": "batch_km",
+                "in_list_view": "1",
+                "columns":1
             },
+             {
+                "label": "Expirtion Date",
+                "fieldname": "expiration_date",
+                "fieldtype": "Date",
+                "insert_after": "manfacturing_date",
+                "in_list_view": "1",
+                "columns":1
 
-        ],
+            },
+         ],
          'Customer':[
              {
                 "label": "HS Code",
@@ -114,7 +180,7 @@ data = {
     },
       "properties": [
 
-        # Sales order Item 
+        #? Sales Invoice Item 
         {
             "doctype": "Sales Invoice Item",
             "doctype_or_field": "DocField",
@@ -123,14 +189,6 @@ data = {
             "property_type": "Int",
             "value": "2"
         },
-        # {
-        #     "doctype": "Sales Invoice Item",
-        #     "doctype_or_field": "DocField",
-        #     "fieldname": "uom",
-        #     "property": "columns",
-        #     "property_type": "Int",
-        #     "value": "1"
-        # },
         {
             "doctype": "Sales Invoice Item",
             "doctype_or_field": "DocField",
@@ -155,63 +213,139 @@ data = {
             "property_type": "Check",
             "value": "0"
         },
-        #   {
-        #     "doctype": "Sales Invoice Item",
-        #     "doctype_or_field": "DocField",
-        #     "fieldname": "batch_km",
-        #     "property": "columns",
-        #     "property_type": "Int",
-        #     "value": "2"
-        # },
-        #   {
-        #     "doctype": "Sales Invoice Item",
-        #     "doctype_or_field": "DocField",
-        #     "fieldname": "manfacturing_date",
-        #     "property": "columns",
-        #     "property_type": "Int",
-        #     "value": "1"
-        # },
-        #   {
-        #     "doctype": "Sales Invoice Item",
-        #     "doctype_or_field": "DocField",
-        #     "fieldname": "expiration_date",
-        #     "property": "columns",
-        #     "property_type": "Int",
-        #     "value": "1"
-        # },
-        # {
-        #     "doctype": "Sales Invoice Item",
-        #     "doctype_or_field": "DocField",
-        #     "fieldname": "supplier",
-        #     "property": "in_list_view",
-        #     "property_type": "Check",
-        #     "value": "0"
-        # },
-
-        # {
-        #     "doctype": "Sales Invoice Item",
-        #     "doctype_or_field": "DocField",
-        #     "fieldname": "warehouse",
-        #     "property": "in_list_view",
-        #     "property_type": "Check",
-        #     "value": "1"
-        # },
-        # {
-        # "doctype": "Sales Invoice Item",
-        # "doctype_or_field": "DocField",
-        # "fieldname": "actual_qty",
-        # "property": "in_list_view",
-        # "property_type": "Check",
-        # "value": "1",
-        # },
-        # {
-        # "doctype": "Sales Invoice Item",
-        # "doctype_or_field": "DocField",
-        # "fieldname": "actual_qty",
-        # "property": "columns",
-        # "property_type": "Int",
-        # "value": "1"
-        # }, 
+        #? purchase invoice Item 
+        {
+            "doctype": "Purchase Invoice Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "item_code",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "2"
+        },
+        {
+            "doctype": "Purchase Invoice Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "qty",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "2"
+        },
+        {
+            "doctype": "Purchase Invoice Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "rate",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Purchase Invoice Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "amount",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "2"
+        },
+        #? Purchase Order Item 
+        {
+            "doctype": "Purchase Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "item_code",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "2"
+        },
+        {
+            "doctype": "Purchase Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "schedule_date",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Purchase Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "qty",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Purchase Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "uom",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Purchase Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "rate",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Purchase Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "amount",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        #? Sales Order Item 
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "item_name",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "2"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "item_code",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "2"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "delivery_date",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "qty",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "rate",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Sales Order Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "amount",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+       
+      
     ],
   
     # 'on_setup': 'dynamic.kmina.setup.setup_kmina'
