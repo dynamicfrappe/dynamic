@@ -46,6 +46,18 @@ data = {
                 "columns":1
 
             },
+            {
+                "label": "SFDA Registration No",
+                "fieldname": "sfda_registration_no",
+                "fieldtype": "Data",
+                "insert_after": "expiration_date",
+            },
+            {
+                "label": "HS Code",
+                "fieldname": "hs_code",
+                "fieldtype": "Data",
+                "insert_after": "sfda_registration_no",
+            }
         ],
         'Sales Invoice':[
              {
@@ -176,7 +188,16 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "hs_code",
             },
-         ]
+         ],
+        "Item Customer Detail":[
+            {
+                "label": "SFDA Registration No",
+                "fieldname": "sfda_registration_no",
+                "fieldtype": "Data",
+                "insert_after": "ref_code",
+                 "in_list_view": 1,
+            }
+        ]
     },
       "properties": [
 
@@ -257,7 +278,7 @@ data = {
         },
         {
             "doctype": "Purchase Order Item",
-            "doctype_or_field": "DocField",
+            "docexpiration_datetype_or_field": "DocField",
             "fieldname": "schedule_date",
             "property": "columns",
             "property_type": "Int",
@@ -344,11 +365,20 @@ data = {
             "property_type": "Int",
             "value": "1"
         },
+        {
+           "doc_type": "Item Customer Detail",
+           "doctype_or_field": "DocField",
+           "field_name": "ref_code",
+           "name": "Item Customer Detail-ref_code-label",
+           "property": "label",
+           "property_type": "Data",
+           "value": "HS Code"
+          }
        
       
     ],
   
-    # 'on_setup': 'dynamic.kmina.setup.setup_kmina'
+     'on_setup': 'dynamic.kmina.setup.setup_kmina'
 }
 
 
