@@ -28,17 +28,17 @@
     </div>
     <!-- end heade  -->
     <div class="row mt-3">
-        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;">{{_(" أذن تسليم رقم")}} ({{doc.name}})  </div>
+        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;"><strong>{{_(" أذن تسليم رقم")}} ({{doc.name}})</strong>  </div>
     </div>
     <div class="row mt-3">
         <div class="col-sm-3 col-xs-3 mt-1" style="text-align: center;">  {{_("تاريخ الفاتوره")}}: </div>
         <div class="col-sm-3 col-xs-3  mt-1" style="text-align: center;">
-        <strong> {{ doc.posting_date }}</strong>
+         {{ doc.posting_date }}
         </div>
       
         <div class="col-sm-3 col-xs-3" > {{_( "كود العميل")}} :</div>
         <div class="col-sm-3 col-xs-3" >
-          <strong> {{ doc.customer }}</strong>
+           {{ doc.customer }}
         </div>
       
     </div>
@@ -46,32 +46,31 @@
     <div class="row mt-1">
         <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_(" أسم العميل")}} :</div>
         <div class="col-sm-3 col-xs-3" style="text-align: center;">
-          <strong>{{ doc.customer_name }} </strong>
+          {{ doc.customer_name }} 
         </div>
 
         <div class="col-sm-3 col-xs-3" > {{_( "أسم المندوب")}} :</div>
         <div class="col-sm-3 col-xs-3" >
-            <strong>
+            
                  {% if doc.sales_team%}
                 {{ doc.sales_team[0].sales_person or '' }}
                 {%else%}
                 {{_("None")}}
                 {%endif%}  
-            </strong>
           </div>
     </div>
 
     <div class="row mt-1">
         <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_(" عنوان العميل")}} :</div>
         <div class="col-sm-9 col-xs-9" style="text-align: right;">
-          <strong>{{ doc.customer_address or "" }} </strong>
+          {{ doc.customer_address or "" }} 
         </div>
     </div>
 
     <div class="row mt-1">
         <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_(" ملاحظات ")}} :</div>
         <div class="col-sm-9 col-xs-9" style="text-align: right;">
-          <strong>{{ doc.remarks or "" }} </strong>
+          {{ doc.remarks or "" }} 
         </div>
     </div>
 
