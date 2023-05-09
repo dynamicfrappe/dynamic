@@ -116,6 +116,18 @@ data = {
                 "columns":1
 
             },
+             {
+                "label": "SFDA Registration No",
+                "fieldname": "sfda_registration_no",
+                "fieldtype": "Data",
+                "insert_after": "expiration_date",
+            },
+            {
+                "label": "HS Code",
+                "fieldname": "hs_code",
+                "fieldtype": "Data",
+                "insert_after": "sfda_registration_no",
+            }
         ],
         #** purchase ORder
          'Purchase Order':[

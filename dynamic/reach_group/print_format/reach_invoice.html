@@ -38,7 +38,7 @@
       
         <div class="col-sm-3 col-xs-3" > {{_( "كود العميل")}} :</div>
         <div class="col-sm-3 col-xs-3" >
-          <strong> {{ doc.posting_date }}</strong>
+          <strong> {{ doc.customer }}</strong>
         </div>
       
     </div>
@@ -46,7 +46,7 @@
     <div class="row mt-1">
         <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_(" أسم العميل")}} :</div>
         <div class="col-sm-3 col-xs-3" style="text-align: center;">
-          <strong>{{ doc.customer }} </strong>
+          <strong>{{ doc.customer_name }} </strong>
         </div>
 
         <div class="col-sm-3 col-xs-3" > {{_( "أسم المندوب")}} :</div>
@@ -63,14 +63,14 @@
 
     <div class="row mt-1">
         <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_(" عنوان العميل")}} :</div>
-        <div class="col-sm-9 col-xs-9" style="text-align: center;">
+        <div class="col-sm-9 col-xs-9" style="text-align: right;">
           <strong>{{ doc.customer_address or "" }} </strong>
         </div>
     </div>
 
     <div class="row mt-1">
         <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_(" ملاحظات ")}} :</div>
-        <div class="col-sm-9 col-xs-9" style="text-align: center;">
+        <div class="col-sm-9 col-xs-9" style="text-align: right;">
           <strong>{{ doc.remarks or "" }} </strong>
         </div>
     </div>
@@ -80,19 +80,19 @@
         <div class=" col-sm-12 col-xs-12 margin-top margin-bottom" >
             <table class="table table-bordered table-condensed">
                 <tr>
-                    <th>م</th>
-                    <th >كود الصنف</th>
-                    <th style="width:30%"> اسم الصنف</th>
-                    <th>وحده القياس</th>
-                    <th> السعر</th>
-                    <th>الأجمالى</th>
+                    <th style="width:5%">م</th>
+                    <th style="width:20%" >كود الصنف</th>
+                    <th style="width:40%"> اسم الصنف</th>
+                    <th style="width:10%"> الكميه</th>
+                    <th style="width:10%"> السعر</th>
+                    <th style="width:15%">الأجمالى</th>
                 </tr>
                 {% for item in doc.items %}
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td>{{ item.item_code }}</td>
                     <td>{{ item.item_name }}</td>
-                    <td>{{ item.uom}}</td>
+                    <td>{{ item.uom}} {{"_ " }}  {{ item.qty}}</td>
                     <td>{{ item.rate or 0}}</td>
                     <td>{{ item.amount }}</td>
                 </tr>
@@ -100,17 +100,17 @@
                  <tr>
                     <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
                     <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">الأجمالى</td>
-                    <th colspan="2">{{ doc.total }}</th>
+                    <th colspan="2" style="text-align: center;" >{{ doc.total }}</th>
                 </tr>
                 <tr>
                     <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
                     <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">الخصم</td>
-                    <td colspan="2">{{ doc.discount_amount }}</td>
+                    <td colspan="2" style="text-align: center;" >{{ doc.discount_amount }}</td>
                 </tr>
                 <tr>
                     <td colspan="3" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;"></td>
                     <td colspan="1" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;">صافى القيمة</td>
-                    <td colspan="2">{{ doc.grand_total }}</td>
+                    <td colspan="2" style="text-align: center;">{{ doc.grand_total }}</td>
                 </tr>
                 <!--<tr>
                     <td colspan="5" rowspan="3"><u> <strong> المبلغ بالحروف</strong> :- <strong>{{
