@@ -195,18 +195,21 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "tax_category",
                 "label": "Building No",
+                "reqd":1
             },
             {
                 "fieldname": "floor_no",
                 "fieldtype": "Data",
                 "insert_after": "building_no",
                 "label": "Floor No",
+                "reqd":1
             },
             {
                 "fieldname": "apartment_no",
                 "fieldtype": "Data",
                 "insert_after": "floor_no",
                 "label": "Apartment No",
+                "reqd":1
             }
         ],
         "Sales Order": [

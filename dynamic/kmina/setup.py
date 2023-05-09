@@ -5,6 +5,7 @@ def setup_kmina():
     create_sales_order_script()
 
 
+
 def create_sales_order_script():
     name = "Sales Order-Form"
     if frappe.db.exists("Client Script", name):
