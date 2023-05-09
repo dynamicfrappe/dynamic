@@ -46,14 +46,13 @@
   {
    "fieldname": "token",
    "fieldtype": "Text",
-   "label": "Token",
-   "read_only": 1
+   "label": "Token"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-04-30 10:13:46.756103",
+ "modified": "2023-05-08 14:59:49.726523",
  "modified_by": "Administrator",
  "module": "Shipping",
  "name": "Shipping Settings",
