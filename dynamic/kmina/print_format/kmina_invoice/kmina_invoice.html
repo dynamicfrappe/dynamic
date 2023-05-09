@@ -123,8 +123,6 @@
                     <th>UOM</th>
                     <th>Unit Price</th>
                     <th>Amount</th>
-                    <th>VAT%</th>
-                    <th>VAT(Amt.)</th>
                     <th>Batch</th>
                     <th>Mfg.dt</th>
                     <th>Expirt.dt</th>
@@ -142,8 +140,6 @@
                     <td>{{ item.rate or 0}}</td>
                     <td>{{ item.amount}}</td>
                     <!-- <td>{{ item.price_list_rate or 0}}</td> -->
-                    <td>{{ item.discount_amount or 0}}</td>
-                    <td>{{ item.discount_amount or 0}}</td>
                     <td>{{ item.batch_km or " "}}</td>
                     <td>{{ item.manfacturing_date or ""}}</td>
                     <td>{{ item.expiration_date or " "}}</td>
