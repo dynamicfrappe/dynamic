@@ -1,7 +1,11 @@
 <!-- {%- from "templates/print_formats/standard_macros.html" import add_header -%} -->
 
 {% set customer_doc = frappe.get_doc("Customer",doc.customer)%}
-{% set cst_contact = frappe.get_doc("Contact",doc.contact_person)%}
+{% if doc.contact_person%}
+{% set cst_contact = frappe.get_doc("Contact",doc.contact_person) %}
+{%else%}
+{% set cst_contact = 0 %}
+{%endif%}
 
 
 
@@ -63,7 +67,12 @@
         </div>
         <div class="col-sm-6 col-xs-6 mt-1" >
             {{_("Your Contact")}} <br>
-            <b>{{cst_contact.mobile_no}}</b>
+            {%if cst_contact and cst_contact.phone_nos[0]%}
+            <b>{{cst_contact.phone_nos[0].phone}}</b>
+            {%else%}
+            <b>{{_("None")}}</b>
+            {%endif%}
+           
             <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">
         </div>
     </div>
@@ -86,20 +95,20 @@
         <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 3px;">
     </div>
 
-    <div class="row">
-        <div class="col-sm-3 col-xs-3 mt-1" >
-            {{_("HS Code")}}:<br>
-        </div>
-        <div class="col-sm-3 col-xs-3 mt-1" >
-            {{customer_doc.hs_code or ""}}:<br>
-        </div>
-        <div class="col-sm-3 col-xs-3 mt-1" >
-            {{_("SDFA REgistration No")}}:<br>
-        </div>
-        <div class="col-sm-3 col-xs-3 mt-1" >
-            {{customer_doc.sdfa_code or ""}}:<br>
-        </div>
-    </div>
+    <!--<div class="row">-->
+    <!--    <div class="col-sm-3 col-xs-3 mt-1" >-->
+    <!--        {{_("HS Code")}}:<br>-->
+    <!--    </div>-->
+    <!--    <div class="col-sm-3 col-xs-3 mt-1" >-->
+    <!--        {{customer_doc.hs_code or ""}}:<br>-->
+    <!--    </div>-->
+    <!--    <div class="col-sm-3 col-xs-3 mt-1" >-->
+    <!--        {{_("SDFA REgistration No")}}:<br>-->
+    <!--    </div>-->
+    <!--    <div class="col-sm-3 col-xs-3 mt-1" >-->
+    <!--        {{customer_doc.sdfa_code or ""}}:<br>-->
+    <!--    </div>-->
+    <!--</div>-->
 
 
 
@@ -119,6 +128,8 @@
                     <th>Batch</th>
                     <th>Mfg.dt</th>
                     <th>Expirt.dt</th>
+                    <th>SFDA</th>
+                    <th>HS</th>
                     <!-- <th>سعر بعد الخصم</th>
                     <th>الأجمالى</th> -->
                 </tr>
@@ -136,6 +147,8 @@
                     <td>{{ item.batch_km or " "}}</td>
                     <td>{{ item.manfacturing_date or ""}}</td>
                     <td>{{ item.expiration_date or " "}}</td>
+                    <td>{{ item.sfda_registration_no or " "}}</td>
+                    <td>{{ item.hs_code or " "}}</td>
                     <!-- <td>{{ item.amount }}</td> -->
                 </tr>
                 {% endfor %}
