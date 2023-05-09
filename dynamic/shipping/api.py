@@ -126,6 +126,9 @@ def create_order(doc, *args, **kwargs):
                     cutomer_contact.phone_nos) > 1 else "",
                 "note": "note"
             }
+
+        else:
+            return "Customer address is missing"
         data = {
             "order_code": doc.get("name"),
             "order_date": doc.get("transaction_date"),

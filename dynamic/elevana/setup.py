@@ -45,8 +45,10 @@ def create_sales_order_script():
         doc.view = "Form"
         doc.enabled = 1
     doc.script = """   
+            
          frappe.ui.form.on('Sales Order', {
             refresh(frm){
+                if(frm.doc.docstatus ==1){
                 frm.add_custom_button(__("Create Shipping Order"), function() {
                 frappe.call({
                 method:"dynamic.shipping.api.create_order",
@@ -58,8 +60,10 @@ def create_sales_order_script():
                     }
                 }
                 })
-        })
+        }) 
+            }
             }
         })
+        
         """
     doc.save()
