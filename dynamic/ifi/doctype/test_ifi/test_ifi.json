@@ -8,7 +8,8 @@
  "engine": "InnoDB",
  "field_order": [
   "full_name",
-  "salary"
+  "salary",
+  "customer"
  ],
  "fields": [
   {
@@ -23,11 +24,17 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "salary"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "customer",
+   "options": "Customer"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-08 10:51:15.443596",
+ "modified": "2023-05-10 09:38:38.300160",
  "modified_by": "Administrator",
  "module": "IFI",
  "name": "test_ifi",
