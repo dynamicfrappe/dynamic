@@ -353,6 +353,7 @@ jenv = {
         "get_balance_on:erpnext.accounts.utils.get_balance_on",
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
+        "get_party_address:dynamic.api.get_party_address",
     ],
     "filters": []
 }

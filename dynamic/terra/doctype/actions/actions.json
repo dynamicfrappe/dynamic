@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{customer}-{DD}-{MM}-{YY}",
+ "autoname": "format:{customer}-{DD}-{MM}-{YY}-{####}",
  "creation": "2022-06-22 17:07:17.828615",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -141,9 +141,13 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-04 23:39:37.668328",
+
+
+
+ "modified": "2023-05-10 12:43:56.173914",
+
  "modified_by": "Administrator",
- "module": "terra",
+ "module": "Terra",
  "name": "Actions",
  "owner": "Administrator",
  "permissions": [

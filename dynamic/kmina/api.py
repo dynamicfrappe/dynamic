@@ -95,3 +95,18 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
 		doclist.set_payment_schedule()
 
 	return doclist
+
+
+
+@frappe.whitelist()
+def get_customer_item_code(customer,item_code):
+	sql = f"""
+		select ref_code , sfda_registration_no
+		from `tabItem Customer Detail`
+		where  customer_name = '{customer}' and parent = '{item_code}' 
+	"""
+
+	result = frappe.db.sql(sql,as_dict=1)
+
+
+	return  result
