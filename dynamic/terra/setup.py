@@ -496,6 +496,11 @@ def create_sales_order_scipt():
     doc.script = """
             
             frappe.ui.form.on('Sales Order',{
+                setup: function (frm) {
+                    frm.custom_make_buttons = {
+                        "Sales Order Approval": "Sales Order Approval",
+                    };
+                },
                refresh:(frm)=>{
                     if(frm.doc.docstatus==1 && frm.doc.status == "To Deliver and Bill"){
                         frm.add_custom_button(

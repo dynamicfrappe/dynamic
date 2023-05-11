@@ -123,7 +123,10 @@ def make_sales_order_approval(source_name, target_doc=None, skip_item_mapping=Fa
 			)
 
 	mapper = {
-		"Sales Order": {"doctype": "Sales Order Approval", "validation": {"docstatus": ["=", 1]}},
+		"Sales Order": {"doctype": "Sales Order Approval",
+		  "field_map": {
+				"delivery_date":"delivery_date"
+			},"validation": {"docstatus": ["=", 1]}},
 		"Sales Taxes and Charges": {"doctype": "Sales Taxes and Charges", "add_if_empty": True},
 		"Sales Team": {"doctype": "Sales Team", "add_if_empty": True},
 	}
