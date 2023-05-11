@@ -7,6 +7,9 @@ def get_data():
 		"non_standard_fieldnames": {
 			"Delivery Note": "sales_order_approval",
 		},
+		# "internal_links": {
+		# 	"Sales Order": ["items", "against_sales_order"],
+		# },
         "transactions": [
 			{
 				"label": _("Transactions"),

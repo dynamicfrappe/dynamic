@@ -17,6 +17,7 @@
   "company",
   "posting_date",
   "posting_time",
+  "delivery_date",
   "set_posting_time",
   "is_return",
   "issue_credit_note",
@@ -1323,14 +1324,19 @@
    "label": "Total Delivered Qty",
    "no_copy": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Delivery Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-19 10:55:24.271924",
+ "modified": "2023-05-11 13:44:42.444486",
  "modified_by": "Administrator",
- "module": "terra",
+ "module": "Terra",
  "name": "Sales Order Approval",
  "owner": "Administrator",
  "permissions": [
