@@ -12,8 +12,7 @@ data = {
                 "label": "Material Request",
                 "options" : "Material Request" , 
                 "read_only" : 0,
-                "allow_on_submit":0,
-                
+                "allow_on_submit":0,      
             },
             {
                 "fieldname": "advance_paid",
