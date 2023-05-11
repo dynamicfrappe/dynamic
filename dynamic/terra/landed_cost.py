@@ -105,9 +105,10 @@ def validate_cost(self , *args , **kwargs):
             for item in self.taxes :
                 if item.docment_name == invocie.invoice :
                     # frappe.throw("HERE!" , str( self.taxes))
-                    line_avaiable = validate_line_amount(item.docment_type , item.line_name)
+                    line_avaiable = validate_line_amount(item.docment_type , item.line_name) 
+                    # frappe.throw(_(f""" {item.base_amount} + {line_avaiable} """))
                     if float(item.base_amount or 0)  >  float(line_avaiable or 0) :
-                        frappe.throw(_(""" Allocated Amount  """))
+                        frappe.throw(_(f""" {item.base_amount} + {line_avaiable} """))
 
                     allocated =  allocated + float(item.base_amount or 0)
             if allocated > invocie.allocated_amount :
@@ -119,7 +120,7 @@ def validate_cost(self , *args , **kwargs):
 def validate_line_amount(doc_type ,document ,*args ,**kwargs):
     invoice_line_amount = 0 
     allocated_ex = get_old_laned_cost_ex(document ,doc_type ) 
-    line_total = frappe.db.sql(f"""SELECT SUM(amount) as total 
+    line_total = frappe.db.sql(f"""SELECT SUM(base_amount) as total 
                                   FROM 
                                  `tabPurchase Invoice Item`  
                                  WHERE name = '{document}' """,as_dict=1)
@@ -127,7 +128,7 @@ def validate_line_amount(doc_type ,document ,*args ,**kwargs):
         invoice_line_amount = line_total[0].get("total")
     
     available_amount = float(invoice_line_amount or 0) - float(allocated_ex or 0)
-    # frappe.throw(str(document))
+    # frappe.throw(str(available_amount))
     return available_amount 
 
 
@@ -184,7 +185,7 @@ def get_old_laned_cost_ex(line_name , docment_type  ) :
     ON a.name = b.parent 
        WHERE a.docstatus =1 AND
        b.line_name='{line_name}' and b.docment_type = '{docment_type}'  """,as_dict=1)
-    
+   
     if amount and len(amount) > 0 :
         return float(amount[0].get('total') or 0 )
     else :
