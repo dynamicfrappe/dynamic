@@ -1110,6 +1110,14 @@ data = {
         "property_type": "Int",
         "value": "2"
         },
+        {
+        "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "description",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1"
+        },
     ],
   
     'on_setup': 'dynamic.terra.setup.create_terra_scripts'
