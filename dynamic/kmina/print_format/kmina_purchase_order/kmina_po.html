@@ -24,8 +24,8 @@
         <div class="col-sm-6 col-xs-6  mt-1">
             <div class="row">
                 <div class="col-12" style="text-align: center;"><b style="border-left: 5px solid yellow;border-spacing: 1px;padding-left: 4px;">{{_("Purchase Order")}}</b></div>
-                <div class="col-sm-8 col-xs-8">{{_("Purchase Order Number")}}</div>
-                <div class="col-sm-4 col-xs-4">{{_("PO Date")}}</div>
+                <div class="col-sm-8 col-xs-8 mt-2">{{_("Purchase Order Number")}}</div>
+                <div class="col-sm-4 col-xs-4 mt-2">{{_("PO Date")}}</div>
                 
             </div>
             <div class="row">
@@ -54,18 +54,6 @@
                 TRN : 100512258300003
             </span>
         </div>
-        <!-- <div class="col-sm-6 col-xs-6 mt-1" >
-            {{_("Your Reference")}} <br>
-            <b>{{doc.items[0].sales_order or ""}}</b>
-            <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">
-        </div> -->
-    </div>
-
-    <div class="row">
-        <div class="col-sm-6 col-xs-6 mt-1" >
-            <span>
-            </span>
-        </div>
         <div class="col-sm-6 col-xs-6 mt-1" >
             {{_("Your Contact")}} <br>
             {%if supp_contact and supp_contact.phone_nos[0]%}
@@ -78,7 +66,24 @@
         </div>
     </div>
 
-    <div class="row">
+    <!--<div class="row">-->
+    <!--    <div class="col-sm-6 col-xs-6 mt-1" >-->
+    <!--        <span>-->
+    <!--        </span>-->
+    <!--    </div>-->
+    <!--    <div class="col-sm-6 col-xs-6 mt-1" >-->
+    <!--        {{_("Your Contact")}} <br>-->
+    <!--        {%if supp_contact and supp_contact.phone_nos[0]%}-->
+    <!--        <b>{{supp_contact.phone_nos[0].phone}}</b>-->
+    <!--        {%else%}-->
+    <!--        <b>{{_("None")}}</b>-->
+    <!--        {%endif%}-->
+           
+    <!--        <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">-->
+    <!--    </div>-->
+    <!--</div>-->
+
+    <div class="row mt-3">
         <div class="col-sm-6 col-xs-6 mt-1" >
             {{_("Ff details :")}} <br>
             {{_("Mr. Habib Gara,")}} <br>
@@ -95,7 +100,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-sm-12 col-xs-12 mt-1" >
             {{_("TRN")}}:<br>
         </div>
