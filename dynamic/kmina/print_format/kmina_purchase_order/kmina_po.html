@@ -1,6 +1,5 @@
 <!-- {%- from "templates/print_formats/standard_macros.html" import add_header -%} -->
 
-{% set customer_doc = frappe.get_doc("Customer",doc.customer)%}
 {% if doc.contact_person%}
 {% set supp_contact = frappe.get_doc("Contact",doc.contact_person) %}
 {%else%}
@@ -107,20 +106,6 @@
         <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 3px;">
     </div>
 
-    <!--<div class="row">-->
-    <!--    <div class="col-sm-3 col-xs-3 mt-1" >-->
-    <!--        {{_("HS Code")}}:<br>-->
-    <!--    </div>-->
-    <!--    <div class="col-sm-3 col-xs-3 mt-1" >-->
-    <!--        {{customer_doc.hs_code or ""}}:<br>-->
-    <!--    </div>-->
-    <!--    <div class="col-sm-3 col-xs-3 mt-1" >-->
-    <!--        {{_("SDFA REgistration No")}}:<br>-->
-    <!--    </div>-->
-    <!--    <div class="col-sm-3 col-xs-3 mt-1" >-->
-    <!--        {{customer_doc.sdfa_code or ""}}:<br>-->
-    <!--    </div>-->
-    <!--</div>-->
 
 
 
