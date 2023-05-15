@@ -53,23 +53,24 @@ def validate_delivery_note(doc,*args,**kwargs):
         if len(doc.packed_items) > 0  : 
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
     if 'Terra' in DOMAINS:
-        if doc.is_return == 1:
-            #update reservation row where item_code = line_item_code and sales_order=line_sales_order
-            for line in doc.items:
-                if line.against_sales_order:
-                    sql = f"""
-                    update `tabReservation Warehouse` AS rsv_warehouse 
-                    INNER JOIN `tabReservation` AS reserve
-                    ON rsv_warehouse.parent=reserve.name AND reserve.`sales_order`='{line.against_sales_order}'
-                    set rsv_warehouse.`reserved_qty`=(rsv_warehouse.`reserved_qty`+ ABS({line.qty})) 
-                    where rsv_warehouse.item='{line.item_code}'
-                    """
-                    frappe.db.sql(sql)
-        if doc.is_return != 1:
-            submit_delivery_note(doc)
-            minus_delivery_qty_from_reservation(doc,*args,**kwargs)
-            check_so_approval(doc)
-            recalculate_delivered_qty()
+        submit_delivery_note(doc)
+        minus_delivery_qty_from_reservation(doc,*args,**kwargs)
+        check_so_approval(doc)
+        recalculate_delivered_qty()
+        # if doc.is_return == 1:
+        #     #update reservation row where item_code = line_item_code and sales_order=line_sales_order
+        #     for line in doc.items:
+        #         if line.against_sales_order:
+        #             sql = f"""
+        #             update `tabReservation Warehouse` AS rsv_warehouse 
+        #             INNER JOIN `tabReservation` AS reserve
+        #             ON rsv_warehouse.parent=reserve.name AND reserve.`sales_order`='{line.against_sales_order}'
+        #             set rsv_warehouse.`reserved_qty`=(rsv_warehouse.`reserved_qty`+ ABS({line.qty})) 
+        #             where rsv_warehouse.item='{line.item_code}'
+        #             """
+        #             frappe.db.sql(sql)
+        # if doc.is_return != 1:
+            # ..
 
 
 @frappe.whitelist()  
