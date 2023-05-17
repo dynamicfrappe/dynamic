@@ -335,6 +335,7 @@ domains = {
     'Sedia':"dynamic.domains.sedia",
     'Majestey':"dynamic.domains.majestey",
     'Kmina':"dynamic.domains.kmina",
+    'Maser2000':"dynamic.domains.maser2000",
 }
 
 # domain Conatin
