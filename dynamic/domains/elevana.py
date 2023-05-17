@@ -195,21 +195,21 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "tax_category",
                 "label": "Building No",
-                "reqd":1
+                "reqd": 1
             },
             {
                 "fieldname": "floor_no",
                 "fieldtype": "Data",
                 "insert_after": "building_no",
                 "label": "Floor No",
-                "reqd":1
+                "reqd": 1
             },
             {
                 "fieldname": "apartment_no",
                 "fieldtype": "Data",
                 "insert_after": "floor_no",
                 "label": "Apartment No",
-                "reqd":1
+                "reqd": 1
             }
         ],
         "Sales Order": [
@@ -218,7 +218,26 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "territory",
                 "label": "Note",
+                "no_copy":1
+            },
+            {
+                "fieldname": "is_synced",
+                "fieldtype": "Check",
+                "insert_after": "note",
+                "label": "Is Synced",
+                "hidden": 1,
+                "no_copy":1
+            },
+            {
+                "fieldname": "shipping_company",
+                "fieldtype": "Select",
+                "insert_after": "order_type",
+                "label": "Shipping company",
+                "read_only": 1,
+                "options" : "\nflextock\njandt",
+                "no_copy":1
             }
+
         ]
     },
     "properties": [
