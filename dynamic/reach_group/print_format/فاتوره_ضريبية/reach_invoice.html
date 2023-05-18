@@ -13,7 +13,7 @@
     </div>
 
 </div> -->
-
+{% set cst_doc=frappe.get_doc("Customer",doc.customer)%}
 <div class="container-fluid">
     <!-- header -->
     <div class="row mt-3">
@@ -30,7 +30,7 @@
     </div>
     <!-- end heade  -->
     <div class="row mt-3">
-        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;"><strong>{{_(" أذن تسليم رقم")}} ({{doc.name}})</strong>  </div>
+        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;"><strong>{{_(" فاتورة رقم")}} ({{doc.name}})</strong>  </div>
     </div>
     <div class="row mt-3">
         <div class="col-sm-3 col-xs-3 mt-1" style="text-align: center;">  {{_("تاريخ الفاتوره")}}: </div>
@@ -51,8 +51,17 @@
           {{ doc.customer_name }} 
         </div>
 
-        <div class="col-sm-3 col-xs-3" > {{_( "أسم المندوب")}} :</div>
+        <div class="col-sm-3 col-xs-3" > {{_("كود الضريبي ")}} :</div>
         <div class="col-sm-3 col-xs-3" >
+            {%if cst_doc.tax_id %}
+                {{ cst_doc.tax_id}} 
+            {%else%}
+                {{_("None")}}
+            {%endif%}
+        </div>
+
+        <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_( "أسم المندوب")}} :</div>
+        <div class="col-sm-3 col-xs-3" style="text-align: center;">
             
                  {% if doc.sales_team%}
                 {{ doc.sales_team[0].sales_person or '' }}
@@ -107,13 +116,18 @@
                 {% endfor %}
                  <tr>
                     <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">الأجمالى</td>
+                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">الأجمالى قبل الضريبه</td>
                     <th colspan="2" style="text-align: center;" >{{ doc.total }}</th>
                 </tr>
                 <tr>
                     <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">الخصم</td>
+                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">{{_("الخصم")}}:{{doc.additional_discount_percentage}}</td>
                     <td colspan="2" style="text-align: center;" >{{ doc.discount_amount }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">ضريبه القيمة المضافة</td>
+                    <td colspan="2" style="text-align: center;" > {{doc.base_total_taxes_and_charges}}</td>
                 </tr>
                 <tr>
                     <td colspan="3" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;"></td>
@@ -187,7 +201,7 @@
             {{_("التاريخ")}}
         </div>
     </div>
-    <div class="row mt-4">
+    <div class="row mt-4" >
         <div class="col-sm-4 col-xs-4" style="text-align: center;">
             {{"......" * 8}}
         </div>
@@ -226,7 +240,30 @@
 
     <!-- FOOTER -->
     <!-- FOOTER -->
-{% if print_settings.repeat_header_footer %}
+<div class="row " style="margin-top:200px;">
+        <div class="col-sm-12 col-xs-12" style="text-align: center;">
+            <hr style="border: 1px solid #020202;border-radius: 1px;margin-top: 3px;">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-xs-6" style="text-align: center;">
+            0226438700 - 01112500075 - info@reachgroupco.com
+        </div>
+        <div class="col-sm-6 col-xs-6" style="text-align: center;">
+            Head Office : 3 Mohamed Abd Al Salam St. (Heliopolis)
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-xs-12" style="text-align: center;">
+            Factory : Plot226 manfacturing area Balad Alarab - (Beni Seaif) www.reachgroupco.com
+        </div>
+        
+    </div>
+
+</div>
+<!-- {% if print_settings.repeat_header_footer %}
 <div id="footer-html" class="visible-pdf">
   {% if not no_letterhead and footer %}
   <div class="letter-head-footer">
@@ -241,6 +278,6 @@
     {{ _("Page {0} of {1}").format('<span class="page"></span>', '<span class="topage"></span>') }}
   </p>
 </div>
-{% endif %}
+{% endif %} -->
 
-</div>
+<!-- </div> -->
