@@ -73,7 +73,7 @@ def create_product(product):
         }
         r = requests.post(url, headers=headers, json=data)
         res = json.loads(r.text)
-        #print("response", res.text)
+        # print("response", res.text)
         if r.status_code == 200:
             return res.get("response")[0].get("message")
         else:
@@ -147,16 +147,21 @@ def create_order(doc, *args, **kwargs):
             "Authorization": f"""Bearer {token}"""
         }
         r = requests.post(url, headers=headers, json=data)
+        print("rrr", r.text)
         res = json.loads(r.text)
-        print("res",res)
         if r.status_code == 200:
-            pass
+            sql = f"""
+                    update `tabSales Order` set is_synced=1 where name='{doc.get("name")}'
+                """
+            frappe.db.sql(sql)
+            frappe.db.commit()
         else:
             frappe.log_error(
                 title=_("Error while create order"),
                 message=r.text,
             )
         return res.get("message")
+
 
 # 4. Get Order status:
 def get_order_status(order_code):

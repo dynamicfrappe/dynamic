@@ -46,10 +46,12 @@ def create_sales_order_script():
         doc.enabled = 1
     doc.script = """   
             
+            
+            
          frappe.ui.form.on('Sales Order', {
             refresh(frm){
-                if(frm.doc.docstatus ==1){
-                frm.add_custom_button(__("Create Shipping Order"), function() {
+                if(frm.doc.docstatus ==1 && frm.doc.is_synced == 0){
+                frm.add_custom_button(__("flextock"), function() {
                 frappe.call({
                 method:"dynamic.shipping.api.create_order",
                 args:{
@@ -60,7 +62,36 @@ def create_sales_order_script():
                     }
                 }
                 })
-        }) 
+        },"Shipping With") 
+        
+        frm.add_custom_button(__("j & t"), function() {
+                frappe.call({
+                method:"dynamic.shipping.jandt.create_oder",
+                args:{
+                    "product" : frm.doc
+                },callback(r){
+                    if(r.message){
+                        frappe.msgprint(r.message)
+                    }
+                }
+                })
+        },"Shipping With")
+        
+        
+            }
+            if(frm.doc.is_synced == 1 && frm.doc.shipping_company == "jandt"){
+                frm.add_custom_button(__("Cancel Order Shipping"), function() {
+                frappe.call({
+                method:"dynamic.shipping.jandt.cancel_order",
+                args:{
+                    "order" : frm.doc
+                },callback(r){
+                    if(r.message){
+                        frappe.msgprint(r.message)
+                    }
+                }
+                })
+        })
             }
             }
         })
