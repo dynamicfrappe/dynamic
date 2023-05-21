@@ -217,7 +217,8 @@ doc_events = {
         "before_insert" :"dynamic.api.lead_before_insert"
     },
     "Purchase Receipt":{
-         "on_submit" : "dynamic.api.submit_purchase_recipt"
+         "on_submit" : "dynamic.api.submit_purchase_recipt",
+         "before_save" : "dynamic.api.before_save",
     }
 
     # "Purchase Receipt": {
@@ -336,6 +337,7 @@ domains = {
     'Majestey':"dynamic.domains.majestey",
     'Kmina':"dynamic.domains.kmina",
     'Maser2000':"dynamic.domains.maser2000",
+    'Behira Pac':"dynamic.domains.behira_pac",
 }
 
 # domain Conatin

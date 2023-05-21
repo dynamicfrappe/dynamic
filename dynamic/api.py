@@ -958,7 +958,17 @@ def validate_active_domains_cancel(doc ,*args,**kwargs):
 
 
      
-
+@frappe.whitelist()           
+def before_save(doc ,*args,**kwargs) :
+    if doc.items:
+        for row in doc.items:
+            if row.get("purchase_order"):
+                recevied_qty = frappe.db.get_value("Purchase Order Item",{
+                    "parent":row.get("purchase_order"),
+                    "item_code":row.get("item_code")
+                },"received_qty"
+                )
+                row.actual_received_qty = recevied_qty
         # first_day = datetime.today().replace(day=1)
         # last_day = add_days(add_months(first_day, 1),-1) 
 
