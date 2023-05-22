@@ -124,6 +124,10 @@ def validate_active_domains(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
         # check sINV items valutaion rate
         check_item_valuation_rate(doc)
+    
+    if "Majestey" in DOMAINS:
+        disable_batch_if_qty_zero(doc)
+
 
 def check_item_valuation_rate(doc):
     for item in doc.items:
@@ -1365,4 +1369,18 @@ def get_party_address(party_type, party):
         city_state = city_state + doc.pincode if doc.pincode else city_state
         city_state += ""
     return street_address + ',' + city_state
+
+
+
+
+def disable_batch_if_qty_zero(doc):
+    for item in doc.items:
+        print("from item grid '%s'"%item.idx)
+        if item.get("batch_no"):
+            batch = frappe.get_doc("Batch",item.get("batch_no"))
+            if batch.batch_qty == 0:
+                batch.diabled = 1
+                batch.save()
+
+
 
