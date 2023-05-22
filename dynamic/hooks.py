@@ -337,6 +337,7 @@ domains = {
     'Kmina':"dynamic.domains.kmina",
     'Maser2000':"dynamic.domains.maser2000",
     'Behira Pac':"dynamic.domains.behira_pac",
+    'Future':"dynamic.domains.future",
 }
 
 # domain Conatin
