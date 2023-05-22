@@ -43,6 +43,27 @@ def validate_sales_invoice(doc,*args,**kwargs):
              set_complicated_pundel_list(doc)
              validate_packed_item(doc.name)
         #     caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
+    
+    if "Majestey" in DOMAINS:
+        disable_batch_if_qty_zero(doc)
+
+
+
+
+def disable_batch_if_qty_zero(doc,*args, **kwargs):
+    for item in doc.items:
+        print("------------------------------- from item grid '%s'"%item.idx)
+        if item.get("batch_no"):
+            sql = f"""
+                update `tabBatch` set disabled = 1 where batch_qty = 0 and name = '{item.batch_no}'
+            """
+            frappe.db.sql(sql)
+            frappe.db.commit()
+            
+            # batch_doc = frappe.get_doc("Batch",item.get("batch_no"))
+            # if batch_doc.batch_qty == 0:
+            #     batch_doc.diabled = 1
+            #     batch_doc.save()
 
 def validate_delivery_note(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
