@@ -219,9 +219,9 @@ doc_events = {
          "on_submit" : "dynamic.api.submit_purchase_recipt",
          "before_save" : "dynamic.api.before_save",
     },
-    "Batch":{
-        "before_save": "dynamic.api.disable_batch_if_qty_zero"
-    }
+    # "Batch":{
+    #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
+    # }
 
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
