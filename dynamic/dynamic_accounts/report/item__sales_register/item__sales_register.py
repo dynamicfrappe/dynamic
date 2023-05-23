@@ -99,9 +99,10 @@ def _execute(
 		)
 
 		if d.stock_uom != d.uom and d.stock_qty:
-			row.update({"rate": (d.base_net_rate * d.qty) / d.stock_qty, "amount": d.base_net_amount})
+			row.update({"unit_rate": d.base_net_rate, "amount": d.base_net_amount,"rate":d.stock_uom_rate})
+			# row.update({"unit_rate": (d.base_net_rate * d.qty) / d.stock_qty, "amount": d.base_net_amount})
 		else:
-			row.update({"rate": d.base_net_rate, "amount": d.base_net_amount})
+			row.update({"unit_rate": d.base_net_rate, "amount": d.base_net_amount})
 
 		total_tax = 0
 		total_other_charges = 0
@@ -304,19 +305,34 @@ def get_columns(additional_table_columns, filters):
 			"width": 100,
 		},
 		{
-			"label": _("Stock UOM"),
+			"label": _("Stock UOM"),#unit
 			"fieldname": "stock_uom",
 			"fieldtype": "Link",
 			"options": "UOM",
 			"width": 100,
 		},
+		{
+			"label": _("Rate"),
+			"fieldname": "rate",
+			"fieldtype": "Float",
+			"width": 100,
+		},
+		
 		{"label": _("Stock Qty"), "fieldname": "stock_qty", "fieldtype": "Float", "width": 100},
 		
 		{
-			"label": _("UOM"),
+			"label": _("UOM"),#box
 			"fieldname": "uom",
 			"fieldtype": "Data",
 			# "options": "UOM",
+			"width": 100,
+		},
+		
+
+		{
+			"label": _("Unit Rate"),
+			"fieldname": "unit_rate",
+			"fieldtype": "Float",
 			"width": 100,
 		},
 		
@@ -328,13 +344,7 @@ def get_columns(additional_table_columns, filters):
 			"fieldtype": "Flaot",
 			"width": 100,
 		},
-		{
-			"label": _("Rate"),
-			"fieldname": "rate",
-			"fieldtype": "Float",
-			"options": "currency",
-			"width": 100,
-		},
+		
 		{
 			"label": _("Amount"),
 			"fieldname": "amount",
@@ -425,6 +435,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabSales Invoice Item`.sales_order, `tabSales Invoice Item`.delivery_note,
 			`tabSales Invoice Item`.income_account, `tabSales Invoice Item`.cost_center,
 			`tabSales Invoice Item`.stock_qty, `tabSales Invoice Item`.stock_uom,
+			`tabSales Invoice Item`.stock_uom_rate,
 			`tabSales Invoice Item`.base_net_rate, `tabSales Invoice Item`.base_net_amount,
 			`tabSales Invoice`.customer_name, `tabSales Invoice`.customer_group, `tabSales Invoice Item`.so_detail,
 			`tabSales Invoice Item`.conversion_factor,

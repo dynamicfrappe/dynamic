@@ -13,7 +13,8 @@
     </div>
 
 </div> -->
-{% set cst_doc=frappe.get_doc("Customer",doc.customer)%}
+<!-- {% set cst_doc=frappe.get_doc("Customer",doc.customer)%}/ -->
+
 <div class="container-fluid">
     <!-- header -->
     <div class="row mt-3">
@@ -50,18 +51,17 @@
         <div class="col-sm-3 col-xs-3" style="text-align: center;">
           {{ doc.customer_name }} 
         </div>
-
-        <div class="col-sm-3 col-xs-3" > {{_("كود الضريبي ")}} :</div>
-        <div class="col-sm-3 col-xs-3" >
-            {%if cst_doc.tax_id %}
+        <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_("كود الضريبي )}} :</div>
+        <div class="col-sm-3 col-xs-3" style="text-align: center;">
+            <!-- {%if cst_doc.tax_id %}
                 {{ cst_doc.tax_id}} 
             {%else%}
                 {{_("None")}}
-            {%endif%}
+            {%endif%} -->
         </div>
 
-        <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_( "أسم المندوب")}} :</div>
-        <div class="col-sm-3 col-xs-3" style="text-align: center;">
+        <div class="col-sm-3 col-xs-3" > {{_( "أسم المندوب")}} :</div>
+        <div class="col-sm-3 col-xs-3" >
             
                  {% if doc.sales_team%}
                 {{ doc.sales_team[0].sales_person or '' }}
@@ -99,11 +99,10 @@
                 <tr>
                     <th style="width:5%">م</th>
                     <th style="width:20%" >كود الصنف</th>
-                    <th style="width:30%"> اسم الصنف</th>
+                    <th style="width:40%"> اسم الصنف</th>
                     <th style="width:13%"> الكميه</th>
                     <th style="width:7%"> السعر</th>
                     <th style="width:15%">الأجمالى</th>
-                    <th style="width:10%"> نسبة الضريبة</th>
                 </tr>
                 {% for item in doc.items %}
                 <tr>
@@ -113,27 +112,26 @@
                     <td>{{ item.uom}} {{"_ " }}  {{ item.qty}}</td>
                     <td>{{ item.rate or 0}}</td>
                     <td>{{ item.amount }}</td>
-                    <td>{{ item.item_tax_template }}</td>
                 </tr>
                 {% endfor %}
                  <tr>
                     <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="2" style="border-bottom-style: hidden;border-right-style: hidden;">الأجمالى قبل الضريبه</td>
+                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">الأجمالى قبل الضريبه</td>
                     <th colspan="2" style="text-align: center;" >{{ doc.total }}</th>
                 </tr>
                 <tr>
                     <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="2" style="border-bottom-style: hidden;border-right-style: hidden;">{{_("الخصم")}}:{{doc.additional_discount_percentage}}</td>
-                    <td colspan="2" style="text-align: center;" >{{ doc.discount_amount }}</td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="2" style="border-bottom-style: hidden;border-right-style: hidden;">  الضريبة</td>
+                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">ضريبه القيمة المضافة</td>
                     <td colspan="2" style="text-align: center;" > {{doc.base_total_taxes_and_charges}}</td>
                 </tr>
                 <tr>
+                    <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">الخصم</td>
+                    <td colspan="2" style="text-align: center;" >{{ doc.discount_amount }}</td>
+                </tr>
+                <tr>
                     <td colspan="3" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="2" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;">صافى القيمة</td>
+                    <td colspan="1" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;">صافى القيمة</td>
                     <td colspan="2" style="text-align: center;">{{ doc.grand_total }}</td>
                 </tr>
                 <!--<tr>
@@ -265,21 +263,3 @@
     </div>
 
 </div>
-<!-- {% if print_settings.repeat_header_footer %}
-<div id="footer-html" class="visible-pdf">
-  {% if not no_letterhead and footer %}
-  <div class="letter-head-footer">
-   {{footer}}
-   "xxxxxxxx"
-  </div>
-  {%else%}
-  {{footer}}
-  "tttttttttttt"
-  {% endif %}
-  <p class="text-center small page-number visible-pdf">
-    {{ _("Page {0} of {1}").format('<span class="page"></span>', '<span class="topage"></span>') }}
-  </p>
-</div>
-{% endif %} -->
-
-<!-- </div> -->

@@ -21,6 +21,22 @@ data = {
                 "insert_after":"monthly_sales_target"
             },
         ],
+        'Sales Invoice':[
+            {
+                "label": "Crean",
+                "fieldname": "crean",
+                "fieldtype": "Select",
+                "options":"\nYes\nNo",
+                "insert_after": "customer",
+                "reqd":1
+            },
+            {
+                "label": "Crean Amount",
+                "fieldname": "crean_amount",
+                "fieldtype": "Float",
+                "insert_after": "crean",
+            },
+        ],
         'Purchase Order':[
              {
                 "fieldname": "customer_so",
@@ -101,18 +117,18 @@ data = {
                 "in_list_view":1
             },
             {
+                "label": "Crean",
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
                 "insert_after": "order_type",
-                "label": "Crean",
                 "reqd":1
             },
             {
+                "label": "Crean Amount",
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
-                "label": "Crean Amount"
             },
             {
                 "label": "Advance Paymentstest",
