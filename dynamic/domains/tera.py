@@ -950,7 +950,7 @@ data = {
                 "fieldtype":"Select",
                 "label":"Naming Template",
                 "insert_after":"type",
-                "options":"\nCash-.YYYY.-\nBank-.YYYY.-"
+                "options":"\nProjects-.YYYY.-\nHeliopolis-.YYYY.-\nNew Cairo-.YYYY.-\nZayed-.YYYY.-\nMohandseen-.YYYY.-\nMain-.YYYY.-"
             }
         ],
         "Payment Entry Deduction":[
