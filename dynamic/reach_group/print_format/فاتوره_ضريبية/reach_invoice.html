@@ -189,6 +189,29 @@
     
     </div>
 
+    <div class="row mt-1">
+        <div class=" col-sm-12 col-xs-12 margin-top margin-bottom" >
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th style="width:5%">م</th>
+                    <th style="width:45%" > الضريبة</th>
+                    <th style="width:50%">  القيمه</th>
+
+
+
+                </tr>
+                {% for row in doc.taxes %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ row.account_head }}</td>
+                    <td>{{ row.tax_amount }}</td>
+                </tr>
+                {% endfor %}
+  
+            </table>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-11 col-xs-11" style="text-align: right;;border: solid 2px black;">
          {{_("فقط/ ")}} {{doc.base_in_words}}

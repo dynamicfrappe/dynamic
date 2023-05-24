@@ -117,7 +117,7 @@
                     <td>{{ item.uom}} {{"_ " }}  {{ item.qty}}</td>
                     <td>{{ item.rate or 0}}</td>
                     <td>{{ item.amount }}</td>
-                    <td>{{ item.item_tax_template }}</td>
+                    <td>{{ item.item_tax_template or ''}}</td>
                     <td>{%if item.item_tax_template %}
                      
                         {{
@@ -193,6 +193,33 @@
             </div>
     
         </div> -->
+    
+    
+    </div>
+
+
+    <div class="row mt-1">
+        <div class=" col-sm-12 col-xs-12 margin-top margin-bottom" >
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th style="width:5%">م</th>
+                    <th style="width:45%" > الضريبة</th>
+                    <th style="width:50%">  القيمه</th>
+
+
+
+                </tr>
+                {% for row in doc.taxes %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ row.account_head }}</td>
+                    <td>{{ row.tax_amount }}</td>
+                </tr>
+                {% endfor %}
+  
+            </table>
+        </div>
+        
     
     
     </div>
