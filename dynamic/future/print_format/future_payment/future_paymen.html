@@ -1,28 +1,11 @@
-<!-- {%- from "templates/print_formats/standard_macros.html" import add_header -%} -->
-
-<!--{% set customer_doc = frappe.get_doc("Customer",doc.customer)%}-->
-<!--{% if doc.contact_person%}-->
-<!--{% set cst_contact = frappe.get_doc("Contact",doc.contact_person) %}-->
-<!--{%else%}-->
-<!--{% set cst_contact = 0 %}-->
-<!--{%endif%}-->
-
-
-
-<!--{% if letter_head and not no_letterhead -%}-->
-<!--{% if print_settings.repeat_header_footer %}-->
-<!--   <br>  <div class="letter-head">{{ letter_head }}</div>-->
-<!--{%- endif %}{%- endif %}-->
-
 
 <div class="container-fluid" dir="auto">
-    <!-- header -->
     <div class="row">
                 <div class="col-sm-12 col-xs-12" style="text-align: right;font-size: 17px;"><b>{{_("شركة فيوتشر وود لتجارة وتصنيع الأخشاب")}}</b></div>
         </div>
     <div class="row mt-5">
         <div class="col-sm-5 col-xs-5" style="text-align: right;font-size: 17px;"><b>
-            {%-if doc.payment_type== 'تسلم' or doc.payment_type== 'Recieve' -%}
+            {%-if doc.payment_type== 'تسلم' or doc.payment_type== 'Receive' -%}
             {{_("أذن استلام ")}}
             {%else%}
             {{_("أذن صرف")}}
@@ -41,7 +24,6 @@
         <div class="col-sm-2 col-xs-2" style="text-align: right;font-size: 17px;">{{_("جنيه")}}</div>
     </div>
 
-    <!-- second row -->
     <div class="row mt-1">
         <div class="col-sm-3 col-xs-3  mt-1"><b>{{_("التاريخ")}}</b></div>
         <div class="col-sm-5 col-xs-5  mt-1" style="text-align: right;">
@@ -50,7 +32,6 @@
         <div class="col-sm-4 col-xs-4  mt-1"  style="text-align: center;font-size: 15px;padding-left: 50px;">{{doc.paid_amount}}</div>
     </div>
 
-    <!-- third rowstyle="background-color: #b3b3b3;" -->
     <div class="row mt-1">
         <div class="col-sm-3 col-xs-3  mt-1"><b>{{_("أستلمنا من السيد")}}</b></div>
         <div class="col-sm-5 col-xs-5  mt-1" style="text-align: right;">
@@ -59,7 +40,6 @@
         <div class="col-sm-4 col-xs-4  mt-1"  style="text-align: center;font-size: 15px;padding-left: 50px;"></div>
     </div>
 
-     <!-- four row -->
      <div class="row mt-1">
         <div class="col-sm-3 col-xs-3  mt-1"><b>{{_(" مبلغ وقدرة ")}}</b></div>
         <div class="col-sm-5 col-xs-5  mt-1" style="text-align: right;">
@@ -69,14 +49,12 @@
         <div class="col-sm-4 col-xs-4  mt-1"  style="text-align: center;font-size: 15px;padding-left: 50px;"></div>
     </div>
 
-    <!-- four row -->
     <div class="row mt-1">
         <div class="col-sm-5 col-xs-5  mt-1" style="text-align: right;">
         </div>
         <div class="col-sm-4 col-xs-4  mt-1"  style="text-align: center;font-size: 15px;padding-left: 50px;"></div>
         <div class="col-sm-3 col-xs-3  mt-1"><b>{{_("  المستلم ")}}</b></div>
     </div>
-    <!-- four row -->
     <div class="row mt-1">
         <div class="col-sm-5 col-xs-5  mt-1" style="text-align: right;">
         </div>
@@ -91,8 +69,7 @@
 
 </div>
 
-
-
+helllooooooooooooooooo
 
 
 
