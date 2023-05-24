@@ -31,7 +31,7 @@
     </div>
     <!-- end heade  -->
     <div class="row mt-3">
-        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;"><strong>{{_("  فاتورة مرتجع رقم")}} ({{doc.name}})</strong>  </div>
+        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;"><strong style="font-size: 17px;">{{_("  فاتورة مرتجع رقم")}} ({{doc.name}})</strong>  </div>
     </div>
     <div class="row mt-3">
         <div class="col-sm-3 col-xs-3 mt-1" style="text-align: center;">  {{_("تاريخ الفاتوره")}}: </div>
@@ -61,8 +61,8 @@
             {%endif%}
         </div>
 
-        <div class="col-sm-3 col-xs-3" > {{_( "أسم المندوب")}} :</div>
-        <div class="col-sm-3 col-xs-3" >
+        <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_( "أسم المندوب")}} :</div>
+        <div class="col-sm-3 col-xs-3" style="text-align: center;">
             
                  {% if doc.sales_team%}
                 {{ doc.sales_team[0].sales_person or '' }}
@@ -121,10 +121,12 @@
                     <td>{%if item.item_tax_template %}
                      
                         {{
-                            frappe.utils.cint(
+                            "%.2f"|format((
                                 (frappe.db.get_value("Item Tax Template Detail",
                                 {"parent": item.item_tax_template},'tax_rate')  / 100) * item.amount
-                             )
+                            )
+                            |float)
+                            
                         }}
                         {%else%}
                         {{_("None")}}
@@ -198,7 +200,9 @@
     </div>
 
 
-    <div class="row mt-1">
+    <!-- taxes -->
+    {%if doc.taxes%}
+    <div class="row mt-1"> 
         <div class=" col-sm-12 col-xs-12 margin-top margin-bottom" >
             <table class="table table-bordered table-condensed">
                 <tr>
@@ -208,7 +212,7 @@
 
 
 
-                </tr> 
+                </tr>
                 {% for row in doc.taxes %}
                 <tr>
                     <td>{{ loop.index }}</td>
@@ -219,10 +223,9 @@
   
             </table>
         </div>
-        
-    
-    
     </div>
+    {%endif%}
+   
 
     <div class="row">
         <div class="col-sm-11 col-xs-11" style="text-align: right;;border: solid 2px black;">
