@@ -22,7 +22,7 @@
         </div>
     <div class="row mt-5">
         <div class="col-sm-5 col-xs-5" style="text-align: right;font-size: 17px;"><b>
-            {%-if doc.payment_type== 'تسلم' -%}
+            {%-if doc.payment_type== 'تسلم' or doc.payment_type== 'Recieve' -%}
             {{_("أذن استلام ")}}
             {%else%}
             {{_("أذن صرف")}}
