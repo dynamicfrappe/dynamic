@@ -54,6 +54,14 @@ def create_oder(product):
         # create Business parameter signature 
         business_parameter_signature = create_body_signature(customer_number,hashed_password,private_key)
         customer = frappe.get_doc("Customer", product.get("customer"))
+
+        description = ""
+        for item in product.get("items"):
+            description += item.get("item_code")+"-"+str(item.get("qty")) + ";"
+        description = description[:-1] + "\n" + "مستحضرات تجميل"
+        error_log = frappe.new_doc("Error Log")
+        error_log.error = description
+        error_log.save()
         if customer.get("customer_primary_address") and customer.get("customer_primary_contact"):
             customer_address = frappe.get_doc("Address", customer.get("customer_primary_address"))
             cutomer_contact = frappe.get_doc("Contact", customer.get("customer_primary_contact"))
@@ -71,16 +79,16 @@ def create_oder(product):
                 "payType": "PP_PM",
                 "sendStartTime": datetime_str,
                 "sendEndTime": datetime_str,
-                "goodsType": "ITN5",
+                "goodsType": "ITN6",
                 "length": "0",
                 "width": "0",
                 "height": "0",
                 "weight": 1,
-                "totalQuantity": product.get("total_qty"),
+                "totalQuantity": 1,
                 "itemsValue": product.get("grant_total"),
                 "priceCurrency": "EGP",
                 "offerFee": "",
-                "remark": "",
+                "remark": description,
                 "operateType": 1,
                 "sender": {
                     "name": "Elevana Integrated Medical",
@@ -119,11 +127,11 @@ def create_oder(product):
                     "latitude": "",
                 },
                 "items": [{
-                    "itemType": "ITN5",
+                    "itemType": "ITN6",
                     "itemName": item.get("item_name"),
                     "chineseName": "",
                     "englishName": "",
-                    "number": item.get("qty"),
+                    "number": 1,
                     "itemValue": item.get("rate"),
                     "priceCurrency": "EGP",
                     "desc": item.get("description"),
