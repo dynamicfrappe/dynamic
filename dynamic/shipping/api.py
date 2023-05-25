@@ -10,33 +10,38 @@ from frappe.desk.form.load import get_attachments
 
 @frappe.whitelist()
 def authenticate():
-    method_url = "/base/auth/"
-    data = validate_shipping_settings()
-    if data.get("status"):
-        base_url = data.get("url")
-        body = {
-            "username": data.get("user_name"),
-            "password": data.get("password"),
-            "key": data.get("key")
-        }
-        url = base_url + method_url
-        r = requests.post(url, body)
-        if r.status_code == 200:
-            response = json.loads(r.text)
-            access_token = response.get("access")
-            # print("access_token",access_token)
-            # frappe.set_value("Shipping Settings", "Shipping Settings", "token", access_token)
-            return access_token
+    try:
+        method_url = "/base/auth/"
+        data = validate_shipping_settings()
+        if data.get("status"):
+            base_url = data.get("url")
+            body = {
+                "username": data.get("user_name"),
+                "password": data.get("password"),
+                "key": data.get("key")
+            }
+            url = base_url + method_url
+            r = requests.post(url, body)
+            print(r.text)
+            if r.status_code == 200:
+                response = json.loads(r.text)
+                access_token = response.get("access")
+                # print("access_token",access_token)
+                # frappe.set_value("Shipping Settings", "Shipping Settings", "token", access_token)
+                return access_token
+            else:
+                frappe.log_error(
+                    title=_("Error while shiiping authentications"),
+                    message=r.text,
+                )
         else:
             frappe.log_error(
                 title=_("Error while shiiping authentications"),
-                message=r.text,
+                message="Error while shiiping authentications",
             )
-    else:
-        frappe.log_error(
-            title=_("Error while shiiping authentications"),
-            message="Error while shiiping authentications",
-        )
+    except ex:
+        frappe.msgprint("failed to authente with flexstock")
+        return
 
 
 # 2. Create Product   ---> take list of product
@@ -67,13 +72,18 @@ def create_product(product):
                 }
             ]
         }
-
+        print("token",token)
+        if not token:
+            frappe.throw("failed to authente with flexstock")
+            return 
         headers = {
             "Authorization": f"""Bearer {token}"""
         }
-        r = requests.post(url, headers=headers, json=data)
-        res = json.loads(r.text)
-        # print("response", res.text)
+        try:
+            r = requests.post(url, headers=headers, json=data)
+            res = json.loads(r.text)
+        except ex:
+            frappe.msgprint(str(r.text))
         if r.status_code == 200:
             return res.get("response")[0].get("message")
         else:
