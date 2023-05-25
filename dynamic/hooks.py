@@ -95,6 +95,7 @@ doctype_js = {
     "Job Card":"public/js/job_card.js",
     "Request for Quotation":"public/js/request_for_quotation.js",
     "Mode of Payment":"public/js/mode_of_payment.js",
+    "Purchase Receipt":"public/js/purchase_receipt.js",
     # "Assign To":"public/sidebar/assign_to.js",
     
 }
@@ -126,6 +127,7 @@ doc_events = {
     },
 
     "Sales Invoice": {
+        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
         "validate": "dynamic.api.validate_active_domains",
         "on_cancel" :"dynamic.api.validate_active_domains_cancel"
@@ -199,7 +201,6 @@ doc_events = {
     },
     "Purchase Order":{
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
-        # "before_save": "dynamic.api.add_crean_in_taxes",
         "before_submit": "dynamic.api.add_crean_in_taxes",
         "after_inser" :  "dynamic.api.calculate_orderd_qty",
         "on_submit":  "dynamic.api.calculate_orderd_qty",
@@ -216,8 +217,12 @@ doc_events = {
         "before_insert" :"dynamic.api.lead_before_insert"
     },
     "Purchase Receipt":{
-         "on_submit" : "dynamic.api.submit_purchase_recipt"
-    }
+         "on_submit" : "dynamic.api.submit_purchase_recipt",
+         "before_save" : "dynamic.api.before_save",
+    },
+    # "Batch":{
+    #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
+    # }
 
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
@@ -334,6 +339,9 @@ domains = {
     'Sedia':"dynamic.domains.sedia",
     'Majestey':"dynamic.domains.majestey",
     'Kmina':"dynamic.domains.kmina",
+    'Maser2000':"dynamic.domains.maser2000",
+    'Behira Pac':"dynamic.domains.behira_pac",
+    'Future':"dynamic.domains.future",
 }
 
 # domain Conatin
@@ -352,6 +360,7 @@ jenv = {
         "get_balance_on:erpnext.accounts.utils.get_balance_on",
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
+        "get_party_address:dynamic.api.get_party_address",
     ],
     "filters": []
 }

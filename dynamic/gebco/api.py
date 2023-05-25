@@ -43,6 +43,27 @@ def validate_sales_invoice(doc,*args,**kwargs):
              set_complicated_pundel_list(doc)
              validate_packed_item(doc.name)
         #     caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
+    
+    if "Majestey" in DOMAINS:
+        disable_batch_if_qty_zero(doc)
+
+
+
+
+def disable_batch_if_qty_zero(doc,*args, **kwargs):
+    for item in doc.items:
+        print("------------------------------- from item grid '%s'"%item.idx)
+        if item.get("batch_no"):
+            sql = f"""
+                update `tabBatch` set disabled = 1 where batch_qty = 0 and name = '{item.batch_no}'
+            """
+            frappe.db.sql(sql)
+            frappe.db.commit()
+            
+            # batch_doc = frappe.get_doc("Batch",item.get("batch_no"))
+            # if batch_doc.batch_qty == 0:
+            #     batch_doc.diabled = 1
+            #     batch_doc.save()
 
 def validate_delivery_note(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
@@ -53,11 +74,24 @@ def validate_delivery_note(doc,*args,**kwargs):
         if len(doc.packed_items) > 0  : 
             caculate_shortage_item(doc.packed_items ,doc.set_warehouse)
     if 'Terra' in DOMAINS:
-        # frappe.throw('Validate delivery Note')
         submit_delivery_note(doc)
         minus_delivery_qty_from_reservation(doc,*args,**kwargs)
         check_so_approval(doc)
         recalculate_delivered_qty()
+        # if doc.is_return == 1:
+        #     #update reservation row where item_code = line_item_code and sales_order=line_sales_order
+        #     for line in doc.items:
+        #         if line.against_sales_order:
+        #             sql = f"""
+        #             update `tabReservation Warehouse` AS rsv_warehouse 
+        #             INNER JOIN `tabReservation` AS reserve
+        #             ON rsv_warehouse.parent=reserve.name AND reserve.`sales_order`='{line.against_sales_order}'
+        #             set rsv_warehouse.`reserved_qty`=(rsv_warehouse.`reserved_qty`+ ABS({line.qty})) 
+        #             where rsv_warehouse.item='{line.item_code}'
+        #             """
+        #             frappe.db.sql(sql)
+        # if doc.is_return != 1:
+            # ..
 
 
 @frappe.whitelist()  
@@ -105,6 +139,7 @@ def check_so_approval(doc):
         if item.get("sales_order_approval"):
             remaing_sql = f"""select remaining_qty from `tabSales Order Approval Item` where parent= '{item.sales_order_approval}' and item_code='{item.item_code}' and warehouse='{item.warehouse}' limit 1"""
             item_remining_qty = frappe.db.sql(remaing_sql,as_dict=1)
+            # frappe.errprint(f"==>qty{item.qty} rem {item_remining_qty[0].remaining_qty}")
             if item.qty > item_remining_qty[0].remaining_qty:
                 frappe.throw(_("Approval Remaining Qty '%s'"%item_remining_qty[0].remaining_qty))
             #approval_doc = frappe.get_doc("Sales Order Approval",item.get("sales_order_approval"))

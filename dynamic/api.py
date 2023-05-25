@@ -124,6 +124,9 @@ def validate_active_domains(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
         # check sINV items valutaion rate
         check_item_valuation_rate(doc)
+    
+    
+
 
 def check_item_valuation_rate(doc):
     for item in doc.items:
@@ -815,23 +818,28 @@ def validate_whats_app_settings(data , *args ,**kwargs) :
 
 @frappe.whitelist()
 def modeofpaymentautoname(self,fun=''):
-    print("************************************************** ")
-    #frappe.throw("----------------------------------------------")
     if "Terra" in DOMAINS:
         mode_of_payment = frappe.get_doc("Mode of Payment",self.mode_of_payment)
-        if mode_of_payment.naming:
-            sql = "select count(*) as 'c' from `tabPayment Entry` WHERE mode_of_payment='%s'"%self.mode_of_payment
-            last_id = frappe.db.sql(sql,as_dict=1)
+        if mode_of_payment.get("naming"):
             todays_date = date.today()
             year = todays_date.year
-            id = int(last_id[0].get("c")) +1
-            if mode_of_payment.naming == "Cash-.YYYY.-":
-                self.name = "Cash"+"-"+str(year)+"-" + str(id)
-            elif mode_of_payment.naming == "Bank-.YYYY.-":
-                self.name = "Bank"+"-"+str(year)+"-" + str(id)
-
-            self.mode_of_payment_naming = mode_of_payment.naming
+            id = create_naming_reord(mode_of_payment.get("naming"))
+            nameingstr = mode_of_payment.get("naming")
+            nameingstr = nameingstr.replace(".YYYY.",str(year))
+            self.name = nameingstr + str(id)
             
+
+
+
+def create_naming_reord(series):
+    doc= frappe.new_doc("Mode OF PAYMENT NAMING")
+    doc.mode_of_payment_series = series
+    doc.save()
+
+    sql = f"""select count(*) as 'c' from `tabMode OF PAYMENT NAMING` WHERE mode_of_payment_series = '{series}'"""
+    last_id = frappe.db.sql(sql,as_dict=1)
+    id = int(last_id[0].get("c")) 
+    return id    
 @frappe.whitelist()           
 def submit_stock_entry(doc ,*args,**kwargs) :
 
@@ -959,7 +967,17 @@ def validate_active_domains_cancel(doc ,*args,**kwargs):
 
 
      
-
+@frappe.whitelist()           
+def before_save(doc ,*args,**kwargs) :
+    if doc.items:
+        for row in doc.items:
+            if row.get("purchase_order"):
+                recevied_qty = frappe.db.get_value("Purchase Order Item",{
+                    "parent":row.get("purchase_order"),
+                    "item_code":row.get("item_code")
+                },"received_qty"
+                )
+                row.actual_received_qty = recevied_qty
         # first_day = datetime.today().replace(day=1)
         # last_day = add_days(add_months(first_day, 1),-1) 
 
@@ -1163,6 +1181,14 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                             "total":doc.crean_amount + total,
                             "description":crean_account
                         })
+                        elif  flage_crean_tax and  doc.doctype == "Sales Invoice":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account
+                        })
                         elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
                             doc.append("taxes",{
                             "charge_type":"Actual",
@@ -1320,4 +1346,47 @@ def get_street_address_html(party_type, party):
         city_state = city_state + doc.pincode if doc.pincode else city_state
         city_state += ""
     return street_address + ',' + city_state
+
+@frappe.whitelist()
+def get_party_address(party_type, party):
+    address_list = frappe.db.sql(
+        """
+        SELECT
+            link.parent
+        FROM
+            `tabDynamic Link` link,
+            `tabAddress` address
+        WHERE
+            link.parenttype = "Address"
+                AND link.link_name = %(party)s
+                AND link.link_doctype = %(party_type)s
+        ORDER BY
+            address.address_type="Postal" DESC,
+            address.address_type="Billing" DESC
+        LIMIT 1
+    """,
+        {"party": party,"party_type":party_type},
+        as_dict=True,
+    )
+    street_address = city_state = ""
+    if address_list:
+        supplier_address = address_list[0]["parent"]
+        doc = frappe.get_doc("Address", supplier_address)
+        if doc.address_line2:
+            street_address = "First address :" +doc.address_line1 + " ,Second address :" + doc.address_line2 
+        else:
+            street_address = doc.address_line1 
+
+        city_state = " City: "+ doc.city + ", " if doc.city else ""
+        city_state = city_state + doc.state + " " if doc.state else city_state
+        city_state = city_state + doc.pincode if doc.pincode else city_state
+        city_state += ""
+    return street_address + ',' + city_state
+
+
+
+
+
+
+
 

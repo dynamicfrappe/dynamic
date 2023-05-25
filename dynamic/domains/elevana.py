@@ -24,7 +24,7 @@ data = {
                 # "permlevel":"1"
             }
         ],
-        'User' :[
+        'User': [
             {
                 "fieldname": "extension",
                 "fieldtype": "Data",
@@ -59,7 +59,7 @@ data = {
                 "read_only": "1",
             }
         ],
-        
+
         'Sales Partner': [
             {
                 "fieldname": "ref_doctype",
@@ -109,7 +109,7 @@ data = {
                 "read_only": "1",
             }
         ],
-        
+
         'Quotation': [
             {
                 "fieldname": "sales_team_section_break",
@@ -168,7 +168,7 @@ data = {
                 "options": "Customer Group"
             }
         ],
-        
+
         'E Commerce Settings': [
             {
                 "fieldname": "default_customer_territory",
@@ -178,25 +178,75 @@ data = {
                 "options": "Territory"
             }
         ],
-        'Loyalty Program Collection' :[
+        'Loyalty Program Collection': [
             {
                 "fieldname": "return_collection_factor",
                 "fieldtype": "Currency",
                 "insert_after": "collection_factor",
                 "label": "Return Collection Factor (=1 LP)",
-                "reqd":"1",
-                "in_list_view":"1",
-                "columns" : "3"
+                "reqd": "1",
+                "in_list_view": "1",
+                "columns": "3"
             }
+        ],
+        "Address": [
+            {
+                "fieldname": "building_no",
+                "fieldtype": "Data",
+                "insert_after": "tax_category",
+                "label": "Building No",
+                "reqd": 1
+            },
+            {
+                "fieldname": "floor_no",
+                "fieldtype": "Data",
+                "insert_after": "building_no",
+                "label": "Floor No",
+                "reqd": 1
+            },
+            {
+                "fieldname": "apartment_no",
+                "fieldtype": "Data",
+                "insert_after": "floor_no",
+                "label": "Apartment No",
+                "reqd": 1
+            }
+        ],
+        "Sales Order": [
+            {
+                "fieldname": "note",
+                "fieldtype": "Data",
+                "insert_after": "territory",
+                "label": "Note",
+                "no_copy":1
+            },
+            {
+                "fieldname": "is_synced",
+                "fieldtype": "Check",
+                "insert_after": "note",
+                "label": "Is Synced",
+                "hidden": 1,
+                "no_copy":1
+            },
+            {
+                "fieldname": "shipping_company",
+                "fieldtype": "Select",
+                "insert_after": "order_type",
+                "label": "Shipping company",
+                "read_only": 1,
+                "options" : "\nflextock\njandt",
+                "no_copy":1
+            }
+
         ]
     },
     "properties": [
         {
-            "doctype":"Customer",
-            "doctype_or_field":"DocField",
-            "fieldname":"customer_type",
-            "property":"options",
-            "property_type":"Text",
+            "doctype": "Customer",
+            "doctype_or_field": "DocField",
+            "fieldname": "customer_type",
+            "property": "options",
+            "property_type": "Text",
             "value": "\nCompany\nIndividual\nMarketer\nDistributor"
         }
     ],

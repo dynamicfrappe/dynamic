@@ -658,7 +658,9 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
                 // sales invoice
               if(flt(doc.per_billed, 6) < 100) {
                 cur_frm.page.remove_inner_button('Sales Invoice', 'Create')
-                cur_frm.add_custom_button(__('Sales Invoice'), () => me.make_sales_invoice(), __('Create'));
+                cur_frm.cscript['make_sales_invoice'] = create_kmina_sales_invoice
+
+                // cur_frm.add_custom_button(__('Sales Invoice'), () => me.frm.trigger("make_sales_invoice"), __('Create'));
               }
               }
             }
@@ -813,14 +815,20 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
 		dialog.wrapper.find('.grid-heading-row .grid-row-check').click();
 		dialog.show();
 	},
-  make_sales_invoice: function() {
-		frappe.model.open_mapped_doc({
-			method: "dynamic.kmina.api.make_sales_invoice",
-			frm: this.frm
-		})
-	},
+  // make_sales_invoice: function() {
+	// 	frappe.model.open_mapped_doc({
+	// 		method: "dynamic.kmina.api.make_sales_invoice",
+	// 		frm: this.frm
+	// 	})
+	// },
 })
+var create_kmina_sales_invoice = function() {
 
+  frappe.model.open_mapped_doc({
+  method: "dynamic.kmina.api.make_sales_invoice",
+  frm: cur_frm
+})
+}
 $.extend(
 	cur_frm.cscript,
 	new extend_sales_order({frm: cur_frm}),

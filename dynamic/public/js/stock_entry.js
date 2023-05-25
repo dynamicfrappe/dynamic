@@ -114,6 +114,23 @@ frappe.ui.form.on("Stock Entry", {
         
       
       }
+    },
+    cost_center:function(frm){
+      if(frm.doc.cost_center){
+        frappe.call({
+          method: "dynamic.api.get_active_domains",
+          callback: function (r) {
+              if (r.message && r.message.length) {
+                  if (r.message.includes("Maser2000")) {
+                    $.each(frm.doc.items || [], function(i, d) {
+                      d.cost_center = frm.doc.cost_center;
+                    });
+                    refresh_field("items");
+                  }
+              }
+          }
+      })
+      }
     }
 
 

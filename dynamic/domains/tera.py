@@ -12,8 +12,7 @@ data = {
                 "label": "Material Request",
                 "options" : "Material Request" , 
                 "read_only" : 0,
-                "allow_on_submit":0,
-                
+                "allow_on_submit":0,      
             },
             {
                 "fieldname": "advance_paid",
@@ -951,7 +950,7 @@ data = {
                 "fieldtype":"Select",
                 "label":"Naming Template",
                 "insert_after":"type",
-                "options":"\nCash-.YYYY.-\nBank-.YYYY.-"
+                "options":"\nProjects-.YYYY.-\nHeliopolis-.YYYY.-\nNew Cairo-.YYYY.-\nZayed-.YYYY.-\nMohandseen-.YYYY.-\nMain-.YYYY.-"
             }
         ],
         "Payment Entry Deduction":[
@@ -1109,6 +1108,14 @@ data = {
         "property": "columns",
         "property_type": "Int",
         "value": "2"
+        },
+        {
+        "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "description",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1"
         },
     ],
   

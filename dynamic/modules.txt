@@ -16,3 +16,5 @@ Elevana
 Homrany
 Teba
 Kmina
+Shipping
+Future
