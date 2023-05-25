@@ -22,6 +22,11 @@ def generate_signature_string(api_key, api_secret, nonce):
 
 @frappe.whitelist()
 def get_key_and_secret_and_urls():
+    """
+    Get the key and secret from the J and T Settings doctype
+    Returns:
+          obj: key and secret
+    """
     jt_settings = frappe.get_single("J and T Settings")
     if jt_settings.get("api_account") and jt_settings.get("private_key"):
         return {
@@ -37,6 +42,13 @@ def get_key_and_secret_and_urls():
 
 @frappe.whitelist()
 def create_oder(product):
+    """
+    Args:
+        product:
+
+    Returns:
+        obj: order status
+    """
     product = json.loads(product)
     settings = get_key_and_secret_and_urls()
     if settings.get("create_order"):
@@ -186,6 +198,9 @@ def create_oder(product):
 
 
 def checking_order():
+    """
+     check if order is shipped or not
+    """
     settings = get_key_and_secret_and_urls()
     if settings.get("checking_order"):
         url = settings.get("checking_order")
@@ -258,6 +273,16 @@ def cancel_order(order):
 
 @frappe.whitelist()
 def create_body_signature(customerCode,pwd,privatekey):
+    """
+    create body signature
+    Args:
+        customerCode:
+        pwd:
+        privatekey:
+
+    Returns:
+        signature_base64
+    """
     to_sign = customerCode +  pwd + privatekey
     signature = hashlib.md5(to_sign.encode()).digest()
     signature_base64 = base64.b64encode(signature).decode()
@@ -268,6 +293,15 @@ def create_body_signature(customerCode,pwd,privatekey):
 
 @frappe.whitelist()
 def create_header_signature(privatekey ,bizContent):
+    """
+    create header signature
+    Args:
+        privatekey:  private key
+        bizContent: dict
+
+    Returns:
+        signature_base64
+    """
     to_sign = json.dumps(bizContent) +  str(privatekey)
     signature = hashlib.md5(to_sign.encode()).digest()
     signature_base64 = base64.b64encode(signature).decode()
@@ -276,6 +310,10 @@ def create_header_signature(privatekey ,bizContent):
     
 @frappe.whitelist()
 def create_password():
+    """
+    create password
+    Returns:
+    """
     customer_number = "J0086002753"
     plain_text_password = "P4dhv2D1"
     private_key = "a0a1047cce70493c9d5d29704f05d0d9"
