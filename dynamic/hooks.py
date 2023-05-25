@@ -200,7 +200,6 @@ doc_events = {
     },
     "Purchase Order":{
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
-        # "before_save": "dynamic.api.add_crean_in_taxes",
         "before_submit": "dynamic.api.add_crean_in_taxes",
         "after_inser" :  "dynamic.api.calculate_orderd_qty",
         "on_submit":  "dynamic.api.calculate_orderd_qty",
@@ -217,8 +216,12 @@ doc_events = {
         "before_insert" :"dynamic.api.lead_before_insert"
     },
     "Purchase Receipt":{
-         "on_submit" : "dynamic.api.submit_purchase_recipt"
-    }
+         "on_submit" : "dynamic.api.submit_purchase_recipt",
+         "before_save" : "dynamic.api.before_save",
+    },
+    # "Batch":{
+    #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
+    # }
 
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
@@ -336,6 +339,8 @@ domains = {
     'Majestey':"dynamic.domains.majestey",
     'Kmina':"dynamic.domains.kmina",
     'Maser2000':"dynamic.domains.maser2000",
+    'Behira Pac':"dynamic.domains.behira_pac",
+    'Future':"dynamic.domains.future",
 }
 
 # domain Conatin
