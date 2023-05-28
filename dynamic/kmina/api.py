@@ -10,6 +10,7 @@ from frappe.model.mapper import get_mapped_doc
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
+	frappe.throw("kmina")
 	def postprocess(source, target):
 		set_missing_values(source, target)
 		#Get the advance paid Journal Entries in Sales Invoice Advance
