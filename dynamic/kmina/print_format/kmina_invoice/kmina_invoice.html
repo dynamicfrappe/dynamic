@@ -37,26 +37,37 @@
     <!-- end header -->
     <div class="row mt-1">
         <div class="col-sm-6 col-xs-6 mt-1" >  
-            <b>CENTRAL CIRCLE GENERAL TRADING COMPANY LLC</b> <br>
+            <!--<b>Kmena</b> <br>-->
+            <span>KMENA FZ-LLC <br>FOP0003<br>
+                Compass Building,<br>
+                Al Shohada Road,<br>
+                AL Hamra Industrial Zone-FZ,<br>
+                Ras Al Khaimah, United Arab Emirates
+            </span>
+            <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">
         </div>
         <div class="col-sm-6 col-xs-6 mt-1" >  
-            {{_("Customer No.")}} <br>
-            <b>{{doc.customer}}</b>
+           <b> {{_("Customer.")}}:</b> <br>
+            <b>{{doc.customer}}</b><br>
+            <b>Contact :<br>{{doc.contact_display}}</b>
             <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-6 col-xs-6 mt-1" >
-            <span>P.O Box 66852 AL-Badaa, Dubai - AUE<br>
-                The Binary tower by Omniyat, Office 710,Business Bay - Dubai<br>
-                Dubai, United Arab Emir.
-                TRN : 100512258300003
-            </span>
+            <!--<span>KMENA FZ-LLC <br>FOP0003<br>-->
+            <!--    Compass Building,<br>-->
+            <!--    Al Shohada Road,<br>-->
+            <!--    AL Hamra Industrial Zone-FZ,<br>-->
+            <!--    Ras Al Khaimah, United Arab Emirates-->
+            <!--</span>-->
+             Inco term: <b>{{doc.inco_term}}</b><br>
+            Shipment Type	: <b>{{doc.shipment_type}}</b>
         </div>
         <div class="col-sm-6 col-xs-6 mt-1" >
-            {{_("Your Reference")}} <br>
-            <b>{{doc.items[0].sales_order or ""}}</b>
+            {{_("Customer Purchase Order")}} <br>
+            <b> {{doc.po_no or ""}}</b>
             <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">
         </div>
     </div>
@@ -67,31 +78,31 @@
             </span>
         </div>
         <div class="col-sm-6 col-xs-6 mt-1" >
-            {{_("Your Contact")}} <br>
-            {%if cst_contact and cst_contact.phone_nos[0]%}
-            <b>{{cst_contact.phone_nos[0].phone}}</b>
-            {%else%}
-            <b>{{_("None")}}</b>
-            {%endif%}
+            <!--{{_("Your Contact")}} <br>-->
+            <!--{%if cst_contact and cst_contact.phone_nos[0]%}-->
+            <!--<b>{{cst_contact.phone_nos[0].phone}}</b>-->
+            <!--{%else%}-->
+            <!--<b>{{_("None")}}</b>-->
+            <!--{%endif%}-->
            
-            <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">
+            <!--<hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">-->
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-6 col-xs-6 mt-1" >
-            {{_("Billing Address")}}<br>
-            {{doc.customer_address}}
+            <!--{{_("Billing Address")}}<br>-->
+            <!--{{doc.customer_address}}-->
         </div>
         <div class="col-sm-6 col-xs-6 mt-1" >
             {{_("Delivery Address")}} <br>
-            <b>{{doc.customer_address}}</b>
+            <b>{{doc.customer}}  <br>{{doc.customer_address}}</b>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-12 col-xs-12 mt-1" >
-            {{_("TRN")}}:<br>
+            <!--{{_("TRN")}}:<br>-->
         </div>
         <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 3px;">
     </div>
@@ -127,7 +138,6 @@
                     <th>Batch</th>
                     <th>Mfg.dt</th>
                     <th>Expirt.dt</th>
-                    <th>SFDA</th>
                     <th>HS</th>
                     <!-- <th>سعر بعد الخصم</th>
                     <th>الأجمالى</th> -->
@@ -144,7 +154,6 @@
                     <td>{{ item.batch_km or " "}}</td>
                     <td>{{ item.manfacturing_date or ""}}</td>
                     <td>{{ item.expiration_date or " "}}</td>
-                    <td>{{ item.sfda_registration_no or " "}}</td>
                     <td>{{ item.hs_code or " "}}</td>
                     <!-- <td>{{ item.amount }}</td> -->
                 </tr>
@@ -192,6 +201,20 @@
             
         </div>
 
+        <div class="col-sm-3 col-xs-3 mt-1" >
+            {{_("Discount")}}:
+        </div>
+        <div class="col-sm-3 col-xs-3 mt-1" >
+            {{ doc.additional_discount_percentage }} %
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-6 col-xs-6 mt-1" >
+                 In Words: <br>
+            {{doc.in_words}}
+        </div>
+
         <div style="border-left: 5px solid yellow;" class="col-sm-3 col-xs-3 mt-1" >
            <b>{{_("Grand Total")}}:</b> 
 
@@ -222,14 +245,14 @@
         <div class="col-sm-12 col-xs-12 mt-1" style=""> 
             <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 3px;">
         </div>
-        <div class="col-sm-6 col-xs-6 mt-1" style=""> 
-        <b>Tel.1 : +971 4575 4706</b> <br>
-        <b>Tel.2 : +965 9606 5742</b> <br>
-        </div>
-        <div class="col-sm-6 col-xs-6 mt-1" style=""> 
-            <b>Email:</b> supplychain-ae@centralcircleco.com;<br>
-            info-ae@centralcircleco.com
-        </div>           
+        <!--<div class="col-sm-6 col-xs-6 mt-1" style=""> -->
+        <!--<b>Tel.1 : +971 4575 4706</b> <br>-->
+        <!--<b>Tel.2 : +965 9606 5742</b> <br>-->
+        <!--</div>-->
+        <!--<div class="col-sm-6 col-xs-6 mt-1" style=""> -->
+        <!--    <b>Email:</b> supplychain-ae@centralcircleco.com;<br>-->
+        <!--    info-ae@centralcircleco.com-->
+        <!--</div>           -->
 </div>
 </div>
 

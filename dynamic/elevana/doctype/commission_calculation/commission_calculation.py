@@ -76,6 +76,7 @@ def get_commisio_sales_person(data):
 			AND {row.total} >= commission_table.amount_from AND {row.total} < commission_table.amount_to
 			"""
 			data_sales_person=frappe.db.sql(sql_sales_person,as_dict=1)
+			# frappe.errprint(sql_sales_person)
 			row['incentives'] =  data_sales_person[0].commission_result if len(data_sales_person) else 0
 		return data
 	return data
