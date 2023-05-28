@@ -18,7 +18,7 @@ frappe.ui.form.on('Commission Calculation', {
 				callback:function(r){
 					if(!r.exp && r.message){
 						frm.set_value("commission_info",[])
-						console.log(r.message)
+						// console.log(r.message)
 						$.each(r.message || [], function(i, item){
 							let row = frm.add_child('commission_info', {
 								sales_person: item.sales_person,

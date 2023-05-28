@@ -50,7 +50,9 @@ def calculate_commission(**kwargs):
 	WHERE invoice.docstatus=1 
 	AND sales_team.sales_person NOT IN(
 	SELECT demo_ledger.sales_person FROM `tabCommission Ledger` demo_ledger
-	WHERE  CAST(DATE_FORMAT("{doc_date}" ,'%Y-%m-01') as DATE) =CAST(DATE_FORMAT(demo_ledger.commission_date ,'%Y-%m-01') as DATE)
+	INNER JOIN `tabCommission Calculation` commission_calculation
+	ON commission_calculation.name = demo_ledger.parent AND commission_calculation.docstatus=1
+	WHERE  CAST(DATE_FORMAT("{doc_date}" ,'%Y-%m-01') as DATE)=CAST(DATE_FORMAT(demo_ledger.commission_date ,'%Y-%m-01') as DATE)
 	)
 	{condition}
 	group BY sales_team.sales_person
@@ -70,8 +72,8 @@ def get_commisio_sales_person(data):
 			,`tabCommission Template` template
 			, `tabSales Person` sales_person
 			WHERE commission_table.parent=template.name AND template.name=sales_person.commission_template
-			AND sales_person.name="{row.sales_person}" AND {row.total} >= commission_table.amount_from 
-			AND {row.total} < commission_table.amount_to
+			AND sales_person.name="{row.sales_person}" 
+			AND {row.total} >= commission_table.amount_from AND {row.total} < commission_table.amount_to
 			"""
 			data_sales_person=frappe.db.sql(sql_sales_person,as_dict=1)
 			row['incentives'] =  data_sales_person[0].commission_result if len(data_sales_person) else 0
