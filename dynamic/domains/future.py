@@ -13,7 +13,6 @@ data = {
         "property": "in_list_view",
         "property_type": "Check",
         "value": "0",
-        "default_value":0
         },
         {
         "doctype": "Sales Order Item",
@@ -22,7 +21,6 @@ data = {
         "property": "in_list_view",
         "property_type": "Check",
         "value": "1",
-        "default_value":1
         },
         ],
 }
