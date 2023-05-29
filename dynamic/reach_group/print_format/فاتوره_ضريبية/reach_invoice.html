@@ -30,7 +30,7 @@
     </div>
     <!-- end heade  -->
     <div class="row mt-3">
-        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;"><strong>{{_(" فاتورة رقم")}} ({{doc.name}})</strong>  </div>
+        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;"><strong style="font-size: 17px;">{{_(" فاتورة رقم")}} ({{doc.name}})</strong>  </div>
     </div>
     <div class="row mt-3">
         <div class="col-sm-3 col-xs-3 mt-1" style="text-align: center;">  {{_("تاريخ الفاتوره")}}: </div>
@@ -99,11 +99,12 @@
                 <tr>
                     <th style="width:5%">م</th>
                     <th style="width:20%" >كود الصنف</th>
-                    <th style="width:30%"> اسم الصنف</th>
+                    <th style="width:20%"> اسم الصنف</th>
                     <th style="width:13%"> الكميه</th>
                     <th style="width:7%"> السعر</th>
                     <th style="width:15%">الأجمالى</th>
                     <th style="width:10%"> نسبة الضريبة</th>
+                    <th style="width:10%"> قيمه الضريبة</th>
                 </tr>
                 {% for item in doc.items %}
                 <tr>
@@ -114,25 +115,40 @@
                     <td>{{ item.rate or 0}}</td>
                     <td>{{ item.amount }}</td>
                     <td>{{ item.item_tax_template }}</td>
+                    <td>{%if item.item_tax_template %}
+                     
+                        {{
+                            "%.2f"|format((
+                                (frappe.db.get_value("Item Tax Template Detail",
+                                {"parent": item.item_tax_template},'tax_rate')  / 100) * item.amount
+                            )
+                            |float)
+                            
+                        }}
+                        {%else%}
+                        {{_("None")}}
+                        {%endif%}
+                        <!-- {{ item.item_tax_template }} -->
+                    </td>
                 </tr>
                 {% endfor %}
                  <tr>
-                    <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="4" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
                     <td colspan="2" style="border-bottom-style: hidden;border-right-style: hidden;">الأجمالى قبل الضريبه</td>
                     <th colspan="2" style="text-align: center;" >{{ doc.total }}</th>
                 </tr>
                 <tr>
-                    <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="4" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
                     <td colspan="2" style="border-bottom-style: hidden;border-right-style: hidden;">{{_("الخصم")}}:{{doc.additional_discount_percentage}}</td>
                     <td colspan="2" style="text-align: center;" >{{ doc.discount_amount }}</td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="4" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
                     <td colspan="2" style="border-bottom-style: hidden;border-right-style: hidden;">  الضريبة</td>
                     <td colspan="2" style="text-align: center;" > {{doc.base_total_taxes_and_charges}}</td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="4" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;"></td>
                     <td colspan="2" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;">صافى القيمة</td>
                     <td colspan="2" style="text-align: center;">{{ doc.grand_total }}</td>
                 </tr>
@@ -174,6 +190,32 @@
     
     
     </div>
+
+    <!-- taxes -->
+    {%if doc.taxes%}
+    <div class="row mt-1"> 
+        <div class=" col-sm-12 col-xs-12 margin-top margin-bottom" >
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th style="width:5%">م</th>
+                    <th style="width:45%" > الضريبة</th>
+                    <th style="width:50%">  القيمه</th>
+
+
+
+                </tr>
+                {% for row in doc.taxes %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ row.account_head }}</td>
+                    <td>{{ row.tax_amount }}</td>
+                </tr>
+                {% endfor %}
+  
+            </table>
+        </div>
+    </div>
+    {%endif%}
 
     <div class="row">
         <div class="col-sm-11 col-xs-11" style="text-align: right;;border: solid 2px black;">

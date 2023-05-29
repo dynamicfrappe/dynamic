@@ -10,33 +10,42 @@ from frappe.desk.form.load import get_attachments
 
 @frappe.whitelist()
 def authenticate():
-    method_url = "/base/auth/"
-    data = validate_shipping_settings()
-    if data.get("status"):
-        base_url = data.get("url")
-        body = {
-            "username": data.get("user_name"),
-            "password": data.get("password"),
-            "key": data.get("key")
-        }
-        url = base_url + method_url
-        r = requests.post(url, body)
-        if r.status_code == 200:
-            response = json.loads(r.text)
-            access_token = response.get("access")
-            # print("access_token",access_token)
-            # frappe.set_value("Shipping Settings", "Shipping Settings", "token", access_token)
-            return access_token
+    """
+       Authenticate Shipping Settings
+         :return: access_token
+    """
+    try:
+        method_url = "/base/auth/"
+        data = validate_shipping_settings()
+        if data.get("status"):
+            base_url = data.get("url")
+            body = {
+                "username": data.get("user_name"),
+                "password": data.get("password"),
+                "key": data.get("key")
+            }
+            url = base_url + method_url
+            r = requests.post(url, body)
+            print(r.text)
+            if r.status_code == 200:
+                response = json.loads(r.text)
+                access_token = response.get("access")
+                # print("access_token",access_token)
+                # frappe.set_value("Shipping Settings", "Shipping Settings", "token", access_token)
+                return access_token
+            else:
+                frappe.log_error(
+                    title=_("Error while shiiping authentications"),
+                    message=r.text,
+                )
         else:
             frappe.log_error(
                 title=_("Error while shiiping authentications"),
-                message=r.text,
+                message="Error while shiiping authentications",
             )
-    else:
-        frappe.log_error(
-            title=_("Error while shiiping authentications"),
-            message="Error while shiiping authentications",
-        )
+    except Exception as ex:
+        frappe.msgprint("failed to authente with flexstock")
+        return
 
 
 # 2. Create Product   ---> take list of product
@@ -45,7 +54,7 @@ def create_product(product):
     product = json.loads(product)
     """
     Args:
-        product: list of products
+        product: product object
     Returns:
         listOfObjects : list<Object>
     """
@@ -67,13 +76,18 @@ def create_product(product):
                 }
             ]
         }
-
+        print("token",token)
+        if not token:
+            frappe.throw("failed to authente with flexstock")
+            return 
         headers = {
             "Authorization": f"""Bearer {token}"""
         }
-        r = requests.post(url, headers=headers, json=data)
-        res = json.loads(r.text)
-        # print("response", res.text)
+        try:
+            r = requests.post(url, headers=headers, json=data)
+            res = json.loads(r.text)
+        except Exception as e:
+            frappe.msgprint(str(r.text))
         if r.status_code == 200:
             return res.get("response")[0].get("message")
         else:
@@ -89,11 +103,9 @@ def create_product(product):
 def create_order(doc, *args, **kwargs):
     """
     Args:
-        doc: order object
-        *args:
-        **kwargs:
+        doc: sales order
     Returns:
-        obj: message
+        listOfObjects : list<Object>
     """
     doc = json.loads(doc)
 
@@ -167,9 +179,9 @@ def create_order(doc, *args, **kwargs):
 def get_order_status(order_code):
     """
     Args:
-        order_code:
+        order_code: order code
     Returns:
-        obj : courier_name,order_status,tracking_number,tracking_url
+        obj: order status
     """
     data = validate_shipping_settings()
     if data.get("status"):
@@ -188,10 +200,10 @@ def get_order_status(order_code):
 
 
 def validate_shipping_settings():
-    """
+    """ validate shipping settings
     Returns:
-        object: object
-    """
+        obj: shipping_settings
+        """
     shipping_settings = frappe.get_single("Shipping Settings")
     if shipping_settings.get("url") and shipping_settings.get("user_name") and shipping_settings.get(
             "password") and shipping_settings.get("key"):

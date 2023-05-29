@@ -22,6 +22,11 @@ def generate_signature_string(api_key, api_secret, nonce):
 
 @frappe.whitelist()
 def get_key_and_secret_and_urls():
+    """
+    Get the key and secret from the J and T Settings doctype
+    Returns:
+          obj: key and secret
+    """
     jt_settings = frappe.get_single("J and T Settings")
     if jt_settings.get("api_account") and jt_settings.get("private_key"):
         return {
@@ -37,6 +42,13 @@ def get_key_and_secret_and_urls():
 
 @frappe.whitelist()
 def create_oder(product):
+    """
+    Args:
+        product:
+
+    Returns:
+        obj: order status
+    """
     product = json.loads(product)
     settings = get_key_and_secret_and_urls()
     if settings.get("create_order"):
@@ -54,6 +66,14 @@ def create_oder(product):
         # create Business parameter signature 
         business_parameter_signature = create_body_signature(customer_number,hashed_password,private_key)
         customer = frappe.get_doc("Customer", product.get("customer"))
+
+        description = ""
+        for item in product.get("items"):
+            description += item.get("item_code")+"-"+str(item.get("qty")) + ";"
+        description = description[:-1] + "\n" + "مستحضرات تجميل"
+        error_log = frappe.new_doc("Error Log")
+        error_log.error = description
+        error_log.save()
         if customer.get("customer_primary_address") and customer.get("customer_primary_contact"):
             customer_address = frappe.get_doc("Address", customer.get("customer_primary_address"))
             cutomer_contact = frappe.get_doc("Contact", customer.get("customer_primary_contact"))
@@ -71,16 +91,16 @@ def create_oder(product):
                 "payType": "PP_PM",
                 "sendStartTime": datetime_str,
                 "sendEndTime": datetime_str,
-                "goodsType": "ITN5",
+                "goodsType": "ITN6",
                 "length": "0",
                 "width": "0",
                 "height": "0",
                 "weight": 1,
-                "totalQuantity": product.get("total_qty"),
+                "totalQuantity": 1,
                 "itemsValue": product.get("grant_total"),
                 "priceCurrency": "EGP",
                 "offerFee": "",
-                "remark": "",
+                "remark": description,
                 "operateType": 1,
                 "sender": {
                     "name": "Elevana Integrated Medical",
@@ -119,11 +139,11 @@ def create_oder(product):
                     "latitude": "",
                 },
                 "items": [{
-                    "itemType": "ITN5",
+                    "itemType": "ITN6",
                     "itemName": item.get("item_name"),
                     "chineseName": "",
                     "englishName": "",
-                    "number": item.get("qty"),
+                    "number": 1,
                     "itemValue": item.get("rate"),
                     "priceCurrency": "EGP",
                     "desc": item.get("description"),
@@ -178,6 +198,9 @@ def create_oder(product):
 
 
 def checking_order():
+    """
+     check if order is shipped or not
+    """
     settings = get_key_and_secret_and_urls()
     if settings.get("checking_order"):
         url = settings.get("checking_order")
@@ -250,6 +273,16 @@ def cancel_order(order):
 
 @frappe.whitelist()
 def create_body_signature(customerCode,pwd,privatekey):
+    """
+    create body signature
+    Args:
+        customerCode:
+        pwd:
+        privatekey:
+
+    Returns:
+        signature_base64
+    """
     to_sign = customerCode +  pwd + privatekey
     signature = hashlib.md5(to_sign.encode()).digest()
     signature_base64 = base64.b64encode(signature).decode()
@@ -260,6 +293,15 @@ def create_body_signature(customerCode,pwd,privatekey):
 
 @frappe.whitelist()
 def create_header_signature(privatekey ,bizContent):
+    """
+    create header signature
+    Args:
+        privatekey:  private key
+        bizContent: dict
+
+    Returns:
+        signature_base64
+    """
     to_sign = json.dumps(bizContent) +  str(privatekey)
     signature = hashlib.md5(to_sign.encode()).digest()
     signature_base64 = base64.b64encode(signature).decode()
@@ -268,6 +310,10 @@ def create_header_signature(privatekey ,bizContent):
     
 @frappe.whitelist()
 def create_password():
+    """
+    create password
+    Returns:
+    """
     customer_number = "J0086002753"
     plain_text_password = "P4dhv2D1"
     private_key = "a0a1047cce70493c9d5d29704f05d0d9"

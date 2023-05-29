@@ -127,6 +127,7 @@ doc_events = {
     },
 
     "Sales Invoice": {
+        # "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
         "validate": "dynamic.api.validate_active_domains",
         "on_cancel" :"dynamic.api.validate_active_domains_cancel"

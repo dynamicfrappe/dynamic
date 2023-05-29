@@ -1180,6 +1180,14 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                             "total":doc.crean_amount + total,
                             "description":crean_account
                         })
+                        elif  flage_crean_tax and  doc.doctype == "Sales Invoice":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account
+                        })
                         elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
                             doc.append("taxes",{
                             "charge_type":"Actual",
