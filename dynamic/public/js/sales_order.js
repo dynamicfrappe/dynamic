@@ -84,7 +84,34 @@ frappe.ui.form.on("Sales Order", {
 		}
   },
   
-
+  opportunity:function(frm){
+    if (frm.doc.opportunity){
+      frappe.call({
+        method :"dynamic.api.get_active_domains" ,
+        async: false,
+        callback:function (r){
+         if (r.message.includes("Terra")) {
+          frappe.call({
+            method: "frappe.client.get_value",
+            args: {
+              doctype: "Opportunity",
+              fieldname: "source",
+              filters: {
+                name: frm.doc.opportunity
+              }
+            },
+            callback: function(data) {
+              if (data.message) {
+                frm.set_value("source", data.message.source);
+                frm.refresh_field("source")
+              }
+            }
+          });
+          }
+        }
+    })
+    }
+  },
   onload: function (frm) {
     frm.set_query('item_purchase_order', 'items', function(doc, cdt, cdn) {
       let row = locals[cdt][cdn];
@@ -650,6 +677,7 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
               if (r.message.includes("IFI")){
                 // Make Purchase Order
                 if (!cur_frm.doc.is_internal_customer) {
+                  cur_frm.cscript['make_sales_invoice'] = create_ifi_sales_invoice
                   cur_frm.page.remove_inner_button('Purchase Order', 'Create')
                   cur_frm.add_custom_button(__('Purchase Order'), () => me.frm.trigger("make_purchase_order_ifi"), __('Create'));
                 }
@@ -657,8 +685,8 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
               if(r.message.includes("Kmina")){
                 // sales invoice
               if(flt(doc.per_billed, 6) < 100) {
-                cur_frm.page.remove_inner_button('Sales Invoice', 'Create')
-                cur_frm.cscript['make_sales_invoice'] = create_kmina_sales_invoice
+                // cur_frm.page.remove_inner_button('Sales Invoice', 'Create')
+                cur_frm.cscript['make_sales_invoice'] = create_kmina_sales_invoice //new
 
                 // cur_frm.add_custom_button(__('Sales Invoice'), () => me.frm.trigger("make_sales_invoice"), __('Create'));
               }
@@ -823,9 +851,15 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
 	// },
 })
 var create_kmina_sales_invoice = function() {
-
   frappe.model.open_mapped_doc({
   method: "dynamic.kmina.api.make_sales_invoice",
+  frm: cur_frm
+})
+}
+
+var create_ifi_sales_invoice = function() {
+  frappe.model.open_mapped_doc({
+  method: "dynamic.ifi.api.ifi_make_sales_invoice",
   frm: cur_frm
 })
 }

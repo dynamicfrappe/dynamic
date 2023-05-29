@@ -3,6 +3,15 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {
+        'Sales Person': [
+            {
+                "label": "Commission Template",
+                "fieldname": "commission_template",
+                "fieldtype": "Link",
+                "insert_after": "employee",
+                "options": "Commission Template",
+            }
+        ],
         'Lead': [
             {
                 "fieldname": "sales_person",

@@ -36,26 +36,41 @@
 
     <div class="row mt-1">
         <div class="col-sm-6 col-xs-6 mt-1" >  
-            <b>Kmena</b> <br>
+            <!--<b>Kmena</b> <br>-->
         </div>
         
     </div>
 
     <div class="row">
         <div class="col-sm-6 col-xs-6 mt-1" >
-            <span>P.O Box 66852 AL-Badaa, Dubai - AUE<br>
-                The Binary tower by Omniyat, Office 710,Business Bay - Dubai<br>
-                Dubai, United Arab Emir.
-                TRN : 100512258300003
+            <span>
+               KMENA FZ-LLC <br>FOP0003<br>
+                Compass Building,<br>
+                Al Shohada Road,<br>
+                AL Hamra Industrial Zone-FZ,<br>
+                Ras Al Khaimah, United Arab Emirates
             </span>
+            <!--<span>P.O Box 66852 AL-Badaa, Dubai - AUE<br>-->
+            <!--    The Binary tower by Omniyat, Office 710,Business Bay - Dubai<br>-->
+            <!--    Dubai, United Arab Emir.-->
+            <!--    TRN : 100512258300003-->
+            <!--</span>-->
         </div>
         <div class="col-sm-6 col-xs-6 mt-1" >
-            {{_("Your Contact")}} <br>
-            {%if supp_contact and supp_contact.phone_nos[0]%}
-            <b>{{supp_contact.phone_nos[0].phone}}</b>
-            {%else%}
-            <b>{{_("None")}}</b>
-            {%endif%}
+            <!--{{_("Your Contact")}} <br>-->
+            <!--<b>{{doc.contact_display}}</b>-->
+            <!--{%if supp_contact and supp_contact.phone_nos[0]%}-->
+            <!--<b>{{supp_contact.phone_nos[0].phone}}</b>-->
+            <!--{%else%}-->
+            <!--<b>{{_("None")}}</b>-->
+            <!--{%endif%}-->
+             {{_("Delivery Address :")}} <br>
+            {{_("Mr. Habib Gara,")}} <br>
+            {{_("Mobile: +33627441980")}} <br>
+            {{_(" EV Cargo / Cold Chain")}} <br>
+            {{_("229 Rue de la belle etoile")}} <br>
+            {{_("95700 Roissy CDG, Paris")}} <br>
+             {{_("email: Coldchain@eu.evcargo.com")}} <br>
            
             <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">
         </div>
@@ -80,34 +95,30 @@
 
     <div class="row mt-3">
         <div class="col-sm-6 col-xs-6 mt-1" >  
-            {{_("Supplier")}} <br>
+            <!--{{_("Supplier")}} <br>-->
             <b>{{doc.supplier}}</b>
-            <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">
+            <p>{{doc.address_display}}</p>
+            <!--<hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 1px;">-->
         </div>
         <div class="col-sm-6 col-xs-6 mt-1" >
-            {{_("Delivery Address")}} <br>
-            <b>{{supplier_address}}</b>
+          Inco Term : {{doc.inco_term}}
         </div>
     </div>
 
     <div class="row mt-3">
         <div class="col-sm-6 col-xs-6 mt-1" >
+             <!--{{_("Your Contact")}} <br>-->
+            <b>{{doc.contact_display}}</b>
         </div>
         <div class="col-sm-6 col-xs-6 mt-1" >
-            {{_("Ff details :")}} <br>
-            {{_("Mr. Habib Gara,")}} <br>
-            {{_("Mobile: +33627441980")}} <br>
-            {{_(" EV Cargo / Cold Chain")}} <br>
-            {{_("229 Rue de la belle etoile")}} <br>
-            {{_("95700 Roissy CDG, Paris")}} <br>
-             {{_("email: Coldchain@eu.evcargo.com")}} <br>
+           
         </div>
         
     </div>
 
     <div class="row mt-2">
         <div class="col-sm-12 col-xs-12 mt-1" >
-            {{_("TRN")}}:<br>
+            <!--{{_("TRN")}}:<br>-->
         </div>
         <hr style="border: 1px solid #1aa3ff;border-radius: 1px;margin-top: 3px;">
     </div>
