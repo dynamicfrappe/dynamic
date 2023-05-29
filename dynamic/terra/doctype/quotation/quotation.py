@@ -412,6 +412,8 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 		target.run_method("set_missing_values")
 		if source.allocate_advances_automatically :
 			target.run_method("set_advances")
+		# if source.source:
+		# 	target.source = source.source
 		target.run_method("calculate_taxes_and_totals")
 
 	def update_item(obj, target, source_parent):
@@ -429,7 +431,9 @@ def _make_sales_order(source_name, target_doc=None, ignore_permissions=False):
 		source_name,
 		{
 			"Quotation": {"doctype": "Sales Order", "validation": {"docstatus": ["=", 1]},
-			"field_map": {"allocate_advances_automatically": "allocate_advances_automatically"}
+			"field_map": {
+				"allocate_advances_automatically": "allocate_advances_automatically"
+				}
 			},
 			"Quotation Item": {
 				"doctype": "Sales Order Item",

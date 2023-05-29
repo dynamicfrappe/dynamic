@@ -24,8 +24,14 @@ def authenticate():
                 "password": data.get("password"),
                 "key": data.get("key")
             }
+            header = { "Content-Type" :"application/json",
+            "Accept": "application/json",
+            "Connection" :"keep-alive" ,
+            "Accept-Encoding" :"gzip, deflate, br" ,
+            "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36" }
+         
             url = base_url + method_url
-            r = requests.post(url, body)
+            r = requests.post(url, headers=header ,data=json.dumps(body))
             print(r.text)
             if r.status_code == 200:
                 response = json.loads(r.text)
