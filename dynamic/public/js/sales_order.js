@@ -84,7 +84,34 @@ frappe.ui.form.on("Sales Order", {
 		}
   },
   
-
+  opportunity:function(frm){
+    if (frm.doc.opportunity){
+      frappe.call({
+        method :"dynamic.api.get_active_domains" ,
+        async: false,
+        callback:function (r){
+         if (r.message.includes("Terra")) {
+          frappe.call({
+            method: "frappe.client.get_value",
+            args: {
+              doctype: "Opportunity",
+              fieldname: "source",
+              filters: {
+                name: frm.doc.opportunity
+              }
+            },
+            callback: function(data) {
+              if (data.message) {
+                frm.set_value("source", data.message.source);
+                frm.refresh_field("source")
+              }
+            }
+          });
+          }
+        }
+    })
+    }
+  },
   onload: function (frm) {
     frm.set_query('item_purchase_order', 'items', function(doc, cdt, cdn) {
       let row = locals[cdt][cdn];
