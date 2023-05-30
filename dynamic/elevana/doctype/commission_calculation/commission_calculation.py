@@ -33,15 +33,18 @@ def calculate_commission(**kwargs):
 	,DATE_ADD(LAST_DAY("{doc_date}"),INTERVAL 15 DAY) date_after_15
 	,sales_team.sales_person,invoice.name
 	,SUM(
-	CASE WHEN invoice.posting_date <= LAST_DAY("{doc_date}")
+	CASE WHEN invoice.posting_date <= LAST_DAY("{doc_date}") 
+	AND invoice.posting_date >= CAST(DATE_FORMAT("{doc_date}" ,'%Y-%m-01') as DATE)
 	AND invoice.is_return=0
 	THEN invoice.grand_total
 	ELSE 0 END) invoice_amount
 	,SUM(
 	CASE WHEN invoice.posting_date <= DATE_ADD(LAST_DAY("{doc_date}"),INTERVAL 15 DAY)
+	AND invoice.posting_date>=CAST(DATE_FORMAT("{doc_date}" ,'%Y-%m-01') as DATE)
 	AND invoice.is_return=1
 	THEN (SELECT invoice.grand_total FROM `tabSales Invoice` base_inv
 	WHERE base_inv.posting_date<= LAST_DAY("{doc_date}") 
+	 AND base_inv.posting_date >= CAST(DATE_FORMAT("{doc_date}" ,'%Y-%m-01') as DATE)
 	AND invoice.return_against=base_inv.name)
 	ELSE 0 END) return_invoice
 	from `tabSales Team` sales_team
@@ -58,15 +61,16 @@ def calculate_commission(**kwargs):
 	group BY sales_team.sales_person
 	) base
 	"""
-
 	# frappe.errprint(sql)
+
 	sql_date = frappe.db.sql(sql,as_dict=1)
+	# frappe.errprint(sql_date)
 	return get_commisio_sales_person(sql_date)
 
 def get_commisio_sales_person(data):
 	if(data):
 		for row in data:
-			frappe.errprint(row)
+			# frappe.errprint(row)
 			sql_sales_person = f"""
 			SELECT ((commission_table.commission_rate/100) * {row.total}) as commission_result 
 			FROM `tabCommission Template Child` commission_table
@@ -77,8 +81,8 @@ def get_commisio_sales_person(data):
 			AND {row.total} >= commission_table.amount_from AND {row.total} < commission_table.amount_to
 			"""
 			data_sales_person=frappe.db.sql(sql_sales_person,as_dict=1)
-			frappe.errprint(sql_sales_person)
-			frappe.errprint(data_sales_person)
+			# frappe.errprint(sql_sales_person)
+			# frappe.errprint(data_sales_person)
 			row['incentives'] =  data_sales_person[0].commission_result if len(data_sales_person) else 0
 		return data
 	return data
