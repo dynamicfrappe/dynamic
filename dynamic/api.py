@@ -1160,7 +1160,7 @@ def add_crean_in_taxes(doc,*args,**kwargs):
 def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
         if(doc.crean=='Yes' and doc.crean_amount >0):
-            crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
+            crean_account,cost_center = frappe.db.get_value('Company',doc.company,["crean_income_account","cost_center"])
             if(crean_account):
                 flage_crean_tax = True
                 total = 0
@@ -1186,7 +1186,8 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                             "account_head":crean_account,
                             "tax_amount":doc.crean_amount,
                             "total":doc.crean_amount + total,
-                            "description":crean_account
+                            "description":crean_account,
+                            "cost_center":cost_center,
                         })
                         elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
                             doc.append("taxes",{
@@ -1197,6 +1198,7 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                             "description":crean_account,
                             "category":"Total",
                             "add_deduct_tax":"Add",
+                            "cost_center":cost_center,
                         })
                     doc.total_taxes_and_charges = doc.crean_amount + total
             doc.run_method("calculate_taxes_and_totals")
