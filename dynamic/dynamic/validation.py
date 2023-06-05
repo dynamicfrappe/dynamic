@@ -4,7 +4,6 @@ from frappe import _
 from dynamic.terra.landed_cost import validate_cost ,get_doctype_info
 from dynamic.terra.sales_invoice import check_return_account ,validate_sales_invoices
 from dynamic.terra.item import create_item_serial_doc
-# from dynamic.api import generate_item_code
 DOMAINS = frappe.get_active_domains()
 
 def validate_landed_cost(doc,*args,**kwargs):

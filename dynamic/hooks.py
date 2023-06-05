@@ -134,7 +134,8 @@ doc_events = {
     },
     "Item": {
         "autoname": "dynamic.api.autoname",
-        "validate": "dynamic.dynamic.validation.validate_item_code",
+        "validate": ["dynamic.dynamic.validation.validate_item_code",
+                    ],
         "after_insert": "dynamic.dynamic.validation.after_insert_variant_item",
     },
     "Delivery Note": {

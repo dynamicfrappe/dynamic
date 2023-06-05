@@ -6,6 +6,7 @@ data = {
        
 },
     "properties": [  
+        #Sales Order Item
         {
         "doctype": "Sales Order Item",
         "doctype_or_field": "DocField",
@@ -13,6 +14,14 @@ data = {
         "property": "in_list_view",
         "property_type": "Check",
         "value": "0",
+        },
+        {
+        "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "price_list_rate",
+        "property": "in_list_view",
+        "property_type": "Check",
+        "value": "1",
         },
         {
         "doctype": "Purchase Order Item",
@@ -30,13 +39,6 @@ data = {
         "property_type": "Check",
         "value": "1",
         },
-        # {
-        # "doctype": "Sales Order Item",
-        # "doctype_or_field": "DocField",
-        # "fieldname": "price_list_rate",
-        # "property": "in_list_view",
-        # "property_type": "Check",
-        # "value": "1",
-        # },
+        
         ],
 }

@@ -24,7 +24,7 @@ frappe.ui.form.on("Sales Order", {
       "Cheque": "Cheque",
     };
   },
-  refresh: function (frm) {    
+  refresh: function (frm) {  
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {
@@ -151,6 +151,7 @@ frappe.ui.form.on("Sales Order", {
 
 
   add_cheque_button(frm) {
+    console.log("test--->")
     if (frm.doc.docstatus == 1) {
       frappe.call({
         method: "dynamic.api.get_active_domains",

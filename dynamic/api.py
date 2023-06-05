@@ -1391,5 +1391,3 @@ def get_party_address(party_type, party):
 
 
 
-
-
