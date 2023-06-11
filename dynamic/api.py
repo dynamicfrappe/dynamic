@@ -487,6 +487,7 @@ def create_reservation_validate(self,*args , **kwargs):
        
 def add_row_for_reservation(self):
     # if not self.reservation:
+    #! ask if new company will ttake same behavior for warhouse and sales order
     for item in self.items:
         sql = f"""
         select soi.reservation from `tabSales Order` so

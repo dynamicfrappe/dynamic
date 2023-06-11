@@ -96,6 +96,7 @@ doctype_js = {
     "Request for Quotation":"public/js/request_for_quotation.js",
     "Mode of Payment":"public/js/mode_of_payment.js",
     "Purchase Receipt":"public/js/purchase_receipt.js",
+    "Stock Reconciliation":"public/js/stock_reconciliation.js",
     # "Assign To":"public/sidebar/assign_to.js",
     
 }
@@ -148,7 +149,8 @@ doc_events = {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
-        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc","dynamic.api.create_reservation_validate"],
+        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc"
+        ,"dynamic.api.create_reservation_validate"],
         "before_save":[
             "dynamic.api.check_source_item", 
             ],
