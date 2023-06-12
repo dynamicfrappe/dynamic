@@ -1,4 +1,5 @@
 <!-- {%- from "templates/print_formats/standard_macros.html" import add_header -%}
+
 <div style="direction: ltr !important;margin-top: 0%;">
     <div id="header-html" class="hidden-pdf">
         <img src="/assets/dynamic/images/hm_header.jpg" />
@@ -13,25 +14,33 @@
     </div>
 
 </div> -->
-<!-- {% set cst_doc=frappe.get_doc("Customer",doc.customer)%}/ -->
+<!--{% extends "templates/print_formats/standard.html" %}-->
+{%- from "templates/print_formats/standard_macros.html" import add_header, render_field with context -%}
 
-<div class="container-fluid">
+{% if letter_head and not no_letterhead -%}
+{% if print_settings.repeat_header_footer %}
+   <br>  <div class="letter-head">{{ letter_head }}</div>
+{%- endif %}{%- endif %}
+
+
+{% set cst_doc=frappe.get_doc("Customer",doc.customer)%}
+<div class="container-fluid" repeat_header_x_times="9999">
     <!-- header -->
-    <div class="row mt-3">
-        <div class="col-sm-6 col-xs-6 mt-1" style="">
-            {{_("شركة ريتش جروب للتجارة والتوريدات")}} <br>
-            {{_("3 شارع محمد عبد السلام - هليوبوليس - القاهرة")}} <br>
-            {{_("تليفون : 0226438700 - موبيل: 0112500075")}} <br>
-            {{_("رقم السجل التجارى :  431958")}} <br>
-            {{_("رقم التسجيل الضريبي :  628-600-054")}} <br>
-        </div>
-        <div class="col-sm-6 col-xs-6 " style="text-align: left;">
-            <img src="/assets/dynamic/images/reach.jpeg"  height="80" width="200"/>
-        </div>
-    </div>
+    <!--<div class="row mt-3">-->
+    <!--    <div class="col-sm-6 col-xs-6 mt-1" style="">-->
+    <!--        {{_("شركة ريتش جروب للتجارة والتوريدات")}} <br>-->
+    <!--        {{_("3 شارع محمد عبد السلام - هليوبوليس - القاهرة")}} <br>-->
+    <!--        {{_("تليفون : 0226438700 - موبيل: 0112500075")}} <br>-->
+    <!--        {{_("رقم السجل التجارى :  431958")}} <br>-->
+    <!--        {{_("رقم التسجيل الضريبي :  628-600-054")}} <br>-->
+    <!--    </div>-->
+    <!--    <div class="col-sm-6 col-xs-6 " style="text-align: left;">-->
+    <!--        <img src="/assets/dynamic/images/reach.jpeg"  height="80" width="200"/>-->
+    <!--    </div>-->
+    <!--</div>-->
     <!-- end heade  -->
     <div class="row mt-3">
-        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;"><strong>{{_(" فاتورة رقم")}} ({{doc.name}})</strong>  </div>
+        <div class="col-sm-12 col-xs-12 mt-3" style="text-align: center;"><strong style="font-size: 17px;">{{_(" فاتورة رقم")}} ({{doc.name}})</strong>  </div>
     </div>
     <div class="row mt-3">
         <div class="col-sm-3 col-xs-3 mt-1" style="text-align: center;">  {{_("تاريخ الفاتوره")}}: </div>
@@ -51,17 +60,18 @@
         <div class="col-sm-3 col-xs-3" style="text-align: center;">
           {{ doc.customer_name }} 
         </div>
-        <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_("كود الضريبي )}} :</div>
-        <div class="col-sm-3 col-xs-3" style="text-align: center;">
-            <!-- {%if cst_doc.tax_id %}
+
+        <div class="col-sm-3 col-xs-3" > {{_("كود الضريبي ")}} :</div>
+        <div class="col-sm-3 col-xs-3" >
+            {%if cst_doc.tax_id %}
                 {{ cst_doc.tax_id}} 
             {%else%}
                 {{_("None")}}
-            {%endif%} -->
+            {%endif%}
         </div>
 
-        <div class="col-sm-3 col-xs-3" > {{_( "أسم المندوب")}} :</div>
-        <div class="col-sm-3 col-xs-3" >
+        <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_( "أسم المندوب")}} :</div>
+        <div class="col-sm-3 col-xs-3" style="text-align: center;">
             
                  {% if doc.sales_team%}
                 {{ doc.sales_team[0].sales_person or '' }}
@@ -99,10 +109,12 @@
                 <tr>
                     <th style="width:5%">م</th>
                     <th style="width:20%" >كود الصنف</th>
-                    <th style="width:40%"> اسم الصنف</th>
+                    <th style="width:20%"> اسم الصنف</th>
                     <th style="width:13%"> الكميه</th>
                     <th style="width:7%"> السعر</th>
                     <th style="width:15%">الأجمالى</th>
+                    <th style="width:10%"> نسبة الضريبة</th>
+                    <th style="width:10%"> قيمه الضريبة</th>
                 </tr>
                 {% for item in doc.items %}
                 <tr>
@@ -112,26 +124,42 @@
                     <td>{{ item.uom}} {{"_ " }}  {{ item.qty}}</td>
                     <td>{{ item.rate or 0}}</td>
                     <td>{{ item.amount }}</td>
+                    <td>{{ item.item_tax_template }}</td>
+                    <td>{%if item.item_tax_template %}
+                     
+                        {{
+                            "%.2f"|format((
+                                (frappe.db.get_value("Item Tax Template Detail",
+                                {"parent": item.item_tax_template},'tax_rate')  / 100) * item.amount
+                            )
+                            |float)
+                            
+                        }}
+                        {%else%}
+                        {{_("None")}}
+                        {%endif%}
+                        <!-- {{ item.item_tax_template }} -->
+                    </td>
                 </tr>
                 {% endfor %}
                  <tr>
-                    <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">الأجمالى قبل الضريبه</td>
+                    <td colspan="4" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="2" style="border-bottom-style: hidden;border-right-style: hidden;">الأجمالى قبل الضريبه</td>
                     <th colspan="2" style="text-align: center;" >{{ doc.total }}</th>
                 </tr>
                 <tr>
-                    <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">ضريبه القيمة المضافة</td>
-                    <td colspan="2" style="text-align: center;" > {{doc.base_total_taxes_and_charges}}</td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="1" style="border-bottom-style: hidden;border-right-style: hidden;">الخصم</td>
+                    <td colspan="4" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="2" style="border-bottom-style: hidden;border-right-style: hidden;">{{_("الخصم")}}:{{doc.additional_discount_percentage}}</td>
                     <td colspan="2" style="text-align: center;" >{{ doc.discount_amount }}</td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;"></td>
-                    <td colspan="1" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;">صافى القيمة</td>
+                    <td colspan="4" style="border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="2" style="border-bottom-style: hidden;border-right-style: hidden;">  الضريبة</td>
+                    <td colspan="2" style="text-align: center;" > {{doc.base_total_taxes_and_charges}}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;"></td>
+                    <td colspan="2" style="border-top-style: hidden;border-bottom-style: hidden;border-right-style: hidden;">صافى القيمة</td>
                     <td colspan="2" style="text-align: center;">{{ doc.grand_total }}</td>
                 </tr>
                 <!--<tr>
@@ -172,6 +200,32 @@
     
     
     </div>
+
+    <!-- taxes -->
+    {%if doc.taxes%}
+    <div class="row mt-1"> 
+        <div class=" col-sm-12 col-xs-12 margin-top margin-bottom" >
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th style="width:5%">م</th>
+                    <th style="width:45%" > الضريبة</th>
+                    <th style="width:50%">  القيمه</th>
+
+
+
+                </tr>
+                {% for row in doc.taxes %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ row.account_head }}</td>
+                    <td>{{ row.tax_amount }}</td>
+                </tr>
+                {% endfor %}
+  
+            </table>
+        </div>
+    </div>
+    {%endif%}
 
     <div class="row">
         <div class="col-sm-11 col-xs-11" style="text-align: right;;border: solid 2px black;">
@@ -240,26 +294,78 @@
 
     <!-- FOOTER -->
     <!-- FOOTER -->
-<div class="row " style="margin-top:200px;">
-        <div class="col-sm-12 col-xs-12" style="text-align: center;">
-            <hr style="border: 1px solid #020202;border-radius: 1px;margin-top: 3px;">
-        </div>
-    </div>
+    <!--<div class="row " style="margin-top:200px;">-->
+    <!--    <div class="col-sm-12 col-xs-12" style="text-align: center;">-->
+    <!--        <hr style="border: 1px solid #020202;border-radius: 1px;margin-top: 3px;">-->
+    <!--    </div>-->
+    <!--</div>-->
 
-    <div class="row">
-        <div class="col-sm-6 col-xs-6" style="text-align: center;">
-            0226438700 - 01112500075 - info@reachgroupco.com
-        </div>
-        <div class="col-sm-6 col-xs-6" style="text-align: center;">
-            Head Office : 3 Mohamed Abd Al Salam St. (Heliopolis)
-        </div>
-    </div>
+    <!--<div class="row">-->
+    <!--    <div class="col-sm-6 col-xs-6" style="text-align: center;">-->
+    <!--        0226438700 - 01112500075 - info@reachgroupco.com-->
+    <!--    </div>-->
+    <!--    <div class="col-sm-6 col-xs-6" style="text-align: center;">-->
+    <!--        Head Office : 3 Mohamed Abd Al Salam St. (Heliopolis)-->
+    <!--    </div>-->
+    <!--</div>-->
 
-    <div class="row">
-        <div class="col-sm-12 col-xs-12" style="text-align: center;">
-            Factory : Plot226 manfacturing area Balad Alarab - (Beni Seaif) www.reachgroupco.com
-        </div>
+    <!--<div class="row">-->
+    <!--    <div class="col-sm-12 col-xs-12" style="text-align: center;">-->
+    <!--        Factory : Plot226 manfacturing area Balad Alarab - (Beni Seaif) www.reachgroupco.com-->
+    <!--    </div>-->
         
-    </div>
+    <!--</div>-->
 
+
+
+
+   <!--         {% if print_settings.repeat_header_footer %}-->
+			<!--	<div id="footer-html" class="visible-pdf">-->
+   <!--         		{% if not no_letterhead and footer %}-->
+   <!--         		<div class="letter-head-footer">-->
+   <!--         			{{ footer }}-->
+   <!--         		</div>-->
+   <!--         		{% endif %}-->
+   <!--         		<p class="text-center small page-number visible-pdf">-->
+   <!--         			{{ _("Page {0} of {1}").format('<span class="page"></span>', '<span class="topage"></span>') }}-->
+   <!--         		</p>-->
+	  <!--      </div>-->
+			<!--{% endif %}-->
+			
+			
+			
+			<!--{% if print_settings.repeat_header_footer %}-->
+   <!--        <br>  <div class="letter-head-footer">{{ footer }}</div>-->
+   <!--     {%- endif %}-->
+   
+   {% if print_settings.repeat_header_footer %}
+	<div id="footer-html" >
+		<div class="letter-head-footer">
+			{{ footer }}
+		</div>
+	
+	</div>
+	{% endif %}
+			
 </div>
+
+
+	
+<!-- {% if print_settings.repeat_header_footer %}
+<div id="footer-html" class="visible-pdf">
+  {% if not no_letterhead and footer %}
+  <div class="letter-head-footer">
+   {{footer}}
+   "xxxxxxxx"
+  </div>
+  {%else%}
+  {{footer}}
+  "tttttttttttt"
+  {% endif %}
+  <p class="text-center small page-number visible-pdf">
+    {{ _("Page {0} of {1}").format('<span class="page"></span>', '<span class="topage"></span>') }}
+  </p>
+</div>
+{% endif %} -->
+
+<!-- </div> -->

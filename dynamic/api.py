@@ -25,7 +25,10 @@ from erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import re
 from dynamic.gebco.doctype.sales_invocie.utils import set_complicated_pundel_list
 from datetime import date
 from dateutil import parser
+from six import string_types
 from dynamic.ifi.api import validate_payemnt_entry
+
+
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -485,6 +488,7 @@ def create_reservation_validate(self,*args , **kwargs):
        
 def add_row_for_reservation(self):
     # if not self.reservation:
+    #! ask if new company will ttake same behavior for warhouse and sales order
     for item in self.items:
         sql = f"""
         select soi.reservation from `tabSales Order` so
@@ -1161,7 +1165,7 @@ def add_crean_in_taxes(doc,*args,**kwargs):
 def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
         if(doc.crean=='Yes' and doc.crean_amount >0):
-            crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
+            crean_account,cost_center = frappe.db.get_value('Company',doc.company,["crean_income_account","cost_center"])
             if(crean_account):
                 flage_crean_tax = True
                 total = 0
@@ -1187,7 +1191,8 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                             "account_head":crean_account,
                             "tax_amount":doc.crean_amount,
                             "total":doc.crean_amount + total,
-                            "description":crean_account
+                            "description":crean_account,
+                            "cost_center":cost_center,
                         })
                         elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
                             doc.append("taxes",{
@@ -1198,6 +1203,7 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                             "description":crean_account,
                             "category":"Total",
                             "add_deduct_tax":"Add",
+                            "cost_center":cost_center,
                         })
                     doc.total_taxes_and_charges = doc.crean_amount + total
             doc.run_method("calculate_taxes_and_totals")
@@ -1382,9 +1388,6 @@ def get_party_address(party_type, party):
         city_state = city_state + doc.pincode if doc.pincode else city_state
         city_state += ""
     return street_address + ',' + city_state
-
-
-
 
 
 

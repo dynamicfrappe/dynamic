@@ -21,6 +21,9 @@ frappe.ui.form.on("Opportunity", {
                             },
                             __("Create")
                         );
+                        //
+                       
+                        // cur_frm.cscript['make_material_request'] = make_material_request
                     }
                     if (r.message.includes("IFI")) {
                         frm.remove_custom_button('Quotation','Create')
@@ -42,3 +45,11 @@ frappe.ui.form.on("Opportunity", {
 		})
 	},
 })
+
+var make_material_request = function() {
+
+    frappe.model.open_mapped_doc({
+		method: "dynamic.terra.doctype.api.make_material_request",
+		frm: cur_frm
+	})
+}

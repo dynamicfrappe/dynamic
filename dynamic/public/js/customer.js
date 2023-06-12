@@ -34,9 +34,23 @@ frappe.ui.form.on("Customer", {
                             },
                             __("Create")
                         );
+                        frm.add_custom_button(
+                            __("Appointment"),
+                            function () {
+                                frm.events.create_cst_appointment(frm)
+                            },
+                            __("Create")
+                        );
                     }
                 }
             }
         })
+    },
+    create_cst_appointment:function(frm){
+        frappe.model.open_mapped_doc({
+            method:
+                "dynamic.terra.api.create_cst_appointment",
+            frm: frm,
+        });
     }
 })

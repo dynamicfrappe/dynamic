@@ -4,6 +4,26 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {
+        "Stock Reconciliation Item":[
+            {
+                "label": "Item Group",
+                "fieldname": "item_group",
+                "fieldtype": "Link",
+                "insert_after": "warehouse",
+                "options" : "Item Group" , 
+                "in_list_view" : "1" , 
+                "columns" : "1" , 
+            },
+            {
+                "label": "Brand",
+                "fieldname": "brand",
+                "fieldtype": "Link",
+                "insert_after": "item_group",
+                "options" : "Brand" , 
+                "in_list_view" : "1" , 
+                "columns" : "1" , 
+            },
+        ],
         'Quotation' :[
              {
                 "fieldname": "material_reuqest",
@@ -557,6 +577,21 @@ data = {
                 "read_only" :1 ,
                 "in_list_view" :1 ,
                 "in_standard_filter" :1
+            },
+            {
+                "label": "Customer / Lead Name",
+                "fieldname": "customer_name",
+                "fieldtype": "Data",
+                "insert_after": "project_name",
+                "read_only" :1 ,
+            },
+            {
+                "label": "Opportunity",
+                "fieldname": "opportunity",
+                "fieldtype": "Link",
+                "options": "Opportunity",
+                "insert_after": "customer_name",
+                "read_only" :1 ,
             },
 
         ],
@@ -1116,6 +1151,22 @@ data = {
         "property": "read_only",
         "property_type": "Check",
         "value": "1"
+        },
+        {
+            "doctype": "Stock Reconciliation Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "valuation_rate",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Stock Reconciliation Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "qty",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
         },
     ],
   

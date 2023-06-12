@@ -96,6 +96,7 @@ doctype_js = {
     "Request for Quotation":"public/js/request_for_quotation.js",
     "Mode of Payment":"public/js/mode_of_payment.js",
     "Purchase Receipt":"public/js/purchase_receipt.js",
+    "Stock Reconciliation":"public/js/stock_reconciliation.js",
     # "Assign To":"public/sidebar/assign_to.js",
     
 }
@@ -134,7 +135,9 @@ doc_events = {
     },
     "Item": {
         "autoname": "dynamic.api.autoname",
-        "validate": "dynamic.dynamic.validation.validate_item_code"
+        "validate": ["dynamic.dynamic.validation.validate_item_code",
+                    ],
+        "after_insert": "dynamic.dynamic.validation.after_insert_variant_item",
     },
     "Delivery Note": {
         "on_submit": "dynamic.gebco.api.validate_delivery_note",
@@ -146,7 +149,8 @@ doc_events = {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
-        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc","dynamic.api.create_reservation_validate"],
+        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc"
+        ,"dynamic.api.create_reservation_validate"],
         "before_save":[
             "dynamic.api.check_source_item", 
             ],
@@ -292,7 +296,7 @@ scheduler_events = {
 #
 override_whitelisted_methods = {
 	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
-    # "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order":"dynamic.ifi.api.override_make_purchase_order"
+    # "erpnext.controllers.item_variant.create_variant":"dyanmic.api.custom_create_variant"
 }
 #
 # each overriding function accepts a `data` argument;
@@ -342,6 +346,8 @@ domains = {
     'Maser2000':"dynamic.domains.maser2000",
     'Behira Pac':"dynamic.domains.behira_pac",
     'Future':"dynamic.domains.future",
+    'Elhamd':"dynamic.domains.elhamd",
+    
 }
 
 # domain Conatin
