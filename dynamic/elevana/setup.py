@@ -45,11 +45,8 @@ def create_sales_order_script():
         doc.view = "Form"
         doc.enabled = 1
     doc.script = """   
-            
-            
-            
-         frappe.ui.form.on('Sales Order', {
-            refresh(frm){
+            frappe.ui.form.on('Sales Order', {
+                        refresh(frm){
                 if(frm.doc.docstatus ==1 && frm.doc.is_synced == 0){
                 frm.add_custom_button(__("flextock"), function() {
                 frappe.call({
@@ -67,6 +64,18 @@ def create_sales_order_script():
         frm.add_custom_button(__("j & t"), function() {
                 frappe.call({
                 method:"dynamic.shipping.jandt.create_oder",
+                args:{
+                    "product" : frm.doc
+                },callback(r){
+                    if(r.message){
+                        frappe.msgprint(r.message)
+                    }
+                }
+                })
+        },"Shipping With")
+         frm.add_custom_button(__("RTX"), function() {
+                frappe.call({
+                method:"dynamic.shipping.rtx.create_oder",
                 args:{
                     "product" : frm.doc
                 },callback(r){
@@ -95,6 +104,8 @@ def create_sales_order_script():
             }
             }
         })
+        
+        
         
         """
     doc.save()

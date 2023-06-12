@@ -245,7 +245,25 @@ data = {
                 "read_only": 1,
                 "options" : "\nflextock\njandt",
                 "no_copy":1
+            },
+            {
+                "fieldname"   : "total_weight",
+                "fieldtype"   : "Data",
+                "insert_after": "shipping_address",
+                "label"       : "Total Weight",
+                "read_only"   : 0,
+                "default"     : 100,
+                "no_copy"     :1
+            },
+            {
+                "fieldname"   : "rtx_number",
+                "fieldtype"   : "Data",
+                "insert_after": "total_weight",
+                "label"       : "RTX Serial",
+                "read_only"   : 1,
+                "no_copy"     :1
             }
+
 
         ]
     },
