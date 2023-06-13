@@ -184,14 +184,7 @@ def validate_delivery_note(doc,*args,**kwargs):
 
 
 
-@frappe.whitelist()       
-def cancel_delivery_note(doc,*args,**kwargs):
-    #1-qty deliverd from delivery note
-    if  'Terra' in DOMAINS:
-        for row in doc.items:
-            reserv_data = frappe.db.get_value('Sales Order Item',{'item_code':row.item_code,'parent':row.against_sales_order},['reservation'],as_dict=1)
-            reserv_doc = frappe.get_doc('Reservation',reserv_data['reservation'])
-            reserv_doc.db_set('status','Invalid')
+
     
 
 @frappe.whitelist()

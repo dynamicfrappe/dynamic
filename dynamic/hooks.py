@@ -142,7 +142,7 @@ doc_events = {
     "Delivery Note": {
         "on_submit": "dynamic.gebco.api.validate_delivery_note",
         "validate": "dynamic.api.validate_delivery_note",
-        "on_cancel": "dynamic.api.cancel_delivery_note",
+        # "on_cancel": "dynamic.api.cancel_delivery_note",
     },
    
     "Journal Entry": {
