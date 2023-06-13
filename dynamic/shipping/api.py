@@ -223,3 +223,6 @@ def validate_shipping_settings():
         }
 
     return {"status": False}
+
+
+

@@ -299,6 +299,7 @@ def loop_over_doc_items(doc):
             #get all reservation for this purchase_order wiz this item
             get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
 
+
 def get_po_reservation(purchase_order,item,target_warehouse):
     reservation_list_sql = f"""SELECT `tabReservation`.name from `tabReservation` WHERE `tabReservation`.status <> 'Invalid'
       AND `tabReservation`.order_source='{purchase_order}' AND `tabReservation`.item_code = '{item}' AND sales_order <> 'Invalid' AND `tabReservation`.warehouse_source = '' """
