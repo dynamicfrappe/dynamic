@@ -58,9 +58,18 @@ frappe.ui.form.on("Lead", {
                             },
                             __("Create")
                         );
+                        frm.add_custom_button(__("Make Sales Order"),function () {
+                            frm.events.make_customer_sales_order_from_lead(frm)
+                        }, __("Create"))
                     }
                 }
             }
+        })
+    },
+    make_customer_sales_order_from_lead:function(frm){
+        frappe.model.open_mapped_doc({
+            method: "dynamic.terra.doctype.quotation.quotation.make_sales_order_lead",
+            frm: cur_frm
         })
     },
     make_opportunity(frm) {

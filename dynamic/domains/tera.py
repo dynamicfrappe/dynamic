@@ -181,6 +181,12 @@ data = {
         ],
         
         "Sales Order":[
+            {
+                "label": "Customer Print Name",
+                "fieldname": "customer_print_name",
+                "fieldtype": "Data",
+                "insert_after": "order_type",
+            },
              {
                 "fieldname": "invoice_payment",
                 "fieldtype": "Float",

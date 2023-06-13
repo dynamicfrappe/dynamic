@@ -26,11 +26,12 @@ frappe.ui.form.on("Opportunity", {
                         // cur_frm.cscript['make_material_request'] = make_material_request
                     }
                     if (r.message.includes("IFI")) {
-                        frm.remove_custom_button('Quotation','Create')
-                        frm.add_custom_button(__('Quotation'),
-                        function() {
-                            frm.events.create_quotation(frm)
-                        }, __('Create'));
+                        cur_frm.cscript['create_quotation'] = create_quotation
+                        // frm.remove_custom_button('Quotation','Create')
+                        // frm.add_custom_button(__('Quotation'),
+                        // function() {
+                        //     frm.events.create_quotation(frm)
+                        // }, __('Create'));
                     }
 
                 }
@@ -38,16 +39,22 @@ frappe.ui.form.on("Opportunity", {
         })
     },
 
-    create_quotation: function(frm) {
-		frappe.model.open_mapped_doc({
-			method: "dynamic.ifi.api.make_quotation",
-			frm: cur_frm
-		})
-	},
+    // create_quotation: function(frm) {
+	// 	frappe.model.open_mapped_doc({
+	// 		method: "dynamic.ifi.api.make_quotation",
+	// 		frm: cur_frm
+	// 	})
+	// },
 })
 
-var make_material_request = function() {
+var create_quotation = function() {
+    frappe.model.open_mapped_doc({
+		method: "dynamic.ifi.api.make_quotation",
+		frm: cur_frm
+	})
+}
 
+var make_material_request = function() {
     frappe.model.open_mapped_doc({
 		method: "dynamic.terra.doctype.api.make_material_request",
 		frm: cur_frm
