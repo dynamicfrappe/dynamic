@@ -19,7 +19,7 @@ frappe.ui.form.on("Customer", {
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
                 if (r.message && r.message.length) {
-                    if (r.message.includes("Terra") || r.message.includes("Elevana")) {
+                    if (r.message.includes("Terra") || r.message.includes("Elevana") || r.message.includes("CRM Advance")) {
                         frm.add_custom_button(
                             __("Action"),
                             function () {
@@ -42,6 +42,20 @@ frappe.ui.form.on("Customer", {
                             __("Create")
                         );
                     }
+                    if(r.message.includes("CRM Advance")){
+                        if(!frm.doc.__islocal){
+                            frm.add_custom_button(
+                              __("Show History"),
+                              function () {
+                                frappe.set_route('query-report','Actions Report',{"phone_no":frm.doc.phone_no})
+                              }
+                            );
+                        }
+                    }
+
+
+
+
                 }
             }
         })

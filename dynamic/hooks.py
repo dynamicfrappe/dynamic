@@ -347,7 +347,7 @@ domains = {
     'Behira Pac':"dynamic.domains.behira_pac",
     'Future':"dynamic.domains.future",
     'Elhamd':"dynamic.domains.elhamd",
-    
+    'CRM Advance':"dynamic.domains.crm_advance",
 }
 
 # domain Conatin
