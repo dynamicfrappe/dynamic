@@ -183,10 +183,6 @@ def validate_delivery_note(doc,*args,**kwargs):
 
 
 
-
-
-    
-
 @frappe.whitelist()
 def submit_journal_entry_cheques (doc):
     if getattr(doc,"payment_entry",None):

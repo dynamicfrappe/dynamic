@@ -245,8 +245,8 @@ def deposite_cheque_under_collection(payment_entry):
         "credit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
     # debit
     je.append("accounts", {
@@ -254,8 +254,8 @@ def deposite_cheque_under_collection(payment_entry):
         "debit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
     collect_cheque_commission = get_bank_commission (payment_entry.drawn_bank_account,collect_cheque_commission_name,payment_entry.paid_amount)
     if collect_cheque_commission:
@@ -267,8 +267,8 @@ def deposite_cheque_under_collection(payment_entry):
             "debit_in_account_currency": flt(collect_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
         })
         # debit
         je.append("accounts", {
@@ -276,12 +276,13 @@ def deposite_cheque_under_collection(payment_entry):
             "credit_in_account_currency": flt(collect_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
         })
 
     cheque_submit = check_cheque_submit()
     je.submit() if cheque_submit else je.save()
+    # je.save()
     payment_entry.db_set('cheque_status','Under Collect')
     return je
 
@@ -289,8 +290,6 @@ def deposite_cheque_under_collection(payment_entry):
 @frappe.whitelist()
 def return_cheque(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
-    payment_entry.db_set('cheque_status','Return') 
-    frappe.db.set_value("Cheque",payment_entry.cheque,'status','Return')
     company = frappe.get_doc("Company", payment_entry.company)
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
@@ -320,12 +319,16 @@ def return_cheque(payment_entry):
         "credit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
     #cheque submitt
     cheque_submit = check_cheque_submit()
     je.submit() if cheque_submit else je.save()
+    payment_entry.db_set('cheque_status','Return') 
+    frappe.db.set_value("Cheque",payment_entry.cheque,'status','Return')
+
+
     return je
     
 
@@ -357,8 +360,8 @@ def collect_cheque_now(payment_entry):
         "debit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
 
     })
     # debit
@@ -367,8 +370,8 @@ def collect_cheque_now(payment_entry):
         "credit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
     collect_cheque_commission = get_bank_commission (payment_entry.drawn_bank_account,collect_cheque_commission_name,payment_entry.paid_amount)
     if collect_cheque_commission:
@@ -423,8 +426,8 @@ def collect_cheque_under_collection(payment_entry):
         "debit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
 
     })
     # debit
@@ -433,8 +436,8 @@ def collect_cheque_under_collection(payment_entry):
         "credit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
     reject_cheque_commission = get_bank_commission (payment_entry.drawn_bank_account,reject_cheque_commission_name,payment_entry.paid_amount)
 
@@ -447,8 +450,8 @@ def collect_cheque_under_collection(payment_entry):
             "debit_in_account_currency": flt(reject_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
         })
         # debit
         je.append("accounts", {
@@ -456,8 +459,8 @@ def collect_cheque_under_collection(payment_entry):
             "credit_in_account_currency": flt(reject_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
         })
 
     cheque_submit = check_cheque_submit()
@@ -468,8 +471,6 @@ def collect_cheque_under_collection(payment_entry):
 @frappe.whitelist()
 def reject_cheque_under_collection(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
-    payment_entry.db_set('cheque_status','Rejected')
-    frappe.db.set_value("Cheque",payment_entry.cheque,'status','Rejected')
     company = frappe.get_doc("Company", payment_entry.company)
     if not payment_entry.drawn_bank_account:
         frappe.throw(_("Please Set Bank Account"))
@@ -495,8 +496,8 @@ def reject_cheque_under_collection(payment_entry):
         "debit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
     # debit
     je.append("accounts", {
@@ -504,8 +505,8 @@ def reject_cheque_under_collection(payment_entry):
         "credit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
     reject_cheque_commission = get_bank_commission (payment_entry.drawn_bank_account,reject_cheque_commission_name,payment_entry.paid_amount)
     if reject_cheque_commission:
@@ -517,8 +518,8 @@ def reject_cheque_under_collection(payment_entry):
             "debit_in_account_currency": flt(reject_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
         })
         # debit
         je.append("accounts", {
@@ -526,10 +527,12 @@ def reject_cheque_under_collection(payment_entry):
             "credit_in_account_currency": flt(reject_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
         })
-
+    payment_entry.db_set('cheque_status','Rejected')
+    frappe.db.set_value("Cheque",payment_entry.cheque,'status','Rejected')
+    # je.save()
     cheque_submit = check_cheque_submit()
     je.submit() if cheque_submit else je.save()
     return je
@@ -593,7 +596,6 @@ def add_row_cheque_tracks(payment_entry, new_cheque_status, old_status=None):
 @frappe.whitelist()
 def pay_cash_new(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
-    frappe.db.set_value("Cheque",payment_entry.cheque,'status','Paid')
     je = frappe.new_doc("Journal Entry")
     je.posting_date = frappe.utils.getdate()
     je.voucher_type = 'Bank Entry'
@@ -620,8 +622,8 @@ def pay_cash_new(payment_entry):
             "credit_in_account_currency": flt(payment_entry.paid_amount),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
 
         })
     elif payment_entry.cheque_status == "Rejected":  # Rejected Cheques Bank Account
@@ -631,8 +633,8 @@ def pay_cash_new(payment_entry):
             "credit_in_account_currency": flt(payment_entry.paid_amount),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
 
         })
     elif payment_entry.cheque_status == "Under Collect": 
@@ -642,8 +644,8 @@ def pay_cash_new(payment_entry):
             "credit_in_account_currency": flt(payment_entry.paid_amount),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
         })
     # debit
     je.append("accounts", {
@@ -651,13 +653,15 @@ def pay_cash_new(payment_entry):
         "debit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
     # je.save()
     cheque_submit = check_cheque_submit()
     je.submit() if cheque_submit else je.save()
     payment_entry.db_set('cheque_status','Paid')
+    frappe.db.set_value("Cheque",payment_entry.cheque,'status','Paid')
+
     return je
 
 
