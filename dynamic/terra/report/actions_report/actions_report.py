@@ -44,12 +44,6 @@ def get_columns():
             "fieldtype": "Data",
             "width": 150
         },
-		{
-            "label": _("Action"),
-            "fieldname": "action",
-            "fieldtype": "Data",
-            "width": 150
-        },
 	    {
             "label": _("Action Name"),
             "fieldname": "action_name",

@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "creation": "2022-07-26 12:28:44.812059",
+ "creation": "2023-06-14 14:52:44.198172",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -12,7 +12,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "CRM Tera",
+ "label": "CRM Advance",
  "links": [
   {
    "hidden": 0,
@@ -35,7 +35,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Activities",
+   "label": "Actions",
    "link_to": "Actions",
    "link_type": "DocType",
    "onboard": 0,
@@ -96,14 +96,15 @@
    "type": "Link"
   }
  ],
- "modified": "2023-06-14 14:52:01.057373",
+ "modified": "2023-06-14 14:54:14.202287",
  "modified_by": "ad@gmail.com",
- "module": "terra",
- "name": "CRM Tera",
- "owner": "Administrator",
+ "module": "CRM Advance",
+ "name": "CRM Advance",
+ "onboarding": "CRM",
+ "owner": "ad@gmail.com",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
- "restrict_to_domain": "Terra",
+ "restrict_to_domain": "CRM Advance",
  "shortcuts": [
   {
    "doc_view": "Calendar",
