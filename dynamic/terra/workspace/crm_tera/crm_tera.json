@@ -96,14 +96,14 @@
    "type": "Link"
   }
  ],
- "modified": "2023-06-14 14:52:01.057373",
+ "modified": "2023-06-14 15:49:10.088396",
  "modified_by": "ad@gmail.com",
  "module": "terra",
  "name": "CRM Tera",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
- "restrict_to_domain": "Terra",
+ "restrict_to_domain": "",
  "shortcuts": [
   {
    "doc_view": "Calendar",

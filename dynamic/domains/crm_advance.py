@@ -170,7 +170,6 @@ data = {
                 "options" : "Cost Center" , 
                 "read_only" : 0,
                 "allow_on_submit":0,
-                "reqd":1
                 
             },
             
@@ -225,7 +224,6 @@ data = {
                 "options" : "Cost Center" , 
                 "read_only" : 0,
                 "allow_on_submit":0,
-                "reqd":1
                 
             },
             {
@@ -244,7 +242,14 @@ data = {
     },
 
     "properties": [
-        
+        {
+        "doctype": "Lead",
+        "doctype_or_field": "DocField",
+        "fieldname": "lead_name",
+        "property": "in_global_search",
+        "property_type": "Check",
+        "value": "1"
+        },
     ],
   
     'on_setup': 'dynamic.crm_advance.setup._setup'
