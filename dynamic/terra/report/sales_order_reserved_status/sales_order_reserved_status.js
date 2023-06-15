@@ -20,5 +20,11 @@ frappe.query_reports["Sales Order Reserved Status"] = {
 			fieldtype: "Link",
 			options:"Sales Order"
 		},
+		{
+			fieldname: "cost_center",
+			label: __("Cost Center"),
+			fieldtype: "Link",
+			options:"Cost Center"
+		},
 	]
 };

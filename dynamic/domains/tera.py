@@ -470,17 +470,15 @@ data = {
             }
         ],
         'Opportunity':[
-
             {
-                 "fieldname": "customer",
-                 "fieldtype": "Link",
-                  "insert_after": "party_name",
-                 "label" :"Custom" ,
-                 "options" :"Customer", 
-                 "read_only" : 1
-                
+            "label" :"Custom" ,
+            "fieldname": "customer",
+            "fieldtype": "Link",
+            "insert_after": "party_name",
+            "options" :"Customer", 
+            # "read_only" : 1,
             },
-             {
+            {
             "fieldname": "phone_no",
             "fieldtype": "Data",
             "in_global_search": 1,
@@ -502,7 +500,6 @@ data = {
                 "read_only" : 0,
                 "allow_on_submit":0,
                 "reqd":1
-                
             },
             {
                  "label" :"Opportunity Name" ,

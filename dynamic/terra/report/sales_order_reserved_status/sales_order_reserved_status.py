@@ -35,8 +35,11 @@ class SalesORderReservationStatus(object):
 			conditions += " and `tabReservation`.creation <= '%s'"%self.filters.get("to_date")
 		if self.filters.get("sales_order"):
 			conditions += " and `tabSales Order`.name = '%s'"%self.filters.get("sales_order")
+		if self.filters.get("cost_center"):
+			conditions += " and `tabSales Order`.cost_center = '%s'"%self.filters.get("cost_center")
 		sql_query_new = f"""
 						SELECT `tabSales Order`.name as sales_order
+						,`tabSales Order`.cost_center
 						,`tabReservation`.name as reservation
 						,`tabReservation`.status 
 						FROM `tabSales Order` 
@@ -67,6 +70,12 @@ class SalesORderReservationStatus(object):
 			{
                 "label": _("Status"),
                 "fieldname": "status",
+                "fieldtype": "Data",
+                "width": 180,
+            },
+	    {
+                "label": _("C	ost Center"),
+                "fieldname": "cost_center",
                 "fieldtype": "Data",
                 "width": 180,
             },
