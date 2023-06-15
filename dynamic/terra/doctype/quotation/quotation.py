@@ -586,7 +586,10 @@ def make_customer_from_lead(source_name, ignore_permissions=False):
 	lead = frappe.db.get_value(
 		"Lead", source_name, ["lead_name"], as_dict=1
 	)
-
+	territory = frappe.db.get_single_value("Selling Settings","territory")
+	customer_group = frappe.db.get_single_value("Selling Settings","customer_group")
+	if not territory or not customer_group:
+		frappe.throw(_("Please Add default customer group and territory in Selling Settings"))
 	if lead and lead.get("lead_name"):
 		if not frappe.db.exists("Customer", lead.get("lead_name")):
 			lead_name = source_name
