@@ -349,7 +349,6 @@ domains = {
     'Future':"dynamic.domains.future",
     'Elhamd':"dynamic.domains.elhamd",
     'CRM Advance':"dynamic.domains.crm_advance",
-    'Terra Custom':"dynamic.domains.tera_custom",
 }
 
 # domain Conatin

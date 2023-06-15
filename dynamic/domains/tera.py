@@ -181,12 +181,6 @@ data = {
         ],
         
         "Sales Order":[
-            {
-                "label": "Customer Print Name",
-                "fieldname": "customer_print_name",
-                "fieldtype": "Data",
-                "insert_after": "order_type",
-            },
              {
                 "fieldname": "invoice_payment",
                 "fieldtype": "Float",
@@ -469,7 +463,50 @@ data = {
             "reqd": 1
             }
         ],
+        'Opportunity':[
 
+            {
+                 "fieldname": "customer",
+                 "fieldtype": "Link",
+                  "insert_after": "party_name",
+                 "label" :"Custom" ,
+                 "options" :"Customer", 
+                 "read_only" : 1
+                
+            },
+             {
+            "fieldname": "phone_no",
+            "fieldtype": "Data",
+            "in_global_search": 1,
+            "in_standard_filter": 1,
+            "insert_after": "source",
+            "label": "Phone No",
+            "translatable": 1,
+            # "unique": 1,
+            "fetch_if_empty": 1,
+            "reqd": 1,
+            "fetch_from": "party_name.phone_no" 
+            },
+            {
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "phone_no",
+                "options" : "Cost Center" , 
+                "read_only" : 0,
+                "allow_on_submit":0,
+                "reqd":1
+                
+            },
+            {
+                 "label" :"Opportunity Name" ,
+                 "fieldname": "opportunity_name",
+                 "fieldtype": "Data",
+                 "insert_after": "customer_name",
+                 "in_global_search" :1, 
+                
+            },
+        ],
         'Stock Settings':[
             {
                 "fieldname": "email_section",
