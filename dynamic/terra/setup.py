@@ -898,7 +898,7 @@ def add_opp_property_setters():
         doc.doc_type = "Opportunity"
         doc.property = "search_fields"
         doc.property_type = "Data"
-        doc.value="status,transaction_date,party_name,opportunity_type,territory,company,phone_no"
+        doc.value="status,transaction_date,party_name,opportunity_type,territory,company"
         doc.save()
 
 def add_customer_property_setters():

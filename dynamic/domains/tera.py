@@ -471,7 +471,7 @@ data = {
         ],
         'Opportunity':[
             {
-            "label" :"Custom" ,
+            "label" :"Customer" ,
             "fieldname": "customer",
             "fieldtype": "Link",
             "insert_after": "party_name",
@@ -481,25 +481,20 @@ data = {
             {
             "fieldname": "phone_no",
             "fieldtype": "Data",
-            "in_global_search": 1,
-            "in_standard_filter": 1,
             "insert_after": "source",
             "label": "Phone No",
-            "translatable": 1,
-            # "unique": 1,
-            "fetch_if_empty": 1,
-            "reqd": 1,
-            "fetch_from": "party_name.phone_no" 
+            "reqd": 0
+          
             },
             {
                 "label": "Cost Center",
                 "fieldname": "cost_center",
                 "fieldtype": "Link",
-                "insert_after": "phone_no",
+                "insert_after": "opportunity_from",
                 "options" : "Cost Center" , 
                 "read_only" : 0,
                 "allow_on_submit":0,
-                "reqd":1
+                "reqd":0
             },
             {
                  "label" :"Opportunity Name" ,
