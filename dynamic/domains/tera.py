@@ -464,12 +464,17 @@ data = {
             }
         ],
         'Opportunity':[
-
+            {
+                "fieldname": "info_data",
+                "fieldtype": "Section Break",
+                "insert_after": "expected_closing",
+                "label" :"Info Data" ,
+            },
             {
                  "fieldname": "customer",
                  "fieldtype": "Link",
-                  "insert_after": "party_name",
-                 "label" :"Custom" ,
+                  "insert_after": "source",
+                 "label" :"Customer" ,
                  "options" :"Customer", 
                  "read_only" : 1
                 
@@ -479,10 +484,10 @@ data = {
             "fieldtype": "Data",
             "in_global_search": 1,
             "in_standard_filter": 1,
-            "insert_after": "source",
+            "insert_after": "customer",
             "label": "Phone No",
             "translatable": 1,
-            # "unique": 1,
+            "unique": 1,
             "fetch_if_empty": 1,
             "reqd": 1,
             "fetch_from": "party_name.phone_no" 
