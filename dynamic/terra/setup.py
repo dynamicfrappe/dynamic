@@ -1039,7 +1039,7 @@ def create_terra_scripts():
     except Exception as ex:
         pass
     try:
-        # install_action()
+        install_action()
         ...
     except Exception as ex:
         print("----------------------- install_actioninstall_actioninstall_action",str(ex))
