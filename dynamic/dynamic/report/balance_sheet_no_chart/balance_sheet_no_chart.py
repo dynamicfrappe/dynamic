@@ -103,7 +103,6 @@ def execute(filters=None):
 	# your report code here
 
     # calculate your data and append it to the `data` list
-	from frappe.utils.report_render_utils import add_total_row
     # # add the total row
 	# total = calculate_total(data)
 	# add_total_row(data, ["", "", "Total"], [None, None, None], total)
