@@ -1379,6 +1379,32 @@ def get_party_address(party_type, party):
     return street_address + ',' + city_state
 
 
+import barcode
+from barcode import Code128
+import base64
+from io import BytesIO
 
+# @frappe.whitelist()
+# def get_barcode_item():
+#     # Get the item code and generate the barcode image
+#     item_code = "978020137962"
+#     ean = EAN13(item_code)
+#     buffer = BytesIO()
+#     ean.write(buffer)
+#     barcode_image_url = f"data:image/png;base64,{buffer.getvalue().encode('base64').decode()}"
+    
+#     # Pass the barcode image URL as a context variable to the Jinja template
+#     context = {'item_code': item_code, 'barcode_image_url': barcode_image_url}
+#     return context
 
-
+def get_barcode_item():
+    # Get the item code and generate the barcode image
+    item_code = "978020137962"
+    code128 = Code128(item_code)
+    buffer = BytesIO()
+    code128.write(buffer)
+    barcode_image_url = f"data:image/png;base64,{base64.b64encode(buffer.getvalue()).decode()}"
+    
+    # Pass the barcode image URL as a context variable to the Jinja template
+    context = {'item_code': item_code, 'barcode_image_url': barcode_image_url}
+    return context

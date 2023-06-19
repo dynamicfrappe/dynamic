@@ -129,4 +129,3 @@ def after_insert_variant_item(doc,*args,**kwargs):
         #             description_list.append(attribute_value[0].attribute_value)
         # frappe.errprint(f'-doc.description->{doc.description}')
         # frappe.throw("test")
-

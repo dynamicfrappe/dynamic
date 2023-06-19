@@ -1,0 +1,57 @@
+
+<p>{{doc.barcodes[0].barcode}}</p>
+<div class="parent">
+                      <div class="child">
+                          <div class="text-center" style="text-transform: uppercase;"> <b>CarePoint Pharmacy </b> </div>
+                          <div class="item-name text-center"> {{doc.item_name}}</div>
+                          <div class="text-center">
+                          <svg class="barcode"
+                              jsbarcode-format="code128"
+                              jsbarcode-value={{doc.barcodes[0].barcode}}
+                              jsbarcode-text={{doc.barcodes[0].barcode}}
+                              jsbarcode-height=20
+                              jsbarcode-width=1
+                              jsbarcode-margin=1
+                              jsbarcode-fontSize=9
+                              jsbarcode-textmargin=0
+                              >
+                          </svg>
+                          </div>  
+                  </div>
+        <!--if no batches show alert-->
+        </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js" ></script>
+    <!--<script src='/assets/frappe/js/lib/JsBarcode.all.min.js'></script>-->
+    
+    <script>
+        JsBarcode(".barcode").init();
+    </script>
+    
+    
+    <svg class="barcode" jsbarcode-format="code128" jsbarcode-value={{doc.barcodes[0].barcode}} jsbarcode-height=23
+    jsbarcode-width="1" js-barcode-fontsize="1" jsbarcode-textmargin="2" jsbarcode-margin="0" jsbarcode-fontoptions=""
+    ></svg>
+
+
+    <div class="child">
+        <div class="text-center" style="text-transform: uppercase;"> <b>CarePoint Pharmacy </b> </div>
+        <div class="item-name text-center"> {{doc.item_name}}</div>
+        <div class="text-center">
+          <svg class="barcode"
+              jsbarcode-format="code128"
+              jsbarcode-value="{{doc.barcodes[0].barcode}}"
+              jsbarcode-height="30"
+              jsbarcode-width="1"
+              jsbarcode-margin="10"
+              jsbarcode-fontSize="12"
+              jsbarcode-textmargin="0"
+              >
+          </svg>
+        </div>  
+      </div>
+      
+      <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.3/JsBarcode.all.min.js"></script>
+      <script>
+        JsBarcode(".barcode").init();
+      </script>

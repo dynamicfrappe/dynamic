@@ -618,14 +618,14 @@ def pay_cash_new(payment_entry):
     if payment_entry.cheque_status == "New":
         # credit
         je.append("accounts", {
-            "account": payment_entry.paid_to,
-            "credit_in_account_currency": flt(payment_entry.paid_amount),
-            "reference_type": payment_entry.doctype,
-            "reference_name": payment_entry.name,
-            # "party_type": payment_entry.party_type,
-            # "party": payment_entry.party
-
-        })
+        "account":  cash_def_account,
+        "credit_in_account_currency": flt(payment_entry.paid_amount),
+        "reference_type": payment_entry.doctype,
+        "reference_name": payment_entry.name,
+        "party_type": payment_entry.party_type,
+        "party": payment_entry.party
+    })
+        
     elif payment_entry.cheque_status == "Rejected":  # Rejected Cheques Bank Account
         # credit
         je.append("accounts", {
@@ -648,14 +648,23 @@ def pay_cash_new(payment_entry):
             # "party": payment_entry.party
         })
     # debit
+    # je.append("accounts", {
+    #     "account":  cash_def_account,
+    #     "debit_in_account_currency": flt(payment_entry.paid_amount),
+    #     "reference_type": payment_entry.doctype,
+    #     "reference_name": payment_entry.name,
+    #     "party_type": payment_entry.party_type,
+    #     "party": payment_entry.party
+    # })
     je.append("accounts", {
-        "account":  cash_def_account,
-        "debit_in_account_currency": flt(payment_entry.paid_amount),
-        "reference_type": payment_entry.doctype,
-        "reference_name": payment_entry.name,
-        # "party_type": payment_entry.party_type,
-        # "party": payment_entry.party
-    })
+            "account": payment_entry.paid_to,
+            "debit_in_account_currency": flt(payment_entry.paid_amount),
+            "reference_type": payment_entry.doctype,
+            "reference_name": payment_entry.name,
+            "party_type": payment_entry.party_type,
+            "party": payment_entry.party
+
+        })
     # je.save()
     cheque_submit = check_cheque_submit()
     je.submit() if cheque_submit else je.save()
