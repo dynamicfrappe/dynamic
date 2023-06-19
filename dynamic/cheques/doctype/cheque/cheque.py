@@ -625,6 +625,15 @@ def pay_cash_new(payment_entry):
         "party_type": payment_entry.party_type,
         "party": payment_entry.party
     })
+        je.append("accounts", {
+            "account": payment_entry.paid_to,
+            "debit_in_account_currency": flt(payment_entry.paid_amount),
+            "reference_type": payment_entry.doctype,
+            "reference_name": payment_entry.name,
+            "party_type": payment_entry.party_type,
+            "party": payment_entry.party
+
+        })
         
     elif payment_entry.cheque_status == "Rejected":  # Rejected Cheques Bank Account
         # credit
@@ -637,6 +646,15 @@ def pay_cash_new(payment_entry):
             # "party": payment_entry.party
 
         })
+        je.append("accounts", {
+            "account": payment_entry.paid_to,
+            "debit_in_account_currency": flt(payment_entry.paid_amount),
+            "reference_type": payment_entry.doctype,
+            "reference_name": payment_entry.name,
+            "party_type": payment_entry.party_type,
+            "party": payment_entry.party
+
+        })
     elif payment_entry.cheque_status == "Under Collect": 
         # credit
         je.append("accounts", {
@@ -647,6 +665,21 @@ def pay_cash_new(payment_entry):
             # "party_type": payment_entry.party_type,
             # "party": payment_entry.party
         })
+        #debit
+        account_paid_to = frappe.db.get_value("Mode of Payment Account",
+                                              {'parent':payment_entry.cash_mod_of_payment},'default_account')
+        if not account_paid_to:
+            frappe.throw(_(f"Please Add Default Account to {payment_entry.cash_mod_of_payment}"))
+
+        je.append("accounts", {
+            "account": account_paid_to,
+            "debit_in_account_currency": flt(payment_entry.paid_amount),
+            "reference_type": payment_entry.doctype,
+            "reference_name": payment_entry.name,
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
+
+        })
     # debit
     # je.append("accounts", {
     #     "account":  cash_def_account,
@@ -656,15 +689,7 @@ def pay_cash_new(payment_entry):
     #     "party_type": payment_entry.party_type,
     #     "party": payment_entry.party
     # })
-    je.append("accounts", {
-            "account": payment_entry.paid_to,
-            "debit_in_account_currency": flt(payment_entry.paid_amount),
-            "reference_type": payment_entry.doctype,
-            "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
-
-        })
+    
     # je.save()
     cheque_submit = check_cheque_submit()
     je.submit() if cheque_submit else je.save()
