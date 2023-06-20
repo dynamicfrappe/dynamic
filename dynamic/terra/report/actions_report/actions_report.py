@@ -30,10 +30,9 @@ def get_data(filters):
 		conditions += " and phone_no = '%s'"%filters.get("phone_no")
 
 	sql = f"""
-	select * from tabActions 
-		{conditions} 
+	select *,`tabAction`.type as action_type from `tabActions` ,`tabAction`
+		{conditions} AND `tabActions`.action=`tabAction`.name
 	"""
-
 	result = frappe.db.sql(sql,as_dict=1)
 	return result
 
@@ -45,9 +44,15 @@ def get_columns():
             "fieldtype": "Data",
             "width": 150
         },
-		{
-            "label": _("Action"),
-            "fieldname": "action",
+	    {
+            "label": _("Action Name"),
+            "fieldname": "action_name",
+            "fieldtype": "Data",
+            "width": 150
+        },
+	{
+            "label": _("Action Type"),
+            "fieldname": "action_type",
             "fieldtype": "Data",
             "width": 150
         },

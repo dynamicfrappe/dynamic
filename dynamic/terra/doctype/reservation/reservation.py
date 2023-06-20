@@ -123,4 +123,3 @@ class Reservation(Document):
 			total_put_order += float(row.reserved_qty)
 		self.db_set('total_purchase_order_reserved_qty',total_put_order)
 
-	

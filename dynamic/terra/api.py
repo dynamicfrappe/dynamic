@@ -3,6 +3,12 @@ import frappe
 
 from frappe.utils import add_days, nowdate, today
 from dynamic.terra.doctype.payment_entry.payment_entry import get_party_details
+from frappe.model.mapper import get_mapped_doc
+from frappe.model.utils import get_fetch_values
+from frappe.utils import add_days, cint, cstr, flt, get_link_to_form, getdate, nowdate, strip_html
+from six import string_types
+from frappe.utils import now
+
 Domains = frappe.get_active_domains()
 
 @frappe.whitelist()
@@ -78,6 +84,8 @@ def create_material_request_from_opportunity(source_name, target_doc=None):
     source_doc = frappe.get_doc("Opportunity",source_name)
     doc = frappe.new_doc("Material Request")
     doc.purpose = "Purchase"
+    doc.customer_name = source_doc.customer_name if source_doc.customer_name else ''
+    doc.opportunity = source_doc.name  
     if len(source_doc.items)> 0:
         for item in source_doc.items:
             item_doc = frappe.get_doc("Item",item.item_code)
@@ -214,4 +222,29 @@ def create_action_doc(source_name ,target_doc=None ):
     target_doc.customer = source_name
     return target_doc
 
+@frappe.whitelist()
+def get_item_group_brand(doctype, txt, searchfield, start, page_len, filters):
+    condition = ' 1=1 '
+    item_group = filters.get("item_group") or ""
+    brand = filters.get("brand") or ""
+    if item_group:
+        condition += f'AND item.item_group="{item_group}" '
+    if brand:
+        condition += f'AND item.brand="{brand}" '
 
+    search_txt = "%%%s%%" % txt
+    data = frappe.db.sql(
+        f"""SELECT item.name,item.item_code,item.item_group,item.brand
+        FROM `tabItem` item
+			where {condition}
+			and (item.name like '{search_txt}' )"""
+    )
+    return data
+
+@frappe.whitelist()
+def create_cst_appointment(source_name ,target_doc=None):
+    source_doc = frappe.get_doc("Customer",source_name)
+    target_doc = frappe.new_doc("Appointment")
+    target_doc.customer_name = source_doc.customer_name
+    target_doc.scheduled_time = now()
+    return target_doc

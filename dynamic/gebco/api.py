@@ -185,21 +185,32 @@ def check_so_approval(doc):
 
 def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
     #1-qty deliverd from delivery note
-    for row in doc.items:
-        reserv_data = frappe.db.get_value('Sales Order Item',{'item_code':row.item_code,'parent':row.against_sales_order},['reservation','item_purchase_order','item_warehouse'],as_dict=1)
-        reserv_doc = frappe.get_doc('Reservation',reserv_data['reservation'])
-        item = frappe.get_doc('Reservation Warehouse',reserv_doc.warehouse[0].name)
-        if(item.reserved_qty < row.qty):
-            frappe.throw(f'Not Enough Reservation qty for item {row.item_code} for reservation {reserv_data["reservation"]} avail reserved qty {item.reserved_qty}')
-        if(row.qty <=  item.reserved_qty):
-            if row.qty < item.reserved_qty:
-                reserv_doc.db_set('status','Partial Delivered')
-            else:
-                reserv_doc.db_set('status','Closed')
-        new_reserved_qty = item.reserved_qty - row.qty
-        item.db_set('reserved_qty',new_reserved_qty)
+    if not doc.is_return:
+        for row in doc.items:
+            reserv_data = frappe.db.get_value('Sales Order Item',{'item_code':row.item_code,'parent':row.against_sales_order},['reservation','item_purchase_order','item_warehouse'],as_dict=1)
+            reserv_doc = frappe.get_doc('Reservation',reserv_data['reservation'])
+            item = frappe.get_doc('Reservation Warehouse',reserv_doc.warehouse[0].name)
+            if(item.reserved_qty < row.qty):
+                frappe.throw(f'Not Enough Reservation qty for item {row.item_code} for reservation {reserv_data["reservation"]} avail reserved qty {item.reserved_qty}')
+            if(row.qty <=  item.reserved_qty):
+                if row.qty < item.reserved_qty:
+                    reserv_doc.db_set('status','Partial Delivered')
+                else:
+                    reserv_doc.db_set('status','Closed')
+            new_reserved_qty = item.reserved_qty - row.qty
+            item.db_set('reserved_qty',new_reserved_qty)
+    elif doc.is_return:
+        set_reservation_invalid(doc,*args,**kwargs)
         # item.save()
     
+@frappe.whitelist()       
+def set_reservation_invalid(doc,*args,**kwargs):
+    #1-qty deliverd from delivery note
+    if  'Terra' in DOMAINS:
+        for row in doc.items:
+            reserv_data = frappe.db.get_value('Sales Order Item',{'item_code':row.item_code,'parent':row.against_sales_order},['reservation'],as_dict=1)
+            reserv_doc = frappe.get_doc('Reservation',reserv_data['reservation'])
+            reserv_doc.db_set('status','Invalid')
 
 def validate_purchase_recipt(doc,*args,**kwargs):
     if 'Gebco' in DOMAINS:
@@ -262,7 +273,7 @@ def submit_delivery_note(doc ,*args,**kwargs) :
                 for obj in cost_center :
                     acceess_target.append(obj.get("name"))
                 
-        
+        # frappe.errprint(f'centers--->{acceess_target}')
         access_group =    acceess_target 
         if len(access_group) > 0 :
             for access in access_group :

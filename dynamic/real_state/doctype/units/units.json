@@ -1,0 +1,65 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-06-18 14:11:16.019505",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "unit_no",
+  "unit_area",
+  "unit_floor",
+  "unit_info_section",
+  "unit_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "unit_no",
+   "fieldtype": "Data",
+   "label": "Unit No"
+  },
+  {
+   "fieldname": "unit_area",
+   "fieldtype": "Float",
+   "label": "Unit Area"
+  },
+  {
+   "fieldname": "unit_floor",
+   "fieldtype": "Data",
+   "label": "Unit Floor"
+  },
+  {
+   "fieldname": "unit_info_section",
+   "fieldtype": "Section Break",
+   "label": "Unit Info"
+  },
+  {
+   "fieldname": "unit_details",
+   "fieldtype": "Small Text",
+   "label": "Unit details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-06-18 14:13:10.654923",
+ "modified_by": "Administrator",
+ "module": "Real State",
+ "name": "Units",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

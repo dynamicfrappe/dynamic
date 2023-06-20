@@ -25,7 +25,10 @@ from erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import re
 from dynamic.gebco.doctype.sales_invocie.utils import set_complicated_pundel_list
 from datetime import date
 from dateutil import parser
+from six import string_types
 from dynamic.ifi.api import validate_payemnt_entry
+
+
 @frappe.whitelist()
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice",doc)
@@ -180,17 +183,6 @@ def validate_delivery_note(doc,*args,**kwargs):
 
 
 
-
-@frappe.whitelist()       
-def cancel_delivery_note(doc,*args,**kwargs):
-    #1-qty deliverd from delivery note
-    if  'Terra' in DOMAINS:
-        for row in doc.items:
-            reserv_data = frappe.db.get_value('Sales Order Item',{'item_code':row.item_code,'parent':row.against_sales_order},['reservation'],as_dict=1)
-            reserv_doc = frappe.get_doc('Reservation',reserv_data['reservation'])
-            reserv_doc.db_set('status','Invalid')
-    
-
 @frappe.whitelist()
 def submit_journal_entry_cheques (doc):
     if getattr(doc,"payment_entry",None):
@@ -295,6 +287,7 @@ def loop_over_doc_items(doc):
         if(row.purchase_order):
             #get all reservation for this purchase_order wiz this item
             get_po_reservation(row.purchase_order,row.item_code,row.warehouse)
+
 
 def get_po_reservation(purchase_order,item,target_warehouse):
     reservation_list_sql = f"""SELECT `tabReservation`.name from `tabReservation` WHERE `tabReservation`.status <> 'Invalid'
@@ -484,6 +477,7 @@ def create_reservation_validate(self,*args , **kwargs):
        
 def add_row_for_reservation(self):
     # if not self.reservation:
+    #! ask if new company will ttake same behavior for warhouse and sales order
     for item in self.items:
         sql = f"""
         select soi.reservation from `tabSales Order` so
@@ -1160,7 +1154,7 @@ def add_crean_in_taxes(doc,*args,**kwargs):
 def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
         if(doc.crean=='Yes' and doc.crean_amount >0):
-            crean_account = frappe.db.get_value('Company',doc.company,"crean_income_account")
+            crean_account,cost_center = frappe.db.get_value('Company',doc.company,["crean_income_account","cost_center"])
             if(crean_account):
                 flage_crean_tax = True
                 total = 0
@@ -1186,7 +1180,8 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                             "account_head":crean_account,
                             "tax_amount":doc.crean_amount,
                             "total":doc.crean_amount + total,
-                            "description":crean_account
+                            "description":crean_account,
+                            "cost_center":cost_center,
                         })
                         elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
                             doc.append("taxes",{
@@ -1197,6 +1192,7 @@ def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
                             "description":crean_account,
                             "category":"Total",
                             "add_deduct_tax":"Add",
+                            "cost_center":cost_center,
                         })
                     doc.total_taxes_and_charges = doc.crean_amount + total
             doc.run_method("calculate_taxes_and_totals")
@@ -1383,9 +1379,33 @@ def get_party_address(party_type, party):
     return street_address + ',' + city_state
 
 
+# import barcode
+# from barcode import Code128
+# import base64
+# from io import BytesIO
 
+@frappe.whitelist()
+def get_barcode_item():
+    ...
+#     # Get the item code and generate the barcode image
+#     item_code = "978020137962"
+#     ean = EAN13(item_code)
+#     buffer = BytesIO()
+#     ean.write(buffer)
+#     barcode_image_url = f"data:image/png;base64,{buffer.getvalue().encode('base64').decode()}"
+    
+#     # Pass the barcode image URL as a context variable to the Jinja template
+#     context = {'item_code': item_code, 'barcode_image_url': barcode_image_url}
+#     return context
 
-
-
-
-
+# def get_barcode_item():
+#     # Get the item code and generate the barcode image
+#     item_code = "978020137962"
+#     code128 = Code128(item_code)
+#     buffer = BytesIO()
+#     code128.write(buffer)
+#     barcode_image_url = f"data:image/png;base64,{base64.b64encode(buffer.getvalue()).decode()}"
+    
+#     # Pass the barcode image URL as a context variable to the Jinja template
+#     context = {'item_code': item_code, 'barcode_image_url': barcode_image_url}
+#     return context

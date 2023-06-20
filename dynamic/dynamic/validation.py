@@ -4,7 +4,6 @@ from frappe import _
 from dynamic.terra.landed_cost import validate_cost ,get_doctype_info
 from dynamic.terra.sales_invoice import check_return_account ,validate_sales_invoices
 from dynamic.terra.item import create_item_serial_doc
-# from dynamic.api import generate_item_code
 DOMAINS = frappe.get_active_domains()
 
 def validate_landed_cost(doc,*args,**kwargs):
@@ -104,5 +103,29 @@ def validate_item_code(doc,*args,**kwargs):
             create_item_serial_doc(doc)
             create_item_specs(doc)
 
+    
 
-
+@frappe.whitelist()
+def after_insert_variant_item(doc,*args,**kwargs):
+    if 'Elhamd' in DOMAINS:
+        if doc.variant_of:
+            if len(doc.attributes):
+                for row in doc.attributes:
+                    doc.description += f" <p>  {row.attribute} : {row.attribute_value}</p>"
+                doc.db_set('description',doc.description)
+        # attr_list = doc.get("item_code").split('-')
+        # attr_list = attr_list[1:]
+        # description_list=[]
+        # if len(attr_list) == len(doc.attributes):
+        #     for cod_attr, attr in zip(attr_list,doc.attributes):
+        #         # frappe.errprint(f'-->{cod_attr}---{attr.attribute}')
+        #         sql = f"""
+        #         SELECT attrbv.attribute_value FROM `tabItem Attribute Value` attrbv
+        #         WHERE attrbv.parent='{attr.attribute}' AND attrbv.abbr ='{cod_attr}'
+        #         """
+        #         frappe.errprint(f'-sql->{sql}')
+        #         attribute_value = frappe.db.sql(sql,as_dict=1)
+        #         if attribute_value[0].attribute_value:
+        #             description_list.append(attribute_value[0].attribute_value)
+        # frappe.errprint(f'-doc.description->{doc.description}')
+        # frappe.throw("test")

@@ -6,7 +6,7 @@ frappe.ui.form.on("Opportunity", {
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
                 if (r.message && r.message.length) {
-                    if (r.message.includes("Terra")) {
+                    if (r.message.includes("Terra") || r.message.includes("CRM Advance")) {
                         frm.add_custom_button(
                             __("Action","Elevana"),
                             function () {
@@ -23,22 +23,56 @@ frappe.ui.form.on("Opportunity", {
                         );
                     }
                     if (r.message.includes("IFI")) {
-                        frm.remove_custom_button('Quotation','Create')
-                        frm.add_custom_button(__('Quotation'),
-                        function() {
-                            frm.events.create_quotation(frm)
-                        }, __('Create'));
+                        cur_frm.cscript['create_quotation'] = create_quotation
                     }
-
+                    if(r.message.includes("CRM Advance")){
+                            if(!frm.doc.__islocal){
+                                frm.add_custom_button(
+                                  __("Show History"),
+                                  function () {
+                                    frappe.set_route('query-report','Actions Report',{"phone_no":frm.doc.phone_no})
+                                  }
+                                );
+                                frm.add_custom_button(__('Make Sales Order'),
+                                  function() {
+                                      frm.trigger("make_sales_order")
+                                  }, __('Create'));
+                                  
+                                  frm.add_custom_button(__('Make Material Request'),
+                                  function() {
+                                      frm.trigger("make_material_request")
+                                  }, __('Create'));
+                                  }
+                    }
                 }
             }
         })
     },
 
-    create_quotation: function(frm) {
-		frappe.model.open_mapped_doc({
-			method: "dynamic.ifi.api.make_quotation",
-			frm: cur_frm
-		})
-	},
+    make_sales_order:function(frm){
+        frappe.model.open_mapped_doc({
+            method:"dynamic.terra.api.create_sales_order_from_opportunity",
+            frm:frm
+        })
+    },
+    make_material_request:function(frm){
+        frappe.model.open_mapped_doc({
+            method:"dynamic.terra.api.create_material_request_from_opportunity",
+            frm:frm
+        })
+    }
 })
+
+var create_quotation = function() {
+    frappe.model.open_mapped_doc({
+		method: "dynamic.ifi.api.make_quotation",
+		frm: cur_frm
+	})
+}
+
+var make_material_request = function() {
+    frappe.model.open_mapped_doc({
+		method: "dynamic.terra.doctype.api.make_material_request",
+		frm: cur_frm
+	})
+}

@@ -38,9 +38,9 @@
          {{ doc.posting_date }}
         </div>
       
-        <div class="col-sm-3 col-xs-3" > {{_( "كود العميل")}} :</div>
+        <div class="col-sm-3 col-xs-3" > </div>
         <div class="col-sm-3 col-xs-3" >
-           {{ doc.customer }}
+           <!-- {{ doc.customer }} -->
         </div>
       
     </div>
@@ -51,8 +51,8 @@
           {{ doc.customer_name }} 
         </div>
 
-        <div class="col-sm-3 col-xs-3" > {{_("كود الضريبي ")}} :</div>
-        <div class="col-sm-3 col-xs-3" >
+        <div class="col-sm-3 col-xs-3" style="text-align: center;"> {{_("كود الضريبي ")}} :</div>
+        <div class="col-sm-3 col-xs-3" style="text-align: center;">
             {%if cst_doc.tax_id %}
                 {{ cst_doc.tax_id}} 
             {%else%}

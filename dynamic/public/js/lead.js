@@ -11,7 +11,7 @@ frappe.ui.form.on("Lead", {
                         if (r.message.includes("IFI")) {
                             window.open(frappe.model.scrub(frm.doc.url));
                         }
-                        if (r.message.includes("Terra") || r.message.includes("Elevana")) {
+                        if (r.message.includes("Terra") || r.message.includes("Elevana") ) {
                             frm.add_custom_button(
                                 __("Action"),
                                 function () {
@@ -42,7 +42,7 @@ frappe.ui.form.on("Lead", {
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
                 if (r.message && r.message.length) {
-                    if (r.message.includes("Terra") || r.message.includes("Elevana")) {
+                    if (r.message.includes("Terra") || r.message.includes("Elevana") || r.message.includes("CRM Advance")) {
                         frm.add_custom_button(
                             __("Action"),
                             function () {
@@ -58,9 +58,38 @@ frappe.ui.form.on("Lead", {
                             },
                             __("Create")
                         );
+                        frm.add_custom_button(__("Make Sales Order"),function () {
+                            frm.events.make_customer_sales_order_from_lead(frm)
+                        }, __("Create"))
+                    }
+                    if(r.message.includes("CRM Advance")){
+                            if(!frm.doc.__islocal){
+                               frm.add_custom_button(
+                            __("New Appointment"),
+                            function () {
+                              frappe.model.open_mapped_doc({
+                                method:"dynamic.api.create_new_appointment",
+                                frm: frm
+                              });
+                            },
+                            __("Create")
+                          );
+                          frm.add_custom_button(
+                            __("Show History"),
+                            function () {
+                              frappe.set_route('query-report','Actions Report',{"phone_no":frm.doc.phone_no})
+                            }
+                          );
+                            }
                     }
                 }
             }
+        })
+    },
+    make_customer_sales_order_from_lead:function(frm){
+        frappe.model.open_mapped_doc({
+            method: "dynamic.terra.doctype.quotation.quotation.make_sales_order_lead",
+            frm: cur_frm
         })
     },
     make_opportunity(frm) {

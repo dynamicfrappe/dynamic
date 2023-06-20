@@ -1,0 +1,55 @@
+
+
+<html>
+    <head>
+        <script src="//code.jquery.com/jquery-latest.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.4/dist/JsBarcode.all.min.js"></script>
+        <style>
+        svg {
+        margin: 30px;
+        }
+
+        body{
+        margin: 50px;
+        }
+
+        h2{
+        text-align: center;
+        }
+        </style>
+    </head>
+    <body>
+        <h2>How To Generate Barcode Using Javascript - Websolutionstuff</h2>
+        <svg id="barcode1"></svg>
+        <svg id="barcode2"></svg>
+        <svg id="barcode3"></svg>
+    </body>
+</html>
+<script>
+    $(document).ready(function(){
+        JsBarcode("#barcode1", "websolutionstuff", {
+            fontSize: 40,
+            background: "#4b8b7f",
+            lineColor: "#ffffff",
+            margin: 40,
+            marginLeft: 40  
+        });
+
+        JsBarcode("#barcode2", "websolutionstuff", {
+            textAlign: "left",
+            textPosition: "top",
+            font: "cursive",
+            fontOptions: "bold",
+            fontSize: 40,
+            textMargin: 15,
+            text: "websolutionstuff"
+        });
+
+        JsBarcode("#barcode3", "1234", {
+            format: "pharmacode",
+            displayValue: false,
+            height: 50,
+            width: 6
+        });
+    });
+</script>

@@ -132,7 +132,7 @@
            
         </div>
         <div class="col-sm-3 col-xs-3 mt-1" >
-            <p style="border: 2px solid black;padding: 2px;"> {{ doc.additional_discount_percentage }} %</p>
+            <p style="border: 2px solid black;padding: 2px;"> {{ frappe.utils.fmt_money(doc.discount_amount or 0,currency=doc.currency) }} </p>
            
         </div>
     </div>
@@ -172,7 +172,7 @@
            
         </div>
     </div>
-
+ <!--fff-->
     <div class="row mt-2">
         <div class="col-12">
             <hr style="border: 1px solid #070707;border-radius: 1px;margin-top: 1px;">
@@ -193,31 +193,6 @@
     </div>
 
 </div>
-
-
-
-<!-- FOOTER -->
-<!--{% if print_settings.repeat_header_footer %}-->
-<!--<div id="footer-html" class="visible-pdf">-->
-<!--  {% if not no_letterhead and footer %}--> 
-<!--  <div class="letter-head-footer">-->
-<!--    {{ footer }}-->
-<!--  </div>-->
-<!--  {% endif %}-->
-<!--  <p class="text-center small page-number visible-pdf">-->
-<!--    {{ _("Page {0} of {1}").format('<span class="page"></span>', '<span class="topage"></span>') }}-->
-<!--  </p>-->
-<!--</div>-->
-<!--{% endif %}-->
-
-
-
-
-
-
-
-
-
 
 
 
