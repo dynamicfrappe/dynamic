@@ -36,6 +36,9 @@ class ItemReservedQty(object):
 			conditions += " and `tabReservation`.creation <= '%s'"%self.filters.get("to_date")
 		if self.filters.get("item_code"):
 			conditions += " and `tabBin`.item_code = '%s'"%self.filters.get("item_code")
+		if self.filters.get("cost_center"):
+			conditions += " and so.cost_center = '%s'"%self.filters.get("cost_center")
+			
 		sql_query_new = f"""
 						SELECT `tabBin`.name as 'bin'
 						,`tabBin`.warehouse as 'bin_warehouse'
@@ -51,6 +54,8 @@ class ItemReservedQty(object):
 						LEFT JOIN `tabReservation Warehouse`
 						ON `tabReservation Warehouse`.parent=`tabReservation`.name 
 						AND `tabReservation Warehouse`.item=`tabReservation`.item_code
+						LEFT JOIN `tabSales Order` so
+						ON so.name=`tabReservation`.sales_order
 						WHERE {conditions} 
 						GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		""".format(conditions=conditions)

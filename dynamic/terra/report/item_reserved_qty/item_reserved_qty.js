@@ -20,5 +20,11 @@ frappe.query_reports["Item Reserved QTY"] = {
 			fieldtype: "Link",
 			options:"Item"
 		},
+		{
+			fieldname: "cost_center",
+			label: __("Cost Center"),
+			fieldtype: "Link",
+			options:"Cost Center"
+		},
 	]
 };
