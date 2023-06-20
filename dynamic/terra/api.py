@@ -76,7 +76,7 @@ def create_sales_order_from_opportunity(source_name, target_doc=None):
                 "uom"           : item_doc.stock_uom,
                 "stock_uom"     : item_doc.stock_uom
             })
-
+    source_doc.db_set('status','Converted')
     return doc
 
 @frappe.whitelist()
