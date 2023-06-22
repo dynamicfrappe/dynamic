@@ -158,6 +158,7 @@ doc_events = {
         "before_save":[
             "dynamic.api.check_source_item", 
             ],
+        "validate" :["dynamic.elevana.hooks.add_partener_to_sales_order"] ,
         "on_cancel":"dynamic.api.cancel_reservation",
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },

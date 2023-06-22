@@ -289,7 +289,24 @@ def create_sales_order(*args, **kwargs):
 
 
 
+@frappe.whitelist(allow_guest=True)
+def get_couponcode_data(*args, **kwargs):
+    """
+    Get Sales Patener Data And Coupon Code 
+    
+    
+    """
+    data = frappe.db.sql(""" 
+    SELECT a.referral_code as code , a.name as marketer ,b.pricing_rule ,
+    c.rate_or_discount,c.discount_percentage , c.discount_amount ,c.rate
+      FROM `tabSales Partner` a  
+    INNER JOIN `tabCoupon Code` b 
+    INNER JOIN `tabPricing Rule` c
+    ON a.referral_code = b.coupon_code AND c.name=b.pricing_rule
 
+
+    """,as_dict=1)
+    return {"data":data }
 
 
 
