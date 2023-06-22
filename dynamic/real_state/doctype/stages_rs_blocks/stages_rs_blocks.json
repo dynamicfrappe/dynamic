@@ -1,42 +1,41 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{project_name}-{stage_name}-{###}",
- "creation": "2023-06-18 14:26:42.701929",
+ "autoname": "format:{block_name}-{block_no}-{###}",
+ "creation": "2023-06-20 11:44:57.014339",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "project_name",
-  "stage_name",
+  "block_name",
+  "block_no",
   "items"
  ],
  "fields": [
   {
-   "fieldname": "stage_name",
+   "fieldname": "block_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Stage Name"
-  },
-  {
-   "fieldname": "project_name",
-   "fieldtype": "Link",
-   "label": "Project Name",
-   "options": "Project RS"
+   "label": "Block Name",
+   "unique": 1
   },
   {
    "fieldname": "items",
    "fieldtype": "Table",
-   "label": "Project RS Stages Item",
-   "options": "Project RS Stages Item"
+   "label": "Stages RS Blocks Item",
+   "options": "Stages RS Blocks Item"
+  },
+  {
+   "fieldname": "block_no",
+   "fieldtype": "Int",
+   "label": "Block NO"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-06-20 11:49:55.894188",
+ "modified": "2023-06-20 11:58:06.148641",
  "modified_by": "Administrator",
  "module": "Real State",
- "name": "Project RS Stages",
+ "name": "Stages RS Blocks",
  "owner": "Administrator",
  "permissions": [
   {
@@ -52,6 +51,7 @@
    "write": 1
   }
  ],
+ "search_fields": "block_name,block_no",
  "sort_field": "modified",
  "sort_order": "DESC"
 }
