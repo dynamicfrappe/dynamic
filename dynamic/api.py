@@ -223,10 +223,6 @@ def autoname(self,fun=''):
         self.name = self.item_code
     
 
-def before_rename(doc , *args , **kwargs) :
-    print('\n\n\n\n===>set before_rename')
-    print('\n\n\n\n===>set before_rename',doc.__dict__)
-    doc.naming_series = "SO-Test-"
 
 @frappe.whitelist()
 def generate_item_code(item_group):
@@ -1442,17 +1438,22 @@ def create_reservation_validate(doc,*args , **kwargs):
 
 from datetime import datetime
 
+
+
 @frappe.whitelist()
-def remove_milsecond_from_time(t):
-    print("\n\n\n\n=====>",t.split('.')[0],type(t))
-    t0= t.split('.')[0]
-    # print("\n\n\n\n=====>",t.split('.')[0],type(t))
-    # x=datetime_object = datetime.strptime(t, '%m:%d:%y %H:%M:%S')
+def before_insert(doc , *args , **kwargs) :
+    if 'Master Deals' in DOMAINS:
+        user = frappe.session.user
+        user_roles = frappe.get_roles()
+        selling_settings = frappe.get_single("Selling Settings")
+        # series_role = frappe.db.get_single_value("Selling Settings","series_role")
+        if selling_settings.series_role and len(selling_settings.series_role):
+            for row in selling_settings.series_role:
+                if row.role in user_roles and row.naming_series_si:
+                    # print('\n\n\n\n===>row.naming_series_si',row.naming_series_si)
+                    # frappe.throw(str(row.role))
+                    doc.naming_series = row.naming_series_si
+                    break
 
-    # print("\n\n\n\n=====>",x)
 
-    return t0
-
-#  {% set t1 = remove_milsecond_from_time(doc.posting_time)%}
-#    {% set t1 = doc.posting_time.split(".")%}
-
+        

@@ -73,11 +73,35 @@ data = {
                 "label":_("Account Currency"),
                 "fieldname":"account_currency",
                 "fieldtype":"Link",
-                "insert_after":"main_currency", 
+                "insert_after":"main_currency",  
                 "options":"Currency", 
 
             },
             
+        ],
+        'Selling Settings':[
+            {
+                "label":_("Sales Serries"),
+                "fieldname":"sales_series_section",
+                "fieldtype":"Section Break",
+                "insert_after":"allow_sales_order_creation_for_expired_quotation", 
+            },
+            {
+                "label":_("Series Role"),
+                "fieldname":"series_role",
+                "fieldtype":"Table",
+                "options":"Sales Naming Series Role",
+                "insert_after":"sales_series_section", 
+            },
+            
+        ],
+        'Item Barcode':[
+            {
+                "label":_("Item Barcode"),
+                "fieldname":"item_barcode",
+                "fieldtype":"Barcode",
+                "insert_after":"barcode", 
+            },
         ],
         
     },

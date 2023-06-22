@@ -4,6 +4,10 @@ from frappe import _
 from dynamic.terra.landed_cost import validate_cost ,get_doctype_info
 from dynamic.terra.sales_invoice import check_return_account ,validate_sales_invoices
 from dynamic.terra.item import create_item_serial_doc
+import random
+
+
+
 DOMAINS = frappe.get_active_domains()
 
 def validate_landed_cost(doc,*args,**kwargs):
@@ -102,6 +106,13 @@ def validate_item_code(doc,*args,**kwargs):
             doc.item_code = item_code
             create_item_serial_doc(doc)
             create_item_specs(doc)
+    if 'Master Deals' in DOMAINS:
+        # Generate a random barcode number
+        barcode_num = ''.join([str(random.randint(0, 9)) for _ in range(13)])
+        doc.append("barcodes",
+                    {"item_barcode":barcode_num,"barcode":barcode_num}
+        )
+        
 
     
 
@@ -113,6 +124,12 @@ def after_insert_variant_item(doc,*args,**kwargs):
                 for row in doc.attributes:
                     doc.description += f" <p>  {row.attribute} : {row.attribute_value}</p>"
                 doc.db_set('description',doc.description)
+    if 'Master Deals' in DOMAINS:
+        # Generate a random barcode number
+        barcode_num = ''.join([str(random.randint(0, 9)) for _ in range(13)])
+        doc.append("barcodes",
+                    {"item_barcode":barcode_num,"barcode":barcode_num}
+        )
         # attr_list = doc.get("item_code").split('-')
         # attr_list = attr_list[1:]
         # description_list=[]

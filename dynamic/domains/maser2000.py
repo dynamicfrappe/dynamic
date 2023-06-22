@@ -18,5 +18,33 @@ data = {
                 "insert_after": "cost_center",
             },
         ],
+        'Pay Document': [
+            {
+                "label": "",
+                "fieldname": "col_break_rf_num",
+                "fieldtype": "Column Break",
+                "insert_after": "notes",
+            },
+            {
+                "label": "Reference Number",
+                "fieldname": "reference_number",
+                "fieldtype": "Data",
+                "insert_after": "col_break_rf_num",
+            },
+        ],
+        'Receipt Document': [
+            {
+                "label": "",
+                "fieldname": "col_break_rf_num",
+                "fieldtype": "Column Break",
+                "insert_after": "notes",
+            },
+            {
+                "label": "Reference Number",
+                "fieldname": "reference_number",
+                "fieldtype": "Data",
+                "insert_after": "col_break_rf_num",
+            },
+        ],
 }
 }

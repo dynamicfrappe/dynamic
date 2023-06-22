@@ -97,7 +97,7 @@ doctype_js = {
     "Mode of Payment":"public/js/mode_of_payment.js",
     "Purchase Receipt":"public/js/purchase_receipt.js",
     "Stock Reconciliation":"public/js/stock_reconciliation.js",
-    "Journal Entry":"public/js/journal_entry.js",
+    # "Journal Entry":"public/js/journal_entry.js",
 
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 
@@ -135,7 +135,8 @@ doc_events = {
         # "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
         "validate": "dynamic.api.validate_active_domains",
-        "on_cancel" :"dynamic.api.validate_active_domains_cancel"
+        "on_cancel" :"dynamic.api.validate_active_domains_cancel",
+        "before_insert": "dynamic.api.before_insert",
     },
     "Item": {
         "autoname": "dynamic.api.autoname",
@@ -158,8 +159,6 @@ doc_events = {
             "dynamic.api.check_source_item", 
             ],
         "on_cancel":"dynamic.api.cancel_reservation",
-        # "before_insert": "dynamic.api.before_rename",
-
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
     "Purchase Receipt": {
@@ -376,8 +375,7 @@ jenv = {
         "get_balance_on:erpnext.accounts.utils.get_balance_on",
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
-        "get_party_address:dynamic.api.get_party_address",
-        "remove_milsecond_from_time:dynamic.api.remove_milsecond_from_time", 
+        "get_party_address:dynamic.api.get_party_address",#ifi
         # "get_barcode_item:dynamic.api.get_barcode_item", 
     ],
     "filters": []
