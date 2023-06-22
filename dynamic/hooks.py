@@ -97,7 +97,11 @@ doctype_js = {
     "Mode of Payment":"public/js/mode_of_payment.js",
     "Purchase Receipt":"public/js/purchase_receipt.js",
     "Stock Reconciliation":"public/js/stock_reconciliation.js",
-    # "Assign To":"public/sidebar/assign_to.js",
+    "Journal Entry":"public/js/journal_entry.js",
+
+    # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
+
+
     
 }
 # doctype_js = {
@@ -149,12 +153,13 @@ doc_events = {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
-        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc"
-        ,"dynamic.api.create_reservation_validate"],
+        "before_submit": ["dynamic.api.before_submit_so"],
         "before_save":[
             "dynamic.api.check_source_item", 
             ],
         "on_cancel":"dynamic.api.cancel_reservation",
+        # "before_insert": "dynamic.api.before_rename",
+
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
     "Purchase Receipt": {
@@ -273,6 +278,7 @@ scheduler_events = {
     # 	],
     	"daily": [
     		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
+    		"dynamic.master_deals.master_deals_api.alert_cheque_date",
             
     	],
     # 	"hourly": [
@@ -349,6 +355,9 @@ domains = {
     'Future':"dynamic.domains.future",
     'Elhamd':"dynamic.domains.elhamd",
     'CRM Advance':"dynamic.domains.crm_advance",
+    'Reservation':"dynamic.domains.reservation",
+    'Real State':"dynamic.domains.real_state",
+    "Master Deals":"dynamic.domains.master_deals",
 }
 
 # domain Conatin
@@ -368,7 +377,8 @@ jenv = {
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
         "get_party_address:dynamic.api.get_party_address",
-        # "get_barcode_item:dynamic.api.get_barcode_item",
+        "remove_milsecond_from_time:dynamic.api.remove_milsecond_from_time", 
+        # "get_barcode_item:dynamic.api.get_barcode_item", 
     ],
     "filters": []
 }
