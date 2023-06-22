@@ -357,6 +357,7 @@ domains = {
     'Reservation':"dynamic.domains.reservation",
     'Real State':"dynamic.domains.real_state",
     "Master Deals":"dynamic.domains.master_deals",
+    "Barcode Item":"dynamic.domains.barcode_item",
 }
 
 # domain Conatin

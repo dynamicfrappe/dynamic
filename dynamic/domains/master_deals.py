@@ -95,14 +95,7 @@ data = {
             },
             
         ],
-        'Item Barcode':[
-            {
-                "label":_("Item Barcode"),
-                "fieldname":"item_barcode",
-                "fieldtype":"Barcode",
-                "insert_after":"barcode", 
-            },
-        ],
+        
         
     },
       "properties": [
