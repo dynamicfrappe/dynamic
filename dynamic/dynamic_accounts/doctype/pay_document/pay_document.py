@@ -10,6 +10,7 @@ import erpnext
 from frappe.utils.data import flt
 from frappe.utils import get_link_to_form
 from erpnext.accounts.utils import get_balance_on
+
 DOMAINS = frappe.get_active_domains()
 
 
@@ -73,7 +74,12 @@ class PayDocument(Document):
         je.cheque_no = self.reference_no
         je.cheque_date = self.reference_date
         je.remark = f' { self.name } وثيقة دفع ' 
-
+        if 'Maser2000' in DOMAINS:
+            je.user_remark = self.notes
+            je.cheque_no = self.reference_number
+            je.cheque_date = frappe.utils.getdate()
+        
+        # frappe.throw(str(self.reference_number))
         account_currency = get_account_currency(self.account)
         account_exchange_rate = flt(self.exchange_rate)
         amount_in_account_currency = self.amount
