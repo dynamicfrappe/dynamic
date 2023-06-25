@@ -97,6 +97,7 @@ doctype_js = {
     "Mode of Payment":"public/js/mode_of_payment.js",
     "Purchase Receipt":"public/js/purchase_receipt.js",
     "Stock Reconciliation":"public/js/stock_reconciliation.js",
+    "Item":"public/js/item.js",
     # "Journal Entry":"public/js/journal_entry.js",
 
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry

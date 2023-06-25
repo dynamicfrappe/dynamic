@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from ntpath import join
+from frappe import _
 
 cheque_status = [
     "New",
@@ -43,9 +44,16 @@ data = {
                 "options": "Account"
             },
             {
+            "label":_("Notification Cheque Role"),
+                "fieldname":"notification_cheque_role",
+                "fieldtype":"Link",
+                "options":"Role",
+                "insert_after":"rejected_cheques_bank_account", 
+            },
+            {
                 "fieldname": "cheques_column",
                 "fieldtype": "Column Break",
-                "insert_after": "rejected_cheques_bank_account",
+                "insert_after": "notification_cheque_role",
                 "label": "",
             },
             {
@@ -75,7 +83,8 @@ data = {
                 "insert_after": "bank_expenses_account",
                 "label": "Cheque Submit",
                 "default":0
-            }
+            },
+            
         ],
         'Bank Account': [
             {
