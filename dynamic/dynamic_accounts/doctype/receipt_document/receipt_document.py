@@ -73,7 +73,8 @@ class ReceiptDocument(Document):
             je.user_remark = self.notes
             je.cheque_no = self.reference_number
             je.cheque_date = frappe.utils.getdate()
-
+            je.voucher_type = 'Cash Entry' if self.mode_of_payment=="Cash" else 'Bank Entry'
+        
         account_currency = get_account_currency(self.account)
         account_exchange_rate = flt(self.exchange_rate)
         amount_in_account_currency = self.amount

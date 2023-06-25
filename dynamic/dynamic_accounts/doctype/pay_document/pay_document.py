@@ -78,6 +78,7 @@ class PayDocument(Document):
             je.user_remark = self.notes
             je.cheque_no = self.reference_number
             je.cheque_date = frappe.utils.getdate()
+            je.voucher_type = 'Cash Entry' if self.mode_of_payment=="Cash" else 'Bank Entry'
         
         # frappe.throw(str(self.reference_number))
         account_currency = get_account_currency(self.account)
