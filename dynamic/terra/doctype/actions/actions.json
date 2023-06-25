@@ -30,7 +30,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Type",
-   "options": "\nIndoor\nOut door",
+   "options": "\nIndoor\nOut door\nMarekting",
    "reqd": 1
   },
   {
@@ -139,7 +139,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-10 12:43:56.173914",
+ "modified": "2023-06-25 11:36:24.480098",
  "modified_by": "Administrator",
  "module": "Terra",
  "name": "Actions",
