@@ -1,29 +1,36 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2023-06-18 14:23:14.929461",
+ "creation": "2023-06-22 04:41:06.514948",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "stage_name"
+  "role",
+  "naming_series_si"
  ],
  "fields": [
   {
-   "fieldname": "stage_name",
+   "fieldname": "role",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Stage Name",
-   "options": "Project RS Stages"
+   "label": "Role",
+   "options": "Role"
+  },
+  {
+   "fieldname": "naming_series_si",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Naming Series SI"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-06-18 14:23:14.929461",
+ "modified": "2023-06-22 04:46:46.739572",
  "modified_by": "Administrator",
- "module": "Real State",
- "name": "Project RS Stages Items",
+ "module": "Master Deals",
+ "name": "Sales Naming Series Role",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

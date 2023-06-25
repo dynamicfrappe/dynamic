@@ -25,6 +25,9 @@ frappe.ui.form.on("Sales Order", {
     };
   },
   refresh: function (frm) {  
+    frm.events.set_field_reqd_reservation(frm)
+    frm.events.set_query(frm)
+
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {
@@ -79,11 +82,24 @@ frappe.ui.form.on("Sales Order", {
             }
         }}
     })
-
-      
 		}
   },
-  
+  reservation_check:function(frm){
+    frm.events.set_field_reqd_reservation(frm)
+  },
+  set_field_reqd_reservation:function(frm){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("Reservation")) {
+            frm.set_df_property("set_warehouse", "reqd", frm.doc.reservation_check)
+            frm.refresh_field("set_warehouse")
+          }
+      }}
+  })
+    
+  },
   opportunity:function(frm){
     if (frm.doc.opportunity){
       frappe.call({
@@ -113,13 +129,7 @@ frappe.ui.form.on("Sales Order", {
     }
   },
   onload: function (frm) {
-    frm.set_query('item_purchase_order', 'items', function(doc, cdt, cdn) {
-      let row = locals[cdt][cdn];
-			return {
-				query: 'dynamic.api.get_purchase_order',
-				filters:{"item_code":row.item_code}
-			};
-		});
+    frm.events.set_query(frm)
   },
   update_grid:function(frm){
     frappe.call({
@@ -139,9 +149,30 @@ frappe.ui.form.on("Sales Order", {
       }}
   })
   },
-
-
-
+  set_query:function(frm){
+    frm.set_query('item_purchase_order', 'items', function(doc, cdt, cdn) {
+      let row = locals[cdt][cdn];
+			return {
+				query: 'dynamic.api.get_purchase_order',
+				filters:{"item_code":row.item_code}
+			};
+		});
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("Reservation")) {
+            frm.set_query('item_code', 'items', function(doc, cdt, cdn) {
+              return {
+                filters:{"reserved":0}
+              };
+            });
+          }
+      }}
+  })
+    
+  },
+  
   total_cars: function (frm) {
     if (frm.doc.total_cars) {
       frm.set_value("pending_cars", frm.doc.total_cars);
