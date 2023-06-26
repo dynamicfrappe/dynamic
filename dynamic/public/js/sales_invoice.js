@@ -41,6 +41,8 @@ frappe.ui.form.on("Sales Invoice", {
 
   refresh(frm) {
     frm.events.add_cheque_button(frm);
+    const myTimeout = setTimeout(get_customer_query, 1300);
+
 
     var check_domain = frm.events.domian_valid();
     if (check_domain && frm.doc.docstatus == 0) {
@@ -102,4 +104,25 @@ frappe.ui.form.on("Sales Invoice", {
       },
     });
   },
+
 });
+
+function get_customer_query(){
+  frappe.call({
+    method: "dynamic.api.get_active_domains",
+    callback: function (r) {
+      if (r.message && r.message.length) {
+        if (r.message.includes("Master Deals")) {
+          cur_frm.set_query('customer',(doc)=>{
+            return {
+              query: 'dynamic.master_deals.master_deals_api.customer_query_custom',
+              filters:{"docname":cur_frm.doc.name}
+            }
+            
+          })
+        }
+      }
+    },
+  });
+  
+}

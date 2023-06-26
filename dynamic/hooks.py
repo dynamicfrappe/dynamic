@@ -303,7 +303,8 @@ scheduler_events = {
 #
 override_whitelisted_methods = {
 	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
-    # "erpnext.controllers.item_variant.create_variant":"dyanmic.api.custom_create_variant"
+    #/home/abanoub/frappe/dynamc_projects/frappe-14/apps/erpnext/erpnext/controllers/queries.py
+    # "erpnext.controllers.queries.supplier_query":"dynamic.master_deals.master_deals_api.get_supplier_by_code"
 }
 #
 # each overriding function accepts a `data` argument;
