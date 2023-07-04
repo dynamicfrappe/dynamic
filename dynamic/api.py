@@ -98,6 +98,10 @@ def validate_active_domains(doc,*args,**kwargs):
     if  'Moyate' in DOMAINS: 
         """   Validate Sales Commition With Moyate """
         validate_sales_invocie_to_moyate(doc)
+        if doc._action == "delete":
+            print("\n\n\n\n\n\n====>in test  delete")
+
+
 
 
     if 'Product Bundle' in DOMAINS: 
@@ -944,28 +948,50 @@ from dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion impor
 @frappe.whitelist()
 def validate_active_domains_cancel(doc ,*args,**kwargs):
     if  'Moyate' in DOMAINS: 
+        delete_update_commission_sales()
         # Clear Invoice Commision Amount 
-        #1 - remove commition log 
-        # 2 -update old logs  
+        # #1 - remove commition log 
+        # # 2 -update old logs  
 
-        #get invocie log  
-        invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
-        # frappe.throw(str(invoice_log))
-        if invoice_log and len(invoice_log) > 0 :
-            for l in invoice_log :
-                log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
+        # #get invocie log  
+        # invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
+        # # frappe.throw(str(invoice_log))
+        # if invoice_log and len(invoice_log) > 0 :
+        #     for l in invoice_log :
+        #         log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
                 
-                first_day  = log.from_date
-                last_day = log.to_date 
-                person = log.sales_person
-                item_group = log.item__group
-                # log.remove_raw()
-                frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
-                frappe.db.commit()
-                update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
+        #         first_day  = log.from_date
+        #         last_day = log.to_date 
+        #         person = log.sales_person
+        #         item_group = log.item__group
+        #         # log.remove_raw()
+        #         frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
+        #         frappe.db.commit()
+        #         update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
 
 
-     
+@frappe.whitelist()
+def delete_update_commission_sales(doc ,*args,**kwargs):
+# Clear Invoice Commision Amount 
+    #1 - remove commition log 
+    # 2 -update old logs  
+
+    #get invocie log  
+    invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
+    # frappe.throw(str(invoice_log))
+    if invoice_log and len(invoice_log) > 0 :
+        for l in invoice_log :
+            log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
+            
+            first_day  = log.from_date
+            last_day = log.to_date 
+            person = log.sales_person
+            item_group = log.item__group
+            # log.remove_raw()
+            frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
+            frappe.db.commit()
+            update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
+
 @frappe.whitelist()           
 def before_save(doc ,*args,**kwargs) :
     if doc.items:
