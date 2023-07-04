@@ -535,12 +535,14 @@ def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_
 				AND `tabBin`.item_code = '{item_code}'
 				AND `tabReservation`.status <> "Invalid"
 				""" ,as_dict=1)
+       
 	if data and len(data) > 0 :
 		if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < reservation_amount  :
 			frappe.throw(_(f""" stock value in warehouse {warehouse_source} = {data[0].get("qty") or 0} 
 				and you requires  {reservation_amount} for Item {item_code}  """))
 	if  not data or len(data) == 0 :
 			frappe.throw(_(f"""no stock value in warehouse {warehouse_source} for item {item_code}  """))
+    
 	return data
 
 def validate_purchase_order_reservation(item_code,order_source,reservation_amount):

@@ -89,7 +89,11 @@ def get_data(filters):
 		conditions += " and date  <= date('%s')"%filters.get("to_date")
 	sql = f"""
 	
-	  select * from `tabSales Person Commetion`
+	select person.*, invoice.name,team.sales_person FROM `tabSales Invoice` invoice
+	INNER JOIN `tabSales Team` team
+	ON invoice.name=team.parent
+	INNER JOIN `tabSales Person Commetion` person
+	ON person.sales_person=team.sales_person AND team.parent=person.invocie
 	  {conditions}
 	"""
 	print(sql)
