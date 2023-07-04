@@ -104,10 +104,10 @@ def get_data(filters):
 	ON invoice.name=team.parent
 	INNER JOIN `tabSales Person Commetion` person
 	ON person.sales_person=team.sales_person AND team.parent=person.invocie
-	  {conditions}
+	  {conditions} AND invoice.docstatus=1
 	  group by person.sales_person,person.item__group,person.commission_template , person.from_date
 	"""
-	print("sql ==================> ",sql)
+	# print("sql ==================> ",sql)
 	res = frappe.db.sql(sql,as_dict=1)
 
 	return res
