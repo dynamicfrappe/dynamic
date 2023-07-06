@@ -182,7 +182,6 @@ frappe.ui.form.on("Sales Order", {
 
 
   add_cheque_button(frm) {
-    console.log("test--->")
     if (frm.doc.docstatus == 1) {
       frappe.call({
         method: "dynamic.api.get_active_domains",
@@ -716,12 +715,12 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
               }
               if(r.message.includes("Kmina")){
                 // sales invoice
-              if(flt(doc.per_billed, 6) < 100) {
-                // cur_frm.page.remove_inner_button('Sales Invoice', 'Create')
-                cur_frm.cscript['make_sales_invoice'] = create_kmina_sales_invoice //new
-
-                // cur_frm.add_custom_button(__('Sales Invoice'), () => me.frm.trigger("make_sales_invoice"), __('Create'));
+                if(flt(doc.per_billed, 6) < 100) {
+                  cur_frm.cscript['make_sales_invoice'] = create_kmina_sales_invoice //new
+                }
               }
+              if (r.message.includes("Future")){
+                cur_frm.page.remove_inner_button('Sales Invoice','Create')
               }
             }
           }

@@ -83,6 +83,10 @@ if "Teba" in active_domains:
 
     PaymentEntry = TerraPaymentEntry
 
+if "Moyate" in active_domains:
+    from dynamic.moyaty.doctype.sales_invoice.sales_invoice import CustomSalesInvoice as MoyateSalesInvoice
+
+    SalesInvoice = MoyateSalesInvoice
 
 
 

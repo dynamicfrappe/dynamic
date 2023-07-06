@@ -2,6 +2,8 @@ frappe.ui.form.on("Purchase Invoice", {
   refresh: function (frm) {
     frm.custom_make_buttons["Cheque"] = "Cheque";
     frm.events.add_cheque_button(frm);
+    const myTimeout = setTimeout(get_supplier_query, 1000);
+
   },
   add_cheque_button(frm) {
     if (frm.doc.docstatus == 1) {
@@ -42,3 +44,25 @@ frappe.ui.form.on("Purchase Invoice", {
     });
   },
 });
+
+
+
+function get_supplier_query(){
+  frappe.call({
+    method: "dynamic.api.get_active_domains",
+    callback: function (r) {
+      if (r.message && r.message.length) {
+        if (r.message.includes("Master Deals")) {
+          cur_frm.set_query('supplier',(doc)=>{
+            return {
+              query: 'dynamic.master_deals.master_deals_api.get_supplier_by_code',
+              filters:{"docname":cur_frm.doc.name}
+            }
+            
+          })
+        }
+      }
+    },
+  });
+  
+}

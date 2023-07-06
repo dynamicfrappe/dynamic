@@ -121,9 +121,24 @@ def after_insert_variant_item(doc,*args,**kwargs):
                 doc.db_set('description',doc.description)
     if 'Barcode Item' in DOMAINS:
         # Generate a random barcode number
-        barcode_num = ''.join([str(random.randint(0, 9)) for _ in range(13)])
+        # barcodes_exist = frappe.db.get_list("Item",)
+        barcode_num = generate_barcode()
+        # old_barcodes = frappe.db.sql(f"""
+        # select barcode from `tabItem Barcode` where barcode ='{barcode_num}'
+        # """,as_list=1)
+
         doc.append("barcodes",
                     {"item_barcode":barcode_num,"barcode":barcode_num}
         )
         doc.save()
 
+def generate_barcode():
+    new_barcode = ''.join([str(random.randint(0, 9)) for _ in range(13)])
+    old_barcodes = frappe.db.sql(f"""
+        select barcode from `tabItem Barcode` where barcode ='{new_barcode}'
+        """,as_list=1)
+    frappe.errprint(f"===>{old_barcodes}")
+    if len(old_barcodes):
+        generate_barcode()
+    if not old_barcodes:
+        return new_barcode

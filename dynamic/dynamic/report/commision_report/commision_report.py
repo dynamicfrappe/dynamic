@@ -78,20 +78,26 @@ def get_columns():
 def get_data(filters):
 	conditions = " where 1=1"
 	if filters.get("sales_person"):
-		conditions += " and sales_person = '%s'"%filters.get("sales_person")
+		conditions += " and person.sales_person = '%s'"%filters.get("sales_person")
 	if filters.get("sales_invoice"):
-		conditions += " and sales_invoice = '%s'"%filters.get("sales_invoice")
+		conditions += " and person.invocie = '%s'"%filters.get("sales_invoice")
 	if filters.get("item_group"):
-		conditions += " and item__group = '%s'"%filters.get("item_group")
+		conditions += " and person.item__group = '%s'"%filters.get("item_group")
 	if filters.get("from_date"):
-		conditions += " and date >=date('%s')"%filters.get("from_date")
+		conditions += " and person.date >=date('%s')"%filters.get("from_date")
 	if filters.get("to_date"):
-		conditions += " and date  <= date('%s')"%filters.get("to_date")
+		conditions += " and person.date <= date('%s')"%filters.get("to_date")
 	sql = f"""
 	
-	  select * from `tabSales Person Commetion`
-	  {conditions}
+	select person.*, invoice.name,team.sales_person 
+	FROM `tabSales Invoice` invoice
+	INNER JOIN `tabSales Team` team
+	ON invoice.name=team.parent
+	INNER JOIN `tabSales Person Commetion` person
+	ON person.sales_person=team.sales_person AND team.parent=person.invocie
+	  {conditions} AND invoice.docstatus=1
 	"""
+	# frappe.errprint(sql)
 	print(sql)
 	res = frappe.db.sql(sql,as_dict=1)
 

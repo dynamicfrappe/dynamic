@@ -1,5 +1,6 @@
 
 from __future__ import unicode_literals
+from frappe import _
 
 data = {
 'custom_fields': {
@@ -17,6 +18,16 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "cost_center",
             },
+        ],
+        'Payment Entry':[
+            {
+                "label":_("User Remark"),
+                "fieldname":"user_remark",
+                "fieldtype":"Data",
+                "insert_after":"payment_type", 
+            },
+
+            
         ],
         'Pay Document': [
             {

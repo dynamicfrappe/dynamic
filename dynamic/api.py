@@ -98,6 +98,10 @@ def validate_active_domains(doc,*args,**kwargs):
     if  'Moyate' in DOMAINS: 
         """   Validate Sales Commition With Moyate """
         validate_sales_invocie_to_moyate(doc)
+        if doc._action == "delete":
+            print("\n\n\n\n\n\n====>in test  delete")
+
+
 
 
     if 'Product Bundle' in DOMAINS: 
@@ -535,12 +539,14 @@ def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_
 				AND `tabBin`.item_code = '{item_code}'
 				AND `tabReservation`.status <> "Invalid"
 				""" ,as_dict=1)
+       
 	if data and len(data) > 0 :
 		if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < reservation_amount  :
 			frappe.throw(_(f""" stock value in warehouse {warehouse_source} = {data[0].get("qty") or 0} 
 				and you requires  {reservation_amount} for Item {item_code}  """))
 	if  not data or len(data) == 0 :
 			frappe.throw(_(f"""no stock value in warehouse {warehouse_source} for item {item_code}  """))
+    
 	return data
 
 def validate_purchase_order_reservation(item_code,order_source,reservation_amount):
@@ -942,28 +948,50 @@ from dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion impor
 @frappe.whitelist()
 def validate_active_domains_cancel(doc ,*args,**kwargs):
     if  'Moyate' in DOMAINS: 
+        delete_update_commission_sales()
         # Clear Invoice Commision Amount 
-        #1 - remove commition log 
-        # 2 -update old logs  
+        # #1 - remove commition log 
+        # # 2 -update old logs  
 
-        #get invocie log  
-        invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
-        # frappe.throw(str(invoice_log))
-        if invoice_log and len(invoice_log) > 0 :
-            for l in invoice_log :
-                log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
+        # #get invocie log  
+        # invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
+        # # frappe.throw(str(invoice_log))
+        # if invoice_log and len(invoice_log) > 0 :
+        #     for l in invoice_log :
+        #         log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
                 
-                first_day  = log.from_date
-                last_day = log.to_date 
-                person = log.sales_person
-                item_group = log.item__group
-                # log.remove_raw()
-                frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
-                frappe.db.commit()
-                update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
+        #         first_day  = log.from_date
+        #         last_day = log.to_date 
+        #         person = log.sales_person
+        #         item_group = log.item__group
+        #         # log.remove_raw()
+        #         frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
+        #         frappe.db.commit()
+        #         update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
 
 
-     
+@frappe.whitelist()
+def delete_update_commission_sales(doc ,*args,**kwargs):
+# Clear Invoice Commision Amount 
+    #1 - remove commition log 
+    # 2 -update old logs  
+
+    #get invocie log  
+    invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
+    # frappe.throw(str(invoice_log))
+    if invoice_log and len(invoice_log) > 0 :
+        for l in invoice_log :
+            log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
+            
+            first_day  = log.from_date
+            last_day = log.to_date 
+            person = log.sales_person
+            item_group = log.item__group
+            # log.remove_raw()
+            frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
+            frappe.db.commit()
+            update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
+
 @frappe.whitelist()           
 def before_save(doc ,*args,**kwargs) :
     if doc.items:
@@ -1383,52 +1411,52 @@ def hold_item_reserved(doc,*args,**kwargs):
 
 @frappe.whitelist()    
 def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
-    #if 'IFI' in DOMAINS:
-    if(doc.crean=='Yes' and doc.crean_amount >0):
-        crean_account,cost_center = frappe.db.get_value('Company',doc.company,["crean_income_account","cost_center"])
-        if(crean_account):
-            flage_crean_tax = True
-            total = 0
-            if len(doc.taxes):
-                for row in doc.taxes:
-                    total = row.total
-                    if row.account_head == crean_account:
-                        row.tax_amount = doc.crean_amount
-                        row.total =  row.total
-                        flage_crean_tax = False
-                else:
-                    if  flage_crean_tax and  doc.doctype == "Sales Order":
-                        doc.append("taxes",{
-                        "charge_type":"Actual",
-                        "account_head":crean_account,
-                        "tax_amount":doc.crean_amount,
-                        "total":doc.crean_amount + total,
-                        "description":crean_account
-                    })
-                    elif  flage_crean_tax and  doc.doctype == "Sales Invoice":
-                        doc.append("taxes",{
-                        "charge_type":"Actual",
-                        "account_head":crean_account,
-                        "tax_amount":doc.crean_amount,
-                        "total":doc.crean_amount + total,
-                        "description":crean_account,
-                        "cost_center":cost_center,
-                    })
-                    elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
-                        doc.append("taxes",{
-                        "charge_type":"Actual",
-                        "account_head":crean_account,
-                        "tax_amount":doc.crean_amount,
-                        "total":doc.crean_amount + total,
-                        "description":crean_account,
-                        "category":"Total",
-                        "add_deduct_tax":"Add",
-                        "cost_center":cost_center,
-                    })
-                doc.total_taxes_and_charges = doc.crean_amount + total
-        doc.run_method("calculate_taxes_and_totals")
-        if(not crean_account):
-            frappe.msgprint(_("Company Has No Crane Account"))
+    if 'IFI' in DOMAINS:
+        if(doc.crean=='Yes' and doc.crean_amount >0):
+            crean_account,cost_center = frappe.db.get_value('Company',doc.company,["crean_income_account","cost_center"])
+            if(crean_account):
+                flage_crean_tax = True
+                total = 0
+                if len(doc.taxes):
+                    for row in doc.taxes:
+                        total = row.total
+                        if row.account_head == crean_account:
+                            row.tax_amount = doc.crean_amount
+                            row.total =  row.total
+                            flage_crean_tax = False
+                    else:
+                        if  flage_crean_tax and  doc.doctype == "Sales Order":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account
+                        })
+                        elif  flage_crean_tax and  doc.doctype == "Sales Invoice":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account,
+                            "cost_center":cost_center,
+                        })
+                        elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account,
+                            "category":"Total",
+                            "add_deduct_tax":"Add",
+                            "cost_center":cost_center,
+                        })
+                    doc.total_taxes_and_charges = doc.crean_amount + total
+            doc.run_method("calculate_taxes_and_totals")
+            if(not crean_account):
+                frappe.msgprint(_("Company Has No Crane Account"))
 
 @frappe.whitelist()
 def create_reservation_validate(doc,*args , **kwargs):

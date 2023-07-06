@@ -8,13 +8,13 @@ data = {
 
     'custom_fields': {
         'Company':[
-            {
-                "label":_("Notification Cheque Role"),
-                "fieldname":"notification_cheque_role",
-                "fieldtype":"Link",
-                "options":"Role",
-                "insert_after":"rejected_cheques_bank_account", 
-            },
+            # {
+            #     "label":_("Notification Cheque Role"),
+            #     "fieldname":"notification_cheque_role",
+            #     "fieldtype":"Link",
+            #     "options":"Role",
+            #     "insert_after":"rejected_cheques_bank_account", 
+            # },
             
         ],
         'Supplier':[
@@ -47,15 +47,7 @@ data = {
             },
             
         ],
-        'Payment Entry':[
-            {
-                "label":_("User Remark"),
-                "fieldname":"user_remark",
-                "fieldtype":"Data",
-                "insert_after":"payment_type", 
-            },
-            
-        ],
+        
         'Journal Entry':[
             {
                 "label":_("Notebook No"),
