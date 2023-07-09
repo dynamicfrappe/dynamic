@@ -50,12 +50,14 @@ def execute(filters=None):
 				"buying_amount",
 				"gross_profit",
 				"gross_profit_percent",
+				# "gross_profit_percent_demo",
 				"project",
 			],
 			"item_code": [
 				"item_code",
 				"item_name",
 				"brand",
+				# "cost_center",
 				"description",
 				"qty",
 				"base_rate",
@@ -64,6 +66,7 @@ def execute(filters=None):
 				"buying_amount",
 				"gross_profit",
 				"gross_profit_percent",
+				# "gross_profit_percent_demo",
 			],
 			"warehouse": [
 				"warehouse",
@@ -74,6 +77,7 @@ def execute(filters=None):
 				"buying_amount",
 				"gross_profit",
 				"gross_profit_percent",
+				# "gross_profit_percent_demo",
 			],
 			"brand": [
 				"brand",
@@ -84,6 +88,7 @@ def execute(filters=None):
 				"buying_amount",
 				"gross_profit",
 				"gross_profit_percent",
+				# "gross_profit_percent_demo",
 			],
 			"item_group": [
 				"item_group",
@@ -94,6 +99,7 @@ def execute(filters=None):
 				"buying_amount",
 				"gross_profit",
 				"gross_profit_percent",
+				# "gross_profit_percent_demo",
 			],
 			"customer": [
 				"customer",
@@ -105,6 +111,7 @@ def execute(filters=None):
 				"buying_amount",
 				"gross_profit",
 				"gross_profit_percent",
+				# "gross_profit_percent_demo",
 			],
 			"customer_group": [
 				"customer_group",
@@ -115,6 +122,7 @@ def execute(filters=None):
 				"buying_amount",
 				"gross_profit",
 				"gross_profit_percent",
+				# "gross_profit_percent_demo",
 			],
 			"sales_person": [
 				"sales_person",
@@ -126,14 +134,16 @@ def execute(filters=None):
 				"buying_amount",
 				"gross_profit",
 				"gross_profit_percent",
+				# "gross_profit_percent_demo",
 			],
-			"project": ["project", "base_amount", "buying_amount", "gross_profit", "gross_profit_percent"],
+			"project": ["project", "base_amount", "buying_amount", "gross_profit", "gross_profit_percent","gross_profit_percent_demo"],
 			"territory": [
 				"territory",
 				"base_amount",
 				"buying_amount",
 				"gross_profit",
 				"gross_profit_percent",
+				# "gross_profit_percent_demo",
 			],
 		}
 	)
@@ -146,7 +156,7 @@ def execute(filters=None):
 	else:
 		get_data_when_not_grouped_by_invoice(gross_profit_data, filters, group_wise_columns, data)
 	# data = add_total_row(data, columns)
-	frappe.errprint(f'data--->{data}')
+	# frappe.errprint(f'data--->{data}')
 	return columns, data
 
 
@@ -174,10 +184,14 @@ def get_data_when_grouped_by_invoice(
 
 
 def get_data_when_not_grouped_by_invoice(gross_profit_data, filters, group_wise_columns, data):
+	# frappe.errprint(f"test--***->{gross_profit_data.grouped_data}")
 	for src in gross_profit_data.grouped_data:
+		# frappe.errprint(f"src--***->{src}")
 		row = []
 		for col in group_wise_columns.get(scrub(filters.group_by)):
-			row.append(src.get(col))
+			# frappe.errprint(f"col--***->{col}")
+			# frappe.errprint(f"src.get(col)--***->{src.get(col)}")
+			row.append(src.get(col,col))
 
 		row.append(filters.currency)
 
@@ -289,6 +303,12 @@ def get_columns(group_wise_columns, filters):
 				"fieldtype": "Percent",
 				"width": 100,
 			},
+			# "gross_profit_percent_demo": {
+			# 	"label": _("Gross Profit Percent Demo"),
+			# 	"fieldname": "gross_profit_percent_demo",
+			# 	"fieldtype": "Float",
+			# 	"width": 100,
+			# },
 			"project": {
 				"label": _("Project"),
 				"fieldname": "project",
@@ -355,15 +375,15 @@ def get_columns(group_wise_columns, filters):
 			"hidden": 1,
 		}
 	)
-	columns.append(
-		{
-			"label": _("Cost Center"),
-			"fieldname": "cost_center",
-			"fieldtype": "Link",
-			"options": "Cost Center",
-			"width": 100,
-		}
-	)
+	# columns.append(
+	# 	{
+	# 		"label": _("Cost Center"),
+	# 		"fieldname": "cost_center",
+	# 		"fieldtype": "Link",
+	# 		"options": "Cost Center",
+	# 		"width": 100,
+	# 	}
+	# )
 
 	return columns
 
@@ -390,12 +410,12 @@ def get_column_names():
 			"gross_profit": "gross_profit",
 			"gross_profit_percent": "gross_profit_%",
 			"project": "project",
-			
+			# "gross_profit_percent_demo":"gross_profit_percent_demo",
 		}
 	)
 
 
-class GrossProfitGenerator(object):
+class  GrossProfitGenerator(object):
 	def __init__(self, filters=None):
 		self.sle = {}
 		self.data = []
@@ -424,7 +444,7 @@ class GrossProfitGenerator(object):
 		if grouped_by_invoice:
 			buying_amount = 0
 			qty=0
-
+		# print("\n\n\n\n---self.si_list---?",self.si_list,'\n\n\n')
 		for row in reversed(self.si_list):
 			if self.skip_row(row):
 				continue
@@ -448,7 +468,7 @@ class GrossProfitGenerator(object):
 				)
 			else:
 				row.buying_amount = flt(self.get_buying_amount(row, row.item_code), self.currency_precision)
-
+			#! sort from end (child of invoice)
 			if grouped_by_invoice:
 				if row.indent == 1.0:
 					buying_amount += row.buying_amount
@@ -463,6 +483,8 @@ class GrossProfitGenerator(object):
 			if flt(row.qty):
 				row.buying_rate = flt(row.buying_amount / flt(row.qty), self.float_precision)
 				row.base_rate = flt(row.base_amount / flt(row.qty), self.float_precision)
+				# if(row.item_code=='10359004'):
+				# 	print("\n\n\n\n------?",row.item_name,row.base_amount,'\n\n\n')
 			else:
 				if self.is_not_invoice_row(row):
 					row.buying_rate, row.base_rate = 0.0, 0.0
@@ -473,6 +495,7 @@ class GrossProfitGenerator(object):
 				row.gross_profit_percent = flt(
 					(row.gross_profit / row.base_amount) * 100.0, self.currency_precision
 				)
+				# row.gross_profit_percent = 60.33
 			else:
 				row.gross_profit_percent = 0.0
 
@@ -533,12 +556,18 @@ class GrossProfitGenerator(object):
 		return new_row
 
 	def set_average_gross_profit(self, new_row):
+		
 		new_row.gross_profit = flt(new_row.base_amount - new_row.buying_amount, self.currency_precision)
 		new_row.gross_profit_percent = (
 			flt(((new_row.gross_profit / new_row.base_amount) * 100.0), self.currency_precision)
 			if new_row.base_amount
 			else 0
 		)
+		# new_row.gross_profit_percent_demo = (
+		# 	flt(((new_row.gross_profit / new_row.base_amount)), self.currency_precision)
+		# 	if new_row.base_amount
+		# 	else 0
+		# )
 		new_row.buying_rate = (
 			flt(new_row.buying_amount / flt(new_row.qty), self.float_precision) if flt(new_row.qty) else 0
 		)
@@ -996,67 +1025,66 @@ class GrossProfitGenerator(object):
 # 	result.append(total_row)
 # 	return result
 
-def add_total_row(result, columns, meta=None, is_tree=False, parent_field=None):
-	print("\n\n\n\n-->tota*****l\n\n\n")
-	total_row = [""] * len(columns)
-	has_percent = []
+# def add_total_row(result, columns, meta=None, is_tree=False, parent_field=None):
+# 	print("\n\n\n\n-->tota*****l\n\n\n")
+# 	total_row = [""] * len(columns)
+# 	has_percent = []
 
-	for i, col in enumerate(columns):
-		fieldtype, options, fieldname = None, None, None
-		if isinstance(col, string_types):
-			if meta:
-				# get fieldtype from the meta
-				field = meta.get_field(col)
-				if field:
-					fieldtype = meta.get_field(col).fieldtype
-					fieldname = meta.get_field(col).fieldname
-			else:
-				col = col.split(":")
-				if len(col) > 1:
-					if col[1]:
-						fieldtype = col[1]
-						if "/" in fieldtype:
-							fieldtype, options = fieldtype.split("/")
-					else:
-						fieldtype = "Data"
-		else:
-			fieldtype = col.get("fieldtype")
-			fieldname = col.get("fieldname")
-			options = col.get("options")
+# 	for i, col in enumerate(columns):
+# 		fieldtype, options, fieldname = None, None, None
+# 		if isinstance(col, string_types):
+# 			if meta:
+# 				# get fieldtype from the meta
+# 				field = meta.get_field(col)
+# 				if field:
+# 					fieldtype = meta.get_field(col).fieldtype
+# 					fieldname = meta.get_field(col).fieldname
+# 			else:
+# 				col = col.split(":")
+# 				if len(col) > 1:
+# 					if col[1]:
+# 						fieldtype = col[1]
+# 						if "/" in fieldtype:
+# 							fieldtype, options = fieldtype.split("/")
+# 					else:
+# 						fieldtype = "Data"
+# 		else:
+# 			fieldtype = col.get("fieldtype")
+# 			fieldname = col.get("fieldname")
+# 			options = col.get("options")
 
-		for row in result:
-			frappe.errprint(f'--->{row}')
-			if i >= len(row):
-				continue
-			cell = row.get(fieldname) if isinstance(row, dict) else row[i]
-			if fieldtype in ["Currency", "Int", "Float", "Percent", "Duration"] and flt(cell):
-				if not (is_tree and row.get(parent_field)):
-					total_row[i] = flt(total_row[i]) + flt(cell)
+# 		for row in result:
+# 			if i >= len(row):
+# 				continue
+# 			cell = row.get(fieldname) if isinstance(row, dict) else row[i]
+# 			if fieldtype in ["Currency", "Int", "Float", "Percent", "Duration"] and flt(cell):
+# 				if not (is_tree and row.get(parent_field)):
+# 					total_row[i] = flt(total_row[i]) + flt(cell)
 
-			if fieldtype == "Percent" and i not in has_percent:
-				has_percent.append(i)
+# 			if fieldtype == "Percent" and i not in has_percent:
+# 				has_percent.append(i)
 
-			if fieldtype == "Time" and cell:
-				if not total_row[i]:
-					total_row[i] = timedelta(hours=0, minutes=0, seconds=0)
-				total_row[i] = total_row[i] + cell
+# 			if fieldtype == "Time" and cell:
+# 				if not total_row[i]:
+# 					total_row[i] = timedelta(hours=0, minutes=0, seconds=0)
+# 				total_row[i] = total_row[i] + cell
 
-		if fieldtype == "Link" and options == "Currency":
-			total_row[i] = result[0].get(fieldname) if isinstance(result[0], dict) else result[0][i]
+# 		if fieldtype == "Link" and options == "Currency":
+# 			total_row[i] = result[0].get(fieldname) if isinstance(result[0], dict) else result[0][i]
 
-	for i in has_percent:
-		total_row[i] = flt(total_row[i]) / len(result)
+# 	for i in has_percent:
+# 		total_row[i] = flt(total_row[i]) / len(result)
 
-	first_col_fieldtype = None
-	if isinstance(columns[0], string_types):
-		first_col = columns[0].split(":")
-		if len(first_col) > 1:
-			first_col_fieldtype = first_col[1].split("/")[0]
-	else:
-		first_col_fieldtype = columns[0].get("fieldtype")
+# 	first_col_fieldtype = None
+# 	if isinstance(columns[0], string_types):
+# 		first_col = columns[0].split(":")
+# 		if len(first_col) > 1:
+# 			first_col_fieldtype = first_col[1].split("/")[0]
+# 	else:
+# 		first_col_fieldtype = columns[0].get("fieldtype")
 
-	if first_col_fieldtype not in ["Currency", "Int", "Float", "Percent", "Date"]:
-		total_row[0] = _("Total")
+# 	if first_col_fieldtype not in ["Currency", "Int", "Float", "Percent", "Date"]:
+# 		total_row[0] = _("Total")
 
-	result.append(total_row)
-	return result
+# 	result.append(total_row)
+# 	return result

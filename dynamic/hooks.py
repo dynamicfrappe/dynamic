@@ -207,11 +207,11 @@ doc_events = {
     },
     "Quotation":{
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
-        "before_submit": "dynamic.api.add_crean_in_taxes",
+        "before_submit": "dynamic.api.before_submit_quot",#add_crean_in_taxes
     },
     "Purchase Order":{
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
-        "before_submit": "dynamic.api.add_crean_in_taxes",
+        "before_submit": "dynamic.api.before_submit_po",
         "after_inser" :  "dynamic.api.calculate_orderd_qty",
         "on_submit":  "dynamic.api.calculate_orderd_qty",
     } ,
@@ -380,7 +380,6 @@ jenv = {
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
         "get_party_address:dynamic.api.get_party_address",#ifi
-        # "get_barcode_item:dynamic.api.get_barcode_item", 
     ],
     "filters": []
 }

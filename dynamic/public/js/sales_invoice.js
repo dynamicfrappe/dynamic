@@ -126,3 +126,22 @@ function get_customer_query(){
   });
   
 }
+
+
+frappe.ui.form.on("Sales Team", {
+  sales_person:function(frm,cdt,cdn){
+    let row = locals[cdt][cdn]
+    if (row.sales_person && frm.doc.docstatus==1){
+      frm.call({
+        method:"dynamic.api.validate_active_domains",
+        args:{
+          doc:frm.doc
+        },
+        callback:function(r){
+          console.log('return --------->')
+        }
+      })
+    }
+  }
+
+})

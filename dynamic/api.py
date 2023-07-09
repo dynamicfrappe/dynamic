@@ -93,17 +93,17 @@ from dynamic.gebco.doctype.stock_ledger import get_valuation_rate
 DOMAINS = frappe.get_active_domains()
 
 
+
 @frappe.whitelist()
 def validate_active_domains(doc,*args,**kwargs):
     if  'Moyate' in DOMAINS: 
         """   Validate Sales Commition With Moyate """
+        if isinstance(doc, str):
+            doc = json.loads(doc) 
+        print('\n\n\n\n=======>',type(doc),'\n\n\n')
+        # print('\n\n\n\n=======>',doc.name,'\n\n\n')
         validate_sales_invocie_to_moyate(doc)
-        if doc._action == "delete":
-            print("\n\n\n\n\n\n====>in test  delete")
-
-
-
-
+        
     if 'Product Bundle' in DOMAINS: 
         """   Update Bundle of Bundles """
         make_packing_list(doc)
@@ -134,7 +134,10 @@ def validate_active_domains(doc,*args,**kwargs):
     
     
     
-    
+@frappe.whitelist()
+def test_api(doc,*args,**kwargs):
+    # if  'Moyate' in DOMAINS:
+    print('\n\n\n\n\n***********>',111111111111111111,'\n\n\n') 
 
 
 def check_item_valuation_rate(doc):
@@ -1142,7 +1145,18 @@ def calculate_orderd_qty(doc,*args , **kwargs) :
                 """)
                 frappe.db.commit()
             # frappe.throw(f"{sales_order.per_orderd}")
-            
+
+@frappe.whitelist()           
+def before_submit_po(doc,*args,**kwargs):
+    if 'IFI' in DOMAINS:
+        add_crean_in_taxes(doc,*args,**kwargs)
+
+@frappe.whitelist()           
+def before_submit_quot(doc,*args,**kwargs):
+    if 'Real State' in DOMAINS:
+        hold_item_reserved(doc,*args,**kwargs)
+    if 'IFI' in DOMAINS:
+        add_crean_in_taxes(doc,*args,**kwargs)
 
 @frappe.whitelist()
 def add_crean_in_taxes(doc,*args,**kwargs):
@@ -1363,41 +1377,9 @@ def get_party_address(party_type, party):
     return street_address + ',' + city_state
 
 
-# import barcode
-# from barcode import Code128
-# import base64
-# from io import BytesIO
-
-@frappe.whitelist()
-def get_barcode_item():
-    ...
-#     # Get the item code and generate the barcode image
-#     item_code = "978020137962"
-#     ean = EAN13(item_code)
-#     buffer = BytesIO()
-#     ean.write(buffer)
-#     barcode_image_url = f"data:image/png;base64,{buffer.getvalue().encode('base64').decode()}"
-    
-#     # Pass the barcode image URL as a context variable to the Jinja template
-#     context = {'item_code': item_code, 'barcode_image_url': barcode_image_url}
-#     return context
-
-# def get_barcode_item():
-#     # Get the item code and generate the barcode image
-#     item_code = "978020137962"
-#     code128 = Code128(item_code)
-#     buffer = BytesIO()
-#     code128.write(buffer)
-#     barcode_image_url = f"data:image/png;base64,{base64.b64encode(buffer.getvalue()).decode()}"
-    
-#     # Pass the barcode image URL as a context variable to the Jinja template
-#     context = {'item_code': item_code, 'barcode_image_url': barcode_image_url}
-#     return context
 
 @frappe.whitelist()
 def before_submit_so(doc,*args,**kwargs):
-    if 'Real State' in DOMAINS:
-        hold_item_reserved(doc,*args,**kwargs)
     if 'IFI' in DOMAINS:
         check_crean_amount_after_mapped_doc(doc,*args,**kwargs)
     if "Terra"  in DOMAINS or "Reservation" in DOMAINS:
@@ -1474,12 +1456,9 @@ def before_insert(doc , *args , **kwargs) :
         user = frappe.session.user
         user_roles = frappe.get_roles()
         selling_settings = frappe.get_single("Selling Settings")
-        # series_role = frappe.db.get_single_value("Selling Settings","series_role")
         if selling_settings.series_role and len(selling_settings.series_role):
             for row in selling_settings.series_role:
                 if row.role in user_roles and row.naming_series_si:
-                    # print('\n\n\n\n===>row.naming_series_si',row.naming_series_si)
-                    # frappe.throw(str(row.role))
                     doc.naming_series = row.naming_series_si
                     break
 

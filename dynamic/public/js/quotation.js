@@ -63,6 +63,8 @@ frappe.ui.form.on("Quotation",{
             }
         }
     })
+    frm.events.set_query(frm)
+
     },
     reject_quotation(frm){
         frm.call({
@@ -77,7 +79,21 @@ frappe.ui.form.on("Quotation",{
         })
     },
 
- 
+    set_query:function(frm){
+        frappe.call({
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+              if (r.message && r.message.length) {
+                if (r.message.includes("Real State")) {
+                  frm.set_query('item_code', 'items', function(doc, cdt, cdn) {
+                    return {
+                      filters:{"reserved":0}
+                    };
+                  });
+                }
+            }}
+        })
+    }
 })
 
 

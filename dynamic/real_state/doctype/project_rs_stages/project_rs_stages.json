@@ -28,12 +28,12 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Project RS Stages Item",
-   "options": "Project RS Stages Item"
+   "options": "Stages RS Blocks Items"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-06-20 11:49:55.894188",
+ "modified": "2023-07-05 09:32:24.580533",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Project RS Stages",
