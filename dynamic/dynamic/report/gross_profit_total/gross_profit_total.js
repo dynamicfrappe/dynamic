@@ -55,7 +55,8 @@ frappe.query_reports["Gross Profit Total"] = {
 	"parent_field": "parent_invoice",
 	"initial_depth": 3,
 	"formatter": function(value, row, column, data, default_formatter) {
-		if (column.fieldname == "sales_invoice" && column.options == "Item" && data && data.indent == 0) {
+		if (column.fieldname == "sales_invoice" && column.options == "Item" && data && data.indent == 0) 
+		{
 			column._options = "Sales Invoice";
 		} else {
 			column._options = "Item";
@@ -63,6 +64,7 @@ frappe.query_reports["Gross Profit Total"] = {
 		value = default_formatter(value, row, column, data);
 
 		if (data && (data.indent == 0.0 || (row[1] && row[1].content == "Total"))) {
+			console.log(data)
 			value = $(`<span>${value}</span>`);
 			var $value = $(value).css("font-weight", "bold");
 			value = $value.wrap("<p></p>").parent().html();

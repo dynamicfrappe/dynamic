@@ -845,11 +845,12 @@ class  GrossProfitGenerator(object):
 		for index, row in enumerate(self.si_list):
 			if parents_index < len(parents) and row.parent == parents[parents_index]:
 				invoice = self.get_invoice_row(row)
-				# frappe.errprint(f'invoice row++++++-->{invoice}')
 				self.si_list.insert(index, invoice)
 				parents_index += 1
+				frappe.errprint(f'invoice row++++++-->{invoice}')
 
 			else:
+				frappe.errprint(f'invoice 222++++++-->{invoice}')
 				# skipping the bundle items rows
 				if not row.indent:
 					row.indent = 1.0
