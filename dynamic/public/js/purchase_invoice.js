@@ -2,7 +2,7 @@ frappe.ui.form.on("Purchase Invoice", {
   refresh: function (frm) {
     frm.custom_make_buttons["Cheque"] = "Cheque";
     frm.events.add_cheque_button(frm);
-    const myTimeout = setTimeout(get_supplier_query, 1000);
+    // const myTimeout = setTimeout(get_supplier_query, 1000);
 
   },
   add_cheque_button(frm) {
