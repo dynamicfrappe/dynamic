@@ -741,7 +741,7 @@ class  GrossProfitGenerator(object):
 		if self.filters.to_date:
 			conditions += " and posting_date <= %(to_date)s"
 
-		conditions += " and (is_return = 0 or (is_return=1 and return_against is null))"
+		# conditions += " and (is_return = 0 or (is_return=1 and return_against is null))"
 
 		if self.filters.item_group:
 			conditions += " and {0}".format(get_item_group_condition(self.filters.item_group))
@@ -769,7 +769,35 @@ class  GrossProfitGenerator(object):
 			
 		if self.filters.get("customer"):
 			conditions += f" and `tabSales Invoice`.customer = '{self.filters.get('customer')}' "
-
+		sql_string=  """
+         select
+				`tabSales Invoice Item`.parenttype, `tabSales Invoice Item`.parent,
+				`tabSales Invoice`.posting_date, `tabSales Invoice`.posting_time,
+				`tabSales Invoice`.project, `tabSales Invoice`.update_stock,
+				`tabSales Invoice`.customer, `tabSales Invoice`.customer_group,
+				`tabSales Invoice`.territory, `tabSales Invoice Item`.item_code,
+				`tabSales Invoice Item`.item_name, `tabSales Invoice Item`.description,
+				`tabSales Invoice Item`.warehouse, `tabSales Invoice Item`.item_group,
+				`tabSales Invoice Item`.brand, `tabSales Invoice Item`.dn_detail,
+				`tabSales Invoice Item`.delivery_note, `tabSales Invoice Item`.stock_qty as qty,
+				`tabSales Invoice Item`.base_net_rate, `tabSales Invoice Item`.base_net_amount,
+				`tabSales Invoice Item`.name as "item_row", `tabSales Invoice`.is_return,
+				`tabSales Invoice Item`.cost_center
+				{sales_person_cols}
+			from
+				`tabSales Invoice` inner join `tabSales Invoice Item`
+					on `tabSales Invoice Item`.parent = `tabSales Invoice`.name
+				{sales_team_table}
+			where
+				`tabSales Invoice`.docstatus=1 and `tabSales Invoice`.is_opening!='Yes' {conditions} {match_cond}
+			order by
+				`tabSales Invoice`.posting_date desc, `tabSales Invoice`.posting_time desc
+            """.format(
+				conditions=conditions,
+				sales_person_cols=sales_person_cols,
+				sales_team_table=sales_team_table,
+				match_cond=get_match_cond("Sales Invoice"))
+		# frappe.throw(str(sql_string))
 		self.si_list = frappe.db.sql(
 			"""
 			select
