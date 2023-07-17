@@ -3,7 +3,7 @@ import frappe
 from frappe.model.mapper import get_mapped_doc
 
 from werkzeug.wrappers import Response
-
+#dynamic.elevana.api
 import json
 
 from frappe.utils.data import nowdate
@@ -168,123 +168,276 @@ def get_item_list(*args, **kwargs):
 
 @frappe.whitelist()
 def create_customer(*args, **kwargs):
+    try :
+        data = json.loads(frappe.request.data)
+        # return data
+        customer_name = data.get('customer_name')
+        phone_no = data.get('phone_no')
+        
+        customer_group = frappe.db.get_single_value("E Commerce Settings", "default_customer_group")
+        customer_territory = frappe.db.get_single_value("E Commerce Settings", "default_customer_territory")
 
-    data = json.loads(frappe.request.data)
-    # return data
-    customer_name = data.get('customer_name')
-    phone_no = data.get('phone_no')
-    customer_group = frappe.db.get_single_value("E Commerce Settings", "default_customer_group")
-    customer_territory = frappe.db.get_single_value("E Commerce Settings", "default_customer_territory")
+        if not customer_name :
+            frappe.response['status_code'] = 400
+            frappe.response['message'] = _("{} is required").format(_('Customer Name'))
+            return
 
-    if not customer_name :
+        if not phone_no :
+            frappe.response['status_code'] = 400
+            frappe.response['message'] = _("{} is required").format(_('Phone No'))
+            return
+
+        if not customer_group :
+            frappe.response['status_code'] = 400
+            frappe.response['message'] = _("{} is required").format(_('Customer Group'))
+            return
+
+        if not customer_group :
+            frappe.response['status_code'] = 400
+            frappe.response['message'] = _("{} is required").format(_('Customer Territory'))
+            return
+
+
+        customer = frappe.new_doc('Customer')
+        customer.customer_name = customer_name 
+        customer.customer_group = customer_group
+        customer.territory = customer_territory
+        customer.phone_no = phone_no
+        customer.woocommerce_customer_id = data.get("id")
+        customer.save(ignore_permissions=True)
+        if customer :
+            create_customer_address(customer ,data)
+            frappe.response['status_code'] = 200
+            frappe.response['customer'] = customer
+            return 
+        else :
+            error = frappe.new_doc("Error Log")
+            error.method="create_customer"
+            error.error = "Error Accour"
+            error.save()
+            frappe.response['status_code'] = 400
+            frappe.response['message'] ="Can Not Save Customer"
+            return 
+        
+    except Exception as e :
+        error = frappe.new_doc("Error Log")
+        error.method="create_customer"
+        error.error = e
+        error.save()
         frappe.response['status_code'] = 400
-        frappe.response['message'] = _("{} is required").format(_('Customer Name'))
-        return
-
-    if not phone_no :
-        frappe.response['status_code'] = 400
-        frappe.response['message'] = _("{} is required").format(_('Phone No'))
-        return
-
-    if not customer_group :
-        frappe.response['status_code'] = 400
-        frappe.response['message'] = _("{} is required").format(_('Customer Group'))
-        return
-
-    if not customer_group :
-        frappe.response['status_code'] = 400
-        frappe.response['message'] = _("{} is required").format(_('Customer Territory'))
-        return
-
-
-    customer = frappe.new_doc('Customer')
-    customer.customer_name = customer_name 
-    customer.customer_group = customer_group
-    customer.territory = customer_territory
-    customer.phone_no = phone_no
-    customer.save(ignore_permissions=True)
-    frappe.response['customer'] = customer
+        frappe.response['message'] = e
+        return 
 
 
 
+def create_customer_address(customer, woocommerce_customer):
+    billing_address = woocommerce_customer.get("billing")
+    shipping_address = woocommerce_customer.get("shipping")
+    
+    if billing_address:
+        country = "Egypt"
+        # country = get_country_name(billing_address.get("country"))
+        # if not frappe.db.exists("Country", country):
+        #     country = "Switzerland"
+        try :
+            frappe.get_doc({
+                "doctype": "Address",
+                "woocommerce_address_id": "Billing",
+                "address_title": customer.name,
+                "address_type": "Billing",
+                "address_line1": billing_address.get("address_1") or "Address 1",
+                "address_line2": billing_address.get("address_2"),
+                "city": billing_address.get("city") or "City",
+                "state": billing_address.get("state"),
+                "pincode": billing_address.get("postcode"),
+                "country": country,
+                "phone": billing_address.get("phone"),
+                "email_id": billing_address.get("email"),
+                "building_no" : billing_address.get("building_no"),
+                "floor_no":billing_address.get("floor_no"),
+                "apartment_no":billing_address.get("apartment_no"),
+                "links": [{
+                    "link_doctype": "Customer",
+                    "link_name": customer.name
+                }]
+            }).insert()
+
+        except Exception as e:
+            error = frappe.new_doc("Error Log")
+            error.method="create_customer_address"
+            error.error = e
+            error.save()
+            # make_woocommerce_log(title=e, status="Error", method="create_customer_address", message=frappe.get_traceback(),
+            #         request_data=woocommerce_customer, exception=True)
+
+    if shipping_address:
+        # country = get_country_name(shipping_address.get("country"))
+        # if not frappe.db.exists("Country", country):
+        country = "Egypt"
+        try :
+            frappe.get_doc({
+                "doctype": "Address",
+                "woocommerce_address_id": "Shipping",
+                "address_title": customer.name,
+                "address_type": "Shipping",
+                "address_line1": shipping_address.get("address_1") or "Address 1",
+                "address_line2": shipping_address.get("address_2"),
+                "city": shipping_address.get("city") or "City",
+                "state": shipping_address.get("state"),
+                "pincode": shipping_address.get("postcode"),
+                "country": country,
+                "building_no" : shipping_address.get("building_no"),
+                "floor_no":shipping_address.get("floor_no"),
+                "apartment_no":shipping_address.get("apartment_no"),
+                "phone": shipping_address.get("phone"),
+                "email_id": shipping_address.get("email"),
+                "links": [{
+                    "link_doctype": "Customer",
+                    "link_name": customer.name
+                }]
+            }).insert()
+            
+        except Exception as e:
+            error = frappe.new_doc("Error Log")
+            error.method="create_customer_address"
+            error.error = e
+            error.save()
+            # make_woocommerce_log(title=e, status="Error", method="create_customer_address", message=frappe.get_traceback(),
+            #     request_data=woocommerce_customer, exception=True)
+
+# ToDO: email and phone into child table
+def create_customer_contact(customer, woocommerce_customer):
+    try :
+        frappe.get_doc({
+            "doctype": "Contact",
+            "first_name": woocommerce_customer["billing"]["first_name"],
+            "last_name": woocommerce_customer["billing"]["last_name"],
+            "email_ids": [{
+                "email_id": woocommerce_customer["billing"]["email"],
+                "is_primary": 1
+            }],
+            "phone_nos": [{
+                "phone": woocommerce_customer["billing"]["phone"],
+                "is_primary_phone": 1
+            }],
+            "links": [{
+                "link_doctype": "Customer",
+                "link_name": customer.name
+            }]
+        }).insert()
+
+    except Exception as e:
+        #create Error
+        error = frappe.new_doc("Error Log")
+        error.method="create_customer_contact"
+        error.error = e
+        error.save()
 
 
+
+def get_coupon_code(refal) :
+    coupon = frappe.get_all("Coupon Code", filters=[["coupon_code", "=",refal]], fields=['name'])
+    if coupon and len(coupon) > 0 :
+        return coupon[0].get("name")
+    return False
 
 @frappe.whitelist()
 def create_sales_order(*args, **kwargs):
-    # return json.loads(frappe.request.data)
-    data = json.loads(frappe.request.data)
+    try :
+        # return json.loads(frappe.request.data)
+        data = json.loads(frappe.request.data)
+        id = data.get("customer_id")
+        customer = frappe.get_all("Customer", filters=[["woocommerce_customer_id", "=", id]], fields=['name'])
+        # customer_name = data.get('customer_id')
+        items = data.get('items')
+        
+        # return frappe.get_doc("Customer" , customer_name)
+        # return frappe.db.exists("Customer" , "pewter")
+        # if frappe.db.exists("Customer" , customer_name) :
+        #     customer = frappe.get_doc("Customer" , customer_name)
 
-    customer_name = data.get('customer')
-    items = data.get('items')
-    customer = None
-    # return frappe.get_doc("Customer" , customer_name)
-    # return frappe.db.exists("Customer" , "pewter")
-    if frappe.db.exists("Customer" , customer_name) :
-        customer = frappe.get_doc("Customer" , customer_name)
-
-    company = frappe.db.get_single_value("E Commerce Settings", "company")
-    price_list = frappe.db.get_single_value("E Commerce Settings", "price_list")
-
-
-    if not customer_name :
-        frappe.response['status_code'] = 400
-        frappe.response['message'] = _("{} is required").format(_('Customer'))
-        return
-
-    if not customer :
-        frappe.response['status_code'] = 400
-        frappe.response['message'] = _("{} is invalid").format(_('Customer'))
-        return
-    
-    # print (frappe.request.post)
-    print (type(items))
-    if type(items) is str :
-        items = json.loads(str(items))
-    
-    print (type(items))
-    # return
-
-    if not items :
-        frappe.response['status_code'] = 400
-        frappe.response['message'] = _("{} is required").format(_('Items'))
-        return
+        company = frappe.db.get_single_value("E Commerce Settings", "company")
+        price_list = frappe.db.get_single_value("E Commerce Settings", "price_list")
 
 
-    
-     
-    order = frappe.new_doc("Sales Order")
-    order.customer = customer.name
-    order.company = company
-    order.currency = get_company_currency(company)
-    order.price_list = price_list
-    order.order_type = "Sales"
-    order.delivery_date = nowdate()
-    
-    order.conversion_rate = 1
-    order.cost_center = get_default_cost_center(company)
-
-
-    for item in items or []:
-        #it=frappe._dict(it)
-        item_doc = None
-        item_code = item.get("item_code")
-        if frappe.db.exists("Item" , item_code) :
-            item_doc = frappe.get_doc("Item" , item_code)
-
-        if not item_doc :
+        if not customer :
             frappe.response['status_code'] = 400
-            frappe.response['message'] = _("{} is invalid").format(_('Item'))
+            frappe.response['message'] = _("{} is required").format(_('Customer'))
+            return
+
+        if not customer :
+            frappe.response['status_code'] = 400
+            frappe.response['message'] = _("{} is invalid").format(_('Customer'))
             return
         
-        row = order.append("items",{})
-        row.item_code = item_doc.item_code
-        row.warehoue = item_doc.hub_warehouse
-        row.qty= item.get ("qty")
-        row.price_list_rate= item.get ("rate")
-    
-    order.save(ignore_permissions=True)
-    frappe.response['order'] = order
+        # print (frappe.request.post)
+        print (type(items))
+        if type(items) is str :
+            items = json.loads(str(items))
+        
+        print (type(items))
+        # items = json.loads(str(items))
+        # return
+        print(customer )
+        if not items :
+            frappe.response['status_code'] = 400
+            frappe.response['message'] = _("{} is required").format(_('Items'))
+            return
+
+
+        
+        
+        order = frappe.new_doc("Sales Order")
+        
+        order.customer = customer[0].get("name")
+        order.company = company
+        order.currency = get_company_currency(company)
+        order.price_list = price_list
+        order.order_type = "Sales"
+        order.delivery_date = nowdate()
+        # order.woocommerce_order_id = data.get("order_id")
+        order.conversion_rate = 1
+        order.cost_center = get_default_cost_center(company)
+        
+        warehouse = None
+        for item in items or []:
+            #it=frappe._dict(it)
+           
+            item_code = item.get("item_code")
+            print("item Code" , item_code)
+            if frappe.db.exists("Item" , item_code) :
+                item_doc = frappe.get_doc("Item" , item_code)
+
+            if not item_doc :
+                frappe.response['status_code'] = 400
+                frappe.response['message'] = _("{} is invalid").format(_('Item'))
+                return
+            
+            row = order.append("items",{})
+            row.item_code = item_code
+            row.warehoue = item_doc.hub_warehouse
+            warehouse = item_doc.hub_warehouse
+            row.qty= item.get ("qty")
+            row.price_list_rate= item.get("rate")
+        print("order" , order)
+        order.set_warehouse = warehouse
+        
+        order.save()
+        if data.get("coupon_code" ) :
+            coupon = get_coupon_code(data.get("coupon_code" )) 
+            if coupon :
+                order.coupon_code = coupon
+        order.save()
+        frappe.response['order'] = order
+        return 
+    except Exception as e :
+        error = frappe.new_doc("Error Log")
+        error.method="create_order"
+        error.error = e
+        error.save()
+        frappe.response['status_code'] = 400
+        frappe.response['message'] = _("{} ").format(_(e))
+        return
 
 
 
