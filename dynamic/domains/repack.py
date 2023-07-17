@@ -32,21 +32,29 @@ data = {
 },
 "properties": [  
         #Sales Order Item
-        # {
-        # "doctype": "Stock Entry",
-        # "doctype_or_field": "DocField",
-        # "fieldname": "from_warehouse",
-        # "property": "read_only",
-        # "property_type": "Check",
-        # "value": "1",
-        # },
-        # {
-        # "doctype": "Stock Entry",
-        # "doctype_or_field": "DocField",
-        # "fieldname": "to_warehouse",
-        # "property": "read_only",
-        # "property_type": "Check",
-        # "value": "1",
-        # },
+        {
+        "doctype": "Stock Entry",
+        "doctype_or_field": "DocField",
+        "fieldname": "from_warehouse",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1",
+        },
+        {
+        "doctype": "Stock Entry",
+        "doctype_or_field": "DocField",
+        "fieldname": "to_warehouse",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1",
+        },
+        {
+        "doctype": "Stock Entry Detail",
+        "doctype_or_field": "DocField",
+        "fieldname": "qty",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1",
+        },
 ]
 }
