@@ -495,7 +495,7 @@ def add_row_for_reservation(self):
         sql_reserv = frappe.db.sql(sql)
         #! edited for reservation module affect in terra
         warehouse = item.get('item_warehouse') if "Terra" in DOMAINS else item.get('warehouse') or ''
-        if not item.reservation or not len(sql_reserv):
+        if not item.get('reservation') or not len(sql_reserv):
             reserv_doc = frappe.new_doc('Reservation')
             reserv_doc.item_code = item.item_code
             reserv_doc.status = 'Active'
@@ -513,7 +513,7 @@ def add_row_for_reservation(self):
 
 def check_total_reservation(self):
     for item in self.items:
-        #? edited for reservation module affect in terra
+        #! edited for reservation module affect in terra
         warehouse = item.get('item_warehouse') if "Terra" in DOMAINS else item.get('warehouse') or ''
         if warehouse:
             validate_warehouse_stock_reservation(item.item_code,warehouse,item.qty)
@@ -1382,7 +1382,7 @@ def get_party_address(party_type, party):
 def before_submit_so(doc,*args,**kwargs):
     if 'IFI' in DOMAINS:
         check_crean_amount_after_mapped_doc(doc,*args,**kwargs)
-    if "Terra"  in DOMAINS or "Reservation" in DOMAINS:
+    if "Terra"  in DOMAINS or ("Reservation" in DOMAINS and doc.reservation_check):
         create_reservation_validate(doc,*args , **kwargs)
 
 def hold_item_reserved(doc,*args,**kwargs):

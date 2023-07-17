@@ -41,7 +41,7 @@ frappe.ui.form.on("Sales Invoice", {
 
   refresh(frm) {
     frm.events.add_cheque_button(frm);
-    const myTimeout = setTimeout(get_customer_query, 1300);
+    // const myTimeout = setTimeout(get_customer_query, 1300);
 
 
     var check_domain = frm.events.domian_valid();

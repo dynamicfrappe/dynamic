@@ -33,7 +33,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-05 09:32:24.580533",
+ "modified": "2023-07-17 09:03:15.452796",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Project RS Stages",
@@ -52,6 +52,7 @@
    "write": 1
   }
  ],
+ "restrict_to_domain": "Real State",
  "sort_field": "modified",
  "sort_order": "DESC"
 }

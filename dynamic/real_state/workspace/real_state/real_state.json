@@ -1,0 +1,66 @@
+{
+ "cards_label": "Real State",
+ "category": "Modules",
+ "charts": [],
+ "creation": "2023-07-11 08:11:05.631847",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends": "",
+ "extends_another_page": 1,
+ "hide_custom": 0,
+ "icon": "stock",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Real State",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Real State",
+   "link_to": "Project RS",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Project RS",
+   "link_to": "Project RS",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Project RS Stages",
+   "link_to": "Project RS Stages",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stages RS Blocks",
+   "link_to": "Stages RS Blocks",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2023-07-17 09:12:15.736257",
+ "modified_by": "Administrator",
+ "module": "Real State",
+ "name": "Real State",
+ "onboarding": "",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 1,
+ "restrict_to_domain": "Real State",
+ "shortcuts": []
+}
