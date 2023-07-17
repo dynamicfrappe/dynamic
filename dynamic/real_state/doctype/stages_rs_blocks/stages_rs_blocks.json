@@ -57,7 +57,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-05 09:53:37.994975",
+ "modified": "2023-07-17 09:03:58.123158",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Stages RS Blocks",
@@ -76,6 +76,7 @@
    "write": 1
   }
  ],
+ "restrict_to_domain": "Real State",
  "search_fields": "block_name,block_no",
  "sort_field": "modified",
  "sort_order": "DESC"
