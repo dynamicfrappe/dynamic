@@ -1465,7 +1465,8 @@ def before_insert_invoice(doc , *args , **kwargs) :
 
 
 @frappe.whitelist()
-def before_cancel_invoice(doc , *args , **kwargs):
-    cancel_
-    if 'Moyate' in DOMAINS:
-        lnk = get_link_to_form(customer.doctype, customer.name)
+def delivery_note_before_submit(delivery_doc , *args , **kwargs):
+    for row in delivery_doc.items:
+        #check if available qty in stock and reservation
+        frappe.errprint('test')
+
