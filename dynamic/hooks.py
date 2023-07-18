@@ -148,7 +148,7 @@ doc_events = {
         "after_insert": "dynamic.dynamic.validation.after_insert_variant_item",
     },
     "Delivery Note": {
-        "on_submit": ["dynamic.gebco.api.validate_delivery_note", "dynamic.api.delivery_not_on_submit"],
+        "on_submit": ["dynamic.gebco.api.validate_delivery_note",],
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
         "validate": ["dynamic.api.validate_delivery_note",],
         # "on_cancel": "dynamic.api.cancel_delivery_note",
