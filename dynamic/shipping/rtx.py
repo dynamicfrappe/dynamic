@@ -139,7 +139,7 @@ def create_oder(product):
       try :
          req = requests.post(url , data=json.dumps(pay_load) , headers=header)
          print(req.status_code)
-         if req.status_code == 201 :
+         if req.status_code in [201 , 200 ]:
             respo = req.json()
             sql = f"""
                     update `tabSales Order` set is_synced=1 , rtx_number ="{respo.get('serial')}" where name='{product.get("name")}'
@@ -147,11 +147,11 @@ def create_oder(product):
             frappe.db.sql(sql)
             frappe.db.commit()
             frappe.msgprint("Order Sent to RTX")
-            return 0
+            return 
          else :
             create_erro_log("RTX Error" , req.text)
             frappe.msgprint("error Accourd")
-            return 0
+            return 
 
       except Exception as e :
          create_erro_log("RTX Error" , str(e))
