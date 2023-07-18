@@ -148,8 +148,8 @@ doc_events = {
     },
     "Delivery Note": {
         "on_submit": ["dynamic.gebco.api.validate_delivery_note", "dynamic.api.delivery_not_on_submit"],
-        "before_submit": ["dynamic.api.delivery_note_before_submit"],
-        "validate": ["dynamic.api.validate_delivery_note","dynamic.api.delivery_note_before_submit"],
+        # "before_submit": ["dynamic.api.delivery_note_before_submit"],
+        "validate": ["dynamic.api.validate_delivery_note",],
         # "on_cancel": "dynamic.api.cancel_delivery_note",
     },
    
