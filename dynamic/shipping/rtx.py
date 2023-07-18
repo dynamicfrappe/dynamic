@@ -96,14 +96,26 @@ def create_oder(product):
    customer_address = ""
    # check if address has phone number 
    if product.get("customer_address") :
+      # customer_address =product.get("customer_address")
+     
       address_obj  = frappe.get_doc("Address" , product.get("customer_address"))
-      address = address_obj.address_line1 or ""
+      customer_address = address_obj
+      address =f"""  {customer_address.address_line1}
+                     {customer_address.address_line2} - {customer_address.city} -
+                     {customer_address.state} - {customer_address.country} -
+                       {customer_address.building_no} - {customer_address.floor_no}
+               """
       phone =  address_obj.phone or ""
    if customer.get("customer_primary_address") and customer.get("customer_primary_contact"):
       customer_address = frappe.get_doc("Address", customer.get("customer_primary_address"))
       cutomer_contact = frappe.get_doc("Contact", customer.get("customer_primary_contact"))
       if len(address) < 2 :
-         address = customer_address.address_line1
+         address = f"""{customer_address.address_line1}
+             {customer_address.address_line2} - {customer_address.city} -
+             {customer_address.state} - {customer_address.country} -
+             {customer_address.building_no} - {customer_address.floor_no}
+             
+             """
       if len(phone) < 2 :
          phone = cutomer_contact.phone_nos[0].phone if len(cutomer_contact.phone_nos) > 0 else ""
 
@@ -113,10 +125,12 @@ def create_oder(product):
       "notes"             : product.get("notes") or " " ,
       "order_date"        : datetime_str ,
       "shipment_contents" : data.get("content") ,
-      "weight"            : data.get("wight")
+      "weight"            : data.get("wight") ,
+      "total_amount"      : product.get("grand_total"),
+      "address"           : address
    }
    token = get_token()
-   print(token)
+
    if token :
       header = {
           "Content-Type" :"application/json" ,
