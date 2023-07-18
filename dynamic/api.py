@@ -949,11 +949,11 @@ def validate_mode_of_payment_naming(old_naming=None,mode_of_payment=None,*args, 
 from dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion import  update_month_previous_logs_for_person
 
 @frappe.whitelist()
-def validate_active_domains_cancel(doc ,*args,**kwargs):
+def invoice_on_cancel(doc ,*args,**kwargs):
     if  'Moyate' in DOMAINS: 
-        delete_update_commission_sales()
+        delete_update_commission_sales(doc ,*args,**kwargs)
         # Clear Invoice Commision Amount 
-        # #1 - remove commition log 
+        # #1 - remove commition log  invoice_on_cancel
         # # 2 -update old logs  
 
         # #get invocie log  
@@ -1451,7 +1451,7 @@ from datetime import datetime
 
 
 @frappe.whitelist()
-def before_insert(doc , *args , **kwargs) :
+def before_insert_invoice(doc , *args , **kwargs) :
     if 'Master Deals' in DOMAINS:
         user = frappe.session.user
         user_roles = frappe.get_roles()
@@ -1463,4 +1463,9 @@ def before_insert(doc , *args , **kwargs) :
                     break
 
 
-        
+
+@frappe.whitelist()
+def before_cancel_invoice(doc , *args , **kwargs):
+    cancel_
+    if 'Moyate' in DOMAINS:
+        lnk = get_link_to_form(customer.doctype, customer.name)
