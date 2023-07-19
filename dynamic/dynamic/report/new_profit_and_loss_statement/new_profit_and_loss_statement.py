@@ -66,8 +66,8 @@ def execute(filters=None):
 	print("cost_of_good_sold",cost_of_good_sold)
 	if len(cost_of_good_sold) > 0:
 		total_income_againest_cost_of_good_sold = {
-			'account_name': 'Total Income againist cost of good sold',
-			'account': 'Total Income againist cost of good sold', 
+			'account_name': 'Gross Profit',
+			'account': 'Gross Profit', 
 			'currency': 'EGP',
 			'opening_balance': 0.0,
 			'dec_2023': income[len(income)-2].get("total") - cost_of_good_sold[len(cost_of_good_sold)-2].get("total"),
