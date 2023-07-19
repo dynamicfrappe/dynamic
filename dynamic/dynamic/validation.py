@@ -108,7 +108,6 @@ def validate_item_code(doc,*args,**kwargs):
 
     if 'Barcode Item' in DOMAINS:
         if len(doc.barcodes) and doc.barcodes[0].get('barcode'):
-            print('\n\n\n==>',doc.barcodes[0].get('barcode'),'\n\n==')
             doc.db_set('barcode',doc.barcodes[0].get('barcode'))
             doc.db_set('item_barcode',doc.barcodes[0].get('barcode'))
 
