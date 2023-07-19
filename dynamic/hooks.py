@@ -148,8 +148,9 @@ doc_events = {
         "after_insert": "dynamic.dynamic.validation.after_insert_variant_item",
     },
     "Delivery Note": {
-        "on_submit": "dynamic.gebco.api.validate_delivery_note",
-        "validate": "dynamic.api.validate_delivery_note",
+        "on_submit": ["dynamic.gebco.api.validate_delivery_note",],
+        # "before_submit": ["dynamic.api.delivery_note_before_submit"],
+        "validate": ["dynamic.api.validate_delivery_note",],
         # "on_cancel": "dynamic.api.cancel_delivery_note",
     },
    
@@ -274,7 +275,7 @@ scheduler_events = {
         "* 8 * * *":[
             # "dynamic.ifi.api.send_mail_daily_opportunity_lead",
             # "dynamic.ifi.api.daily_opportunity_notify" 
-        ]
+        ],
     },
     # 	"all": [
     # 		"dynamic.tasks.all"

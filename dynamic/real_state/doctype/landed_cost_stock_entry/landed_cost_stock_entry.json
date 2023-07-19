@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "creation": "2023-07-19 06:43:34.374643",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "receipt_document_type",
+  "receipt_document",
+  "supplier",
+  "col_break1",
+  "posting_date",
+  "grand_total"
+ ],
+ "fields": [
+  {
+   "default": "Stock Entry",
+   "fieldname": "receipt_document_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Receipt Document Type",
+   "options": "Stock Entry",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "receipt_document",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Receipt Document",
+   "oldfieldname": "purchase_receipt_no",
+   "oldfieldtype": "Link",
+   "options": "receipt_document_type",
+   "print_width": "220px",
+   "reqd": 1,
+   "width": "220px"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "fieldname": "col_break1",
+   "fieldtype": "Column Break",
+   "width": "50%"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Grand Total",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2023-07-19 06:43:34.374643",
+ "modified_by": "Administrator",
+ "module": "Real State",
+ "name": "Landed Cost Stock Entry",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "ASC"
+}

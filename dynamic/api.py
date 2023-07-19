@@ -1452,6 +1452,10 @@ from datetime import datetime
 
 @frappe.whitelist()
 def before_insert_invoice(doc , *args , **kwargs) :
+    """
+    this feature for differrent branches
+    change naming of invoice according to user loggin in
+    """
     if 'Master Deals' in DOMAINS:
         user = frappe.session.user
         user_roles = frappe.get_roles()
@@ -1464,8 +1468,5 @@ def before_insert_invoice(doc , *args , **kwargs) :
 
 
 
-@frappe.whitelist()
-def before_cancel_invoice(doc , *args , **kwargs):
-    cancel_
-    if 'Moyate' in DOMAINS:
-        lnk = get_link_to_form(customer.doctype, customer.name)
+
+
