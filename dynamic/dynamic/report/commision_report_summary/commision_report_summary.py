@@ -79,23 +79,35 @@ def get_columns():
 def get_data(filters):
 	conditions = " where 1=1"
 	if filters.get("sales_person"):
-		conditions += " and sales_person = '%s'"%filters.get("sales_person")
+		conditions += " and person.sales_person = '%s'"%filters.get("sales_person")
 
 	data = filters.get("from_date")
 	if data :
-		conditions += f" and from_date >= date('{data}') "
+		conditions += f" and person.from_date >= date('{data}') "
 
 	data = filters.get("to_date")
 	if data :
-		conditions += f" and to_date <= date('{data}') "
+		conditions += f" and person.to_date <= date('{data}') "
 
 	sql = f"""
 	
-	  select sales_person,item__group,commission_template,commission_amount,sum(amount) as 'amount',sum(invoice_qty) as 'total_qty',from_date,to_date from `tabSales Person Commetion` 
-	  {conditions}
-	  group by sales_person,item__group,commission_template , from_date
+	select person.sales_person
+	,person.item__group
+	,person.commission_template
+	,person.commission_amount
+	,sum(person.amount) as 'amount'
+	,sum(person.invoice_qty) as 'total_qty'
+	,person.from_date
+	,person.to_date
+	FROM `tabSales Invoice` invoice
+	INNER JOIN `tabSales Team` team
+	ON invoice.name=team.parent
+	INNER JOIN `tabSales Person Commetion` person
+	ON person.sales_person=team.sales_person AND team.parent=person.invocie
+	  {conditions} AND invoice.docstatus=1
+	  group by person.sales_person,person.item__group,person.commission_template , person.from_date
 	"""
-	print("sql ==================> ",sql)
+	# print("sql ==================> ",sql)
 	res = frappe.db.sql(sql,as_dict=1)
 
 	return res

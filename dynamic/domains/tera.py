@@ -487,7 +487,7 @@ data = {
             "insert_after": "customer",
             "label": "Phone No",
             "translatable": 1,
-            "unique": 1,
+            # "unique": 1,
             "fetch_if_empty": 1,
             "reqd": 1,
             "fetch_from": "party_name.phone_no" 

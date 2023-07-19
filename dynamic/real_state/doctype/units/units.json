@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:{unit_no}-{unit_floor}-{###}",
  "creation": "2023-06-18 14:11:16.019505",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -41,7 +42,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-06-18 14:13:10.654923",
+ "modified": "2023-06-20 11:55:35.389048",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Units",
@@ -60,6 +61,7 @@
    "write": 1
   }
  ],
+ "search_fields": "unit_no,unit_floor,unit_area,unit_details",
  "sort_field": "modified",
  "sort_order": "DESC"
 }

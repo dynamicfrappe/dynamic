@@ -16,15 +16,15 @@ Under The  Fiscal Year Sales Invocie Month will Be The Count Method
 
 #caculate total item group sales amount ant qty 
 def count_total_item_group_qty_amount(invoice):
-    group_qty = [{item.get("item_group"): item.get("qty")} for item in invoice.items ]
-    group_amount = [{item.get("item_group"): item.get("amount")} for item in invoice.items ]
+    group_qty = [{item.get("item_group"): item.get("qty")} for item in invoice.get('items') ]
+    group_amount = [{item.get("item_group"): item.get("amount")} for item in invoice.get('items') ]
     #get Sum qty amd amount for each item group 
     sum_group_qty  = reduce(add, (map(Counter, group_qty )))
     sum_group_amount  = reduce(add, (map(Counter, group_amount )))
  
-    for person in invoice.sales_team :
-        sales_person = validate_sales_person(person.sales_person)
-        person_percent  = float(person.allocated_percentage) /100 
+    for person in invoice.get('sales_team') :
+        sales_person = validate_sales_person(person.get("sales_person"))
+        person_percent  = float(person.get('allocated_percentage')) /100 
         #maping item Group with commision template -- >
         if not sales_person :
             
@@ -51,15 +51,15 @@ def count_total_item_group_qty_amount(invoice):
             for k,v in commetion.items() :
                 item_group = k
             old_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE 
-            sales_person = '{person.sales_person}' and invocie='{invoice.name}' and 
+            sales_person = '{person.get("sales_person")}' and invocie='{invoice.get("name")}' and 
             item__group = '{item_group}' 
                 """,as_dict =1)
             if old_log and len(old_log) > 0 :
                 log = frappe.get_doc("Sales Person Commetion" ,old_log[0].get('name') )
             else: 
                 log = frappe.new_doc("Sales Person Commetion" )
-            log.sales_person = person.sales_person
-            log.invocie = invoice.name
+            log.sales_person = person.get("sales_person")
+            log.invocie = invoice.get('name')
             for k,v in commetion.items() :
                log.item__group = k 
                log.commission_template = v
@@ -255,23 +255,26 @@ def   validate_sales_invocie_to_moyate(self):
                 3 - 
     """
     count_total_item_group_qty_amount(self)
-    if self.sales_team :
+    if self.get('sales_team') :
         # frappe.throw(" Sales Team Found")
-        case =  "submit" if self._action == "submit" else "draft"
-        for person in self.sales_team :
-            sales_person = validate_sales_person(person.sales_person)
+        case =  "submit" if self.get('_action') == "submit" else "draft"
+        for person in self.get('sales_team') :
+            sales_person = validate_sales_person(person.get('sales_person'))
             #caculate Commition Base On total Amount Before Tax 
-            cal_precent = float(person.allocated_percentage) /100
+            cal_precent = float(person.get('allocated_percentage')) /100
             #data = allocated_percentage ,  sales_person , Items ,  date
-            filtersitems = filetr_item_base_on_template([{  "item_code"  :item.item_code ,
-                                                            "item_group" :item.item_group ,
-                                                            "amount"     :float(item.base_amount) *cal_precent  ,
-                                                            "qty" :item.qty} 
-                                                             for item in  self.items] , 
-                                                             person.sales_person ,
-                                                             self.posting_date ,
+            filtersitems = filetr_item_base_on_template([{  "item_code"  :item.get('item_code') ,
+                                                            "item_group" :item.get('item_group') ,
+                                                            "amount"     :float(item.get('base_amount')) *cal_precent  ,
+                                                            "qty" :item.get('qty')} 
+                                                             for item in  self.get('items')] , 
+                                                             person.get('sales_person') ,
+                                                             self.get('posting_date') ,
                                                              case )
-            person.incentives = filtersitems
+            if(isinstance(person,dict)):
+                person.setdefault('incentives',filtersitems) 
+            else:
+                person.incentives = filtersitems 
     
 
 

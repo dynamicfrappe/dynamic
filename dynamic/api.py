@@ -93,13 +93,17 @@ from dynamic.gebco.doctype.stock_ledger import get_valuation_rate
 DOMAINS = frappe.get_active_domains()
 
 
+
 @frappe.whitelist()
 def validate_active_domains(doc,*args,**kwargs):
     if  'Moyate' in DOMAINS: 
         """   Validate Sales Commition With Moyate """
+        if isinstance(doc, str):
+            doc = json.loads(doc) 
+        print('\n\n\n\n=======>',type(doc),'\n\n\n')
+        # print('\n\n\n\n=======>',doc.name,'\n\n\n')
         validate_sales_invocie_to_moyate(doc)
-
-
+        
     if 'Product Bundle' in DOMAINS: 
         """   Update Bundle of Bundles """
         make_packing_list(doc)
@@ -129,6 +133,11 @@ def validate_active_domains(doc,*args,**kwargs):
         check_item_valuation_rate(doc)
     
     
+    
+@frappe.whitelist()
+def test_api(doc,*args,**kwargs):
+    # if  'Moyate' in DOMAINS:
+    print('\n\n\n\n\n***********>',111111111111111111,'\n\n\n') 
 
 
 def check_item_valuation_rate(doc):
@@ -219,6 +228,7 @@ def autoname(self,fun=''):
         #series = "Tax-Inv-.DD.-.MM.-.YYYY.-.###." if getattr(self,'tax_auth' , 0) else self.naming_series
         self.item_code=generate_item_code(self.item_group)
         self.name = self.item_code
+    
 
 
 @frappe.whitelist()
@@ -469,11 +479,8 @@ def update_against_document_in_jv(self):
 				from dynamic.terra.utils import reconcile_against_document
 				reconcile_against_document(lst)
 
-@frappe.whitelist()
-def create_reservation_validate(self,*args , **kwargs):
-    if "Terra" in DOMAINS:
-        check_total_reservation(self)
-        add_row_for_reservation(self)
+
+
        
 def add_row_for_reservation(self):
     # if not self.reservation:
@@ -486,14 +493,16 @@ def add_row_for_reservation(self):
         where so.name = '{self.name}'
         """
         sql_reserv = frappe.db.sql(sql)
-        if not item.reservation or not len(sql_reserv):
+        #! edited for reservation module affect in terra
+        warehouse = item.get('item_warehouse') if "Terra" in DOMAINS else item.get('warehouse') or ''
+        if not item.get('reservation') or not len(sql_reserv):
             reserv_doc = frappe.new_doc('Reservation')
             reserv_doc.item_code = item.item_code
             reserv_doc.status = 'Active'
             reserv_doc.valid_from = self.transaction_date
             reserv_doc.reservation_amount = item.qty
             #source in reservation = row.source else slaes_order_source
-            reserv_doc.warehouse_source = item.item_warehouse if item.item_warehouse  else "" #self.set_warehouse
+            reserv_doc.warehouse_source = warehouse #self.set_warehouse
             if not reserv_doc.warehouse_source:
                 reserv_doc.order_source = item.item_purchase_order if item.item_purchase_order else "" #self.purchase_order
             reserv_doc.save()
@@ -504,9 +513,11 @@ def add_row_for_reservation(self):
 
 def check_total_reservation(self):
     for item in self.items:
-        if item.item_warehouse:
-            validate_warehouse_stock_reservation(item.item_code,item.item_warehouse,item.qty)
-        if item.item_purchase_order:
+        #! edited for reservation module affect in terra
+        warehouse = item.get('item_warehouse') if "Terra" in DOMAINS else item.get('warehouse') or ''
+        if warehouse:
+            validate_warehouse_stock_reservation(item.item_code,warehouse,item.qty)
+        if "Terra" in DOMAINS and item.get('item_purchase_order'):
             validate_purchase_order_reservation(item.item_code,item.item_purchase_order,item.qty)
 
 def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_amount):
@@ -531,12 +542,14 @@ def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_
 				AND `tabBin`.item_code = '{item_code}'
 				AND `tabReservation`.status <> "Invalid"
 				""" ,as_dict=1)
+       
 	if data and len(data) > 0 :
 		if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < reservation_amount  :
 			frappe.throw(_(f""" stock value in warehouse {warehouse_source} = {data[0].get("qty") or 0} 
 				and you requires  {reservation_amount} for Item {item_code}  """))
 	if  not data or len(data) == 0 :
 			frappe.throw(_(f"""no stock value in warehouse {warehouse_source} for item {item_code}  """))
+    
 	return data
 
 def validate_purchase_order_reservation(item_code,order_source,reservation_amount):
@@ -936,30 +949,52 @@ def validate_mode_of_payment_naming(old_naming=None,mode_of_payment=None,*args, 
 from dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion import  update_month_previous_logs_for_person
 
 @frappe.whitelist()
-def validate_active_domains_cancel(doc ,*args,**kwargs):
+def invoice_on_cancel(doc ,*args,**kwargs):
     if  'Moyate' in DOMAINS: 
+        delete_update_commission_sales(doc ,*args,**kwargs)
         # Clear Invoice Commision Amount 
-        #1 - remove commition log 
-        # 2 -update old logs  
+        # #1 - remove commition log  invoice_on_cancel
+        # # 2 -update old logs  
 
-        #get invocie log  
-        invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
-        # frappe.throw(str(invoice_log))
-        if invoice_log and len(invoice_log) > 0 :
-            for l in invoice_log :
-                log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
+        # #get invocie log  
+        # invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
+        # # frappe.throw(str(invoice_log))
+        # if invoice_log and len(invoice_log) > 0 :
+        #     for l in invoice_log :
+        #         log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
                 
-                first_day  = log.from_date
-                last_day = log.to_date 
-                person = log.sales_person
-                item_group = log.item__group
-                # log.remove_raw()
-                frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
-                frappe.db.commit()
-                update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
+        #         first_day  = log.from_date
+        #         last_day = log.to_date 
+        #         person = log.sales_person
+        #         item_group = log.item__group
+        #         # log.remove_raw()
+        #         frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
+        #         frappe.db.commit()
+        #         update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
 
 
-     
+@frappe.whitelist()
+def delete_update_commission_sales(doc ,*args,**kwargs):
+# Clear Invoice Commision Amount 
+    #1 - remove commition log 
+    # 2 -update old logs  
+
+    #get invocie log  
+    invoice_log = frappe.db.sql(f""" SELECT name FROM `tabSales Person Commetion` WHERE invocie = '{doc.name}'""" ,as_dict=1)
+    # frappe.throw(str(invoice_log))
+    if invoice_log and len(invoice_log) > 0 :
+        for l in invoice_log :
+            log = frappe.get_doc("Sales Person Commetion" , l.get("name"))
+            
+            first_day  = log.from_date
+            last_day = log.to_date 
+            person = log.sales_person
+            item_group = log.item__group
+            # log.remove_raw()
+            frappe.db.sql(f""" DELETE FROM `tabSales Person Commetion` WHERE name = '{l.get("name")}'""")
+            frappe.db.commit()
+            update_month_previous_logs_for_person(first_day , last_day , item_group ,person  )
+
 @frappe.whitelist()           
 def before_save(doc ,*args,**kwargs) :
     if doc.items:
@@ -1110,7 +1145,18 @@ def calculate_orderd_qty(doc,*args , **kwargs) :
                 """)
                 frappe.db.commit()
             # frappe.throw(f"{sales_order.per_orderd}")
-            
+
+@frappe.whitelist()           
+def before_submit_po(doc,*args,**kwargs):
+    if 'IFI' in DOMAINS:
+        add_crean_in_taxes(doc,*args,**kwargs)
+
+@frappe.whitelist()           
+def before_submit_quot(doc,*args,**kwargs):
+    if 'Real State' in DOMAINS:
+        hold_item_reserved(doc,*args,**kwargs)
+    if 'IFI' in DOMAINS:
+        add_crean_in_taxes(doc,*args,**kwargs)
 
 @frappe.whitelist()
 def add_crean_in_taxes(doc,*args,**kwargs):
@@ -1149,55 +1195,7 @@ def add_crean_in_taxes(doc,*args,**kwargs):
             doc.run_method("calculate_taxes_and_totals")
         if(not crean_account):
             frappe.msgprint(_("Company Has No Crane Account"))
-       
-@frappe.whitelist()    
-def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
-    if 'IFI' in DOMAINS:
-        if(doc.crean=='Yes' and doc.crean_amount >0):
-            crean_account,cost_center = frappe.db.get_value('Company',doc.company,["crean_income_account","cost_center"])
-            if(crean_account):
-                flage_crean_tax = True
-                total = 0
-                if len(doc.taxes):
-                    for row in doc.taxes:
-                        total = row.total
-                        if row.account_head == crean_account:
-                            row.tax_amount = doc.crean_amount
-                            row.total =  row.total
-                            flage_crean_tax = False
-                    else:
-                        if  flage_crean_tax and  doc.doctype == "Sales Order":
-                            doc.append("taxes",{
-                            "charge_type":"Actual",
-                            "account_head":crean_account,
-                            "tax_amount":doc.crean_amount,
-                            "total":doc.crean_amount + total,
-                            "description":crean_account
-                        })
-                        elif  flage_crean_tax and  doc.doctype == "Sales Invoice":
-                            doc.append("taxes",{
-                            "charge_type":"Actual",
-                            "account_head":crean_account,
-                            "tax_amount":doc.crean_amount,
-                            "total":doc.crean_amount + total,
-                            "description":crean_account,
-                            "cost_center":cost_center,
-                        })
-                        elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
-                            doc.append("taxes",{
-                            "charge_type":"Actual",
-                            "account_head":crean_account,
-                            "tax_amount":doc.crean_amount,
-                            "total":doc.crean_amount + total,
-                            "description":crean_account,
-                            "category":"Total",
-                            "add_deduct_tax":"Add",
-                            "cost_center":cost_center,
-                        })
-                    doc.total_taxes_and_charges = doc.crean_amount + total
-            doc.run_method("calculate_taxes_and_totals")
-            if(not crean_account):
-                frappe.msgprint(_("Company Has No Crane Account"))
+
                  
 
 
@@ -1379,33 +1377,96 @@ def get_party_address(party_type, party):
     return street_address + ',' + city_state
 
 
-# import barcode
-# from barcode import Code128
-# import base64
-# from io import BytesIO
 
 @frappe.whitelist()
-def get_barcode_item():
-    ...
-#     # Get the item code and generate the barcode image
-#     item_code = "978020137962"
-#     ean = EAN13(item_code)
-#     buffer = BytesIO()
-#     ean.write(buffer)
-#     barcode_image_url = f"data:image/png;base64,{buffer.getvalue().encode('base64').decode()}"
-    
-#     # Pass the barcode image URL as a context variable to the Jinja template
-#     context = {'item_code': item_code, 'barcode_image_url': barcode_image_url}
-#     return context
+def before_submit_so(doc,*args,**kwargs):
+    if 'IFI' in DOMAINS:
+        check_crean_amount_after_mapped_doc(doc,*args,**kwargs)
+    if "Terra"  in DOMAINS or ("Reservation" in DOMAINS and doc.reservation_check):
+        create_reservation_validate(doc,*args , **kwargs)
 
-# def get_barcode_item():
-#     # Get the item code and generate the barcode image
-#     item_code = "978020137962"
-#     code128 = Code128(item_code)
-#     buffer = BytesIO()
-#     code128.write(buffer)
-#     barcode_image_url = f"data:image/png;base64,{base64.b64encode(buffer.getvalue()).decode()}"
-    
-#     # Pass the barcode image URL as a context variable to the Jinja template
-#     context = {'item_code': item_code, 'barcode_image_url': barcode_image_url}
-#     return context
+def hold_item_reserved(doc,*args,**kwargs):
+    for row in doc.items:
+        if row.qty > 1:
+            frappe.throw(_("Qty Should be 1 "))
+        frappe.db.set_value("Item",row.item_code,'reserved',1)
+
+@frappe.whitelist()    
+def check_crean_amount_after_mapped_doc(doc,*args,**kwargs):
+    if 'IFI' in DOMAINS:
+        if(doc.crean=='Yes' and doc.crean_amount >0):
+            crean_account,cost_center = frappe.db.get_value('Company',doc.company,["crean_income_account","cost_center"])
+            if(crean_account):
+                flage_crean_tax = True
+                total = 0
+                if len(doc.taxes):
+                    for row in doc.taxes:
+                        total = row.total
+                        if row.account_head == crean_account:
+                            row.tax_amount = doc.crean_amount
+                            row.total =  row.total
+                            flage_crean_tax = False
+                    else:
+                        if  flage_crean_tax and  doc.doctype == "Sales Order":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account
+                        })
+                        elif  flage_crean_tax and  doc.doctype == "Sales Invoice":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account,
+                            "cost_center":cost_center,
+                        })
+                        elif flage_crean_tax and  doc.doctype == "Purchase Invoice":
+                            doc.append("taxes",{
+                            "charge_type":"Actual",
+                            "account_head":crean_account,
+                            "tax_amount":doc.crean_amount,
+                            "total":doc.crean_amount + total,
+                            "description":crean_account,
+                            "category":"Total",
+                            "add_deduct_tax":"Add",
+                            "cost_center":cost_center,
+                        })
+                    doc.total_taxes_and_charges = doc.crean_amount + total
+            doc.run_method("calculate_taxes_and_totals")
+            if(not crean_account):
+                frappe.msgprint(_("Company Has No Crane Account"))
+
+@frappe.whitelist()
+def create_reservation_validate(doc,*args , **kwargs):
+    #if "Terra"  in DOMAINS or "Reservation" in DOMAINS:
+    check_total_reservation(doc)
+    add_row_for_reservation(doc)
+
+from datetime import datetime
+
+
+
+@frappe.whitelist()
+def before_insert_invoice(doc , *args , **kwargs) :
+    """
+    this feature for differrent branches
+    change naming of invoice according to user loggin in
+    """
+    if 'Master Deals' in DOMAINS:
+        user = frappe.session.user
+        user_roles = frappe.get_roles()
+        selling_settings = frappe.get_single("Selling Settings")
+        if selling_settings.series_role and len(selling_settings.series_role):
+            for row in selling_settings.series_role:
+                if row.role in user_roles and row.naming_series_si:
+                    doc.naming_series = row.naming_series_si
+                    break
+
+
+
+
+

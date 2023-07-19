@@ -7,7 +7,7 @@ from erpnext.selling.doctype.sales_order.sales_order import SalesOrder as ERPNex
 from erpnext.selling.doctype.quotation.quotation import Quotation as ERPNextQuotation
 from erpnext.payroll.doctype.salary_slip.salary_slip import SalarySlip as ERPNextSalarySlip
 from erpnext.crm.doctype.lead.lead import Lead as ERPNextLead
-
+from erpnext.stock.doctype.stock_entry.stock_entry import StockEntry as ERPNextStockEntry
 
 # Default ERP Class
 PaymentEntry = ERPNextPaymentEntry
@@ -16,7 +16,7 @@ Quotation = ERPNextQuotation
 SalarySlip = ERPNextSalarySlip
 Lead = ERPNextLead
 SalesInvoice = ERPNextSalesInvoice
-
+StockEntry = ERPNextStockEntry
 
 
 
@@ -83,7 +83,15 @@ if "Teba" in active_domains:
 
     PaymentEntry = TerraPaymentEntry
 
+if "Moyate" in active_domains:
+    from dynamic.moyaty.doctype.sales_invoice.sales_invoice import CustomSalesInvoice as MoyateSalesInvoice
 
+    SalesInvoice = MoyateSalesInvoice
+
+if "Future" in active_domains:
+    from dynamic.future.stock_entry import StockEntry as FutureStockEntry
+
+    StockEntry = FutureStockEntry
 
 
 

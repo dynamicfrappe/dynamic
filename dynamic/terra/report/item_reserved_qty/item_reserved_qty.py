@@ -36,8 +36,12 @@ class ItemReservedQty(object):
 			conditions += " and `tabReservation`.creation <= '%s'"%self.filters.get("to_date")
 		if self.filters.get("item_code"):
 			conditions += " and `tabBin`.item_code = '%s'"%self.filters.get("item_code")
+		if self.filters.get("cost_center"):
+			conditions += " and so.cost_center = '%s'"%self.filters.get("cost_center")
+			
 		sql_query_new = f"""
 						SELECT `tabBin`.name as 'bin'
+						,so.cost_center as cost_center
 						,`tabBin`.warehouse as 'bin_warehouse'
 						,`tabBin`.item_code
 						,`tabBin`.actual_qty as bin_actual_qty
@@ -51,6 +55,10 @@ class ItemReservedQty(object):
 						LEFT JOIN `tabReservation Warehouse`
 						ON `tabReservation Warehouse`.parent=`tabReservation`.name 
 						AND `tabReservation Warehouse`.item=`tabReservation`.item_code
+						LEFT JOIN `tabSales Order` so
+						ON so.name=`tabReservation`.sales_order
+						LEFT JOIN `tabSales Invoice Item` soi
+						ON soi.parent=so.name AND `tabReservation Warehouse`.item = soi.item_code
 						WHERE {conditions} 
 						GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		""".format(conditions=conditions)
@@ -93,3 +101,13 @@ class ItemReservedQty(object):
                 "width": 180,
             },
 		]
+		if self.filters.get("cost_center"):
+			self.columns.append(
+				{
+					"label": _("Cost Center"),
+					"fieldname": "cost_center",
+					"fieldtype": "Link",
+					"options": "Cost Center",
+					"width": 180,
+				}
+			)
