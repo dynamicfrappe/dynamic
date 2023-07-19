@@ -233,11 +233,15 @@ def get_cost_of_good_sold_data(
 		accounts, accounts_by_name, parent_children_map = filter_cost_accounts(accounts)
 		company_currency = get_appropriate_currency(company, filters)
 		gl_entries_by_account = {}
-		print("account ================================> ",accounts)
+		account_doc = frappe.get_doc("Account",account)
+		sql = """select lft, rgt from tabAccount
+				where parent_account='%s'"""%account
+		if not account_doc.is_group:
+			sql = """select lft, rgt from tabAccount
+				where name='%s'"""%account
+
 		for root in frappe.db.sql(
-			"""select lft, rgt from tabAccount
-				where parent_account=%s or name=%s""",
-			(account,account),
+			sql,
 			as_dict=1,
 		):
 			#account
