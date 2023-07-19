@@ -6,3 +6,16 @@ frappe.ui.form.on('Project RS Stages', {
 
 	// }
 });
+
+
+
+cur_frm.fields_dict["items"].grid.get_field("block_name").get_query = function(doc) {
+	return {
+		filters: {
+		'project_name': doc.project_name,
+		'stage_name': doc.stage_name,
+		}
+
+	}
+
+}

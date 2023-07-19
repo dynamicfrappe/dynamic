@@ -97,10 +97,7 @@ def get_data(filters):
 	ON person.sales_person=team.sales_person AND team.parent=person.invocie
 	  {conditions} AND invoice.docstatus=1
 	"""
-	# frappe.errprint(sql)
-	print(sql)
-	res = frappe.db.sql(sql,as_dict=1)
-
-	return res
+	# res = frappe.db.sql(sql,as_dict=1)
+	return frappe.db.sql(sql,as_dict=1)
 
 

@@ -14,7 +14,7 @@ frappe.ui.form.on("Purchase Order", {
     frm.events.add_cheque_button(frm);
     
     frm.events.get_linked_doctypes(frm)
-    const myTimeout = setTimeout(get_supplier_query, 1000);
+    // const myTimeout = setTimeout(get_supplier_query, 1000);
 
    
   },

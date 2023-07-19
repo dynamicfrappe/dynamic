@@ -41,7 +41,7 @@ frappe.ui.form.on("Sales Invoice", {
 
   refresh(frm) {
     frm.events.add_cheque_button(frm);
-    const myTimeout = setTimeout(get_customer_query, 1300);
+    // const myTimeout = setTimeout(get_customer_query, 1300);
 
 
     var check_domain = frm.events.domian_valid();
@@ -126,3 +126,22 @@ function get_customer_query(){
   });
   
 }
+
+
+frappe.ui.form.on("Sales Team", {
+  sales_person:function(frm,cdt,cdn){
+    let row = locals[cdt][cdn]
+    if (row.sales_person && frm.doc.docstatus==1){
+      frm.call({
+        method:"dynamic.api.validate_active_domains",
+        args:{
+          doc:frm.doc
+        },
+        callback:function(r){
+          console.log('return --------->')
+        }
+      })
+    }
+  }
+
+})

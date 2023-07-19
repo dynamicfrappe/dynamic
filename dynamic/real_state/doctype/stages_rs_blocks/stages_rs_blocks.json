@@ -9,6 +9,10 @@
  "field_order": [
   "block_name",
   "block_no",
+  "column_break_wxrkk",
+  "project_name",
+  "stage_name",
+  "section_break_bnhjh",
   "items"
  ],
  "fields": [
@@ -22,17 +26,38 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Stages RS Blocks Item",
-   "options": "Stages RS Blocks Item"
+   "options": "Blocks Items"
   },
   {
    "fieldname": "block_no",
    "fieldtype": "Int",
    "label": "Block NO"
+  },
+  {
+   "fieldname": "column_break_wxrkk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Link",
+   "label": "Project Name",
+   "options": "Project RS"
+  },
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Link",
+   "label": "Stage Name",
+   "options": "Project RS Stages"
+  },
+  {
+   "description": "Block Units",
+   "fieldname": "section_break_bnhjh",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-06-20 11:58:06.148641",
+ "modified": "2023-07-17 09:03:58.123158",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Stages RS Blocks",
@@ -51,6 +76,7 @@
    "write": 1
   }
  ],
+ "restrict_to_domain": "Real State",
  "search_fields": "block_name,block_no",
  "sort_field": "modified",
  "sort_order": "DESC"

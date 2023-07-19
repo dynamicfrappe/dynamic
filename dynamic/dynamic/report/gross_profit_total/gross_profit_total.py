@@ -3,22 +3,12 @@
 
 
 import frappe
-from frappe import _, qb, scrub
-from frappe.query_builder import Order
+from frappe import _, scrub
 from frappe.utils import cint, flt
 
 from erpnext.controllers.queries import get_match_cond
-from erpnext.stock.report.stock_ledger.stock_ledger import get_item_group_condition
 from erpnext.stock.utils import get_incoming_rate
-import frappe
-import os, json
-from frappe import _
-from frappe.modules import scrub, get_module_path
-from frappe.utils import flt, cint, get_html_format
-from frappe.translate import send_translations
-import frappe.desk.reportview
-from frappe.permissions import get_role_permissions
-from six import iteritems, string_types
+
 
 def execute(filters=None):
 	if not filters:
@@ -145,8 +135,7 @@ def execute(filters=None):
 
 	else:
 		get_data_when_not_grouped_by_invoice(gross_profit_data, filters, group_wise_columns, data)
-	# data = add_total_row(data, columns)
-	frappe.errprint(f'data--->{data}')
+
 	return columns, data
 
 
@@ -167,7 +156,6 @@ def get_data_when_grouped_by_invoice(
 		row.currency = filters.currency
 
 		for col in group_wise_columns.get(scrub(filters.group_by)):
-			# frappe.errprint(f'-column_names[col]:{column_names[col]}-->{src.get(col)}')
 			row[column_names[col]] = src.get(col)
 
 		data.append(row)
@@ -330,7 +318,6 @@ def get_columns(group_wise_columns, filters):
 				"options": "territory",
 				"width": 100,
 			},
-			
 			"cost_center": {
 				"label": _("Cost Center"),
 				"fieldname": "cost_center",
@@ -338,12 +325,10 @@ def get_columns(group_wise_columns, filters):
 				"options": "Cost Center",
 				"width": 100,
 			},
-			
 		}
 	)
-	# frappe.errprint(group_wise_columns.get(scrub(filters.group_by)))
+
 	for col in group_wise_columns.get(scrub(filters.group_by)):
-		# frappe.errprint(f"col:-->{col}----")
 		columns.append(column_map.get(col))
 
 	columns.append(
@@ -353,15 +338,6 @@ def get_columns(group_wise_columns, filters):
 			"fieldtype": "Link",
 			"options": "Currency",
 			"hidden": 1,
-		}
-	)
-	columns.append(
-		{
-			"label": _("Cost Center"),
-			"fieldname": "cost_center",
-			"fieldtype": "Link",
-			"options": "Cost Center",
-			"width": 100,
 		}
 	)
 
@@ -390,23 +366,21 @@ def get_column_names():
 			"gross_profit": "gross_profit",
 			"gross_profit_percent": "gross_profit_%",
 			"project": "project",
-			
 		}
 	)
 
 
 class GrossProfitGenerator(object):
 	def __init__(self, filters=None):
-		self.sle = {}
 		self.data = []
 		self.average_buying_rate = {}
 		self.filters = frappe._dict(filters)
 		self.load_invoice_items()
-		self.get_delivery_notes()
 
 		if filters.group_by == "Invoice":
 			self.group_items_by_invoice()
 
+		self.load_stock_ledger_entries()
 		self.load_product_bundle()
 		self.load_non_stock_items()
 		self.get_returned_invoice_items()
@@ -481,7 +455,6 @@ class GrossProfitGenerator(object):
 
 		if self.grouped:
 			self.get_average_rate_based_on_group_by()
-		# frappe.errprint(f"self.grouped_data --->{self.grouped_data}")
 
 	def get_average_rate_based_on_group_by(self):
 		for key in list(self.grouped):
@@ -503,14 +476,7 @@ class GrossProfitGenerator(object):
 						):
 							returned_item_rows = self.returned_invoices[row.parent][row.item_code]
 							for returned_item_row in returned_item_rows:
-								# returned_items 'qty' should be stateful
-								if returned_item_row.qty != 0:
-									if row.qty >= abs(returned_item_row.qty):
-										row.qty += returned_item_row.qty
-										returned_item_row.qty = 0
-									else:
-										row.qty = 0
-										returned_item_row.qty += row.qty
+								row.qty += flt(returned_item_row.qty)
 								row.base_amount += flt(returned_item_row.base_amount, self.currency_precision)
 							row.buying_amount = flt(flt(row.qty) * flt(row.buying_rate), self.currency_precision)
 						if flt(row.qty) or row.base_amount:
@@ -575,7 +541,6 @@ class GrossProfitGenerator(object):
 		return False
 
 	def get_buying_amount_from_product_bundle(self, row, product_bundle):
-		# frappe.errprint("in get_buying_amount_from_product_bundle")
 		buying_amount = 0.0
 		for packed_item in product_bundle:
 			if packed_item.get("parent_detail_docname") == row.item_row:
@@ -583,24 +548,7 @@ class GrossProfitGenerator(object):
 
 		return flt(buying_amount, self.currency_precision)
 
-	def calculate_buying_amount_from_sle(self, row, my_sle, parenttype, parent, item_row, item_code):
-		for i, sle in enumerate(my_sle):
-			# find the stock valution rate from stock ledger entry
-			if (
-				sle.voucher_type == parenttype
-				and parent == sle.voucher_no
-				and sle.voucher_detail_no == item_row
-			):
-				previous_stock_value = len(my_sle) > i + 1 and flt(my_sle[i + 1].stock_value) or 0.0
-
-				if previous_stock_value:
-					return abs(previous_stock_value - flt(sle.stock_value)) * flt(row.qty) / abs(flt(sle.qty))
-				else:
-					return flt(row.qty) * self.get_average_buying_rate(row, item_code)
-		return 0.0
-
 	def get_buying_amount(self, row, item_code):
-		# frappe.errprint(f'--in get_buying_amount 566-->{row}')
 		# IMP NOTE
 		# stock_ledger_entries should already be filtered by item_code and warehouse and
 		# sorted by posting_date desc, posting_time desc
@@ -610,54 +558,29 @@ class GrossProfitGenerator(object):
 			return flt(row.qty) * item_rate
 
 		else:
-			my_sle = self.get_stock_ledger_entries(item_code, row.warehouse)
+			my_sle = self.sle.get((item_code, row.warehouse))
 			if (row.update_stock or row.dn_detail) and my_sle:
 				parenttype, parent = row.parenttype, row.parent
 				if row.dn_detail:
 					parenttype, parent = "Delivery Note", row.delivery_note
 
-				return self.calculate_buying_amount_from_sle(
-					row, my_sle, parenttype, parent, row.item_row, item_code
-				)
-			elif self.delivery_notes.get((row.parent, row.item_code), None):
-				#  check if Invoice has delivery notes
-				dn = self.delivery_notes.get((row.parent, row.item_code))
-				parenttype, parent, item_row, warehouse = (
-					"Delivery Note",
-					dn["delivery_note"],
-					dn["item_row"],
-					dn["warehouse"],
-				)
-				my_sle = self.get_stock_ledger_entries(item_code, row.warehouse)
-				return self.calculate_buying_amount_from_sle(
-					row, my_sle, parenttype, parent, item_row, item_code
-				)
-			elif row.sales_order and row.so_detail:
-				incoming_amount = self.get_buying_amount_from_so_dn(row.sales_order, row.so_detail, item_code)
-				if incoming_amount:
-					return incoming_amount
+				for i, sle in enumerate(my_sle):
+					# find the stock valution rate from stock ledger entry
+					if (
+						sle.voucher_type == parenttype
+						and parent == sle.voucher_no
+						and sle.voucher_detail_no == row.item_row
+					):
+						previous_stock_value = len(my_sle) > i + 1 and flt(my_sle[i + 1].stock_value) or 0.0
+
+						if previous_stock_value:
+							return (previous_stock_value - flt(sle.stock_value)) * flt(row.qty) / abs(flt(sle.qty))
+						else:
+							return flt(row.qty) * self.get_average_buying_rate(row, item_code)
 			else:
 				return flt(row.qty) * self.get_average_buying_rate(row, item_code)
 
-		return flt(row.qty) * self.get_average_buying_rate(row, item_code)
-
-	def get_buying_amount_from_so_dn(self, sales_order, so_detail, item_code):
-		from frappe.query_builder.functions import Sum
-
-		delivery_note_item = frappe.qb.DocType("Delivery Note Item")
-
-		query = (
-			frappe.qb.from_(delivery_note_item)
-			.select(Sum(delivery_note_item.incoming_rate * delivery_note_item.stock_qty))
-			.where(delivery_note_item.docstatus == 1)
-			.where(delivery_note_item.item_code == item_code)
-			.where(delivery_note_item.against_sales_order == sales_order)
-			.where(delivery_note_item.so_detail == so_detail)
-			.groupby(delivery_note_item.item_code)
-		)
-
-		incoming_amount = query.run()
-		return flt(incoming_amount[0][0]) if incoming_amount else 0
+		return 0.0
 
 	def get_average_buying_rate(self, row, item_code):
 		args = row
@@ -677,7 +600,6 @@ class GrossProfitGenerator(object):
 		return self.average_buying_rate[item_code]
 
 	def get_last_purchase_rate(self, item_code, row):
-		# frappe.errprint(f'--get_last_purchase_rate-->{row}')
 		purchase_invoice = frappe.qb.DocType("Purchase Invoice")
 		purchase_invoice_item = frappe.qb.DocType("Purchase Invoice Item")
 
@@ -712,19 +634,6 @@ class GrossProfitGenerator(object):
 		if self.filters.to_date:
 			conditions += " and posting_date <= %(to_date)s"
 
-		conditions += " and (is_return = 0 or (is_return=1 and return_against is null))"
-
-		if self.filters.item_group:
-			conditions += " and {0}".format(get_item_group_condition(self.filters.item_group))
-
-		if self.filters.sales_person:
-			conditions += """
-				and exists(select 1
-							from `tabSales Team` st
-							where st.parent = `tabSales Invoice`.name
-							and   st.sales_person = %(sales_person)s)
-			"""
-
 		if self.filters.group_by == "Sales Person":
 			sales_person_cols = ", sales.sales_person, sales.allocated_amount, sales.incentives"
 			sales_team_table = "left join `tabSales Team` sales on sales.parent = `tabSales Invoice`.name"
@@ -737,9 +646,6 @@ class GrossProfitGenerator(object):
 
 		if self.filters.get("item_code"):
 			conditions += " and `tabSales Invoice Item`.item_code = %(item_code)s"
-			
-		if self.filters.get("customer"):
-			conditions += f" and `tabSales Invoice`.customer = '{self.filters.get('customer')}' "
 
 		self.si_list = frappe.db.sql(
 			"""
@@ -751,8 +657,7 @@ class GrossProfitGenerator(object):
 				`tabSales Invoice`.territory, `tabSales Invoice Item`.item_code,
 				`tabSales Invoice Item`.item_name, `tabSales Invoice Item`.description,
 				`tabSales Invoice Item`.warehouse, `tabSales Invoice Item`.item_group,
-				`tabSales Invoice Item`.brand, `tabSales Invoice Item`.so_detail,
-				`tabSales Invoice Item`.sales_order, `tabSales Invoice Item`.dn_detail,
+				`tabSales Invoice Item`.brand, `tabSales Invoice Item`.dn_detail,
 				`tabSales Invoice Item`.delivery_note, `tabSales Invoice Item`.stock_qty as qty,
 				`tabSales Invoice Item`.base_net_rate, `tabSales Invoice Item`.base_net_amount,
 				`tabSales Invoice Item`.name as "item_row", `tabSales Invoice`.is_return,
@@ -774,30 +679,6 @@ class GrossProfitGenerator(object):
 			self.filters,
 			as_dict=1,
 		)
-		# frappe.errprint(self.si_list)
-
-	def get_delivery_notes(self):
-		self.delivery_notes = frappe._dict({})
-		if self.si_list:
-			invoices = [x.parent for x in self.si_list]
-			dni = qb.DocType("Delivery Note Item")
-			delivery_notes = (
-				qb.from_(dni)
-				.select(
-					dni.against_sales_invoice.as_("sales_invoice"),
-					dni.item_code,
-					dni.warehouse,
-					dni.parent.as_("delivery_note"),
-					dni.name.as_("item_row"),
-				)
-				.where((dni.docstatus == 1) & (dni.against_sales_invoice.isin(invoices)))
-				.groupby(dni.against_sales_invoice, dni.item_code)
-				.orderby(dni.creation, order=Order.desc)
-				.run(as_dict=True)
-			)
-
-			for entry in delivery_notes:
-				self.delivery_notes[(entry.sales_invoice, entry.item_code)] = entry
 
 	def group_items_by_invoice(self):
 		"""
@@ -807,16 +688,13 @@ class GrossProfitGenerator(object):
 		parents = []
 
 		for row in self.si_list:
-			# frappe.errprint(f'parent-->{row}')
 			if row.parent not in parents:
 				parents.append(row.parent)
 
 		parents_index = 0
-		# frappe.errprint(f'before si_list++++++-->{self.si_list}')
 		for index, row in enumerate(self.si_list):
 			if parents_index < len(parents) and row.parent == parents[parents_index]:
 				invoice = self.get_invoice_row(row)
-				# frappe.errprint(f'invoice row++++++-->{invoice}')
 				self.si_list.insert(index, invoice)
 				parents_index += 1
 
@@ -829,7 +707,6 @@ class GrossProfitGenerator(object):
 
 					if frappe.db.exists("Product Bundle", row.item_code):
 						self.add_bundle_items(row, index)
-		# frappe.errprint(f'self.si_list++++++-->{self.si_list}')
 
 	def get_invoice_row(self, row):
 		return frappe._dict(
@@ -846,13 +723,13 @@ class GrossProfitGenerator(object):
 				"customer_group": row.customer_group,
 				"item_code": None,
 				"item_name": None,
-				"description": '',
+				"description": None,
 				"warehouse": None,
 				"item_group": None,
 				"brand": None,
 				"dn_detail": None,
 				"delivery_note": None,
-				"qty": 0,
+				"qty": None,
 				"item_row": None,
 				"is_return": row.is_return,
 				"cost_center": row.cost_center,
@@ -906,37 +783,24 @@ class GrossProfitGenerator(object):
 			"Item", item_code, ["item_name", "description", "item_group", "brand"]
 		)
 
-	def get_stock_ledger_entries(self, item_code, warehouse):
-		# frappe.errprint(f'--in get_stock_ledger_entries 77-->')
-		if item_code and warehouse:
-			if (item_code, warehouse) not in self.sle:
-				sle = qb.DocType("Stock Ledger Entry")
-				res = (
-					qb.from_(sle)
-					.select(
-						sle.item_code,
-						sle.voucher_type,
-						sle.voucher_no,
-						sle.voucher_detail_no,
-						sle.stock_value,
-						sle.warehouse,
-						sle.actual_qty.as_("qty"),
-					)
-					.where(
-						(sle.company == self.filters.company)
-						& (sle.item_code == item_code)
-						& (sle.warehouse == warehouse)
-						& (sle.is_cancelled == 0)
-					)
-					.orderby(sle.item_code)
-					.orderby(sle.warehouse, sle.posting_date, sle.posting_time, sle.creation, order=Order.desc)
-					.run(as_dict=True)
-				)
+	def load_stock_ledger_entries(self):
+		res = frappe.db.sql(
+			"""select item_code, voucher_type, voucher_no,
+				voucher_detail_no, stock_value, warehouse, actual_qty as qty
+			from `tabStock Ledger Entry`
+			where company=%(company)s and is_cancelled = 0
+			order by
+				item_code desc, warehouse desc, posting_date desc,
+				posting_time desc, creation desc""",
+			self.filters,
+			as_dict=True,
+		)
+		self.sle = {}
+		for r in res:
+			if (r.item_code, r.warehouse) not in self.sle:
+				self.sle[(r.item_code, r.warehouse)] = []
 
-				self.sle[(item_code, warehouse)] = res
-			# frappe.errprint(f'--in res 88-->{res}')
-			return self.sle[(item_code, warehouse)]
-		return []
+			self.sle[(r.item_code, r.warehouse)].append(r)
 
 	def load_product_bundle(self):
 		self.product_bundles = {}
@@ -956,107 +820,3 @@ class GrossProfitGenerator(object):
 			"""select name from tabItem
 			where is_stock_item=0"""
 		)
-
-
-# def add_total_row(result, columns):
-# 	total_row = [""]*len(columns)
-# 	has_percent = []
-# 	for row in result:
-# 		for i, col in enumerate(columns):
-# 			fieldtype = None
-# 			if isinstance(col, basestring):
-# 				col = col.split(":")
-# 				if len(col) > 1:
-# 					fieldtype = col[1]
-# 			else:
-# 				fieldtype = col.get("fieldtype")
-
-# 			if fieldtype in ["Currency", "Int", "Float", "Percent"] and flt(row[i]):
-# 				total_row[i] = flt(total_row[i]) + flt(row[i])
-# 			if fieldtype == "Percent" and i not in has_percent:
-# 				has_percent.append(i)
-
-# 	for i in has_percent:
-# 		total_row[i] = total_row[i] / len(result)
-
-# 	first_col_fieldtype = None
-# 	if isinstance(columns[0], basestring):
-# 		first_col = columns[0].split(":")
-# 		if len(first_col) > 1:
-# 			first_col_fieldtype = first_col[1].split("/")[0]
-# 	else:
-# 		first_col_fieldtype = columns[0].get("fieldtype")
-
-# 	if first_col_fieldtype not in ["Currency", "Int", "Float", "Percent"]:
-# 		if first_col_fieldtype == "Link":
-# 			total_row[0] = "'" + _("Total") + "'"
-# 		else:
-# 			total_row[0] = _("Total")
-
-# 	result.append(total_row)
-# 	return result
-
-def add_total_row(result, columns, meta=None, is_tree=False, parent_field=None):
-	print("\n\n\n\n-->tota*****l\n\n\n")
-	total_row = [""] * len(columns)
-	has_percent = []
-
-	for i, col in enumerate(columns):
-		fieldtype, options, fieldname = None, None, None
-		if isinstance(col, string_types):
-			if meta:
-				# get fieldtype from the meta
-				field = meta.get_field(col)
-				if field:
-					fieldtype = meta.get_field(col).fieldtype
-					fieldname = meta.get_field(col).fieldname
-			else:
-				col = col.split(":")
-				if len(col) > 1:
-					if col[1]:
-						fieldtype = col[1]
-						if "/" in fieldtype:
-							fieldtype, options = fieldtype.split("/")
-					else:
-						fieldtype = "Data"
-		else:
-			fieldtype = col.get("fieldtype")
-			fieldname = col.get("fieldname")
-			options = col.get("options")
-
-		for row in result:
-			frappe.errprint(f'--->{row}')
-			if i >= len(row):
-				continue
-			cell = row.get(fieldname) if isinstance(row, dict) else row[i]
-			if fieldtype in ["Currency", "Int", "Float", "Percent", "Duration"] and flt(cell):
-				if not (is_tree and row.get(parent_field)):
-					total_row[i] = flt(total_row[i]) + flt(cell)
-
-			if fieldtype == "Percent" and i not in has_percent:
-				has_percent.append(i)
-
-			if fieldtype == "Time" and cell:
-				if not total_row[i]:
-					total_row[i] = timedelta(hours=0, minutes=0, seconds=0)
-				total_row[i] = total_row[i] + cell
-
-		if fieldtype == "Link" and options == "Currency":
-			total_row[i] = result[0].get(fieldname) if isinstance(result[0], dict) else result[0][i]
-
-	for i in has_percent:
-		total_row[i] = flt(total_row[i]) / len(result)
-
-	first_col_fieldtype = None
-	if isinstance(columns[0], string_types):
-		first_col = columns[0].split(":")
-		if len(first_col) > 1:
-			first_col_fieldtype = first_col[1].split("/")[0]
-	else:
-		first_col_fieldtype = columns[0].get("fieldtype")
-
-	if first_col_fieldtype not in ["Currency", "Int", "Float", "Percent", "Date"]:
-		total_row[0] = _("Total")
-
-	result.append(total_row)
-	return result

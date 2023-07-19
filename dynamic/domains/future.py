@@ -3,6 +3,15 @@ from __future__ import unicode_literals
 
 data = {
     'custom_fields': {
+        'Landed Cost Taxes and Charges': [
+            {
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "base_amount",
+                "options": "Cost Center",
+            }
+        ]
        
 },
     "properties": [  

@@ -37,6 +37,30 @@ data = {
             "no_copy":1
             },
         ],
+        'Sales Invoice Item':[
+            {
+            "label": _("Reservation"),
+            "fieldname": "reservation",
+            "fieldtype": "Link",
+            "options": "Reservation",
+            "insert_after": "description_section",
+            "allow_on_submit":1,
+            "read_only" : 1,
+            "no_copy":1
+            },
+        ],
+         'Delivery Note Item':[
+            {
+            "label": _("Reservation"),
+            "fieldname": "reservation",
+            "fieldtype": "Link",
+            "options": "Reservation",
+            "insert_after": "section_break_6",
+            "allow_on_submit":1,
+            "read_only" : 1,
+            "no_copy":1
+            },
+        ],
         
     },
       "properties": [

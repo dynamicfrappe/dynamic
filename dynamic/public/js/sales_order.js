@@ -157,19 +157,7 @@ frappe.ui.form.on("Sales Order", {
 				filters:{"item_code":row.item_code}
 			};
 		});
-    frappe.call({
-      method: "dynamic.api.get_active_domains",
-      callback: function (r) {
-        if (r.message && r.message.length) {
-          if (r.message.includes("Reservation")) {
-            frm.set_query('item_code', 'items', function(doc, cdt, cdn) {
-              return {
-                filters:{"reserved":0}
-              };
-            });
-          }
-      }}
-  })
+    
     
   },
   

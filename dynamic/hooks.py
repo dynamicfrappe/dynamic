@@ -70,6 +70,7 @@ override_doctype_class = {
     "Salary Slip" : "dynamic.override_doctype_class.SalarySlip",
     "Sales Invoice": "dynamic.override_doctype_class.SalesInvoice",
     "Customer": "dynamic.teba.doctype.customer.CustomerController",
+    "Stock Entry":"dynamic.override_doctype_class.StockEntry"
     # "Lead" : "dynamic.override_doctype_class.Lead"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
@@ -136,8 +137,9 @@ doc_events = {
         # "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
         "validate": "dynamic.api.validate_active_domains",
-        "on_cancel" :"dynamic.api.validate_active_domains_cancel",
-        "before_insert": "dynamic.api.before_insert",
+        "on_cancel" :"dynamic.api.invoice_on_cancel",
+        "before_insert": "dynamic.api.before_insert_invoice", 
+        # "before_cancel" : "dynamic.api.before_cancel_invoice",
     },
     "Item": {
         "autoname": "dynamic.api.autoname",
@@ -146,8 +148,9 @@ doc_events = {
         "after_insert": "dynamic.dynamic.validation.after_insert_variant_item",
     },
     "Delivery Note": {
-        "on_submit": "dynamic.gebco.api.validate_delivery_note",
-        "validate": "dynamic.api.validate_delivery_note",
+        "on_submit": ["dynamic.gebco.api.validate_delivery_note",],
+        # "before_submit": ["dynamic.api.delivery_note_before_submit"],
+        "validate": ["dynamic.api.validate_delivery_note",],
         # "on_cancel": "dynamic.api.cancel_delivery_note",
     },
    
@@ -207,11 +210,11 @@ doc_events = {
     },
     "Quotation":{
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
-        "before_submit": "dynamic.api.add_crean_in_taxes",
+        "before_submit": "dynamic.api.before_submit_quot",#add_crean_in_taxes
     },
     "Purchase Order":{
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
-        "before_submit": "dynamic.api.add_crean_in_taxes",
+        "before_submit": "dynamic.api.before_submit_po",
         "after_inser" :  "dynamic.api.calculate_orderd_qty",
         "on_submit":  "dynamic.api.calculate_orderd_qty",
     } ,
@@ -272,7 +275,7 @@ scheduler_events = {
         "* 8 * * *":[
             # "dynamic.ifi.api.send_mail_daily_opportunity_lead",
             # "dynamic.ifi.api.daily_opportunity_notify" 
-        ]
+        ],
     },
     # 	"all": [
     # 		"dynamic.tasks.all"
@@ -361,6 +364,7 @@ domains = {
     'Real State':"dynamic.domains.real_state",
     "Master Deals":"dynamic.domains.master_deals",
     "Barcode Item":"dynamic.domains.barcode_item",
+    "Repack":"dynamic.domains.repack",
 }
 
 # domain Conatin
@@ -380,7 +384,6 @@ jenv = {
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
         "get_party_address:dynamic.api.get_party_address",#ifi
-        # "get_barcode_item:dynamic.api.get_barcode_item", 
     ],
     "filters": []
 }
