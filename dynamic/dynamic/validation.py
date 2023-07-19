@@ -100,12 +100,17 @@ def validate_item_code(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         print("mohsen33")
         if doc.is_new():
-            
             item_code = generate_item_code(doc.item_group)
             print("mohsen44",item_code)
             doc.item_code = item_code
             create_item_serial_doc(doc)
             create_item_specs(doc)
+
+    if 'Barcode Item' in DOMAINS:
+        if len(doc.barcodes) and doc.barcodes[0].get('barcode'):
+            print('\n\n\n==>',doc.barcodes[0].get('barcode'),'\n\n==')
+            doc.db_set('barcode',doc.barcodes[0].get('barcode'))
+            doc.db_set('item_barcode',doc.barcodes[0].get('barcode'))
 
         
 
