@@ -66,6 +66,7 @@ def create_sales_invoice_script():
 		pass
 def after_install():
 	print("+dynamic")
+
 	create_currency_exchange_rate_script()
 	create_sales_invoice_script()
 	create_invoice_custom_field()

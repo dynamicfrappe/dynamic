@@ -1,23 +1,48 @@
 frappe.ui.form.on("Payment Entry", {
-  setup: function (frm) {
-    frm.set_query("drawn_bank_account", function () {
-      return {
-        filters: [
-          // ["bank", "=", frm.doc.drawn_bank],
-          ["is_company_account", "=", 1],
-        ],
-      };
-    });
-    // frm.set_query("endorsed_party_account", function () {
-    //   return {
-    //     filters: [
-    //       ["company", "=", frm.doc.company],
-    //       ["is_group", "=", 0],
-    //       ["disabled", "=", 0],
-    //     ],
-    //   };
-    // });
+
+  paid_from:function(frm) {
+    frm.doc.currency_exchange =1
+    frm.set_df_property("currency_exchange" , "hidden" , 1) 
+    var account = frm.doc.paid_from 
+    var currency = frm.doc.paid_from_account_currency 
+    if (currency != frappe.get_doc(":Company", frm.doc.company).default_currency ) {
+      frappe.call({
+        "method" :"dynamic.dynamic.utils.currency_valuation_rate" ,
+         async: false,
+        "args" :{
+          "account" : account
+        },callback :function(r){
+         if (r.message) {
+          frm.doc.currency_exchange = r.message
+          frm.set_df_property("currency_exchange" , "hidden" , 0) 
+          frm.refresh_field("currency_exchange")
+         }
+         
+        }
+      })
+      
+    }
+
   },
+  // setup: function (frm) {
+  //   frm.set_query("drawn_bank_account", function () {
+  //     return {
+  //       filters: [
+  //         // ["bank", "=", frm.doc.drawn_bank],
+  //         ["is_company_account", "=", 1],
+  //       ],
+  //     };
+  //   });
+  //   // frm.set_query("endorsed_party_account", function () {
+  //   //   return {
+  //   //     filters: [
+  //   //       ["company", "=", frm.doc.company],
+  //   //       ["is_group", "=", 0],
+  //   //       ["disabled", "=", 0],
+  //   //     ],
+  //   //   };
+  //   // });
+  // },
   get_party_account_ch: function (frm, callback) {
     if (
       frm.doc.company &&
