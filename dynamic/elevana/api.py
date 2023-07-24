@@ -419,9 +419,7 @@ def create_sales_order(*args, **kwargs):
             warehouse = item_doc.hub_warehouse
             row.qty= item.get ("qty")
             row.price_list_rate= item.get("rate")
-        print("order" , order)
         order.set_warehouse = warehouse
-        
         order.save()
         if data.get("coupon_code" ) :
             coupon = get_coupon_code(data.get("coupon_code" )) 

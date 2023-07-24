@@ -84,7 +84,7 @@
    "fieldtype": "Table",
    "label": "Purchase Receipt Items",
    "no_copy": 1,
-   "options": "Landed Cost Item",
+   "options": "Real State Cost Item",
    "reqd": 1
   },
   {
@@ -154,7 +154,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-07-19 06:43:54.529531",
+ "modified": "2023-07-19 09:00:39.568059",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Real State Cost",

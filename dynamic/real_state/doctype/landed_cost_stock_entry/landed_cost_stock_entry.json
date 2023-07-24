@@ -20,7 +20,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Receipt Document Type",
-   "options": "Stock Entry",
+   "options": "Stock Entry\nPurchase Receipt",
    "read_only": 1,
    "reqd": 1
   },
@@ -65,7 +65,7 @@
  ],
  "istable": 1,
  "links": [],
- "modified": "2023-07-19 06:43:34.374643",
+ "modified": "2023-07-19 08:47:57.617675",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Landed Cost Stock Entry",

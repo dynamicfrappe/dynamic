@@ -57,8 +57,8 @@ doctype_list_js = {
                     "Quotation" : "public/js/quotation_list.js"
                     }
 
-after_install = "dynamic.install.after_install"
-after_migrate = "dynamic.install.after_install"
+after_install =[ "dynamic.install.after_install","dynamic.dynamic.utils.create_customizations"]
+after_migrate = ["dynamic.install.after_install" ,"dynamic.dynamic.utils.create_customizations"]
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
@@ -99,7 +99,7 @@ doctype_js = {
     "Purchase Receipt":"public/js/purchase_receipt.js",
     "Stock Reconciliation":"public/js/stock_reconciliation.js",
     "Item":"public/js/item.js",
-    # "Journal Entry":"public/js/journal_entry.js",
+    "Journal Entry":"public/js/journal_entry.js",
 
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 
