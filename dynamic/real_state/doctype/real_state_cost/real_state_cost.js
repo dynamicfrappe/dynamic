@@ -207,8 +207,6 @@ frappe.ui.form.on("Landed Cost Stock Entry", {
 					doctype: "Stock Entry"
 				},
 				callback(r) {
-					console.log(r.message.total_incoming_value);
-					console.log(r.message.total_outgoing_value);
 					if (r.message) {
 						if(r.message.total_incoming_value>0){
 							v_grand_total = r.message.total_incoming_value

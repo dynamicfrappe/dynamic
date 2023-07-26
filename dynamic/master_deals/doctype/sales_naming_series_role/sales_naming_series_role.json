@@ -19,15 +19,16 @@
   },
   {
    "fieldname": "naming_series_si",
-   "fieldtype": "Data",
+   "fieldtype": "Select",
    "in_list_view": 1,
-   "label": "Naming Series SI"
+   "label": "Naming Series SI",
+   "options": "ACC-SINV-.YYYY.-\nACC-SINV-RET-.YYYY.-"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-06-22 04:46:46.739572",
+ "modified": "2023-07-26 05:04:27.933970",
  "modified_by": "Administrator",
  "module": "Master Deals",
  "name": "Sales Naming Series Role",

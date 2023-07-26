@@ -1092,6 +1092,16 @@ def validate_stock_entry(doc,*args,**kwargs):
                 target =  frappe.db.get_value('Stock Entry', f'{doc.outgoing_stock_entry}', 'ds_warehouse')
                 doc.to_warehouse = target
                 return target
+    
+    if  'Real State' in DOMAINS:
+        if doc.get('real_state_cost') and doc.get('stock_entry_type') == 'Material Issue':
+            real_stat_cost = frappe.get_doc('Real State Cost', doc.get('real_state_cost'))
+            for item in real_stat_cost.items:
+                for row in doc.items:
+                    row.item_code == item.item_code
+                    row.basic_rate = (item.amount / item.qty)
+                    row.amount = (item.amount)
+                    row.basic_amount = (item.amount)
 
     # Add vana validate 
 
@@ -1386,6 +1396,7 @@ def before_submit_so(doc,*args,**kwargs):
         create_reservation_validate(doc,*args , **kwargs)
 
 def hold_item_reserved(doc,*args,**kwargs):
+    # frappe.throw('test')
     for row in doc.items:
         if row.qty > 1:
             frappe.throw(_("Qty Should be 1 "))
