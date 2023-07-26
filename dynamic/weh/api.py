@@ -69,10 +69,31 @@ def get_consumables():
     if data.get("date") :
         date =  data.get("date")
         d_sql = d_sql +f"and posting_date =date('{date}')"
+
+        get_name= frappe.db.sql(d_sql ,as_dict= 1)
+        if get_name and len(get_name) > 0  :
+            name = get_name[0].get("name")
+            if name :
+                fileds = ""
+                if data.get("branch") :
+                   fileds =  fileds + f""" branch = '{data.get("branch") }' ,"""
+                if data.get("doctor") :
+                   fileds =  fileds + f""" doctor = '{data.get("doctor") } ',"""
+                if data.get("surgery") :
+                   fileds =  fileds + f""" surgery = '{data.get("surgery") }' ,"""
+
+                
+                frappe.db.sql (f"""
+                UPDATE `tabDelivery Note` SET {fileds[0:-1]}
+                WHERE name ='{name}'  
+                """)
+                frappe.db.commit()
     try :
         delvery_note = frappe.db.sql(f""" 
         select item_name , qty , rate , price_list_rate ,base_amount as amount from `tabDelivery Note Item` WHERE parent in ({d_sql})
         """,as_dict=1)
+
+
         frappe.local.response['message'] =delvery_note
         frappe.local.response['http_status_code'] = 200
         # return delvery_note
