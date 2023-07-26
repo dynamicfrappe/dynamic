@@ -19,15 +19,111 @@ from erpnext.accounts.doctype.journal_entry.journal_entry import get_exchange_ra
 
 class RealStateCost(LandedCostVoucher):
 	def validate(self):
-		self.check_mandatory()
-		self.init_landed_taxes_and_totals()
-		self.set_total_taxes_and_charges()
-		if not self.get("items"):
-			self.get_items_from_purchase_receipts()
+		# self.create_matrial_issue()
+		# self.create_matrial_reciept()
+		# self.create_gl_landed_cost()
+		
+		# self.check_mandatory()
+		# self.init_landed_taxes_and_totals()
+		# self.set_total_taxes_and_charges()
+		# if not self.get("items"):
+		# 	self.get_items_from_purchase_receipts()
 
-		self.set_applicable_charges_on_item()
+		# self.set_applicable_charges_on_item()
+		...
+	def after_insert(self):
+		self.create_matrial_issue()
+		self.create_matrial_reciept()
+		...
 
+	def create_matrial_issue(self):
+		stock_matial_issue = frappe.new_doc("Stock Entry")
+		stock_matial_issue.stock_entry_type = "Material Issue"
+		stock_matial_issue.purpose = "Material Issue"
+		stock_matial_issue.from_warehouse = self.source_warehouse
+		for row in self.items:
+			stock_matial_issue.append('items',{
+				's_warehouse' :self.source_warehouse,
+				'item_code' :row.item_code,
+				'qty' :row.qty,
+				'basic_rate' :(row.amount / row.qty),
+				'expense_account' :self.temporary_account,
+			})
+		stock_matial_issue.real_state_cost = self.name
+		stock_matial_issue.save(ignore_permissions=1)
 	
+	def create_matrial_reciept(self):
+		all_tax = sum(flt(tax.amount)for tax in self.get("taxes"))
+		stock_matial_receipt = frappe.new_doc("Stock Entry")
+		stock_matial_receipt.stock_entry_type = "Material Receipt"
+		stock_matial_receipt.purpose = "Material Receipt"
+		stock_matial_receipt.to_warehouse = self.target_warehouse
+		for row in self.items:
+			stock_matial_receipt.append('items',{
+				't_warehouse' :self.target_warehouse,
+				'item_code' :row.item_code,
+				'qty' :row.qty,
+				'basic_rate' :(row.amount / row.qty) + all_tax,
+			})
+		# print('\n\n\n===>',stock_matial_receipt.__dict__,'\n\n\n--')
+		stock_matial_receipt.real_state_cost = self.name
+		stock_matial_receipt.save(ignore_permissions=1)
+
+	def create_gl_landed_cost(self):
+		from erpnext.accounts.general_ledger import make_gl_entries, make_reverse_gl_entries
+		gl_entries = []
+		grand_total = self.purchase_receipts[0].grand_total 
+		gl_entries.append(
+			self.get_gl_dict({
+			'company': self.company,
+			"account": self.debit_to,#company stock in hand
+			"against": self.temporary_account,
+			'voucher_type': 'Real State Cost',
+			'voucher_no': self.name,
+			'debit': self.total_taxes_and_charges + grand_total,
+			'credit': 0,
+			'debit_in_account_currency': self.total_taxes_and_charges + grand_total,
+			'credit_in_account_currency': 0,
+			'is_opening': "No",
+			'party_type': None,
+			'party': None,
+			# 'project': data.get("project")
+			# 'remarks': data.get("remarks"),
+			# 'posting_date': data.posting_date,
+			# 'fiscal_year': fiscal_year,
+			})
+		)
+		
+		
+		gl_entries.append(
+			self.get_gl_dict({
+			'company': self.company,
+			"account": self.debit_to,#company stock in hand
+			"against": self.temporary_account,
+			'voucher_type': 'Real State Cost',
+			'voucher_no': self.name,
+			'debit': self.total_taxes_and_charges + grand_total,
+			'credit': 0,
+			'debit_in_account_currency': self.total_taxes_and_charges + grand_total,
+			'credit_in_account_currency': 0,
+			'is_opening': "No",
+			'party_type': None,
+			'party': None,
+			# 'project': data.get("project")
+			# 'remarks': data.get("remarks"),
+			# 'posting_date': data.posting_date,
+			# 'fiscal_year': fiscal_year,
+			})
+		)
+
+		make_gl_entries(
+					gl_entries,
+					update_outstanding='No',
+					merge_entries=False,
+					from_repost=False,
+				)
+		
+
 	def init_landed_taxes_and_totals(self):
 		self.tax_field = "taxes" 
 		self.set_account_currency()
@@ -74,13 +170,13 @@ class RealStateCost(LandedCostVoucher):
 			#? set landed cost voucher amount in pr item
 			self.set_landed_cost_voucher_amount()
 			#? set valuation amount in pr item
-			self.update_valuation_rate(doc,reset_outgoing_rate=False)
+			# self.update_valuation_rate(doc,reset_outgoing_rate=False)
 			#? db_update will update and save landed_cost_voucher_amount and voucher_amount in PR
 			all_tax = sum(flt(tax.amount)for tax in self.get("taxes"))
 			for item in doc.get("items"):
 				item.basic_rate += all_tax
 				item.valuation_rate +=  all_tax
-				print('\n\n\n==<item',item.__dict__,'\n\n\n')
+				# print('\n\n\n==<item',item.__dict__,'\n\n\n')
 				item.db_update()
 			
 			#!check
