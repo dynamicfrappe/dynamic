@@ -91,46 +91,46 @@ class RealStateCost(LandedCostVoucher):
 		else:
 			fiscal_year = fiscal_years[0][0]
 		# send
-		# gl_entries.append(
-		# 	{
-		# 	"account": self.temporary_account,
-		# 	"against": stock_entry.items[0].expense_account , #**temporary_account
-		# 	"posting_date": now(),
-		# 	'company': self.company,
-		# 	'voucher_type': 'Real State Cost',
-		# 	'voucher_no': self.name,
-		# 	"fiscal_year": fiscal_year,
-		# 	'debit':  grand_total,
-		# 	'credit': 0,
-		# 	'debit_in_account_currency':  grand_total,
-		# 	'credit_in_account_currency': 0,
-		# 	'is_opening': "No",
-		# 	'party_type': None,
-		# 	'party': None,
-		# 	"cost_center": self.items[0].cost_center,
-		# 	}
-		# )
+		gl_entries.append(
+			{
+			"account": self.temporary_account,
+			"against": stock_entry.items[0].expense_account , #**temporary_account
+			"posting_date": now(),
+			'company': self.company,
+			'voucher_type': 'Real State Cost',
+			'voucher_no': self.name,
+			"fiscal_year": fiscal_year,
+			'debit':  grand_total,
+			'credit': 0,
+			'debit_in_account_currency':  grand_total,
+			'credit_in_account_currency': 0,
+			'is_opening': "No",
+			'party_type': None,
+			'party': None,
+			"cost_center": self.items[0].cost_center,
+			}
+		)
 		
 		
-		# gl_entries.append(
-		# 	{
-		# 	"account": stock_entry.items[0].expense_account,
-		# 	"against": self.temporary_account,
-		# 	"posting_date": now(),
-		# 	'company': self.company,
-		# 	'voucher_type': 'Real State Cost',
-		# 	'voucher_no': self.name,
-		# 	"fiscal_year": fiscal_year,
-		# 	'debit':  0,
-		# 	'credit': grand_total,
-		# 	'debit_in_account_currency':  0,
-		# 	'credit_in_account_currency': grand_total,
-		# 	'is_opening': "No",
-		# 	'party_type': None,
-		# 	'party': None,
-		# 	"cost_center": self.items[0].cost_center,
-		# 	}
-		# )
+		gl_entries.append(
+			{
+			"account": stock_entry.items[0].expense_account,
+			"against": self.temporary_account,
+			"posting_date": now(),
+			'company': self.company,
+			'voucher_type': 'Real State Cost',
+			'voucher_no': self.name,
+			"fiscal_year": fiscal_year,
+			'debit':  0,
+			'credit': grand_total,
+			'debit_in_account_currency':  0,
+			'credit_in_account_currency': grand_total,
+			'is_opening': "No",
+			'party_type': None,
+			'party': None,
+			"cost_center": self.items[0].cost_center,
+			}
+		)
 # ///////////////////////////////////////////////////////
 		# print('\n\n\n==><',gl_entries,'\n\n')
 		# frappe.throw('test')
@@ -174,26 +174,26 @@ class RealStateCost(LandedCostVoucher):
 			}
 		)
 		#2-recieve
-		# gl_entries.append(
-		# 	{
-		# 	"account": self.taxes[0].expense_account,
-		# 	"against": stock_account,
-		# 	"posting_date": now(),
-		# 	'company': self.company,
-		# 	'voucher_type': 'Real State Cost',
-		# 	'voucher_no': self.name,
-		# 	"fiscal_year": fiscal_year,
-		# 	'debit':  0,
-		# 	'credit': self.total_taxes_and_charges,
-		# 	'debit_in_account_currency':  0,
-		# 	'credit_in_account_currency': self.total_taxes_and_charges,
-		# 	'is_opening': "No",
-		# 	'party_type': None,
-		# 	'party': None,
-		# 	"cost_center": self.taxes[0].taxes_cost_center,
-		# 	}
-		# )
-		# gl_entries.append(
+		gl_entries.append(
+			{
+			"account": self.taxes[0].expense_account,
+			"against": stock_account,
+			"posting_date": now(),
+			'company': self.company,
+			'voucher_type': 'Real State Cost',
+			'voucher_no': self.name,
+			"fiscal_year": fiscal_year,
+			'debit':  0,
+			'credit': self.total_taxes_and_charges,
+			'debit_in_account_currency':  0,
+			'credit_in_account_currency': self.total_taxes_and_charges,
+			'is_opening': "No",
+			'party_type': None,
+			'party': None,
+			"cost_center": self.taxes[0].taxes_cost_center,
+			}
+		)
+		gl_entries.append(
 			{
 			"account": stock_account,
 			"against": self.taxes[0].expense_account,
