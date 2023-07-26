@@ -158,3 +158,9 @@ def customer_query_custom(doctype, txt, searchfield, start, page_len, filters, a
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 		as_dict=as_dict,
 	)
+
+
+@frappe.whitelist()
+def get_options(doc, arg=None):
+	if frappe.get_meta('Sales Invoice').get_field("naming_series"):
+		return frappe.get_meta('Sales Invoice').get_field("naming_series").options
