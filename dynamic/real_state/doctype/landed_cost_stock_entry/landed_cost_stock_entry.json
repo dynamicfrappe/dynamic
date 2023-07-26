@@ -8,6 +8,7 @@
  "field_order": [
   "receipt_document_type",
   "receipt_document",
+  "to_warehouse",
   "supplier",
   "col_break1",
   "posting_date",
@@ -20,7 +21,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Receipt Document Type",
-   "options": "Stock Entry",
+   "options": "Stock Entry\nPurchase Receipt",
    "read_only": 1,
    "reqd": 1
   },
@@ -61,11 +62,19 @@
    "in_list_view": 1,
    "label": "Grand Total",
    "read_only": 1
+  },
+  {
+   "fetch_from": "receipt_document.to_warehouse",
+   "fieldname": "to_warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2023-07-19 06:43:34.374643",
+ "modified": "2023-07-25 08:39:48.292590",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Landed Cost Stock Entry",

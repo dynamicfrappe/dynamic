@@ -7,6 +7,26 @@ from frappe import _
 data = {
 
     'custom_fields': {
+        'Stock Entry':[
+            {
+                "label":_("Real State Cost"),
+                "fieldname":"real_state_cost",
+                "fieldtype":"Link",
+                "options":"Real State Cost",
+                "read_only":"1", 
+                "insert_after":"total_amount", 
+            },
+        ],
+        'Landed Cost Taxes and Charges':[
+            {
+                "label":_("Cost Center"),
+                "fieldname":"taxes_cost_center",
+                "fieldtype":"Link",
+                "insert_after":"base_amount", 
+                "options":"Cost Center", 
+                "in_list_view":"1", 
+            },
+        ],
         'Item':[
             {
                 "label":_("Unit Info"),

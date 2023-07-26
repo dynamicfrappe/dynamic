@@ -10,6 +10,10 @@
   "company",
   "column_break_2",
   "posting_date",
+  "section_break_p06rh",
+  "source_warehouse",
+  "target_warehouse",
+  "temporary_account",
   "section_break_5",
   "purchase_receipts",
   "purchase_receipt_items",
@@ -84,7 +88,7 @@
    "fieldtype": "Table",
    "label": "Purchase Receipt Items",
    "no_copy": 1,
-   "options": "Landed Cost Item",
+   "options": "Real State Cost Item",
    "reqd": 1
   },
   {
@@ -148,13 +152,36 @@
    "options": "Real State Cost",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "description": "Warehouse",
+   "fieldname": "section_break_p06rh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "label": "Target Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "temporary_account",
+   "fieldtype": "Link",
+   "label": "Temporary Account",
+   "options": "Account"
   }
  ],
  "icon": "icon-usd",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-07-19 06:43:54.529531",
+ "modified": "2023-07-25 11:25:23.334705",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Real State Cost",

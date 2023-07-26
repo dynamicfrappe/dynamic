@@ -32,7 +32,7 @@ def create_currency_exchange_je(*args,**kwargs) :
    field.fieldname = "account_currency_exchange"
    field.insert_after  ="balance"
    field.read_only = 1
-   field.hidden = 1
+   #field.hidden = 1
    field.fieldtype = "Data"
    field.save()
    print("currency_exchange Filed is created")
@@ -66,6 +66,7 @@ def currency_valuation_rate(account ) :
       valuation =  balance_in_account_currency / balance_in_compnay_currency
       return valuation 
    except Exception as e :
+      print("-----------------------------------",str(e))
       return False
 
 
