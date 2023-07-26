@@ -12,13 +12,15 @@ from frappe.model.meta import get_field_precision
 from frappe.utils import flt
 from frappe.utils import cint, flt, round_based_on_smallest_currency_fraction
 from erpnext.stock.get_item_details import get_conversion_factor
-
+from frappe.utils import now, formatdate
 import erpnext
 from erpnext.accounts.doctype.journal_entry.journal_entry import get_exchange_rate
-
+from erpnext.accounts.general_ledger import make_gl_entries, make_reverse_gl_entries
+from erpnext.accounts.utils import get_account_currency, get_fiscal_years, validate_fiscal_year
 
 class RealStateCost(LandedCostVoucher):
 	def validate(self):
+		self.create_gl_landed_cost()
 		# self.create_matrial_issue()
 		# self.create_matrial_reciept()
 		# self.create_gl_landed_cost()
@@ -70,60 +72,160 @@ class RealStateCost(LandedCostVoucher):
 		stock_matial_receipt.save(ignore_permissions=1)
 
 	def create_gl_landed_cost(self):
-		from erpnext.accounts.general_ledger import make_gl_entries, make_reverse_gl_entries
+		
+		company_doc = frappe.get_doc('Company',self.company)
 		gl_entries = []
 		grand_total = self.purchase_receipts[0].grand_total 
-		gl_entries.append(
-			self.get_gl_dict({
-			'company': self.company,
-			"account": self.debit_to,#company stock in hand
-			"against": self.temporary_account,
-			'voucher_type': 'Real State Cost',
-			'voucher_no': self.name,
-			'debit': self.total_taxes_and_charges + grand_total,
-			'credit': 0,
-			'debit_in_account_currency': self.total_taxes_and_charges + grand_total,
-			'credit_in_account_currency': 0,
-			'is_opening': "No",
-			'party_type': None,
-			'party': None,
-			# 'project': data.get("project")
-			# 'remarks': data.get("remarks"),
-			# 'posting_date': data.posting_date,
-			# 'fiscal_year': fiscal_year,
-			})
-		)
+		stock_entry = frappe.get_doc('Stock Entry', self.purchase_receipts[0].receipt_document) 
+		stock_account = frappe.db.get_value('Warehouse', self.target_warehouse,'account') 
+		if not stock_account:
+			stock_account = frappe.db.get_value('Company',self.company,'default_inventory_account') 
 		
-		
-		gl_entries.append(
-			self.get_gl_dict({
-			'company': self.company,
-			"account": self.debit_to,#company stock in hand
-			"against": self.temporary_account,
-			'voucher_type': 'Real State Cost',
-			'voucher_no': self.name,
-			'debit': self.total_taxes_and_charges + grand_total,
-			'credit': 0,
-			'debit_in_account_currency': self.total_taxes_and_charges + grand_total,
-			'credit_in_account_currency': 0,
-			'is_opening': "No",
-			'party_type': None,
-			'party': None,
-			# 'project': data.get("project")
-			# 'remarks': data.get("remarks"),
-			# 'posting_date': data.posting_date,
-			# 'fiscal_year': fiscal_year,
-			})
-		)
-
-		make_gl_entries(
-					gl_entries,
-					update_outstanding='No',
-					merge_entries=False,
-					from_repost=False,
+		fiscal_years = get_fiscal_years(now(), company=self.company)
+		if len(fiscal_years) > 1:
+			frappe.throw(
+				_("Multiple fiscal years exist for the date {0}. Please set company in Fiscal Year").format(
+					formatdate(now())
 				)
+			)
+		else:
+			fiscal_year = fiscal_years[0][0]
+		# send
+		# gl_entries.append(
+		# 	{
+		# 	"account": self.temporary_account,
+		# 	"against": stock_entry.items[0].expense_account , #**temporary_account
+		# 	"posting_date": now(),
+		# 	'company': self.company,
+		# 	'voucher_type': 'Real State Cost',
+		# 	'voucher_no': self.name,
+		# 	"fiscal_year": fiscal_year,
+		# 	'debit':  grand_total,
+		# 	'credit': 0,
+		# 	'debit_in_account_currency':  grand_total,
+		# 	'credit_in_account_currency': 0,
+		# 	'is_opening': "No",
+		# 	'party_type': None,
+		# 	'party': None,
+		# 	"cost_center": self.items[0].cost_center,
+		# 	}
+		# )
+		
+		
+		# gl_entries.append(
+		# 	{
+		# 	"account": stock_entry.items[0].expense_account,
+		# 	"against": self.temporary_account,
+		# 	"posting_date": now(),
+		# 	'company': self.company,
+		# 	'voucher_type': 'Real State Cost',
+		# 	'voucher_no': self.name,
+		# 	"fiscal_year": fiscal_year,
+		# 	'debit':  0,
+		# 	'credit': grand_total,
+		# 	'debit_in_account_currency':  0,
+		# 	'credit_in_account_currency': grand_total,
+		# 	'is_opening': "No",
+		# 	'party_type': None,
+		# 	'party': None,
+		# 	"cost_center": self.items[0].cost_center,
+		# 	}
+		# )
+# ///////////////////////////////////////////////////////
+		# print('\n\n\n==><',gl_entries,'\n\n')
+		# frappe.throw('test')
+		#1-recieve
+		gl_entries.append(
+			{
+			"account": self.temporary_account,
+			"against": stock_account,
+			"posting_date": now(),
+			'company': self.company,
+			'voucher_type': 'Real State Cost',
+			'voucher_no': self.name,
+			"fiscal_year": fiscal_year,
+			'debit':  0,
+			'credit': grand_total,
+			'debit_in_account_currency':  0,
+			'credit_in_account_currency': grand_total,
+			'is_opening': "No",
+			'party_type': None,
+			'party': None,
+			"cost_center": self.taxes[0].taxes_cost_center,
+			}
+		)
+		gl_entries.append(
+			{
+			"account": stock_account,
+			"against": self.temporary_account,
+			"posting_date": now(),
+			'company': self.company,
+			'voucher_type': 'Real State Cost',
+			'voucher_no': self.name,
+			"fiscal_year": fiscal_year,
+			'debit':  grand_total,
+			'credit': 0,
+			'debit_in_account_currency':  grand_total,
+			'credit_in_account_currency': 0,
+			'is_opening': "No",
+			'party_type': None,
+			'party': None,
+			"cost_center": self.taxes[0].taxes_cost_center,
+			}
+		)
+		#2-recieve
+		# gl_entries.append(
+		# 	{
+		# 	"account": self.taxes[0].expense_account,
+		# 	"against": stock_account,
+		# 	"posting_date": now(),
+		# 	'company': self.company,
+		# 	'voucher_type': 'Real State Cost',
+		# 	'voucher_no': self.name,
+		# 	"fiscal_year": fiscal_year,
+		# 	'debit':  0,
+		# 	'credit': self.total_taxes_and_charges,
+		# 	'debit_in_account_currency':  0,
+		# 	'credit_in_account_currency': self.total_taxes_and_charges,
+		# 	'is_opening': "No",
+		# 	'party_type': None,
+		# 	'party': None,
+		# 	"cost_center": self.taxes[0].taxes_cost_center,
+		# 	}
+		# )
+		# gl_entries.append(
+			{
+			"account": stock_account,
+			"against": self.taxes[0].expense_account,
+			"posting_date": now(),
+			'company': self.company,
+			'voucher_type': 'Real State Cost',
+			'voucher_no': self.name,
+			"fiscal_year": fiscal_year,
+			'debit':  self.total_taxes_and_charges,
+			'credit': 0,
+			'debit_in_account_currency':  self.total_taxes_and_charges,
+			'credit_in_account_currency': 0,
+			'is_opening': "No",
+			'party_type': None,
+			'party': None,
+			"cost_center": self.taxes[0].taxes_cost_center,
+			}
+		)
+		self.insert_gl(gl_entries)
 		
 
+	def insert_gl(self,gl_entries):
+		for args in gl_entries:
+			gle = frappe.new_doc("GL Entry")
+			gle.update(args)
+			gle.flags.ignore_permissions = 1
+			gle.flags.from_repost = False
+			gle.flags.adv_adj = False
+			gle.flags.update_outstanding = 'No'
+			gle.flags.notify_update = False
+			gle.submit()
+			
 	def init_landed_taxes_and_totals(self):
 		self.tax_field = "taxes" 
 		self.set_account_currency()
