@@ -176,16 +176,16 @@ def make_cheque_pay(payment_entry):
         "credit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
 
     })
     # debit
     je.append("accounts", {
         "account":   payment_entry.paid_from,
         "debit_in_account_currency": flt(payment_entry.paid_amount),
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
 
 
@@ -199,8 +199,8 @@ def make_cheque_pay(payment_entry):
             "debit_in_account_currency": flt(pay_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
         })
         # debit
         je.append("accounts", {
@@ -208,8 +208,8 @@ def make_cheque_pay(payment_entry):
             "credit_in_account_currency": flt(pay_cheque_commission),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
         })
 
     cheque_submit = check_cheque_submit()
@@ -622,16 +622,16 @@ def pay_cash_new(payment_entry):
         "credit_in_account_currency": flt(payment_entry.paid_amount),
         "reference_type": payment_entry.doctype,
         "reference_name": payment_entry.name,
-        "party_type": payment_entry.party_type,
-        "party": payment_entry.party
+        # "party_type": payment_entry.party_type,
+        # "party": payment_entry.party
     })
         je.append("accounts", {
-            "account": payment_entry.paid_to,
+            "account": payment_entry.paid_from,
             "debit_in_account_currency": flt(payment_entry.paid_amount),
             "reference_type": payment_entry.doctype,
             "reference_name": payment_entry.name,
-            "party_type": payment_entry.party_type,
-            "party": payment_entry.party
+            # "party_type": payment_entry.party_type,
+            # "party": payment_entry.party
 
         })
         

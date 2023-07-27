@@ -85,6 +85,32 @@ def get_columns():
             "fieldname": "branch",
             "fieldtype": "Data",
             "width": 150
-        }
+        },
+	    {
+            "label": _("Local Source"),
+            "fieldname": "local_source",
+            "fieldtype": "Link",
+            "options": "Local Source",
+            "width": 150
+        },
+	    {
+            "label": _("Date"),
+            "fieldname": "date",
+            "fieldtype": "Date",
+            "width": 150
+        },
+	    {
+            "label": _("Time"),
+            "fieldname": "time",
+            "fieldtype": "Time",
+            "width": 150
+        },
+	{
+            "label": _("Created By"),
+            "fieldname": "create_by",
+            "fieldtype": "Link",
+	        "options": "User",
+            "width": 150
+        },
 	]
 	return columns
