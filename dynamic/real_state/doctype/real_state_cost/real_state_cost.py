@@ -20,8 +20,8 @@ from erpnext.accounts.utils import get_account_currency, get_fiscal_years, valid
 
 class RealStateCost(LandedCostVoucher):
 	def validate(self):
-		self.create_matrial_issue()
-		self.create_matrial_reciept()
+		# self.create_matrial_issue()
+		# self.create_matrial_reciept()
 		
 		# self.check_mandatory()
 		# self.init_landed_taxes_and_totals()
@@ -31,7 +31,7 @@ class RealStateCost(LandedCostVoucher):
 
 		# self.set_applicable_charges_on_item()
 		...
-	def after_insert(self):
+	def before_submit(self):
 		self.create_matrial_issue()
 		self.create_matrial_reciept()
 		
