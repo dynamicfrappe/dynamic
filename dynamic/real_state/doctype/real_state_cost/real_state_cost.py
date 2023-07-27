@@ -20,8 +20,8 @@ from erpnext.accounts.utils import get_account_currency, get_fiscal_years, valid
 
 class RealStateCost(LandedCostVoucher):
 	def validate(self):
-		# self.create_matrial_issue()
-		# self.create_matrial_reciept()
+		self.create_matrial_issue()
+		self.create_matrial_reciept()
 		
 		# self.check_mandatory()
 		# self.init_landed_taxes_and_totals()
@@ -35,8 +35,8 @@ class RealStateCost(LandedCostVoucher):
 		self.create_matrial_issue()
 		self.create_matrial_reciept()
 		
-	def before_submit(self):
-		self.create_gl_landed_cost()
+	# def before_submit(self):
+	# 	self.create_gl_landed_cost()
 
 	def create_matrial_issue(self):
 		stock_matial_issue = frappe.new_doc("Stock Entry")
@@ -44,6 +44,7 @@ class RealStateCost(LandedCostVoucher):
 		stock_matial_issue.purpose = "Material Issue"
 		stock_matial_issue.from_warehouse = self.source_warehouse
 		for row in self.items:
+			# print('\n\n\n=(row.amount / row.qty)=>',(row.amount / row.qty),'\n\n')
 			stock_matial_issue.append('items',{
 				's_warehouse' :self.source_warehouse,
 				'item_code' :row.item_code,
@@ -53,23 +54,28 @@ class RealStateCost(LandedCostVoucher):
 			})
 		stock_matial_issue.real_state_cost = self.name
 		stock_matial_issue.save(ignore_permissions=1)
+		stock_matial_issue.submit()
 	
 	def create_matrial_reciept(self):
 		all_tax = sum(flt(tax.amount)for tax in self.get("taxes"))
+		
 		stock_matial_receipt = frappe.new_doc("Stock Entry")
 		stock_matial_receipt.stock_entry_type = "Material Receipt"
 		stock_matial_receipt.purpose = "Material Receipt"
 		stock_matial_receipt.to_warehouse = self.target_warehouse
 		for row in self.items:
+			item_tax = (all_tax/row.qty)
 			stock_matial_receipt.append('items',{
 				't_warehouse' :self.target_warehouse,
 				'item_code' :row.item_code,
 				'qty' :row.qty,
-				'basic_rate' :(row.amount / row.qty) + all_tax,
+				'basic_rate' :(row.amount / row.qty) + item_tax,
+				'expense_account' :self.temporary_account,
 			})
 		# print('\n\n\n===>',stock_matial_receipt.__dict__,'\n\n\n--')
 		stock_matial_receipt.real_state_cost = self.name
 		stock_matial_receipt.save(ignore_permissions=1)
+		stock_matial_receipt.submit()
 
 	def create_gl_landed_cost(self):
 		
@@ -94,7 +100,7 @@ class RealStateCost(LandedCostVoucher):
 		gl_entries.append(
 			{
 			"account": self.temporary_account,
-			"against": stock_entry.items[0].expense_account , #**temporary_account
+			"against": stock_entry.items[0].expense_account , 
 			"posting_date": now(),
 			'company': self.company,
 			'voucher_type': 'Real State Cost',
