@@ -20,10 +20,8 @@ from erpnext.accounts.utils import get_account_currency, get_fiscal_years, valid
 
 class RealStateCost(LandedCostVoucher):
 	def validate(self):
-		self.create_gl_landed_cost()
 		# self.create_matrial_issue()
 		# self.create_matrial_reciept()
-		# self.create_gl_landed_cost()
 		
 		# self.check_mandatory()
 		# self.init_landed_taxes_and_totals()
@@ -36,7 +34,9 @@ class RealStateCost(LandedCostVoucher):
 	def after_insert(self):
 		self.create_matrial_issue()
 		self.create_matrial_reciept()
-		...
+		
+	def before_submit(self):
+		self.create_gl_landed_cost()
 
 	def create_matrial_issue(self):
 		stock_matial_issue = frappe.new_doc("Stock Entry")
