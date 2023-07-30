@@ -710,12 +710,30 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
               if (r.message.includes("Future")){
                 cur_frm.page.remove_inner_button('Sales Invoice','Create')
               }
+              if (r.message.includes("Real State")){
+                console.log('in domain')
+                me.get_method_for_payment()
+                // cur_frm.cscript.get_method_for_payment();
+              }
             }
           }
         })
 
       }
     }
+    
+  },
+  get_method_for_payment: function(){
+    var method = "dynamic.real_state.rs_api.get_payment_entry";
+    if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
+      if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){
+        method = "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_invoice";
+      }else {
+        method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
+      }
+    }
+
+    return method
   },
   make_purchase_order_ifi: function(){
 		let pending_items = this.frm.doc.items.some((item) =>{
@@ -882,6 +900,20 @@ var create_ifi_sales_invoice = function() {
   frm: cur_frm
 })
 }
+
+cur_frm.cscript.get_method_for_payment  = function() {
+  var method = "dynamic.real_state.rs_api.get_payment_entry";
+		if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
+			if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){
+				method = "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_invoice";
+			}else {
+				method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
+			}
+		}
+    console.log(method)
+		return method
+}
+
 $.extend(
 	cur_frm.cscript,
 	new extend_sales_order({frm: cur_frm}),
