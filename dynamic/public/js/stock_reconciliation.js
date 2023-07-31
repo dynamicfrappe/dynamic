@@ -69,7 +69,7 @@ frappe.ui.form.on("Stock Reconciliation", {
 
 		frappe.prompt(fields, function(data) {
 			frappe.call({
-				method: "erpnext.stock.doctype.stock_reconciliation.stock_reconciliation.get_items",
+				method: "dynamic.terra.api.get_items",
 				args: {
 					warehouse: data.warehouse,
 					posting_date: frm.doc.posting_date,
