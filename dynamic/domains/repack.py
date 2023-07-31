@@ -22,7 +22,7 @@ data = {
                 "label": "Repack",
                 "fieldname": "repack",
                 "fieldtype": "Link",
-                "options": "Reback",
+                "options": "Repack",
                 "insert_after": "stock_entry_type",
                 "read_only": "1",
             },
