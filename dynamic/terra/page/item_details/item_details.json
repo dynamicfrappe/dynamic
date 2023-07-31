@@ -4,7 +4,7 @@
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2023-07-31 11:35:35.446164",
+ "modified": "2023-07-31 13:24:20.411269",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "item-details",
@@ -15,6 +15,6 @@
  "script": null,
  "standard": "Yes",
  "style": null,
- "system_page": 1,
+ "system_page": 0,
  "title": "Item Details"
 }
