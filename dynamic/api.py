@@ -1394,6 +1394,8 @@ def before_submit_so(doc,*args,**kwargs):
         check_crean_amount_after_mapped_doc(doc,*args,**kwargs)
     if "Terra"  in DOMAINS or ("Reservation" in DOMAINS and doc.reservation_check):
         create_reservation_validate(doc,*args , **kwargs)
+    if  "Real State" in DOMAINS:
+        set_advences_to_schedules(doc,*args,**kwargs)
 
 def hold_item_reserved(doc,*args,**kwargs):
     # frappe.throw('test')
@@ -1480,4 +1482,19 @@ def before_insert_invoice(doc , *args , **kwargs) :
 
 
 
-
+@frappe.whitelist()
+def set_advences_to_schedules(doc , *args , **kwargs):
+    if doc.advancess:
+        total_advance = 0
+        for advance in doc.advancess:
+            total_advance += advance.allocated_amount
+    if doc.payment_schedule:
+        for schedule in doc.payment_schedule:
+            if(total_advance>0 and (schedule.outstanding - (schedule.paid_amount or 0)) > 0):
+                advance_added_amount = schedule.outstanding - (schedule.paid_amount or 0)
+                if(advance_added_amount >= total_advance):
+                    schedule.db_set('paid_amount',(schedule.paid_amount or 0)+total_advance)
+                    total_advance=0
+                elif(advance_added_amount < total_advance):
+                    schedule.db_set('paid_amount',(schedule.paid_amount or 0)+advance_added_amount)
+                    total_advance -= advance_added_amount

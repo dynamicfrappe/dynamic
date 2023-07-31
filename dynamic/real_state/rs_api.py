@@ -39,7 +39,7 @@ def get_payment_entry(
 	bank_amount=None,
 	reference_date=None,
 ):
-	frappe.throw('get_new_one tra tra')
+	# frappe.throw('get_new_one tra tra')
 	
 	reference_doc = None
 	doc = frappe.get_doc(dt, dn)
@@ -105,7 +105,7 @@ def get_payment_entry(
 	if doc.doctype == "Purchase Invoice" and doc.invoice_is_blocked():
 		frappe.msgprint(_("{0} is on hold till {1}").format(doc.name, doc.release_date))
 	else:
-		if doc.doctype in ("Sales Invoice", "Purchase Invoice") and frappe.get_value(
+		if doc.doctype in ("Sales Invoice", "Purchase Invoice","Sales Order") and frappe.get_value(
 			"Payment Terms Template",
 			{"name": doc.payment_terms_template},
 			"allocate_payment_based_on_payment_terms",
@@ -143,7 +143,7 @@ def get_payment_entry(
 					},
 				)
 			else:
-				frappe.throw('test2')
+				# frappe.throw('test2')
 				pe.append(
 					"references",
 					{
@@ -154,6 +154,7 @@ def get_payment_entry(
 						"total_amount": grand_total,
 						"outstanding_amount": outstanding_amount,
 						"allocated_amount": outstanding_amount,
+						# "payment_term": outstanding_amount,
 					},
 				)
 
@@ -178,3 +179,49 @@ def get_payment_entry(
 		pe.set_difference_amount()
 
 	return pe
+
+def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_currency, doc):
+	grand_total = outstanding_amount = 0
+	if party_amount:
+		grand_total = outstanding_amount = party_amount
+	elif dt in ("Sales Invoice", "Purchase Invoice"):
+		if party_account_currency == doc.company_currency:
+			grand_total = doc.base_rounded_total or doc.base_grand_total
+		else:
+			grand_total = doc.rounded_total or doc.grand_total
+		outstanding_amount = doc.outstanding_amount
+	elif dt in ("Expense Claim"):
+		grand_total = doc.total_sanctioned_amount + doc.total_taxes_and_charges
+		outstanding_amount = doc.grand_total - doc.total_amount_reimbursed
+	elif dt == "Employee Advance":
+		grand_total = flt(doc.advance_amount)
+		outstanding_amount = flt(doc.advance_amount) - flt(doc.paid_amount)
+		if party_account_currency != doc.currency:
+			grand_total = flt(doc.advance_amount) * flt(doc.exchange_rate)
+			outstanding_amount = (flt(doc.advance_amount) - flt(doc.paid_amount)) * flt(doc.exchange_rate)
+	elif dt == "Fees":
+		grand_total = doc.grand_total
+		outstanding_amount = doc.outstanding_amount
+	elif dt == "Dunning":
+		grand_total = doc.grand_total
+		outstanding_amount = doc.grand_total
+	elif dt == "Donation":
+		grand_total = doc.amount
+		outstanding_amount = doc.amount
+	elif dt == "Gratuity":
+		grand_total = doc.amount
+		outstanding_amount = flt(doc.amount) - flt(doc.paid_amount)
+	elif dt == 'Sales Order':
+		grand_total = doc.grand_total
+		if doc.payment_schedule:
+			paid_amount=0
+			for row in doc.payment_schedule:
+				paid_amount += row.paid_amount
+		outstanding_amount = flt(doc.grand_total) - flt(paid_amount)
+	else:
+		if party_account_currency == doc.company_currency:
+			grand_total = flt(doc.get("base_rounded_total") or doc.base_grand_total)
+		else:
+			grand_total = flt(doc.get("rounded_total") or doc.grand_total)
+		outstanding_amount = grand_total - flt(doc.advance_paid)
+	return grand_total, outstanding_amount
