@@ -6,21 +6,23 @@ from frappe import _
 
 
 def execute(filters=None):
-	return ItemReservedQty(filters).run()
+	return AppartementReserved(filters).run()
 
 
-class ItemReservedQty(object):
+class AppartementReserved(object):
 	def __init__(self,filters):
 		self.filters  = frappe._dict(filters or {})
 		
 	def run(self):
+		# self.data = []
 		self.get_columns()
-		self.get_data()
+		self.data = self.get_data()
 		return self.columns, self.data
 
 	def get_data(self):
 		self.data = []
 		self.data = self.get_transaction(self.filters)
+		# self.data = self.get_data()
 		return self.data
 
 	def get_transaction(self,filters):
@@ -30,50 +32,49 @@ class ItemReservedQty(object):
 
 	def get_data(self):
 		conditions = "  1=1 "
-		if self.filters.get("from_date"):
-			conditions += " and `tabReservation`.creation >= '%s'"%self.filters.get("from_date")
-		if self.filters.get("to_date"):
-			conditions += " and `tabReservation`.creation <= '%s'"%self.filters.get("to_date")
+		# if self.filters.get("from_date"):
+		# 	conditions += " and `tabReservation`.creation >= '%s'"%self.filters.get("from_date")
+		# if self.filters.get("to_date"):
+		# 	conditions += " and `tabReservation`.creation <= '%s'"%self.filters.get("to_date")
 		if self.filters.get("item_code"):
-			conditions += " and `tabBin`.item_code = '%s'"%self.filters.get("item_code")
-		if self.filters.get("cost_center"):
-			conditions += " and so.cost_center = '%s'"%self.filters.get("cost_center")
+			conditions += " and `tabItem`.item_code = '%s'"%self.filters.get("item_code")
+		# if self.filters.get("cost_center"):
+		# 	conditions += " and so.cost_center = '%s'"%self.filters.get("cost_center")
 		
 			
 		sql_query_new = f"""
-						SELECT `tabBin`.name as 'bin'
-						,so.cost_center as cost_center
-						,`tabBin`.warehouse as 'bin_warehouse'
-						,`tabBin`.item_code
-						,`tabBin`.actual_qty as bin_actual_qty
-						,SUM(`tabReservation Warehouse`.reserved_qty) as reserved_qty
-						,(`tabBin`.actual_qty- (SUM(`tabReservation Warehouse`.reserved_qty)) ) as actual_avail_aty
-						FROM `tabBin`
-						LEFT JOIN `tabReservation`
-						ON `tabReservation`.warehouse_source=`tabBin`.warehouse 
-						AND `tabReservation`.status NOT IN ("Closed","Invalid")
-						AND `tabReservation`.item_code=`tabBin`.item_code
-						LEFT JOIN `tabReservation Warehouse`
-						ON `tabReservation Warehouse`.parent=`tabReservation`.name 
-						AND `tabReservation Warehouse`.item=`tabReservation`.item_code
-						LEFT JOIN `tabSales Order` so
-						ON so.name=`tabReservation`.sales_order
-						LEFT JOIN `tabSales Invoice Item` soi
-						ON soi.parent=so.name AND `tabReservation Warehouse`.item = soi.item_code
+						select `tabItem`.item_code,`tabItem`.item_name,`tabQuotation Item`.parent as quotation,
+						`tabSales Order Item`.parent as sales_order,`tabSales Invoice Item`.parent as sales_invoice
+						,(
+						CASE 
+						WHEN `tabSales Invoice Item`.parent is null and `tabQuotation Item`.parent is null  THEN 'Exist'
+						WHEN `tabSales Invoice Item`.parent is null and `tabQuotation Item`.parent is not null  THEN 'Reserved'
+						WHEN `tabSales Invoice Item`.parent is not null  THEN 'Sold'
+						END
+						) as status
+						FROM `tabItem`
+						LEFT JOIN `tabQuotation Item`
+						ON `tabQuotation Item`.item_code=`tabItem`.item_code
+						LEFT JOIN `tabSales Order Item`
+						ON `tabSales Order Item`.prevdoc_docname=`tabQuotation Item`.parent
+						AND `tabSales Order Item`.item_code=`tabQuotation Item`.item_code 
+						LEFT JOIN `tabSales Invoice Item`
+						ON `tabSales Invoice Item`.sales_order=`tabSales Order Item`.parent 
+						AND `tabSales Invoice Item`.item_code =`tabSales Order Item`.item_code 
 						WHERE {conditions} 
-						GROUP BY `tabBin`.warehouse,`tabBin`.item_code
+						ORDER BY `tabQuotation Item`.parent DESC limit 20
 		""".format(conditions=conditions)
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
+		# frappe.errprint(f"sql_data ==> {sql_data}")
 		return sql_data
 
 	def get_columns(self):
 		# add columns wich appear data
 		self.columns = [
 			{
-				"label": _("Warehosue"),
-				"fieldname": "bin_warehouse",
-				"fieldtype": "Link",
-				"options": "Warehouse",
+				"label": _("Item Name"),
+				"fieldname": "item_name",
+				"fieldtype": "Data",
 				"width": 180,
 			},
 			{
@@ -84,31 +85,31 @@ class ItemReservedQty(object):
 				"width": 170,
 			},
 			{
-                "label": _("Actual QTY"),
-                "fieldname": "bin_actual_qty",
-                "fieldtype": "Float",
+                "label": _("Quotation"),
+                "fieldname": "quotation",
+                "fieldtype": "Link",
+				"options": "Quotation",
+                "width": 180,
+            },
+	    {
+                "label": _("Sales Order"),
+                "fieldname": "sales_order",
+                "fieldtype": "Link",
+				"options": "Sales Order",
+                "width": 180,
+            },
+	    {
+                "label": _("Sales Invoice"),
+                "fieldname": "sales_invoice",
+                "fieldtype": "Link",
+				"options": "Sales Invoice",
                 "width": 180,
             },
 			{
-                "label": _("Reserved QTY"),
-                "fieldname": "reserved_qty",
-                "fieldtype": "Float",
-                "width": 180,
-            },
-			{
-                "label": _("Actual Avail QTY"),
-                "fieldname": "actual_avail_aty",
-                "fieldtype": "Float",
+                "label": _("Status"),
+                "fieldname": "status",
+                "fieldtype": "Data",
                 "width": 180,
             },
 		]
-		if self.filters.get("cost_center"):
-			self.columns.append(
-				{
-					"label": _("Cost Center"),
-					"fieldname": "cost_center",
-					"fieldtype": "Link",
-					"options": "Cost Center",
-					"width": 180,
-				}
-			)
+		
