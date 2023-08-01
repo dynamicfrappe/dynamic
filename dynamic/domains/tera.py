@@ -454,7 +454,7 @@ data = {
             "fieldtype": "Data",
             "in_global_search": 1,
             "in_standard_filter": 1,
-            "insert_after": "tax_category",
+            "insert_after": "sku",
             "label": "Phone No",
             "translatable": 1,
             "unique": 1,
