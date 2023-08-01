@@ -693,6 +693,7 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
           method: "dynamic.api.get_active_domains",
           callback: function (r) {
             if (r.message && r.message.length) {
+              console.log('domains ',r.message)
               if (r.message.includes("IFI")){
                 // Make Purchase Order
                 if (!cur_frm.doc.is_internal_customer) {
@@ -711,9 +712,9 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
                 cur_frm.page.remove_inner_button('Sales Invoice','Create')
               }
               if (r.message.includes("Real State")){
-                console.log('in domain')
-                me.get_method_for_payment()
-                // cur_frm.cscript.get_method_for_payment();
+                // console.log('domains real state')
+                // me.get_method_for_payment()
+                cur_frm.cscript['get_method_for_payment'] = create_payment_for_real_state
               }
             }
           }
@@ -723,7 +724,7 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
     }
     
   },
-  get_method_for_payment: function(){
+  create_payment_for_real_state: function(){
     var method = "dynamic.real_state.rs_api.get_payment_entry";
     if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
       if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){

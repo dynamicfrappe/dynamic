@@ -10,6 +10,7 @@ frappe.ui.form.on("Stock Reconciliation", {
                     if (r.message.includes("Terra")) {
                         frm.events.set_queries_terra(frm)
                         if(frm.doc.docstatus < 1) {
+							cur_frm.remove_custom_button('Fetch Items from Warehouse')
                             frm.add_custom_button(__("Fetch Items from Warehouse"), function() {
                                 frm.events.get_items(frm);
                             });

@@ -653,6 +653,7 @@ def submit_payment(doc,*args,**kwargs):
 def validate_paymentrntry(doc , *args,**kwargs) :
     if "IFI" in DOMAINS :
         validate_payemnt_entry(doc)
+
 @frappe.whitelist()
 def update_paymentrntry(doc, *args,**kwargs) :
     if "Cheques" in DOMAINS :
@@ -677,6 +678,7 @@ def update_paymentrntry(doc, *args,**kwargs) :
                     frappe.db.commit()
                     #  frappe.throw(_(f" Endorsed Party Account type is {party_type_account_type} and party type {doc.endorsed_party_type} "))
                     #get defalu party type account
+
 @frappe.whitelist()
 def submit_payment_for_terra(doc , *args ,**kwargs):
     if doc.references and len (doc.references) > 0 :
