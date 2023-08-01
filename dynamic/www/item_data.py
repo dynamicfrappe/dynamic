@@ -70,7 +70,7 @@ def encode_item_data(doc):
     server_url = get_host_name()
     # print('\n\n\n===>uel   ',f'{server_url}/item_data?item_code={item_code_55}','\n\n')
     print(item_code_55)
-    return f'{server_url}/item_data?item_code={item_code_55}'
+    return f'http://{server_url}/item_data?item_code={item_code_55}'
 
 def get_image_link(item_code):
     imag_link =  frappe.db.get_value('File', {'attached_to_doctype': 'Item','attached_to_name': item_code}, ['file_url'])
