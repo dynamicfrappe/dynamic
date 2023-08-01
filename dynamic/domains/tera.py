@@ -541,7 +541,7 @@ data = {
             },
             {
                 "fieldname": "image",
-                "fieldtype": "Image",
+                "fieldtype": "Attach Image",
                 "insert_after": "default_warehouse",
                 "label": "Image",
                 "translatable": 1,
