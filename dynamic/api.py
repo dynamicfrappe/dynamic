@@ -27,7 +27,7 @@ from datetime import date
 from dateutil import parser
 from six import string_types
 from dynamic.ifi.api import validate_payemnt_entry
-
+from frappe.utils import get_host_name
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -82,6 +82,8 @@ def encode_invoice_data(doc):
         # print ("hexa_tag => ", hexa_tag)
     total_hex_b64 = codecs.encode(codecs.decode(total_hex, 'hex'), 'base64').decode('utf-8')
     return total_hex_b64
+
+
 
 import frappe
 from frappe import _

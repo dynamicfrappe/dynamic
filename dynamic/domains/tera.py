@@ -538,7 +538,30 @@ data = {
                 "insert_after": "reservation_setting_section",
                 "label": "Reservation Setting",
                 "translatable": 1,
-            }
+            },
+            {
+                "fieldname": "image",
+                "fieldtype": "Image",
+                "insert_after": "default_warehouse",
+                "label": "Image",
+                "translatable": 1,
+            },
+            {
+                "label": "Price List",
+                "fieldname": "price_list",
+                "fieldtype": "Link",
+                "insert_after": "image",
+                "options": "Price List",
+                "translatable": 1,
+            },
+            {
+                "label": "Warehouse",
+                "fieldname": "warehouse",
+                "fieldtype": "Link",
+                "insert_after": "price_list",
+                "options": "Warehouse",
+                "translatable": 1,
+            },
         ],
         'Material Request':[
             {
