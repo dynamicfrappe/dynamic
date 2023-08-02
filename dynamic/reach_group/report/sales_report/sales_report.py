@@ -12,7 +12,7 @@ def execute(filters=None):
 
 
 def get_data(filters):
-	conditions = " where 1=1 "
+	conditions = " 1=1 "
 	if filters.get("from_date"):
 		conditions += " and sinv.posting_date >= '%s'"%filters.get("from_date")
 	if filters.get("to_date"):
@@ -33,8 +33,10 @@ def get_data(filters):
 	select sinv.*,team.sales_person from `tabSales Invoice` sinv
 	LEFT JOIN `tabSales Team`team
 	ON team.parent=sinv.name
-		{conditions}
+	WHERE sinv.status NOT IN ('Cancelled','Draft')
+    AND {conditions}
 	"""
+	frappe.errprint(sql)
 	result = frappe.db.sql(sql,as_dict=1)
 	return result
 
