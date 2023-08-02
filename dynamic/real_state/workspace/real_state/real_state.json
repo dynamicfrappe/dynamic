@@ -7,8 +7,8 @@
  "disable_user_customization": 0,
  "docstatus": 0,
  "doctype": "Workspace",
- "extends": "",
- "extends_another_page": 1,
+ "extends": "Real State",
+ "extends_another_page": 0,
  "hide_custom": 0,
  "icon": "stock",
  "idx": 0,
@@ -53,7 +53,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-08-02 14:43:30.712192",
+ "modified": "2023-08-02 14:51:40.814290",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Real State",
