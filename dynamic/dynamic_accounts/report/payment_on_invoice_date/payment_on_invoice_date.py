@@ -180,9 +180,6 @@ def get_entries(filters):
 		filters,
 		as_dict=1,
 	)
-	# for voucher in data:
-	# 	sales_person = frappe.db.get_value(voucher.voucher_type,voucher.voucher_no,'sales_person')
-	# 	voucher['sales_person'] = sales_person
 	return data
 
 

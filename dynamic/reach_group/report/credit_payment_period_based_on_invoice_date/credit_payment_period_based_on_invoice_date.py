@@ -22,6 +22,8 @@ def execute(filters=None):
 	data = []
 	for d in entries:
 		invoice = invoice_details.get(d.against_voucher) or frappe._dict()
+		sales_person = frappe.db.get_value(d.voucher_type,d.voucher_no,'sales_person')
+		d['sales_person'] = sales_person
 
 		if d.reference_type == "Purchase Invoice":
 			payment_amount = flt(d.debit) or -1 * flt(d.credit)
@@ -35,6 +37,7 @@ def execute(filters=None):
 
 		row = [
 			d.voucher_type,
+			d.sales_person,
 			d.voucher_no,
 			d.party_type,
 			d.party,
@@ -77,6 +80,13 @@ def get_columns(filters):
 			"fieldname": "payment_document",
 			"label": _("Payment Document Type"),
 			"fieldtype": "Data",
+			"width": 100,
+		},
+		{
+			"fieldname": "sales_person",
+			"label": _("Sales Person"),
+			"fieldtype": "Link",
+			"options": "Sales Person",
 			"width": 100,
 		},
 		{
