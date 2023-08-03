@@ -24,7 +24,7 @@ def get_data(filters):
 	# if filters.get("customer_type"):
 	# 	conditions += " and customer_type = '%s'"%filters.get("customer_type")
 	if filters.get("branch"):
-		conditions += " and branch = '%s'"%filters.get("branch")
+		conditions += ' and branch = "%s"'%filters.get("branch")
 	
 	if filters.get("phone_no"):
 		conditions += " and phone_no = '%s'"%filters.get("phone_no")

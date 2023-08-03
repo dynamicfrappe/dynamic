@@ -169,18 +169,19 @@ def get_conditions(filters):
 
 
 def get_entries(filters):
-	data = frappe.db.sql(
+	return frappe.db.sql(
 		"""select
-		gl.voucher_type, gl.voucher_no, gl.party_type, gl.party, gl.posting_date, gl.debit, gl.credit, gl.remarks, gl.against_voucher
-		from `tabGL Entry` gl
-		where company=%(company)s and voucher_type in ('Journal Entry', 'Payment Entry') {0}
+		voucher_type, voucher_no, party_type, party, posting_date, debit, credit, remarks, against_voucher
+		from `tabGL Entry`
+		where company=%(company)s and voucher_type in ('Journal Entry', 'Payment Entry') 
+		AND debit = 0 AND credit > 0
+		{0}
 	""".format(
 			get_conditions(filters)
 		),
 		filters,
 		as_dict=1,
 	)
-	return data
 
 
 def get_invoice_posting_date_map(filters):
