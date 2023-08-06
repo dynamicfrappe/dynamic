@@ -164,6 +164,7 @@ doc_events = {
             ],
         "validate" :["dynamic.elevana.hooks.add_partener_to_sales_order"] ,
         "on_cancel":"dynamic.api.cancel_reservation",
+        "on_submit":["dynamic.real_state.rs_api.so_on_submit",],
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
     "Purchase Receipt": {
