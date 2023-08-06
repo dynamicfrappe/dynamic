@@ -142,10 +142,10 @@ class CustomerAccountReport(object):
                 "width": 180,
             },
 	    {
-                "label": _("Payemnet Terms Template"),
+                "label": _("Payment Terms Template"),
                 "fieldname": "payment_terms",
                 "fieldtype": "Link",
-				"options": "Payemnet Terms Template",
+				"options": "Payment Terms Template",
                 "width": 180,
             },
 	    # {
