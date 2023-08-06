@@ -67,9 +67,9 @@ def encode_item_data(doc):
     item_code = doc.name
     item_code_55 = escape_html_demo(doc.name)
     # item_url = urllib.parse.quote(item_code)
-    server_url = get_host_name()
+    server_url = get_host_name() #'10.0.0.13:8000' # get_host_name()
     # print('\n\n\n===>uel   ',f'{server_url}/item_data?item_code={item_code_55}','\n\n')
-    print(item_code_55)
+    # print(item_code_55)
     return f'http://{server_url}/item_data?item_code={item_code_55}'
 
 def get_image_link(item_code):

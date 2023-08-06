@@ -432,7 +432,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 		additional_query_columns = ""
 	# frappe.errprint(f'con-->{conditions}')
 	# frappe.errprint(f'adddd{additional_query_columns}')
-	frappe.errprint(filters)
+	# frappe.errprint(filters)
 	data =  frappe.db.sql(
 		"""
 		select
@@ -457,7 +457,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 		FROM `tabSales Invoice`
 		 INNER JOIN `tabSales Invoice Item`
 		 ON `tabSales Invoice`.name = `tabSales Invoice Item`.parent 
-		where  `tabSales Invoice`.docstatus = 0
+		where  `tabSales Invoice`.docstatus<>2
 		   {1}
 		
 		""".format(

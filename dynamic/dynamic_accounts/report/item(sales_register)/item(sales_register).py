@@ -438,8 +438,9 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 	else:
 		additional_query_columns = ""
 	# frappe.errprint(f'con-->{conditions}')
-	# frappe.errprint(f'adddd{additional_query_columns}')
-	frappe.errprint(filters)
+	# frappe.errprint(f'additional_query_columns:{additional_query_columns}')
+	# frappe.errprint(f'filters:{filters}')
+	
 	data =  frappe.db.sql(
 		"""
 		select`tabSales Invoice Item`.parent sinv
@@ -466,7 +467,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 		 ON `tabSales Invoice`.name = `tabSales Invoice Item`.parent 
 		 LEFT JOIN `tabSales Team`
 		 ON `tabSales Team`.parent=`tabSales Invoice Item`.parent 
-		where  `tabSales Invoice`.docstatus = 0
+		where  `tabSales Invoice`.docstatus<>2
 		   {1}
 		GROUP BY `tabSales Invoice`.name ,`tabSales Team`.sales_person
 		""".format(
