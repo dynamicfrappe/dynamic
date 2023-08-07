@@ -4,11 +4,16 @@
 import frappe
 from frappe import _
 from erpnext.accounts.doctype.payment_entry.payment_entry import (
-	set_party_type,set_party_account,set_payment_type
-,set_party_account_currency,set_grand_total_and_outstanding_amount,get_bank_cash_account,set_paid_amount_and_received_amount
-,apply_early_payment_discount,get_party_bank_account,get_reference_as_per_payment_terms
-,split_early_payment_discount_loss,set_pending_discount_loss
-)
+		set_party_type,set_party_account,set_payment_type
+	,set_party_account_currency,set_grand_total_and_outstanding_amount,get_bank_cash_account,set_paid_amount_and_received_amount
+	,apply_early_payment_discount,get_party_bank_account,get_reference_as_per_payment_terms
+
+	)
+try :
+	from erpnext.accounts.doctype.payment_entry.payment_entry import 	split_early_payment_discount_loss ,set_pending_discount_loss
+except :
+	from .utils import split_early_payment_discount_loss ,set_pending_discount_loss
+
 from frappe import ValidationError, _, scrub, throw
 from frappe.utils import cint, comma_or, flt, get_link_to_form, getdate, nowdate
 from functools import reduce
