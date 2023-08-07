@@ -70,12 +70,12 @@ frappe.ui.form.on("Payment Entry", {
     });
   },
   target_exchange_rate(frm){
-    if (frm.doc.target_exchange_rate != 1) {
-      var paid_amount = frm.doc.target_exchange_rate * frm.doc.received_amount
-      frm.set_value("paid_amount",paid_amount)
-      frm.refresh_field("paid_amount")
-      console.log("hellow",paid_amount)
-    }
+    // if (frm.doc.target_exchange_rate != 1) {
+    //   var paid_amount = frm.doc.target_exchange_rate * frm.doc.received_amount
+    //   frm.set_value("paid_amount",paid_amount)
+    //   frm.refresh_field("paid_amount")
+    //   console.log("hellow",paid_amount)
+    // }
    
   },
   refresh(frm) {

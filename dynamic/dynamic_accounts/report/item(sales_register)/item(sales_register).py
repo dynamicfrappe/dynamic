@@ -63,8 +63,8 @@ def _execute(
 			delivery_note = d.parent
 
 		row = {
-			"item_code": d.item_code,
-			"item_name": item_record.item_name if item_record else d.item_name,
+			"sinv": d.sinv,
+			# "item_name": item_record.item_name if item_record else d.item_name,
 			"sales_person":d.sales_person,
 			"item_group": item_record.item_group if item_record else d.item_group,
 			"description": d.description,
@@ -74,7 +74,7 @@ def _execute(
 			"customer_name": customer_record.customer_name,
 			"customer_group": customer_record.customer_group,
 			"uom": d.uom,
-			"qty": d.qty,
+			# "qty": d.qty,
 		}
 
 		if additional_query_columns:
@@ -161,41 +161,48 @@ def _execute(
 
 def get_columns(additional_table_columns, filters):
 	columns = []
-	# columns += [
-	# 	{
-	# 		"fieldname": "sales_person",
-	# 		"label": _("Sales Person"),
-	# 		"fieldtype": "Link",
-	# 		"options": "Sales Person",
-	# 		"width": 100,
-	# 	},
-	# ]
-	if filters.get("group_by") != ("Item"):
-		columns.extend(
-			[
-				{
-					"label": _("Item Code"),
-					"fieldname": "item_code",
-					"fieldtype": "Link",
-					"options": "Item",
-					"width": 120,
-				},
-				{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 120},
-			]
-		)
+	columns += [
+		{
+			"fieldname": "sinv",
+			"label": _("Sales Invoice"),
+			"fieldtype": "Link",
+			"options": "Sales Invoice",
+			"width": 100,
+		},
+		{
+			"fieldname": "sales_person",
+			"label": _("Sales Person"),
+			"fieldtype": "Link",
+			"options": "Sales Person",
+			"width": 100,
+		},
+	]
+	# if filters.get("group_by") != ("Item"):
+	# 	columns.extend(
+	# 		[
+	# 			{
+	# 				"label": _("Item Code"),
+	# 				"fieldname": "item_code",
+	# 				"fieldtype": "Link",
+	# 				"options": "Item",
+	# 				"width": 120,
+	# 			},
+	# 			{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 120},
+	# 		]
+	# 	)
 
-	if filters.get("group_by") not in ("Item", "Item Group"):
-		columns.extend(
-			[
-				{
-					"label": _("Item Group"),
-					"fieldname": "item_group",
-					"fieldtype": "Link",
-					"options": "Item Group",
-					"width": 120,
-				}
-			]
-		)
+	# if filters.get("group_by") not in ("Item", "Item Group"):
+	# 	columns.extend(
+	# 		[
+	# 			{
+	# 				"label": _("Item Group"),
+	# 				"fieldname": "item_group",
+	# 				"fieldtype": "Link",
+	# 				"options": "Item Group",
+	# 				"width": 120,
+	# 			}
+	# 		]
+	# 	)
 
 	columns.extend(
 		[
@@ -348,12 +355,12 @@ def get_columns(additional_table_columns, filters):
 		
 
 		
-		{
-			"label": _("QTY"),
-			"fieldname": "qty",
-			"fieldtype": "Flaot",
-			"width": 100,
-		},
+		# {
+		# 	"label": _("QTY"),
+		# 	"fieldname": "qty",
+		# 	"fieldtype": "Flaot",
+		# 	"width": 100,
+		# },
 		
 		{
 			"label": _("Amount"),
@@ -402,12 +409,12 @@ def get_conditions(filters, additional_conditions=None):
 	if filters.get("item_group"):
 		conditions += """and ifnull(`tabSales Invoice Item`.item_group, '') = %(item_group)s"""
 
-	if not filters.get("group_by"):
-		conditions += (
-			" ORDER BY `tabSales Invoice`.posting_date desc, `tabSales Invoice Item`.item_group desc"
-		)
-	else:
-		conditions += get_group_by_conditions(filters, "Sales Invoice")
+	# if not filters.get("group_by"):
+	# 	conditions += (
+	# 		" ORDER BY `tabSales Invoice`.posting_date desc, `tabSales Invoice Item`.item_group desc"
+	# 	)
+	# else:
+	# 	conditions += get_group_by_conditions(filters, "Sales Invoice")
 
 	return conditions
 
@@ -431,13 +438,14 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 	else:
 		additional_query_columns = ""
 	# frappe.errprint(f'con-->{conditions}')
-	# frappe.errprint(f'adddd{additional_query_columns}')
-	# frappe.errprint(filters)
+	# frappe.errprint(f'additional_query_columns:{additional_query_columns}')
+	# frappe.errprint(f'filters:{filters}')
+	
 	data =  frappe.db.sql(
 		"""
-		select
-			`tabSales Invoice Item`.name, `tabSales Invoice Item`.parent,
-			`tabSales Invoice`.posting_date, `tabSales Invoice`.debit_to,
+		select`tabSales Invoice Item`.parent sinv
+			,`tabSales Team`.sales_person
+			,`tabSales Invoice`.posting_date, `tabSales Invoice`.debit_to,
 			`tabSales Invoice`.unrealized_profit_loss_account,
 			`tabSales Invoice`.is_internal_customer,
 			`tabSales Invoice`.project, `tabSales Invoice`.customer, `tabSales Invoice`.remarks,
@@ -457,9 +465,11 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 		FROM `tabSales Invoice`
 		 INNER JOIN `tabSales Invoice Item`
 		 ON `tabSales Invoice`.name = `tabSales Invoice Item`.parent 
+		 LEFT JOIN `tabSales Team`
+		 ON `tabSales Team`.parent=`tabSales Invoice Item`.parent 
 		where  `tabSales Invoice`.docstatus<>2
 		   {1}
-		
+		GROUP BY `tabSales Invoice`.name ,`tabSales Team`.sales_person
 		""".format(
 			additional_query_columns or "", conditions
 		),
