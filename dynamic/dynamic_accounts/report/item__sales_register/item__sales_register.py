@@ -65,6 +65,7 @@ def _execute(
 		row = {
 			"item_code": d.item_code,
 			"item_name": item_record.item_name if item_record else d.item_name,
+			"sales_person":d.sales_person,
 			"item_group": item_record.item_group if item_record else d.item_group,
 			"description": d.description,
 			"invoice": d.parent,
@@ -160,7 +161,15 @@ def _execute(
 
 def get_columns(additional_table_columns, filters):
 	columns = []
-
+	# columns += [
+	# 	{
+	# 		"fieldname": "sales_person",
+	# 		"label": _("Sales Person"),
+	# 		"fieldtype": "Link",
+	# 		"options": "Sales Person",
+	# 		"width": 100,
+	# 	},
+	# ]
 	if filters.get("group_by") != ("Item"):
 		columns.extend(
 			[
@@ -269,6 +278,7 @@ def get_columns(additional_table_columns, filters):
 			"options": "Project",
 			"width": 80,
 		},
+		
 		{
 			"label": _("Company"),
 			"fieldname": "company",
@@ -394,7 +404,7 @@ def get_conditions(filters, additional_conditions=None):
 
 	if not filters.get("group_by"):
 		conditions += (
-			"ORDER BY `tabSales Invoice`.posting_date desc, `tabSales Invoice Item`.item_group desc"
+			" ORDER BY `tabSales Invoice`.posting_date desc, `tabSales Invoice Item`.item_group desc"
 		)
 	else:
 		conditions += get_group_by_conditions(filters, "Sales Invoice")
@@ -404,13 +414,13 @@ def get_conditions(filters, additional_conditions=None):
 
 def get_group_by_conditions(filters, doctype):
 	if filters.get("group_by") == "Invoice":
-		return "ORDER BY `tab{0} Item`.parent desc".format(doctype)
+		return " ORDER BY `tab{0} Item`.parent desc".format(doctype)
 	elif filters.get("group_by") == "Item":
-		return "ORDER BY `tab{0} Item`.`item_code`".format(doctype)
+		return " ORDER BY `tab{0} Item`.`item_code`".format(doctype)
 	elif filters.get("group_by") == "Item Group":
-		return "ORDER BY `tab{0} Item`.{1}".format(doctype, frappe.scrub(filters.get("group_by")))
+		return " ORDER BY `tab{0} Item`.{1}".format(doctype, frappe.scrub(filters.get("group_by")))
 	elif filters.get("group_by") in ("Customer", "Customer Group", "Territory", "Supplier"):
-		return "ORDER BY `tab{0}`.{1}".format(doctype, frappe.scrub(filters.get("group_by")))
+		return " ORDER BY `tab{0}`.{1}".format(doctype, frappe.scrub(filters.get("group_by")))
 
 
 def get_items(filters, additional_query_columns, additional_conditions=None):
@@ -420,7 +430,9 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 		additional_query_columns = ", " + ", ".join(additional_query_columns)
 	else:
 		additional_query_columns = ""
-
+	# frappe.errprint(f'con-->{conditions}')
+	# frappe.errprint(f'adddd{additional_query_columns}')
+	# frappe.errprint(filters)
 	data =  frappe.db.sql(
 		"""
 		select
@@ -440,10 +452,14 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabSales Invoice`.customer_name, `tabSales Invoice`.customer_group, `tabSales Invoice Item`.so_detail,
 			`tabSales Invoice Item`.conversion_factor,
 			`tabSales Invoice Item`.qty,
-			`tabSales Invoice`.update_stock, `tabSales Invoice Item`.uom, `tabSales Invoice Item`.qty {0}
-		from `tabSales Invoice`, `tabSales Invoice Item`
-		where `tabSales Invoice`.name = `tabSales Invoice Item`.parent
-			and `tabSales Invoice`.docstatus = 1 {1}
+			`tabSales Invoice`.update_stock, `tabSales Invoice Item`.uom, `tabSales Invoice Item`.qty
+			{0}
+		FROM `tabSales Invoice`
+		 INNER JOIN `tabSales Invoice Item`
+		 ON `tabSales Invoice`.name = `tabSales Invoice Item`.parent 
+		where  `tabSales Invoice`.docstatus<>2
+		   {1}
+		
 		""".format(
 			additional_query_columns or "", conditions
 		),

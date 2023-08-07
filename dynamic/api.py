@@ -27,7 +27,7 @@ from datetime import date
 from dateutil import parser
 from six import string_types
 from dynamic.ifi.api import validate_payemnt_entry
-
+from frappe.utils import get_host_name
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -82,6 +82,8 @@ def encode_invoice_data(doc):
         # print ("hexa_tag => ", hexa_tag)
     total_hex_b64 = codecs.encode(codecs.decode(total_hex, 'hex'), 'base64').decode('utf-8')
     return total_hex_b64
+
+
 
 import frappe
 from frappe import _
@@ -653,6 +655,7 @@ def submit_payment(doc,*args,**kwargs):
 def validate_paymentrntry(doc , *args,**kwargs) :
     if "IFI" in DOMAINS :
         validate_payemnt_entry(doc)
+
 @frappe.whitelist()
 def update_paymentrntry(doc, *args,**kwargs) :
     if "Cheques" in DOMAINS :
@@ -677,6 +680,7 @@ def update_paymentrntry(doc, *args,**kwargs) :
                     frappe.db.commit()
                     #  frappe.throw(_(f" Endorsed Party Account type is {party_type_account_type} and party type {doc.endorsed_party_type} "))
                     #get defalu party type account
+
 @frappe.whitelist()
 def submit_payment_for_terra(doc , *args ,**kwargs):
     if doc.references and len (doc.references) > 0 :
@@ -1394,6 +1398,8 @@ def before_submit_so(doc,*args,**kwargs):
         check_crean_amount_after_mapped_doc(doc,*args,**kwargs)
     if "Terra"  in DOMAINS or ("Reservation" in DOMAINS and doc.reservation_check):
         create_reservation_validate(doc,*args , **kwargs)
+    if  "Real State" in DOMAINS:
+        set_advences_to_schedules(doc,*args,**kwargs)
 
 def hold_item_reserved(doc,*args,**kwargs):
     # frappe.throw('test')
@@ -1480,4 +1486,19 @@ def before_insert_invoice(doc , *args , **kwargs) :
 
 
 
-
+@frappe.whitelist()
+def set_advences_to_schedules(doc , *args , **kwargs):
+    if doc.advancess:
+        total_advance = 0
+        for advance in doc.advancess:
+            total_advance += advance.allocated_amount
+    if doc.payment_schedule:
+        for schedule in doc.payment_schedule:
+            if(total_advance>0 and (schedule.outstanding - (schedule.paid_amount or 0)) > 0):
+                advance_added_amount = schedule.outstanding - (schedule.paid_amount or 0)
+                if(advance_added_amount >= total_advance):
+                    schedule.db_set('paid_amount',(schedule.paid_amount or 0)+total_advance)
+                    total_advance=0
+                elif(advance_added_amount < total_advance):
+                    schedule.db_set('paid_amount',(schedule.paid_amount or 0)+advance_added_amount)
+                    total_advance -= advance_added_amount

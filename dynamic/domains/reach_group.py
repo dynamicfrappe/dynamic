@@ -12,6 +12,24 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "tax_id",
             },
+        ],
+        'Payment Entry':[
+            {
+                "label": "Sales Person",
+                "fieldname": "sales_person",
+                "fieldtype": "Link",
+                "options": "Sales Person",
+                "insert_after": "party_name",
+            },
+        ],
+        'Journal Entry':[
+            {
+                "label": "Sales Person",
+                "fieldname": "sales_person",
+                "fieldtype": "Link",
+                "options": "Sales Person",
+                "insert_after": "multi_currency",
+            },
         ]
     },
     "properties": [

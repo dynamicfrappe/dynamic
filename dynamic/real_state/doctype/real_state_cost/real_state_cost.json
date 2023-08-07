@@ -120,10 +120,12 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "Amount",
    "fieldname": "distribute_charges_based_on",
    "fieldtype": "Select",
    "label": "Distribute Charges Based On",
    "options": "Qty\nAmount\nDistribute Manually",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -181,7 +183,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-07-25 11:25:23.334705",
+ "modified": "2023-07-26 07:59:28.918222",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Real State Cost",
