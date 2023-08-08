@@ -162,7 +162,7 @@ frappe.ui.form.on("Stock Entry", {
           // },
           callback: function(r) {
             if (!r.exc){
-              console.log(r.message)
+              // console.log(r.message)
               frappe.model.set_value(cdt, cdn, 'qty_target', (r.message[0] || 0.0));
               // ["actual_qty", "basic_rate"].forEach((field) => {
               //   frappe.model.set_value(cdt, cdn, field, (r.message[field] || 0.0));
