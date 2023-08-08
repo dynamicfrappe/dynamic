@@ -66,6 +66,16 @@ data = {
             "read_only" :0
             },
            
-       ]
+       ],
+       "Stock Entry Detail" :[
+            {
+            "label":"Actual Qty(Target)",
+            "fieldname":"qty_target",
+            "fieldtype":"Float",
+            "insert_after":"actual_qty",
+            "read_only" :1
+            },
+           
+       ],
     }
 }
