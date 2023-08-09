@@ -13,12 +13,11 @@ def get_context(context):
     code_escap = escape_html_show(code)
     context.item_code = code_escap
     item_doc = frappe.get_doc('Item',context.item_code)
-    context.item_name = item_doc.item_name
+    # context.item_name = item_doc.item_name
     context.item_doc = item_doc
-    context.description = item_doc.description
-    context.test = item_doc.country_of_origin
-    description = f"{item_doc.item_name} - {item_doc.size or 'None Size'}  - {item_doc.color  or 'None Color'} - " + item_doc.description
-    context.description = description
+    # context.test = item_doc.country_of_origin
+    item_doc.description = f"{item_doc.item_name} - {item_doc.size or 'None Size'}  - {item_doc.color  or 'None Color'} - " + item_doc.description
+    # context.description = description
     img_link = get_image_link(context.item_code)
     item_price = get_item_price(context.item_code)
     context.img_link = img_link if img_link else '/assets/dynamic/images/cocaola.jpg'
