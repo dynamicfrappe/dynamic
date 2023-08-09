@@ -16,7 +16,7 @@ def get_context(context):
     context.item_name = item_doc.item_name
     context.item_doc = item_doc
     context.description = item_doc.description
-    context.country = item_doc.country_of_origin
+    context.test = item_doc.country_of_origin
     description = f"{item_doc.item_name} - {item_doc.size or 'None Size'}  - {item_doc.color  or 'None Color'} - " + item_doc.description
     context.description = description
     img_link = get_image_link(context.item_code)
