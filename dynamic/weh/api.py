@@ -32,6 +32,9 @@ def customer(*args, **kwargs):
     customer.customer_group = "All Customer Groups"
     customer.territory = "All Territories"
     customer.remote_id = data.get("remote_id")
+    customer.branch = data.get("branch") or " "
+    customer.doctor = data.get("doctor") or " "
+    customer.branch = data.get("surgery") or " "
     try:
         customer.save()
         frappe.local.response['message'] = customer.name
