@@ -15,15 +15,15 @@
     <h3>item name = {{ item_name }} "/assets/dynamic/images/cocaola.jpg"</h3> -->
     <div class="card">
       <img src={{img_link}} alt="Denim Jeans" style="width:100%;min-height:200px;">
-      <h3>{{ item_name }}</h3>
+      <h3>{{ item_doc.item_name }}</h3>
       <p class="price">Price :{{item_price}}</p>
       <p class="brand" style="color: black;">Brand :{{item_doc.brand}}</p>
       <p class="group" style="color: black;">Group :{{item_doc.item_group}}</p>
       {% if frappe.session.user != 'Guest'%}
       <p class="group" style="color: black;">QTY :{{qty}}</p>
       {% endif%}
-      <p style="color: black;">DESC :{{description}}</p>
-      <!-- <p style="color: black;">CNT :{{test}}</p> -->
+      <p style="color: black;">DESC :{{item_doc.description}}</p>
+      <p style="color: black;">CNT :{{item_doc.country_of_origin}}</p>
     </div>
 
 {%- endblock -%}
