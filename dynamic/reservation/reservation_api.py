@@ -29,3 +29,30 @@ def delivery_note_before_submit(delivery_doc , *args , **kwargs):
 
 def check_each_row_vaild_qty():
     ...
+
+#"dynamic.reservation.reservation_api.check_valid_item_qty"
+def check_valid_item_qty():
+    ...
+
+
+
+# decrator parent
+def burn(f):
+    def blah(*args, **kwargs):
+        print('hah')
+        print(args)
+        print(kwargs)
+        return f(*args, **kwargs)
+    return blah
+
+def conditionally(dec, cond):
+    def resdec(child):
+        if not cond:
+            return child
+        return dec(child)
+    return resdec
+
+@conditionally(burn, False)
+def validate_decorator(doc,invoice=None):
+    print(f'\n\n-watch-->{doc},\n\n')
+

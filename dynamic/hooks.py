@@ -150,7 +150,8 @@ doc_events = {
     "Delivery Note": {
         "on_submit": ["dynamic.gebco.api.validate_delivery_note",],
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
-        "validate": ["dynamic.api.validate_delivery_note",],
+        "validate": ["dynamic.api.validate_delivery_note",
+                     "dynamic.weh.delevery_note.validate_delevery_note",],
         # "on_cancel": "dynamic.api.cancel_delivery_note",
     },
    
@@ -306,6 +307,7 @@ scheduler_events = {
 # ------------------------------
 #
 override_whitelisted_methods = {
+    # "frappe.desk.reportview.export_query": "dynamic.api.export_query",
 	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
     #/home/abanoub/frappe/dynamc_projects/frappe-14/apps/erpnext/erpnext/controllers/queries.py
     # "erpnext.controllers.queries.supplier_query":"dynamic.master_deals.master_deals_api.get_supplier_by_code"

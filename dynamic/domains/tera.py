@@ -201,6 +201,12 @@ data = {
                 "allow_on_submit":1,
                 "default":0
             },
+            {
+                "label": "Customer Print Name",
+                "fieldname": "customer_print_name",
+                "fieldtype": "Data",
+                "insert_after": "order_type",
+            },
         # ],
 
 

@@ -1502,3 +1502,4 @@ def set_advences_to_schedules(doc , *args , **kwargs):
                 elif(advance_added_amount < total_advance):
                     schedule.db_set('paid_amount',(schedule.paid_amount or 0)+advance_added_amount)
                     total_advance -= advance_added_amount
+

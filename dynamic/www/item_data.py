@@ -16,6 +16,9 @@ def get_context(context):
     context.item_name = item_doc.item_name
     context.item_doc = item_doc
     context.description = item_doc.description
+    context.country_of_origin = item_doc.country_of_origin
+    description = f"{item_doc.item_name} - {item_doc.size or 'None Size'}  - {item_doc.color  or 'None Color'} - " + item_doc.description
+    context.description = description
     img_link = get_image_link(context.item_code)
     item_price = get_item_price(context.item_code)
     context.img_link = img_link if img_link else '/assets/dynamic/images/cocaola.jpg'
@@ -68,8 +71,6 @@ def encode_item_data(doc):
     item_code_55 = escape_html_demo(doc.name)
     # item_url = urllib.parse.quote(item_code)
     server_url = get_host_name() #'10.0.0.13:8000' # get_host_name()
-    # print('\n\n\n===>uel   ',f'{server_url}/item_data?item_code={item_code_55}','\n\n')
-    # print(item_code_55)
     return f'http://{server_url}/item_data?item_code={item_code_55}'
 
 def get_image_link(item_code):

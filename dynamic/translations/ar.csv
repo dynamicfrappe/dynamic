@@ -5,3 +5,5 @@ Vehicle Contract With name {0} will be end after 2 months from now {1},عقد ا
 Vehicle  With name {0} will need To Change Tire Name {1} , سيارة بأسم {1} ستحتاج لتغيير أطارات {1}
 Vehicle  With name {0} will need To Change Tire Inspection Name {1} , سياره بأسم {0} ستحتاج لتفتيش أطارات {1}
 Vechile Log Is Submitted For Driver {0}  at {1} status become Completed , تم ارسال سجل السياره للسائق {0} فى {1} والحاله اصبحت مكتمله
+Status,الحالة
+Model Year,موديل السنة
