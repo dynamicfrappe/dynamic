@@ -16,7 +16,7 @@ def get_context(context):
     context.item_name = item_doc.item_name
     context.item_doc = item_doc
     context.description = item_doc.description
-    context.country_of_origin = item_doc.country_of_origin
+    context.country = item_doc.country_of_origin
     description = f"{item_doc.item_name} - {item_doc.size or 'None Size'}  - {item_doc.color  or 'None Color'} - " + item_doc.description
     context.description = description
     img_link = get_image_link(context.item_code)
@@ -26,7 +26,8 @@ def get_context(context):
     context.qty = get_item_stock(context.item_code) or 0
     server_url = get_host_name()#frappe.local.conf.host_name or frappe.local.conf.hostname
     # site_url = get_url()
-    # print('\n\n\n\===server_url=>',server_url,'\n\n\n')
+    # print('\n\n\n\n----------------------------------\n\n')
+    # print(context.__dict__)
     return context
 def escape_html_show(text):
 	if not isinstance(text, str):
