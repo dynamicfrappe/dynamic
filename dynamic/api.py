@@ -1488,6 +1488,7 @@ def before_insert_invoice(doc , *args , **kwargs) :
 
 @frappe.whitelist()
 def set_advences_to_schedules(doc , *args , **kwargs):
+    total_advance = 0
     if doc.advancess:
         total_advance = 0
         for advance in doc.advancess:

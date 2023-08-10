@@ -8,6 +8,16 @@ from frappe import _
 @frappe.whitelist()
 def delivery_note_before_submit(delivery_doc , *args , **kwargs):
     for row in delivery_doc.items:
+        if row.against_sales_order:
+            #**main phase
+            #1- check sales order is reserved check box enabled
+            #2- if not reservation -> validate avail qty in stock and reserved qty for warehouse (common method used also if SO reserved)
+            #3- if SO reserved check (common method used a)
+            ...
+        elif row.against_sales_invoice:
+            #-loop over items get againts_sales order
+            #-
+            ...
         #! check if available qty in stock and reservation
         try:
             if row.reservation:
@@ -34,25 +44,6 @@ def check_each_row_vaild_qty():
 def check_valid_item_qty():
     ...
 
-
-
-# decrator parent
-def burn(f):
-    def blah(*args, **kwargs):
-        print('hah')
-        print(args)
-        print(kwargs)
-        return f(*args, **kwargs)
-    return blah
-
-def conditionally(dec, cond):
-    def resdec(child):
-        if not cond:
-            return child
-        return dec(child)
-    return resdec
-
-@conditionally(burn, False)
 def validate_decorator(doc,invoice=None):
-    print(f'\n\n-watch-->{doc},\n\n')
+    ...
 
