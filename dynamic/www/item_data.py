@@ -10,23 +10,17 @@ import urllib
 def get_context(context):
     # if not frappe.session.user:
     code = frappe.form_dict.item_code
-    code_escap = escape_html_show(code)
-    context.item_code = code_escap
-    item_doc = frappe.get_doc('Item',context.item_code)
-    # context.item_name = item_doc.item_name
-    context.item_doc = item_doc
-    # context.test = item_doc.country_of_origin
-    item_doc.description = f"{item_doc.item_name} - {item_doc.size or 'None Size'}  - {item_doc.color  or 'None Color'} - " + item_doc.description
-    # context.description = description
+    item_code = escape_html_show(code)
+    item_doc = frappe.get_doc('Item',item_code)
     img_link = get_image_link(context.item_code)
-    item_price = get_item_price(context.item_code)
+    item_price, price_list = get_item_price(context.item_code)
+    item_doc.description = f"{item_doc.item_name} - {item_doc.size or 'None Size'}  - {item_doc.color  or 'None Color'} - " + item_doc.description
+    item_doc.price_list = price_list
+    context.item_doc = item_doc
     context.img_link = img_link if img_link else '/assets/dynamic/images/cocaola.jpg'
     context.item_price = item_price or 0
     context.qty = get_item_stock(context.item_code) or 0
     server_url = get_host_name()#frappe.local.conf.host_name or frappe.local.conf.hostname
-    # site_url = get_url()
-    # print('\n\n\n\n----------------------------------\n\n')
-    # print(context.__dict__)
     return context
 def escape_html_show(text):
 	if not isinstance(text, str):
@@ -80,11 +74,12 @@ def get_image_link(item_code):
     return imag_link or ''
 
 def get_item_price(item_code):
-    price_list = frappe.db.get_single_value('Stock Settings','price_list')
     item_price = 0
+    price_list =None
+    price_list = frappe.db.get_single_value('Stock Settings','price_list')
     if price_list:
         item_price = frappe.db.get_value('Item Price',{'item_code':item_code,'price_list':price_list,'selling':1},'price_list_rate')
-    return item_price
+    return [item_price,price_list]
 
 def get_item_stock(item) :
     warehouse  = frappe.db.get_single_value('Stock Settings','warehouse')

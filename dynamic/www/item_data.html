@@ -10,20 +10,19 @@
 {%- endblock -%}
 
 {% block page_content %}
-    <h2 style="text-align:center">{{ item_code }}</h2>
-    <!-- <h3>item code = {{ item_code }}</h3>
-    <h3>item name = {{ item_name }} "/assets/dynamic/images/cocaola.jpg"</h3> -->
+    <h2 style="text-align:center">{{ item_doc.item_code }}</h2>
     <div class="card">
       <img src={{img_link}} alt="Denim Jeans" style="width:100%;min-height:200px;">
       <h3>{{ item_doc.item_name }}</h3>
+      <!-- <p class="brand" style="color: black;">Brand :{{item_doc.brand}}</p> -->
       <p class="price">Price :{{item_price}}</p>
-      <p class="brand" style="color: black;">Brand :{{item_doc.brand}}</p>
+      <p class="price">Price List :{{item_doc.price_list}}</p>
       <p class="group" style="color: black;">Group :{{item_doc.item_group}}</p>
       {% if frappe.session.user != 'Guest'%}
       <p class="group" style="color: black;">QTY :{{qty}}</p>
       {% endif%}
-      <p style="color: black;">DESC :{{item_doc.description}}</p>
-      <p style="color: black;">CNT :{{item_doc.country_of_origin}}</p>
+      <p style="color: black;">{{item_doc.description}}</p>
+      <p style="color: black;">Origin :{{item_doc.country_of_origin}}</p>
     </div>
 
 {%- endblock -%}

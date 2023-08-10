@@ -15,6 +15,8 @@ def delivery_note_before_submit(delivery_doc , *args , **kwargs):
             #3- if SO reserved check (common method used a)
             ...
         elif row.against_sales_invoice:
+            #-loop over items get againts_sales order
+            #-
             ...
         #! check if available qty in stock and reservation
         try:
