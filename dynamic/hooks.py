@@ -235,6 +235,9 @@ doc_events = {
          "on_submit" : "dynamic.api.submit_purchase_recipt",
          "before_save" : "dynamic.api.before_save",
     },
+    "Stock Ledger Entry":{
+        "before_insert":"dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
+    },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
     # }

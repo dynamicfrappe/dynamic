@@ -1504,3 +1504,12 @@ def set_advences_to_schedules(doc , *args , **kwargs):
                     schedule.db_set('paid_amount',(schedule.paid_amount or 0)+advance_added_amount)
                     total_advance -= advance_added_amount
 
+
+
+
+    
+    
+    
+    
+    
+   

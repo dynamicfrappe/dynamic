@@ -236,7 +236,7 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 def so_on_submit(self,*args , **kwargs):
 	if 'Real State' in DOMAINS:
 		update_against_document_in_jv(self)
-		...
+		
 
 
 #?same function but not same cjild field table name
