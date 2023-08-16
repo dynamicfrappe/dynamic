@@ -25,6 +25,8 @@ frappe.ui.form.on("Sales Order", {
     };
   },
   refresh: function (frm) {  
+    // console.log(frm.get_docfield('set_warehouse'))
+    
     frm.events.set_field_reqd_reservation(frm)
     frm.events.set_query(frm)
 
@@ -65,6 +67,7 @@ frappe.ui.form.on("Sales Order", {
                   doc_name: frm.doc.name,
                 },
                 callback: function(r, rt) {
+                  frm.clear_table("advancess");
                   r.message.forEach(row => {
                     // console.log(row)
                     let child = frm.add_child("advancess");

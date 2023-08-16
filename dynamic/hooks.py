@@ -100,7 +100,7 @@ doctype_js = {
     "Stock Reconciliation":"public/js/stock_reconciliation.js",
     "Item":"public/js/item.js",
     "Journal Entry":"public/js/journal_entry.js",
-
+    # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 
 
@@ -234,6 +234,9 @@ doc_events = {
     "Purchase Receipt":{
          "on_submit" : "dynamic.api.submit_purchase_recipt",
          "before_save" : "dynamic.api.before_save",
+    },
+    "Stock Ledger Entry":{
+        "before_insert":"dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
     },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
