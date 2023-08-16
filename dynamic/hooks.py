@@ -374,6 +374,7 @@ domains = {
     "Master Deals":"dynamic.domains.master_deals",
     "Barcode Item":"dynamic.domains.barcode_item",
     "Repack":"dynamic.domains.repack",
+    "EGY Phar":"dynamic.domains.egy_phar",
 }
 
 # domain Conatin
