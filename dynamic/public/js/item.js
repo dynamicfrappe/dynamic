@@ -4,6 +4,7 @@ frappe.ui.form.on("Item", {
     refresh:function(frm){
         // frm.refresh_fields("barcodes")
         // frm.refresh_fields();
+        // frm.set_value('image',"/files/moltob1846c.png")
         frm.events.add_custom_btn(frm)
     },
     add_custom_btn:function(frm){

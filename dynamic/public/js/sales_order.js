@@ -25,6 +25,8 @@ frappe.ui.form.on("Sales Order", {
     };
   },
   refresh: function (frm) {  
+    // console.log(frm.get_docfield('set_warehouse'))
+    
     frm.events.set_field_reqd_reservation(frm)
     frm.events.set_query(frm)
 
