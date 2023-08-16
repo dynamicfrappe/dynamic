@@ -100,7 +100,7 @@ doctype_js = {
     "Stock Reconciliation":"public/js/stock_reconciliation.js",
     "Item":"public/js/item.js",
     "Journal Entry":"public/js/journal_entry.js",
-
+    # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 
 
@@ -150,7 +150,8 @@ doc_events = {
     "Delivery Note": {
         "on_submit": ["dynamic.gebco.api.validate_delivery_note",],
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
-        "validate": ["dynamic.api.validate_delivery_note",],
+        "validate": ["dynamic.api.validate_delivery_note",
+                     "dynamic.weh.delevery_note.validate_delevery_note",],
         # "on_cancel": "dynamic.api.cancel_delivery_note",
     },
    
@@ -164,6 +165,7 @@ doc_events = {
             ],
         "validate" :["dynamic.elevana.hooks.add_partener_to_sales_order"] ,
         "on_cancel":"dynamic.api.cancel_reservation",
+        "on_submit":["dynamic.real_state.rs_api.so_on_submit",],
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
     "Purchase Receipt": {
@@ -232,6 +234,12 @@ doc_events = {
     "Purchase Receipt":{
          "on_submit" : "dynamic.api.submit_purchase_recipt",
          "before_save" : "dynamic.api.before_save",
+    },
+    "Stock Ledger Entry":{
+        "before_insert":"dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
+    },
+    "File":{
+        "after_insert":"dynamic.master_deals.master_deals_api.deals_after_insert"
     },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
@@ -305,6 +313,7 @@ scheduler_events = {
 # ------------------------------
 #
 override_whitelisted_methods = {
+    # "frappe.desk.reportview.export_query": "dynamic.api.export_query",
 	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
     #/home/abanoub/frappe/dynamc_projects/frappe-14/apps/erpnext/erpnext/controllers/queries.py
     # "erpnext.controllers.queries.supplier_query":"dynamic.master_deals.master_deals_api.get_supplier_by_code"
@@ -377,6 +386,7 @@ jenv = {
     "methods": [
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
+        "encode_item_data:dynamic.www.item_data.encode_item_data",
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",

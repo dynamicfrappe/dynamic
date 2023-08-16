@@ -35,3 +35,11 @@ cur_frm.fields_dict["stages"].grid.get_field("stage_name").get_query = function(
 	}
 
 }
+
+
+
+erpnext.project_rs = frappe.ui.form.Controller.extend({
+	refresh:function(){
+		console.log('test========>class')
+	}
+})

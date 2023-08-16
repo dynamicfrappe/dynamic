@@ -53,7 +53,7 @@ def get_packed_item_details(item_code, company):
 	)
 	return query.run(as_dict=True)[0]
 
-
+@frappe.whitelist()
 def get_bin_qty(item, warehouse):
 	# det = frappe.db.sql("""select actual_qty, projected_qty from `tabBin`
 	# 	where item_code = %s and warehouse = %s""", (item, warehouse), as_dict = 1)

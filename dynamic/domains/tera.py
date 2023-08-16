@@ -4,6 +4,15 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {
+        "Sales Invoice":[
+            {
+                "label": "Customer Print Name",
+                "fieldname": "customer_print_name",
+                "fieldtype": "Data",
+                "insert_after": "customer",
+                "allow_on_submit": "1",
+            },
+        ],
         "Stock Reconciliation Item":[
             {
                 "label": "Item Group",
@@ -200,6 +209,13 @@ data = {
                 "no_copy" : 1,
                 "allow_on_submit":1,
                 "default":0
+            },
+            {
+                "label": "Customer Print Name",
+                "fieldname": "customer_print_name",
+                "fieldtype": "Data",
+                "insert_after": "order_type",
+                "allow_on_submit": "1",
             },
         # ],
 
@@ -454,7 +470,7 @@ data = {
             "fieldtype": "Data",
             "in_global_search": 1,
             "in_standard_filter": 1,
-            "insert_after": "tax_category",
+            "insert_after": "sku",
             "label": "Phone No",
             "translatable": 1,
             "unique": 1,
@@ -538,7 +554,30 @@ data = {
                 "insert_after": "reservation_setting_section",
                 "label": "Reservation Setting",
                 "translatable": 1,
-            }
+            },
+            {
+                "fieldname": "image",
+                "fieldtype": "Attach Image",
+                "insert_after": "default_warehouse",
+                "label": "Image",
+                "translatable": 1,
+            },
+            {
+                "label": "Price List",
+                "fieldname": "price_list",
+                "fieldtype": "Link",
+                "insert_after": "image",
+                "options": "Price List",
+                "translatable": 1,
+            },
+            {
+                "label": "Warehouse",
+                "fieldname": "warehouse",
+                "fieldtype": "Link",
+                "insert_after": "price_list",
+                "options": "Warehouse",
+                "translatable": 1,
+            },
         ],
         'Material Request':[
             {

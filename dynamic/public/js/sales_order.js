@@ -25,6 +25,8 @@ frappe.ui.form.on("Sales Order", {
     };
   },
   refresh: function (frm) {  
+    // console.log(frm.get_docfield('set_warehouse'))
+    
     frm.events.set_field_reqd_reservation(frm)
     frm.events.set_query(frm)
 
@@ -58,13 +60,14 @@ frappe.ui.form.on("Sales Order", {
         method: "dynamic.api.get_active_domains",
         callback: function (r) {
           if (r.message && r.message.length) {
-            if (r.message.includes("IFI")) {
+            if (r.message.includes("IFI") || r.message.includes("Real State")) {
               return frappe.call({
                 method: "dynamic.ifi.api.get_advanced_so_ifi",//get_advanced_so_ifi
                 args:{
                   doc_name: frm.doc.name,
                 },
                 callback: function(r, rt) {
+                  frm.clear_table("advancess");
                   r.message.forEach(row => {
                     // console.log(row)
                     let child = frm.add_child("advancess");
@@ -693,6 +696,7 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
           method: "dynamic.api.get_active_domains",
           callback: function (r) {
             if (r.message && r.message.length) {
+              // console.log('domains ',r.message)
               if (r.message.includes("IFI")){
                 // Make Purchase Order
                 if (!cur_frm.doc.is_internal_customer) {
@@ -710,12 +714,18 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
               if (r.message.includes("Future")){
                 cur_frm.page.remove_inner_button('Sales Invoice','Create')
               }
+              if (r.message.includes("Real State")){
+                // console.log('domains real state')
+                // me.get_method_for_payment()
+                cur_frm.cscript['get_method_for_payment'] = create_payment_for_real_state
+              }
             }
           }
         })
 
       }
     }
+    
   },
   make_purchase_order_ifi: function(){
 		let pending_items = this.frm.doc.items.some((item) =>{
@@ -869,6 +879,18 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
 	// 	})
 	// },
 })
+var create_payment_for_real_state = function(){
+  var method = "dynamic.real_state.rs_api.get_payment_entry";
+  if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
+    if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){
+      method = "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_invoice";
+    }else {
+      method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
+    }
+  }
+
+  return method
+}
 var create_kmina_sales_invoice = function() {
   frappe.model.open_mapped_doc({
   method: "dynamic.kmina.api.make_sales_invoice",
@@ -882,6 +904,20 @@ var create_ifi_sales_invoice = function() {
   frm: cur_frm
 })
 }
+
+cur_frm.cscript.get_method_for_payment  = function() {
+  var method = "dynamic.real_state.rs_api.get_payment_entry";
+		if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
+			if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){
+				method = "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_invoice";
+			}else {
+				method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
+			}
+		}
+    console.log(method)
+		return method
+}
+
 $.extend(
 	cur_frm.cscript,
 	new extend_sales_order({frm: cur_frm}),
