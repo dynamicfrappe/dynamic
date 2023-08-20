@@ -12,7 +12,7 @@ def get_context(context):
     code = frappe.form_dict.item_code
     item_code = escape_html_show(code)
     item_doc = frappe.get_doc('Item',item_code)
-    img_link = get_image_link(context.item_code)
+    img_link = get_image_link(item_code)
     item_price, price_list = get_item_price(context.item_code)
     item_doc.description = f"{item_doc.item_name} - {item_doc.size or 'None Size'}  - {item_doc.color  or 'None Color'} - " + item_doc.description
     item_doc.price_list = price_list

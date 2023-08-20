@@ -42,10 +42,11 @@ def get_data(filters):
 		if row.item_code in data:
 			data[row.item_code][row.warehouse] = row.actual_qty
 
+	filtered_data = list(filter(lambda x:x[1], data.items()))
 	for k,v in data.items():
 		last_data.append(v)
 		
-	print('\n\n\n===last_data>',last_data,'\n\n\n')
+	# print('\n\n\n===data>',data,'\n\n\n')
 	return last_data
 
 def get_columns(filters):
