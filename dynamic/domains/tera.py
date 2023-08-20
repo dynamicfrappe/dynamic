@@ -10,6 +10,7 @@ data = {
                 "fieldname": "customer_print_name",
                 "fieldtype": "Data",
                 "insert_after": "customer",
+                "allow_on_submit": "1",
             },
         ],
         "Stock Reconciliation Item":[
@@ -214,6 +215,7 @@ data = {
                 "fieldname": "customer_print_name",
                 "fieldtype": "Data",
                 "insert_after": "order_type",
+                "allow_on_submit": "1",
             },
         # ],
 

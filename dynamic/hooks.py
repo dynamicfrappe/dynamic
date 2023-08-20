@@ -238,6 +238,9 @@ doc_events = {
     "Stock Ledger Entry":{
         "before_insert":"dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
     },
+    "File":{
+        "after_insert":"dynamic.master_deals.master_deals_api.deals_after_insert"
+    },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
     # }
@@ -371,6 +374,8 @@ domains = {
     "Master Deals":"dynamic.domains.master_deals",
     "Barcode Item":"dynamic.domains.barcode_item",
     "Repack":"dynamic.domains.repack",
+    "EGY Phar":"dynamic.domains.egy_phar",
+    "ARAM":"dynamic.domains.aram",
 }
 
 # domain Conatin
