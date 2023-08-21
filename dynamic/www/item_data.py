@@ -22,6 +22,7 @@ def get_context(context):
     context.qty = get_item_stock(context.item_code) or 0
     server_url = get_host_name()#frappe.local.conf.host_name or frappe.local.conf.hostname
     return context
+
 def escape_html_show(text):
 	if not isinstance(text, str):
 		return text
