@@ -14,7 +14,7 @@ def get_context(context):
     item_code = escape_html_show(code)
     item_doc = frappe.get_doc('Item',item_code)
     img_link = get_image_link(item_code)
-    server_url = server_url #get_host_name() #'10.0.0.13:8000' # get_host_name()
+    server_url = get_host_name() #'10.0.0.13:8000' # get_host_name()
     img_link =  f'http://{server_url}{img_link}'
     print('\n\n\n---img_link->',img_link,'\n\n\n')
     item_price, price_list = get_item_price(context.item_code)
@@ -69,7 +69,7 @@ def encode_item_data(doc):
     item_code = doc.name
     item_code_55 = escape_html_demo(doc.name)
     # item_url = urllib.parse.quote(item_code)
-    server_url = server_url #get_host_name()#'10.0.0.13:8000' # get_host_name()
+    server_url = get_host_name()#'10.0.0.13:8000' # get_host_name()
     return f'http://{server_url}/item_data?item_code={item_code_55}'
 
 @frappe.whitelist()
@@ -80,7 +80,7 @@ def test_encode_item_data(doc):
     item_code = doc.name
     item_code_55 = escape_html_demo(doc.name)
     # item_url = urllib.parse.quote(item_code)
-    server_url = server_url #get_host_name()#'10.0.0.13:8000' # get_host_name()
+    server_url = get_host_name()#'10.0.0.13:8000' # get_host_name()
     img_link = get_image_link(item_code)
     img_link =  f'http://{server_url}{img_link}'
     return {'url':f'http://{server_url}/item_data?item_code={item_code_55}','image_link':img_link}
