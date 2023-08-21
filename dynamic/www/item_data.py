@@ -2,10 +2,10 @@
 
 import frappe
 from frappe import _
-from frappe.utils import get_host_name, escape_html
+from frappe.utils import get_host_name, escape_html,get_url
 no_cache = 1
 import urllib 
-# server_url = get_host_name() #'10.0.0.13:8000'
+# server_url = get_host_name() 
 
 @frappe.whitelist(allow_guest=False)
 def get_context(context):
@@ -83,7 +83,7 @@ def test_encode_item_data(doc):
     server_url = get_host_name()
     img_link = get_image_link(item_code)
     img_link =  f'http://{server_url}{img_link}'
-    return {'url':f'http://{server_url}/item_data?item_code={item_code_55}','image_link':img_link}
+    return {'url':f'http://{server_url}/item_data?item_code={item_code_55}','image_link':img_link,'get_url':get_url()}
 
 def get_image_link(item_code):
     imag_link =  frappe.db.get_value('File', {'attached_to_doctype': 'Item','attached_to_name': item_code}, ['file_url'])
