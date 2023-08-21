@@ -16,12 +16,12 @@ def get_context(context):
     img_link = get_image_link(item_code)
     server_url = get_host_name() #'10.0.0.13:8000' # get_host_name()
     img_link =  f'http://{server_url}{img_link}'
-    print('\n\n\n---img_link->',img_link,'\n\n\n')
+    # print('\n\n\n---img_link->',img_link,'\n\n\n')
     item_price, price_list = get_item_price(context.item_code)
     item_doc.description = f"{item_doc.item_name} - {item_doc.size or 'None Size'}  - {item_doc.color  or 'None Color'} - " + item_doc.description
     item_doc.price_list = price_list
     context.item_doc = item_doc
-    context.img_link = img_link if img_link else '/assets/dynamic/images/cocaola.jpg'
+    context.img_link = img_link 
     context.item_price = item_price or 0
     context.qty = get_item_stock(context.item_code) or 0
     # server_url = get_host_name()#frappe.local.conf.host_name or frappe.local.conf.hostname
