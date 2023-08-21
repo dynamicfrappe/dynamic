@@ -18,6 +18,7 @@
       <p class="price">Price(+Tax):{{item_price}}</p>
       <!-- <p class="price">Price List :{{item_doc.price_list}}</p> -->
       <p class="group" style="color: black;">Group :{{item_doc.item_group}}</p>
+      <p class="group" style="color: black;">QTY test :{{qty}}</p>
       {% if frappe.session.user != 'Guest'%}
       <p class="group" style="color: black;">QTY :{{qty}}</p>
       {% endif%}
