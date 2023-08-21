@@ -279,8 +279,8 @@ def get_row_qty(source_doc,item_code,edit_row_qty):
 
 @frappe.whitelist()
 def make_stock_entry(source_name, target_doc=None):
-	doc = get_mapped_doc("Reback", source_name, {
-		"Reback": {
+	doc = get_mapped_doc("Repack", source_name, {
+		"Repack": {
 			"doctype": "Stock Entry",
 			"field_map": {
 				'from_warehouse':'from_warehouse',
@@ -293,7 +293,7 @@ def make_stock_entry(source_name, target_doc=None):
 				# "docstatus": ["=", 1]
 			}
 		},
-		"Stock Entry Detail": {
+		"Repack Items": {
 			"doctype": "Stock Entry Detail",
 			"field_map": {
 				# "parent": "sales_order",

@@ -38,7 +38,7 @@ frappe.ui.form.on('Repack', {
 				function () {
 				  frappe.model.open_mapped_doc({
 					method:
-					  "dynamic.dynamic.doctype.Repack.Repack.make_stock_entry",
+					  "dynamic.dynamic.doctype.repack.repack.make_stock_entry",
 					frm: frm, //this.frm
 				  });
 				},
@@ -147,12 +147,15 @@ function check_should_not_attach_bom_items(bom_no) {
 			},
 			callback:function(r){
 				let result = r.message
-				console.log('========>',result)
+				// console.log('========>',result)
 				if(result.flage==false){
 					row.qty = result.qty
-					frm.refresh_field('items')
 					frappe.throw(__(result.msg))
+				}else{
+					row.basic_amount = row.qty * row.basic_rate
+					row.amount = row.qty * row.basic_rate
 				}
+				frm.refresh_field('items')
 			}
 		})
 	}
