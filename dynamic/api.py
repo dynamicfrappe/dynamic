@@ -542,7 +542,7 @@ def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_
 				AND `tabBin`.name = `tabReservation Warehouse`.bin
 				WHERE `tabBin`.warehouse = '{warehouse_source}'
 				AND `tabBin`.item_code = '{item_code}'
-				AND `tabReservation`.status <> "Invalid"
+				AND `tabReservation`.status NOT IN ("Invalid","Closed")
 				""" ,as_dict=1)
        
 	if data and len(data) > 0 :
