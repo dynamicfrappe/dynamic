@@ -922,3 +922,12 @@ $.extend(
 	cur_frm.cscript,
 	new extend_sales_order({frm: cur_frm}),
 );
+
+
+frappe.ui.form.on("Sales Order Item", {
+  qty:function(frm,cdt,cdn){
+    let row = locals[cdt][cdn]
+    row.total = row.base_price_list_rate * row.qty
+    frm.refresh_fields('items')
+  }
+})

@@ -160,3 +160,12 @@ frappe.ui.form.on("Sales Team", {
   }
 
 })
+
+
+frappe.ui.form.on("Sales Invoice Item", {
+  qty:function(frm,cdt,cdn){
+    let row = locals[cdt][cdn]
+    row.total = row.base_price_list_rate * row.qty
+    frm.refresh_fields('items')
+  }
+})

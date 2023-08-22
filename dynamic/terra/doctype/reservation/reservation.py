@@ -56,7 +56,7 @@ class Reservation(Document):
 				WHERE `tabBin`.warehouse = '{self.warehouse_source}'
 				AND `tabBin`.item_code = '{self.item_code}'
 				AND `tabReservation`.name <> "{self.name}"
-				AND `tabReservation`.status  <> "Invalid"
+				AND `tabReservation`.status NOT IN ("Invalid","Closed")
 				""" ,as_dict=1)
 		
 		if data and len(data) > 0 :
@@ -84,7 +84,7 @@ class Reservation(Document):
 			LEFT JOIN
 			`tabReservation`
 			ON `tabReservation Purchase Order`.parent = `tabReservation`.name 
-			AND `tabReservation`.name <> '{self.name}' AND  `tabReservation`.status <> "Invalid"
+			AND `tabReservation`.name <> '{self.name}' AND  `tabReservation`.status NOT IN ("Invalid","Closed")
 			where `tabPurchase Order Item`.item_code = '{self.item_code}'  
 			AND `tabPurchase Order Item`.parent = '{self.order_source}' 
 			""",as_dict=1)
