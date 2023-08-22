@@ -544,6 +544,10 @@ def validate_warehouse_stock_reservation(item_code,warehouse_source,reservation_
 				AND `tabBin`.item_code = '{item_code}'
 				AND `tabReservation`.status NOT IN ("Invalid","Closed")
 				""" ,as_dict=1)
+        
+	# print('\n\n\n\n',data,'\n\n\n\n')
+	# frappe.throw('test')
+    
        
 	if data and len(data) > 0 :
 		if data[0].get("qty") == 0 or float( data[0].get("qty")  or 0 ) < reservation_amount  :
