@@ -163,6 +163,7 @@ def get_data(
 	ignore_closing_entries=False,
 	ignore_accumulated_values_for_fy=False,
 	total=True,
+
 ):
 
 	accounts = get_accounts(company, root_type)
@@ -207,7 +208,7 @@ def get_data(
 
 	if out and total:
 		add_total_row(out, root_type, balance_must_be, period_list, company_currency)
-	#print("out===========> ",out)
+	# print("out===========> ",out)
 	return out
 
 def get_cost_of_good_sold_data(
@@ -225,7 +226,7 @@ def get_cost_of_good_sold_data(
 	if account:
 		accounts = get_cost_of_good_sold_accounts(company, account)
 		for a in accounts:
-			print("a.account before condition",account,a.name)
+			# print("a.account before condition",account,a.name)
 			if a.name == account:
 				a.parent_account = None
 		if not accounts:
@@ -245,7 +246,7 @@ def get_cost_of_good_sold_data(
 			as_dict=1,
 		):
 			#account
-			print("from for loooooooooooooooooooooop --------------------------------------")
+			# print("from for loooooooooooooooooooooop --------------------------------------")
 			set_gl_entries_by_account(
 				company,
 				period_list[0]["year_start_date"] if only_current_fiscal_year else None,
@@ -269,7 +270,7 @@ def get_cost_of_good_sold_data(
 		out = filter_out_zero_value_rows(out, parent_children_map)
 		if out and total:
 			add_total_row(out, account, balance_must_be, period_list, company_currency)
-		print("out new ===========> ",out)
+		# print("out new ===========> ",out)
 		return out
 	return []
 
@@ -446,13 +447,17 @@ def get_cost_of_good_sold_accounts(company, account):
 		)
 		
 
-def filter_accounts(accounts, depth=20):
+def filter_accounts(accounts, depth=20 ):
 	parent_children_map = {}
 	accounts_by_name = {}
+	# if cost :
+	# 	accounts.remove(cost)
+	# 	print("Cost remove ")
 	for d in accounts:
-		accounts_by_name[d.name] = d
-		parent_children_map.setdefault(d.parent_account or None, []).append(d)
-
+			# print("account -----------" , d)
+			accounts_by_name[d.name] = d
+			parent_children_map.setdefault(d.parent_account or None, []).append(d)
+	
 	filtered_accounts = []
 
 	def add_to_list(parent, level):
@@ -479,7 +484,7 @@ def filter_cost_accounts(accounts, depth=20):
 	def add_to_list(parent, level):
 		if level < depth:
 			children = parent_children_map.get(parent) or []
-			print("children ------------------> ",children)
+			#print("children ------------------> ",children)
 			sort_accounts(children, is_root=True if parent == None else False)
 
 			for child in children:
