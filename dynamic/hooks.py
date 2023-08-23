@@ -374,6 +374,7 @@ domains = {
     "Master Deals":"dynamic.domains.master_deals",
     "Barcode Item":"dynamic.domains.barcode_item",
     "Repack":"dynamic.domains.repack",
+    "Clinic":"dynamic.domains.clinic",
     "EGY Phar":"dynamic.domains.egy_phar",
     "ARAM":"dynamic.domains.aram",
 }
