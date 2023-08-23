@@ -204,6 +204,8 @@ class Repack(StockEntry):
 	def add_to_stock_entry_detail(self, item_dict, bom_no=None):
 		for d in item_dict:
 			item_row = item_dict[d]
+			# frappe.errprint(item_row.get('rate'))
+			# frappe.errprint(item_row)
 			stock_uom = item_row.get("stock_uom") or frappe.db.get_value("Item", d, "stock_uom")
 
 			se_child = self.append("items")
@@ -213,6 +215,8 @@ class Repack(StockEntry):
 			se_child.uom = item_row["uom"] if item_row.get("uom") else stock_uom
 			se_child.stock_uom = stock_uom
 			se_child.qty = flt(item_row["qty"], se_child.precision("qty"))
+			# se_child.rate = item_row['rate']
+			se_child.basic_rate = item_row.get('rate')
 			se_child.allow_alternative_item = item_row.get("allow_alternative_item", 0)
 			se_child.subcontracted_item = item_row.get("main_item_code")
 			se_child.cost_center = item_row.get("cost_center") or get_default_cost_center(
@@ -257,9 +261,14 @@ def get_row_qty(source_doc,item_code,edit_row_qty):
 	data = frappe.db.sql(
 		f"""
 	SELECT stock_qty as qty FROM `tabBOM Explosion Item` WHERE item_code='{item_code}' and parent='{bom}'
-	""",as_dict=1)[0]
-	precent_change = frappe.db.get_single_value('Manufacturing Settings','change_precent')
-	if precent_change:
+	""",as_dict=1)
+	if not len(data):
+		msg = (_(f"QTY  should be 1"))
+		return {'flage':False,'qty':1,'msg':msg}
+	# print('\n\n\n-->data--',data,'\n\n\n')
+	precent_change = frappe.db.get_single_value('Manufacturing Settings','change_precent') or 0
+	if precent_change and data:
+		data =data[0]
 		if len(data) and data.get('qty'):
 			if (
 				float(edit_row_qty) < (data.get('qty') - (data.get('qty')*float(precent_change)/100) )
@@ -268,11 +277,10 @@ def get_row_qty(source_doc,item_code,edit_row_qty):
 				msg = (_(f"QTY at least should be {(data.get('qty') - (data.get('qty')*float(precent_change)/100) )} AND No More {(data.get('qty') + (data.get('qty')*float(precent_change)/100) )}"))
 				return {'flage':False,'qty':data.get('qty'),'msg':msg}
 
-
 @frappe.whitelist()
 def make_stock_entry(source_name, target_doc=None):
-	doc = get_mapped_doc("Reback", source_name, {
-		"Reback": {
+	doc = get_mapped_doc("Repack", source_name, {
+		"Repack": {
 			"doctype": "Stock Entry",
 			"field_map": {
 				'from_warehouse':'from_warehouse',
@@ -285,7 +293,7 @@ def make_stock_entry(source_name, target_doc=None):
 				# "docstatus": ["=", 1]
 			}
 		},
-		"Stock Entry Detail": {
+		"Repack Items": {
 			"doctype": "Stock Entry Detail",
 			"field_map": {
 				# "parent": "sales_order",
