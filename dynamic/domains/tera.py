@@ -4,6 +4,15 @@ from __future__ import unicode_literals
 data = {
 
     'custom_fields': {
+        "Sales Invoice":[
+            {
+                "label": "Customer Print Name",
+                "fieldname": "customer_print_name",
+                "fieldtype": "Data",
+                "insert_after": "customer",
+                "allow_on_submit": "1",
+            },
+        ],
         "Stock Reconciliation Item":[
             {
                 "label": "Item Group",
@@ -206,6 +215,7 @@ data = {
                 "fieldname": "customer_print_name",
                 "fieldtype": "Data",
                 "insert_after": "order_type",
+                "allow_on_submit": "1",
             },
         # ],
 

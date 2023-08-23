@@ -46,7 +46,7 @@ def execute(filters=None):
 		ignore_closing_entries=True,
 		ignore_accumulated_values_for_fy=True,
 	)
-	print("cost_of_good_sold ------------------------> ",cost_of_good_sold)
+	# print("cost_of_good_sold ------------------------> ",cost_of_good_sold)
 
 	expense = get_data(
 		filters.company,
@@ -57,13 +57,23 @@ def execute(filters=None):
 		accumulated_values=filters.accumulated_values,
 		ignore_closing_entries=True,
 		ignore_accumulated_values_for_fy=True,
+		
 	)
+	new_expense = []
+	for i in expense :
+		if i not in  cost_of_good_sold and i.get("account") != filters.get("account"):
+			# expense.remove(i)
+			new_expense.append(i)
+		
+			
+	#fileter expense
+	# print("Expence" , expense )
 
 	net_profit_loss = get_net_profit_loss(
-		income, expense, period_list, filters.company, filters.presentation_currency
+		income, new_expense , period_list, filters.company, filters.presentation_currency
 	)
-	print("income",income)
-	print("cost_of_good_sold",cost_of_good_sold)
+	# print("income",income)
+	# print("cost_of_good_sold",cost_of_good_sold)
 	if len(cost_of_good_sold) > 0:
 		total_income_againest_cost_of_good_sold = {
 			'account_name': 'Gross Profit',
@@ -77,7 +87,7 @@ def execute(filters=None):
 	data = []
 	data.extend(income or [])
 	data.extend(cost_of_good_sold or [])
-	data.extend(expense or [])
+	data.extend(new_expense or [])
 	
 	if net_profit_loss:
 		data.append(net_profit_loss)
@@ -150,12 +160,12 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 	}
 
 	has_value = False
-
+	print(f"all Expencies ==========   {expense}")
 	for period in period_list:
 		key = period if consolidated else period.key
 		total_income = flt(income[-2][key], 3) if income else 0
-		total_expense = flt(expense[-2][key], 3) if expense else 0
-
+		total_expense = flt(expense[-1][key], 3) if expense else 0
+		print(f"Exception ------- {flt(expense[-1][key], 3) }")
 		net_profit_loss[key] = total_income - total_expense
 
 		if net_profit_loss[key]:

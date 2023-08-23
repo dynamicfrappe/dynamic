@@ -138,40 +138,43 @@ frappe.ui.form.on("Stock Entry", {
     },
     get_target_warehouse_details: function(frm, cdt, cdn) {
       var child = locals[cdt][cdn];
-      if(!child.bom_no && child.t_warehouse) {
-        frappe.call({
-          method: "erpnext.accounts.doctype.pos_invoice.pos_invoice.get_stock_availability", //"erpnext.stock.doctype.stock_entry.stock_entry.get_warehouse_details",
-          args:{
-            'item_code': child.item_code,
-            'warehouse': cstr(child.t_warehouse),
-          },
-          // args: {
-          //   "args": {
-          //     'item_code': child.item_code,
-          //     'warehouse': cstr(child.t_warehouse),
-          //     'transfer_qty': child.transfer_qty,
-          //     'serial_no': child.serial_no,
-          //     'qty': child.s_warehouse ? -1* child.transfer_qty : child.transfer_qty,
-          //     'posting_date': frm.doc.posting_date,
-          //     'posting_time': frm.doc.posting_time,
-          //     'company': frm.doc.company,
-          //     'voucher_type': frm.doc.doctype,
-          //     'voucher_no': child.name,
-          //     'allow_zero_valuation': 1
-          //   }
-          // },
-          callback: function(r) {
-            if (!r.exc){
-              // console.log(r.message)
-              frappe.model.set_value(cdt, cdn, 'qty_target', (r.message[0] || 0.0));
-              // ["actual_qty", "basic_rate"].forEach((field) => {
-              //   frappe.model.set_value(cdt, cdn, field, (r.message[field] || 0.0));
-              // });
-              // frm.events.calculate_basic_amount(frm, child);
+      if (child.item_code){
+        if(!child.bom_no && child.t_warehouse) {
+          frappe.call({
+            method: "erpnext.accounts.doctype.pos_invoice.pos_invoice.get_stock_availability", //"erpnext.stock.doctype.stock_entry.stock_entry.get_warehouse_details",
+            args:{
+              'item_code': child.item_code,
+              'warehouse': cstr(child.t_warehouse),
+            },
+            // args: {
+            //   "args": {
+            //     'item_code': child.item_code,
+            //     'warehouse': cstr(child.t_warehouse),
+            //     'transfer_qty': child.transfer_qty,
+            //     'serial_no': child.serial_no,
+            //     'qty': child.s_warehouse ? -1* child.transfer_qty : child.transfer_qty,
+            //     'posting_date': frm.doc.posting_date,
+            //     'posting_time': frm.doc.posting_time,
+            //     'company': frm.doc.company,
+            //     'voucher_type': frm.doc.doctype,
+            //     'voucher_no': child.name,
+            //     'allow_zero_valuation': 1
+            //   }
+            // },
+            callback: function(r) {
+              if (!r.exc){
+                // console.log(r.message)
+                frappe.model.set_value(cdt, cdn, 'qty_target', (r.message[0] || 0.0));
+                // ["actual_qty", "basic_rate"].forEach((field) => {
+                //   frappe.model.set_value(cdt, cdn, field, (r.message[field] || 0.0));
+                // });
+                // frm.events.calculate_basic_amount(frm, child);
+              }
             }
-          }
-        });
+          });
+        }
       }
+
     },
 
 

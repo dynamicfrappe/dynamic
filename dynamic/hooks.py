@@ -100,7 +100,7 @@ doctype_js = {
     "Stock Reconciliation":"public/js/stock_reconciliation.js",
     "Item":"public/js/item.js",
     "Journal Entry":"public/js/journal_entry.js",
-
+    # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 
 
@@ -151,7 +151,7 @@ doc_events = {
         "on_submit": ["dynamic.gebco.api.validate_delivery_note",],
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
         "validate": ["dynamic.api.validate_delivery_note",
-                     "dynamic.weh.delevery_note.validate_delevery_note"],
+                     "dynamic.weh.delevery_note.validate_delevery_note",],
         # "on_cancel": "dynamic.api.cancel_delivery_note",
     },
    
@@ -234,6 +234,12 @@ doc_events = {
     "Purchase Receipt":{
          "on_submit" : "dynamic.api.submit_purchase_recipt",
          "before_save" : "dynamic.api.before_save",
+    },
+    "Stock Ledger Entry":{
+        "before_insert":"dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
+    },
+    "File":{
+        "after_insert":"dynamic.master_deals.master_deals_api.deals_after_insert"
     },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
@@ -369,6 +375,8 @@ domains = {
     "Barcode Item":"dynamic.domains.barcode_item",
     "Repack":"dynamic.domains.repack",
     "Clinic":"dynamic.domains.clinic",
+    "EGY Phar":"dynamic.domains.egy_phar",
+    "ARAM":"dynamic.domains.aram",
 }
 
 # domain Conatin
@@ -382,6 +390,7 @@ jenv = {
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_item_data:dynamic.www.item_data.encode_item_data",
+        "test_encode_item_data:dynamic.www.item_data.test_encode_item_data",
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",

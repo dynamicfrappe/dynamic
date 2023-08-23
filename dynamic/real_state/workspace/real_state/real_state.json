@@ -19,7 +19,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Real State",
+   "label": "Real Estate",
    "link_to": "Project RS",
    "link_type": "DocType",
    "onboard": 0,
@@ -28,8 +28,8 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Project RS",
-   "link_to": "Project RS",
+   "label": "Quotation",
+   "link_to": "Quotation",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -37,8 +37,8 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Project RS Stages",
-   "link_to": "Project RS Stages",
+   "label": "Sales Order",
+   "link_to": "Sales Order",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -46,14 +46,113 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Stages RS Blocks",
-   "link_to": "Stages RS Blocks",
+   "label": "Sales Invoice",
+   "link_to": "Sales Invoice",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Master Data",
+   "link_to": "Salary Detail",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item",
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Group",
+   "link_to": "Item Group",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer",
+   "link_to": "Customer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer Group",
+   "link_to": "Customer Group",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Operation",
+   "link_to": "Actions",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Additional Cost",
+   "link_to": "Real State Cost",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Entry",
+   "link_to": "Stock Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payments",
+   "link_to": "Payment Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Journal Entry",
+   "link_to": "Journal Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_to": "Action",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
   }
  ],
- "modified": "2023-08-02 14:51:40.814290",
+ "modified": "2023-08-09 15:32:27.477059",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Real State",

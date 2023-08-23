@@ -164,3 +164,16 @@ def customer_query_custom(doctype, txt, searchfield, start, page_len, filters, a
 def get_options(doc, arg=None):
 	if frappe.get_meta('Sales Invoice').get_field("naming_series"):
 		return frappe.get_meta('Sales Invoice').get_field("naming_series").options
+	
+
+def deals_after_insert(doc,*args,**kwargs):
+	if 'Master Deals' in DOMAINS:
+		if doc.attached_to_doctype == 'Item' and doc.attached_to_name != None:
+			item_attach = frappe.db.get_list('File',
+			filters={
+				'attached_to_doctype': 'Item',
+				'attached_to_name': doc.attached_to_name,
+			},
+			fields=['name'],)
+			if len(item_attach) == 1:
+				frappe.db.set_value('Item',doc.attached_to_name,'image',doc.file_url)

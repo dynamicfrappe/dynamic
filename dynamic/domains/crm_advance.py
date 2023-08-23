@@ -20,7 +20,7 @@ data = {
             "reqd": 1,
             }
         ] ,
-
+        
         'Quotation' :[
              {
                 "fieldname": "material_reuqest",

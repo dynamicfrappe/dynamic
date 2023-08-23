@@ -69,7 +69,7 @@ data = {
 
         'Sales Order':[
             {
-                "label": "Advance Paymentstest",
+                "label": "Advance Payment",
                 "fieldname": "advance_paymentss",
                 "fieldtype": "Section Break",
                 "insert_after": "payment_schedule"
