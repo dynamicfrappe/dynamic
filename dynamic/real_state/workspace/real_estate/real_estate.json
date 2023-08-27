@@ -143,7 +143,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Operation",
+   "label": "Operations",
    "link_to": "Operation",
    "link_type": "DocType",
    "onboard": 0,
@@ -223,7 +223,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Apartment Reserved",
    "link_to": "Appartement Reserved",
    "link_type": "Report",
@@ -232,7 +232,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Customer Account Report",
    "link_to": "Customer  Account Report",
    "link_type": "Report",
@@ -241,7 +241,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Actions Report",
    "link_to": "Actions Report",
    "link_type": "Report",
@@ -251,7 +251,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Doc",
+   "label": "Actions",
    "link_to": "Item",
    "link_type": "DocType",
    "onboard": 0,
@@ -267,7 +267,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-08-23 15:33:50.709590",
+ "modified": "2023-08-27 15:31:24.130232",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Real Estate",
@@ -275,5 +275,24 @@
  "pin_to_bottom": 0,
  "pin_to_top": 1,
  "restrict_to_domain": "Real State",
- "shortcuts": []
+ "shortcuts": [
+  {
+   "color": "#ED6396",
+   "doc_view": "List",
+   "format": "{} Open",
+   "label": "Reservation Form",
+   "link_to": "Quotation",
+   "stats_filter": "{\n\"docstatus\":1\n}",
+   "type": "DocType"
+  },
+  {
+   "color": "#EC864B",
+   "doc_view": "List",
+   "format": "{} Available",
+   "label": "Apartement",
+   "link_to": "Item",
+   "stats_filter": "{\n    \"disabled\": 0\n}",
+   "type": "DocType"
+  }
+ ]
 }
