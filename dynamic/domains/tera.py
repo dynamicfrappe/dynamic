@@ -21,6 +21,13 @@ data = {
                 "insert_after": "base_price_list_rate",
                 "in_list_view" :1 ,
             },
+             {
+                "label": _("Grand Total"),
+                "fieldname": "grand_total",
+                "fieldtype": "Float",
+                "insert_after": "total",
+                "read_only" :1 ,
+            }
         ],
         "Stock Reconciliation Item":[
             {
@@ -760,6 +767,13 @@ data = {
                 "insert_after": "base_price_list_rate",
                 "in_list_view" :1 ,
             },
+            {
+                "label": _("Grand Total"),
+                "fieldname": "grand_total",
+                "fieldtype": "Float",
+                "insert_after": "total",
+                "read_only" :1 ,
+            }
 
         ], 
         "Purchase Order Item":[
@@ -882,6 +896,13 @@ data = {
                 "label": "QTY As Per Sub Uom",
                 "read_only":1
             
+            },
+            {
+                "label": _("Grand Total"),
+                "fieldname": "grand_total",
+                "fieldtype": "Float",
+                "insert_after": "total",
+                "read_only" :1 ,
             }
         ],
           "Stock Entry":[
