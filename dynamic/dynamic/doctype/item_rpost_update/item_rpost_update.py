@@ -7,6 +7,7 @@ from  erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import r
 class Itemrpostupdate(Document):
 	def on_submit(self):
 		self.create_repost()
+		self.append_repost_entries()
 	
 	def create_repost(self) :
 		reposted_data = self.get_posted_data()
@@ -22,6 +23,15 @@ class Itemrpostupdate(Document):
 			frappe.db.commit()
 
 		repost_entries()
+
+	def append_repost_entries(self):
+		items=self.create_repost()
+		if items :
+			for item in items:
+				self.append("items", {
+				"repost_item":item,
+				})
+
 	def validate(self)  :
 		# self.get_posted_data()
 		# self.create_repost()
