@@ -6,7 +6,7 @@ from frappe.model.document import Document
 from  erpnext.stock.doctype.repost_item_valuation.repost_item_valuation import repost_entries
 
 class Itemrpostupdate(Document):
-	def on_submit(self):
+	def before_submit(self):
 		self.create_repost()
 	
 	def create_repost(self) :
