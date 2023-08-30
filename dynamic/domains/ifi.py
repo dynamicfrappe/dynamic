@@ -1,6 +1,5 @@
-
-from frappe import _
 from __future__ import unicode_literals
+from frappe import _
 
 installation_status = [
     "",
