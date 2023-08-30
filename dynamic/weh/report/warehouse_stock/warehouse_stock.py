@@ -103,7 +103,7 @@ class WarehouseStock(object):
 					ON b.name = a.item_code
 					WHERE a.warehouse in ({warehouse_str[:-1]}) 
 
-					GROUP By  a.item_code
+				
 					"""
 			
 			if self.filters.get("item_code") :
@@ -114,6 +114,8 @@ class WarehouseStock(object):
 
 			if self.filters.get("brand") :
 				sql = sql + f"""AND b.brand = '{self.filters.get("brand")}' """
+			sql = sql +"	GROUP By  a.item_code"
 			data = frappe.db.sql(sql ,as_dict=1)
+			return data
 		return data
 
