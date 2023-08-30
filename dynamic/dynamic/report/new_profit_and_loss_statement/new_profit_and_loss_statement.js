@@ -23,11 +23,18 @@ frappe.require("assets/erpnext/js/financial_statements.js", function() {
 			"label": __("Include Default Book Entries"),
 			"fieldtype": "Check",
 			"default": 1
-		},{
+		}
+		,{
 			"fieldname": "account",
 			"label": __("Cost of good sold account"),
 			"fieldtype": "Link",
 			"options":"Account"
+		} ,
+		{
+			"fieldname": "chart",
+			"label": __("Show Chart"),
+			"fieldtype": "Check"
+		
 		}
 	);
 });
