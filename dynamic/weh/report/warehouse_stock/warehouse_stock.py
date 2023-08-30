@@ -87,17 +87,18 @@ class WarehouseStock(object):
 		data = []
 		warehouse_str = ''
 		cases = ""
+		
 		if self.warehouses :
 			for k in self.warehouses  :
 				warehouse_str = warehouse_str + f" '{k.get('label')}' ,"
-				cases = cases + f"""  CASE a.warehouse WHEN "{k.get('label')}" THEN a.actual_qty 
-					 ELSE  0
-					 END as {k.get('fieldname')} ,"""
-			 
-			sql  = f"""  select a.item_code , b.item_name ,b.item_group , b.brand, SUM(a.actual_qty ) as total ,
+				cases = cases + f""" 
+				(select  SUM(actual_qty)  from `tabBin` where 
+					warehouse =   '{k.get('label')}'  and item_code= a.item_code )  as '{k.get('fieldname')}' ,
+				"""
+			sql  = f"""  select a.item_code , b.item_name ,b.item_group , b.brand, sum(a.actual_qty) as total,
 						
 					 {cases[:-1]} 
-					
+					 ( 0 ) as total_2
 					FROM `tabBin` a 
 					inner join  `tabItem` b 
 					ON b.name = a.item_code
@@ -106,6 +107,23 @@ class WarehouseStock(object):
 				
 					"""
 			
+
+			"""
+			select a.item_code , b.item_name ,b.item_group , b.brand, 
+			(select  actual_qty  from `tabBin` where 
+			warehouse =  "القوافل الطبية - WEH" and item_code= a.item_code)  as warehouse_1  ,
+			(select  actual_qty  from `tabBin` where 
+			warehouse =  "مخزن رئيسي - WEH" and item_code= a.item_code)  as warehouse_2 , 
+			((select  actual_qty  from `tabBin` where 
+			warehouse =  "القوافل الطبية - WEH" and item_code= a.item_code)  + (select  actual_qty  from `tabBin` where 
+			warehouse =  "مخزن رئيسي - WEH" and item_code= a.item_code) ) as total
+			FROM `tabBin` a inner join `tabItem` b ON b.name = a.item_code
+			WHERE a.warehouse in ( 'القوافل الطبية - WEH' , 'مخزن رئيسي - WEH' ) 
+			AND b.item_code = 'D0375' 
+			GROUP By a.item_code ;
+			
+			
+			"""
 			if self.filters.get("item_code") :
 				sql = sql + f"""AND b.item_code = '{self.filters.get("item_code")}' """
 
@@ -114,8 +132,10 @@ class WarehouseStock(object):
 
 			if self.filters.get("brand") :
 				sql = sql + f"""AND b.brand = '{self.filters.get("brand")}' """
-			sql = sql +"	GROUP By  a.item_code"
+			sql = sql +"	GROUP By  a.item_code "
 			data = frappe.db.sql(sql ,as_dict=1)
+
+			# frappe.throw(str(sql))
 			return data
 		return data
 
