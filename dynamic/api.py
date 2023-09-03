@@ -1517,4 +1517,10 @@ def set_advences_to_schedules(doc , *args , **kwargs):
     
     
     
-   
+@frappe.whitelist()
+def get_customer_branches(customer):
+    branches_list = []
+    doc = frappe.get_doc("Customer",customer)
+    for b in doc.branches:
+        branches_list.append(b.customer_branch)
+    return branches_list

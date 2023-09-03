@@ -96,7 +96,9 @@ def execute(filters=None):
 		filters.periodicity, period_list, filters.accumulated_values, filters.company
 	)
 
-	chart = get_chart_data(filters, columns, income, expense, net_profit_loss)
+	chart =[] 
+	if filters.get("chart") :
+		chart = get_chart_data(filters, columns, income, expense, net_profit_loss)
 
 	currency = filters.presentation_currency or frappe.get_cached_value(
 		"Company", filters.company, "default_currency"
