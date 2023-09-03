@@ -159,7 +159,34 @@ var create_terra_sales_order = function() {
 //       });
 // }
 
-
+frappe.ui.form.on("Quotation Item", {
+    item_code:function(frm,cdt,cdn){
+      let row = locals[cdt][cdn]
+      if(row.item_code){
+        frappe.call({
+                  'method': 'frappe.client.get_value',
+                  'args': {
+                      'doctype': 'Item Price',
+                      'filters': {
+                          'item_code': row.item_code,
+                          "selling":1
+                      },
+                     'fieldname':'price_list_rate'
+                  },
+                  'callback': function(res){
+                      row.amount =  res.message.price_list_rate;
+                  }
+              });
+        
+        frm.refresh_fields('items')
+      }
+    },
+    qty:function(frm,cdt,cdn){
+      let row = locals[cdt][cdn]
+      row.amount = row.base_price_list_rate * row.qty
+      frm.refresh_fields('items')
+    }
+  })
 
 cur_frm.cscript['Make Payment Entry'] = function() {
     frappe.model.open_mapped_doc({
