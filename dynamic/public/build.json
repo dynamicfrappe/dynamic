@@ -1,8 +1,7 @@
 
 {
     "js/dynamic.min.js": [
-        "public/js/car_quick_entry.js",
-        "public/js/assign_to.js"  
+        "public/js/car_quick_entry.js"
     ]
 
 }
