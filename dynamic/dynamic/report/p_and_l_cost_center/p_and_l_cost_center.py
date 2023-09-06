@@ -25,7 +25,15 @@ from dynamic.dynamic.report.p_and_l_cost_center.utils import (
 
 def execute(filters=None):
 	data = []
-
+	period_list = get_period_list(
+			filters.from_fiscal_year,
+			filters.to_fiscal_year,
+			filters.period_start_date,
+			filters.period_end_date,
+			filters.filter_based_on,
+			filters.periodicity,
+			company=filters.company,
+		)
 	for i in filters.get("cost_center") : 
 		data.extend( [
 			{
@@ -213,7 +221,7 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 		key = period if consolidated else period.key
 		total_income = flt(income[-2][key], 3) if income else 0
 		total_expense = flt(expense[-1][key], 3) if expense else 0
-		print(f"Exception ------- {flt(expense[-1][key], 3) }")
+		# print(f"Exception ------- {flt(expense[-1][key], 3) }")
 		net_profit_loss[key] = total_income - total_expense
 
 		if net_profit_loss[key]:
