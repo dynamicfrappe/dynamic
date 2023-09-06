@@ -686,7 +686,10 @@ var create_ifi_purchase_order = function() {
 
 
 const extend_sales_order = erpnext.selling.SalesOrderController.extend({
-
+  // customer_branch:function(){
+  //   console.log('xxxxxxxxx')
+  //   console.log(doc)
+  // },
   refresh: function(doc, dt, dn) {
     var me = this;
 		this._super(doc);
