@@ -23,7 +23,7 @@ data = {
         ],
         'Sales Invoice':[
             {
-                "label": "Crean",
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
@@ -31,7 +31,7 @@ data = {
                 "reqd":1
             },
             {
-                "label": "Crean Amount",
+                "label": _("Crean Amount"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
@@ -55,35 +55,35 @@ data = {
 
             },
             {
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
                 "insert_after": "apply_tds",
-                "label": "Crean",
                 "reqd":1
             },
             {
+                "label": _("Crean Amount"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
-                "label": "Crean Amount",
             },
 
         ],
          'Quotation':[
             {
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
                 "insert_after": "customer_name",
-                "label": "Crean",
                 "reqd":1
             },
             {
+                "label": _("Crean"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
-                "label": "Crean Amount",
             },
            
          ],
@@ -126,7 +126,7 @@ data = {
                 "in_list_view":1
             },
             {
-                "label": "Crean",
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
@@ -134,7 +134,7 @@ data = {
                 "reqd":1
             },
             {
-                "label": "Crean Amount",
+                "label": _("Crean Amount"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
@@ -234,18 +234,18 @@ data = {
          ],
          'Purchase Invoice':[
              {
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
                 "insert_after": "due_date",
-                "label": "Crean",
                 "reqd":1
             },
             {
+                "label": _("Crean Amount"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
-                "label": "Crean Amount",
             },
          ],
     },

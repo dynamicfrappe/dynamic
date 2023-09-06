@@ -34,6 +34,7 @@ def get_data(filters):
 	,`tabCustomer`.customer_name 
 	,`tabDelivery Note Item`.item_code
 	,`tabDelivery Note Item`.item_name
+	,`tabDelivery Note Item`.qty
 	FROM `tabDelivery Note`
 	INNER JOIN `tabDelivery Note Item` 
 	ON `tabDelivery Note`.name=`tabDelivery Note Item`.parent
@@ -83,6 +84,12 @@ def get_columns(filters):
 			"label": _("Service Name"),
 			"fieldname": "item_name",
 			"fieldtype": "Data",
+			"width": 150
+		},
+		{
+			"label": _("QTY"),
+			"fieldname": "qty",
+			"fieldtype": "Float",
 			"width": 150
 		},
 		{
