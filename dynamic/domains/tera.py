@@ -901,9 +901,10 @@ data = {
                 "label": _("Grand Total"),
                 "fieldname": "grand_total",
                 "fieldtype": "Float",
-                "insert_after": "total",
-                "read_only" :1 ,
-            }
+                "insert_after": "price_list_rate",
+                "in_list_view":1
+            
+            },  
         ],
           "Stock Entry":[
              {

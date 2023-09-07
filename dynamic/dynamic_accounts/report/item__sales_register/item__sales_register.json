@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2023-05-08 12:50:49.114326",
+ "modified": "2023-09-05 12:56:53.707056",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Item- Sales Register",
@@ -24,6 +24,12 @@
   },
   {
    "role": "Accounts User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Sales User"
   }
  ]
 }

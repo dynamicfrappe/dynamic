@@ -174,7 +174,7 @@ frappe.ui.form.on("Quotation Item", {
                      'fieldname':'price_list_rate'
                   },
                   'callback': function(res){
-                      row.amount =  res.message.price_list_rate;
+                      row.grand_total =  res.message.price_list_rate;
                   }
               });
         
@@ -183,7 +183,7 @@ frappe.ui.form.on("Quotation Item", {
     },
     qty:function(frm,cdt,cdn){
       let row = locals[cdt][cdn]
-      row.amount = row.base_price_list_rate * row.qty
+      row.grand_total = row.base_price_list_rate * row.qty
       frm.refresh_fields('items')
     }
   })
