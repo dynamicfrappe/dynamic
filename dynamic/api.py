@@ -594,11 +594,30 @@ def validate_purchase_order_reservation(item_code,order_source,reservation_amoun
 def cancel_reservation(self,*args , **kwargs):
     if "Terra" in DOMAINS:
         for item in self.items:
-            if(item.reservation):
-                frappe.db.set_value('Reservation',item.reservation,'status','Invalid')
+            try:
+                if(item.reservation):
+                    frappe.db.set_value('Reservation',item.reservation,'status','Invalid')
+            except Exception as ex:
+                create_error(item.reservation,self.name,str(ex))
 
 
+def cor_job_cancel_reservation():
+    if "Terra" in DOMAINS:
+        so_reserve_name = frappe.db.sql(
+            """
+                Update `tabReservation` set status='Invalid' WHERE `tabReservation`.name IN (
+                SELECT `tabReservation`.name FROM `tabReservation`
+                INNER JOIN `tabSales Order` 
+                ON `tabReservation`.sales_order=`tabSales Order`.name
+                WHERE `tabSales Order`.docstatus=2
+            )
+            """
+        )
 
+def create_error(so_name,reserv,ex):
+    error = frappe.new_doc('Error Log')
+    error.error = f'Reservation {reserv} Not Cancelled For SO {so_name}'
+    error.save()
 
 @frappe.whitelist()
 def validate_sales_order_reservation_status():

@@ -293,9 +293,10 @@ scheduler_events = {
     		"dynamic.master_deals.master_deals_api.alert_cheque_date",
             
     	],
-    # 	"hourly": [
-    # 		"dynamic.tasks.hourly"
-    # 	],
+    	"hourly": [
+    		# "dynamic.tasks.hourly",
+            "dynamic.dynamic.api.cor_job_cancel_reservation"
+    	],
     # 	"weekly": [
     # 		"dynamic.tasks.weekly"
     # 	]
