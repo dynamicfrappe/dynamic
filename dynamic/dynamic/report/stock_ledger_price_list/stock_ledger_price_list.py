@@ -284,8 +284,7 @@ def get_items(filters):
 	items = []
 	if conditions:
 		items = frappe.db.sql_list(
-			"""select name
-			  where {}""".format(" and ".join(conditions)), filters
+			"""select name from `tabItem` item where {}""".format(" and ".join(conditions)), filters
 		)
 	return items
 
@@ -303,7 +302,7 @@ def get_item_details(items, sl_entries, include_uom,filters):
 		cf_field = ", ucd.conversion_factor "
 		cf_join = (
 			"left join `tabUOM Conversion Detail` ucd on ucd.parent=item.name and ucd.uom=%s"
-			% frappe.db.escape(include_uom),
+			% (frappe.db.escape(include_uom))
 		)
 
 	pl_field = " ,`tabItem Price`.price_list_rate as item_price "
@@ -314,7 +313,8 @@ def get_item_details(items, sl_entries, include_uom,filters):
 	res = frappe.db.sql(
 		"""
 		select
-			item.name, item.item_name, item.description, item.item_group, item.brand, item.stock_uom {cf_field}
+			item.name, item.item_name, item.description, item.item_group, item.brand, item.stock_uom 
+			{cf_field}
 			{pl_field}
 		from
 			`tabItem` item
