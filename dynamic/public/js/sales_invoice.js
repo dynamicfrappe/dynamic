@@ -65,6 +65,15 @@ frappe.ui.form.on("Sales Invoice", {
     }
     
   },
+  brand:function(frm){
+    frm.fields_dict.items.grid.get_field("item_code").get_query = function () {
+      return {
+        filters: [
+          ["brand", "=", cur_frm.doc.brand],
+        ],
+      };
+    };
+  },
   set_query:function(frm){
     frappe.call({
         method: "dynamic.api.get_active_domains",

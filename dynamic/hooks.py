@@ -135,8 +135,8 @@ doc_events = {
 
     "Sales Invoice": {
         # "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
-        "on_submit": "dynamic.gebco.api.validate_sales_invoice",
-        "validate": "dynamic.api.validate_active_domains",
+        "on_submit": ["dynamic.gebco.api.validate_sales_invoice","dynamic.controllers.sales_invoice.before_submit"],
+        "validate": ["dynamic.api.validate_active_domains", "dynamic.controllers.sales_invoice.validate"],
         "on_cancel" :"dynamic.api.invoice_on_cancel",
         "before_insert": "dynamic.api.before_insert_invoice", 
         # "before_cancel" : "dynamic.api.before_cancel_invoice",
@@ -377,6 +377,7 @@ domains = {
     "Clinic":"dynamic.domains.clinic",
     "EGY Phar":"dynamic.domains.egy_phar",
     "ARAM":"dynamic.domains.aram",
+    "Lormed":"dynamic.domains.lormed"
 }
 
 # domain Conatin
