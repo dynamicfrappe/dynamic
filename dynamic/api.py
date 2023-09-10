@@ -28,6 +28,7 @@ from dateutil import parser
 from six import string_types
 from dynamic.ifi.api import validate_payemnt_entry
 from frappe.utils import get_host_name
+import pandas as pd
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -1543,3 +1544,97 @@ def get_customer_branches(customer):
     for b in doc.branches:
         branches_list.append(b.customer_branch)
     return branches_list
+
+
+@frappe.whitelist()
+def add_stcok_reconciliation(file):
+    pat = file.split('/')
+    usecols = ['Item Code','Item Name','Warehouse','Quantity','Valuation Rate','Brand','Item Group','Serial No','Batch No']#,'Serial No','Batch No'
+    # data = pd.read_csv(frappe.get_site_path('private', 'files', str(pat[-1])), usecols=usecols)
+    #!---
+    data = pd.read_excel(frappe.get_site_path('private', 'files', str(pat[-1])) ,sheet_name = 0,engine='openpyxl',usecols=usecols)
+    data = data.fillna('')
+    return get_data(data) 
+    # print('\n\n\n=data=>',data,'\n\n\n')
+    # t = pd.read_excel()
+    #! refer to e.beshoy
+       
+    # for id in range(2, len(data['Item Code'])) :
+    #     item_code =  data['Item Code'].iloc[id]  if str(data['Item Code'].iloc[id]) !='nan' and data['Item Code'].iloc[id] else " "
+    #     warehouse =  data['Warehouse'].iloc[id]  if str(data['Warehouse'].iloc[id]) !='nan' and data['Warehouse'].iloc[id] else False
+    #     if len (item_code) > 2   :
+    #         # frappe.throw(str(item_code))
+    #         valid_item =  validate_item_code(item_code)
+    #         valid_warehouse = validate_warehouse(warehouse)
+    #         qty = float(data['Quantity'].iloc[id] or 0)  if str(data['Quantity'].iloc[id]) !='nan'  else 0
+    #         if valid_item and valid_warehouse  and qty > 0 :
+                
+            
+            
+    #             valuation_rate = float(data['Valuation Rate'].iloc[id] or 0 ) if str(data['Valuation Rate'].iloc[id]) !='nan' else 0
+    #             item_name = data['Item Name'].iloc[id]
+    #             serail_no = data['Serial No'].iloc[id] if  str(data['Serial No'].iloc[id]) !='nan' else " "
+    #             batch =  data['Batch No'].iloc[id] if  str(data['Batch No'].iloc[id]) !='nan' else " "
+
+    #             obj = {
+    #                 "Item_Code" :valid_item , 
+    #                 "Item_Name" : item_name , 
+    #                 "Warehouse" : valid_warehouse ,
+    #                 "Serial_No" : serail_no ,
+    #                 "Batch_No" : batch ,
+    #                 "Quantity" :qty ,
+    #                 "Valuation_Rate":valuation_rate
+    #                  }
+    #         reponse.append(obj)
+    # return reponse
+
+def get_data(data):
+    reponse = []
+    for  index, row in data.iterrows():
+        if row.get('Item Code')  and str(row.get('Item Code')) !='nan':
+            item_code = row.get('Item Code')  if str(row.get('Item Code')) !='nan' and row.get('Item Code') else " "
+            warehouse =  row.get('Warehouse')  if str(row.get('Warehouse')) !='nan' and row.get('Warehouse') else " "
+            brand = row.get('Brand')  if str(row.get('Brand')) !='nan' and row.get('Brand') else " "
+            item_group = row.get('Item Group')  if str(row.get('Item Group')) !='nan' and row.get('Item Group') else " "
+            print('\n\n\n=in row=>',row,'\n\n\n')
+            if len(str(item_code)) or 0  > 2   :
+                valid_item =  validate_item_code(item_code)
+                valid_warehouse = validate_warehouse(warehouse) if warehouse else "" 
+                qty = row.get('Quantity') or 0 
+                
+                if valid_item and valid_warehouse: #! deleted qty >0
+                    # print('\n\n\n=in valid=>',reponse,'\n\n\n')
+                    valuation_rate = row.get('Valuation Rate') or 0 
+                    item_name = row.get('Item Name') or ''
+                    serail_no = row.get('Serial No') if  str(row.get('Serial No')) !='nan' else " "
+                    batch =  row.get('Batch No') if  str(row.get('Batch No')) !='nan' else " "
+                    obj = {
+                        "Item_Code" :valid_item , 
+                        "Item_Name" : item_name , 
+                        "Warehouse" : valid_warehouse ,
+                        "Serial_No" : serail_no ,
+                        "Batch_No" : batch ,
+                        "Quantity" :qty ,
+                        "Valuation_Rate":valuation_rate,
+                        "item_group":item_group,
+                        "brand":brand,
+                            }
+                    reponse.append(obj)
+        # print('\n\n\n=response=>',reponse,'\n\n\n')
+    return reponse
+
+def validate_item_code(item_code) :
+    item_sql = frappe.db.sql(f""" SELECT name FROM `tabItem` 
+                            WHERE item_code = '{item_code}'""",as_dict =1 )
+    if len(item_sql) > 0 and item_sql[0].get("name") :
+        return item_code
+    else :
+        frappe.msgprint(_(f""" Item Code Erro {item_code}"""))
+
+def validate_warehouse(warehouse):
+    warehouse_sql = frappe.db.sql(f""" SELECT name FROM `tabWarehouse`  
+                    WHERE name ='{warehouse}'""",as_dict=1)
+    if len(warehouse_sql) > 0 and warehouse_sql[0].get("name")  :
+        return warehouse
+    else :
+        frappe.msgprint(_(f""" Warehouse Erro {warehouse}"""))

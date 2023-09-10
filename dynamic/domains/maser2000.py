@@ -18,6 +18,13 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "cost_center",
             },
+            {
+                "label": _("Projects"),
+                "fieldname": "projects",
+                "fieldtype": "Link",
+                "options": "Project",
+                "insert_after": "permission_number",
+            },
         ],
         'Payment Entry':[
             {
@@ -57,5 +64,15 @@ data = {
                 "insert_after": "col_break_rf_num",
             },
         ],
-}
+    },
+    "properties": [
+        {
+        "doctype": "Stock Entry",
+        "doctype_or_field": "DocField",
+        "fieldname": "accounting_dimensions_section",
+        "property": "hidden",
+        "property_type": "Check",
+        "value": "1"
+        },
+    ]
 }

@@ -75,7 +75,7 @@ override_doctype_class = {
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
-
+#/home/abanoub/frappe-13/apps/frappe/frappe/public/js/frappe/views/reports/report_view.js
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Sales Order": "public/js/sales_order.js",
