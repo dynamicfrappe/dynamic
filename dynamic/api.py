@@ -1596,7 +1596,7 @@ def get_data(data):
             warehouse =  row.get('Warehouse')  if str(row.get('Warehouse')) !='nan' and row.get('Warehouse') else " "
             brand = row.get('Brand')  if str(row.get('Brand')) !='nan' and row.get('Brand') else " "
             item_group = row.get('Item Group')  if str(row.get('Item Group')) !='nan' and row.get('Item Group') else " "
-            print('\n\n\n=in row=>',row,'\n\n\n')
+            # print('\n\n\n=in row=>',row,'\n\n\n')
             if len(str(item_code)) or 0  > 2   :
                 valid_item =  validate_item_code(item_code)
                 valid_warehouse = validate_warehouse(warehouse) if warehouse else "" 
@@ -1660,12 +1660,19 @@ def export_data_to_csv_file(items):
             data['item_name'] = ''
         if 'item_code' not in data.columns:
             data['item_code'] = ''
+        if 'item_group' not in data.columns:
+            data['item_group'] = ''
+        if 'brand' not in data.columns:
+            data['brand'] = ''
+        if 'batch_no' not in data.columns:
+            data['batch_no'] = ''
 
         #get specific colms
-        data = data[["item_code", "item_name","qty","warehouse","serial_no","valuation_rate"]]
+        data = data[["item_code", "item_name","qty","warehouse","serial_no","batch_no","valuation_rate","item_group","brand"]]
         data = data.rename(columns = {
             'item_code': 'Item Code', 'item_name': 'Item Name',
-            'qty':"Quantity","warehouse":'Warehouse','serial_no':'Serial No','valuation_rate':'Valuation Rate'
+            'qty':"Quantity","warehouse":'Warehouse','serial_no':'Serial No','valuation_rate':'Valuation Rate',
+            'item_group':'Item Group','brand':'Brand','batch_no':'Batch No'
             })
         
         timestamp = datetime.now().strftime("%y%M%d%h%m%s")

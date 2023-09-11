@@ -115,14 +115,14 @@ def get_payment_entry(
 			{"name": doc.payment_terms_template},
 			"allocate_payment_based_on_payment_terms",
 		):
-			frappe.throw('tes11')
+			# frappe.throw('tes11')
 			for reference in get_reference_as_per_payment_terms(
 				doc.payment_schedule, dt, dn, doc, grand_total, outstanding_amount, party_account_currency
 			):
 				# frappe.throw('test1')
 				pe.append("references", reference)
 		else:
-			frappe.throw('test333')
+			# frappe.throw('test333')
 			if dt == "Dunning":
 				pe.append(
 					"references",
@@ -149,7 +149,7 @@ def get_payment_entry(
 					},
 				)
 			else:
-				frappe.throw('test2')
+				# frappe.throw('test2')
 				pe.append(
 					"references",
 					{
