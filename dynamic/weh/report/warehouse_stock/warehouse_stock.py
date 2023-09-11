@@ -132,6 +132,13 @@ class WarehouseStock(object):
 
 			if self.filters.get("brand") :
 				sql = sql + f"""AND b.brand = '{self.filters.get("brand")}' """
+
+			# if self.filters.get("from_date") :
+			# 	sql = sql + f"""AND b.creation = '{self.filters.get("from_date")}' """
+			
+			# if self.filters.get("to_date") :
+			# 	sql = sql + f"""AND b.creation = '{self.filters.get("to_date")}' """
+
 			sql = sql +"	GROUP By  a.item_code "
 			data = frappe.db.sql(sql ,as_dict=1)
 
