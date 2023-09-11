@@ -68,7 +68,32 @@ frappe.ui.form.on("Stock Reconciliation", {
 			  d.show();
 			}
 		  );
-    },
+		  frm.fields_dict["items"].grid.grid_buttons
+		  .find(".btn-custom")
+		  .removeClass("btn-default")
+		  .addClass("btn-primary");
+		frm.fields_dict["items"].grid.add_custom_button(
+		  __("Export Excel"),
+		  function() {
+			// console.log("frm.items");
+			frappe.call({
+			  method: "dynamic.api.export_data_to_csv_file",
+			  args: {
+				items: frm.doc.items,
+			  },
+			  callback: function(r) {
+				if (r.message){
+					let file = r.message.file 
+					let file_url = r.message.file_url 
+					file_url = file_url.replace(/#/g, '%23');
+					window.open(file_url);
+				}
+			  },
+			});
+	
+		  }
+		);
+		},
     set_queries_terra(frm) {
         frm.set_query('item_code','items', function(doc,cdt,cdn) {
             let row = locals[cdt][cdn]

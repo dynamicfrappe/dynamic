@@ -1638,3 +1638,43 @@ def validate_warehouse(warehouse):
         return warehouse
     else :
         frappe.msgprint(_(f""" Warehouse Erro {warehouse}"""))
+
+
+import json
+@frappe.whitelist()
+def export_data_to_csv_file(items):
+    items = json.loads(items)
+    # items = eval(items)
+    if(len(items)):
+        # convert into dataframe
+        data = pd.DataFrame(data=items)
+        if 'warehouse' not in data.columns:
+            data['warehouse'] = ''
+        if 'serial_no' not in data.columns:
+            data['serial_no'] = ''
+        if 'valuation_rate' not in data.columns:
+            data['valuation_rate'] = '0'
+        if 'qty' not in data.columns:
+            data['qty'] = '0'
+        if 'item_name' not in data.columns:
+            data['item_name'] = ''
+        if 'item_code' not in data.columns:
+            data['item_code'] = ''
+
+        #get specific colms
+        data = data[["item_code", "item_name","qty","warehouse","serial_no","valuation_rate"]]
+        data = data.rename(columns = {
+            'item_code': 'Item Code', 'item_name': 'Item Name',
+            'qty':"Quantity","warehouse":'Warehouse','serial_no':'Serial No','valuation_rate':'Valuation Rate'
+            })
+        
+        timestamp = datetime.now().strftime("%y%M%d%h%m%s")
+        output_filename = f"Items_data_{timestamp}.xlsx"
+        file_type = "public"
+        output_path = frappe.get_site_path(file_type, 'files', output_filename)
+        data.to_excel(output_path,na_rep=" ",index=False)    
+        file_url = f'/files/' + output_filename
+        return {
+            "file":data ,
+            "file_url":file_url
+        }
