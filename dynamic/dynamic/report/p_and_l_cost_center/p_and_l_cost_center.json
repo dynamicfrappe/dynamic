@@ -1,5 +1,5 @@
 {
- "add_total_row": 0,
+ "add_total_row": 1,
  "columns": [],
  "creation": "2023-09-06 15:09:43.407252",
  "disable_prepared_report": 0,
@@ -9,8 +9,8 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "letter_head": "test",
- "modified": "2023-09-06 15:10:45.810283",
+ "letter_head": "",
+ "modified": "2023-09-12 10:47:10.325149",
  "modified_by": "Administrator",
  "module": "dynamic",
  "name": "P and L cost center",
@@ -30,7 +30,7 @@
    "role": "Auditor"
   },
   {
-   "role": "Accountant"
+   "role": "Accounts User"
   }
  ]
 }
