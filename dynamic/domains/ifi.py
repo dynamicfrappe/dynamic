@@ -85,6 +85,12 @@ data = {
                 "fieldtype": "Float",
                 "insert_after": "crean",
             },
+            {
+                "label": _("Order Draft"),
+                "fieldname": "order_draft",
+                "fieldtype": "Check",
+                "insert_after": "order_type",
+            },
            
          ],
          'Opportunity':[
