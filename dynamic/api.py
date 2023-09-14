@@ -28,6 +28,7 @@ from dateutil import parser
 from six import string_types
 from dynamic.ifi.api import validate_payemnt_entry
 from frappe.utils import get_host_name
+import pandas as pd
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -594,11 +595,30 @@ def validate_purchase_order_reservation(item_code,order_source,reservation_amoun
 def cancel_reservation(self,*args , **kwargs):
     if "Terra" in DOMAINS:
         for item in self.items:
-            if(item.reservation):
-                frappe.db.set_value('Reservation',item.reservation,'status','Invalid')
+            try:
+                if(item.reservation):
+                    frappe.db.set_value('Reservation',item.reservation,'status','Invalid')
+            except Exception as ex:
+                create_error(item.reservation,self.name,str(ex))
 
 
+def cor_job_cancel_reservation():
+    if "Terra" in DOMAINS:
+        so_reserve_name = frappe.db.sql(
+            """
+                Update `tabReservation` set status='Invalid' WHERE `tabReservation`.name IN (
+                SELECT `tabReservation`.name FROM `tabReservation`
+                INNER JOIN `tabSales Order` 
+                ON `tabReservation`.sales_order=`tabSales Order`.name
+                WHERE `tabSales Order`.docstatus=2
+            )
+            """
+        )
 
+def create_error(so_name,reserv,ex):
+    error = frappe.new_doc('Error Log')
+    error.error = f'Reservation {reserv} Not Cancelled For SO {so_name}'
+    error.save()
 
 @frappe.whitelist()
 def validate_sales_order_reservation_status():
@@ -1524,3 +1544,144 @@ def get_customer_branches(customer):
     for b in doc.branches:
         branches_list.append(b.customer_branch)
     return branches_list
+
+
+@frappe.whitelist()
+def add_stcok_reconciliation(file):
+    pat = file.split('/')
+    usecols = ['Item Code','Item Name','Warehouse','Quantity','Valuation Rate','Brand','Item Group','Serial No','Batch No']#,'Serial No','Batch No'
+    # data = pd.read_csv(frappe.get_site_path('private', 'files', str(pat[-1])), usecols=usecols)
+    #!---
+    data = pd.read_excel(frappe.get_site_path('private', 'files', str(pat[-1])) ,sheet_name = 0,engine='openpyxl',usecols=usecols)
+    data = data.fillna('')
+    return get_data(data) 
+    # print('\n\n\n=data=>',data,'\n\n\n')
+    # t = pd.read_excel()
+    #! refer to e.beshoy
+       
+    # for id in range(2, len(data['Item Code'])) :
+    #     item_code =  data['Item Code'].iloc[id]  if str(data['Item Code'].iloc[id]) !='nan' and data['Item Code'].iloc[id] else " "
+    #     warehouse =  data['Warehouse'].iloc[id]  if str(data['Warehouse'].iloc[id]) !='nan' and data['Warehouse'].iloc[id] else False
+    #     if len (item_code) > 2   :
+    #         # frappe.throw(str(item_code))
+    #         valid_item =  validate_item_code(item_code)
+    #         valid_warehouse = validate_warehouse(warehouse)
+    #         qty = float(data['Quantity'].iloc[id] or 0)  if str(data['Quantity'].iloc[id]) !='nan'  else 0
+    #         if valid_item and valid_warehouse  and qty > 0 :
+                
+            
+            
+    #             valuation_rate = float(data['Valuation Rate'].iloc[id] or 0 ) if str(data['Valuation Rate'].iloc[id]) !='nan' else 0
+    #             item_name = data['Item Name'].iloc[id]
+    #             serail_no = data['Serial No'].iloc[id] if  str(data['Serial No'].iloc[id]) !='nan' else " "
+    #             batch =  data['Batch No'].iloc[id] if  str(data['Batch No'].iloc[id]) !='nan' else " "
+
+    #             obj = {
+    #                 "Item_Code" :valid_item , 
+    #                 "Item_Name" : item_name , 
+    #                 "Warehouse" : valid_warehouse ,
+    #                 "Serial_No" : serail_no ,
+    #                 "Batch_No" : batch ,
+    #                 "Quantity" :qty ,
+    #                 "Valuation_Rate":valuation_rate
+    #                  }
+    #         reponse.append(obj)
+    # return reponse
+
+def get_data(data):
+    reponse = []
+    for  index, row in data.iterrows():
+        if row.get('Item Code')  and str(row.get('Item Code')) !='nan':
+            item_code = row.get('Item Code')  if str(row.get('Item Code')) !='nan' and row.get('Item Code') else " "
+            warehouse =  row.get('Warehouse')  if str(row.get('Warehouse')) !='nan' and row.get('Warehouse') else " "
+            brand = row.get('Brand')  if str(row.get('Brand')) !='nan' and row.get('Brand') else " "
+            item_group = row.get('Item Group')  if str(row.get('Item Group')) !='nan' and row.get('Item Group') else " "
+            # print('\n\n\n=in row=>',row,'\n\n\n')
+            if len(str(item_code)) or 0  > 2   :
+                valid_item =  validate_item_code(item_code)
+                valid_warehouse = validate_warehouse(warehouse) if warehouse else "" 
+                qty = row.get('Quantity') or 0 
+                
+                if valid_item and valid_warehouse: #! deleted qty >0
+                    # print('\n\n\n=in valid=>',reponse,'\n\n\n')
+                    valuation_rate = row.get('Valuation Rate') or 0 
+                    item_name = row.get('Item Name') or ''
+                    serail_no = row.get('Serial No') if  str(row.get('Serial No')) !='nan' else " "
+                    batch =  row.get('Batch No') if  str(row.get('Batch No')) !='nan' else " "
+                    obj = {
+                        "Item_Code" :valid_item , 
+                        "Item_Name" : item_name , 
+                        "Warehouse" : valid_warehouse ,
+                        "Serial_No" : serail_no ,
+                        "Batch_No" : batch ,
+                        "Quantity" :qty ,
+                        "Valuation_Rate":valuation_rate,
+                        "item_group":item_group,
+                        "brand":brand,
+                            }
+                    reponse.append(obj)
+        # print('\n\n\n=response=>',reponse,'\n\n\n')
+    return reponse
+
+def validate_item_code(item_code) :
+    item_sql = frappe.db.sql(f""" SELECT name FROM `tabItem` 
+                            WHERE item_code = '{item_code}'""",as_dict =1 )
+    if len(item_sql) > 0 and item_sql[0].get("name") :
+        return item_code
+    else :
+        frappe.msgprint(_(f""" Item Code Erro {item_code}"""))
+
+def validate_warehouse(warehouse):
+    warehouse_sql = frappe.db.sql(f""" SELECT name FROM `tabWarehouse`  
+                    WHERE name ='{warehouse}'""",as_dict=1)
+    if len(warehouse_sql) > 0 and warehouse_sql[0].get("name")  :
+        return warehouse
+    else :
+        frappe.msgprint(_(f""" Warehouse Erro {warehouse}"""))
+
+
+import json
+@frappe.whitelist()
+def export_data_to_csv_file(items):
+    items = json.loads(items)
+    # items = eval(items)
+    if(len(items)):
+        # convert into dataframe
+        data = pd.DataFrame(data=items)
+        if 'warehouse' not in data.columns:
+            data['warehouse'] = ''
+        if 'serial_no' not in data.columns:
+            data['serial_no'] = ''
+        if 'valuation_rate' not in data.columns:
+            data['valuation_rate'] = '0'
+        if 'qty' not in data.columns:
+            data['qty'] = '0'
+        if 'item_name' not in data.columns:
+            data['item_name'] = ''
+        if 'item_code' not in data.columns:
+            data['item_code'] = ''
+        if 'item_group' not in data.columns:
+            data['item_group'] = ''
+        if 'brand' not in data.columns:
+            data['brand'] = ''
+        if 'batch_no' not in data.columns:
+            data['batch_no'] = ''
+
+        #get specific colms
+        data = data[["item_code", "item_name","qty","warehouse","serial_no","batch_no","valuation_rate","item_group","brand"]]
+        data = data.rename(columns = {
+            'item_code': 'Item Code', 'item_name': 'Item Name',
+            'qty':"Quantity","warehouse":'Warehouse','serial_no':'Serial No','valuation_rate':'Valuation Rate',
+            'item_group':'Item Group','brand':'Brand','batch_no':'Batch No'
+            })
+        
+        timestamp = datetime.now().strftime("%y%M%d%h%m%s")
+        output_filename = f"Items_data_{timestamp}.xlsx"
+        file_type = "public"
+        output_path = frappe.get_site_path(file_type, 'files', output_filename)
+        data.to_excel(output_path,na_rep=" ",index=False)    
+        file_url = f'/files/' + output_filename
+        return {
+            "file":data ,
+            "file_url":file_url
+        }

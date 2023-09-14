@@ -1,0 +1,284 @@
+<style>
+    .print-format table,
+    .print-format tr,
+    .print-format td,
+    .print-format div,
+    .print-format p {
+      font-family: Monospace;
+      line-height: 200%;
+      vertical-align: middle;
+    }
+    
+    /*.print-format table td.td-head{*/
+    /* padding:0px  !important;*/
+    /* height:2px;*/
+    /*}*/
+     
+    @media screen {
+      .print-format {
+        width: 5.3in;
+        padding: 0.05in;
+        min-height: 8in;
+        /*background-color:gray;*/
+      }
+      .print-format table td.td-head{
+     padding:0px  !important;
+     height:2px;
+    }
+     .print-format table{
+        margin:0px;
+    }
+    .print-format table{
+        margin:0px;
+         width: 100%;
+         border: 1px solid black !important;
+         border-collapse: collapse
+  
+    }
+    
+    .print-format table.table_head1{
+        margin:0px;
+        width: 100%;
+        border:none  !important;
+  
+    }
+    
+    
+    .print-format table.table_head1{
+        margin:0px;
+         width: 100%;
+         border: none;
+  
+    }
+    .print-format table.table_head1 td, th{
+        border-left: none!important;
+    }
+    
+    .print-format table td ,th{
+        line-height: 170%;
+        font-size: 17px;
+    }
+    
+    
+    
+    .print-format table td{
+        border-left: 1px solid black !important;
+    }
+    .print-format table.table_bottom th td{
+        border: 1px solid black;
+    }
+    
+    .print-format table.table_bottom{
+       border-collapse: collapse;
+    }
+    
+    .print-format table td.td-bottom{
+     padding:0px  !important;
+     height:2px;
+     border: 1px solid black;
+    }
+    
+    .print-format .tr_head{
+           border-bottom: 1px solid black;
+      }
+      
+      .print-format table.table_head1{
+        margin:0px;
+        width: 100%;
+        border:none  !important;
+  
+    }
+    
+    
+    .print-format table.table_head1{
+        margin:0px;
+         width: 100%;
+         border: none;
+  
+    }
+    .print-format table.table_head1 td, th{
+        border-left: none!important;
+    }
+    
+    .print-format table td ,th{
+        line-height: 170%;
+        font-size: 17px;
+    }
+    
+    
+    }
+    
+    
+    @media print {
+        .print-format {
+        width: 5.3in;
+        padding: 0.15in;
+        min-height: 8in;
+      }
+    .print-format table,
+    .print-format table td.td-head{
+     padding:0px  !important;
+     height:2px;
+    }
+    .print-format table{
+        margin:0px;
+        width: 100%;
+    }
+    
+    
+    .print-format table{
+        margin:0px;
+         width: 100%;
+         border: 1px solid black !important;
+    }
+    
+    .print-format table td{
+        border-left: 1px solid black !important;
+    }
+    
+    .print-format table td.td-bottom{
+     padding:0px  !important;
+     height:2px;
+     border: 1px solid black;
+    }
+    .print-format .tr_head{
+           border-bottom: 1px solid black;
+  
+      }
+      .print-format table.table_head1{
+        margin:0px;
+        width: 100%;
+        border:none  !important;
+  
+    }
+    
+    
+    .print-format table.table_head1{
+        margin:0px;
+         width: 100%;
+         border: none;
+  
+    }
+    .print-format table.table_head1 td, th{
+        border-left: none!important;
+    }
+    
+    .print-format table td ,th{
+        line-height: 170%;
+        font-size: 17px;
+    }
+    
+    
+    }
+    
+    
+    *{
+        font-size:11px;  
+        font-weight: bold;
+        font-family: 'Inter', sans-serif;
+        font-family: 'Noto Naskh Arabic', serif;
+  
+  
+    }
+  </style>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  
+  <div style="margin-top: 10px !important">
+    <div class="row">
+        <h1 class="text-center" style="font-weight:900 !important;font-family:arial;font-size:35px !important">عويس جروب</h1>
+        <p class="text-center" style="line-height: 140%;">ش جاد بجوار فيلا مدير الامن</p>
+        <p class="text-center" style="line-height: 140%;">المبيعات 01200028756</p>
+        <h3 class="text-center" style="border:1px solid black;margin-top:5px;width: 220px;margin:auto;margin-bottom:7px">فاتوره مبيعات نقدي</h3>
+        
+    </div>  
+    <div class="row margin-bottom">
+      <div class="col-xs-12">
+        <table class="table_head1" style='width:100%;'>
+        
+       
+          <tr>
+            <td class='td-head' style="text-align: right !important">
+              {{_('مسلسل')}}: 
+            </td>
+  
+            <td class='td-head' style="text-align: center !important">{{ doc.name }}</td>
+          </tr>
+  
+          <tr>
+            <td class='td-head' style="text-align: right !important">
+             {{_('الوقت')}}: 
+            </td>
+  
+            <td class='td-head' style="text-align: center !important">{{ frappe.format(doc.posting_time, {'fieldtype': 'Time'}) }} {{ doc.posting_date }}</td>
+          </tr>
+          <tr>
+            <td class='td-head' style="text-align: right !important">
+              {{_('العميل')}}:
+            </td>
+  
+            <td  class='td-head' style="text-align: center !important">
+              {{ doc.customer_name or "" }}
+            </td>
+          </tr>
+  
+          
+        </table>
+      </div>
+      
+    </div>
+    <div class="margin-bottom">
+      <table class="table_head" style="margin-bottom: 0px;margin-top: 2px;">
+        <tr class="tr_head">
+          <td style=width:60%>
+            {{_('الصنف')}}
+          </td>
+          <td>
+            {{_('كميه')}}
+          </td>
+          <td>
+            {{_('سعر')}}
+          </td>
+          <td>
+            {{_('اجمالي')}}
+          </td>
+        </tr>
+  
+        {% for item in doc.items %}
+  
+        <tr>
+          <td>{{ item.item_name }}</td>
+  
+          <td>{{ item.qty }}</td>
+          <td>{{item.rate}}</td>
+          <td>{{ item.amount }}</td>
+         
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div class="margin-bottom">
+      <table class="table_bottom" style="margin-top: 2px;width:66%;float:left">
+          <tr>
+              <td class='td-bottom' style="text-align:center">{{_('الاجمالي')}}</td>
+              <td class='td-bottom'  style="text-align:center">{{doc.net_total}}</td>
+          </tr>
+          <tr>
+              <td class='td-bottom'  style="text-align:center">{{_('الخصم')}}</td>
+              <td class='td-bottom'  style="text-align:center">{{doc.discount_amount}}</td>
+          </tr> 
+           <tr>
+              <td class='td-bottom'  style="text-align:center">{{_('الصافي')}}</td>
+              <td class='td-bottom'  style="text-align:center">{{doc.grand_total}}</td>
+          </tr> 
+           <tr>
+              <td class='td-bottom'  style="text-align:center">{{_('المدفوع')}}</td>
+              <td class='td-bottom'  style="text-align:center">{{doc.paid_amount}}</td>
+          </tr>
+          <tr>
+              <td class='td-bottom'  style="text-align:center">{{_('المتبقي')}}</td>
+              <td class='td-head'  style="text-align:center">{{doc.outstanding_amount}}</td>
+          </tr>    
+      </table>
+      </div>
+  </div>
+  

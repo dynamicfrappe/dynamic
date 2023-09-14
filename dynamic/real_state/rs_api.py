@@ -45,7 +45,7 @@ def get_payment_entry(
 	reference_date=None,
 ):
 	# frappe.throw('get_new_one tra tra')
-	
+	# frappe.throw('test1')
 	reference_doc = None
 	doc = frappe.get_doc(dt, dn)
 	if dt in ("Sales Order", "Purchase Order") and flt(doc.per_billed, 2) > 0:
@@ -115,13 +115,14 @@ def get_payment_entry(
 			{"name": doc.payment_terms_template},
 			"allocate_payment_based_on_payment_terms",
 		):
-
-			for reference in get_reference_as_per_payment_terms(
+			# frappe.throw('tes11')
+			for reference in get_reference_as_per_payment_terms_for_real_state(
 				doc.payment_schedule, dt, dn, doc, grand_total, outstanding_amount, party_account_currency
 			):
 				# frappe.throw('test1')
 				pe.append("references", reference)
 		else:
+			# frappe.throw('test333')
 			if dt == "Dunning":
 				pe.append(
 					"references",
@@ -307,3 +308,39 @@ def update_against_document_in_jv(self):
 			from erpnext.accounts.utils import reconcile_against_document
 
 			reconcile_against_document(lst)
+
+
+def get_reference_as_per_payment_terms_for_real_state(
+	payment_schedule, dt, dn, doc, grand_total, outstanding_amount, party_account_currency
+):
+	# frappe.throw('geeeee888')
+	references = []
+	is_multi_currency_acc = (doc.currency != doc.company_currency) and (
+		party_account_currency != doc.company_currency
+	)
+
+	for payment_term in payment_schedule:
+		payment_term_outstanding = flt(
+			payment_term.payment_amount - payment_term.paid_amount, payment_term.precision("payment_amount")
+		)
+		if not is_multi_currency_acc:
+			# If accounting is done in company currency for multi-currency transaction
+			payment_term_outstanding = flt(
+				payment_term_outstanding * doc.get("conversion_rate"), payment_term.precision("payment_amount")
+			)
+
+		if payment_term_outstanding:
+			references.append(
+				{
+					"reference_doctype": dt,
+					"reference_name": dn,
+					"bill_no": doc.get("bill_no"),
+					"due_date": payment_term.get("due_date"),
+					"total_amount": grand_total,
+					"outstanding_amount": outstanding_amount,
+					"payment_term": payment_term.payment_term,
+					"allocated_amount": payment_term_outstanding,
+				}
+			)
+
+	return references

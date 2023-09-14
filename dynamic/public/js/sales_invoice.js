@@ -119,6 +119,24 @@ frappe.ui.form.on("Sales Invoice", {
       },
     });
   },
+  cost_center:function(frm){
+    if(frm.doc.cost_center){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Cost Center")) {
+                $.each(frm.doc["items"] || [], function(i, item) {
+                  item.cost_center = flt(frm.doc.cost_center);
+                });
+                frm.refresh_field("items");
+              }
+            }
+          }
+      })
+  }
+    
+  },
 
 });
 
@@ -153,7 +171,7 @@ frappe.ui.form.on("Sales Team", {
           doc:frm.doc
         },
         callback:function(r){
-          console.log('return --------->')
+          // console.log('return --------->')
         }
       })
     }

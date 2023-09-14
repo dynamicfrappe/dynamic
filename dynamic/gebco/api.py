@@ -185,7 +185,7 @@ def check_so_approval(doc):
 
 def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
     #1-qty deliverd from delivery note
-    print("\n\n\n\n====>in minus_delivery_qty_from_reservation")
+    # print("\n\n\n\n====>in minus_delivery_qty_from_reservation")
     if not doc.is_return:
         for row in doc.items:
             reserv_data = frappe.db.get_value('Sales Order Item',{'item_code':row.item_code,'parent':row.against_sales_order},['reservation','item_purchase_order','item_warehouse'],as_dict=1)
@@ -201,7 +201,7 @@ def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
             new_reserved_qty = item.reserved_qty - row.qty
             item.db_set('reserved_qty',new_reserved_qty)
     elif doc.is_return:
-        print("\n\n\n\n====>in return")
+        # print("\n\n\n\n====>in return")
         set_reservation_invalid(doc,*args,**kwargs)
         # item.save()
     

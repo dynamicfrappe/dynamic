@@ -18,7 +18,9 @@ a {
     display :none !important
 }
 
-
+.dt-row--highlight{
+    background-color:  blue !important;
+}
 /* Navigation Bar */
 .navbar-expand .navbar-nav>li>a{
 	color:#fff !important;

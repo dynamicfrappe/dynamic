@@ -75,7 +75,7 @@ override_doctype_class = {
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
-
+#/home/abanoub/frappe-13/apps/frappe/frappe/public/js/frappe/views/reports/report_view.js
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Sales Order": "public/js/sales_order.js",
@@ -293,9 +293,10 @@ scheduler_events = {
     		"dynamic.master_deals.master_deals_api.alert_cheque_date",
             
     	],
-    # 	"hourly": [
-    # 		"dynamic.tasks.hourly"
-    # 	],
+    	"hourly": [
+    		# "dynamic.tasks.hourly",
+            "dynamic.dynamic.api.cor_job_cancel_reservation"
+    	],
     # 	"weekly": [
     # 		"dynamic.tasks.weekly"
     # 	]
@@ -377,7 +378,8 @@ domains = {
     "Clinic":"dynamic.domains.clinic",
     "EGY Phar":"dynamic.domains.egy_phar",
     "ARAM":"dynamic.domains.aram",
-    "Branch":"dynamic.domains.branch"
+    "Branch":"dynamic.domains.branch",
+    "Cost Center":"dynamic.domains.cost_center",
 }
 
 # domain Conatin

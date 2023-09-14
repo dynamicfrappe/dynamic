@@ -26,7 +26,8 @@ frappe.ui.form.on("Sales Order", {
   },
   refresh: function (frm) {  
     // console.log(frm.get_docfield('set_warehouse'))
-    
+    console.log('data===>')
+    console.log(frappe.datetime.get_diff(frm.doc.delivery_date))
     frm.events.set_field_reqd_reservation(frm)
     frm.events.set_query(frm)
 
@@ -686,7 +687,10 @@ var create_ifi_purchase_order = function() {
 
 
 const extend_sales_order = erpnext.selling.SalesOrderController.extend({
-
+  // customer_branch:function(){
+  //   console.log('xxxxxxxxx')
+  //   console.log(doc)
+  // },
   refresh: function(doc, dt, dn) {
     var me = this;
 		this._super(doc);
@@ -888,7 +892,6 @@ var create_payment_for_real_state = function(){
       method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
     }
   }
-
   return method
 }
 var create_kmina_sales_invoice = function() {

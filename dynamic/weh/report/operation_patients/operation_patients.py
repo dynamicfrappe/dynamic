@@ -3,6 +3,7 @@
 
 import frappe
 from frappe import _
+from datetime import date
 
 def execute(filters=None):
 	columns, data = [], []
@@ -13,6 +14,10 @@ def execute(filters=None):
 
 def get_data(filters):
 	conditions = " 1=1 "
+	if filters.get("from_date"):
+		conditions += " AND `tabDelivery Note`.creation >= '%s' "%(filters.get("from_date"))
+	if filters.get("to_date"):
+		conditions += " AND `tabDelivery Note`.creation <= '%s' "%(filters.get("to_date"))
 	if filters.get("doctor"):
 		conditions += " AND `tabDelivery Note`.doctor LIKE '%{0}%' ".format(filters.get("doctor"))
 	if filters.get("customer"):
@@ -34,6 +39,7 @@ def get_data(filters):
 	,`tabCustomer`.customer_name 
 	,`tabDelivery Note Item`.item_code
 	,`tabDelivery Note Item`.item_name
+	,`tabDelivery Note Item`.qty
 	FROM `tabDelivery Note`
 	INNER JOIN `tabDelivery Note Item` 
 	ON `tabDelivery Note`.name=`tabDelivery Note Item`.parent
@@ -41,7 +47,6 @@ def get_data(filters):
 	ON `tabDelivery Note`.customer=`tabCustomer`.name
 	WHERE  `tabDelivery Note`.docstatus<>2 AND {conditions}
 	"""
-	
 	result = frappe.db.sql(sql,as_dict=1)
 	return result
 
@@ -83,6 +88,12 @@ def get_columns(filters):
 			"label": _("Service Name"),
 			"fieldname": "item_name",
 			"fieldtype": "Data",
+			"width": 150
+		},
+		{
+			"label": _("QTY"),
+			"fieldname": "qty",
+			"fieldtype": "Float",
 			"width": 150
 		},
 		{
