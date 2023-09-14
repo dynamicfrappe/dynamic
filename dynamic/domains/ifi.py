@@ -146,13 +146,13 @@ data = {
                 "insert_after": "crean",
             },
             {
-                "label": "Advance Paymentstest",
+                "label": "Advance Payments",
                 "fieldname": "advance_paymentss",
                 "fieldtype": "Section Break",
                 "insert_after": "payment_schedule"
             },
             {
-                "label": "Get Advances Receivedd",
+                "label": "Get Advances Received",
                 "fieldname": "get_advancess",
                 "fieldtype": "Button",
                 "insert_after": "advance_paymentss",

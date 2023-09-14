@@ -26,7 +26,8 @@ frappe.ui.form.on("Sales Order", {
   },
   refresh: function (frm) {  
     // console.log(frm.get_docfield('set_warehouse'))
-    
+    console.log('data===>')
+    console.log(frappe.datetime.get_diff(frm.doc.delivery_date))
     frm.events.set_field_reqd_reservation(frm)
     frm.events.set_query(frm)
 

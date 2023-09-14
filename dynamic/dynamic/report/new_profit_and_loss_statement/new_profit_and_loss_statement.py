@@ -162,12 +162,12 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 	}
 
 	has_value = False
-	print(f"all Expencies ==========   {expense}")
+	# print(f"all Expencies ==========   {expense}")
 	for period in period_list:
 		key = period if consolidated else period.key
 		total_income = flt(income[-2][key], 3) if income else 0
 		total_expense = flt(expense[-1][key], 3) if expense else 0
-		print(f"Exception ------- {flt(expense[-1][key], 3) }")
+		# print(f"Exception ------- {flt(expense[-1][key], 3) }")
 		net_profit_loss[key] = total_income - total_expense
 
 		if net_profit_loss[key]:
