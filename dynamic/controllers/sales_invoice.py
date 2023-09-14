@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 
 Domains=frappe.get_active_domains()
+
 def validate(self , event):
     if "Lormed" in Domains :
         validate_items(self)
