@@ -19,7 +19,10 @@ a {
 }
 
 .dt-row--highlight{
-    background-color:  blue !important;
+    background-color:  red !important;
+}
+.dt-row--highlight .dt-cell {
+    background-color: #80ccff !important;
 }
 /* Navigation Bar */
 .navbar-expand .navbar-nav>li>a{
