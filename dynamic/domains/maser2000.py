@@ -1,5 +1,6 @@
 
 from __future__ import unicode_literals
+from frappe import _
 
 data = {
 'custom_fields': {
@@ -16,6 +17,44 @@ data = {
                 "fieldname": "permission_number",
                 "fieldtype": "Data",
                 "insert_after": "cost_center",
+            },
+        ],
+        'Payment Entry':[
+            {
+                "label":_("User Remark"),
+                "fieldname":"user_remark",
+                "fieldtype":"Data",
+                "insert_after":"payment_type", 
+            },
+
+            
+        ],
+        'Pay Document': [
+            {
+                "label": "",
+                "fieldname": "col_break_rf_num",
+                "fieldtype": "Column Break",
+                "insert_after": "notes",
+            },
+            {
+                "label": "Reference Number",
+                "fieldname": "reference_number",
+                "fieldtype": "Data",
+                "insert_after": "col_break_rf_num",
+            },
+        ],
+        'Receipt Document': [
+            {
+                "label": "",
+                "fieldname": "col_break_rf_num",
+                "fieldtype": "Column Break",
+                "insert_after": "notes",
+            },
+            {
+                "label": "Reference Number",
+                "fieldname": "reference_number",
+                "fieldtype": "Data",
+                "insert_after": "col_break_rf_num",
             },
         ],
 }

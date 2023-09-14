@@ -1,9 +1,47 @@
 from __future__ import unicode_literals
-
+from frappe import _
 
 data = {
 
     'custom_fields': {
+        "Sales Invoice":[
+            {
+                "label": "Customer Print Name",
+                "fieldname": "customer_print_name",
+                "fieldtype": "Data",
+                "insert_after": "customer",
+                "allow_on_submit": "1",
+            },
+        ],
+        "Sales Invoice Item":[
+            {
+                "label": _("Total"),
+                "fieldname": "total",
+                "fieldtype": "Float",
+                "insert_after": "base_price_list_rate",
+                "in_list_view" :1 ,
+            },
+        ],
+        "Stock Reconciliation Item":[
+            {
+                "label": "Item Group",
+                "fieldname": "item_group",
+                "fieldtype": "Link",
+                "insert_after": "warehouse",
+                "options" : "Item Group" , 
+                "in_list_view" : "1" , 
+                "columns" : "1" , 
+            },
+            {
+                "label": "Brand",
+                "fieldname": "brand",
+                "fieldtype": "Link",
+                "insert_after": "item_group",
+                "options" : "Brand" , 
+                "in_list_view" : "1" , 
+                "columns" : "1" , 
+            },
+        ],
         'Quotation' :[
              {
                 "fieldname": "material_reuqest",
@@ -181,6 +219,13 @@ data = {
                 "allow_on_submit":1,
                 "default":0
             },
+            {
+                "label": "Customer Print Name",
+                "fieldname": "customer_print_name",
+                "fieldtype": "Data",
+                "insert_after": "order_type",
+                "allow_on_submit": "1",
+            },
         # ],
 
 
@@ -304,9 +349,7 @@ data = {
                 "label": "Opportunity",
                 'options' : 'Opportunity' ,
                 "reqd" : 1
-            },
-            
-            
+            },  
          ],
          'Landed Cost Item': [
             {
@@ -434,7 +477,7 @@ data = {
             "fieldtype": "Data",
             "in_global_search": 1,
             "in_standard_filter": 1,
-            "insert_after": "tax_category",
+            "insert_after": "sku",
             "label": "Phone No",
             "translatable": 1,
             "unique": 1,
@@ -444,12 +487,17 @@ data = {
             }
         ],
         'Opportunity':[
-
+            {
+                "fieldname": "info_data",
+                "fieldtype": "Section Break",
+                "insert_after": "expected_closing",
+                "label" :"Info Data" ,
+            },
             {
                  "fieldname": "customer",
                  "fieldtype": "Link",
-                  "insert_after": "party_name",
-                 "label" :"Custom" ,
+                  "insert_after": "source",
+                 "label" :"Customer" ,
                  "options" :"Customer", 
                  "read_only" : 1
                 
@@ -459,7 +507,7 @@ data = {
             "fieldtype": "Data",
             "in_global_search": 1,
             "in_standard_filter": 1,
-            "insert_after": "source",
+            "insert_after": "customer",
             "label": "Phone No",
             "translatable": 1,
             # "unique": 1,
@@ -513,7 +561,30 @@ data = {
                 "insert_after": "reservation_setting_section",
                 "label": "Reservation Setting",
                 "translatable": 1,
-            }
+            },
+            {
+                "fieldname": "image",
+                "fieldtype": "Attach Image",
+                "insert_after": "default_warehouse",
+                "label": "Image",
+                "translatable": 1,
+            },
+            {
+                "label": "Price List",
+                "fieldname": "price_list",
+                "fieldtype": "Link",
+                "insert_after": "image",
+                "options": "Price List",
+                "translatable": 1,
+            },
+            {
+                "label": "Warehouse",
+                "fieldname": "warehouse",
+                "fieldtype": "Link",
+                "insert_after": "price_list",
+                "options": "Warehouse",
+                "translatable": 1,
+            },
         ],
         'Material Request':[
             {
@@ -557,6 +628,21 @@ data = {
                 "read_only" :1 ,
                 "in_list_view" :1 ,
                 "in_standard_filter" :1
+            },
+            {
+                "label": "Customer / Lead Name",
+                "fieldname": "customer_name",
+                "fieldtype": "Data",
+                "insert_after": "project_name",
+                "read_only" :1 ,
+            },
+            {
+                "label": "Opportunity",
+                "fieldname": "opportunity",
+                "fieldtype": "Link",
+                "options": "Opportunity",
+                "insert_after": "customer_name",
+                "read_only" :1 ,
             },
 
         ],
@@ -666,7 +752,14 @@ data = {
                 "label": "Remaining Qty",
                 "read_only":1,
                 "no_copy":1
-            }
+            },
+            {
+                "label": _("Total"),
+                "fieldname": "total",
+                "fieldtype": "Float",
+                "insert_after": "base_price_list_rate",
+                "in_list_view" :1 ,
+            },
 
         ], 
         "Purchase Order Item":[
@@ -789,7 +882,15 @@ data = {
                 "label": "QTY As Per Sub Uom",
                 "read_only":1
             
-            }
+            },
+            {
+                "label": "Grand Total",
+                "fieldname": "grand_total",
+                "fieldtype": "Float",
+                "insert_after": "price_list_rate",
+                "in_list_view":1
+            
+            },  
         ],
           "Stock Entry":[
              {
@@ -1116,6 +1217,22 @@ data = {
         "property": "read_only",
         "property_type": "Check",
         "value": "1"
+        },
+        {
+            "doctype": "Stock Reconciliation Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "valuation_rate",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
+        },
+        {
+            "doctype": "Stock Reconciliation Item",
+            "doctype_or_field": "DocField",
+            "fieldname": "qty",
+            "property": "columns",
+            "property_type": "Int",
+            "value": "1"
         },
     ],
   

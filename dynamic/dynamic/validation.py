@@ -4,7 +4,10 @@ from frappe import _
 from dynamic.terra.landed_cost import validate_cost ,get_doctype_info
 from dynamic.terra.sales_invoice import check_return_account ,validate_sales_invoices
 from dynamic.terra.item import create_item_serial_doc
-# from dynamic.api import generate_item_code
+import random
+
+
+
 DOMAINS = frappe.get_active_domains()
 
 def validate_landed_cost(doc,*args,**kwargs):
@@ -97,12 +100,49 @@ def validate_item_code(doc,*args,**kwargs):
     if 'Terra' in DOMAINS:
         print("mohsen33")
         if doc.is_new():
-            
             item_code = generate_item_code(doc.item_group)
             print("mohsen44",item_code)
             doc.item_code = item_code
             create_item_serial_doc(doc)
             create_item_specs(doc)
 
+    if 'Barcode Item' in DOMAINS:
+        if len(doc.barcodes) and doc.barcodes[0].get('barcode'):
+            doc.db_set('barcode',doc.barcodes[0].get('barcode'))
+            doc.db_set('item_barcode',doc.barcodes[0].get('barcode'))
 
+        
 
+    
+
+@frappe.whitelist()
+def after_insert_variant_item(doc,*args,**kwargs):
+    if 'Elhamd' in DOMAINS:
+        if doc.variant_of:
+            if len(doc.attributes):
+                for row in doc.attributes:
+                    doc.description += f" <p>  {row.attribute} : {row.attribute_value}</p>"
+                doc.db_set('description',doc.description)
+    if 'Barcode Item' in DOMAINS:
+        # Generate a random barcode number
+        # barcodes_exist = frappe.db.get_list("Item",)
+        barcode_num = generate_barcode()
+        # old_barcodes = frappe.db.sql(f"""
+        # select barcode from `tabItem Barcode` where barcode ='{barcode_num}'
+        # """,as_list=1)
+
+        doc.append("barcodes",
+                    {"item_barcode":barcode_num,"barcode":barcode_num}
+        )
+        doc.save()
+
+def generate_barcode():
+    new_barcode = ''.join([str(random.randint(0, 9)) for _ in range(13)])
+    old_barcodes = frappe.db.sql(f"""
+        select barcode from `tabItem Barcode` where barcode ='{new_barcode}'
+        """,as_list=1)
+    frappe.errprint(f"===>{old_barcodes}")
+    if len(old_barcodes):
+        generate_barcode()
+    if not old_barcodes:
+        return new_barcode

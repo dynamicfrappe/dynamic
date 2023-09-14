@@ -132,7 +132,7 @@
            
         </div>
         <div class="col-sm-3 col-xs-3 mt-1" >
-            <p style="border: 2px solid black;padding: 2px;"> {{ doc.additional_discount_percentage }} %</p>
+            <p style="border: 2px solid black;padding: 2px;"> {{ frappe.utils.fmt_money(doc.discount_amount or 0,currency=doc.currency) }}  </p>
            
         </div>
     </div>
@@ -202,8 +202,9 @@
 <!--  {% if not no_letterhead and footer %}--> 
 <!--  <div class="letter-head-footer">-->
 <!--    {{ footer }}-->
+
 <!--  </div>-->
-<!--  {% endif %}-->
+<!--  {% endif %}sssss-->
 <!--  <p class="text-center small page-number visible-pdf">-->
 <!--    {{ _("Page {0} of {1}").format('<span class="page"></span>', '<span class="topage"></span>') }}-->
 <!--  </p>-->

@@ -1,0 +1,83 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{block_name}-{block_no}-{###}",
+ "creation": "2023-06-20 11:44:57.014339",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "block_name",
+  "block_no",
+  "column_break_wxrkk",
+  "project_name",
+  "stage_name",
+  "section_break_bnhjh",
+  "items"
+ ],
+ "fields": [
+  {
+   "fieldname": "block_name",
+   "fieldtype": "Data",
+   "label": "Block Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Stages RS Blocks Item",
+   "options": "Blocks Items"
+  },
+  {
+   "fieldname": "block_no",
+   "fieldtype": "Int",
+   "label": "Block NO"
+  },
+  {
+   "fieldname": "column_break_wxrkk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Link",
+   "label": "Project Name",
+   "options": "Project RS"
+  },
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Link",
+   "label": "Stage Name",
+   "options": "Project RS Stages"
+  },
+  {
+   "description": "Block Units",
+   "fieldname": "section_break_bnhjh",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-07-17 09:03:58.123158",
+ "modified_by": "Administrator",
+ "module": "Real State",
+ "name": "Stages RS Blocks",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "restrict_to_domain": "Real State",
+ "search_fields": "block_name,block_no",
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

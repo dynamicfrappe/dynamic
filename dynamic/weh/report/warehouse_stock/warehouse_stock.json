@@ -1,0 +1,61 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2023-08-29 14:14:18.579828",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "json": "{}",
+ "letter_head": "Moyati",
+ "modified": "2023-08-29 14:15:12.530781",
+ "modified_by": "Administrator",
+ "module": "WEH",
+ "name": "Warehouse Stock",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Item",
+ "report_name": "Warehouse Stock",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Manufacturing User"
+  },
+  {
+   "role": "Purchase User"
+  },
+  {
+   "role": "Stock Manager"
+  },
+  {
+   "role": "Maintenance User"
+  },
+  {
+   "role": "Item Manager"
+  },
+  {
+   "role": "All"
+  },
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "SALES MOYATI"
+  },
+  {
+   "role": "\u0642\u0633\u0645 \u0627\u0633\u062a\u0644\u0627\u0645 \u0627\u0644\u0646\u0642\u062f\u064a\u0629 \u0645\u0646 \u0627\u0644\u0645\u0646\u0627\u062f\u064a\u0628"
+  },
+  {
+   "role": "Auditor"
+  }
+ ]
+}

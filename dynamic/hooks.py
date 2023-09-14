@@ -57,8 +57,8 @@ doctype_list_js = {
                     "Quotation" : "public/js/quotation_list.js"
                     }
 
-after_install = "dynamic.install.after_install"
-after_migrate = "dynamic.install.after_install"
+after_install =[ "dynamic.install.after_install","dynamic.dynamic.utils.create_customizations"]
+after_migrate = ["dynamic.install.after_install" ,"dynamic.dynamic.utils.create_customizations"]
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
@@ -70,6 +70,7 @@ override_doctype_class = {
     "Salary Slip" : "dynamic.override_doctype_class.SalarySlip",
     "Sales Invoice": "dynamic.override_doctype_class.SalesInvoice",
     "Customer": "dynamic.teba.doctype.customer.CustomerController",
+    "Stock Entry":"dynamic.override_doctype_class.StockEntry"
     # "Lead" : "dynamic.override_doctype_class.Lead"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
@@ -96,7 +97,13 @@ doctype_js = {
     "Request for Quotation":"public/js/request_for_quotation.js",
     "Mode of Payment":"public/js/mode_of_payment.js",
     "Purchase Receipt":"public/js/purchase_receipt.js",
-    # "Assign To":"public/sidebar/assign_to.js",
+    "Stock Reconciliation":"public/js/stock_reconciliation.js",
+    "Item":"public/js/item.js",
+    "Journal Entry":"public/js/journal_entry.js",
+    # "Project RS":"public/js/custom_project_rs.js",
+    # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
+
+
     
 }
 # doctype_js = {
@@ -130,27 +137,35 @@ doc_events = {
         # "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
         "on_submit": "dynamic.gebco.api.validate_sales_invoice",
         "validate": "dynamic.api.validate_active_domains",
-        "on_cancel" :"dynamic.api.validate_active_domains_cancel"
+        "on_cancel" :"dynamic.api.invoice_on_cancel",
+        "before_insert": "dynamic.api.before_insert_invoice", 
+        # "before_cancel" : "dynamic.api.before_cancel_invoice",
     },
     "Item": {
         "autoname": "dynamic.api.autoname",
-        "validate": "dynamic.dynamic.validation.validate_item_code"
+        "validate": ["dynamic.dynamic.validation.validate_item_code",
+                    ],
+        "after_insert": "dynamic.dynamic.validation.after_insert_variant_item",
     },
     "Delivery Note": {
-        "on_submit": "dynamic.gebco.api.validate_delivery_note",
-        "validate": "dynamic.api.validate_delivery_note",
-        "on_cancel": "dynamic.api.cancel_delivery_note",
+        "on_submit": ["dynamic.gebco.api.validate_delivery_note",],
+        # "before_submit": ["dynamic.api.delivery_note_before_submit"],
+        "validate": ["dynamic.api.validate_delivery_note",
+                     "dynamic.weh.delevery_note.validate_delevery_note",],
+        # "on_cancel": "dynamic.api.cancel_delivery_note",
     },
    
     "Journal Entry": {
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
-        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc","dynamic.api.create_reservation_validate"],
+        "before_submit": ["dynamic.api.before_submit_so"],
         "before_save":[
             "dynamic.api.check_source_item", 
             ],
+        "validate" :["dynamic.elevana.hooks.add_partener_to_sales_order"] ,
         "on_cancel":"dynamic.api.cancel_reservation",
+        "on_submit":["dynamic.real_state.rs_api.so_on_submit",],
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
     "Purchase Receipt": {
@@ -197,11 +212,11 @@ doc_events = {
     },
     "Quotation":{
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
-        "before_submit": "dynamic.api.add_crean_in_taxes",
+        "before_submit": "dynamic.api.before_submit_quot",#add_crean_in_taxes
     },
     "Purchase Order":{
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
-        "before_submit": "dynamic.api.add_crean_in_taxes",
+        "before_submit": "dynamic.api.before_submit_po",
         "after_inser" :  "dynamic.api.calculate_orderd_qty",
         "on_submit":  "dynamic.api.calculate_orderd_qty",
     } ,
@@ -219,6 +234,12 @@ doc_events = {
     "Purchase Receipt":{
          "on_submit" : "dynamic.api.submit_purchase_recipt",
          "before_save" : "dynamic.api.before_save",
+    },
+    "Stock Ledger Entry":{
+        "before_insert":"dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
+    },
+    "File":{
+        "after_insert":"dynamic.master_deals.master_deals_api.deals_after_insert"
     },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
@@ -262,13 +283,14 @@ scheduler_events = {
         "* 8 * * *":[
             # "dynamic.ifi.api.send_mail_daily_opportunity_lead",
             # "dynamic.ifi.api.daily_opportunity_notify" 
-        ]
+        ],
     },
     # 	"all": [
     # 		"dynamic.tasks.all"
     # 	],
     	"daily": [
     		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
+    		"dynamic.master_deals.master_deals_api.alert_cheque_date",
             
     	],
     # 	"hourly": [
@@ -291,8 +313,10 @@ scheduler_events = {
 # ------------------------------
 #
 override_whitelisted_methods = {
+    # "frappe.desk.reportview.export_query": "dynamic.api.export_query",
 	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
-    # "erpnext.selling.doctype.sales_order.sales_order.make_purchase_order":"dynamic.ifi.api.override_make_purchase_order"
+    #/home/abanoub/frappe/dynamc_projects/frappe-14/apps/erpnext/erpnext/controllers/queries.py
+    # "erpnext.controllers.queries.supplier_query":"dynamic.master_deals.master_deals_api.get_supplier_by_code"
 }
 #
 # each overriding function accepts a `data` argument;
@@ -308,7 +332,8 @@ override_doctype_dashboards = {
     "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data" ,
     "Work Order" :"dynamic.public.dashboard.work_order.get_data" ,
     "Job Card" :"dynamic.public.dashboard.job_card.get_data" ,
-    "Opportunity" :"dynamic.public.dashboard.opportunity_dashboard.get_data"
+    "Opportunity" :"dynamic.public.dashboard.opportunity_dashboard.get_data",
+    "Customer" :"dynamic.public.dashboard.customer_dashboard.get_data",
 }
 
 # exempt linked doctypes from being automatically cancelled
@@ -342,6 +367,17 @@ domains = {
     'Maser2000':"dynamic.domains.maser2000",
     'Behira Pac':"dynamic.domains.behira_pac",
     'Future':"dynamic.domains.future",
+    'Elhamd':"dynamic.domains.elhamd",
+    'CRM Advance':"dynamic.domains.crm_advance",
+    'Reservation':"dynamic.domains.reservation",
+    'Real State':"dynamic.domains.real_state",
+    "Master Deals":"dynamic.domains.master_deals",
+    "Barcode Item":"dynamic.domains.barcode_item",
+    "Repack":"dynamic.domains.repack",
+    "Clinic":"dynamic.domains.clinic",
+    "EGY Phar":"dynamic.domains.egy_phar",
+    "ARAM":"dynamic.domains.aram",
+    "Branch":"dynamic.domains.branch"
 }
 
 # domain Conatin
@@ -354,13 +390,15 @@ jenv = {
     "methods": [
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
+        "encode_item_data:dynamic.www.item_data.encode_item_data",
+        "test_encode_item_data:dynamic.www.item_data.test_encode_item_data",
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",
         "get_balance_on:erpnext.accounts.utils.get_balance_on",
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
-        "get_party_address:dynamic.api.get_party_address",
+        "get_party_address:dynamic.api.get_party_address",#ifi
     ],
     "filters": []
 }

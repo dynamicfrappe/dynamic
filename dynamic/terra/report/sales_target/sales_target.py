@@ -78,9 +78,9 @@ class SalesTarget(object):
 						GROUP  BY sales_team.sales_person
 						)data
 		""".format(conditions=conditions)
-		# frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
+		frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
-		# frappe.errprint(f"sql_query_new is ==> {sql_query_new}")
+		frappe.errprint(f"sql_data is ==> {sql_data}")
 		return sql_data
 
 	def get_columns(self):

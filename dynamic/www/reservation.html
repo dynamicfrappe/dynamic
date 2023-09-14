@@ -1,0 +1,257 @@
+{% extends "templates/base2.html" %} 
+
+{% block content %} 
+<style> 
+.dt{
+  color: rgb(16, 13, 224);
+  font-size: 20;
+  text-align: center;
+}
+</style>
+<div class="jumbotron">
+   <h1 class="display-4 dt">  {{  _('Wellcome') }} </h1>
+   <p class="lead dt"> {{ user }} </p>
+   <hr class="my-4">
+   <p class="dt"> {{ date }} - {{current_day}} </p>
+   <!-- <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a> -->
+ </div>
+ <div class="row" > 
+   <div class="col-md-6 col-sm-12" > 
+      <div class="form-group">
+     
+         <select class="form-control" onchange="set_patien_info()"  
+          id ="pt-select" aria-placeholder="{{  _('Patient') }} ">
+    
+          <option> </option>
+            {% for patient in patients %}
+            <option value="{{patient.name}}">  {{ patient.name }} </option>
+            {% endfor %}
+         </select>
+      
+      </div>
+
+
+       </div>
+   
+   <div class="col-md-6 col-sm-12"  > 
+      <form class="form-inline my-2 my-lg-0">
+        <input name="csrf_token" class="hidden  form-control" value="{{csrf_token}}" hidden>
+         <input class="form-control mr-sm-2" type="search" 
+         placeholder="{{  _('name or phone') }}" id="search" name="search"
+               aria-label="Search" onchange="find_p()">
+         <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="find_p()"> {{  _('Find') }}</button>
+       </form>
+   
+      <a href="/patient" class="btn btn-primary">  {{  _('Create Patient') }}  </a>
+   </div>
+
+ </div>
+ 
+ <div id="ptsection">  
+  
+  {% if patient %}
+  <br> <hr> <br> <br> 
+  <div class="row" > {{  _('Patient') }}   </div>
+  {% endif %}
+
+</div>
+ <br> <hr> <br> <br> 
+ <div class="row" > 
+   <div class="col-md-6 col-sm-12" > 
+    <label> {{  _('Departments') }}</label>
+      <select class="form-control" onchange="check_department()"  id="deparment">
+       
+         <option> </option>
+         {% for de in departments %}
+         <option value="{{de.medical_department}}">  {{ de.medical_department }} </option>
+         {% endfor %}
+       </select>
+      
+       
+   </div>
+   <div class="col-md-6 col-sm-12"  > 
+    <label> {{  _('Specialty') }}</label> 
+    <select class="form-control" onchange="check_department()" id ="specialty">
+      </select>
+
+   </div>
+
+ </div>
+ <br>
+ <div class="row" > 
+
+  <div class="col-md-6 col-sm-12"  > 
+    <label> {{  _('Doctor') }}</label> 
+    <select class="form-control" onchange="check_department()" id ="specialty">
+      </select>
+
+   </div>
+
+  <div class="col-md-6 col-sm-12"  > 
+
+    <button class = "btn btn-primary" > {{  _(' Make Appointment') }}  </button>
+  </div>
+
+ </div>
+
+ {% include  'www/website_script.js'%}
+ <script> 
+frappe.provide("frappe.ui.form");
+async function set_patien_info(){
+  var patien = document.getElementById("pt-select").value
+
+  const response = await fetch('{{ search_url }}'  ,{
+         method:"POST" ,
+         headers :{
+          "Content-Type" :"application/json",
+          "Accept" : "*/*" ,
+          "Access-Control-Allow-Origin" : "*" 
+          
+
+         },
+         body:JSON.stringify({"name" : patien ,
+                    "csrf_token" :'{{csrf_token}}'})
+      }
+      );
+      const spiecilists  = await response.json();
+      var componant =  document.getElementById("ptsection")
+      componant.innerHTML = ""
+      if (spiecilists){
+        var cont = spiecilists.message[0]
+        if (cont ) {
+          componant.innerHTML = `
+        
+     
+                  
+                 <div class="card mb-4">
+                  <div class="card-body">
+                      <div class="row"> 
+                        <div class="col-sm-3">
+                                <p class="mb-0">${cont.patient_name} </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p class="text-muted mb-0">{{  _('Name') }}  </p>
+                        </div>
+                        <div class="col-sm-3">
+                                <p class="mb-0">${cont.dob} </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p class="text-muted mb-0">{{  _('Date Of Birth') }}  </p>
+                        </div>
+                      </div>
+                      <hr>
+
+                      <div class="row"> 
+                       
+                        <div class="col-sm-3">
+                                <p class="mb-0">${cont.phone} </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p class="text-muted mb-0">  {{  _('Phone') }} </p>
+                        </div>
+                        <div class="col-sm-3">
+                                <p class="mb-0">${cont.sex} </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p class="text-muted mb-0">  {{  _('Sex') }} </p>
+                        </div>
+                      </div>
+                      <hr>
+
+
+                      <div class="row"> 
+                        <div class="col-sm-3">
+                                <p class="mb-0">  ${cont.email}  </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p class="text-muted mb-0">   {{  _('Email') }}  </p>
+                        </div>
+                        
+                        <div class="col-sm-3">
+                                <p class="mb-0">  ${cont.blood_group} </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p class="text-muted mb-0">  {{  _('blood group') }}  </p>
+                        </div>
+                      </div>
+                      <hr>
+                  </div>
+                </div>
+
+          
+                  
+                  `
+                  
+          
+        }
+        
+      }
+      
+      
+
+} 
+
+  async function find_p() {
+   var qu = document.getElementById("search").value
+  
+    const response = await fetch('{{ search_url }}'  ,{
+         method:"POST" ,
+         headers :{
+          "Content-Type" :"application/json",
+          "Accept" : "*/*" ,
+          "Access-Control-Allow-Origin" : "*" 
+          
+
+         },
+         body:JSON.stringify({"search" : qu ,
+                    "csrf_token" :'{{csrf_token}}'})
+      }
+      );
+      const spiecilists  = await response.json();
+      if (spiecilists ) {
+        // console.log(spiecilists)
+        var opt = document.getElementById("pt-select")
+         opt.innerHTML = ""
+         if (spiecilists.message) {
+        spiecilists.message.forEach(element => {
+          console.log(element )
+          opt.innerHTML =  opt.innerHTML +  `
+                     <option value ='${element.name}'> ${element.patient_name}   </option>`
+        });
+      
+        set_patien_info()}
+      }
+   
+ }
+ async function check_department (){
+ 
+   var deparment = document.getElementById("deparment").value
+   let getting = document.cookie
+   if (deparment){
+      const response = await fetch('{{ deparment_endpoint }}'  ,{
+         method:"POST" ,
+         headers :{
+          "Content-Type" :"application/json",
+          "Accept" : "*/*" ,
+          "Access-Control-Allow-Origin" : "*" ,
+       
+
+         },
+        body:JSON.stringify({"dep" : deparment ,  "csrf_token" :'{{csrf_token}}'})
+      }
+      );
+      const spiecilists  = await response.json();
+      console.log(spiecilists)
+      var specialty = document.getElementById("specialty")
+      if (spiecilists){
+        specialty.innerHTML = ""
+
+
+      }
+   }
+ }
+
+
+</script>
+
+{% endblock %}

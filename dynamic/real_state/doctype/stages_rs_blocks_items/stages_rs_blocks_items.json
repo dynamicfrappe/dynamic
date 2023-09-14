@@ -1,0 +1,32 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{block_name}-{#####}",
+ "creation": "2023-06-20 11:49:09.673478",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "block_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "block_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Block Name",
+   "options": "Stages RS Blocks"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-06-20 11:50:55.801881",
+ "modified_by": "Administrator",
+ "module": "Real State",
+ "name": "Stages RS Blocks Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

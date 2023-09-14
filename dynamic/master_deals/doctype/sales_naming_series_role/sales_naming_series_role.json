@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-06-22 04:41:06.514948",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "role",
+  "naming_series_si"
+ ],
+ "fields": [
+  {
+   "fieldname": "role",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Role",
+   "options": "Role"
+  },
+  {
+   "fieldname": "naming_series_si",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Naming Series SI",
+   "options": "ACC-SINV-.YYYY.-\nACC-SINV-RET-.YYYY.-"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-07-26 05:04:27.933970",
+ "modified_by": "Administrator",
+ "module": "Master Deals",
+ "name": "Sales Naming Series Role",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

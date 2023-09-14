@@ -886,7 +886,6 @@ def make_delivery_note(source_name, target_doc=None, skip_item_mapping=False):
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
-	frappe.throw("terrra")
 	def postprocess(source, target):
 		set_missing_values(source, target)
 		# Get the advance paid Journal Entries in Sales Invoice Advance
@@ -941,7 +940,8 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
 				"field_map": {
 					"party_account_currency": "party_account_currency",
 					"payment_terms_template": "payment_terms_template",
-					"allocate_advances_automatically": "allocate_advances_automatically"
+					"allocate_advances_automatically": "allocate_advances_automatically",
+					"customer_print_name": "customer_print_name",
 				},
 				"field_no_map": ["payment_terms_template"],
 				"validation": {"docstatus": ["=", 1]},

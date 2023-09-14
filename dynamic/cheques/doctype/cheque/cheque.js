@@ -62,7 +62,23 @@ frappe.ui.form.on("Cheque", {
       };
     });
   },
-  refresh: function (frm) {},
+  refresh: function (frm) {
+    frm.add_custom_button(
+      __("cheque_alert"),
+      function () {
+          // frm.call({
+          //     method:
+          //         "dynamic.master_deals.master_deals_api.alert_cheque_date",
+          //     args: {
+          //     },
+          //     callback:function(r){
+
+          //     }
+          // });
+      },
+      __("test")
+  );
+  },
   reference_type:function (frm) {
     frm.set_value("reference_name","")
     frm.refresh_field("reference_name")

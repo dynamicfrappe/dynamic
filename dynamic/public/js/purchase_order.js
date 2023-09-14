@@ -1,13 +1,24 @@
+
+
+
 frappe.ui.form.on("Purchase Order", {
+  onload:function(frm){
+
+  },
+  setup:function(frm){
+   
+  },
   refresh: function (frm) {
+
     frm.custom_make_buttons["Cheque"] = "Cheque";
     frm.events.add_cheque_button(frm);
     
     frm.events.get_linked_doctypes(frm)
+    // const myTimeout = setTimeout(get_supplier_query, 1000);
 
    
   },
-  
+
   get_linked_doctypes(frm) {
 		return new Promise((resolve) => {
 			if (frm.__linked_doctypes) {
@@ -70,7 +81,7 @@ frappe.ui.form.on("Purchase Order", {
 			method: "dynamic.ifi.api.make_purchase_invoice",
 			frm: cur_frm
 		})
-	},
+	}
 
 });
 
@@ -109,3 +120,23 @@ $.extend(
 );
 
 
+
+function get_supplier_query(){
+  frappe.call({
+    method: "dynamic.api.get_active_domains",
+    callback: function (r) {
+      if (r.message && r.message.length) {
+        if (r.message.includes("Master Deals")) {
+          cur_frm.set_query('supplier',(doc)=>{
+            return {
+              query: 'dynamic.master_deals.master_deals_api.get_supplier_by_code',
+              filters:{"docname":cur_frm.doc.name}
+            }
+            
+          })
+        }
+      }
+    },
+  });
+  
+}

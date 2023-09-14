@@ -898,7 +898,7 @@ def add_opp_property_setters():
         doc.doc_type = "Opportunity"
         doc.property = "search_fields"
         doc.property_type = "Data"
-        doc.value="status,transaction_date,party_name,opportunity_type,territory,company,phone_no"
+        doc.value="status,transaction_date,party_name,opportunity_type,territory,company"
         doc.save()
 
 def add_customer_property_setters():
@@ -1040,6 +1040,7 @@ def create_terra_scripts():
         pass
     try:
         install_action()
+        ...
     except Exception as ex:
         print("----------------------- install_actioninstall_actioninstall_action",str(ex))
     try:

@@ -1,0 +1,138 @@
+
+
+    <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>EAN-13 Barcode Example</title>
+</head>
+<body>
+  <svg id="barcode" width="300" height="100"></svg>
+  <script>
+    function drawBarcode(svg, ean) {
+      // Define the barcode dimensions
+      var barWidth = 2;
+      var barHeight = 80;
+      var quietZone = 10;
+      var fontSize = 20;
+      var fontOffset = 5;
+
+      // Calculate the checksum digit
+      var checksum = 0;
+      for (var i = 0; i < 12; i++) {
+        checksum += parseInt(ean.charAt(i)) * ((i % 2 === 0) ? 1 : 3);
+      }
+      checksum = (10 - (checksum % 10)) % 10;
+
+      // Generate the barcode pattern
+      var pattern = "101";
+      for (var i = 0; i < 6; i++) {
+        pattern += BarcodePatterns["A"][parseInt(ean.charAt(i))];
+      }
+      pattern += "01010";
+      for (var i = 6; i < 12; i++) {
+        pattern += BarcodePatterns["C"][parseInt(ean.charAt(i))];
+      }
+      pattern += BarcodePatterns["C"][checksum] + "101";
+
+      // Draw the barcode
+      var x = quietZone;
+      for (var i = 0; i < pattern.length; i++) {
+        var bar = pattern.charAt(i);
+        if (bar === "1") {
+          svg.appendChild(createRect(x, 0, barWidth, barHeight));
+        }
+        x += barWidth;
+      }
+
+      // Draw the human-readable text
+      svg.appendChild(createText(quietZone, barHeight + fontSize + fontOffset, ean));
+    }
+
+    function createRect(x, y, width, height) {
+      var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      rect.setAttribute("x", x);
+      rect.setAttribute("y", y);
+      rect.setAttribute("width", width);
+      rect.setAttribute("height", height);
+      return rect;
+    }
+
+    function createText(x, y, text) {
+      var textElem = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      textElem.setAttribute("x", x);
+      textElem.setAttribute("y", y);
+      textElem.setAttribute("font-size", fontSize);
+      textElem.appendChild(document.createTextNode(text));
+      return textElem;
+    }
+
+    var BarcodePatterns = {
+      "A": ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"],
+      "C": ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"]
+    };
+
+    var svg = document.getElementById("barcode");
+    drawBarcode(svg, "978020137962");
+  </script>
+</body>
+</html>
+
+
+
+<!-- --------------------
+-->
+
+{% set ean = doc.barcodes[0].barcode %}
+{% set BarcodePatterns = {
+  "A": ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"],
+  "C": ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"]
+} %}
+{% if ean %}
+  <svg width="300" height="100">
+    {% set barWidth = 2 %}
+    {% set barHeight = 80 %}
+    {% set quietZone = 10 %}
+    {% set fontSize = 20 %}
+    {% set fontOffset = 5 %}
+
+    {% set checksum = 0 %}
+    {% set flage = 1 %}
+    {% for i in range(12) %}
+        {% if (i % 2 == 0)  %}
+            {% set flage = 1 %}
+        {%else%}
+            {% set flage = 3 %}
+            {% set checksum = checksum + (((ean[i]) * flage) | int )%}
+        {%endif%}
+      
+    {% endfor %}
+    {% set checksum = (10 - (checksum % 10)) % 10 %}
+
+    {% set pattern = "101" %}
+    {% for i in range(6) %}
+      {% set pattern = pattern ~ BarcodePatterns["A"][(ean[i] | int)] %}
+    {% endfor %}
+    {% set pattern = pattern ~ "01010" %}
+    {% for i in range(6, 12) %}
+      {% set pattern = pattern ~ BarcodePatterns["C"][(ean[i]) | int] %}
+    {% endfor %}
+    {% set pattern = pattern ~ BarcodePatterns["C"][checksum] ~ "101" %}
+
+    {% set x = quietZone %}
+    {% for i in range(pattern|length) %}
+      {% set bar = pattern[i] %}
+      {% if bar == "1" %}
+        <rect x="{{ x }}" y="0" width="{{ barWidth }}" height="{{ barHeight }}" fill="black" />
+      {% endif %}
+      {% set x = x + barWidth %}
+    {% endfor %}
+
+    <text x="{{ quietZone }}" y="{{ barHeight + fontSize + fontOffset }}" font-size="{{ fontSize }}">{{ ean }}</text>
+  </svg>
+{% endif %}
+
+{% set data = get_barcode_item() %}
+{% if data.barcode_image_url %}
+  <img src="{{ data.barcode_image_url }}" alt="{{ data.item_code }} barcode" />
+{% endif %}

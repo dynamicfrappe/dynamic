@@ -1,6 +1,6 @@
-
-
 from __future__ import unicode_literals
+from frappe import _
+
 installation_status = [
     "",
     "Pending",
@@ -103,6 +103,15 @@ data = {
                 "insert_after": "source",
             },
          ],
+         "Address":[
+             {
+                "label": _("Floor"),
+                "fieldname": "floor",
+                "fieldtype": "Data",
+                "insert_after": "fax",
+            },
+             
+         ],
          'Sales Order':[
             {
                 "label": "Sales Installation",
@@ -157,6 +166,14 @@ data = {
                 "fieldtype": "Percent",
                 "insert_after": "per_delivered",
                 "allow_on_submit":1
+            },
+            {
+                "label": _("Floor"),
+                "fieldname": "floor",
+                "fieldtype": "Data",
+                "insert_after": "adress_display",
+                "fetch_from":"customer_address.floor",
+
             },
          ],
          'Lead':[

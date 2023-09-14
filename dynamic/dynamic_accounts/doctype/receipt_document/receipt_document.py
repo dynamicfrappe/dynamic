@@ -10,6 +10,8 @@ import erpnext
 from frappe.utils.data import flt
 from frappe.utils import get_link_to_form
 
+DOMAINS = frappe.get_active_domains()
+
 
 class ReceiptDocument(Document):
 
@@ -67,7 +69,12 @@ class ReceiptDocument(Document):
         je.cheque_date = self.reference_date
         je.remark = f'Payment against {self.doctype}: ' + \
                     self.name + '\n' + (getattr(self, 'notes', "") or "")
-
+        if 'Maser2000' in DOMAINS:
+            je.user_remark = self.notes
+            je.cheque_no = self.reference_number
+            je.cheque_date = frappe.utils.getdate()
+            je.voucher_type = 'Cash Entry' if self.mode_of_payment=="Cash" else 'Bank Entry'
+        
         account_currency = get_account_currency(self.account)
         account_exchange_rate = flt(self.exchange_rate)
         amount_in_account_currency = self.amount
