@@ -377,7 +377,7 @@ domains = {
     "Clinic":"dynamic.domains.clinic",
     "EGY Phar":"dynamic.domains.egy_phar",
     "ARAM":"dynamic.domains.aram",
-    "Lormed":"dynamic.domains.lormed"
+   
 }
 
 # domain Conatin
