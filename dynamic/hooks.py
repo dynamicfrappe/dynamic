@@ -380,7 +380,7 @@ domains = {
     "ARAM":"dynamic.domains.aram",
     "Branch":"dynamic.domains.branch",
     "Cost Center":"dynamic.domains.cost_center",
-     "Lormed":"dynamic.domains.lormed"
+    "Lormed":"dynamic.domains.lormed"
 }
 
 # domain Conatin
