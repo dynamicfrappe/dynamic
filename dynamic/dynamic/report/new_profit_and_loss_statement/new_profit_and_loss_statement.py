@@ -68,25 +68,28 @@ def execute(filters=None):
 			
 	#fileter expense
 	# print("Expence" , expense )
-
+	print("\n\n\n income \n\n==>", income )	
 	net_profit_loss = get_net_profit_loss(
 		income, new_expense , period_list, filters.company, filters.presentation_currency
 	)
 	# print("income",income)
-	# print("cost_of_good_sold",cost_of_good_sold)
-	if len(cost_of_good_sold) > 0:
-		total_income_againest_cost_of_good_sold = {
-			'account_name': 'Gross Profit',
-			'account': 'Gross Profit', 
-			'currency': 'EGP',
-			'opening_balance': 0.0,
-			'dec_2023': income[len(income)-2].get("total") - cost_of_good_sold[len(cost_of_good_sold)-2].get("total"),
-			'total': income[len(income)-2].get("total") - cost_of_good_sold[len(cost_of_good_sold)-2].get("total")
-		}
-		cost_of_good_sold.append(total_income_againest_cost_of_good_sold)
+	# print("\n\n\ncost_of_good_sold\n\n==>",cost_of_good_sold)
+	# if len(cost_of_good_sold) > 0:
+	# 	total_income_againest_cost_of_good_sold = {
+	# 		'account_name': 'Gross Profit',
+	# 		'account': 'Gross Profit', 
+	# 		'currency': 'EGP',
+	# 		'opening_balance': 0.0,
+	# 		'dec_2023': income[len(income)-2].get("total") - cost_of_good_sold[len(cost_of_good_sold)-2].get("total"),
+	# 		'total': income[len(income)-2].get("total") - cost_of_good_sold[len(cost_of_good_sold)-2].get("total")
+	# 	}
+	# 	cost_of_good_sold.append(total_income_againest_cost_of_good_sold)
+	gross_profit = new_get_net_profit_loss(income, cost_of_good_sold , period_list, filters.company, filters.presentation_currency)
 	data = []
 	data.extend(income or [])
 	data.extend(cost_of_good_sold or [])
+	#** gross_profit
+	data.append(gross_profit or [])
 	data.extend(new_expense or [])
 	
 	if net_profit_loss:
@@ -109,6 +112,32 @@ def execute(filters=None):
 
 	return columns, data, None, chart, None
 
+def new_get_net_profit_loss(income, expense, period_list, company, currency=None, consolidated=False):
+	total = 0
+	net_profit_loss = {
+		"account_name": "'" + _("Gross Profit") + "'",
+		"account": "'" + _("Gross Profit") + "'",
+		"warn_if_negative": True,
+		"currency": currency or frappe.get_cached_value("Company", company, "default_currency"),
+	}
+	row_incom = {}
+	row_expense = {}
+
+	has_value = False
+	for period in period_list:
+		key = period if consolidated else period.key
+		total_income = flt(income[-2][key], 3) if income else 0
+		total_expense = flt(expense[-2][key], 3) if expense else 0
+		net_profit_loss[key] = total_income - total_expense
+
+
+		if net_profit_loss[key]:
+			has_value = True
+
+		total += flt(net_profit_loss[key])
+		net_profit_loss["total"] = total
+	if has_value:
+		return net_profit_loss
 
 def get_report_summary(
 	period_list, periodicity, income, expense, net_profit_loss, currency, filters, consolidated=False

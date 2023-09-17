@@ -1,4 +1,6 @@
 from __future__ import unicode_literals
+import frappe
+from frappe import _
 
 data = {
 
@@ -262,7 +264,13 @@ data = {
                 "label"       : "RTX Serial",
                 "read_only"   : 1,
                 "no_copy"     :1
-            }
+            },
+             {
+                "label"       : _("Elvana Shipping"),
+                "fieldname"   : "elvana_shipping",
+                "fieldtype"   : "Check",
+                "insert_after": "order_type",
+            },
 
 
         ]

@@ -174,6 +174,7 @@ frappe.ui.form.on("Quotation Item", {
                      'fieldname':'price_list_rate'
                   },
                   'callback': function(res){
+                    console.log(`item prdice ---> ${res.message.price_list_rate}`)
                       row.grand_total =  res.message.price_list_rate;
                   }
               });

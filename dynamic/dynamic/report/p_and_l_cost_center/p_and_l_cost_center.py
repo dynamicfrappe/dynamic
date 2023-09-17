@@ -277,19 +277,25 @@ def add_total_colms(all_incom, all_expense, period_list, company, currency=None,
 	}
 
 	has_value = False
-	#** all_income
-	result_income = dict(functools.reduce(operator.add,map(collections.Counter, all_incom)))
-	result_income_row = {**net_income_loss, **result_income}
-	#** all_expense
-	result_expense = dict(functools.reduce(operator.add,map(collections.Counter, all_expense)))
-	result_expense_row = {**net_expense_loss, **result_expense}
-	#** subtract
+	result_income = {}
+	result_income_row = {}
+	result_expense_row = {}
 	diff_dict = {}
-	for key in result_income.keys():
-		diff_dict[key] = result_income.get(key, 0) - result_expense.get(key, 0)
+	#** all_income
+	if all_incom:
+		result_income = dict(functools.reduce(operator.add,map(collections.Counter, all_incom)))
+		result_income_row = {**net_income_loss, **result_income}
+	#** all_expense
+	if all_expense:
+		result_expense = dict(functools.reduce(operator.add,map(collections.Counter, all_expense)))
+		result_expense_row = {**net_expense_loss, **result_expense}
+	#** subtract
+	if result_income:
+		for key in result_income.keys():
+			diff_dict[key] = result_income.get(key, 0) - result_expense.get(key, 0)
 	submition = {**submition, **diff_dict}
 	# frappe.errprint(f'result==>{result}')
-	return result_income_row, result_expense_row, submition
+	return result_income_row or [], result_expense_row or [], submition or []
 
 
 
