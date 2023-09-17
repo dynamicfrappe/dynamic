@@ -67,6 +67,26 @@ frappe.ui.form.on("Stock Entry", {
       frm.events.trea_setup(frm)
       frm.events.set_property(frm)
     },
+    stock_entry_type : function (frm){
+      frm.events.filter_stock_entry_transfer(frm)
+    },
+    filter_stock_entry_transfer(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length) {
+                if (r.message.includes("Lormed")) {
+                  if (frm.doc.stock_entry_type == "Repack"){
+                    frm.set_query("stock_entry_transfer_type", () => {
+                    return { filters: {"stock_entry_type": "Material Transfer" }
+                    }});
+                  }
+                }
+            }
+        }
+    })
+
+    },
     add_to_transit : function (frm) {
       frm.events.set_property(frm)
     },
@@ -79,6 +99,7 @@ frappe.ui.form.on("Stock Entry", {
         frm.set_df_property("to_warehouse", "read_only", 1);
       }
     },
+    
     comparison : function (frm) {
         if(frm.doc.against_comparison){
 
