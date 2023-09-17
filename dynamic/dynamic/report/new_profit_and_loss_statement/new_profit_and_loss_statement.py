@@ -68,7 +68,7 @@ def execute(filters=None):
 			
 	#fileter expense
 	# print("Expence" , expense )
-	print("\n\n\n income \n\n==>", income )	
+	# print("\n\n\n income \n\n==>", income )	
 	net_profit_loss = get_net_profit_loss(
 		income, new_expense , period_list, filters.company, filters.presentation_currency
 	)
