@@ -13,7 +13,7 @@ data = {
              {
                 "label": _("Last Comment"),
                 "fieldname": "last_comment",
-                "fieldtype": "Section Break",
+                "fieldtype": "Small Text",
                 "insert_after": "last_com_section",
             },
         ],
