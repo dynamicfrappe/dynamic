@@ -367,7 +367,7 @@ def prepare_data(accounts, balance_must_be, period_list, company_currency):
 		row["has_value"] = has_value
 		row["total"] = total
 		data.append(row)
-
+		# print(f'\n\n\n ===> prepare row row==>{row}')
 	return data
 
 
@@ -406,7 +406,7 @@ def add_total_row(out, root_type, balance_must_be, period_list, company_currency
 			total_row.setdefault("total", 0.0)
 			total_row["total"] += flt(row["total"])
 			total_row["opening_balance"] += row["opening_balance"]
-			row["total"] = ""
+			row["total"] = total_row["total"]
 
 	if "total" in total_row:
 		out.append(total_row)

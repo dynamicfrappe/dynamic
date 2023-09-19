@@ -13,6 +13,10 @@ def execute(filters=None):
 
 def get_data(filters):
 	conditions = " 1=1 "
+	if filters.get("from_date"):
+		conditions += " AND `tabStock Entry`.posting_date >= '%s' "%(filters.get("from_date"))
+	if filters.get("to_date"):
+		conditions += " AND `tabStock Entry`.posting_date <= '%s' "%(filters.get("to_date"))
 	if filters.get("s_warehouse"):
 		conditions += " AND `tabStock Entry Detail`.s_warehouse='%s' "%(filters.get("s_warehouse"))
 	if filters.get("item_code"):
@@ -44,7 +48,8 @@ def get_columns(filters):
 		{
 			"label": _("Name"),
 			"fieldname": "name",
-			"fieldtype": "Data",
+			"fieldtype": "Link",
+			"options": "Stock Entry",
 			"width": 150
 		},
 		{

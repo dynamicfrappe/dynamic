@@ -902,7 +902,8 @@ data = {
                 "fieldname": "grand_total",
                 "fieldtype": "Float",
                 "insert_after": "price_list_rate",
-                "in_list_view":1
+                "in_list_view":1,
+                "read_only":1,
             
             },  
         ],

@@ -85,6 +85,13 @@ data = {
                 "fieldtype": "Float",
                 "insert_after": "crean",
             },
+            {
+                "label": _("Order Draft"),
+                "fieldname": "order_draft",
+                "fieldtype": "Check",
+                "insert_after": "order_type",
+                "in_standard_filter": 1,
+            },
            
          ],
          'Opportunity':[
@@ -140,13 +147,13 @@ data = {
                 "insert_after": "crean",
             },
             {
-                "label": "Advance Paymentstest",
+                "label": "Advance Payments",
                 "fieldname": "advance_paymentss",
                 "fieldtype": "Section Break",
                 "insert_after": "payment_schedule"
             },
             {
-                "label": "Get Advances Receivedd",
+                "label": "Get Advances Received",
                 "fieldname": "get_advancess",
                 "fieldtype": "Button",
                 "insert_after": "advance_paymentss",

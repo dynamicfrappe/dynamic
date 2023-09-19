@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.utils import flt
-
+import collections, functools, operator
 #dynamic.dynamic.report.p_and_l_cost_center.utils
 from dynamic.dynamic.report.p_and_l_cost_center.utils import (
 	get_columns,
@@ -22,9 +22,12 @@ from dynamic.dynamic.report.p_and_l_cost_center.utils import (
 # 	get_cost_of_good_sold_data
 # )
 
+all_incom_list = []
+all_expense_list = []
 
 def execute(filters=None):
 	data = []
+	
 	period_list = get_period_list(
 			filters.from_fiscal_year,
 			filters.to_fiscal_year,
@@ -34,17 +37,18 @@ def execute(filters=None):
 			filters.periodicity,
 			company=filters.company,
 		)
-	for i in filters.get("cost_center") : 
+	total_income = total_expense=0
+	for cost_center in filters.get("cost_center") : 
 		data.extend( [
-			{
-        "account":  f"___________" ,
-        "parent_account":   "",
-        "indent": "" ,
+	# 		{
+    #     "account":  f"___________" ,
+    #     "parent_account":   "",
+    #     "indent": "" ,
         
-      } ,
+    #   } ,
 			
 			{
-        "account":  f"{i }" ,
+        "account":  f"{cost_center}" ,
         "parent_account":   "",
         "indent": "" ,
         
@@ -74,7 +78,7 @@ def execute(filters=None):
 			"Income",
 			"Credit",
 			period_list,
-			i,
+			cost_center,
 			filters=filters,
 			accumulated_values=filters.accumulated_values,
 			ignore_closing_entries=True,
@@ -85,7 +89,7 @@ def execute(filters=None):
 			filters.get("account"),
 			"Debit",
 			period_list,
-			i , 
+			cost_center, 
 			filters=filters,
 			accumulated_values=filters.accumulated_values,
 			ignore_closing_entries=True,
@@ -98,7 +102,7 @@ def execute(filters=None):
 			"Expense",
 			"Debit",
 			period_list,
-			i,
+			cost_center,
 			filters=filters,
 			accumulated_values=filters.accumulated_values,
 			ignore_closing_entries=True,
@@ -133,14 +137,22 @@ def execute(filters=None):
 		
 
 		# cost_centers = filters.get("cost_center")
-
+		# frappe.errprint(f'incom:{income}')
+		# frappe.errprint(f'expense:{expense}')
 		data.extend(income or [])
 		data.extend(cost_of_good_sold or [])
 		data.extend(new_expense or [])
 
+		# for row in 
 		if net_profit_loss:
 			data.append(net_profit_loss)
-
+		
+		#?add new row
+	net_income_loss,net_expense_loss, submition = add_total_colms(all_incom_list, all_expense_list , period_list, filters.company, filters.presentation_currency)
+	data.append(net_income_loss)
+	data.append(net_expense_loss)
+	data.append(submition)
+	# frappe.errprint(f'all_incom_list=======:{all_incom_list}')
 	columns = get_columns(
 		filters.periodicity, period_list, filters.accumulated_values, filters.company
 	)
@@ -214,6 +226,8 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 		"warn_if_negative": True,
 		"currency": currency or frappe.get_cached_value("Company", company, "default_currency"),
 	}
+	row_incom = {}
+	row_expense = {}
 
 	has_value = False
 	# print(f"all Expencies ==========   {expense}")
@@ -224,14 +238,65 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 		# print(f"Exception ------- {flt(expense[-1][key], 3) }")
 		net_profit_loss[key] = total_income - total_expense
 
+		row_incom[key] = total_income 
+		row_expense[key] =  total_expense
+
 		if net_profit_loss[key]:
 			has_value = True
 
 		total += flt(net_profit_loss[key])
 		net_profit_loss["total"] = total
-
+	
+	all_incom_list.append(row_incom)
+	all_expense_list.append(row_expense)
+	# frappe.errprint(f'get_net_profit_loss==>{net_profit_loss}')
 	if has_value:
 		return net_profit_loss
+
+def add_total_colms(all_incom, all_expense, period_list, company, currency=None, consolidated=False):
+	total = 0
+	net_income_loss = {
+		"account_name": "'" + _("All Income") + "'",
+		"account": "'" + _("All Income") + "'",
+		"warn_if_negative": True,
+		"currency": currency or frappe.get_cached_value("Company", company, "default_currency"),
+	}
+
+	net_expense_loss = {
+		"account_name": "'" + _("All Expense") + "'",
+		"account": "'" + _("All Expense") + "'",
+		"warn_if_negative": True,
+		"currency": currency or frappe.get_cached_value("Company", company, "default_currency"),
+	}
+
+	submition = {
+		"account_name": "'" + _("Total Profit Or Loss") + "'",
+		"account": "'" + _("Total Profit Or Loss") + "'",
+		"warn_if_negative": True,
+		"currency": currency or frappe.get_cached_value("Company", company, "default_currency"),
+	}
+
+	has_value = False
+	result_income = {}
+	result_income_row = {}
+	result_expense_row = {}
+	diff_dict = {}
+	#** all_income
+	if all_incom:
+		result_income = dict(functools.reduce(operator.add,map(collections.Counter, all_incom)))
+		result_income_row = {**net_income_loss, **result_income}
+	#** all_expense
+	if all_expense:
+		result_expense = dict(functools.reduce(operator.add,map(collections.Counter, all_expense)))
+		result_expense_row = {**net_expense_loss, **result_expense}
+	#** subtract
+	if result_income:
+		for key in result_income.keys():
+			diff_dict[key] = result_income.get(key, 0) - result_expense.get(key, 0)
+	submition = {**submition, **diff_dict}
+	# frappe.errprint(f'result==>{result}')
+	return result_income_row or [], result_expense_row or [], submition or []
+
 
 
 def get_chart_data(filters, columns, income, expense, net_profit_loss):

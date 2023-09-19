@@ -18,7 +18,12 @@ a {
     display :none !important
 }
 
-
+.dt-row--highlight{
+    background-color:  red !important;
+}
+.dt-row--highlight .dt-cell {
+    background-color: #80ccff !important;
+}
 /* Navigation Bar */
 .navbar-expand .navbar-nav>li>a{
 	color:#fff !important;
