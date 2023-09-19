@@ -90,6 +90,7 @@ data = {
                 "fieldname": "order_draft",
                 "fieldtype": "Check",
                 "insert_after": "order_type",
+                "in_standard_filter": 1,
             },
            
          ],
