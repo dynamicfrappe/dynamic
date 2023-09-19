@@ -5,7 +5,7 @@ data = {
     'custom_fields': {
         'Quotation': [
             {
-                "label": _("Last Comment"),
+                "label": _("Last Comment Sec"),
                 "fieldname": "last_com_section",
                 "fieldtype": "Section Break",
                 "insert_after": "lost_reasons",
