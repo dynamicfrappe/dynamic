@@ -267,7 +267,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-09-21 10:26:44.434732",
+ "modified": "2023-09-21 12:20:06.805220",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Real Estate",
@@ -296,7 +296,7 @@
   },
   {
    "doc_view": "List",
-   "label": "Real Estate Sittings",
+   "label": "Real Estate Settings",
    "link_to": "Real Estate Sittings",
    "type": "DocType"
   }

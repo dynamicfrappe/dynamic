@@ -1,4 +1,5 @@
 
+from frappe import _
 
 data = {
     "custom_fields":{
@@ -9,7 +10,15 @@ data = {
                 "fieldtype": "Link",
                 "insert_after": "customer" ,
                 "options": "Brand",
-            }
+            },
+            {
+                "label": _("Ignore Validation"),
+                "fieldname": "ignore_validation",
+                "fieldtype": "Check",
+                "insert_after": "due_date" ,
+            },
+
+            
         ],
         "Stock Entry":[
             {
