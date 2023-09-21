@@ -23,14 +23,18 @@ frappe.ui.form.on("Sales Order", {
       "Installation Request": "Installation Request",
       "Cheque": "Cheque",
     };
+    frm.events.setup_doc_event(frm)
+  },
+  transaction_date:function(frm){
+    frm.events.setup_doc_event(frm)
   },
   refresh: function (frm) {  
     // console.log(frm.get_docfield('set_warehouse'))
-    console.log('data===>')
-    console.log(frappe.datetime.get_diff(frm.doc.delivery_date))
+    // console.log('data===>')
+    // console.log(frappe.datetime.get_diff(frm.doc.delivery_date))
     frm.events.set_field_reqd_reservation(frm)
     frm.events.set_query(frm)
-
+    frm.events.domian_valid(frm)
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {
@@ -152,6 +156,28 @@ frappe.ui.form.on("Sales Order", {
           }
       }}
   })
+  },
+  setup_doc_event:function(frm){
+    if (frm.doc.transaction_date){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Real State")) {
+              frappe.call({
+                method:"dynamic.real_state.rs_api.add_year_date",
+                args:{
+                  trans_date:  frm.doc.transaction_date
+                  },
+                callback:function(r){
+                  frm.set_value('delivery_date',r.message)
+                  frm.refresh_field('delivery_date')
+                }
+              })
+            }
+        }}
+    })
+    }
   },
   set_query:function(frm){
     frm.set_query('item_purchase_order', 'items', function(doc, cdt, cdn) {

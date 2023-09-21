@@ -8,7 +8,7 @@ def validate(self , event):
         validate_items(self)
 
 def before_submit(self , event):
-    if "Lormed" in Domains :
+    if "Lormed" in Domains  and not self.ignore_validation: #and not self.ignore_validation
         check_open_sales_invoices(self)
 
 def validate_items(self):

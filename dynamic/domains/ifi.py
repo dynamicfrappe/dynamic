@@ -256,6 +256,7 @@ data = {
             },
          ],
     },
+
       "properties": [
         {
         "doctype": "Quotation",
@@ -547,6 +548,15 @@ data = {
         "property": "options",
         "property_type": "Text",
         "value": "\nDraft\nOpen\nReplied\nOrdered\nLost\nCancelled\nExpired\nPotential",
+
+        },
+        {
+         "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "discount_amount",
+        "property": "depends_on",
+        "property_type": "Data",
+        "value": "",
 
         },
         

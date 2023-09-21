@@ -100,6 +100,7 @@ doctype_js = {
     "Stock Reconciliation":"public/js/stock_reconciliation.js",
     "Item":"public/js/item.js",
     "Journal Entry":"public/js/journal_entry.js",
+    "Payment Terms Template":"public/js/payment_terms_template.js",
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 
@@ -291,7 +292,7 @@ scheduler_events = {
     	"daily": [
     		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
     		"dynamic.master_deals.master_deals_api.alert_cheque_date",
-            
+    		"dynamic.real_state.rs_api.setup_payment_term_notify",
     	],
     	"hourly": [
     		# "dynamic.tasks.hourly",

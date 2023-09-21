@@ -103,7 +103,7 @@ def validate_active_domains(doc,*args,**kwargs):
         """   Validate Sales Commition With Moyate """
         if isinstance(doc, str):
             doc = json.loads(doc) 
-        print('\n\n\n\n=======>',type(doc),'\n\n\n')
+        # print('\n\n\n\n=======>',type(doc),'\n\n\n')
         # print('\n\n\n\n=======>',doc.name,'\n\n\n')
         validate_sales_invocie_to_moyate(doc)
         
