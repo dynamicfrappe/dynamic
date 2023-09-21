@@ -34,7 +34,7 @@ frappe.ui.form.on("Sales Order", {
     // console.log(frappe.datetime.get_diff(frm.doc.delivery_date))
     frm.events.set_field_reqd_reservation(frm)
     frm.events.set_query(frm)
-
+    frm.events.domian_valid(frm)
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {
