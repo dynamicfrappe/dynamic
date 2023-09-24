@@ -403,6 +403,7 @@ jenv = {
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
         "get_party_address:dynamic.api.get_party_address",#ifi
+        "get_customer_total_unpaid_amount:dynamic.api.get_customer_total_unpaid_amount"
     ],
     "filters": []
 }

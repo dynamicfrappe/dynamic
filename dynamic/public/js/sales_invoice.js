@@ -40,6 +40,21 @@ frappe.ui.form.on("Sales Invoice", {
   },
 
   refresh(frm) {
+    // frm.add_custom_button(
+    //   __("get_out "),
+    //   function () {
+    //     frappe.call({
+    //       method: "dynamic.api.get_customer_total_unpaid_amount",
+    //       args: {
+    //         customer: frm.doc.customer,
+    //       },
+    //       callback: function (r) {
+    //         console.log(r.message);
+    //       },
+    //     });
+    //   },
+    //   __("Create")
+    // );
     frm.events.add_cheque_button(frm);
     frm.events.set_query(frm)
     // const myTimeout = setTimeout(get_customer_query, 1300);
