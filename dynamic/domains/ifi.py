@@ -557,7 +557,14 @@ data = {
         "property": "depends_on",
         "property_type": "Data",
         "value": "",
-
+        },
+        {
+        "doctype": "Quotation Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "image",
+        "property": "hidden",
+        "property_type": "Check",
+        "value": "0",
         },
         
     ],
