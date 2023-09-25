@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-09-21 10:24:56.911541",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "alert_payemnt_term_days",
+  "role_to_alert"
+ ],
+ "fields": [
+  {
+   "fieldname": "role_to_alert",
+   "fieldtype": "Link",
+   "label": "Role To Alert",
+   "options": "Role"
+  },
+  {
+   "fieldname": "alert_payemnt_term_days",
+   "fieldtype": "Data",
+   "label": "Alert Payemnt Term Days"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-09-21 10:51:41.739950",
+ "modified_by": "Administrator",
+ "module": "Real State",
+ "name": "Real Estate Sittings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

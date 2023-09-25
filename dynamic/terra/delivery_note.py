@@ -6,15 +6,15 @@ from frappe import _
 
 
 def validate_delivery_notes_sal_ord(doc):
-
+    pass
     # validate sales invocie linked with sales order 
-    for line in doc.items :
-        if not line.against_sales_order : 
-            frappe.throw(_(f"""You can not add Delivery Note without Sales Order 
-                                Please Check item {line.item_name}"""))
-        if  not line.sales_order_approval : 
-            frappe.throw(_(f"""You can not add Delivery Note without Sales Order Approver
-                                Please Check item {line.item_name}"""))
+    # for line in doc.items :
+    #     if not line.against_sales_order : 
+    #         frappe.throw(_(f"""You can not add Delivery Note without Sales Order 
+    #                             Please Check item {line.item_name}"""))
+    #     if  not line.sales_order_approval : 
+    #         frappe.throw(_(f"""You can not add Delivery Note without Sales Order Approver
+    #                             Please Check item {line.item_name}"""))
 
     #check reservation 
     # for line in doc.items :

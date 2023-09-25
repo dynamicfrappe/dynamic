@@ -1,0 +1,1029 @@
+
+
+<html dir="ltr" lang="en-US">
+    <head>
+        <style type="text/css">
+@media screen {
+	.print-format-gutter {
+		background-color: #d1d8dd;
+		padding: 30px 0px;
+	}
+	.print-format {
+		background-color: white;
+		border-radius: 8px;
+		max-width: 8.3in;
+		min-height: 11.69in;
+		padding: 0.75in;
+		margin: auto;
+		color: var(--gray-900);
+	}
+
+	.print-format.landscape {
+		max-width: 11.69in;
+		padding: 0.2in;
+	}
+
+	.page-break {
+		/* padding: 15px 0px; */
+		border-bottom: 1px dashed #888;
+	}
+
+	/* .page-break:first-child {
+		padding-top: 0px;
+	} */
+
+	.page-break:last-child {
+		border-bottom: 0px;
+	}
+
+	/* mozilla hack for images in table */
+	body:last-child .print-format td img {
+		width: 100% !important;
+	}
+
+	@media(max-width: 767px) {
+		.print-format {
+			padding: 0.2in;
+		}
+	}
+}
+
+@media print {
+	.print-format p {
+		margin-left: 1px;
+		margin-right: 1px;
+	}
+}
+
+.disabled-check {
+	color: #eee;
+}
+
+.data-field {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.data-field .value {
+	word-wrap: break-word;
+}
+
+.important .value {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+.important label {
+	line-height: 1.8;
+	margin: 0px;
+}
+
+.table {
+	font-size: inherit;
+	margin: 20px 0px;
+}
+
+.square-image {
+	width: 100%;
+	height: 0;
+	padding: 50% 0;
+	background-size: contain;
+	/*background-size: cover;*/
+	background-repeat: no-repeat !important;
+	background-position: center center;
+	border-radius: 4px;
+}
+
+.print-item-image {
+	object-fit: contain;
+}
+
+.pdf-variables,
+.pdf-variable,
+.visible-pdf {
+	display: none !important;
+}
+
+.print-format {
+	font-size: 9pt;
+	font-family: Inter, "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+	-webkit-print-color-adjust:exact;
+}
+
+.page-break {
+	page-break-after: always;
+}
+
+.print-heading {
+	border-bottom: 1px solid #aaa;
+	margin-bottom: 10px;
+}
+
+.print-heading h2 {
+	margin: 0px;
+}
+.print-heading h4 {
+	margin-top: 5px;
+}
+
+table.no-border, table.no-border td {
+	border: 0px;
+}
+
+.print-format label {
+	/* wkhtmltopdf breaks label into multiple lines when it is inline-block */
+	display: block;
+	font-weight: 700;
+}
+
+.print-format img {
+	max-width: 100%;
+}
+
+.print-format table td > .primary:first-child {
+	font-weight: bold;
+}
+
+.print-format td, .print-format th {
+	vertical-align: top !important;
+	padding: 6px !important;
+}
+
+.print-format p {
+	margin: 3px 0px 3px;
+}
+
+.print-format table td pre {
+	white-space: normal;
+	word-break: normal;
+}
+
+table td div {
+	
+	/* needed to avoid partial cutting of text between page break in wkhtmltopdf */
+	page-break-inside: avoid !important;
+	
+}
+
+/* hack for webkit specific browser */
+@media (-webkit-min-device-pixel-ratio:0) {
+	thead, tfoot {
+		display: table-header-group;
+	}
+}
+
+[document-status] {
+	margin-bottom: 5mm;
+}
+
+.signature-img {
+	background: #fff;
+	border-radius: 3px;
+	margin-top: 5px;
+	max-height: 150px;
+}
+
+.print-format-preview [data-fieldtype="Table"] {
+	overflow: auto;
+}
+.print-heading {
+	text-align: right;
+	text-transform: uppercase;
+	color: #666;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #d1d8dd;
+}
+
+.print-heading h2 {
+	font-size: 24px;
+}
+
+.print-format th {
+	background-color: #eee !important;
+	border-bottom: 0px !important;
+}
+
+.print-format .primary.compact-item {
+    font-weight: bold;
+}
+
+/* modern format: for-test */
+</style>
+
+<link href="https://next.ifiegypt.com/assets/css/printview.css" rel="stylesheet">
+</head>
+<body><div class="print-format print-format-preview" style="display: flex; flex-direction: column;">
+<div class="page-break" style="display: flex; flex-direction: column; flex: 1 1 0%;">
+	<div id="header-html" class="hidden-pdf">
+	
+	<div class="print-heading">
+		<h2>
+			<div>Sales Order</div>
+			<small class="sub-heading">SAL-ORD-2023-00074</small>
+		</h2>
+	</div>
+	<div class="text-center" document-status="draft">
+		<h4 style="margin: 0px;">DRAFT</h4>
+	</div>
+	</div>
+
+	
+	<div id="footer-html" class="visible-pdf" style="
+			display: block !important;
+			order: 1;
+			margin-top: auto;
+			padding-top: var(--padding-xl)
+		">
+		
+		<p class="text-center small page-number visible-pdf">
+			Page <span class="page"></span> of <span class="topage"></span>
+		</p>
+	</div>
+	
+
+	
+	<div class="row section-break" data-label="">
+			<div class="col-xs-6 column-break">
+			
+				
+		
+			<div class="row important data-field" data-fieldname="customer_name" data-fieldtype="Data">
+				<div class="col-xs-5">
+					
+					<label>Customer Name: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	 value">
+					Mr. Sheiref Hamdy
+	
+				</div>
+			</div>
+		
+			
+				
+		
+			<div class="row  data-field" data-fieldname="type" data-fieldtype="Select">
+				<div class="col-xs-5">
+					
+					<label>type: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	 value">
+					Sales
+	
+				</div>
+			</div>
+		
+			
+				
+		
+			<div class="row  data-field" data-fieldname="crean" data-fieldtype="Select">
+				<div class="col-xs-5">
+					
+					<label>Crean: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	 value">
+					No
+	
+				</div>
+			</div>
+		
+			
+				
+		
+			<div class="row  data-field" data-fieldname="crean_amount" data-fieldtype="Float">
+				<div class="col-xs-5">
+					
+					<label>Crean Amount: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	text-right value">
+					0
+	
+				</div>
+			</div>
+		
+			
+			</div>
+		
+			<div class="col-xs-6 column-break">
+			
+				
+		
+			<div class="row  data-field" data-fieldname="transaction_date" data-fieldtype="Date">
+				<div class="col-xs-5">
+					
+					<label>Date: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	 value">
+					20-09-2023
+	
+				</div>
+			</div>
+		
+			
+				
+		
+			<div class="row  data-field" data-fieldname="delivery_date" data-fieldtype="Date">
+				<div class="col-xs-5">
+					
+					<label>Delivery Date: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	 value">
+					01-12-2023
+	
+				</div>
+			</div>
+		
+			
+				
+		
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="Address and Contact">
+			<div class="col-xs-6 column-break">
+			
+				
+		
+			<div class="row  data-field" data-fieldname="address_display" data-fieldtype="Small Text">
+				<div class="col-xs-5">
+					
+					<label>Address: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	 value">
+					Stone Park<br>Egypt<br>
+Egypt<br>
+
+	
+				</div>
+			</div>
+		
+			
+				
+		
+			<div class="row  data-field" data-fieldname="contact_display" data-fieldtype="Small Text">
+				<div class="col-xs-5">
+					
+					<label>Contact: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	 value">
+					Mr. Sheiref Hamdy
+	
+				</div>
+			</div>
+		
+			
+			</div>
+		
+			<div class="col-xs-6 column-break">
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="">
+			<div class="col-xs-12 column-break">
+			
+				<div data-fieldname="items" data-fieldtype="Table">
+		<table class="table table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th style="width: 40px" class="table-sr">Sr</th>
+					
+					
+						<th style="width: 150px;" class="
+	" data-fieldname="items" data-fieldtype="Table">
+							Item Code</th>
+					
+					
+					
+						<th style="width: 300px;" class="
+	" data-fieldname="items" data-fieldtype="Table">
+							Description</th>
+					
+					
+					
+						<th style="width: 150px;" class="
+	" data-fieldname="items" data-fieldtype="Table">
+							Image</th>
+					
+					
+					
+						<th style="width: 100px;" class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+							Quantity</th>
+					
+					
+					
+						<th style="width: 80px;" class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+							Picked Qty (in Stock UOM)</th>
+					
+					
+					
+						<th style="width: 80px;" class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+							Discount Amount</th>
+					
+					
+					
+						<th style="width: 100px;" class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+							Rate</th>
+					
+					
+					
+						<th style="width: 100px;" class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+							Amount</th>
+					
+					
+					
+						<th style="width: 80px;" class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+							Rate of Stock UOM</th>
+					
+					
+					
+						<th style="width: 80px;" class="
+	text-center" data-fieldname="items" data-fieldtype="Table">
+							Grant Commission</th>
+					
+					
+					
+						<th style="width: 80px;" class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+							Weight Per Unit</th>
+					
+					
+					
+						<th style="width: 80px;" class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+							Total Weight</th>
+					
+					
+				</tr>
+			</thead>
+			<tbody>
+				
+				<tr>
+					<td class="table-sr">1</td>
+					
+					
+						<td class="
+	" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">STO-ITEM-2023-00064
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value"><div class="ql-snow"><div class="ql-editor read-mode"><p>Supply and install single standard door (Leaf size W 70 cm, 80 cm, 90 cm * maximum architectural opening H 220 cm * maximum wall depth 20 cm) with 1&nbsp;hinged door from pine wood with walnut veneer finish. Door main frame, outer frame, standard hinges (Silver color), standrad lock (Silver color)&nbsp;and rubber sealing are included.&nbsp;</p><p>Door handles, stoppers and any special accessories are not included. (Final price depends on final design and site visit).</p></div></div>
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		<img src="/files/Walvi Walnut Door.png" class="img-responsive">
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		
+
+	
+		<small class="pull-left">Unit</small>
+	
+	14
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">0
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		ج.م 1,131.33
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		ج.م 11,666.67
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		ج.م 163,333.38
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		ج.م 11,666.67
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-center" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		<!-- <i class="fa fa-check"></i> -->
+		<svg viewBox="0 0 16 16" fill="transparent" stroke="#1F272E" stroke-width="2" xmlns="http://www.w3.org/2000/svg" id="icon-tick" style="width: 12px; height: 12px; margin-top: 5px;">
+			<path d="M2 9.66667L5.33333 13L14 3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+		</svg>
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">0
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">0
+	</div></td>
+						
+					
+					
+				</tr>
+				
+				<tr>
+					<td class="table-sr">2</td>
+					
+					
+						<td class="
+	" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">STO-ITEM-2023-00129
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value"><div class="ql-snow">For the guest bathroom , kitchen , bathroom first floor: Supply and install architrave (Arch open W 70 cm - 100 cm * maximum H 220 cm * maximum wall depth 20 cm) from mdf with plain walnut veneer finish.  (Final price depends on final design and site visit).</div>
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		<img src="" class="img-responsive">
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		
+
+	
+		<small class="pull-left">Unit</small>
+	
+	3
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">0
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		ج.م 0.00
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		ج.م 4,122.81
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		ج.م 12,368.43
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		ج.م 4,122.81
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-center" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">
+		<!-- <i class="fa fa-check"></i> -->
+		<svg viewBox="0 0 16 16" fill="transparent" stroke="#1F272E" stroke-width="2" xmlns="http://www.w3.org/2000/svg" id="icon-tick" style="width: 12px; height: 12px; margin-top: 5px;">
+			<path d="M2 9.66667L5.33333 13L14 3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+		</svg>
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">0
+	</div></td>
+						
+					
+					
+					
+						<td class="
+	text-right" data-fieldname="items" data-fieldtype="Table">
+						
+							<div class="value">0
+	</div></td>
+						
+					
+					
+				</tr>
+				
+			</tbody>
+		</table>
+	</div>
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="">
+			<div class="col-xs-6 column-break">
+			
+				
+		
+			<div class="row  data-field" data-fieldname="total_qty" data-fieldtype="Float">
+				<div class="col-xs-5">
+					
+					<label>Total Quantity: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	text-right value">
+					17
+	
+				</div>
+			</div>
+		
+			
+			</div>
+		
+			<div class="col-xs-6 column-break">
+			
+				<div class="row">
+	
+		<div class="col-xs-5">
+			<label>Total</label></div>
+		<div class="col-xs-7 text-right">
+			ج.م 175,701.81
+		</div>
+	
+</div>
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="">
+			<div class="col-xs-12 column-break">
+			
+				<div class="row">
+	<div class="col-xs-6"></div>
+	<div class="col-xs-6"><div class="row">
+			<div class="col-xs-5">
+				<label>Additional Discount Amount</label></div>
+			<div class="col-xs-7 text-right">
+				- ج.م 17,570.18
+			</div>
+		</div><div class="row">
+				<div class="col-xs-5">
+					<label>Egypt</label>
+				</div>
+				<div class="col-xs-7 text-right">
+					ج.م 1,750.00
+				</div>
+			</div><div class="row">
+				<div class="col-xs-5">
+					<label>ضريبة القيمة المضافة</label>
+				</div>
+				<div class="col-xs-7 text-right">
+					ج.م 22,138.43
+				</div>
+			</div></div>
+</div>
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="Loyalty Points Redemption">
+			<div class="col-xs-12 column-break">
+			
+				
+		
+			<div class="row  data-field" data-fieldname="loyalty_points" data-fieldtype="Int">
+				<div class="col-xs-5">
+					
+					<label>Loyalty Points: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	text-right value">
+					0
+	
+				</div>
+			</div>
+		
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="">
+			<div class="col-xs-6 column-break">
+			
+			</div>
+		
+			<div class="col-xs-6 column-break">
+			
+				
+		
+			<div class="row  data-field" data-fieldname="grand_total" data-fieldtype="Currency">
+				<div class="col-xs-5">
+					
+					<label>Grand Total: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	text-right value">
+					
+		ج.م 182,020.06
+	
+				</div>
+			</div>
+		
+			
+				
+		
+			<div class="row important data-field" data-fieldname="rounded_total" data-fieldtype="Currency">
+				<div class="col-xs-5">
+					
+					<label>Rounded Total: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	text-right value">
+					
+		ج.م 182,020.00
+	
+				</div>
+			</div>
+		
+			
+				
+		
+			<div class="row  data-field" data-fieldname="in_words" data-fieldtype="Data">
+				<div class="col-xs-5">
+					
+					<label>In Words: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	 value">
+					EGP One Hundred And Eighty Two Thousand And Twenty only.
+	
+				</div>
+			</div>
+		
+			
+				
+		
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="Terms and Conditions">
+			<div class="col-xs-12 column-break">
+			
+				<div style="padding: 10px 0px" data-fieldname="terms" data-fieldtype="Text Editor"><div class="ql-snow"><div class="ql-editor read-mode"><p><strong>Terms &amp; Conditions:</strong></p><p>-Prices are based on quantities submitted by the client including all scope</p><p>-After accepting the estimate &amp; receiving the DP a deduction of 15% per item will be applied for any canceled item</p><p>-In case of total order cancellation, 20% from the total estimate amount will be deducted &amp; refund applied</p><p>-Prices doesn't include special accessories or mechanisms</p><p>-Manufacturing duration 3 months starts upon receiving client's down payment &amp; final design approval</p><p>-Additional storage fees 70 LE/day in case site is not ready for delivery</p><p>-Site &amp; approved drawings should be ready within 1 month from down payment otherwise quotation will be revised</p><p><br></p><p><strong>Payment Terms:</strong></p><p>-70% upon agreement</p><p>-30% 7 working days before delivery</p><p>-Any Special accessories are to be fully paid upon agreement</p><p><br></p><p>Please make all payment via check under the name of&nbsp;"<strong>Amazon for Trading</strong>" or deposit our bank account:</p><p>-Account Name:&nbsp;Amazon for Trading</p><p>-Bank Name :&nbsp;&nbsp;CIB</p><p>-Account Number: 100059100321</p><p>-IBAN:&nbsp;&nbsp;&nbsp;EG240010014500000100059100321</p></div></div>
+</div>
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="More Information">
+			<div class="col-xs-6 column-break">
+			
+				
+		
+			
+			</div>
+		
+			<div class="col-xs-6 column-break">
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="Billing and Delivery Status">
+			<div class="col-xs-6 column-break">
+			
+				
+		
+			<div class="row  data-field" data-fieldname="per_orderd" data-fieldtype="Percent">
+				<div class="col-xs-5">
+					
+					<label>% Orderd: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	text-right value">
+					0.0%
+	
+				</div>
+			</div>
+		
+			
+			</div>
+		
+			<div class="col-xs-6 column-break">
+			
+				
+		
+			<div class="row  data-field" data-fieldname="per_picked" data-fieldtype="Percent">
+				<div class="col-xs-5">
+					
+					<label>% Picked: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	text-right value">
+					0.0%
+	
+				</div>
+			</div>
+		
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="Commission">
+			<div class="col-xs-6 column-break">
+			
+			</div>
+		
+			<div class="col-xs-6 column-break">
+			
+				
+		
+			<div class="row  data-field" data-fieldname="amount_eligible_for_commission" data-fieldtype="Currency">
+				<div class="col-xs-5">
+					
+					<label>Amount Eligible for Commission: </label>
+					
+				</div>
+				<div class="col-xs-7
+				
+	text-right value">
+					
+		ج.م 158,131.63
+	
+				</div>
+			</div>
+		
+			
+			</div>
+		
+	</div>
+	
+	<div class="row section-break" data-label="Auto Repeat Section">
+			<div class="col-xs-6 column-break">
+			
+			</div>
+		
+			<div class="col-xs-6 column-break">
+			
+			</div>
+		
+	</div>
+	
+</div>
+</div></body></html>

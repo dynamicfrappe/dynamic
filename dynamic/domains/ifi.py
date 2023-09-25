@@ -90,6 +90,7 @@ data = {
                 "fieldname": "order_draft",
                 "fieldtype": "Check",
                 "insert_after": "order_type",
+                "in_standard_filter": 1,
             },
            
          ],
@@ -255,6 +256,7 @@ data = {
             },
          ],
     },
+
       "properties": [
         {
         "doctype": "Quotation",
@@ -547,6 +549,22 @@ data = {
         "property_type": "Text",
         "value": "\nDraft\nOpen\nReplied\nOrdered\nLost\nCancelled\nExpired\nPotential",
 
+        },
+        {
+         "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "discount_amount",
+        "property": "depends_on",
+        "property_type": "Data",
+        "value": "",
+        },
+        {
+        "doctype": "Quotation Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "image",
+        "property": "hidden",
+        "property_type": "Check",
+        "value": "0",
         },
         
     ],

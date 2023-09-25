@@ -23,14 +23,18 @@ frappe.ui.form.on("Sales Order", {
       "Installation Request": "Installation Request",
       "Cheque": "Cheque",
     };
+    frm.events.setup_doc_event(frm)
+  },
+  transaction_date:function(frm){
+    frm.events.setup_doc_event(frm)
   },
   refresh: function (frm) {  
     // console.log(frm.get_docfield('set_warehouse'))
-    console.log('data===>')
-    console.log(frappe.datetime.get_diff(frm.doc.delivery_date))
+    // console.log('data===>')
+    // console.log(frappe.datetime.get_diff(frm.doc.delivery_date))
     frm.events.set_field_reqd_reservation(frm)
     frm.events.set_query(frm)
-
+    frm.events.domian_valid(frm)
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {
@@ -42,7 +46,7 @@ frappe.ui.form.on("Sales Order", {
     frm.events.add_cheque_button(frm);
     frm.events.add_installation_button(frm);
     frm.events.add_furniture_installation_button(frm);
-    cur_frm.page.remove_inner_button(__('Update Items'))
+    // cur_frm.page.remove_inner_button(__('Update Items'))
     if(frm.doc.docstatus === 1 && frm.doc.status !== 'Closed'
 			&& flt(frm.doc.per_delivered, 6) < 100 && flt(frm.doc.per_billed, 6) < 100) {
 			frm.add_custom_button(__('Update Items'), () => {
@@ -152,6 +156,28 @@ frappe.ui.form.on("Sales Order", {
           }
       }}
   })
+  },
+  setup_doc_event:function(frm){
+    if (frm.doc.transaction_date){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Real State")) {
+              frappe.call({
+                method:"dynamic.real_state.rs_api.add_year_date",
+                args:{
+                  trans_date:  frm.doc.transaction_date
+                  },
+                callback:function(r){
+                  frm.set_value('delivery_date',r.message)
+                  frm.refresh_field('delivery_date')
+                }
+              })
+            }
+        }}
+    })
+    }
   },
   set_query:function(frm){
     frm.set_query('item_purchase_order', 'items', function(doc, cdt, cdn) {

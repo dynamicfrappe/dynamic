@@ -103,7 +103,7 @@ def validate_active_domains(doc,*args,**kwargs):
         """   Validate Sales Commition With Moyate """
         if isinstance(doc, str):
             doc = json.loads(doc) 
-        print('\n\n\n\n=======>',type(doc),'\n\n\n')
+        # print('\n\n\n\n=======>',type(doc),'\n\n\n')
         # print('\n\n\n\n=======>',doc.name,'\n\n\n')
         validate_sales_invocie_to_moyate(doc)
         
@@ -877,50 +877,50 @@ def create_naming_reord(series):
     return id    
 @frappe.whitelist()           
 def submit_stock_entry(doc ,*args,**kwargs) :
-
-    if "Terra"  in DOMAINS :
-        # validate against terra branches settings  
-        user_list = []
-        acceess_target = []
-        acccess_source = []
-        target_types = ["Material Issue" , "Material Transfer" ,"Send to Subcontractor"]
-        recive_types = ["Material Receipt" , "Material Transfer"]
-        user = frappe.session.user
-        target_w = False
-        source_w = False
-        if doc.from_warehouse :
-            target_w = frappe.get_doc("Warehouse" ,doc.from_warehouse)
-        if doc.to_warehouse:
-            source_w = frappe.get_doc("Warehouse" ,doc.to_warehouse)
-        entry_type = frappe.get_doc("Stock Entry Type" ,doc.stock_entry_type).purpose
+    pass
+    # if "Terra"  in DOMAINS :
+    #     # validate against terra branches settings  
+    #     user_list = []
+    #     acceess_target = []
+    #     acccess_source = []
+    #     target_types = ["Material Issue" , "Material Transfer" ,"Send to Subcontractor"]
+    #     recive_types = ["Material Receipt" , "Material Transfer"]
+    #     user = frappe.session.user
+    #     target_w = False
+    #     source_w = False
+    #     if doc.from_warehouse :
+    #         target_w = frappe.get_doc("Warehouse" ,doc.from_warehouse)
+    #     if doc.to_warehouse:
+    #         source_w = frappe.get_doc("Warehouse" ,doc.to_warehouse)
+    #     entry_type = frappe.get_doc("Stock Entry Type" ,doc.stock_entry_type).purpose
         
-        if target_w and entry_type in target_types and  not target_w.warehouse_type   :
-                # frappe.throw(str("case@ happend"))
-                cost_center = frappe.db.sql(f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.from_warehouse}' """ ,as_dict=1)
-                if cost_center and len(cost_center) > 0 :
-                    for obj in cost_center :
-                        acceess_target.append(obj.get("name"))
+    #     if target_w and entry_type in target_types and  not target_w.warehouse_type   :
+    #             # frappe.throw(str("case@ happend"))
+    #             cost_center = frappe.db.sql(f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.from_warehouse}' """ ,as_dict=1)
+    #             if cost_center and len(cost_center) > 0 :
+    #                 for obj in cost_center :
+    #                     acceess_target.append(obj.get("name"))
                 
-        if source_w and  entry_type in recive_types and not  source_w.warehouse_type:
-                cost_center = frappe.db.sql(f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.to_warehouse}' """ ,as_dict=1)
-                if cost_center and len(cost_center) > 0 :
-                    for obj in cost_center :
-                         acccess_source.append(obj.get("name"))
-        access_group =    acceess_target +  acccess_source 
-        if len(access_group) > 0 :
-            for access in access_group :
-                # frappe.throw(str(access))
-                users = frappe.db.sql(f""" SELECT branch_manager FROM `tabBranch Managers` WHERE parenttype ='Cost Center'
-                and parent = '{access}' 
-                   """)
-                # frappe.throw(str(users))
-                for usr in users :
-                    user_list.append(usr[0])
+    #     if source_w and  entry_type in recive_types and not  source_w.warehouse_type:
+    #             cost_center = frappe.db.sql(f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.to_warehouse}' """ ,as_dict=1)
+    #             if cost_center and len(cost_center) > 0 :
+    #                 for obj in cost_center :
+    #                      acccess_source.append(obj.get("name"))
+    #     access_group =    acceess_target +  acccess_source 
+    #     if len(access_group) > 0 :
+    #         for access in access_group :
+    #             # frappe.throw(str(access))
+    #             users = frappe.db.sql(f""" SELECT branch_manager FROM `tabBranch Managers` WHERE parenttype ='Cost Center'
+    #             and parent = '{access}' 
+    #                """)
+    #             # frappe.throw(str(users))
+    #             for usr in users :
+    #                 user_list.append(usr[0])
             
        
-        #validate user access 
-        if user not in user_list :
-            frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
+    #     #validate user access 
+    #     if user not in user_list :
+    #         frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
        
             
 @frappe.whitelist()           
@@ -1685,3 +1685,37 @@ def export_data_to_csv_file(items):
             "file":data ,
             "file_url":file_url
         }
+    
+
+
+
+
+
+@frappe.whitelist()
+def get_customer_total_unpaid_amount(customer, company=None):
+    if not customer:
+        return 0
+    company_condition = ""
+    if company:
+        company_condition = " and company = '{0}'".format(company)
+    company_wise_total_unpaid = frappe._dict(
+        frappe.db.sql(
+            """
+        select company, sum(debit_in_account_currency) - sum(credit_in_account_currency)
+        from `tabGL Entry`
+        where party_type = %s and party=%s
+        and is_cancelled = 0 {0}
+        group by company""".format(company_condition),
+            ("Customer", customer),
+        )
+    )
+    total_unpaid = 0
+    if company:
+        total_unpaid = company_wise_total_unpaid.get(company, 0)
+    else:
+        total_unpaid = sum(company_wise_total_unpaid.values())
+
+    total_unpaid = frappe.format_value(total_unpaid, "Float")
+
+    # frappe.msgprint(_("Total Unpaid Amount is {0}").format(total_unpaid))
+    return total_unpaid

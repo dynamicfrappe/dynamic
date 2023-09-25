@@ -46,7 +46,7 @@ class ItemReservedQty(object):
 						,`tabBin`.item_code
 						,`tabBin`.actual_qty as bin_actual_qty
 						,SUM(`tabReservation Warehouse`.reserved_qty) as reserved_qty
-						,(`tabBin`.actual_qty- (SUM(`tabReservation Warehouse`.reserved_qty)) ) as actual_avail_aty
+						,(`tabBin`.actual_qty - (SUM(`tabReservation Warehouse`.reserved_qty)) ) as actual_avail_aty
 						FROM `tabBin`
 						LEFT JOIN `tabReservation`
 						ON `tabReservation`.warehouse_source=`tabBin`.warehouse 
