@@ -45,8 +45,12 @@ class stock_entry_repack(object):
 			conditions += " and `tabStock Entry`.posting_date <= '%s'"%self.filters.get("to_date")
 		sql_query_new = f"""
 					select `tabStock Entry`.name stock_entry,
-					`tabStock Entry`.stock_entry_transfer_type
+					`tabStock Entry`.stock_entry_transfer_type,
+					`tabStock Entry Detail`.item_code
+					,`tabStock Entry Detail`.qty
 					from `tabStock Entry`
+					INNER JOIN `tabStock Entry Detail`
+					ON `tabStock Entry Detail`.parent=`tabStock Entry`.name
 					WHERE {conditions} 
 					AND `tabStock Entry`.stock_entry_type='Repack'
 					AND `tabStock Entry`.stock_entry_transfer_type <> ''
@@ -73,6 +77,19 @@ class stock_entry_repack(object):
 				"fieldname": "stock_entry_transfer_type",
 				"fieldtype": "Link",
 				"options": "Stock Entry",
+				"width": 250,
+			},
+			{
+				"label": _("Item Code"),
+				"fieldname": "item_code",
+				"fieldtype": "Link",
+				"options": "Item",
+				"width": 250,
+			},
+			{
+				"label": _("QTY"),
+				"fieldname": "qty",
+				"fieldtype": "Flaot",
 				"width": 250,
 			},
 			# {
