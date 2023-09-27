@@ -68,8 +68,8 @@ def get_payment_entry(
 		dt, party_account_currency, bank, outstanding_amount, payment_type, bank_amount, doc
 	)
 	# print(f'\n\n-->bank or _cach-->{bank} \n\n')
-	print(f'\n\n--outstanding_amount-->{outstanding_amount} \n\n')
-	print(f'\n\n-->paid_amount-->{paid_amount} \n\n')
+	# print(f'\n\n--outstanding_amount-->{outstanding_amount} \n\n')
+	# print(f'\n\n-->paid_amount-->{paid_amount} \n\n')
 
 	reference_date = getdate(reference_date)
 	paid_amount, received_amount, discount_amount, valid_discounts = apply_early_payment_discount(

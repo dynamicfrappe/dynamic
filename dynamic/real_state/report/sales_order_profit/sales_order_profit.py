@@ -66,7 +66,7 @@ def get_conditions(filters):
 	
 	if filters.get("customer"):
 		conditions += " and so.customer = '%s' " %(filters.get("customer"))
-	print(f'\n\n\n==>{conditions} \n\n')
+	# print(f'\n\n\n==>{conditions} \n\n')
 	return conditions
 
 
