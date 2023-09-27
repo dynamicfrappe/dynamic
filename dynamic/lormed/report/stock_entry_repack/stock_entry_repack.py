@@ -40,17 +40,24 @@ class stock_entry_repack(object):
 	def get_new_opportunity(self,conditions):
 		item_group = ''
 		if self.filters.get("from_date"):
-			conditions += " and tpo.creation >= '%s'"%self.filters.get("from_date")
+			conditions += " and `tabStock Entry`.posting_date >= '%s'"%self.filters.get("from_date")
 		if self.filters.get("to_date"):
-			conditions += " and tpo.creation <= '%s'"%self.filters.get("to_date")
+			conditions += " and `tabStock Entry`.posting_date <= '%s'"%self.filters.get("to_date")
 		sql_query_new = f"""
-					select `taStock Entry`.name,
-					from `taStock Entry`
-					WHERE {conditions} AND tpo.docstatus=1
-					GROUP BY tpo.name
+					select `tabStock Entry`.name stock_entry,
+					`tabStock Entry`.stock_entry_transfer_type,
+					`tabStock Entry Detail`.item_code
+					,`tabStock Entry Detail`.qty
+					from `tabStock Entry`
+					INNER JOIN `tabStock Entry Detail`
+					ON `tabStock Entry Detail`.parent=`tabStock Entry`.name
+					WHERE {conditions} 
+					AND `tabStock Entry`.stock_entry_type='Repack'
+					AND `tabStock Entry`.stock_entry_transfer_type <> ''
+					
 		""".format(conditions=conditions)
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
-		frappe.errprint(f"sql_query_new is ==> {sql_data}")
+		# frappe.errprint(f"sql_query_new is ==> {sql_data}")
 		return sql_data
 
 
@@ -59,37 +66,50 @@ class stock_entry_repack(object):
 		# add columns wich appear data
 		self.columns = [
 			{
-				"label": _("Purchase Order"),
-				"fieldname": "purchase_order",
+				"label": _("Stock Entry"),
+				"fieldname": "stock_entry",
 				"fieldtype": "Link",
-				"options": "Purchase Order",
-				"width": 150,
+				"options": "Stock Entry",
+				"width": 250,
 			},
 			{
-				"label": _("Supplier"),
-				"fieldname": "supplier",
+				"label": _("Stock Entry Transfer"),
+				"fieldname": "stock_entry_transfer_type",
 				"fieldtype": "Link",
-				"options": "Supplier",
-				"width": 150,
+				"options": "Stock Entry",
+				"width": 250,
 			},
 			{
-                "fieldname": "purchase_amount",
-                "label": _("Purchase Amount"),
-                "fieldtype": "Data",
-                "width": 130,
-            },
+				"label": _("Item Code"),
+				"fieldname": "item_code",
+				"fieldtype": "Link",
+				"options": "Item",
+				"width": 250,
+			},
 			{
-                "fieldname": "total_paid",
-                "label": _("Total Paid"),
-                "fieldtype": "Data",
-                "width": 130,
-            },
-			{
-                "fieldname": "outstanding",
-                "label": _("Outstanding"),
-                "fieldtype": "Data",
-                "width": 130,
-            },
+				"label": _("QTY"),
+				"fieldname": "qty",
+				"fieldtype": "Flaot",
+				"width": 250,
+			},
+			# {
+            #     "fieldname": "purchase_amount",
+            #     "label": _("Purchase Amount"),
+            #     "fieldtype": "Data",
+            #     "width": 130,
+            # },
+			# {
+            #     "fieldname": "total_paid",
+            #     "label": _("Total Paid"),
+            #     "fieldtype": "Data",
+            #     "width": 130,
+            # },
+			# {
+            #     "fieldname": "outstanding",
+            #     "label": _("Outstanding"),
+            #     "fieldtype": "Data",
+            #     "width": 130,
+            # },
 			# {
             #     "fieldname": "total_count",
             #     "label": _("No.Order"),

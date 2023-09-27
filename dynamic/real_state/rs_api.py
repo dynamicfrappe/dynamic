@@ -67,6 +67,9 @@ def get_payment_entry(
 	paid_amount, received_amount = set_paid_amount_and_received_amount(
 		dt, party_account_currency, bank, outstanding_amount, payment_type, bank_amount, doc
 	)
+	print(f'\n\n-->bank or _cach-->{bank} \n\n')
+	print(f'\n\n--outstanding_amount-->{outstanding_amount} \n\n')
+	print(f'\n\n-->paid_amount-->{paid_amount} \n\n')
 
 	reference_date = getdate(reference_date)
 	paid_amount, received_amount, discount_amount, valid_discounts = apply_early_payment_discount(
@@ -225,7 +228,8 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 			paid_amount=0
 			for row in doc.payment_schedule:
 				paid_amount += row.paid_amount
-		outstanding_amount = flt(doc.grand_total) - flt(paid_amount)
+		# outstanding_amount = (flt(doc.grand_total) - flt(paid_amount))
+		outstanding_amount = flt(doc.grand_total) - (sum(row.advance_amount for row in doc.advancess)) or 0
 	else:
 		if party_account_currency == doc.company_currency:
 			grand_total = flt(doc.get("base_rounded_total") or doc.base_grand_total)
@@ -250,7 +254,7 @@ def update_against_document_in_jv(self):
 				2. split into multiple rows if partially adjusted, assign against voucher
 				3. submit advance voucher
 		"""
-		from erpnext.accounts.party import get_party_account
+		from erpnext.accounts.party import get_party_account 
 		debit_to = get_party_account('Customer',self.customer,self.company)
 		total_advance = sum(row.advance_amount for row in self.advancess)
 		outstanding_amount =  self.base_grand_total - total_advance

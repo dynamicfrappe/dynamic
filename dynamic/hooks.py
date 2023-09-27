@@ -18,10 +18,6 @@ from . import __version__ as app_version
 DOCTYPE_JS_FILE_PATH = "../apps/dynamic/dynamic/override_doctype_js.json"
 
 
-
-
- 
-
 app_name = "dynamic"
 app_title = "Dynamic"
 app_publisher = "Dynamic"
