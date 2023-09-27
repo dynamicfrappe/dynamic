@@ -319,7 +319,7 @@ def update_against_document_in_jv(self):
 
 def update_advance_payment(self):
 	total_paid_advance = sum(row.advance_amount for row in self.advancess)
-	for row in self.advancess:
+	for row in self.payment_schedule:
 		if total_paid_advance >= row.outstanding:
 			row.paid_amount += total_paid_advance - row.outstanding
 			total_paid_advance = total_paid_advance - row.outstanding
