@@ -167,8 +167,8 @@ def prepare_data(data, so_elapsed_time, filters):
 		# sum data for chart
 		completed += row["billed_amount"]
 		pending += row["pending_amount"]
-		row['valuation_rate'] = check_item_valuation_rate(row)
-		row['profit'] = row['amount'] - (row['valuation_rate'] * row.get('qty'))
+		row['valuation_rate'] = (check_item_valuation_rate(row) * row.get('qty') )
+		row['profit'] = row['amount'] - row['valuation_rate'] 
 		# prepare data for report view
 		row["qty_to_bill"] = flt(row["qty"]) - flt(row["billed_qty"])
 

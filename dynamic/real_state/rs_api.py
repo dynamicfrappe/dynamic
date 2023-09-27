@@ -243,7 +243,7 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 def so_on_submit(self,*args , **kwargs):
 	if 'Real State' in DOMAINS:
 		update_against_document_in_jv(self)
-		update_advance_payment(self)
+		# update_advance_payment(self)
 		
 
 
@@ -321,10 +321,10 @@ def update_advance_payment(self):
 	total_paid_advance = sum(row.advance_amount for row in self.advancess)
 	for row in self.payment_schedule:
 		if total_paid_advance >= row.outstanding:
-			row.paid_amount += total_paid_advance - row.outstanding
-			total_paid_advance = total_paid_advance - row.outstanding
-		elif total_paid_advance < row.outstanding:
 			row.paid_amount +=  row.outstanding
+			total_paid_advance -=   row.outstanding
+		elif total_paid_advance < row.outstanding:
+			row.paid_amount +=  total_paid_advance
 			total_paid_advance = 0
 
 
