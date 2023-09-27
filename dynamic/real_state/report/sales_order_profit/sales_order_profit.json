@@ -1,5 +1,5 @@
 {
- "add_total_row": 0,
+ "add_total_row": 1,
  "columns": [],
  "creation": "2023-09-27 11:51:35.321549",
  "disable_prepared_report": 0,
@@ -10,7 +10,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "Reservation form",
- "modified": "2023-09-27 11:51:35.321549",
+ "modified": "2023-09-27 13:07:44.574449",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Sales Order Profit",

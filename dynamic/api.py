@@ -143,7 +143,7 @@ def test_api(doc,*args,**kwargs):
     print('\n\n\n\n\n***********>',111111111111111111,'\n\n\n') 
 
 
-def check_item_valuation_rate(doc):
+def check_item_valuation_rate(doc): 
     for item in doc.items:
         value_rate = get_valuation_rate(item.item_code,
         item.warehouse,
