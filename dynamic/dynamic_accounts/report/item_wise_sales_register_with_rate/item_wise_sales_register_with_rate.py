@@ -171,7 +171,8 @@ def get_columns(additional_table_columns, filters):
 					"width": 120,
 				},
 				{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 120},
-				{"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
+				{"label": _("Description"), "fieldname": "description", "fieldtype": "Data", "width": 150},
+				#
 			]
 		)
 
@@ -184,13 +185,28 @@ def get_columns(additional_table_columns, filters):
 					"fieldtype": "Link",
 					"options": "Item Group",
 					"width": 120,
-				}
+				},
+				{"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 120},
 			]
 		)
 
 	columns.extend(
 		[
-			{"label": _("Description"), "fieldname": "description", "fieldtype": "Data", "width": 150},
+			{
+			"label": _("Sales Order"),
+			"fieldname": "sales_order",
+			"fieldtype": "Link",
+			"options": "Sales Order",
+			"width": 100,
+		},
+		{
+			"label": _("Delivery Note"),
+			"fieldname": "delivery_note",
+			"fieldtype": "Link",
+			"options": "Delivery Note",
+			"width": 100,
+		},
+			
 			{
 				"label": _("Invoice"),
 				"fieldname": "invoice",
@@ -198,22 +214,9 @@ def get_columns(additional_table_columns, filters):
 				"options": "Sales Invoice",
 				"width": 120,
 			},
-			{"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 120},
+			
 		]
 	)
-
-	if filters.get("group_by") != "Customer":
-		columns.extend(
-			[
-				{
-					"label": _("Customer Group"),
-					"fieldname": "customer_group",
-					"fieldtype": "Link",
-					"options": "Customer Group",
-					"width": 120,
-				}
-			]
-		)
 
 	if filters.get("group_by") not in ("Customer", "Customer Group"):
 		columns.extend(
@@ -229,73 +232,40 @@ def get_columns(additional_table_columns, filters):
 			]
 		)
 
-	if additional_table_columns:
-		columns += additional_table_columns
+	if filters.get("group_by") != "Customer":
+		columns.extend(
+			[
+				{
+					"label": _("Customer Group"),
+					"fieldname": "customer_group",
+					"fieldtype": "Link",
+					"options": "Customer Group",
+					"width": 120,
+				}
+			]
+		)
 
-	columns += [
-		{
-			"label": _("Receivable Account"),
-			"fieldname": "debit_to",
-			"fieldtype": "Link",
-			"options": "Account",
-			"width": 80,
-		},
-		{
+	
+	columns.extend(
+		[
+			{
 			"label": _("Mode Of Payment"),
 			"fieldname": "mode_of_payment",
 			"fieldtype": "Data",
 			"width": 120,
 		},
-	]
-
-	if filters.get("group_by") != "Territory":
-		columns.extend(
-			[
-				{
-					"label": _("Territory"),
-					"fieldname": "territory",
-					"fieldtype": "Link",
-					"options": "Territory",
-					"width": 80,
-				}
-			]
-		)
-
-	columns += [
 		{
+			"label": _("Territory"),
+			"fieldname": "territory",
+			"fieldtype": "Link",
+			"options": "Territory",
+			"width": 80,
+		},{
 			"label": _("Project"),
 			"fieldname": "project",
 			"fieldtype": "Link",
 			"options": "Project",
 			"width": 80,
-		},
-		{
-			"label": _("Company"),
-			"fieldname": "company",
-			"fieldtype": "Link",
-			"options": "Company",
-			"width": 80,
-		},
-		{
-			"label": _("Sales Order"),
-			"fieldname": "sales_order",
-			"fieldtype": "Link",
-			"options": "Sales Order",
-			"width": 100,
-		},
-		{
-			"label": _("Delivery Note"),
-			"fieldname": "delivery_note",
-			"fieldtype": "Link",
-			"options": "Delivery Note",
-			"width": 100,
-		},
-		{
-			"label": _("Income Account"),
-			"fieldname": "income_account",
-			"fieldtype": "Link",
-			"options": "Account",
-			"width": 100,
 		},
 		{
 			"label": _("Cost Center"),
@@ -312,7 +282,8 @@ def get_columns(additional_table_columns, filters):
 			"options": "UOM",
 			"width": 100,
 		},
-		{
+		 {"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
+		 {
 			"label": _("Rate"),
 			"fieldname": "rate",
 			"fieldtype": "Float",
@@ -326,7 +297,79 @@ def get_columns(additional_table_columns, filters):
 			"options": "currency",
 			"width": 100,
 		},
-	]
+		{
+			"label": _("Total Tax"),
+			"fieldname": "total_tax",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"label": _("Total Other Charges"),
+			"fieldname": "total_other_charges",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"label": _("Total"),
+			"fieldname": "total",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		]
+	)
+	if additional_table_columns:
+		columns += additional_table_columns
+
+	# columns += [
+	# 	{
+	# 		"label": _("Receivable Account"),
+	# 		"fieldname": "debit_to",
+	# 		"fieldtype": "Link",
+	# 		"options": "Account",
+	# 		"width": 80,
+	# 	},
+		
+	# ]
+
+	# if filters.get("group_by") != "Territory":
+	# 	columns.extend(
+	# 		[
+	# 			{
+	# 				"label": _("Territory"),
+	# 				"fieldname": "territory",
+	# 				"fieldtype": "Link",
+	# 				"options": "Territory",
+	# 				"width": 80,
+	# 			}
+	# 		]
+	# 	)
+
+	# columns += [
+		
+	# 	{
+	# 		"label": _("Company"),
+	# 		"fieldname": "company",
+	# 		"fieldtype": "Link",
+	# 		"options": "Company",
+	# 		"width": 80,
+	# 	},
+		
+		
+	# 	{
+	# 		"label": _("Income Account"),
+	# 		"fieldname": "income_account",
+	# 		"fieldtype": "Link",
+	# 		"options": "Account",
+	# 		"width": 100,
+	# 	},
+		
+		
+		
+		
+	# ]
 
 	if filters.get("group_by"):
 		columns.append(
@@ -592,56 +635,38 @@ def get_tax_accounts(
 				)
 
 	tax_columns.sort()
-	for desc in tax_columns:
-		columns.append(
-			{
-				"label": _(desc + " Rate"),
-				"fieldname": frappe.scrub(desc + " Rate"),
-				"fieldtype": "Float",
-				"width": 100,
-			}
-		)
+	# for desc in tax_columns:
+	# 	columns.append(
+	# 		{
+	# 			"label": _(desc + " Rate"),
+	# 			"fieldname": frappe.scrub(desc + " Rate"),
+	# 			"fieldtype": "Float",
+	# 			"width": 100,
+	# 		}
+	# 	)
 
-		columns.append(
-			{
-				"label": _(desc + " Amount"),
-				"fieldname": frappe.scrub(desc + " Amount"),
-				"fieldtype": "Currency",
-				"options": "currency",
-				"width": 100,
-			}
-		)
+	# 	columns.append(
+	# 		{
+	# 			"label": _(desc + " Amount"),
+	# 			"fieldname": frappe.scrub(desc + " Amount"),
+	# 			"fieldtype": "Currency",
+	# 			"options": "currency",
+	# 			"width": 100,
+	# 		}
+	# 	)
 
-	columns += [
-		{
-			"label": _("Total Tax"),
-			"fieldname": "total_tax",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"label": _("Total Other Charges"),
-			"fieldname": "total_other_charges",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"label": _("Total"),
-			"fieldname": "total",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"fieldname": "currency",
-			"label": _("Currency"),
-			"fieldtype": "Currency",
-			"width": 80,
-			"hidden": 1,
-		},
-	]
+	# columns += [
+		
+		
+		
+	# 	{
+	# 		"fieldname": "currency",
+	# 		"label": _("Currency"),
+	# 		"fieldtype": "Currency",
+	# 		"width": 80,
+	# 		"hidden": 1,
+	# 	},
+	# ]
 
 	return itemised_tax, tax_columns
 
