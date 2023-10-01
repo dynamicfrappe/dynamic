@@ -171,7 +171,7 @@ def get_columns(additional_table_columns, filters):
 					"width": 120,
 				},
 				{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 120},
-				{"label": _("Incoming Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
+				{"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
 			]
 		)
 
@@ -427,7 +427,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 def get_delivery_notes_against_sales_order(item_list):
 	so_dn_map = frappe._dict()
 	so_item_rows = list(set([d.so_detail for d in item_list]))
-
+	frappe.errprint(f'so_item_rows--->{so_item_rows}')
 	if so_item_rows:
 		delivery_notes = frappe.db.sql(
 			"""
