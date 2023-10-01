@@ -74,6 +74,7 @@ def _execute(
 			"customer_name": customer_record.customer_name,
 			"customer_group": customer_record.customer_group,
 			"incoming_rate": d.incoming_rate,
+			"total_cost": d.incoming_rate * d.qty,
 		}
 
 		if additional_query_columns:
@@ -102,6 +103,9 @@ def _execute(
 			row.update({"rate": (d.base_net_rate * d.qty) / d.stock_qty, "amount": d.base_net_amount})
 		else:
 			row.update({"rate": d.base_net_rate, "amount": d.base_net_amount})
+		 
+		row['profit_rate'] = row.get('rate',0) - row.get('incoming_rate',0)
+		row['total_profit'] = (row.get('rate',0) - row.get('incoming_rate',0)) * (row.get('qty') or row.get('stock_qty') )
 
 		total_tax = 0
 		total_other_charges = 0
@@ -283,16 +287,31 @@ def get_columns(additional_table_columns, filters):
 			"width": 100,
 		},
 		 {"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
+		 {"label": _("Total Cost"), "fieldname": "total_cost", "fieldtype": "Float", "width": 120},
 		 {
-			"label": _("Rate"),
+			"label": _("Sales Rate"),
 			"fieldname": "rate",
 			"fieldtype": "Float",
 			"options": "currency",
 			"width": 100,
 		},
 		{
-			"label": _("Amount"),
+			"label": _("Total Sale"),
 			"fieldname": "amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"label": _("Profit Rate"),
+			"fieldname": "profit_rate",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"label": _("Total Profit"),
+			"fieldname": "total_profit",
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 100,
