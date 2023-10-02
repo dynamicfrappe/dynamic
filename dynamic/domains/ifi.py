@@ -574,6 +574,13 @@ data = {
         "property_type": "Small Text",
         "value": "tc_name.terms",
         },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocType",
+        "property": "make_attachments_public",
+        "property_type": "Check",
+        "value": "1",
+        },
         
     ],
   
