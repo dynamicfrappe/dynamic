@@ -122,8 +122,8 @@ def get_total_profit_new(income, expense, period_list, company, currency=None, c
 		key = period if consolidated else period.key
 		total_income = flt(income[-2][key], 3) if income else 0
 		total_expense = flt(expense[-2][key], 3) if expense else 0
-		total_income_increase += flt(income[-2][key], 3) if income else 0
-		total_expense_increase +=  flt(expense[-2][key], 3) if expense else 0
+		# total_income_increase += flt(income[-2][key], 3) if income else 0
+		# total_expense_increase +=  flt(expense[-2][key], 3) if expense else 0
 		net_profit_loss[key] = total_income - total_expense
 
 
@@ -132,8 +132,8 @@ def get_total_profit_new(income, expense, period_list, company, currency=None, c
 
 		total += flt(net_profit_loss[key])
 		net_profit_loss["total"] = total
-	frappe.errprint(f'total_income_increase==> {total_income_increase}')
-	frappe.errprint(f'total_expense_increase==> {total_expense_increase}')
+	# frappe.errprint(f'total_income_increase==> {total_income_increase}')
+	# frappe.errprint(f'total_expense_increase==> {total_expense_increase}')
 	if has_value:
 		return net_profit_loss
 

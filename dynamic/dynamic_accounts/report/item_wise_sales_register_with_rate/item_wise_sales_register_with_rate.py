@@ -92,7 +92,7 @@ def _execute(
 		row.update(
 			{
 				"debit_to": d.debit_to,
-				"mode_of_payment": ", ".join(mode_of_payments.get(d.parent, [])),
+				"mode_of_payment": ", ".join(mode_of_payments.get(d.parent, [])) if mode_of_payments.get(d.parent) else '',
 				"territory": d.territory,
 				"project": d.project,
 				"company": d.company,
