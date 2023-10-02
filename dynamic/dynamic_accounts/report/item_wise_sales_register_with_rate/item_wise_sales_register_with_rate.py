@@ -37,7 +37,7 @@ def _execute(
 
 	mode_of_payments = get_mode_of_payments(set(d.parent for d in item_list))
 	so_dn_map = get_delivery_notes_against_sales_order(item_list)
-
+	# frappe.errprint(f"so_dn_map-->{so_dn_map}")
 	data = []
 	total_row_map = {}
 	skip_total_row = 0
@@ -62,7 +62,15 @@ def _execute(
 
 		if not delivery_note and d.update_stock:
 			delivery_note = d.parent
-
+		
+		delivery_note_name = so_dn_map.get(d.so_detail)
+		# frappe.errprint(f"--so_detail -->{delivery_note_name}")
+		# frappe.errprint(f"--so_detail -->{d}")
+		delivery_note_incoming_rate = 0
+		if delivery_note_name:
+			delivery_note_incoming_rate = so_dn_map.get(delivery_note_name[0])[0]
+			# frappe.errprint(f"--delivery_note_incoming_rate -->{delivery_note_incoming_rate}")
+		
 		row = {
 			"item_code": d.item_code,
 			"item_name": item_record.item_name if item_record else d.item_name,
@@ -73,7 +81,7 @@ def _execute(
 			"customer": d.customer,
 			"customer_name": customer_record.customer_name,
 			"customer_group": customer_record.customer_group,
-			"incoming_rate": d.incoming_rate,
+			"incoming_rate": d.incoming_rate or  delivery_note_incoming_rate,
 			"total_cost": d.incoming_rate * d.qty,
 		}
 
@@ -489,7 +497,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 def get_delivery_notes_against_sales_order(item_list):
 	so_dn_map = frappe._dict()
 	so_item_rows = list(set([d.so_detail for d in item_list]))
-	frappe.errprint(f'so_item_rows--->{so_item_rows}')
+	# frappe.errprint(f'so_item_rows--->{so_item_rows}')
 	if so_item_rows:
 		delivery_notes = frappe.db.sql(
 			"""
