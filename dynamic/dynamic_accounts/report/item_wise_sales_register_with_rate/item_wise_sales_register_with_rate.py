@@ -88,11 +88,16 @@ def _execute(
 		if additional_query_columns:
 			for col in additional_query_columns:
 				row.update({col: d.get(col)})
-
+		mode_of_payment_none = any(elem is None for elem in mode_of_payments.get(d.parent, []))
+		mode_of_payment = ''
+		if mode_of_payment_none:
+			mode_of_payment = ''
+		else :
+			mode_of_payment = ", ".join(mode_of_payments.get(d.parent, []))
 		row.update(
 			{
 				"debit_to": d.debit_to,
-				"mode_of_payment": ", ".join(mode_of_payments.get(d.parent, [])) if mode_of_payments.get(d.parent) else '',
+				"mode_of_payment":mode_of_payment,
 				"territory": d.territory,
 				"project": d.project,
 				"company": d.company,
