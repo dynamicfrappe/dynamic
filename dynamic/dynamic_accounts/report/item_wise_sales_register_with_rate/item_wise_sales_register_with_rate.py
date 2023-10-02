@@ -8,7 +8,7 @@ from frappe.model.meta import get_field_precision
 from frappe.utils import cstr, flt
 from frappe.utils.xlsxutils import handle_html
 
-from erpnext.accounts.report.sales_register.sales_register import get_mode_of_payments
+# from erpnext.accounts.report.sales_register.sales_register import get_mode_of_payments
 from erpnext.selling.report.item_wise_sales_history.item_wise_sales_history import (
 	get_customer_details,
 	get_item_details,
@@ -794,3 +794,39 @@ def add_sub_total_row(item, total_row_map, group_by_value, tax_columns):
 	for tax in tax_columns:
 		total_row.setdefault(frappe.scrub(tax + " Amount"), 0.0)
 		total_row[frappe.scrub(tax + " Amount")] += flt(item[frappe.scrub(tax + " Amount")])
+
+
+
+def get_mode_of_payments(invoice_list):
+	# mode_of_payments = {}
+	mode_of_payments_2 = {}
+
+	
+	if invoice_list:
+		# inv_mop = frappe.db.sql(
+		# 	"""select parent, mode_of_payment
+		# 	from `tabSales Invoice Payment` where parent in (%s) group by parent, mode_of_payment"""
+		# 	% ", ".join(["%s"] * len(invoice_list)),
+		# 	tuple(invoice_list),
+		# 	as_dict=1,
+		# )
+		inv_mod = frappe.db.sql(
+			"""select `tabPayment Entry`.name, `tabPayment Entry`.mode_of_payment
+			,`tabPayment Entry Reference`.reference_name as parent
+			from `tabPayment Entry` 
+			INNER JOIN
+			`tabPayment Entry Reference`
+			 ON`tabPayment Entry`.name = `tabPayment Entry Reference`.parent
+			where `tabPayment Entry Reference`.reference_name in (%s)
+			group by `tabPayment Entry Reference`.reference_name"""
+			% ", ".join(["%s"] * len(invoice_list)),
+			tuple(invoice_list),
+			as_dict=1,
+		)
+		# frappe.errprint(f'--inv_mod-<>{inv_mod}')
+		for d in inv_mod:
+			mode_of_payments_2.setdefault(d.parent, []).append(d.mode_of_payment)
+		# for d in inv_mop:
+		# 	mode_of_payments.setdefault(d.parent, []).append(d.mode_of_payment)
+		# frappe.errprint(f'--mode_of_payments_2-<>{mode_of_payments_2}')
+	return mode_of_payments_2
