@@ -191,7 +191,6 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 		"warn_if_negative": True,
 		"currency": currency or frappe.get_cached_value("Company", company, "default_currency"),
 	}
-
 	has_value = False
 	for period in period_list:
 		key = period if consolidated else period.key
