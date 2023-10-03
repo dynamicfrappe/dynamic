@@ -89,6 +89,14 @@ data = {
                 "insert_after": "get_advancess",
                 "allow_on_submit":1
             },
+            {
+                "label": _("Outstanding Amount"),
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "advance_paid",
+                "allow_on_submit":1,
+                "read_only" : 1
+            },
              
          ],
          'Quotation':[
@@ -112,7 +120,16 @@ data = {
                 "options":"Sales Invoice Advance",
                 "insert_after": "get_advancess",
                 "allow_on_submit":1
-            },   
+            },  
+            {
+                "label": _("Outstanding Amount"),
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "in_words",
+                "allow_on_submit":1,
+                "read_only" : 1
+            },  
+            
          ],
         
     },
