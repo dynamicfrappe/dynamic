@@ -209,7 +209,8 @@ doc_events = {
     },
     "Quotation":{
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
-        "before_submit": "dynamic.api.before_submit_quot",#add_crean_in_taxes
+        "before_submit": "dynamic.api.before_submit_quot",
+        "before_save": "dynamic.api.before_save_quotation",
     },
     "Purchase Order":{
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",

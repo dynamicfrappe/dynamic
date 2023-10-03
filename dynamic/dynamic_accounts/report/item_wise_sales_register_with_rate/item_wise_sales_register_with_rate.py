@@ -8,7 +8,7 @@ from frappe.model.meta import get_field_precision
 from frappe.utils import cstr, flt
 from frappe.utils.xlsxutils import handle_html
 
-from erpnext.accounts.report.sales_register.sales_register import get_mode_of_payments
+# from erpnext.accounts.report.sales_register.sales_register import get_mode_of_payments
 from erpnext.selling.report.item_wise_sales_history.item_wise_sales_history import (
 	get_customer_details,
 	get_item_details,
@@ -37,7 +37,7 @@ def _execute(
 
 	mode_of_payments = get_mode_of_payments(set(d.parent for d in item_list))
 	so_dn_map = get_delivery_notes_against_sales_order(item_list)
-
+	# frappe.errprint(f"so_dn_map-->{so_dn_map}")
 	data = []
 	total_row_map = {}
 	skip_total_row = 0
@@ -62,7 +62,15 @@ def _execute(
 
 		if not delivery_note and d.update_stock:
 			delivery_note = d.parent
-
+		
+		delivery_note_name = so_dn_map.get(d.so_detail)
+		# frappe.errprint(f"--so_detail -->{delivery_note_name}")
+		# frappe.errprint(f"--so_detail -->{d}")
+		delivery_note_incoming_rate = 0
+		if delivery_note_name:
+			delivery_note_incoming_rate = so_dn_map.get(delivery_note_name[0])[0]
+			# frappe.errprint(f"--delivery_note_incoming_rate -->{delivery_note_incoming_rate}")
+		
 		row = {
 			"item_code": d.item_code,
 			"item_name": item_record.item_name if item_record else d.item_name,
@@ -73,17 +81,23 @@ def _execute(
 			"customer": d.customer,
 			"customer_name": customer_record.customer_name,
 			"customer_group": customer_record.customer_group,
-			"incoming_rate": d.incoming_rate,
+			"incoming_rate": d.incoming_rate or  delivery_note_incoming_rate,
+			"total_cost": d.incoming_rate * d.qty,
 		}
 
 		if additional_query_columns:
 			for col in additional_query_columns:
 				row.update({col: d.get(col)})
-
+		mode_of_payment_none = any(elem is None for elem in mode_of_payments.get(d.parent, []))
+		mode_of_payment = ''
+		if mode_of_payment_none:
+			mode_of_payment = ''
+		else :
+			mode_of_payment = ", ".join(mode_of_payments.get(d.parent, []))
 		row.update(
 			{
 				"debit_to": d.debit_to,
-				"mode_of_payment": ", ".join(mode_of_payments.get(d.parent, [])),
+				"mode_of_payment":mode_of_payment,
 				"territory": d.territory,
 				"project": d.project,
 				"company": d.company,
@@ -102,6 +116,9 @@ def _execute(
 			row.update({"rate": (d.base_net_rate * d.qty) / d.stock_qty, "amount": d.base_net_amount})
 		else:
 			row.update({"rate": d.base_net_rate, "amount": d.base_net_amount})
+		 
+		row['profit_rate'] = row.get('rate',0) - row.get('incoming_rate',0)
+		row['total_profit'] = (row.get('rate',0) - row.get('incoming_rate',0)) * (row.get('qty') or row.get('stock_qty') )
 
 		total_tax = 0
 		total_other_charges = 0
@@ -171,7 +188,8 @@ def get_columns(additional_table_columns, filters):
 					"width": 120,
 				},
 				{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 120},
-				{"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
+				{"label": _("Description"), "fieldname": "description", "fieldtype": "Data", "width": 150},
+				#
 			]
 		)
 
@@ -184,13 +202,28 @@ def get_columns(additional_table_columns, filters):
 					"fieldtype": "Link",
 					"options": "Item Group",
 					"width": 120,
-				}
+				},
+				{"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 120},
 			]
 		)
 
 	columns.extend(
 		[
-			{"label": _("Description"), "fieldname": "description", "fieldtype": "Data", "width": 150},
+			{
+			"label": _("Sales Order"),
+			"fieldname": "sales_order",
+			"fieldtype": "Link",
+			"options": "Sales Order",
+			"width": 100,
+		},
+		{
+			"label": _("Delivery Note"),
+			"fieldname": "delivery_note",
+			"fieldtype": "Link",
+			"options": "Delivery Note",
+			"width": 100,
+		},
+			
 			{
 				"label": _("Invoice"),
 				"fieldname": "invoice",
@@ -198,22 +231,9 @@ def get_columns(additional_table_columns, filters):
 				"options": "Sales Invoice",
 				"width": 120,
 			},
-			{"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 120},
+			
 		]
 	)
-
-	if filters.get("group_by") != "Customer":
-		columns.extend(
-			[
-				{
-					"label": _("Customer Group"),
-					"fieldname": "customer_group",
-					"fieldtype": "Link",
-					"options": "Customer Group",
-					"width": 120,
-				}
-			]
-		)
 
 	if filters.get("group_by") not in ("Customer", "Customer Group"):
 		columns.extend(
@@ -229,73 +249,40 @@ def get_columns(additional_table_columns, filters):
 			]
 		)
 
-	if additional_table_columns:
-		columns += additional_table_columns
+	if filters.get("group_by") != "Customer":
+		columns.extend(
+			[
+				{
+					"label": _("Customer Group"),
+					"fieldname": "customer_group",
+					"fieldtype": "Link",
+					"options": "Customer Group",
+					"width": 120,
+				}
+			]
+		)
 
-	columns += [
-		{
-			"label": _("Receivable Account"),
-			"fieldname": "debit_to",
-			"fieldtype": "Link",
-			"options": "Account",
-			"width": 80,
-		},
-		{
+	
+	columns.extend(
+		[
+			{
 			"label": _("Mode Of Payment"),
 			"fieldname": "mode_of_payment",
 			"fieldtype": "Data",
 			"width": 120,
 		},
-	]
-
-	if filters.get("group_by") != "Territory":
-		columns.extend(
-			[
-				{
-					"label": _("Territory"),
-					"fieldname": "territory",
-					"fieldtype": "Link",
-					"options": "Territory",
-					"width": 80,
-				}
-			]
-		)
-
-	columns += [
 		{
+			"label": _("Territory"),
+			"fieldname": "territory",
+			"fieldtype": "Link",
+			"options": "Territory",
+			"width": 80,
+		},{
 			"label": _("Project"),
 			"fieldname": "project",
 			"fieldtype": "Link",
 			"options": "Project",
 			"width": 80,
-		},
-		{
-			"label": _("Company"),
-			"fieldname": "company",
-			"fieldtype": "Link",
-			"options": "Company",
-			"width": 80,
-		},
-		{
-			"label": _("Sales Order"),
-			"fieldname": "sales_order",
-			"fieldtype": "Link",
-			"options": "Sales Order",
-			"width": 100,
-		},
-		{
-			"label": _("Delivery Note"),
-			"fieldname": "delivery_note",
-			"fieldtype": "Link",
-			"options": "Delivery Note",
-			"width": 100,
-		},
-		{
-			"label": _("Income Account"),
-			"fieldname": "income_account",
-			"fieldtype": "Link",
-			"options": "Account",
-			"width": 100,
 		},
 		{
 			"label": _("Cost Center"),
@@ -312,21 +299,109 @@ def get_columns(additional_table_columns, filters):
 			"options": "UOM",
 			"width": 100,
 		},
-		{
-			"label": _("Rate"),
+		 {"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
+		 {"label": _("Total Cost"), "fieldname": "total_cost", "fieldtype": "Float", "width": 120},
+		 {
+			"label": _("Sales Rate"),
 			"fieldname": "rate",
 			"fieldtype": "Float",
 			"options": "currency",
 			"width": 100,
 		},
 		{
-			"label": _("Amount"),
+			"label": _("Total Sale"),
 			"fieldname": "amount",
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 100,
 		},
-	]
+		{
+			"label": _("Profit Rate"),
+			"fieldname": "profit_rate",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"label": _("Total Profit"),
+			"fieldname": "total_profit",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"label": _("Total Tax"),
+			"fieldname": "total_tax",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"label": _("Total Other Charges"),
+			"fieldname": "total_other_charges",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"label": _("Total"),
+			"fieldname": "total",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		]
+	)
+	if additional_table_columns:
+		columns += additional_table_columns
+
+	# columns += [
+	# 	{
+	# 		"label": _("Receivable Account"),
+	# 		"fieldname": "debit_to",
+	# 		"fieldtype": "Link",
+	# 		"options": "Account",
+	# 		"width": 80,
+	# 	},
+		
+	# ]
+
+	# if filters.get("group_by") != "Territory":
+	# 	columns.extend(
+	# 		[
+	# 			{
+	# 				"label": _("Territory"),
+	# 				"fieldname": "territory",
+	# 				"fieldtype": "Link",
+	# 				"options": "Territory",
+	# 				"width": 80,
+	# 			}
+	# 		]
+	# 	)
+
+	# columns += [
+		
+	# 	{
+	# 		"label": _("Company"),
+	# 		"fieldname": "company",
+	# 		"fieldtype": "Link",
+	# 		"options": "Company",
+	# 		"width": 80,
+	# 	},
+		
+		
+	# 	{
+	# 		"label": _("Income Account"),
+	# 		"fieldname": "income_account",
+	# 		"fieldtype": "Link",
+	# 		"options": "Account",
+	# 		"width": 100,
+	# 	},
+		
+		
+		
+		
+	# ]
 
 	if filters.get("group_by"):
 		columns.append(
@@ -427,7 +502,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 def get_delivery_notes_against_sales_order(item_list):
 	so_dn_map = frappe._dict()
 	so_item_rows = list(set([d.so_detail for d in item_list]))
-	frappe.errprint(f'so_item_rows--->{so_item_rows}')
+	# frappe.errprint(f'so_item_rows--->{so_item_rows}')
 	if so_item_rows:
 		delivery_notes = frappe.db.sql(
 			"""
@@ -592,56 +667,38 @@ def get_tax_accounts(
 				)
 
 	tax_columns.sort()
-	for desc in tax_columns:
-		columns.append(
-			{
-				"label": _(desc + " Rate"),
-				"fieldname": frappe.scrub(desc + " Rate"),
-				"fieldtype": "Float",
-				"width": 100,
-			}
-		)
+	# for desc in tax_columns:
+	# 	columns.append(
+	# 		{
+	# 			"label": _(desc + " Rate"),
+	# 			"fieldname": frappe.scrub(desc + " Rate"),
+	# 			"fieldtype": "Float",
+	# 			"width": 100,
+	# 		}
+	# 	)
 
-		columns.append(
-			{
-				"label": _(desc + " Amount"),
-				"fieldname": frappe.scrub(desc + " Amount"),
-				"fieldtype": "Currency",
-				"options": "currency",
-				"width": 100,
-			}
-		)
+	# 	columns.append(
+	# 		{
+	# 			"label": _(desc + " Amount"),
+	# 			"fieldname": frappe.scrub(desc + " Amount"),
+	# 			"fieldtype": "Currency",
+	# 			"options": "currency",
+	# 			"width": 100,
+	# 		}
+	# 	)
 
-	columns += [
-		{
-			"label": _("Total Tax"),
-			"fieldname": "total_tax",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"label": _("Total Other Charges"),
-			"fieldname": "total_other_charges",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"label": _("Total"),
-			"fieldname": "total",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"fieldname": "currency",
-			"label": _("Currency"),
-			"fieldtype": "Currency",
-			"width": 80,
-			"hidden": 1,
-		},
-	]
+	# columns += [
+		
+		
+		
+	# 	{
+	# 		"fieldname": "currency",
+	# 		"label": _("Currency"),
+	# 		"fieldtype": "Currency",
+	# 		"width": 80,
+	# 		"hidden": 1,
+	# 	},
+	# ]
 
 	return itemised_tax, tax_columns
 
@@ -750,3 +807,39 @@ def add_sub_total_row(item, total_row_map, group_by_value, tax_columns):
 	for tax in tax_columns:
 		total_row.setdefault(frappe.scrub(tax + " Amount"), 0.0)
 		total_row[frappe.scrub(tax + " Amount")] += flt(item[frappe.scrub(tax + " Amount")])
+
+
+
+def get_mode_of_payments(invoice_list):
+	# mode_of_payments = {}
+	mode_of_payments_2 = {}
+
+	
+	if invoice_list:
+		# inv_mop = frappe.db.sql(
+		# 	"""select parent, mode_of_payment
+		# 	from `tabSales Invoice Payment` where parent in (%s) group by parent, mode_of_payment"""
+		# 	% ", ".join(["%s"] * len(invoice_list)),
+		# 	tuple(invoice_list),
+		# 	as_dict=1,
+		# )
+		inv_mod = frappe.db.sql(
+			"""select `tabPayment Entry`.name, `tabPayment Entry`.mode_of_payment
+			,`tabPayment Entry Reference`.reference_name as parent
+			from `tabPayment Entry` 
+			INNER JOIN
+			`tabPayment Entry Reference`
+			 ON`tabPayment Entry`.name = `tabPayment Entry Reference`.parent
+			where `tabPayment Entry Reference`.reference_name in (%s)
+			group by `tabPayment Entry Reference`.reference_name"""
+			% ", ".join(["%s"] * len(invoice_list)),
+			tuple(invoice_list),
+			as_dict=1,
+		)
+		# frappe.errprint(f'--inv_mod-<>{inv_mod}')
+		for d in inv_mod:
+			mode_of_payments_2.setdefault(d.parent, []).append(d.mode_of_payment)
+		# for d in inv_mop:
+		# 	mode_of_payments.setdefault(d.parent, []).append(d.mode_of_payment)
+		# frappe.errprint(f'--mode_of_payments_2-<>{mode_of_payments_2}')
+	return mode_of_payments_2
