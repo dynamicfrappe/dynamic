@@ -1203,9 +1203,9 @@ def before_save_quotation(doc,*args,**kwargs):
     if 'Real State' in DOMAINS:
         meta = frappe.get_meta(doc.doctype)
         if meta.has_field('outstanding_amount'):
-            if doc.get('outstanding_amount',0) == 0 and len(doc.get('advancess')):
+            if  len(doc.get('advancess')):
                 total_advance_paid = sum(adv.advance_amount for adv in doc.get('advancess'))
-                doc.db_set("outstanding_amount",total_advance_paid)
+                doc.db_set("outstanding_amount",doc.grand_total - total_advance_paid)
 
 @frappe.whitelist()
 def add_crean_in_taxes(doc,*args,**kwargs):

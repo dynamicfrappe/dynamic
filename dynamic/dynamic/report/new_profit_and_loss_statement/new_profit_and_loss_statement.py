@@ -48,7 +48,7 @@ def execute(filters=None):
 		ignore_closing_entries=True,
 		ignore_accumulated_values_for_fy=True,
 	)
-	print(" \n\n cost_of_good_sold ------------------------> ",cost_of_good_sold ,'\n')
+	# print(" \n\n cost_of_good_sold ------------------------> ",cost_of_good_sold ,'\n')
 
 	#[{'account': '411 - تكلفة المبيعات - FW', 'parent_account': '', 'indent': 0.0, 'year_start_date': '2023-01-01', 'year_end_date': '2023-12-31', 'currency': 'EGP', 'include_in_gross': 0, 'account_type': 'Cost of Goods Sold', 'is_group': 0, 'opening_balance': 0.0, 'account_name': '411 - تكلفة المبيعات ', 'dec_2023': 8115322.58, 'has_value': True, 'total': 8115322.58}, {'account_name': 'Total 411 - تكلفة المبيعات - FW (Debit)', 'account': 'Total 411 - تكلفة المبيعات - FW (Debit)', 'currency': 'EGP', 'opening_balance': 0.0, 'dec_2023': 8115322.58, 'total': 8115322.58}, {}]
 
