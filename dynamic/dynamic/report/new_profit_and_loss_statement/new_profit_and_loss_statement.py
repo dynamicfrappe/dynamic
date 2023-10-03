@@ -48,7 +48,7 @@ def execute(filters=None):
 		ignore_closing_entries=True,
 		ignore_accumulated_values_for_fy=True,
 	)
-	print("cost_of_good_sold ------------------------> ",cost_of_good_sold ,'\n')
+	# print(" \n\n cost_of_good_sold ------------------------> ",cost_of_good_sold ,'\n')
 
 	#[{'account': '411 - تكلفة المبيعات - FW', 'parent_account': '', 'indent': 0.0, 'year_start_date': '2023-01-01', 'year_end_date': '2023-12-31', 'currency': 'EGP', 'include_in_gross': 0, 'account_type': 'Cost of Goods Sold', 'is_group': 0, 'opening_balance': 0.0, 'account_name': '411 - تكلفة المبيعات ', 'dec_2023': 8115322.58, 'has_value': True, 'total': 8115322.58}, {'account_name': 'Total 411 - تكلفة المبيعات - FW (Debit)', 'account': 'Total 411 - تكلفة المبيعات - FW (Debit)', 'currency': 'EGP', 'opening_balance': 0.0, 'dec_2023': 8115322.58, 'total': 8115322.58}, {}]
 
@@ -62,21 +62,23 @@ def execute(filters=None):
 		ignore_closing_entries=True,
 		ignore_accumulated_values_for_fy=True,	
 	)
-	# print("expense ------------------------> ",expense,'\n')
 	new_expense = []
 	for i in expense :
 		if i not in  cost_of_good_sold and i.get("account") != filters.get("account"):
 			# expense.remove(i)
 			new_expense.append(i)
+
+	# print("\n\n\nnew_expense ----/////--------------------> ",new_expense,'\n')
 		
 			
 
 	# print("\n\n\n new_expense \n\n==>", new_expense )	
+	gross_profit = get_total_profit_new(income, cost_of_good_sold , period_list, filters.company, filters.presentation_currency)
+
 	net_profit_loss = get_net_profit_loss(
 		income, new_expense , period_list, filters.company, filters.presentation_currency
 	)
 	
-	gross_profit = get_total_profit_new(income, cost_of_good_sold , period_list, filters.company, filters.presentation_currency)
 	data = []
 	data.extend(income or [])
 	data.extend(cost_of_good_sold or [])
@@ -181,6 +183,8 @@ def get_report_summary(
 
 def get_net_profit_loss(income, expense, period_list, company, currency=None, consolidated=False):
 	total = 0
+	incom_total = 0
+	exp_total = 0
 	net_profit_loss = {
 		"account_name": "'" + _("Profit for the year") + "'",
 		"account": "'" + _("Profit for the year") + "'",
@@ -189,11 +193,12 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 	}
 
 	has_value = False
-	# print(f"all Expencies ==========   {expense}")
 	for period in period_list:
 		key = period if consolidated else period.key
 		total_income = flt(income[-2].get(key), 3) if income else 0
-		total_expense = flt(expense[-1].get(key), 3) if expense else 0
+		# incom_total += flt(income[-2].get(key), 3) if income else 0
+		total_expense = flt(expense[-2].get(key), 3) if expense else 0
+		# exp_total += flt(expense[-1].get(key), 3) if expense else 0
 		net_profit_loss[key] = total_income - total_expense
 
 		if net_profit_loss[key]:
@@ -201,6 +206,10 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 
 		total += flt(net_profit_loss[key])
 		net_profit_loss["total"] = total
+	# frappe.errprint(f"all total ==========   {total}")
+	# frappe.errprint(f" incom_total ==========   {incom_total}")
+	# frappe.errprint(f" exp_total ==========   {exp_total}")
+	
 
 	if has_value:
 		return net_profit_loss

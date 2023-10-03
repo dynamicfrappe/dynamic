@@ -7,7 +7,11 @@ from frappe import _
 data = {
 
     'custom_fields': {
-        
+        'Quotation':[
+            
+            
+            
+        ],
         
     },
       "properties": [
