@@ -435,6 +435,12 @@ def check_source_item(self,*args , **kwargs):
     if 'IFI' in DOMAINS:
         # print('\n\n\n-->in reconslation**')
         update_against_document_in_jv(self)
+    if 'Real State' in DOMAINS:
+        meta = frappe.get_meta(self.doctype)
+        if meta.has_field('outstanding_amount'):
+            if  len(self.get('advancess')):
+                total_advance_paid = sum(adv.advance_amount for adv in self.get('advancess'))
+                self.db_set("outstanding_amount",self.grand_total - total_advance_paid)
 
     
 def update_against_document_in_jv(self):
