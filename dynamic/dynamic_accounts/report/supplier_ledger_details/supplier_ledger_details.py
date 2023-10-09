@@ -105,30 +105,31 @@ def get_columns(filters=None):
 	]
 	return columns
 
-def get_cutomer_sales_invoice(customer ,from_date , to_date) :
+def get_cutomer_purchase_invoice(supplier ,from_date , to_date) :
 	
-	data_sales_invoice = frappe.db.sql(f"""SELECT "Sales Invoice" as document_type ,b.posting_date as cur_date ,
+	data_purchase_invoice = frappe.db.sql(f"""SELECT "Purchase Invoice" as document_type ,b.posting_date as cur_date ,
 							a.parent as document_Name  ,b.grand_total as  depit , 0 as credit
-							FROM `tabSales Invoice Item` as a 
-							INNER JOIN  `tabSales Invoice` as b 
+							FROM `tabPurchase Invoice Item` as a 
+							INNER JOIN  `tabPurchase Invoice` as b 
 							ON a.parent=b.name
-							WHERE b.customer = '{customer}' and  b.docstatus =1  and
+							WHERE b.supplier = '{supplier}' and  b.docstatus =1  and
 							b.posting_date between date('{from_date}')   and date('{to_date}')
 							GROUP BY a.parent	""",as_dict=True)
-	return data_sales_invoice
+	return data_purchase_invoice
 
-def get_cutomer_sales_return(customer ,from_date , to_date) :
+def get_cutomer_purchase_return(supplier ,from_date , to_date) :
 	
-	data_sales_invoice = frappe.db.sql(f"""SELECT "Sales Invoice" as document_type ,b.posting_date as cur_date ,
+	data_purchase_invoice = frappe.db.sql(f"""SELECT "Purchase Invoice" as document_type ,b.posting_date as cur_date ,
 							a.parent as document_Name  ,b.grand_total as depit  , 0 as  credit
-							FROM `tabSales Invoice Item` as a 
-							INNER JOIN  `tabSales Invoice` as b 
+							FROM `tabPurchase Invoice Item` as a 
+							INNER JOIN  `tabPurchase Invoice` as b 
 							ON a.parent=b.name
-							WHERE b.customer = '{customer}' and  b.docstatus =1 and b.is_return=1 and
+							WHERE b.supplier = '{supplier}' and  b.docstatus =1 and b.is_return=1 and
 							b.posting_date between date('{from_date}')   and date('{to_date}')
 							GROUP BY a.parent	""",as_dict=True)
-	return data_sales_invoice
-def get_customer_journal_entry(customer ,from_date , to_date) :
+	return data_purchase_invoice
+
+def get_supplier_journal_entry(supplier ,from_date , to_date) :
 	data_journal_entry = frappe.db.sql(f""" SELECT a.name ,b.posting_date as cur_date,
 	 "Journal Entry" as document_type , a.parent as document_Name ,
 	 debit_in_account_currency as depit , credit_in_account_currency as credit
@@ -136,17 +137,17 @@ def get_customer_journal_entry(customer ,from_date , to_date) :
 	`tabJournal Entry Account`  a 
 	INNER Join `tabJournal Entry` b
 	ON a.parent=b.name
-	WHERE a.party_type = "Customer" and a.party='{customer}' and b.docstatus =1
+	WHERE a.party_type = "Supplier" and a.party='{supplier}' and b.docstatus =1
 	AND b.posting_date between date('{from_date}')   and date('{to_date}')
 	""",as_dict=1
 	)
 	return data_journal_entry
-def get_customer_payment_entry(customer ,from_date , to_date ) :
+def get_supplier_payment_entry(supplier ,from_date , to_date ) :
 	data_payments = frappe.db.sql(f"""
 	SELECT posting_date as cur_date,"Payment Entry" as document_type , name as document_Name 
 		,paid_amount as credit 
 	    FROM `tabPayment Entry` 
-	WHERE party_type= "Customer" and party='{customer}'  and payment_type="Receive" and docstatus =1
+	WHERE party_type= "Supplier" and party='{supplier}'  and payment_type="Receive" and docstatus =1
 	and posting_date between date('{from_date}')   and date('{to_date}')
 	""",as_dict=1)
 	
@@ -160,13 +161,13 @@ def get_data(filters=None):
 		date = filters.get("from_date")
 		to_date = filters.get("to_date")
 		company = filters.get("company")
-		party = filters.get("customer")	
+		party = filters.get("supplier")	
 		data_sql = 	frappe.db.sql (f"""
 		select company, sum(debit_in_account_currency) - sum(credit_in_account_currency) as balance ,
 		sum(debit_in_account_currency) as depit , sum(credit_in_account_currency) as credit
 		,"Opening" as document_type , date('{date}') as cur_date
 		from `tabGL Entry`
-		where party_type = "Customer" and party='{party}'
+		where party_type = "Supplier" and party='{party}'
 		and is_cancelled = 0 and company = '{company}'
 		and posting_date < date('{date}')
 		
@@ -174,11 +175,11 @@ def get_data(filters=None):
 		# frappe.throw(str(data_sql))
 
 		data = data_sql
-		payment_data = get_customer_payment_entry(party , date , to_date)
-		journal_entry_data = get_customer_journal_entry(party , date , to_date)
-		sales_invoice_data = get_cutomer_sales_invoice(party , date , to_date)
-		# sales_return_data = get_cutomer_sales_return(party , date , to_date)
-		data = data + payment_data +journal_entry_data +sales_invoice_data 
+		payment_data = get_supplier_payment_entry(party , date , to_date)
+		journal_entry_data = get_supplier_journal_entry(party , date , to_date)
+		purchase_invoice_data = get_cutomer_purchase_invoice(party , date , to_date)
+		# purchase_return_data = get_cutomer_purchase_return(party , date , to_date)
+		data = data + payment_data +journal_entry_data +purchase_invoice_data 
 		data = sorted(data , key=itemgetter('cur_date'))
 		n = -1 
 		depit_total = 0
@@ -194,17 +195,17 @@ def get_data(filters=None):
 				
 				row_caculate = float(object.get("depit") or 0 ) - float(object.get("credit") or 0 )
 				object["balance"] = balance + row_caculate
-			if object.get("document_type") != "Sales Invoice" :
+			if object.get("document_type") != "Purchase Invoice" :
 				calculated_data.append(object)
-			if object.get("document_type") == "Sales Invoice" :
+			if object.get("document_type") == "Purchase Invoice" :
 				calculated_data.append(object)
-				sales_invoice_items = frappe.db.sql(f"""SELECT item_name as des ,qty  ,
+				purchase_invoice_items = frappe.db.sql(f"""SELECT item_name as des ,qty  ,
 				  uom ,base_rate as price , base_amount as total
 				FROM 
-				`tabSales Invoice Item` WHERE parent='{object.get("document_Name")}'
+				`tabPurchase Invoice Item` WHERE parent='{object.get("document_Name")}'
 				
 				""",as_dict=1)
-				for obj_item in sales_invoice_items  :
+				for obj_item in purchase_invoice_items  :
 					if filters.get("show_items") ==1 :
 						calculated_data.append(obj_item)
 			n = n+1
