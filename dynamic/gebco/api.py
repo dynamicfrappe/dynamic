@@ -138,9 +138,11 @@ def check_so_approval(doc):
         activity_log = frappe.new_doc('Activity Log')
         if item.get("sales_order_approval"):
             remaing_sql = f"""select remaining_qty from `tabSales Order Approval Item` where parent= '{item.sales_order_approval}' and item_code='{item.item_code}' and warehouse='{item.warehouse}' limit 1"""
+            
             activity_log.subject = 'remaining sql ==>' + remaing_sql
             item_remining_qty = frappe.db.sql(remaing_sql,as_dict=1)
-            # frappe.errprint(f"==>qty{item.qty} rem {item_remining_qty[0].remaining_qty}")
+            if not len(item_remining_qty):
+                frappe.throw(_("Please Be Sure To Select Right Warehouse"))
             if item.qty > item_remining_qty[0].remaining_qty:
                 frappe.throw(_("Approval Remaining Qty '%s'"%item_remining_qty[0].remaining_qty))
             #approval_doc = frappe.get_doc("Sales Order Approval",item.get("sales_order_approval"))
@@ -158,35 +160,7 @@ def check_so_approval(doc):
             frappe.db.commit()
             # total_qty += item.qty
            
-            # sales_order_approval_name = item.sales_order_approval
 
-     # update sales order qty 
-    # sql = f"""update `tabSales Order Approval` set total_delivered_qty = total_delivered_qty + {total_qty}"""       
-    # frappe.db.sql(sql)
-    # frappe.db.commit()
-    # so_approval_doc = frappe.get_doc("Sales Order Approval",sales_order_approval_name)
-    # total_delived_qty =0
-    # #total_delivered_qty
-    
-    # if so_approval_doc.total_qty == so_approval_doc.total_delivered_qty:
-    #     so_approval_doc.status = "Completed"
-    #     so_approval_doc.save()
-    # elif so_approval_doc.total_qty >so_approval_doc.total_delivered_qty and so_approval_doc.total_delivered_qty != 0:
-    #     so_approval_doc.status ="Partial Delivered"
-    #     so_approval_doc.save()
-
-
-
-            # update sales order qtys
-
-            # so_sql = f"""
-            #  update `tabSales Order Item`
-            #  set remaining_qty = approved_qty - delivered_qty
-            #  where item_code = '{item.item_code}' and parent = '{item.against_sales_order}'
-            # """
-            # frappe.db.sql(so_sql)
-            # frappe.db.commit()
-    
 
 def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
     #1-qty deliverd from delivery note
@@ -205,9 +179,7 @@ def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
             new_reserved_qty = item.reserved_qty - row.qty
             item.db_set('reserved_qty',new_reserved_qty)
     elif doc.is_return:
-        # print("\n\n\n\n====>in return")
         set_reservation_invalid(doc,*args,**kwargs)
-        # item.save()
     
 @frappe.whitelist()       
 def set_reservation_invalid(doc,*args,**kwargs):
@@ -260,23 +232,24 @@ def create_installation_request(sales_order):
 
 
 def submit_delivery_note(doc ,*args,**kwargs) :
-    if "Terra"  in DOMAINS :
-        # validate against terra branches settings  
-        user_list = []
-        acceess_target = []
+    pass
+    # if "Terra"  in DOMAINS :
+    #     # validate against terra branches settings  
+    #     user_list = []
+    #     acceess_target = []
        
-        user = frappe.session.user
-        target_w = False
-        if doc.set_warehouse :
-            target_w = frappe.get_doc("Warehouse" ,doc.set_warehouse)
+    #     user = frappe.session.user
+    #     target_w = False
+    #     if doc.set_warehouse :
+    #         target_w = frappe.get_doc("Warehouse" ,doc.set_warehouse)
         
-        if target_w and  not target_w.warehouse_type   :
-                #frappe.throw(str("case@ happend"))
-            cost_center = frappe.db.sql(f""" 
-            SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.set_warehouse}' """ ,as_dict=1)
-            if cost_center and len(cost_center) > 0 :
-                for obj in cost_center :
-                    acceess_target.append(obj.get("name"))
+    #     if target_w and  not target_w.warehouse_type   :
+    #             #frappe.throw(str("case@ happend"))
+    #         cost_center = frappe.db.sql(f""" 
+    #         SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.set_warehouse}' """ ,as_dict=1)
+    #         if cost_center and len(cost_center) > 0 :
+    #             for obj in cost_center :
+    #                 acceess_target.append(obj.get("name"))
                 
         # frappe.errprint(f'centers--->{acceess_target}')
         access_group =    acceess_target 

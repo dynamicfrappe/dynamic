@@ -1018,13 +1018,14 @@ def make_opportunity(source_name, target_doc=None):
 
 @frappe.whitelist()
 def make_quotation(source_name, target_doc=None):
-	print("\n\n\n************** new")
+	# print("\n\n\n************** new")
 
 	def set_missing_values(source, target):
 		from erpnext.controllers.accounts_controller import get_default_taxes_and_charges
 
 		quotation = frappe.get_doc(target)
-
+		if quotation.tc_name:
+			quotation.terms = frappe.db.get_value('Terms and Conditions',quotation.tc_name,'terms')
 		company_currency = frappe.get_cached_value("Company", quotation.company, "default_currency")
 
 		if quotation.quotation_to == "Customer" and quotation.party_name:
@@ -1083,7 +1084,7 @@ def make_quotation(source_name, target_doc=None):
 		target_doc,
 		set_missing_values,
 	)
-
+	# print(f"\n\n\n************target_doc** {doclist.tc_name}\n\n")
 	return doclist
 
 @frappe.whitelist()

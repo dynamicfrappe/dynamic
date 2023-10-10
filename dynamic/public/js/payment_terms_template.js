@@ -11,7 +11,6 @@ frappe.ui.form.on("Payment Terms Template", {
             callback: function (r) {
               if (r.message && r.message.length) {
                 if (r.message.includes("Real State")) {
-                    console.log('test------')
                     frm.fields_dict["terms"].grid.add_custom_button(
                         __("Upload File"),
                         function() {

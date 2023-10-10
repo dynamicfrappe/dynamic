@@ -18,10 +18,6 @@ from . import __version__ as app_version
 DOCTYPE_JS_FILE_PATH = "../apps/dynamic/dynamic/override_doctype_js.json"
 
 
-
-
- 
-
 app_name = "dynamic"
 app_title = "Dynamic"
 app_publisher = "Dynamic"
@@ -213,7 +209,8 @@ doc_events = {
     },
     "Quotation":{
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
-        "before_submit": "dynamic.api.before_submit_quot",#add_crean_in_taxes
+        "before_submit": "dynamic.api.before_submit_quot",
+        "before_save": "dynamic.api.before_save_quotation",
     },
     "Purchase Order":{
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
@@ -403,6 +400,7 @@ jenv = {
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
         "get_party_address:dynamic.api.get_party_address",#ifi
+        "get_customer_total_unpaid_amount:dynamic.api.get_customer_total_unpaid_amount"
     ],
     "filters": []
 }

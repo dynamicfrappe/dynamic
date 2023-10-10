@@ -40,9 +40,18 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Item-wise Sales Register-With-Rate",
+   "link_to": "Item-wise Sales Register-With-Rate",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-03-15 11:50:29.373829",
+ "modified": "2023-10-04 12:09:33.712085",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "extend acount",

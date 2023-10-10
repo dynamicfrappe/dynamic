@@ -46,18 +46,18 @@ frappe.ui.form.on("Sales Order", {
     frm.events.add_cheque_button(frm);
     frm.events.add_installation_button(frm);
     frm.events.add_furniture_installation_button(frm);
-    cur_frm.page.remove_inner_button(__('Update Items'))
-    // if(frm.doc.docstatus === 1 && frm.doc.status !== 'Closed'
-		// 	&& flt(frm.doc.per_delivered, 6) < 100 && flt(frm.doc.per_billed, 6) < 100) {
-		// 	frm.add_custom_button(__('Update Items'), () => {
-    //     erpnext.utils.update_child_items({
-		// 			frm: frm,
-		// 			child_docname: "items",
-		// 			child_doctype: "Sales Order Detail",
-		// 			cannot_add_row: true,
-		// 		})
-		// 	});
-		// }
+    // cur_frm.page.remove_inner_button(__('Update Items'))
+    if(frm.doc.docstatus === 1 && frm.doc.status !== 'Closed'
+			&& flt(frm.doc.per_delivered, 6) < 100 && flt(frm.doc.per_billed, 6) < 100) {
+			frm.add_custom_button(__('Update Items'), () => {
+        erpnext.utils.update_child_items({
+					frm: frm,
+					child_docname: "items",
+					child_doctype: "Sales Order Detail",
+					cannot_add_row: true,
+				})
+			});
+		}
   },
   get_advancess:function(frm){
     if(!frm.is_return) {
@@ -910,6 +910,7 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
 	// },
 })
 var create_payment_for_real_state = function(){
+  console.log('im test')
   var method = "dynamic.real_state.rs_api.get_payment_entry";
   if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
     if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){
@@ -918,8 +919,10 @@ var create_payment_for_real_state = function(){
       method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
     }
   }
+  console.log(method)
   return method
 }
+
 var create_kmina_sales_invoice = function() {
   frappe.model.open_mapped_doc({
   method: "dynamic.kmina.api.make_sales_invoice",
@@ -934,18 +937,19 @@ var create_ifi_sales_invoice = function() {
 })
 }
 
-cur_frm.cscript.get_method_for_payment  = function() {
-  var method = "dynamic.real_state.rs_api.get_payment_entry";
-		if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
-			if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){
-				method = "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_invoice";
-			}else {
-				method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
-			}
-		}
-    console.log(method)
-		return method
-}
+// cur_frm.cscript.get_method_for_payment  = function() {
+//   console.log('in ----> get_method_for_payment')
+//   var method = "dynamic.real_state.rs_api.get_payment_entry";
+// 		if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
+// 			if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){
+// 				method = "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_invoice";
+// 			}else {
+// 				method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
+// 			}
+// 		}
+//     console.log(method)
+// 		return method
+// }
 
 $.extend(
 	cur_frm.cscript,
