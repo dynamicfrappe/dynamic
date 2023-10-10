@@ -208,12 +208,6 @@ def get_columns(additional_table_columns, filters):
 				"options": "Sales Invoice",
 				"width": 120,
 			},
-			{
-				"label": _("Discount Amount"),
-				"fieldname": "discount_amount",
-				"fieldtype": "Currency",
-				"width": 120,
-			},
 			{"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 120},
 		]
 	)
@@ -360,6 +354,12 @@ def get_columns(additional_table_columns, filters):
 			"fieldname": "qty",
 			"fieldtype": "Flaot",
 			"width": 100,
+		},
+	    {
+			"label": _("Discount Amount"),
+			"fieldname": "discount_amount",
+			"fieldtype": "Currency",
+			"width": 120,
 		},
 		
 		{
