@@ -38,7 +38,7 @@ frappe.ui.form.on('Repack', {
 				function () {
 				  frappe.model.open_mapped_doc({
 					method:
-					  "dynamic.dynamic.doctype.Repack.Repack.make_stock_entry",
+					  "dynamic.dynamic.doctype.repack.repack.make_stock_entry",
 					frm: frm, //this.frm
 				  });
 				},
@@ -121,11 +121,25 @@ function check_should_not_attach_bom_items(bom_no) {
 	transaction_controller.autofill_warehouse(child_table, warehouse_field, warehouse);
 }
 
-  frappe.ui.form.on("Stock Entry Detail", "qty", function(frm, cdt, cdn) {
+  frappe.ui.form.on("Repack Items", "qty", function(frm, cdt, cdn) {
 	let row = locals[cdt][cdn];
 	if (row.qty > 0){
-		frm.call({
-			method:"dynamic.dynamic.doctype.Repack.Repack.get_row_qty",
+		// frappe.call({
+		// 	method:"dynamic.dynamic.doctype.repack.repack.test",
+		// 	args:{
+				
+		// 	},
+		// 	callback:function(r){
+		// 		// let result = r.message
+		// 		// if(result.flage==false){
+		// 		// 	row.qty = result.qty
+		// 		// 	frm.refresh_field('items')
+		// 		// 	frappe.throw(__(result.msg))
+		// 		// }
+		// 	}
+		// })
+		frappe.call({
+			method:"dynamic.dynamic.doctype.repack.repack.get_row_qty",
 			args:{
 				"source_doc" :frm.doc,
 				"item_code":row.item_code,
@@ -133,11 +147,15 @@ function check_should_not_attach_bom_items(bom_no) {
 			},
 			callback:function(r){
 				let result = r.message
+				// console.log('========>',result)
 				if(result.flage==false){
 					row.qty = result.qty
-					frm.refresh_field('items')
 					frappe.throw(__(result.msg))
+				}else{
+					row.basic_amount = row.qty * row.basic_rate
+					row.amount = row.qty * row.basic_rate
 				}
+				frm.refresh_field('items')
 			}
 		})
 	}

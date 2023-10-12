@@ -69,7 +69,7 @@ data = {
 
         'Sales Order':[
             {
-                "label": "Advance Paymentstest",
+                "label": "Advance Payment",
                 "fieldname": "advance_paymentss",
                 "fieldtype": "Section Break",
                 "insert_after": "payment_schedule"
@@ -91,10 +91,40 @@ data = {
             },
              
          ],
+         'Quotation':[
+            {
+                "label": "Advance Payment",
+                "fieldname": "advance_paymentss",
+                "fieldtype": "Section Break",
+                "insert_after": "payment_schedule"
+            },
+            {
+                "label": "Get Advances Receivedd",
+                "fieldname": "get_advancess",
+                "fieldtype": "Button",
+                "insert_after": "advance_paymentss",
+                "allow_on_submit":1
+            },
+            {
+                "label": "Advances",
+                "fieldname": "advancess",
+                "fieldtype": "Table",
+                "options":"Sales Invoice Advance",
+                "insert_after": "get_advancess",
+                "allow_on_submit":1
+            },   
+         ],
         
     },
       "properties": [
-
+         {
+            "doctype": "Payment Terms Template Detail",
+            "doctype_or_field": "DocField",
+            "fieldname": "due_date_based_on",
+            "property": "default",
+            "property_type": "Text",
+            "value": "Month(s) after the end of the invoice month",
+        },
     ],
   
     # 'on_setup': 'dynamic.teba.setup.setup_teba'

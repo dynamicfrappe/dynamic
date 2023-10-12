@@ -75,7 +75,7 @@ override_doctype_class = {
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
-
+#/home/abanoub/frappe-13/apps/frappe/frappe/public/js/frappe/views/reports/report_view.js
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Sales Order": "public/js/sales_order.js",
@@ -100,6 +100,7 @@ doctype_js = {
     "Stock Reconciliation":"public/js/stock_reconciliation.js",
     "Item":"public/js/item.js",
     "Journal Entry":"public/js/journal_entry.js",
+    "Payment Terms Template":"public/js/payment_terms_template.js",
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 
@@ -135,8 +136,8 @@ doc_events = {
 
     "Sales Invoice": {
         # "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
-        "on_submit": "dynamic.gebco.api.validate_sales_invoice",
-        "validate": "dynamic.api.validate_active_domains",
+        "on_submit": ["dynamic.gebco.api.validate_sales_invoice","dynamic.controllers.sales_invoice.before_submit"],
+        "validate": ["dynamic.api.validate_active_domains", "dynamic.controllers.sales_invoice.validate"],
         "on_cancel" :"dynamic.api.invoice_on_cancel",
         "before_insert": "dynamic.api.before_insert_invoice", 
         # "before_cancel" : "dynamic.api.before_cancel_invoice",
@@ -291,11 +292,12 @@ scheduler_events = {
     	"daily": [
     		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
     		"dynamic.master_deals.master_deals_api.alert_cheque_date",
-            
+    		"dynamic.real_state.rs_api.setup_payment_term_notify",
     	],
-    # 	"hourly": [
-    # 		"dynamic.tasks.hourly"
-    # 	],
+    	"hourly": [
+    		# "dynamic.tasks.hourly",
+            "dynamic.dynamic.api.cor_job_cancel_reservation"
+    	],
     # 	"weekly": [
     # 		"dynamic.tasks.weekly"
     # 	]
@@ -374,6 +376,12 @@ domains = {
     "Master Deals":"dynamic.domains.master_deals",
     "Barcode Item":"dynamic.domains.barcode_item",
     "Repack":"dynamic.domains.repack",
+    "Clinic":"dynamic.domains.clinic",
+    "EGY Phar":"dynamic.domains.egy_phar",
+    "ARAM":"dynamic.domains.aram",
+    "Branch":"dynamic.domains.branch",
+    "Cost Center":"dynamic.domains.cost_center",
+    "Lormed":"dynamic.domains.lormed"
 }
 
 # domain Conatin
@@ -387,6 +395,7 @@ jenv = {
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_item_data:dynamic.www.item_data.encode_item_data",
+        "test_encode_item_data:dynamic.www.item_data.test_encode_item_data",
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",
@@ -394,6 +403,7 @@ jenv = {
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
         "get_party_address:dynamic.api.get_party_address",#ifi
+        "get_customer_total_unpaid_amount:dynamic.api.get_customer_total_unpaid_amount"
     ],
     "filters": []
 }

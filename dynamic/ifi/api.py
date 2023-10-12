@@ -1253,3 +1253,43 @@ def ifi_make_sales_invoice(source_name, target_doc=None, ignore_permissions=Fals
 	doclist.set_onload("ignore_price_list", True)
 
 	return doclist
+
+
+@frappe.whitelist()
+def get_advance_entries_quotation(doc_name, include_unallocated=True):
+		self = frappe.get_doc('Quotation', doc_name)
+		if self.doctype == "Sales Invoice":
+			party_account = self.debit_to
+			party_type = "Customer"
+			party = self.customer
+			amount_field = "credit_in_account_currency"
+			order_field = "sales_order"
+			order_doctype = "Sales Order"
+		elif self.doctype == "Quotation":
+			party_account = get_party_account("Customer", party=self.party_name, company=self.company)
+			party_type = "Customer"
+			party = self.party_name
+			amount_field = "credit_in_account_currency"
+			order_field = ""
+			order_doctype = ""
+		else:
+			party_account = self.credit_to
+			party_type = "Supplier"
+			party = self.supplier
+			amount_field = "debit_in_account_currency"
+			order_field = "purchase_order"
+			order_doctype = "Purchase Order"
+
+		order_list = []
+
+		journal_entries = get_advance_journal_entries(
+			party_type, party, party_account, amount_field, order_doctype, order_list, include_unallocated
+		)
+
+		payment_entries = get_advance_payment_entries(
+			party_type, party, party_account, order_doctype, order_list, include_unallocated
+		)
+
+		res = journal_entries + payment_entries
+
+		return res

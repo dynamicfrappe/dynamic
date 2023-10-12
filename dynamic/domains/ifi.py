@@ -1,6 +1,6 @@
-
-
 from __future__ import unicode_literals
+from frappe import _
+
 installation_status = [
     "",
     "Pending",
@@ -23,7 +23,7 @@ data = {
         ],
         'Sales Invoice':[
             {
-                "label": "Crean",
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
@@ -31,7 +31,7 @@ data = {
                 "reqd":1
             },
             {
-                "label": "Crean Amount",
+                "label": _("Crean Amount"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
@@ -55,35 +55,42 @@ data = {
 
             },
             {
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
                 "insert_after": "apply_tds",
-                "label": "Crean",
                 "reqd":1
             },
             {
+                "label": _("Crean Amount"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
-                "label": "Crean Amount",
             },
 
         ],
          'Quotation':[
             {
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
                 "insert_after": "customer_name",
-                "label": "Crean",
                 "reqd":1
             },
             {
+                "label": _("Crean"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
-                "label": "Crean Amount",
+            },
+            {
+                "label": _("Order Draft"),
+                "fieldname": "order_draft",
+                "fieldtype": "Check",
+                "insert_after": "order_type",
+                "in_standard_filter": 1,
             },
            
          ],
@@ -103,6 +110,15 @@ data = {
                 "insert_after": "source",
             },
          ],
+         "Address":[
+             {
+                "label": _("Floor"),
+                "fieldname": "floor",
+                "fieldtype": "Data",
+                "insert_after": "fax",
+            },
+             
+         ],
          'Sales Order':[
             {
                 "label": "Sales Installation",
@@ -117,7 +133,7 @@ data = {
                 "in_list_view":1
             },
             {
-                "label": "Crean",
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
@@ -125,19 +141,19 @@ data = {
                 "reqd":1
             },
             {
-                "label": "Crean Amount",
+                "label": _("Crean Amount"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
             },
             {
-                "label": "Advance Paymentstest",
+                "label": "Advance Payments",
                 "fieldname": "advance_paymentss",
                 "fieldtype": "Section Break",
                 "insert_after": "payment_schedule"
             },
             {
-                "label": "Get Advances Receivedd",
+                "label": "Get Advances Received",
                 "fieldname": "get_advancess",
                 "fieldtype": "Button",
                 "insert_after": "advance_paymentss",
@@ -157,6 +173,14 @@ data = {
                 "fieldtype": "Percent",
                 "insert_after": "per_delivered",
                 "allow_on_submit":1
+            },
+            {
+                "label": _("Floor"),
+                "fieldname": "floor",
+                "fieldtype": "Data",
+                "insert_after": "adress_display",
+                "fetch_from":"customer_address.floor",
+
             },
          ],
          'Lead':[
@@ -217,21 +241,22 @@ data = {
          ],
          'Purchase Invoice':[
              {
+                "label": _("Crean"),
                 "fieldname": "crean",
                 "fieldtype": "Select",
                 "options":"\nYes\nNo",
                 "insert_after": "due_date",
-                "label": "Crean",
                 "reqd":1
             },
             {
+                "label": _("Crean Amount"),
                 "fieldname": "crean_amount",
                 "fieldtype": "Float",
                 "insert_after": "crean",
-                "label": "Crean Amount",
             },
          ],
     },
+
       "properties": [
         {
         "doctype": "Quotation",
@@ -523,6 +548,15 @@ data = {
         "property": "options",
         "property_type": "Text",
         "value": "\nDraft\nOpen\nReplied\nOrdered\nLost\nCancelled\nExpired\nPotential",
+
+        },
+        {
+         "doctype": "Sales Order Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "discount_amount",
+        "property": "depends_on",
+        "property_type": "Data",
+        "value": "",
 
         },
         

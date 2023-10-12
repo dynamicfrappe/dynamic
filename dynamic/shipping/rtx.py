@@ -27,8 +27,6 @@ def validate_shipping_settings():
             "password": shipping_settings.get("password"),
             "wight" : shipping_settings.get("default_wight"),
             "content" :shipping_settings.get("default_content")
-  
-
         }
 
     return {"status": False}

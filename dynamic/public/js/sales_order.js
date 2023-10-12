@@ -23,13 +23,18 @@ frappe.ui.form.on("Sales Order", {
       "Installation Request": "Installation Request",
       "Cheque": "Cheque",
     };
+    frm.events.setup_doc_event(frm)
+  },
+  transaction_date:function(frm){
+    frm.events.setup_doc_event(frm)
   },
   refresh: function (frm) {  
     // console.log(frm.get_docfield('set_warehouse'))
-    
+    // console.log('data===>')
+    // console.log(frappe.datetime.get_diff(frm.doc.delivery_date))
     frm.events.set_field_reqd_reservation(frm)
     frm.events.set_query(frm)
-
+    frm.events.domian_valid(frm)
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {
@@ -41,7 +46,7 @@ frappe.ui.form.on("Sales Order", {
     frm.events.add_cheque_button(frm);
     frm.events.add_installation_button(frm);
     frm.events.add_furniture_installation_button(frm);
-    cur_frm.page.remove_inner_button(__('Update Items'))
+    // cur_frm.page.remove_inner_button(__('Update Items'))
     if(frm.doc.docstatus === 1 && frm.doc.status !== 'Closed'
 			&& flt(frm.doc.per_delivered, 6) < 100 && flt(frm.doc.per_billed, 6) < 100) {
 			frm.add_custom_button(__('Update Items'), () => {
@@ -151,6 +156,28 @@ frappe.ui.form.on("Sales Order", {
           }
       }}
   })
+  },
+  setup_doc_event:function(frm){
+    if (frm.doc.transaction_date){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Real State")) {
+              frappe.call({
+                method:"dynamic.real_state.rs_api.add_year_date",
+                args:{
+                  trans_date:  frm.doc.transaction_date
+                  },
+                callback:function(r){
+                  frm.set_value('delivery_date',r.message)
+                  frm.refresh_field('delivery_date')
+                }
+              })
+            }
+        }}
+    })
+    }
   },
   set_query:function(frm){
     frm.set_query('item_purchase_order', 'items', function(doc, cdt, cdn) {
@@ -686,7 +713,10 @@ var create_ifi_purchase_order = function() {
 
 
 const extend_sales_order = erpnext.selling.SalesOrderController.extend({
-
+  // customer_branch:function(){
+  //   console.log('xxxxxxxxx')
+  //   console.log(doc)
+  // },
   refresh: function(doc, dt, dn) {
     var me = this;
 		this._super(doc);
@@ -888,7 +918,6 @@ var create_payment_for_real_state = function(){
       method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
     }
   }
-
   return method
 }
 var create_kmina_sales_invoice = function() {
@@ -922,3 +951,33 @@ $.extend(
 	cur_frm.cscript,
 	new extend_sales_order({frm: cur_frm}),
 );
+
+
+frappe.ui.form.on("Sales Order Item", {
+  item_code:function(frm,cdt,cdn){
+    let row = locals[cdt][cdn]
+    if(row.item_code){
+      frappe.call({
+				'method': 'frappe.client.get_value',
+				'args': {
+					'doctype': 'Item Price',
+					'filters': {
+						'item_code': row.item_code,
+            "selling":1
+					},
+				   'fieldname':'price_list_rate'
+				},
+				'callback': function(res){
+					row.total =  res.message.price_list_rate;
+				}
+			});
+      
+      frm.refresh_fields('items')
+    }
+  },
+  qty:function(frm,cdt,cdn){
+    let row = locals[cdt][cdn]
+    row.total = row.base_price_list_rate * row.qty
+    frm.refresh_fields('items')
+  }
+})

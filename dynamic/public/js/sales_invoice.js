@@ -40,6 +40,21 @@ frappe.ui.form.on("Sales Invoice", {
   },
 
   refresh(frm) {
+    // frm.add_custom_button(
+    //   __("get_out "),
+    //   function () {
+    //     frappe.call({
+    //       method: "dynamic.api.get_customer_total_unpaid_amount",
+    //       args: {
+    //         customer: frm.doc.customer,
+    //       },
+    //       callback: function (r) {
+    //         console.log(r.message);
+    //       },
+    //     });
+    //   },
+    //   __("Create")
+    // );
     frm.events.add_cheque_button(frm);
     frm.events.set_query(frm)
     // const myTimeout = setTimeout(get_customer_query, 1300);
@@ -64,6 +79,15 @@ frappe.ui.form.on("Sales Invoice", {
       );
     }
     
+  },
+  brand:function(frm){
+    frm.fields_dict.items.grid.get_field("item_code").get_query = function () {
+      return {
+        filters: [
+          ["brand", "=", cur_frm.doc.brand],
+        ],
+      };
+    };
   },
   set_query:function(frm){
     frappe.call({
@@ -119,6 +143,24 @@ frappe.ui.form.on("Sales Invoice", {
       },
     });
   },
+  cost_center:function(frm){
+    if(frm.doc.cost_center){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Cost Center")) {
+                $.each(frm.doc["items"] || [], function(i, item) {
+                  item.cost_center = flt(frm.doc.cost_center);
+                });
+                frm.refresh_field("items");
+              }
+            }
+          }
+      })
+  }
+    
+  },
 
 });
 
@@ -153,10 +195,40 @@ frappe.ui.form.on("Sales Team", {
           doc:frm.doc
         },
         callback:function(r){
-          console.log('return --------->')
+          // console.log('return --------->')
         }
       })
     }
   }
 
+})
+
+
+frappe.ui.form.on("Sales Invoice Item", {
+  item_code:function(frm,cdt,cdn){
+    let row = locals[cdt][cdn]
+    if(row.item_code){
+      frappe.call({
+				'method': 'frappe.client.get_value',
+				'args': {
+					'doctype': 'Item Price',
+					'filters': {
+						'item_code': row.item_code,
+            "selling":1
+					},
+				   'fieldname':'price_list_rate'
+				},
+				'callback': function(res){
+					row.total =  res.message.price_list_rate;
+				}
+			});
+      
+      frm.refresh_fields('items')
+    }
+  },
+  qty:function(frm,cdt,cdn){
+    let row = locals[cdt][cdn]
+    row.total = row.base_price_list_rate * row.qty
+    frm.refresh_fields('items')
+  }
 })

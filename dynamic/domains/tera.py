@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-
+from frappe import _
 
 data = {
 
@@ -11,6 +11,15 @@ data = {
                 "fieldtype": "Data",
                 "insert_after": "customer",
                 "allow_on_submit": "1",
+            },
+        ],
+        "Sales Invoice Item":[
+            {
+                "label": _("Total"),
+                "fieldname": "total",
+                "fieldtype": "Float",
+                "insert_after": "base_price_list_rate",
+                "in_list_view" :1 ,
             },
         ],
         "Stock Reconciliation Item":[
@@ -340,9 +349,7 @@ data = {
                 "label": "Opportunity",
                 'options' : 'Opportunity' ,
                 "reqd" : 1
-            },
-            
-            
+            },  
          ],
          'Landed Cost Item': [
             {
@@ -745,7 +752,14 @@ data = {
                 "label": "Remaining Qty",
                 "read_only":1,
                 "no_copy":1
-            }
+            },
+            {
+                "label": _("Total"),
+                "fieldname": "total",
+                "fieldtype": "Float",
+                "insert_after": "base_price_list_rate",
+                "in_list_view" :1 ,
+            },
 
         ], 
         "Purchase Order Item":[
@@ -868,7 +882,16 @@ data = {
                 "label": "QTY As Per Sub Uom",
                 "read_only":1
             
-            }
+            },
+            {
+                "label": "Grand Total",
+                "fieldname": "grand_total",
+                "fieldtype": "Float",
+                "insert_after": "price_list_rate",
+                "in_list_view":1,
+                "read_only":1,
+            
+            },  
         ],
           "Stock Entry":[
              {

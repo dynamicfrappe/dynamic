@@ -93,7 +93,41 @@ frappe.ui.form.on("Quotation",{
                 }
             }}
         })
-    }
+    },
+
+    get_advancess:function(frm){
+        if(!frm.is_return) {
+                frappe.call({
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+              if (r.message && r.message.length) {
+                if (r.message.includes("Real State")) {
+                  return frappe.call({
+                    method: "dynamic.ifi.api.get_advance_entries_quotation",//get_advanced_so_ifi
+                    args:{
+                        doc_name: frm.doc.name,
+                    },
+                    callback: function(r, rt) {
+                      frm.clear_table("advancess");
+                      r.message.forEach(row => {
+                        // console.log(row)
+                        let child = frm.add_child("advancess");
+                        child.reference_type = row.reference_type,
+                        child.reference_name = row.reference_name,
+                        child.reference_row = row.reference_row,
+                        child.remarks = row.remarks,
+                        child.advance_amount = flt(row.amount),
+                        child.allocated_amount = row.allocated_amount,
+                        child.ref_exchange_rate = flt(row.exchange_rate)
+                      });
+                      refresh_field("advancess");
+                    }
+                  })
+                }
+            }}
+        })
+            }
+      },
 })
 
 
@@ -159,7 +193,35 @@ var create_terra_sales_order = function() {
 //       });
 // }
 
-
+frappe.ui.form.on("Quotation Item", {
+    item_code:function(frm,cdt,cdn){
+      let row = locals[cdt][cdn]
+      if(row.item_code){
+        frappe.call({
+                  'method': 'frappe.client.get_value',
+                  'args': {
+                      'doctype': 'Item Price',
+                      'filters': {
+                          'item_code': row.item_code,
+                          "selling":1
+                      },
+                     'fieldname':'price_list_rate'
+                  },
+                  'callback': function(res){
+                    console.log(`item prdice ---> ${res.message.price_list_rate}`)
+                      row.grand_total =  res.message.price_list_rate;
+                  }
+              });
+        
+        frm.refresh_fields('items')
+      }
+    },
+    qty:function(frm,cdt,cdn){
+      let row = locals[cdt][cdn]
+      row.grand_total = row.base_price_list_rate * row.qty
+      frm.refresh_fields('items')
+    }
+  })
 
 cur_frm.cscript['Make Payment Entry'] = function() {
     frappe.model.open_mapped_doc({
