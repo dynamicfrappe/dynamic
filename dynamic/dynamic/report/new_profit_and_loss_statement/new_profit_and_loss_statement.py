@@ -50,7 +50,6 @@ def execute(filters=None):
 	)
 	# print(" \n\n cost_of_good_sold ------------------------> ",cost_of_good_sold ,'\n')
 
-	#[{'account': '411 - تكلفة المبيعات - FW', 'parent_account': '', 'indent': 0.0, 'year_start_date': '2023-01-01', 'year_end_date': '2023-12-31', 'currency': 'EGP', 'include_in_gross': 0, 'account_type': 'Cost of Goods Sold', 'is_group': 0, 'opening_balance': 0.0, 'account_name': '411 - تكلفة المبيعات ', 'dec_2023': 8115322.58, 'has_value': True, 'total': 8115322.58}, {'account_name': 'Total 411 - تكلفة المبيعات - FW (Debit)', 'account': 'Total 411 - تكلفة المبيعات - FW (Debit)', 'currency': 'EGP', 'opening_balance': 0.0, 'dec_2023': 8115322.58, 'total': 8115322.58}, {}]
 
 	expense = get_data(
 		filters.company,
@@ -68,7 +67,6 @@ def execute(filters=None):
 			# expense.remove(i)
 			new_expense.append(i)
 
-	# print("\n\n\nnew_expense ----/////--------------------> ",new_expense,'\n')
 		
 			
 
@@ -116,12 +114,16 @@ def get_total_profit_new(income, expense, period_list, company, currency=None, c
 	}
 	row_incom = {}
 	row_expense = {}
+	# total_income=0
+	# total_expense=0
 	total_income_increase = 0
 	total_expense_increase = 0
-
+	# print(f"----------------{expense}" )
 	has_value = False
 	for period in period_list:
 		key = period if consolidated else period.key
+		# total_income = flt(income[-2][key], 3) if income else 0
+		# total_expense = flt(expense[-2][key], 3) if expense else 0
 		total_income = flt(income[-2][key], 3) if income else 0
 		total_expense = flt(expense[-2][key], 3) if expense else 0
 		# total_income_increase += flt(income[-2][key], 3) if income else 0
@@ -134,8 +136,7 @@ def get_total_profit_new(income, expense, period_list, company, currency=None, c
 
 		total += flt(net_profit_loss[key])
 		net_profit_loss["total"] = total
-	# frappe.errprint(f'total_income_increase==> {total_income_increase}')
-	# frappe.errprint(f'total_expense_increase==> {total_expense_increase}')
+
 	if has_value:
 		return net_profit_loss
 
@@ -191,12 +192,13 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 		"warn_if_negative": True,
 		"currency": currency or frappe.get_cached_value("Company", company, "default_currency"),
 	}
+	# print(f'///////// {expense}')
 	has_value = False
 	for period in period_list:
 		key = period if consolidated else period.key
 		total_income = flt(income[-2].get(key), 3) if income else 0
 		# incom_total += flt(income[-2].get(key), 3) if income else 0
-		total_expense = flt(expense[-2].get(key), 3) if expense else 0
+		total_expense = flt(expense[-1].get(key), 3) if expense else 0
 		# exp_total += flt(expense[-1].get(key), 3) if expense else 0
 		net_profit_loss[key] = total_income - total_expense
 
