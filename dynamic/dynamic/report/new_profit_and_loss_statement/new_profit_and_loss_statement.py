@@ -14,6 +14,8 @@ from dynamic.future.financial_statements import (
 	get_cost_of_good_sold_data
 )
 
+# total_income={}
+# total_expense={}
 
 def execute(filters=None):
 	period_list = get_period_list(
@@ -46,7 +48,8 @@ def execute(filters=None):
 		ignore_closing_entries=True,
 		ignore_accumulated_values_for_fy=True,
 	)
-	# print("cost_of_good_sold ------------------------> ",cost_of_good_sold)
+	# print(" \n\n cost_of_good_sold ------------------------> ",cost_of_good_sold ,'\n')
+
 
 	expense = get_data(
 		filters.company,
@@ -56,35 +59,24 @@ def execute(filters=None):
 		filters=filters,
 		accumulated_values=filters.accumulated_values,
 		ignore_closing_entries=True,
-		ignore_accumulated_values_for_fy=True,
-		
+		ignore_accumulated_values_for_fy=True,	
 	)
 	new_expense = []
 	for i in expense :
 		if i not in  cost_of_good_sold and i.get("account") != filters.get("account"):
 			# expense.remove(i)
 			new_expense.append(i)
+
 		
 			
-	#fileter expense
-	# print("Expence" , expense )
-	# print("\n\n\n income \n\n==>", income )	
+
+	# print("\n\n\n new_expense \n\n==>", new_expense )	
+	gross_profit = get_total_profit_new(income, cost_of_good_sold , period_list, filters.company, filters.presentation_currency)
+
 	net_profit_loss = get_net_profit_loss(
 		income, new_expense , period_list, filters.company, filters.presentation_currency
 	)
-	# print("income",income)
-	# print("\n\n\ncost_of_good_sold\n\n==>",cost_of_good_sold)
-	# if len(cost_of_good_sold) > 0:
-	# 	total_income_againest_cost_of_good_sold = {
-	# 		'account_name': 'Gross Profit',
-	# 		'account': 'Gross Profit', 
-	# 		'currency': 'EGP',
-	# 		'opening_balance': 0.0,
-	# 		'dec_2023': income[len(income)-2].get("total") - cost_of_good_sold[len(cost_of_good_sold)-2].get("total"),
-	# 		'total': income[len(income)-2].get("total") - cost_of_good_sold[len(cost_of_good_sold)-2].get("total")
-	# 	}
-	# 	cost_of_good_sold.append(total_income_againest_cost_of_good_sold)
-	gross_profit = new_get_net_profit_loss(income, cost_of_good_sold , period_list, filters.company, filters.presentation_currency)
+	
 	data = []
 	data.extend(income or [])
 	data.extend(cost_of_good_sold or [])
@@ -99,9 +91,9 @@ def execute(filters=None):
 		filters.periodicity, period_list, filters.accumulated_values, filters.company
 	)
 
-	chart =[] 
-	if filters.get("chart") :
-		chart = get_chart_data(filters, columns, income, expense, net_profit_loss)
+	# chart =[] 
+	# if filters.get("chart") :
+	# 	chart = get_chart_data(filters, columns, income, expense, net_profit_loss)
 
 	currency = filters.presentation_currency or frappe.get_cached_value(
 		"Company", filters.company, "default_currency"
@@ -110,24 +102,32 @@ def execute(filters=None):
 	# 	period_list, filters.periodicity, income, expense, net_profit_loss, currency, filters
 	# )
 
-	return columns, data, None, chart, None
+	return columns, data, None, None, None
 
-def new_get_net_profit_loss(income, expense, period_list, company, currency=None, consolidated=False):
+def get_total_profit_new(income, expense, period_list, company, currency=None, consolidated=False):
 	total = 0
 	net_profit_loss = {
-		"account_name": "'" + _("Gross Profit") + "'",
+		"account_name": "'" + _("Gross Profit++--") + "'",
 		"account": "'" + _("Gross Profit") + "'",
 		"warn_if_negative": True,
 		"currency": currency or frappe.get_cached_value("Company", company, "default_currency"),
 	}
 	row_incom = {}
 	row_expense = {}
-
+	# total_income=0
+	# total_expense=0
+	total_income_increase = 0
+	total_expense_increase = 0
+	# print(f"----------------{expense}" )
 	has_value = False
 	for period in period_list:
 		key = period if consolidated else period.key
+		# total_income = flt(income[-2][key], 3) if income else 0
+		# total_expense = flt(expense[-2][key], 3) if expense else 0
 		total_income = flt(income[-2][key], 3) if income else 0
 		total_expense = flt(expense[-2][key], 3) if expense else 0
+		# total_income_increase += flt(income[-2][key], 3) if income else 0
+		# total_expense_increase +=  flt(expense[-2][key], 3) if expense else 0
 		net_profit_loss[key] = total_income - total_expense
 
 
@@ -136,6 +136,7 @@ def new_get_net_profit_loss(income, expense, period_list, company, currency=None
 
 		total += flt(net_profit_loss[key])
 		net_profit_loss["total"] = total
+
 	if has_value:
 		return net_profit_loss
 
@@ -183,20 +184,22 @@ def get_report_summary(
 
 def get_net_profit_loss(income, expense, period_list, company, currency=None, consolidated=False):
 	total = 0
+	incom_total = 0
+	exp_total = 0
 	net_profit_loss = {
 		"account_name": "'" + _("Profit for the year") + "'",
 		"account": "'" + _("Profit for the year") + "'",
 		"warn_if_negative": True,
 		"currency": currency or frappe.get_cached_value("Company", company, "default_currency"),
 	}
-
+	# print(f'///////// {expense}')
 	has_value = False
-	# print(f"all Expencies ==========   {expense}")
 	for period in period_list:
 		key = period if consolidated else period.key
-		total_income = flt(income[-2][key], 3) if income else 0
-		total_expense = flt(expense[-1][key], 3) if expense else 0
-		# print(f"Exception ------- {flt(expense[-1][key], 3) }")
+		total_income = flt(income[-2].get(key), 3) if income else 0
+		# incom_total += flt(income[-2].get(key), 3) if income else 0
+		total_expense = flt(expense[-1].get(key), 3) if expense else 0
+		# exp_total += flt(expense[-1].get(key), 3) if expense else 0
 		net_profit_loss[key] = total_income - total_expense
 
 		if net_profit_loss[key]:
@@ -204,39 +207,11 @@ def get_net_profit_loss(income, expense, period_list, company, currency=None, co
 
 		total += flt(net_profit_loss[key])
 		net_profit_loss["total"] = total
+	# frappe.errprint(f"all total ==========   {total}")
+	# frappe.errprint(f" incom_total ==========   {incom_total}")
+	# frappe.errprint(f" exp_total ==========   {exp_total}")
+	
 
 	if has_value:
 		return net_profit_loss
 
-
-def get_chart_data(filters, columns, income, expense, net_profit_loss):
-	labels = [d.get("label") for d in columns[2:]]
-
-	income_data, expense_data, net_profit = [], [], []
-
-	for p in columns[2:]:
-		if income:
-			income_data.append(income[-2].get(p.get("fieldname")))
-		if expense:
-			expense_data.append(expense[-2].get(p.get("fieldname")))
-		if net_profit_loss:
-			net_profit.append(net_profit_loss.get(p.get("fieldname")))
-
-	datasets = []
-	if income_data:
-		datasets.append({"name": _("Income"), "values": income_data})
-	if expense_data:
-		datasets.append({"name": _("Expense"), "values": expense_data})
-	if net_profit:
-		datasets.append({"name": _("Net Profit/Loss"), "values": net_profit})
-
-	chart = {"data": {"labels": labels, "datasets": datasets}}
-
-	if not filters.accumulated_values:
-		chart["type"] = "bar"
-	else:
-		chart["type"] = "line"
-
-	chart["fieldtype"] = "Currency"
-
-	return chart

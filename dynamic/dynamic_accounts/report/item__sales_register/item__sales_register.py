@@ -66,6 +66,7 @@ def _execute(
 			"item_code": d.item_code,
 			"item_name": item_record.item_name if item_record else d.item_name,
 			"sales_person":d.sales_person,
+			"discount_amount" : d.discount_amount,
 			"item_group": item_record.item_group if item_record else d.item_group,
 			"description": d.description,
 			"invoice": d.parent,
@@ -354,6 +355,12 @@ def get_columns(additional_table_columns, filters):
 			"fieldtype": "Flaot",
 			"width": 100,
 		},
+	    {
+			"label": _("Discount Amount"),
+			"fieldname": "discount_amount",
+			"fieldtype": "Currency",
+			"width": 120,
+		},
 		
 		{
 			"label": _("Amount"),
@@ -447,7 +454,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabSales Invoice Item`.sales_order, `tabSales Invoice Item`.delivery_note,
 			`tabSales Invoice Item`.income_account, `tabSales Invoice Item`.cost_center,
 			`tabSales Invoice Item`.stock_qty, `tabSales Invoice Item`.stock_uom,
-			`tabSales Invoice Item`.stock_uom_rate,
+			`tabSales Invoice Item`.stock_uom_rate, `tabSales Invoice Item`.discount_amount,
 			`tabSales Invoice Item`.base_net_rate, `tabSales Invoice Item`.base_net_amount,
 			`tabSales Invoice`.customer_name, `tabSales Invoice`.customer_group, `tabSales Invoice Item`.so_detail,
 			`tabSales Invoice Item`.conversion_factor,

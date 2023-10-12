@@ -89,6 +89,14 @@ data = {
                 "insert_after": "get_advancess",
                 "allow_on_submit":1
             },
+            {
+                "label": _("Outstanding Amount"),
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "advance_paid",
+                "allow_on_submit":1,
+                "read_only" : 1
+            },
              
          ],
          'Quotation':[
@@ -112,7 +120,16 @@ data = {
                 "options":"Sales Invoice Advance",
                 "insert_after": "get_advancess",
                 "allow_on_submit":1
-            },   
+            },  
+            {
+                "label": _("Outstanding Amount"),
+                "fieldname": "outstanding_amount",
+                "fieldtype": "Float",
+                "insert_after": "in_words",
+                "allow_on_submit":1,
+                "read_only" : 1
+            },  
+            
          ],
         
     },
@@ -125,9 +142,33 @@ data = {
             "property_type": "Text",
             "value": "Month(s) after the end of the invoice month",
         },
+        # {
+        #     "doctype": "Quotation",
+        #     "doctype_or_field": "DocField",
+        #     "fieldname": "selling_price_list",
+        #     "property": "reqd",
+        #     "property_type": "Check",
+        #     "value": "1",
+        # },
+        # {
+        #     "doctype": "Quotation",
+        #     "doctype_or_field": "DocField",
+        #     "fieldname": "selling_price_list",
+        #     "property": "hidden",
+        #     "property_type": "Check",
+        #     "value": "1",
+        # },
+        {
+            "doctype": "Quotation",
+            "doctype_or_field": "DocField",
+            "fieldname": "ignore_pricing_rule",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": "1",
+        },
     ],
   
-    # 'on_setup': 'dynamic.teba.setup.setup_teba'
+    # 'on_setup': 'dynamic.teba.setup.setup_teba'ignore_pricing_rule
 }
 
 

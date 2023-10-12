@@ -67,6 +67,9 @@ def get_payment_entry(
 	paid_amount, received_amount = set_paid_amount_and_received_amount(
 		dt, party_account_currency, bank, outstanding_amount, payment_type, bank_amount, doc
 	)
+	# print(f'\n\n-->bank or _cach-->{bank} \n\n')
+	# print(f'\n\n--outstanding_amount-->{outstanding_amount} \n\n')
+	# print(f'\n\n-->paid_amount-->{paid_amount} \n\n')
 
 	reference_date = getdate(reference_date)
 	paid_amount, received_amount, discount_amount, valid_discounts = apply_early_payment_discount(
@@ -225,7 +228,8 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 			paid_amount=0
 			for row in doc.payment_schedule:
 				paid_amount += row.paid_amount
-		outstanding_amount = flt(doc.grand_total) - flt(paid_amount)
+		# outstanding_amount = (flt(doc.grand_total) - flt(paid_amount))
+		outstanding_amount = flt(doc.grand_total) - (sum(row.advance_amount for row in doc.advancess)) or 0
 	else:
 		if party_account_currency == doc.company_currency:
 			grand_total = flt(doc.get("base_rounded_total") or doc.base_grand_total)
@@ -239,6 +243,7 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 def so_on_submit(self,*args , **kwargs):
 	if 'Real State' in DOMAINS:
 		update_against_document_in_jv(self)
+		# update_advance_payment(self)
 		
 
 
@@ -250,7 +255,7 @@ def update_against_document_in_jv(self):
 				2. split into multiple rows if partially adjusted, assign against voucher
 				3. submit advance voucher
 		"""
-		from erpnext.accounts.party import get_party_account
+		from erpnext.accounts.party import get_party_account 
 		debit_to = get_party_account('Customer',self.customer,self.company)
 		total_advance = sum(row.advance_amount for row in self.advancess)
 		outstanding_amount =  self.base_grand_total - total_advance
@@ -310,6 +315,17 @@ def update_against_document_in_jv(self):
 			from erpnext.accounts.utils import reconcile_against_document
 
 			reconcile_against_document(lst)
+
+
+def update_advance_payment(self):
+	total_paid_advance = sum(row.advance_amount for row in self.advancess)
+	for row in self.payment_schedule:
+		if total_paid_advance >= row.outstanding:
+			row.paid_amount +=  row.outstanding
+			total_paid_advance -=   row.outstanding
+		elif total_paid_advance < row.outstanding:
+			row.paid_amount +=  total_paid_advance
+			total_paid_advance = 0
 
 
 def get_reference_as_per_payment_terms_for_real_state(
