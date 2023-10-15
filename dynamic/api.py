@@ -405,7 +405,7 @@ def send_mail_by_role(role,msg,subject):
             "message":msg,
             "now": True
         }
-        print(" emails =====> ", email_args )
+        # print(" emails =====> ", email_args )
 
         if not frappe.flags.in_test:
             frappe.enqueue(method=frappe.sendmail, queue="short", timeout=500, is_async=True, **email_args)
@@ -417,7 +417,7 @@ def send_mail_by_role(role,msg,subject):
 
 
 
-
+# from erpnext.controllers.accounts_controller import set_total_advance_paid
 
 @frappe.whitelist()
 def check_source_item(self,*args , **kwargs):
@@ -441,7 +441,12 @@ def check_source_item(self,*args , **kwargs):
             if  len(self.get('advancess')):
                 total_advance_paid = sum(adv.advance_amount for adv in self.get('advancess'))
                 self.db_set("outstanding_amount",self.grand_total - total_advance_paid)
-
+    
+def set_advance_paid(self):
+    self.set_total_advance_paid()
+    if  len(self.get('advances')):
+                total_advance_paid = sum(adv.advance_amount for adv in self.get('advances'))
+                self.db_set("advance_paid", self.get('advance_paid',0) + total_advance_paid)
     
 def update_against_document_in_jv(self):
 		party_type = "Customer"
@@ -817,7 +822,6 @@ def change_row_after_submit(doc , *args ,**kwargs):
                     sql_reserv_list.remove(row.reservation)
             # if(not row.reservation):
             #     #**check if have ware house or purchase invoice
-            #     check_source_item(doc)
             #     #**create reservation
             #     add_row_for_reservation(doc)
         else:
@@ -1439,6 +1443,7 @@ def before_submit_so(doc,*args,**kwargs):
         check_crean_amount_after_mapped_doc(doc,*args,**kwargs)
     if "Terra"  in DOMAINS or ("Reservation" in DOMAINS and doc.reservation_check):
         create_reservation_validate(doc,*args , **kwargs)
+        # set_advance_paid(doc)
     if  "Real State" in DOMAINS:
         set_advences_to_schedules(doc,*args,**kwargs)
 

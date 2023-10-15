@@ -404,3 +404,20 @@ jenv = {
     ],
     "filters": []
 }
+
+
+
+fixtures = [
+    {
+        "dt": ("Custom Field"),
+        "filters": [
+            [
+                "name",
+                "in",
+                (
+                    "Journal Entry Account-party_name",
+                )
+            ]
+        ]
+    }
+]
