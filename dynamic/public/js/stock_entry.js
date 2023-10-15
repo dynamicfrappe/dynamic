@@ -26,7 +26,6 @@ frappe.ui.form.on("Stock Entry", {
   
     },
     terra_stock_etnrty(frm){
-      console.log("tera")
       if (frm.doc.add_to_transit === 0){
       
           frm.remove_custom_button(__('End Transit')) 

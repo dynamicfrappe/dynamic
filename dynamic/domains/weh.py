@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-
+from frappe import _
 
 data = {
 
@@ -74,6 +74,22 @@ data = {
             "fieldtype":"Float",
             "insert_after":"actual_qty",
             "read_only" :1
+            },
+           
+       ],
+       "Warehouse" :[
+            {
+            "label":_("User Allowed"),
+            "fieldname":"user_allowed",
+            "fieldtype":"Section Break",
+            "insert_after":"old_parent",
+            },
+            {
+            "label":_("Users"),
+            "fieldname":"users",
+            "fieldtype":"Table",
+            "insert_after":"user_allowed",
+            "options":"Warehouse User",
             },
            
        ],
