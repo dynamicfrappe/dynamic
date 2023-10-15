@@ -132,6 +132,7 @@ data = {
             
          ],
         
+        
     },
       "properties": [
          {
@@ -167,7 +168,7 @@ data = {
             "value": "1",
         },
     ],
-  
+    #
     # 'on_setup': 'dynamic.teba.setup.setup_teba'ignore_pricing_rule
 }
 
