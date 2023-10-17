@@ -70,6 +70,7 @@ frappe.ui.form.on("Stock Entry", {
     },
     stock_entry_type : function (frm){
       frm.events.filter_stock_entry_transfer(frm)
+      frm.events.set_property_domain(frm)
     },
     filter_stock_entry_transfer(frm){
       frappe.call({
