@@ -418,6 +418,7 @@ fixtures = [
                 "in",
                 (
                     "Journal Entry Account-party_name",
+                    "Cheque-party_name",
                 )
             ]
         ]

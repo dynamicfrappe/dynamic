@@ -106,6 +106,7 @@ frappe.ui.form.on("Cheque", {
   party: function (frm) {
     frm.events.clear_references(frm);
     frm.events.set_party_account(frm);
+    frm.events.get_party_details(frm)
   },
   set_party_account(frm) {
     frm.events.get_party_account(frm, function (r) {
@@ -117,6 +118,39 @@ frappe.ui.form.on("Cheque", {
         frm.set_value(fieldname, r.message);
       }
     });
+  },
+  get_party_details(frm){
+    if(frm.doc.party){
+      let doctype_name=''
+      let field_name=''
+      if (frappe.meta.has_field('Cheque','party_name')){
+        if (frm.doc.party_type == 'Customer'){
+          doctype_name = 'Customer'
+          field_name = 'customer_name'
+        }
+        else if (frm.doc.party_type == 'Supplier'){
+          doctype_name = 'Supplier'
+          field_name = 'supplier_name'
+        }
+        if(doctype_name && field_name){
+          frappe.call({
+            'method':"frappe.client.get_value",
+            'args': {
+              'doctype': doctype_name,
+              'filters': {
+                'name': frm.doc.party
+              },
+               'fieldname':field_name,
+            },
+            'callback': function(res){
+  
+              frm.doc.party_name =  res.message[field_name]
+              frm.refresh_fields('accounts')
+            }
+          })
+        }
+      }
+    }
   },
   party_type(frm){
     frm.set_value("party", "");
