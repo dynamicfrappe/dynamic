@@ -1,6 +1,7 @@
 
 frappe.ui.form.on("Stock Entry", {
 
+
     // setup :function(frm){
 
     //   frappe.call({
@@ -65,6 +66,7 @@ frappe.ui.form.on("Stock Entry", {
     refresh:function(frm){
       frm.events.trea_setup(frm)
       frm.events.set_property(frm)
+      frm.events.set_property_domain(frm)
     },
     stock_entry_type : function (frm){
       frm.events.filter_stock_entry_transfer(frm)
@@ -97,6 +99,24 @@ frappe.ui.form.on("Stock Entry", {
         frm.set_df_property("from_warehouse", "read_only", 1);
         frm.set_df_property("to_warehouse", "read_only", 1);
       }
+    },
+
+    set_property_domain:function(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length) {
+                if (r.message.includes("Stock Transfer")) {
+                  if (frm.doc.stock_entry_type == "Material Transfer"){
+                    frm.set_df_property("add_to_transit", "read_only", 1)
+                    frm.set_value('add_to_transit',1)
+                    frm.refresh_field("add_to_transit")
+                  }
+                }
+            }
+        }
+    })
+      
     },
     
     comparison : function (frm) {

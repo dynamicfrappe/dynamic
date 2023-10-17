@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{PC}-{customer}-{#####}",
+ "creation": "2023-10-16 09:16:58.722472",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sales_order",
+  "customer",
+  "column_break_zr4pj",
+  "status",
+  "cut_of_date",
+  "loading_date",
+  "sec_items",
+  "items",
+  "section_break_udnsr",
+  "type_of_loading_containers",
+  "with_a_cover",
+  "column_break_t2hef",
+  "data_loger",
+  "loading_place",
+  "section_break_oaqua",
+  "sales_invoice",
+  "reservation_number",
+  "comment"
+ ],
+ "fields": [
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Agree\nPending\nRegected"
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order"
+  },
+  {
+   "fetch_from": "sales_order.customer",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "description": "Items",
+   "fieldname": "sec_items",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Sales Order Item"
+  },
+  {
+   "fieldname": "type_of_loading_containers",
+   "fieldtype": "Select",
+   "label": "Type of loading containers",
+   "options": "Test\nTest2"
+  },
+  {
+   "fieldname": "section_break_udnsr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "with_a_cover",
+   "fieldtype": "Select",
+   "label": "With A Cover",
+   "options": "Yes\nNo"
+  },
+  {
+   "fieldname": "data_loger",
+   "fieldtype": "Select",
+   "label": "Data Loger",
+   "options": "Yes\nNo"
+  },
+  {
+   "fieldname": "cut_of_date",
+   "fieldtype": "Date",
+   "label": "Cut of Date"
+  },
+  {
+   "fieldname": "loading_date",
+   "fieldtype": "Date",
+   "label": "Loading Date "
+  },
+  {
+   "fieldname": "column_break_t2hef",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "loading_place",
+   "fieldtype": "Data",
+   "label": "Loading Place "
+  },
+  {
+   "fieldname": "column_break_zr4pj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_oaqua",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "label": "Sales Invoice",
+   "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "reservation_number",
+   "fieldtype": "Data",
+   "label": "Reservation Number"
+  },
+  {
+   "fieldname": "comment",
+   "fieldtype": "Text",
+   "label": "Comment"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-16 10:05:10.757992",
+ "modified_by": "Administrator",
+ "module": "Nilex",
+ "name": "Preparing the containers",
+ "name_case": "UPPER CASE",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "customer,sales_order",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "customer"
+}
