@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-16 11:56:53.678611",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "confirmation_steps",
+  "attach_photo"
+ ],
+ "fields": [
+  {
+   "fieldname": "confirmation_steps",
+   "fieldtype": "Select",
+   "label": "Confirmation Steps",
+   "options": "Creation\nFirst Confirm\nLast Confirm"
+  },
+  {
+   "fieldname": "attach_photo",
+   "fieldtype": "Attach",
+   "label": "Attach Photo"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-16 11:56:53.678611",
+ "modified_by": "Administrator",
+ "module": "Nilex",
+ "name": "Confirmation Print",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

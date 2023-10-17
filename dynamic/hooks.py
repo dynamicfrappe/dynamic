@@ -378,7 +378,9 @@ domains = {
     "ARAM":"dynamic.domains.aram",
     "Branch":"dynamic.domains.branch",
     "Cost Center":"dynamic.domains.cost_center",
-    "Lormed":"dynamic.domains.lormed"
+    "Lormed":"dynamic.domains.lormed",
+    "Nilex":"dynamic.domains.nilex",
+    "Stock Transfer":"dynamic.domains.stock_transfer",
 }
 
 # domain Conatin
@@ -416,6 +418,7 @@ fixtures = [
                 "in",
                 (
                     "Journal Entry Account-party_name",
+                    "Cheque-party_name",
                 )
             ]
         ]

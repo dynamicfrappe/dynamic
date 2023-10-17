@@ -1,0 +1,137 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-16 15:01:00.370883",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "container_status",
+  "container_number",
+  "sales_invoice",
+  "customer",
+  "shipping_company_name",
+  "column_break_qr8cp",
+  "required_documents",
+  "documents_status",
+  "shipping_line",
+  "section_break_khteq",
+  "pl_number",
+  "atd",
+  "ata",
+  "containers_country",
+  "telex",
+  "container_position",
+  "container_link"
+ ],
+ "fields": [
+  {
+   "fieldname": "container_status",
+   "fieldtype": "Data",
+   "label": "Container Status"
+  },
+  {
+   "fieldname": "container_number",
+   "fieldtype": "Data",
+   "label": "Container Number "
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "label": "Sales Invoice",
+   "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "shipping_company_name",
+   "fieldtype": "Data",
+   "label": "Shipping Company Name"
+  },
+  {
+   "fieldname": "column_break_qr8cp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "required_documents",
+   "fieldtype": "Data",
+   "label": "Required Documents"
+  },
+  {
+   "fieldname": "documents_status",
+   "fieldtype": "Data",
+   "label": "Documents Status"
+  },
+  {
+   "fieldname": "shipping_line",
+   "fieldtype": "Data",
+   "label": "Shipping line"
+  },
+  {
+   "fieldname": "section_break_khteq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "pl_number",
+   "fieldtype": "Data",
+   "label": "pl number"
+  },
+  {
+   "fieldname": "atd",
+   "fieldtype": "Date",
+   "label": "ATD"
+  },
+  {
+   "fieldname": "ata",
+   "fieldtype": "Date",
+   "label": "ATA"
+  },
+  {
+   "fieldname": "containers_country",
+   "fieldtype": "Data",
+   "label": "Containers Country"
+  },
+  {
+   "fieldname": "telex",
+   "fieldtype": "Data",
+   "label": "Telex"
+  },
+  {
+   "fieldname": "container_position",
+   "fieldtype": "Data",
+   "label": "Container Position"
+  },
+  {
+   "fieldname": "container_link",
+   "fieldtype": "Data",
+   "label": "Container Link"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-16 15:01:00.370883",
+ "modified_by": "Administrator",
+ "module": "Nilex",
+ "name": "Container Tracking",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

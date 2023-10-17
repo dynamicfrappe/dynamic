@@ -70,24 +70,37 @@ frappe.ui.form.on("Journal Entry Account", {
 })
 
 
-
-// frappe.form.link_formatters['Customer'] = function(value, doc) {
-//   frappe.call({
-//     'method':"frappe.client.get_value",
-//     'args': {
-//       'doctype': 'Customer',
-//       'filters': {
-//         'name': value
+// frappe.ui.form.on("Journal Entry", {
+//    async get_custom_formate(frm,value, doc){
+//     let formateed = ''
+//     frappe.call({
+//       'method':"frappe.client.get_value",
+//       'args': {
+//         'doctype': 'Customer',
+//         'filters': {
+//           'name': value
+//         },
+//          'fieldname':'customer_name'
 //       },
-//        'fieldname':'customer_name'
-//     },
-//     'callback': function(res){
-//         console.log( res.message.customer_name)
+//       // async: true,
+//       'callback': function(res){
+//           console.log("callbakc", value + ":" +  res.message.customer_name)
+//           return formateed = value + ":" +  res.message.customer_name
+          
+//       }
+//     })
+//     // console.log(`formateed-------->${formateed}`)
+//     return 'xxxxxxxxxxxx'
+//   }
+// })
 
-//     }
-//   })
-	
-// }
-
+// frappe.form.link_formatters['Customer'] = async function(value, doc) {
+//   // return 'xxx:7777'
+//   await cur_frm.events.get_custom_formate(cur_frm,value, doc)
+// }.then(function(result) {
+//   // here you can use the result of promiseB
+//   console.log(`result===>${result}`)
+// });
+ 
 
 
