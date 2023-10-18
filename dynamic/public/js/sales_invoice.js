@@ -217,3 +217,57 @@ frappe.ui.form.on("Sales Invoice Item", {
     frm.refresh_fields('items')
   }
 })
+
+
+
+const extend_sales_invoice = erpnext.accounts.SalesInvoiceController.extend({
+  refresh: function(doc, dt, dn) {
+		const me = this;
+		this._super(doc,dt,dn);
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          // console.log('domains ',r.message)
+          if(r.message.includes("Future")){
+            // sales invoice
+            if (doc.docstatus == 1 && doc.outstanding_amount!=0
+              && !(cint(doc.is_return) && doc.return_against)) {
+                cur_frm.cscript['make_payment_entry'] = create_payment_sales_person //new
+                // cur_frm.page.remove_inner_button('Payment', 'Create')
+              
+            }
+             
+          }
+        }
+      }
+    })
+
+    
+  },
+  
+})
+
+$.extend(
+	cur_frm.cscript,
+	new extend_sales_invoice({frm: cur_frm}),
+);
+
+
+var create_payment_sales_person = function() {
+  return frappe.call({
+    method: "dynamic.qaswaa.utils.qaswaa_api.get_payment_entry",
+    args: {
+      'dt': cur_frm.doc.doctype,
+      'dn': cur_frm.doc.name
+    },
+    callback: function(r) {
+      var doc = frappe.model.sync(r.message);
+      frappe.set_route('Form', doc[0].doctype, doc[0].name);
+    }
+  });
+  // frappe.model.open_mapped_doc({
+  //   method: "dynamic.qaswaa.utils.qaswaa_api.get_payment_entry",
+  //   frm: cur_frm
+  // })
+}

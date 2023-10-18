@@ -919,7 +919,7 @@ var create_payment_for_real_state = function(){
       method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
     }
   }
-  console.log(method)
+  // console.log(method)
   return method
 }
 
