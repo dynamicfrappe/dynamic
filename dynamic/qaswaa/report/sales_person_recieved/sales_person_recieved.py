@@ -41,18 +41,18 @@ class sales_person_recieved(object):
 		if self.filters.get("to_date"):
 			conditions += " and `tabPayment Entry`.posting_date <= '%s'"%self.filters.get("to_date")
 		sql_query_new = f"""
-					select `tabPayment Entry`.posting_date , `tabPayment Entry Reference`.reference_name  as sales_invoice 
+			select `tabPayment Entry`.posting_date , `tabPayment Entry Reference`.reference_name  as sales_invoice 
 			,`tabPayment Entry`.sales_person
-			,sum(`tabPayment Entry`.paid_amount) as person_total_recieved
+			,sum(`tabPayment Entry Reference`.allocated_amount) as person_total_recieved
 			,`tabPayment Entry Reference`.total_amount 
 			FROM `tabPayment Entry`  
 			inner join `tabPayment Entry Reference`
 			ON `tabPayment Entry Reference`.parent=`tabPayment Entry`.name 
 			where `tabPayment Entry Reference`.reference_doctype ='Sales Invoice'
 			AND (`tabPayment Entry`.sales_person is not null and `tabPayment Entry`.sales_person != '')
+			AND `tabPayment Entry`.docstatus=1
 			AND {conditions}
 			GROUP BY `tabPayment Entry Reference`.reference_name, `tabPayment Entry`.sales_person
-					
 		""".format(conditions=conditions)
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 		return sql_data
