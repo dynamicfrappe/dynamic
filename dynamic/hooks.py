@@ -381,6 +381,7 @@ domains = {
     "Lormed":"dynamic.domains.lormed",
     "Nilex":"dynamic.domains.nilex",
     "Stock Transfer":"dynamic.domains.stock_transfer",
+    "Qaswaa":"dynamic.domains.qaswaa",
 }
 
 # domain Conatin

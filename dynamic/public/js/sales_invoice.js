@@ -229,7 +229,7 @@ const extend_sales_invoice = erpnext.accounts.SalesInvoiceController.extend({
       callback: function (r) {
         if (r.message && r.message.length) {
           // console.log('domains ',r.message)
-          if(r.message.includes("Future")){
+          if(r.message.includes("Qaswaa")){
             // sales invoice
             if (doc.docstatus == 1 && doc.outstanding_amount!=0
               && !(cint(doc.is_return) && doc.return_against)) {
