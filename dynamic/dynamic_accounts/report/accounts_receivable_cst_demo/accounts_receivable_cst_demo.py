@@ -641,7 +641,7 @@ class ReceivablePayableReport(object):
 			row.range1 = row.range2 = row.range3 = row.range4 = row.range5 = 0.0
 
 		row.total_due = row.range1 + row.range2 + row.range3 + row.range4 + row.range5
-
+		#!edit here
 	def get_ageing_data(self, entry_date, row):
 		# [0-30, 30-60, 60-90, 90-120, 120-above]
 		row.range1 = row.range2 = row.range3 = row.range4 = row.range5 = 0.0
