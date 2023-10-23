@@ -9,6 +9,10 @@ a {
     color: #666;
 	font-weight: 600;
 }
+span.sidebar-item-label{
+    font-size: 17px;
+    font-weight: 600;
+}
 .small, small {
     font-size: 95%;
 }
