@@ -91,7 +91,14 @@ data = {
         
     },
       "properties": [
-
+        {
+        "doctype": "Item Barcode",
+        "doctype_or_field": "DocField",
+        "fieldname": "barcode",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "0"
+        },
     ],
   
     # 'on_setup': 'dynamic.teba.setup.setup_teba'

@@ -199,38 +199,7 @@ frappe.ui.form.on("Stock Entry", {
       }
     },
 
-    comparison_item:function(frm){
-      if(frm.doc.comparison_item){
-        frappe.call({
-          "method" : "contracting.contracting.doctype.stock_functions.get_comparision_items" ,
-          args:{
-            "comparison" : frm.doc.comparison,
-            "item_code" : frm.doc.comparison_item,
-          },
-          callback :function(r){
-            if (r.message){
-              frm.clear_table("items")
-              $.each(r.message || [], function(i, element) {
-                let row = frm.add_child('items', {
-                  item_code: element.item_code,
-                  item_name: element.item_name,
-                  qty: element.qty,
-                  uom: element.uom,
-                  stock_uom: element.uom,
-                  transfer_qty: element.qty * element.conversion_factor,
-                  conversion_factor: element.conversion_factor,
-                  
-              });
-              })
-              frm.refresh_field("items")
-            }
-          } 
-       
-        })
-      }
-      
-
-    },
+    
     cost_center:function(frm){
       if(frm.doc.cost_center){
         frappe.call({

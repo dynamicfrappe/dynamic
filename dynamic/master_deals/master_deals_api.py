@@ -181,13 +181,10 @@ def deals_after_insert(doc,*args,**kwargs):
 
 @frappe.whitelist()
 def QRcode_Customer_data(doc):
-	return 'INVK-2023-07-003'
-	return frappe.set_route("Form", 'Sales Invoice',  )
-	item_code = doc.name
-	item_code_55 = escape_html_demo(doc.name)
-	# item_url = urllib.parse.quote(item_code)
-	server_url = get_host_name() 
-	return f'http://{server_url}/item_data?item_code={item_code_55}'
+	server_url = get_host_name() #'192.168.1.11' #
+	customer_name=doc.name
+	return f'http://{server_url}/app/customer/{customer_name}'
+	
 	
 def escape_html_demo(text):
 	if not isinstance(text, str):
@@ -207,12 +204,12 @@ def escape_html_demo(text):
 	return "".join(html_escape_table.get(c, c) for c in text)
 
 
-@frappe.whitelist()
-def create_cst(cst_name):
-	new_doc = frappe.new_doc('Sales Invoice')
-	new_doc.customer = cst_name
-	new_doc.run_method("set_missing_values")
-	print(f'\n\n=new_doc=>{new_doc.__dict__}')
-	print(f'\n\n=new_doc=>{new_doc.name}')
+# @frappe.whitelist()
+# def create_cst(cst_name):
+# 	new_doc = frappe.new_doc('Sales Invoice')
+# 	new_doc.customer = cst_name
+# 	new_doc.run_method("set_missing_values")
+# 	print(f'\n\n=new_doc=>{new_doc.__dict__}')
+# 	print(f'\n\n=new_doc=>{new_doc.name}')
 	
-	return new_doc.name
+# 	return new_doc.name
