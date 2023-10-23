@@ -8,7 +8,7 @@ from erpnext import get_default_company
 from frappe.desk.reportview import get_filters_cond, get_match_cond
 
 from erpnext.controllers.queries import get_fields
-
+from frappe.utils import get_host_name, escape_html,get_url
 DOMAINS = frappe.get_active_domains()
 
 
@@ -177,3 +177,42 @@ def deals_after_insert(doc,*args,**kwargs):
 			fields=['name'],)
 			if len(item_attach) == 1:
 				frappe.db.set_value('Item',doc.attached_to_name,'image',doc.file_url)
+
+
+@frappe.whitelist()
+def QRcode_Customer_data(doc):
+	return 'INVK-2023-07-003'
+	return frappe.set_route("Form", 'Sales Invoice',  )
+	item_code = doc.name
+	item_code_55 = escape_html_demo(doc.name)
+	# item_url = urllib.parse.quote(item_code)
+	server_url = get_host_name() 
+	return f'http://{server_url}/item_data?item_code={item_code_55}'
+	
+def escape_html_demo(text):
+	if not isinstance(text, str):
+		return text
+
+	html_escape_table = {
+		"&": "&amp;",
+		'"': "&quot;",
+		"'": "&apos;",
+		">": "&gt;",
+		"<": "&lt;",
+        "+": "&amp;",
+        # " ": "%20",
+        " ": ";",
+	}
+
+	return "".join(html_escape_table.get(c, c) for c in text)
+
+
+@frappe.whitelist()
+def create_cst(cst_name):
+	new_doc = frappe.new_doc('Sales Invoice')
+	new_doc.customer = cst_name
+	new_doc.run_method("set_missing_values")
+	print(f'\n\n=new_doc=>{new_doc.__dict__}')
+	print(f'\n\n=new_doc=>{new_doc.name}')
+	
+	return new_doc.name
