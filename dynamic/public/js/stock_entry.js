@@ -2,7 +2,8 @@
 frappe.ui.form.on("Stock Entry", {
 
 
-    // setup :function(frm){
+    setup :function(frm){
+      frm.events.set_field_property(frm)
 
     //   frappe.call({
     //       "method" : "dynamic.contracting.doctype.stock_functions.fetch_contracting_data" ,
@@ -14,7 +15,46 @@ frappe.ui.form.on("Stock Entry", {
     //       }
     //   })
        
-    // },
+    },
+    transit:function(frm){
+      if(frm.doc.stock_entry_type == 'Material Transfer'){
+        frappe.call({
+          method: "dynamic.api.get_active_domains",
+          callback: function (r) {
+              if (r.message && r.message.length) {
+                  if (r.message.includes("WEH")) {
+                    frm.set_df_property("add_to_transit", "read_only", 1)
+                    if(frm.doc.transit){
+                      frm.set_value("add_to_transit", 1)
+                    }
+                    else{
+                      frm.set_value("add_to_transit", 0)
+                    }
+                   
+                    
+                  }
+                  frm.refresh_field("add_to_transit")
+              }
+          }
+      })
+      }
+    },
+    set_field_property(frm){
+      if(frm.doc.stock_entry_type == 'Material Transfer'){
+        frappe.call({
+          method: "dynamic.api.get_active_domains",
+          callback: function (r) {
+              if (r.message && r.message.length) {
+                  if (r.message.includes("WEH")) {
+                    frm.set_df_property("add_to_transit", "reqd", 1)
+                    // frm.set_value('add_to_transit',1)
+                    frm.refresh_field("add_to_transit")
+                  }
+              }
+          }
+      })
+      }
+    },
     trea_setup(frm){
       frappe.call({
         method:"dynamic.api.validate_terra_domain",
@@ -67,10 +107,12 @@ frappe.ui.form.on("Stock Entry", {
       frm.events.trea_setup(frm)
       frm.events.set_property(frm)
       frm.events.set_property_domain(frm)
+      frm.events.set_field_property(frm)
     },
     stock_entry_type : function (frm){
       frm.events.filter_stock_entry_transfer(frm)
       frm.events.set_property_domain(frm)
+      frm.events.set_field_property(frm)
     },
     filter_stock_entry_transfer(frm){
       frappe.call({
@@ -109,9 +151,9 @@ frappe.ui.form.on("Stock Entry", {
             if (r.message && r.message.length) {
                 if (r.message.includes("Stock Transfer")) {
                   if (frm.doc.stock_entry_type == "Material Transfer"){
-                    frm.set_df_property("add_to_transit", "read_only", 1)
-                    frm.set_value('add_to_transit',1)
-                    frm.refresh_field("add_to_transit")
+                    // frm.set_df_property("add_to_transit", "read_only", 1)
+                    // frm.set_value('add_to_transit',1)
+                    // frm.refresh_field("add_to_transit")
                   }
                 }
             }
@@ -122,11 +164,10 @@ frappe.ui.form.on("Stock Entry", {
     
     comparison : function (frm) {
         if(frm.doc.against_comparison){
-
           frappe.call({
-            "method" : "dynamic.contracting.doctype.stock_functions.stock_entry_setup" ,
+            "method" : "contracting.contracting.doctype.stock_functions.stock_entry_setup" ,
             args:{
-              "comparison" : frm.doc.comparison
+              "comparison" : frm.doc.comparison,
             },
             callback :function(r){
               if (r.message){
@@ -135,7 +176,6 @@ frappe.ui.form.on("Stock Entry", {
                   return {
                     filters: [
                       ["item_code", "in", r.message],
-                     
                     ],
                   };
                 });
@@ -144,12 +184,10 @@ frappe.ui.form.on("Stock Entry", {
                   return {
                     filters: [
                       ["item_code", "in", r.message],
-                     
                     ],
                   };
                 });
                 frm.refresh_field("items")
-
               }
             } 
          
@@ -159,6 +197,39 @@ frappe.ui.form.on("Stock Entry", {
         
       
       }
+    },
+
+    comparison_item:function(frm){
+      if(frm.doc.comparison_item){
+        frappe.call({
+          "method" : "contracting.contracting.doctype.stock_functions.get_comparision_items" ,
+          args:{
+            "comparison" : frm.doc.comparison,
+            "item_code" : frm.doc.comparison_item,
+          },
+          callback :function(r){
+            if (r.message){
+              frm.clear_table("items")
+              $.each(r.message || [], function(i, element) {
+                let row = frm.add_child('items', {
+                  item_code: element.item_code,
+                  item_name: element.item_name,
+                  qty: element.qty,
+                  uom: element.uom,
+                  stock_uom: element.uom,
+                  transfer_qty: element.qty * element.conversion_factor,
+                  conversion_factor: element.conversion_factor,
+                  
+              });
+              })
+              frm.refresh_field("items")
+            }
+          } 
+       
+        })
+      }
+      
+
     },
     cost_center:function(frm){
       if(frm.doc.cost_center){
