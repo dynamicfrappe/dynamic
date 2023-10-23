@@ -9,6 +9,10 @@ a {
     color: #666;
 	font-weight: 600;
 }
+.control-label, .grid-heading-row {
+    font-size: 16px;
+    font-weight: 800;
+  }
 span.sidebar-item-label{
     font-size: 17px;
     font-weight: 600;
