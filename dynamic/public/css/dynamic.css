@@ -1,11 +1,13 @@
 /* Main */
+
 body {
-	font-size: 14px;
+	font-size: 16px;
 	background-color: #f3f6f9;
+    font-weight: 600
 }
 a {
     color: #666;
-	font-weight: 500;
+	font-weight: 600;
 }
 .small, small {
     font-size: 95%;
