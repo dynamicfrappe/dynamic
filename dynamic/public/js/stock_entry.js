@@ -16,29 +16,29 @@ frappe.ui.form.on("Stock Entry", {
     //   })
        
     },
-    transit:function(frm){
-      if(frm.doc.stock_entry_type == 'Material Transfer'){
-        frappe.call({
-          method: "dynamic.api.get_active_domains",
-          callback: function (r) {
-              if (r.message && r.message.length) {
-                  if (r.message.includes("WEH")) {
-                    frm.set_df_property("add_to_transit", "read_only", 1)
-                    if(frm.doc.transit){
-                      frm.set_value("add_to_transit", 1)
-                    }
-                    else{
-                      frm.set_value("add_to_transit", 0)
-                    }
+    // transit:function(frm){
+    //   if(frm.doc.stock_entry_type == 'Material Transfer'){
+    //     frappe.call({
+    //       method: "dynamic.api.get_active_domains",
+    //       callback: function (r) {
+    //           if (r.message && r.message.length) {
+    //               if (r.message.includes("WEH")) {
+    //                 frm.set_df_property("add_to_transit", "read_only", 1)
+    //                 if(frm.doc.transit){
+    //                   frm.set_value("add_to_transit", 1)
+    //                 }
+    //                 else{
+    //                   frm.set_value("add_to_transit", 0)
+    //                 }
                    
                     
-                  }
-                  frm.refresh_field("add_to_transit")
-              }
-          }
-      })
-      }
-    },
+    //               }
+    //               frm.refresh_field("add_to_transit")
+    //           }
+    //       }
+    //   })
+    //   }
+    // },
     set_field_property(frm){
       if(frm.doc.stock_entry_type == 'Material Transfer'){
         frappe.call({
@@ -106,12 +106,12 @@ frappe.ui.form.on("Stock Entry", {
     refresh:function(frm){
       frm.events.trea_setup(frm)
       frm.events.set_property(frm)
-      frm.events.set_property_domain(frm)
+      // frm.events.set_property_domain(frm)
       frm.events.set_field_property(frm)
     },
     stock_entry_type : function (frm){
       frm.events.filter_stock_entry_transfer(frm)
-      frm.events.set_property_domain(frm)
+      // frm.events.set_property_domain(frm)
       frm.events.set_field_property(frm)
     },
     filter_stock_entry_transfer(frm){
