@@ -147,13 +147,13 @@ def get_columns(filters):
 			"width": 100,
 			"convertible": "qty",
 		},
-		{
-			"label": _("Opening Value"),
-			"fieldname": "opening_val",
-			"fieldtype": "Currency",
-			"width": 110,
-			"options": "currency",
-		},
+		# {
+		# 	"label": _("Opening Value"),
+		# 	"fieldname": "opening_val",
+		# 	"fieldtype": "Currency",
+		# 	"width": 110,
+		# 	"options": "currency",
+		# },
 		{
 			"label": _("In Qty"),
 			"fieldname": "in_qty",

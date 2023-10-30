@@ -1,0 +1,242 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "load-quality-.####",
+ "creation": "2023-10-16 13:10:30.361434",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "loading_doc",
+  "customer",
+  "destination",
+  "column_break_s4qeh",
+  "loading_date",
+  "loading_place",
+  "section_break_r8cry",
+  "batch_no",
+  "loot_no",
+  "container_number",
+  "loading_time_beginning",
+  "column_break_f7dpa",
+  "loading_condition",
+  "with_a_cover",
+  "clean_condition",
+  "temperature_after_loading",
+  "loading_time_end",
+  "section_break_whuxq",
+  "items",
+  "section_break_f5t5u",
+  "production_date",
+  "expire_date",
+  "welding_of_containers",
+  "check_package_data",
+  "average_weight_of_packages",
+  "number_of_packages",
+  "column_break_gfxbu",
+  "verify_unit_data",
+  "average_unit_weight",
+  "number_of_units",
+  "metal_detection",
+  "lock_number",
+  "data_loger_number",
+  "quality_engineer"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "destination",
+   "fieldtype": "Data",
+   "label": "Destination"
+  },
+  {
+   "fieldname": "column_break_s4qeh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "loading_place",
+   "fieldtype": "Data",
+   "label": "Loading Place "
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_r8cry",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Data",
+   "label": "Batch No"
+  },
+  {
+   "fieldname": "loot_no",
+   "fieldtype": "Data",
+   "label": "Loot No"
+  },
+  {
+   "fieldname": "container_number",
+   "fieldtype": "Data",
+   "label": "Container Number"
+  },
+  {
+   "fieldname": "loading_condition",
+   "fieldtype": "Data",
+   "label": "Loading Condition"
+  },
+  {
+   "fieldname": "with_a_cover",
+   "fieldtype": "Select",
+   "label": "With a cover",
+   "options": "Yes\nNo"
+  },
+  {
+   "fieldname": "clean_condition",
+   "fieldtype": "Data",
+   "label": "Clean Condition"
+  },
+  {
+   "fieldname": "column_break_f7dpa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "temperature_after_loading",
+   "fieldtype": "Float",
+   "label": "Temperature After Loading"
+  },
+  {
+   "fieldname": "loading_time_beginning",
+   "fieldtype": "Date",
+   "label": "Loading Time Beginning"
+  },
+  {
+   "fieldname": "loading_time_end",
+   "fieldtype": "Date",
+   "label": "Loading Time End "
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_f5t5u",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "production_date",
+   "fieldtype": "Date",
+   "label": "Production Date"
+  },
+  {
+   "fieldname": "expire_date",
+   "fieldtype": "Date",
+   "label": "Expire Date "
+  },
+  {
+   "fieldname": "welding_of_containers",
+   "fieldtype": "Select",
+   "label": "Welding Of Containers",
+   "options": "Approved\nNot Approved"
+  },
+  {
+   "fieldname": "check_package_data",
+   "fieldtype": "Data",
+   "label": "Check Package Data"
+  },
+  {
+   "fieldname": "average_weight_of_packages",
+   "fieldtype": "Data",
+   "label": "Average Weight Of Packages"
+  },
+  {
+   "fieldname": "number_of_packages",
+   "fieldtype": "Float",
+   "label": "Number Of Packages"
+  },
+  {
+   "fieldname": "column_break_gfxbu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "verify_unit_data",
+   "fieldtype": "Data",
+   "label": "Verify Unit Data"
+  },
+  {
+   "fieldname": "average_unit_weight",
+   "fieldtype": "Data",
+   "label": "Average Unit Weight"
+  },
+  {
+   "fieldname": "number_of_units",
+   "fieldtype": "Float",
+   "label": "Number Of /units"
+  },
+  {
+   "fieldname": "metal_detection",
+   "fieldtype": "Data",
+   "label": "Metal detection"
+  },
+  {
+   "fieldname": "lock_number",
+   "fieldtype": "Data",
+   "label": "Lock Number"
+  },
+  {
+   "fieldname": "data_loger_number",
+   "fieldtype": "Data",
+   "label": "Data Loger Number "
+  },
+  {
+   "fieldname": "quality_engineer",
+   "fieldtype": "Data",
+   "label": "Quality Engineer"
+  },
+  {
+   "fieldname": "loading_doc",
+   "fieldtype": "Link",
+   "label": "Loading Doc",
+   "options": "Loading Doctype"
+  },
+  {
+   "fieldname": "loading_date",
+   "fieldtype": "Date",
+   "label": "Loading Date "
+  },
+  {
+   "description": "items",
+   "fieldname": "section_break_whuxq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Sales Order Item"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-17 08:28:39.267039",
+ "modified_by": "Administrator",
+ "module": "Nilex",
+ "name": "Loading Quality",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

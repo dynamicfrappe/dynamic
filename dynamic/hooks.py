@@ -378,7 +378,11 @@ domains = {
     "ARAM":"dynamic.domains.aram",
     "Branch":"dynamic.domains.branch",
     "Cost Center":"dynamic.domains.cost_center",
-    "Lormed":"dynamic.domains.lormed"
+    "Lormed":"dynamic.domains.lormed",
+    "Nilex":"dynamic.domains.nilex",
+    "Stock Transfer":"dynamic.domains.stock_transfer",
+    "Qaswaa":"dynamic.domains.qaswaa",
+    "Rehab" :"dynamic.domains.alrehab"
 }
 
 # domain Conatin
@@ -400,7 +404,26 @@ jenv = {
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
         "get_party_address:dynamic.api.get_party_address",#ifi
-        "get_customer_total_unpaid_amount:dynamic.api.get_customer_total_unpaid_amount"
+        "get_customer_total_unpaid_amount:dynamic.api.get_customer_total_unpaid_amount",
+        "QRcode_Customer_data:dynamic.master_deals.master_deals_api.QRcode_Customer_data",
     ],
     "filters": []
 }
+
+
+
+fixtures = [
+    {
+        "dt": ("Custom Field"),
+        "filters": [
+            [
+                "name",
+                "in",
+                (
+                    "Journal Entry Account-party_name",
+                    "Cheque-party_name",
+                )
+            ]
+        ]
+    }
+]

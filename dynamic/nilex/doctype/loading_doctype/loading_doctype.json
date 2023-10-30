@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "load-doc-.####",
+ "creation": "2023-10-16 12:08:17.279933",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reservation_is_approved",
+  "loading_date",
+  "destination",
+  "column_break_l6ngj",
+  "sales_order",
+  "customer",
+  "section_break_cjm1s",
+  "items",
+  "section_break_ihqla",
+  "type_of_loading_containers",
+  "with_a_cover",
+  "column_break_g4n72",
+  "loading_place",
+  "container_number",
+  "temperature_of_the_container"
+ ],
+ "fields": [
+  {
+   "fieldname": "loading_date",
+   "fieldtype": "Date",
+   "label": "Loading Date"
+  },
+  {
+   "fieldname": "destination",
+   "fieldtype": "Data",
+   "label": "Destination"
+  },
+  {
+   "fieldname": "column_break_l6ngj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "section_break_cjm1s",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Sales Order Item"
+  },
+  {
+   "fieldname": "section_break_ihqla",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "type_of_loading_containers",
+   "fieldtype": "Data",
+   "label": "Type of loading containers"
+  },
+  {
+   "fieldname": "with_a_cover",
+   "fieldtype": "Select",
+   "label": "With a cover",
+   "options": "Yes\nNo"
+  },
+  {
+   "fieldname": "loading_place",
+   "fieldtype": "Data",
+   "label": "Loading Place "
+  },
+  {
+   "fieldname": "container_number",
+   "fieldtype": "Data",
+   "label": "Container Number "
+  },
+  {
+   "fieldname": "column_break_g4n72",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "temperature_of_the_container",
+   "fieldtype": "Data",
+   "label": "Temperature Of The Container"
+  },
+  {
+   "fieldname": "reservation_is_approved",
+   "fieldtype": "Link",
+   "label": "Reservation Is Approved",
+   "options": "Reservation Is Approved"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-16 13:41:35.362809",
+ "modified_by": "Administrator",
+ "module": "Nilex",
+ "name": "Loading Doctype",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
