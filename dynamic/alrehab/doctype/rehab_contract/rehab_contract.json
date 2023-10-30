@@ -45,6 +45,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "unit.unit_area",
    "fieldname": "unit_area",
    "fieldtype": "Data",
    "label": "Unit Area "
@@ -54,6 +55,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "fetch_from": "installment_entry_type.item",
    "fieldname": "maintenance_deposit_item",
    "fieldtype": "Link",
    "label": "Maintenance Deposit Item",
@@ -93,6 +95,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "unit.commercial_year",
    "fieldname": "year",
    "fieldtype": "Link",
    "label": "Year",
@@ -118,7 +121,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-30 12:32:27.483867",
+ "modified": "2023-10-30 14:45:40.106911",
  "modified_by": "Administrator",
  "module": "alrehab",
  "name": "Rehab Contract",

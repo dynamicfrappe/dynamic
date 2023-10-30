@@ -609,6 +609,9 @@ def cancel_reservation(self,*args , **kwargs):
             try:
                 if(item.reservation):
                     frappe.db.set_value('Reservation',item.reservation,'status','Invalid')
+                    frappe.db.sql(f""" UPDATE `tabReservation Purchase Order` 
+                                SET reserved_qty = 0 WHERE parent = '{item.reservation}' """)
+                    frappe.db.commmit()
             except Exception as ex:
                 create_error(item.reservation,self.name,str(ex))
 

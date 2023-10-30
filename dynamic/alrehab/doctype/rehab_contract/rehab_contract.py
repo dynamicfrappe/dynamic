@@ -5,4 +5,5 @@
 from frappe.model.document import Document
 
 class RehabContract(Document):
-	pass
+	def validate(self):
+		pass
