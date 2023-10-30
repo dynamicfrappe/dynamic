@@ -1155,7 +1155,8 @@ def validate_stock_entry(doc,*args,**kwargs):
                     row.basic_amount = (item.amount)
     if  'WEH' in DOMAINS:
         if doc.stock_entry_type == 'Material Transfer' and not doc.add_to_transit:
-            frappe.throw(_("Please Set add to transit"))
+            if not doc.outgoing_stock_entry:
+                frappe.throw(_("Please Set add to transit"))
 
 
     # Add vana validate 
