@@ -135,8 +135,7 @@
    "fieldname": "total_value",
    "fieldtype": "Data",
    "label": "Total Value",
-   "read_only_depends_on": "eval:doc.is_clamed",
-   "reqd": 1
+   "read_only_depends_on": "eval:doc.is_clamed"
   },
   {
    "fieldname": "contract",
@@ -206,7 +205,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-31 09:51:59.578631",
+ "modified": "2023-10-31 12:44:01.046267",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "installment Entry",
