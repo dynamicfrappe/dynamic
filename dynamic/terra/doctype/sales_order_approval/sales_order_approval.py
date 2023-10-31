@@ -31,7 +31,7 @@ class SalesOrderApproval(Document):
 				sql = f"""
 				update `tabSales Order Item` set approved_qty = approved_qty + {item.qty},
 				remaining_qty = qty - approved_qty  where parent='{item.against_sales_order}' 
-				and item_code = '{item.item_code}' 
+				and item_code = '{item.item_code}' AND warehouse='{item.warehouse}'
 				"""
 				frappe.db.sql(sql)
 				frappe.db.commit()
@@ -43,8 +43,9 @@ class SalesOrderApproval(Document):
 	def validate_qty_against_sales_order(self):
 		for item in self.items :
 			qty =  0
-			item_sales_order_qty = frappe.db.sql(f""" select approved_qty , remaining_qty , qty from `tabSales Order Item`
-												 WHERE name = '{item.so_detail}' """ ,as_dict =1)
+			item_sales_order_qty = frappe.db.sql(f""" select approved_qty , remaining_qty 
+			, qty from `tabSales Order Item`
+			WHERE name = '{item.so_detail}' """ ,as_dict =1)
 			if not item_sales_order_qty or len(item_sales_order_qty) ==0 :
 				frappe.throw("Can Not Complete Proccess")
 			if item_sales_order_qty[0].get("approved_qty") :

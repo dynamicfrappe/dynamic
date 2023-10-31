@@ -192,10 +192,6 @@ frappe.ui.form.on("Stock Entry", {
             } 
          
           })
-       
-        
-        
-      
       }
     },
 
