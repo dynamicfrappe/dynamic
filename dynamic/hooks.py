@@ -153,6 +153,7 @@ doc_events = {
     },
    
     "Journal Entry": {
+        "before_submit":["dynamic.controllers.journal_entry.submit_journal_entry"],
         "on_submit": "dynamic.api.submit_journal_entry"
     },
     "Sales Order": {
