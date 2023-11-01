@@ -7,7 +7,13 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "name1"
+  "name1",
+  "auto_create",
+  "creation_frequency",
+  "has_equation",
+  "section_break_3",
+  "variables",
+  "equation"
  ],
  "fields": [
   {
@@ -17,11 +23,48 @@
    "label": "name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "has_equation",
+   "fieldtype": "Check",
+   "label": "Has Equation"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.has_equation==1;",
+   "depends_on": "eval:doc.has_equation==1;",
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "variables",
+   "fieldtype": "Table",
+   "label": "Variables",
+   "options": "Financial penalty template variables"
+  },
+  {
+   "fieldname": "equation",
+   "fieldtype": "Data",
+   "label": "Equation"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_create",
+   "fieldtype": "Check",
+   "label": "Auto Create"
+  },
+  {
+   "depends_on": "eval:doc.auto_create ==1 ;",
+   "fieldname": "creation_frequency",
+   "fieldtype": "Data",
+   "label": "Creation frequency ",
+   "mandatory_depends_on": "eval:doc.auto_create ==1 ;"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-30 12:26:58.243513",
+ "modified": "2023-10-30 17:07:20.095830",
  "modified_by": "Administrator",
  "module": "alrehab",
  "name": "Financial penalty template",
