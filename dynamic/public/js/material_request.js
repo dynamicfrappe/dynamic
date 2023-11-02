@@ -53,7 +53,12 @@ frappe.ui.form.on("Material Request",{
 			run_link_triggers: true
 		});
 	},
-  
+  material_request_purpose:function(frm){
+    if(frm.doc.material_request_purpose){
+      frm.set_value('material_request_type',frm.doc.material_request_purpose)
+      frm.refresh_field('material_request_type')
+    }
+  }
     
     
 })
