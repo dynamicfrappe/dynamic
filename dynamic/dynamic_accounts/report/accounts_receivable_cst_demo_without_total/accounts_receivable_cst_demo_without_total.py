@@ -283,6 +283,76 @@ class ReceivablePayableReport(object):
 				else:
 					self.append_row(row)
 
+		parties = []
+		total_invoiced = 0
+		total_paid = 0
+		total_credit = 0
+		total_outstanding = 0
+		total_range1 = 0
+		total_range2 = 0
+		total_range3 = 0
+		total_range4 = 0
+		total_range5 = 0
+		grand_total = 0
+		new_data = []
+		for row in self.data:
+			if row.party in parties : 
+				total_invoiced +=row.invoiced 
+				total_paid +=row.paid
+				total_credit +=row.credit_note
+				total_outstanding +=row.outstanding
+				grand_total += row.invoice_grand_total
+				total_range1 += row.range1
+				total_range2 += row.range2
+				total_range3 += row.range3
+				total_range4 += row.range4
+				total_range5 += row.range5
+			else : 
+				if len(parties) > 0 :
+					dict = {
+					 "invoiced" : total_invoiced , "paid" :total_paid ,
+					 "credit_note" :total_credit , "outstanding" :total_outstanding ,
+					 "invoice_grand_total" : grand_total ,
+					 "range1" :total_range1 , "range2" :total_range2 ,
+					 "range3" :total_range3 , "range4" :total_range4 ,
+					 "range5" :total_range5 
+					 }
+					new_data.append(dict.copy())
+					total_invoiced = 0
+					total_paid = 0
+					total_credit = 0
+					total_outstanding = 0
+					total_range1 = 0
+					total_range2 = 0
+					total_range3 = 0
+					total_range4 = 0
+					total_range5 = 0
+					grand_total = 0
+
+				total_invoiced +=row.invoiced
+				total_paid +=row.paid
+				total_credit +=row.credit_note
+				total_outstanding +=row.outstanding
+				grand_total += row.invoice_grand_total
+				total_range1 += row.range1
+				total_range2 += row.range2
+				total_range3 += row.range3
+				total_range4 += row.range4
+				total_range5 += row.range5
+
+				parties.append(row.party)
+			new_data.append(row.copy())
+		dict = {
+					"invoiced" : total_invoiced , "paid" :total_paid ,
+					"credit_note" :total_credit , "outstanding" :total_outstanding ,
+					"invoice_grand_total" : grand_total ,
+					"range1" :total_range1 , "range2" :total_range2 ,
+					"range3" :total_range3 , "range4" :total_range4 ,
+					"range5" :total_range5 
+					}
+		new_data.append(dict.copy())
+		self.data = new_data
+
 		if self.filters.get("group_by_party"):
 			self.append_subtotal_row(self.previous_party)
 			if self.data:
