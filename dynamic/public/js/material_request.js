@@ -63,9 +63,8 @@ frappe.ui.form.on("Material Request",{
     
 })
 
-frappe.provide("erpnext.buying");
 
-const MaterialRequestController_Extend = erpnext.buying.BuyingController.extend({
+const MaterialRequestController_Extend = erpnext.buying.MaterialRequestController.extend({
   refresh: function(doc){
     frappe.call({
       method: "dynamic.api.get_active_domains",
