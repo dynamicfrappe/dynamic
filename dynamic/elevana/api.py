@@ -1,7 +1,7 @@
 from dynamic.api import get_item_price
 import frappe
 from frappe.model.mapper import get_mapped_doc
-
+import requests 
 from werkzeug.wrappers import Response
 #dynamic.elevana.api
 import json
@@ -9,6 +9,7 @@ import json
 from frappe.utils.data import nowdate
 from frappe import _
 from erpnext import get_company_currency, get_default_company, get_default_cost_center
+import urllib.parse
 
 def elevana_lead_before_insert(doc, fun=''):
     set_sales_person(doc)
@@ -466,7 +467,104 @@ def get_couponcode_data(*args, **kwargs):
 
 
 
+#dynamic.elevana.api
+# create coupon code 
+# 
+"""
+{
+"code" : " " , 
+"type" : "fixed_cart" , 
+"amount" : " " , 
+"usage_limit":"" ,
+"expiry_date":"",
+"minimum_amount":"",
+}
+update 
+{
+"coupon_id" :""
+"code" : " " , 
+"type" : "fixed_cart" , 
+"amount" : " " , 
+"usage_limit":"" ,
+"expiry_date":"",
+"minimum_amount":"",
+}
+from dynamic.elevana.api import create_coupon_code
+
+create_coupon_code('hnuim' ,False)
+
+"""
+def create_coupon_code(code , update=False,*args ,**kwargs ) :
+    #get code required data 
+    data = frappe.get_doc("Coupon Code" , code)
+    rule = False
+    if data.pricing_rule : 
+         rule = frappe.get_doc("Pricing Rule" ,data.pricing_rule )
+    pay_load = {
+        "code": data.name ,
+        "type" : "fixed_cart" ,
+        "amount" : float(rule.discount_amount or 0) if rule else 0 ,
+        "usage_limit":data.maximum_use , 
+        "expiry_date" : data.valid_upto , 
+        "minimum_amount":1,
+
+    }
+    if update  :
+        pay_load["coupon_id"] = data.wooid 
+
+    #connsction settings 
+    dt = frappe.db.sql(""" SELECT name ,post , put  FROM `tabCoupon Code Setting` WHERE is_active  ="1" """ ,as_dict =1)
+    if dt and len(dt) > 0 :
+       url =dt[0].get("put")  if update else  dt[0].get("post") 
+       print(url)
+       res = requests.get(f"{url}" ,params=pay_load)
+
+       if res.status_code != 200 :
+           #create Error 
+           print("Error" ,res.text)
+           error = frappe.new_doc("Error Log")
+           error.method="create_Copon Code Error"
+           error.error = res.text
+           error.save()
+           pass
+           #frappe.new_doc("Error Log")
+       if not update :
+           d=  res.json()
+           print("success" , d )
+           data.wooid = d.get("data").get("id")
+           data.save()
+           frappe.db.commit()
+           error = frappe.new_doc("Error Log")
+           error.method="create Copon Code Success"
+           error.error = res.text
+           error.save()
+       if update :
+           error = frappe.new_doc("Error Log")
+           error.method="update  Copon Code Success"
+           error.error = res.text
+           error.save()
+           
+          
+       
+    else :
+        frappe.throw("No WooCommerce data Found !")
 
 
+def create_new_code(doc, *args ,**kwargs) :
+    DOMAINS = frappe.get_active_domains()
+    if  'Elevana' in DOMAINS and not doc.is_new() : 
+        #
+        # check price Rule 
+        if not doc.pricing_rule :
+            frappe.throw("Please set price Rule")
 
-
+        if not not doc.valid_upto :
+            doc.valid_upto = "2999-01-01"
+        if not doc.maximum_use :
+            doc.maximum_use = 10000
+        #post to woocommerce 
+        if not doc.wooid :
+            create_coupon_code(doc.name , update=False)
+        # frappe.throw("New Doc")
+        if doc.wooid :
+            create_coupon_code(doc.name , update=True)

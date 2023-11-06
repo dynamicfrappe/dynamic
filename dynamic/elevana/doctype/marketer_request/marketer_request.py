@@ -10,7 +10,7 @@ from frappe import _
 from frappe import utils
 import random
 import string
-
+#from dynamic.elevana.api import create_coupon_code
 
 class MarketerRequest(Document):
     def validate(self) :
@@ -59,6 +59,7 @@ class MarketerRequest(Document):
             coupon.coupon_code = self.referral_code
             coupon.pricing_rule = self.pricing_rule
             coupon.valid_from = utils.today()
+            coupon.data.valid_upto = "2999-01-01"
             coupon.save()
             self.coupon_code = coupon.name
 

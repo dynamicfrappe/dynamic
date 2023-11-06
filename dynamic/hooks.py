@@ -167,6 +167,11 @@ doc_events = {
         "on_submit":["dynamic.real_state.rs_api.so_on_submit",],
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
+    "Coupon Code" : {
+        # this hook will apply only elevana Domain to send coupon code to woo commerce api 
+        "after_insert" : ["dynamic.elevana.api.create_new_code" ,] ,
+         "validate" : ["dynamic.elevana.api.create_new_code" ,]
+    },
     "Purchase Receipt": {
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
         "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains",
