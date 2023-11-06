@@ -46,6 +46,7 @@ class SalesOrder(SellingController):
 
 	def validate(self):
 		super(SalesOrder, self).validate()
+		self.calculate_item_grand_total()
 		self.validate_delivery_date()
 		self.validate_proj_cust()
 		self.validate_po()
@@ -83,6 +84,11 @@ class SalesOrder(SellingController):
 		self.clear_unallocated_advances("Sales Invoice Advance", "advances")
 		self.calculate_total_advance()
 
+
+	def calculate_item_grand_total(self):
+		for item in self.items:
+			item.grand_total = float(item.price_list_rate or 0) * float(item.qty or 0) 
+			print("grand total ",self.grand_total)
 	def get_advance_entries(self, include_unallocated=True):
 		party_type = "Customer"
 		party = self.customer
