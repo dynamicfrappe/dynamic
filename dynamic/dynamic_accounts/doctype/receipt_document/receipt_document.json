@@ -239,8 +239,8 @@
   },
   {
    "default": "RECEIPT-VOUCHER-.####",
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
+   "fieldname": "naming_series", 
+   "fieldtype": "Select", 
    "label": "Series",
    "options": "RECEIPT-VOUCHER-.####"
   }
