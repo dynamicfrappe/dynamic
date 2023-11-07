@@ -108,6 +108,7 @@ frappe.ui.form.on("Stock Entry", {
       frm.events.set_property(frm)
       // frm.events.set_property_domain(frm)
       frm.events.set_field_property(frm)
+      frm.events.transit_btn(frm)
     },
     stock_entry_type : function (frm){
       frm.events.filter_stock_entry_transfer(frm)
@@ -143,7 +144,32 @@ frappe.ui.form.on("Stock Entry", {
         frm.set_df_property("to_warehouse", "read_only", 1);
       }
     },
-
+    transit_btn:function(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length) {
+                if (r.message.includes("WEH")) {
+                  if (frm.doc.docstatus === 1) {
+                    if (frm.doc.add_to_transit && frm.doc.purpose=='Material Transfer' && frm.doc.per_transferred < 100) {
+                      frm.remove_custom_button('End Transit')
+                      frm.add_custom_button('End Transit', function() {
+                        frappe.model.open_mapped_doc({
+                          method: "dynamic.weh.api.make_stock_in_entry",
+                          frm: frm
+                        })
+                      });
+                    }
+                  }
+                 frm.cscript['toggle_related_fields'] = _toggle_related_fields_weh
+                
+                }
+            }
+        }
+    })
+      
+    },
+    
     set_property_domain:function(frm){
       frappe.call({
         method: "dynamic.api.get_active_domains",
@@ -151,9 +177,6 @@ frappe.ui.form.on("Stock Entry", {
             if (r.message && r.message.length) {
                 if (r.message.includes("Stock Transfer")) {
                   if (frm.doc.stock_entry_type == "Material Transfer"){
-                    // frm.set_df_property("add_to_transit", "read_only", 1)
-                    // frm.set_value('add_to_transit',1)
-                    // frm.refresh_field("add_to_transit")
                   }
                 }
             }
@@ -274,3 +297,36 @@ frappe.ui.form.on('Stock Entry Detail', {
   },
   
 })
+
+
+
+
+function _toggle_related_fields_weh(){
+  cur_frm.toggle_enable("from_warehouse", cur_frm.doc.purpose!='Material Receipt');
+  cur_frm.toggle_enable("from_warehouse", !cur_frm.doc.outgoing_stock_entry);
+  cur_frm.toggle_enable("to_warehouse", cur_frm.doc.purpose!='Material Issue');
+
+  cur_frm.fields_dict["items"].grid.set_column_disp("retain_sample", cur_frm.doc.purpose=='Material Receipt');
+  cur_frm.fields_dict["items"].grid.set_column_disp("sample_quantity", cur_frm.doc.purpose=='Material Receipt');
+
+  cur_frm.cscript.toggle_enable_bom();
+
+  if (cur_frm.doc.purpose == 'Send to Subcontractor') {
+    cur_frm.doc.customer = cur_frm.doc.customer_name = cur_frm.doc.customer_address =
+      cur_frm.doc.delivery_note_no = cur_frm.doc.sales_invoice_no = null;
+  } else {
+    cur_frm.doc.customer = cur_frm.doc.customer_name = cur_frm.doc.customer_address =
+      cur_frm.doc.delivery_note_no = cur_frm.doc.sales_invoice_no = cur_frm.doc.supplier =
+      cur_frm.doc.supplier_name = cur_frm.doc.supplier_address = cur_frm.doc.purchase_receipt_no =
+      cur_frm.doc.address_display = null;
+  }
+  if(cur_frm.doc.purpose == "Material Receipt") {
+    cur_frm.set_value("from_bom", 0);
+  }
+
+  // Addition costs based on purpose
+  cur_frm.toggle_display(["additional_costs", "total_additional_costs", "additional_costs_section"],
+    cur_frm.doc.purpose!='Material Issue');
+
+  cur_frm.fields_dict["items"].grid.set_column_disp("additional_cost", cur_frm.doc.purpose!='Material Issue');
+}
