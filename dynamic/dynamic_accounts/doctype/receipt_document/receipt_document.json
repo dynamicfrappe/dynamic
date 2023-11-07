@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:REC-{DD}-{MM}-{YYYY}-{#####}",
+ "autoname": "naming_series:",
  "creation": "2022-05-12 15:15:14.534249",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -248,7 +248,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-07 12:12:53.064624",
+ "modified": "2023-11-07 15:25:31.700436",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Receipt Document",
