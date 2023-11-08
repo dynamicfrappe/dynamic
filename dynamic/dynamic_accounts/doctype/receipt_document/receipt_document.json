@@ -238,7 +238,6 @@
    "read_only": 1
   },
   {
-   "default": "RECEIPT-VOUCHER-.####",
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
@@ -248,7 +247,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-07 15:25:31.700436",
+ "modified": "2023-11-08 10:25:09.471848",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Receipt Document",
