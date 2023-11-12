@@ -6,6 +6,18 @@ from frappe import _
 from frappe.utils.data import  get_link_to_form 
 
 from frappe.model.document import Document
+from frappe.utils import (
+	cint,
+	cstr,
+	flt,
+	fmt_money,
+	format_datetime,
+	format_duration,
+	format_time,
+	format_timedelta,
+	formatdate,
+	getdate,
+)
 
 class Journalinstallment(Document):
 	def validate(self):
@@ -18,6 +30,15 @@ class Journalinstallment(Document):
 			contract = frappe.new_doc("Rehab Contract") 
 			contract.unit = self.unit
 			contract.installment_entry_type = self.type 
+			contract.maintenance_deposit_value = self.maintenance_deposit_value 
+			contract.maintenance_deposit_installments_count = self.maintenance_deposit_installments_count 
+			item = frappe.get_value("installment Entry Type" , self.type , "item")
+			for index in range(cint(self.maintenance_deposit_installments_count)):
+				contract.append('maintenance_deposit_installments_items',{
+					"item":item,
+					"installment_value":flt(flt(self.maintenance_deposit_value) / cint(self.maintenance_deposit_installments_count) ),
+					"due_date":getdate()
+				})
 			contract.save()
 			self.contracted = 1
 			self.contract = contract.name

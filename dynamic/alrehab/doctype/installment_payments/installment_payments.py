@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import getdate, now
 from frappe import _
+
 class InstallmentPayments(Document):
 	def validate(self):
 		if self.items:
@@ -18,14 +19,25 @@ class InstallmentPayments(Document):
 
 @frappe.whitelist()
 def get_customer_instllment(cst):
+	sql_before_taxes = f"""
+	SELECT name 
+	FROM `tabinstallment Entry`
+	WHERE customer='{cst}'
+	"""
+	sql_before_taxes_data = frappe.db.sql(sql_before_taxes,as_dict=1)
+	for entry in sql_before_taxes_data:
+		entry_doc = frappe.get_doc("installment Entry",entry.name)
+		entry_doc.caculate_installment_value()
+		
 	sql = f"""
 	SELECT name 
 	,delay_penalty
 	,total_payed,total_value
 	,outstanding_value
 	FROM `tabinstallment Entry`
-	WHERE customer='{cst}'
+	WHERE customer='{cst}' AND  IFNULL(total_payed,0)<total_value
 	"""
+	print(sql)
 	data_sql = frappe.db.sql(sql,as_dict=1)
 	return data_sql
 
@@ -74,12 +86,12 @@ def create_je_row(row):
 	journal_entry.insert()
 	journal_entry.submit()
 	#**update 
-	total_payed = float(installment_entry_doc.total_payed or 0) + float(row.total_payed or 0) + float(installment_entry_doc.delay_penalty or 0)
-	outstanding_value = float(installment_entry_doc.total_value or 0) - float(total_payed or 0)
-	print(f'\n\n\n=installment_entry_doc.total_payed=>{installment_entry_doc.total_payed}\n\n')
-	print(f'\n\n\n=row.total_payed=>{row.total_payed}\n\n')
-	print(f'\n\n\n=installment_entry_doc.delay_penalty=>{installment_entry_doc.delay_penalty}\n\n')
-	if total_payed > float(installment_entry_doc.total_value):
+	total_payed = float(installment_entry_doc.total_payed or 0) + float(row.total_payed or 0) 
+	outstanding_value = float(installment_entry_doc.outstanding_value or 0) - float(row.total_payed or 0)
+	# print(f'\n\n\n=installment_entry_doc.total_payed=>{installment_entry_doc.total_payed}\n\n')
+	# print(f'\n\n\n=row.total_payed=>{row.total_payed}\n\n')
+	# print(f'\n\n\n=installment_entry_doc.delay_penalty=>{float(total_payed)}--{float(installment_entry_doc.outstanding_value)}\n\n')
+	if float(row.total_payed) > float(installment_entry_doc.outstanding_value):
 		frappe.throw(_("Totla Paid Amount More Than Total Value"))
 	installment_entry_doc.db_set("total_payed",total_payed)
 	installment_entry_doc.db_set("outstanding_value",outstanding_value)

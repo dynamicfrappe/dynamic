@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_rename": 1,
  "autoname": "naming_series:",
  "creation": "2022-05-12 15:15:14.534249",
  "doctype": "DocType",
@@ -241,7 +240,8 @@
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
-   "options": "RECEIPT-VOUCHER-.####"
+   "options": "RECEIPT-VOUCHER-.####.-.YY",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
