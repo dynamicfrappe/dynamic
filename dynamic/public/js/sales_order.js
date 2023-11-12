@@ -910,7 +910,7 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
 	// },
 })
 var create_payment_for_real_state = function(){
-  console.log('im test')
+  // console.log('im test')
   var method = "dynamic.real_state.rs_api.get_payment_entry";
   if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
     if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){

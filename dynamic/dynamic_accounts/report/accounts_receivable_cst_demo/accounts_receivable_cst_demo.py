@@ -101,7 +101,6 @@ class ReceivablePayableReport(object):
 		self.data = []
 		for gle in self.gl_entries:
 			self.update_voucher_balance(gle)
-
 		self.build_data()
 
 	def init_voucher_balance(self):
@@ -300,7 +299,6 @@ class ReceivablePayableReport(object):
 			if self.previous_party and (self.previous_party != row.party):
 				self.append_subtotal_row(self.previous_party)
 			self.previous_party = row.party
-
 		self.data.append(row)
 
 	def set_invoice_details(self, row):
@@ -641,7 +639,7 @@ class ReceivablePayableReport(object):
 			row.range1 = row.range2 = row.range3 = row.range4 = row.range5 = 0.0
 
 		row.total_due = row.range1 + row.range2 + row.range3 + row.range4 + row.range5
-
+		#!edit here
 	def get_ageing_data(self, entry_date, row):
 		# [0-30, 30-60, 60-90, 90-120, 120-above]
 		row.range1 = row.range2 = row.range3 = row.range4 = row.range5 = 0.0
@@ -883,7 +881,6 @@ class ReceivablePayableReport(object):
 				self.party_details[party] = frappe.db.get_value(
 					"Supplier", party, ["supplier_name", "supplier_group"], as_dict=True
 				)
-
 		return self.party_details[party]
 
 	def get_columns(self):

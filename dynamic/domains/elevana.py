@@ -44,6 +44,17 @@ data = {
                 "unique": "1",
             },
         ],
+        "Branch" :[
+               {
+                "fieldname": "branch_code",
+                "fieldtype": "Data",
+                "insert_after": "branch",
+                "label": "Branch Code",
+               
+                # "permlevel":"1"
+            },
+
+        ] ,
         'Customer': [
             {
                 "fieldname": "sales_person",
@@ -118,6 +129,14 @@ data = {
                 "label": "Reference Name",
                 "options": "ref_doctype",
                 "read_only": "1",
+            },
+            {
+                "fieldname": "wooid",
+                "fieldtype": "Data",
+                "insert_after": "coupon_code",
+                "label": "WooCommerceID",
+                "read_only": "1",
+
             }
         ],
 
@@ -271,20 +290,34 @@ data = {
                 "fieldtype"   : "Check",
                 "insert_after": "order_type",
             },
+            {
+                "label"       : _("Branch"),
+                "fieldname"   : "branch",
+                "fieldtype"   : "Link",
+                "options" :"Branch" , 
+                "insert_after": "delivery_date",
+            },
+              {
+                "label"       : _("Branch Code"),
+                "fieldname"   : "branch_code",
+                "fieldtype"   : "Data",
+                "fetch_from": "branch.branch_code",
+                "insert_after": "branch",
+            },
 
 
         ]
     },
-    "properties": [
-        {
-            "doctype": "Customer",
-            "doctype_or_field": "DocField",
-            "fieldname": "customer_type",
-            "property": "options",
-            "property_type": "Text",
-            "value": "\nCompany\nIndividual\nMarketer\nDistributor"
-        }
-    ],
+    # "properties": [
+    #     {
+    #         "doctype": "Customer",
+    #         "doctype_or_field": "DocField",
+    #         "fieldname": "customer_type",
+    #         "property": "options",
+    #         "property_type": "Text",
+    #         "value": "\nCompany\nIndividual\nMarketer\nDistributor"
+    #     }
+    # ],
     "property_setters": [
 
     ],

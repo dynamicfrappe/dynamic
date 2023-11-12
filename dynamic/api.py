@@ -609,6 +609,9 @@ def cancel_reservation(self,*args , **kwargs):
             try:
                 if(item.reservation):
                     frappe.db.set_value('Reservation',item.reservation,'status','Invalid')
+                    frappe.db.sql(f""" UPDATE `tabReservation Purchase Order` 
+                                SET reserved_qty = 0 WHERE parent = '{item.reservation}' """)
+                    frappe.db.commmit()
             except Exception as ex:
                 create_error(item.reservation,self.name,str(ex))
 
@@ -1153,6 +1156,11 @@ def validate_stock_entry(doc,*args,**kwargs):
                     row.basic_rate = (item.amount / item.qty)
                     row.amount = (item.amount)
                     row.basic_amount = (item.amount)
+    if  'WEH' in DOMAINS:
+        if doc.stock_entry_type == 'Material Transfer' and not doc.add_to_transit:
+            if not doc.outgoing_stock_entry:
+                frappe.throw(_("Please Set add to transit"))
+
 
     # Add vana validate 
 
