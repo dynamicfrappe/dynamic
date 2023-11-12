@@ -1,0 +1,90 @@
+{
+ "category": "Places",
+ "charts": [],
+ "creation": "2023-10-16 15:06:01.083041",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "hide_custom": 0,
+ "icon": "sell",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Nilex",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Nilex",
+   "link_to": "About Us Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Preparing the Containers",
+   "link_to": "Preparing the containers",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reservation Is Approved",
+   "link_to": "Reservation Is Approved",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Confirmation Print",
+   "link_to": "Confirmation Print",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Loading Doctype",
+   "link_to": "Loading Doctype",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Loading Quality",
+   "link_to": "Loading Quality",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Container Tracking",
+   "link_to": "Container Tracking",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2023-10-16 15:06:37.995860",
+ "modified_by": "Administrator",
+ "module": "Nilex",
+ "name": "Nilex",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 1,
+ "restrict_to_domain": "Nilex",
+ "shortcuts": []
+}

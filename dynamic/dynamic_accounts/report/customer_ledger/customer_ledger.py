@@ -116,6 +116,7 @@ def get_cutomer_sales_invoice(customer ,from_date , to_date) :
 							b.posting_date between date('{from_date}')   and date('{to_date}')
 							GROUP BY a.parent	""",as_dict=True)
 	return data_sales_invoice
+
 def get_cutomer_sales_return(customer ,from_date , to_date) :
 	
 	data_sales_invoice = frappe.db.sql(f"""SELECT "Sales Invoice" as document_type ,b.posting_date as cur_date ,

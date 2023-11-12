@@ -132,6 +132,7 @@ data = {
             
          ],
         
+        
     },
       "properties": [
          {
@@ -142,9 +143,33 @@ data = {
             "property_type": "Text",
             "value": "Month(s) after the end of the invoice month",
         },
+        # {
+        #     "doctype": "Quotation",
+        #     "doctype_or_field": "DocField",
+        #     "fieldname": "selling_price_list",
+        #     "property": "reqd",
+        #     "property_type": "Check",
+        #     "value": "1",
+        # },
+        # {
+        #     "doctype": "Quotation",
+        #     "doctype_or_field": "DocField",
+        #     "fieldname": "selling_price_list",
+        #     "property": "hidden",
+        #     "property_type": "Check",
+        #     "value": "1",
+        # },
+        {
+            "doctype": "Quotation",
+            "doctype_or_field": "DocField",
+            "fieldname": "ignore_pricing_rule",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": "1",
+        },
     ],
-  
-    # 'on_setup': 'dynamic.teba.setup.setup_teba'
+    #
+    # 'on_setup': 'dynamic.teba.setup.setup_teba'ignore_pricing_rule
 }
 
 

@@ -232,34 +232,33 @@ def create_installation_request(sales_order):
 
 
 def submit_delivery_note(doc ,*args,**kwargs) :
-    pass
-    # if "Terra"  in DOMAINS :
-    #     # validate against terra branches settings  
-    #     user_list = []
-    #     acceess_target = []
+    if "Terra"  in DOMAINS :
+        # validate against terra branches settings  
+        user_list = []
+        acceess_target = []
        
-    #     user = frappe.session.user
-    #     target_w = False
-    #     if doc.set_warehouse :
-    #         target_w = frappe.get_doc("Warehouse" ,doc.set_warehouse)
+        user = frappe.session.user
+        target_w = False
+        if doc.set_warehouse :
+            target_w = frappe.get_doc("Warehouse" ,doc.set_warehouse)
         
-    #     if target_w and  not target_w.warehouse_type   :
-    #             #frappe.throw(str("case@ happend"))
-    #         cost_center = frappe.db.sql(f""" 
-    #         SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.set_warehouse}' """ ,as_dict=1)
-    #         if cost_center and len(cost_center) > 0 :
-    #             for obj in cost_center :
-    #                 acceess_target.append(obj.get("name"))
+        if target_w and  not target_w.warehouse_type   :
+                #frappe.throw(str("case@ happend"))
+            cost_center = frappe.db.sql(f""" 
+            SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.set_warehouse}' """ ,as_dict=1)
+            if cost_center and len(cost_center) > 0 :
+                for obj in cost_center :
+                    acceess_target.append(obj.get("name"))
                 
-    #     # frappe.errprint(f'centers--->{acceess_target}')
-    #     access_group =    acceess_target 
-    #     if len(access_group) > 0 :
-    #         for access in access_group :
-    #             users = frappe.db.sql(f""" SELECT branch_manager FROM `tabBranch Managers` WHERE parenttype ='Cost Center'
-    #             and parent = '{access}' 
-    #                """)
-    #             for usr in users :
-    #                 user_list.append(usr[0])
-    #     #validate user access 
-    #     if user not in user_list :
-    #         frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
+        # frappe.errprint(f'centers--->{acceess_target}')
+        access_group =    acceess_target 
+        if len(access_group) > 0 :
+            for access in access_group :
+                users = frappe.db.sql(f""" SELECT branch_manager FROM `tabBranch Managers` WHERE parenttype ='Cost Center'
+                and parent = '{access}' 
+                   """)
+                for usr in users :
+                    user_list.append(usr[0])
+        #validate user access 
+        if user not in user_list :
+            frappe.throw(f"you can Not Complete this action for Branch  { access_group}")

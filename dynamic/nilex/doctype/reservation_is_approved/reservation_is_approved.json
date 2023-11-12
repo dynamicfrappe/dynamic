@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "Res-App-.####",
+ "creation": "2023-10-16 09:55:55.557829",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "preparing_the_containers",
+  "sales_order",
+  "customer",
+  "column_break_xsnlz",
+  "cut_of_date",
+  "loading_date",
+  "section_break_ysjjo",
+  "shipping_line_name",
+  "lable_attach"
+ ],
+ "fields": [
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "column_break_xsnlz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cut_of_date",
+   "fieldtype": "Date",
+   "label": "Cut of Date"
+  },
+  {
+   "fieldname": "loading_date",
+   "fieldtype": "Date",
+   "label": "Loading Date "
+  },
+  {
+   "fieldname": "section_break_ysjjo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "shipping_line_name",
+   "fieldtype": "Data",
+   "label": "Shipping Line Name"
+  },
+  {
+   "fieldname": "lable_attach",
+   "fieldtype": "Attach",
+   "label": "Lable Attach "
+  },
+  {
+   "fieldname": "preparing_the_containers",
+   "fieldtype": "Link",
+   "label": "Preparing the containers",
+   "options": "Preparing the containers"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-16 12:38:49.245864",
+ "modified_by": "Administrator",
+ "module": "Nilex",
+ "name": "Reservation Is Approved",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "customer,sales_order",
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

@@ -155,3 +155,16 @@ input[type=checkbox]:checked:before {
 }
 
 
+
+
+/* #footer-htm{
+    background-color: red;
+    height: 50px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+					 */
