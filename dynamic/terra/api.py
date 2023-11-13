@@ -9,8 +9,18 @@ from frappe.utils import add_days, cint, cstr, flt, get_link_to_form, getdate, n
 from six import string_types
 from frappe.utils import now
 from erpnext.stock.utils import get_stock_balance
+from dynamic.api import validate_purchase_recipt, check_email_setting_in_stock_setting, check_pr_reservation
 
 Domains = frappe.get_active_domains()
+
+def purchase_reciept_before_submit(doc,*args,**kwargs):
+    frappe.throw('test')
+    if 'Gebco' in Domains:
+        validate_purchase_recipt(doc)
+    if 'Terra' in Domains:
+        check_email_setting_in_stock_setting(doc)
+        #check if PR has Reservation & reserve over warehouse
+        check_pr_reservation(doc)
 
 @frappe.whitelist()
 def get_iem_sub_uom(item_code,uom,qty):
