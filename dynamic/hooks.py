@@ -97,6 +97,7 @@ doctype_js = {
     "Item":"public/js/item.js",
     "Journal Entry":"public/js/journal_entry.js",
     "Payment Terms Template":"public/js/payment_terms_template.js",
+    "Payment Terms Template":"public/js/payment_terms_template.js",
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 
@@ -166,10 +167,10 @@ doc_events = {
         "on_submit":["dynamic.real_state.rs_api.so_on_submit",],
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
-    "Purchase Receipt": {
-        # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
-        "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains",
-        # "before_save":"dynamic.api.check_pr_reservation"
+    "Coupon Code" : {
+        # this hook will apply only elevana Domain to send coupon code to woo commerce api 
+        "after_insert" : ["dynamic.elevana.api.create_new_code" ,] ,
+         "validate" : ["dynamic.elevana.api.create_new_code" ,]
     },
     "Material Request": {
         "on_submit": "dynamic.api.validate_material_request",
@@ -231,8 +232,11 @@ doc_events = {
         "before_insert" :"dynamic.api.lead_before_insert"
     },
     "Purchase Receipt":{
-         "on_submit" : "dynamic.api.submit_purchase_recipt",
+         "on_submit" : ["dynamic.api.submit_purchase_recipt","dynamic.api.submit_purchase_recipt_based_on_active_domains",],
          "before_save" : "dynamic.api.before_save",
+         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+        # "before_submit": 
+        # "before_save":"dynamic.api.check_pr_reservation"
     },
     "Stock Ledger Entry":{
         "before_insert":"dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
@@ -291,6 +295,7 @@ scheduler_events = {
     		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
     		"dynamic.master_deals.master_deals_api.alert_cheque_date",
     		"dynamic.real_state.rs_api.setup_payment_term_notify",
+    		# "dynamic.alrehab.doctype.installment_entry.installment_entry.get_installment_entry_to_update_status",
     	],
     	"hourly": [
     		# "dynamic.tasks.hourly",

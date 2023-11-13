@@ -1294,3 +1294,15 @@ def get_advance_entries_quotation(doc_name, include_unallocated=True):
 		res = journal_entries + payment_entries
 
 		return res
+
+
+@frappe.whitelist()
+def get_furniture_so_items(sales_order):
+	return frappe.db.sql(f"""
+	SELECT `tabSales Order Item`.name,`tabSales Order Item`.item_code,`tabSales Order Item`.item_name,`tabSales Order Item`.qty
+	,`tabSales Order Item`.delivery_date,`tabSales Order Item`.rate,`tabSales Order Item`.amount
+	FROM `tabSales Order`
+	INNER JOIN `tabSales Order Item` 
+	ON `tabSales Order`.name=`tabSales Order Item`.parent
+	where `tabSales Order`.name='{sales_order}'
+	""",as_dict=1)

@@ -11,6 +11,10 @@
   "type",
   "section_break_4",
   "journal_type",
+  "column_break_o6mbu",
+  "date",
+  "column_break_xzip5",
+  "value",
   "item_section_section",
   "unit",
   "year",
@@ -18,7 +22,14 @@
   "maintenance_deposit_value",
   "maintenance_deposit_installments_count",
   "contracted",
-  "contract"
+  "contract",
+  "customer_group_section",
+  "customer_group",
+  "all_customer_section",
+  "exclude",
+  "customers",
+  "one_customer_section",
+  "customer"
  ],
  "fields": [
   {
@@ -99,13 +110,89 @@
    "label": "Contract",
    "mandatory_depends_on": "eval:doc.contracted==1 ;",
    "options": "Rehab Contract"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.journal_type==\"Customer Group\";",
+   "depends_on": "eval:doc.journal_type==\"Customer Group\";",
+   "fieldname": "customer_group_section",
+   "fieldtype": "Section Break",
+   "label": "Customer Group Section"
+  },
+  {
+   "fieldname": "customer_group",
+   "fieldtype": "Link",
+   "label": "Customer Group",
+   "mandatory_depends_on": "eval:doc.journal_type==\"Customer Group\";",
+   "options": "Customer Group"
+  },
+  {
+   "depends_on": "eval:doc.journal_type != \"Contract\";",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "mandatory_depends_on": "eval:doc.journal_type != \"Contract\";"
+  },
+  {
+   "depends_on": "eval:doc.journal_type!=\"Contract\";",
+   "fieldname": "value",
+   "fieldtype": "Data",
+   "label": "Value",
+   "mandatory_depends_on": "eval:doc.journal_type != \"Contract\";"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.journal_type==\"All Customer\";",
+   "depends_on": "eval:doc.journal_type==\"All Customer\";",
+   "fieldname": "all_customer_section",
+   "fieldtype": "Section Break",
+   "label": "All Customer Section"
+  },
+  {
+   "collapsible_depends_on": "eval:doc.journal_type==\"All Customer\";",
+   "default": "0",
+   "fieldname": "exclude",
+   "fieldtype": "Check",
+   "label": "Exclude "
+  },
+  {
+   "depends_on": "eval:doc.exclude",
+   "fieldname": "customers",
+   "fieldtype": "Table",
+   "label": "Customers",
+   "mandatory_depends_on": "eval:doc.exclude",
+   "options": "Customer Name"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.journal_type==\"One Customer\";",
+   "depends_on": "eval:doc.journal_type==\"One Customer\";",
+   "fieldname": "one_customer_section",
+   "fieldtype": "Section Break",
+   "label": "One Customer Section"
+  },
+  {
+   "collapsible_depends_on": "eval:doc.journal_type==\"One Customer\";",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "mandatory_depends_on": "eval:doc.journal_type==\"One Customer\";",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "column_break_o6mbu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_xzip5",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-30 14:40:16.849274",
+ "modified": "2023-10-31 12:20:02.237587",
  "modified_by": "Administrator",
- "module": "alrehab",
+ "module": "AlRehab",
  "name": "Journal installment",
  "owner": "Administrator",
  "permissions": [

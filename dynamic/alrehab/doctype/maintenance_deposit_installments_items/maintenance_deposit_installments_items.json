@@ -24,7 +24,7 @@
   },
   {
    "fieldname": "installment_value",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "in_list_view": 1,
    "label": "installment Value",
    "reqd": 1
@@ -58,7 +58,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-10-30 11:27:53.321718",
+ "modified": "2023-11-08 11:50:29.536132",
  "modified_by": "Administrator",
  "module": "alrehab",
  "name": "Maintenance Deposit installments Items",

@@ -7,7 +7,18 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "name1"
+  "name1",
+  "auto_create",
+  "monthly_section",
+  "one_month",
+  "three_month",
+  "six_month",
+  "year",
+  "has_eq_sec",
+  "has_equation",
+  "section_break_3",
+  "variables",
+  "equation"
  ],
  "fields": [
   {
@@ -17,11 +28,76 @@
    "label": "name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "has_equation",
+   "fieldtype": "Check",
+   "label": "Has Equation"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.has_equation==1;",
+   "depends_on": "eval:doc.has_equation==1;",
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "variables",
+   "fieldtype": "Table",
+   "label": "Variables",
+   "options": "Financial penalty template variables"
+  },
+  {
+   "fieldname": "equation",
+   "fieldtype": "Data",
+   "label": "Equation"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_create",
+   "fieldtype": "Check",
+   "label": "Auto Create"
+  },
+  {
+   "depends_on": "eval:doc.auto_create ==1 ;",
+   "fieldname": "monthly_section",
+   "fieldtype": "Section Break",
+   "label": "Monthly"
+  },
+  {
+   "default": "0",
+   "fieldname": "one_month",
+   "fieldtype": "Check",
+   "label": "One Month"
+  },
+  {
+   "default": "0",
+   "fieldname": "three_month",
+   "fieldtype": "Check",
+   "label": "Three Month"
+  },
+  {
+   "default": "0",
+   "fieldname": "six_month",
+   "fieldtype": "Check",
+   "label": "Six Month"
+  },
+  {
+   "default": "0",
+   "fieldname": "year",
+   "fieldtype": "Check",
+   "label": "Year"
+  },
+  {
+   "fieldname": "has_eq_sec",
+   "fieldtype": "Section Break",
+   "label": "Has Equation"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-30 12:26:58.243513",
+ "modified": "2023-11-08 16:35:34.255425",
  "modified_by": "Administrator",
  "module": "alrehab",
  "name": "Financial penalty template",
