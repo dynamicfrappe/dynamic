@@ -291,12 +291,10 @@ def check_email_setting_in_stock_setting(doc):
             #     pass
 
 def check_pr_reservation(doc):
-    # print(f'\n\n\n**** {doc.__dict__} \n\n')
     if doc.doctype == "Purchase Invoice":
         if  doc.update_stock:
             loop_over_doc_items(doc)
     if doc.doctype == 'Purchase Receipt':
-        # print('\n\n\n------------ purchase recit \n\n')
         loop_over_doc_items(doc)
 
 def loop_over_doc_items(doc):
