@@ -172,11 +172,6 @@ doc_events = {
         "after_insert" : ["dynamic.elevana.api.create_new_code" ,] ,
          "validate" : ["dynamic.elevana.api.create_new_code" ,]
     },
-    "Purchase Receipt": {
-        # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
-        "on_submit": "dynamic.api.submit_purchase_recipt_based_on_active_domains",
-        # "before_save":"dynamic.api.check_pr_reservation"
-    },
     "Material Request": {
         "on_submit": "dynamic.api.validate_material_request",
         "validate" : "dynamic.api.onsave_material_request"
@@ -237,8 +232,11 @@ doc_events = {
         "before_insert" :"dynamic.api.lead_before_insert"
     },
     "Purchase Receipt":{
-         "on_submit" : "dynamic.api.submit_purchase_recipt",
+         "on_submit" : ["dynamic.api.submit_purchase_recipt","dynamic.api.submit_purchase_recipt_based_on_active_domains",],
          "before_save" : "dynamic.api.before_save",
+         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+        # "before_submit": 
+        # "before_save":"dynamic.api.check_pr_reservation"
     },
     "Stock Ledger Entry":{
         "before_insert":"dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
