@@ -14,6 +14,7 @@ class Reservation(Document):
 			data = self.validate_warehouse()
 		if target == 'pur':
 			data = self.validate_purchase_order()
+			
 		self.total_warehouse_reseved()
 		self.total_purchase_order_reseved()
 		if self.status == "Invalid" :
