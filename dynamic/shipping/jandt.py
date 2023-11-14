@@ -58,11 +58,9 @@ def create_oder(product):
         timestamp = str(int(time.time() * 1000))
         customer_number = settings.get("customer_number")
         hashed_password = settings.get("hashed_password")
-
         # send time
         now = datetime.datetime.now()
         datetime_str = now.strftime("%Y-%m-%d %H:%M:%S")
-
         # create Business parameter signature 
         business_parameter_signature = create_body_signature(customer_number,hashed_password,private_key)
         customer = frappe.get_doc("Customer", product.get("customer"))
@@ -97,6 +95,7 @@ def create_oder(product):
                 "height": "0",
                 "weight": 1,
                 "totalQuantity": 1,
+                "network" : product.get("branch_code") if product.get("branch_code") else "" ,
                 "itemsValue": product.get("grant_total"),
                 "priceCurrency": "EGP",
                 "offerFee": "",

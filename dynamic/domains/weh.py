@@ -4,6 +4,16 @@ from frappe import _
 data = {
 
     'custom_fields': {
+     "Material Request":[
+        {
+            "fieldname":"material_request_purpose",
+            "fieldtype":"Link",
+            "insert_after":"material_request_type",
+            "label":"Material Request Purpose",
+            "options" :'Material Request Purpose',
+            "reqd":1
+        },
+     ],
        "Customer":[
         {
             "fieldname":"remote_id",
@@ -93,5 +103,22 @@ data = {
             },
            
        ],
-    }
+    },"properties": [
+     {
+        "doctype": "Material Request",
+        "doctype_or_field": "DocField",
+        "fieldname": "material_request_type",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "0"
+        },
+        {
+        "doctype": "Material Request",
+        "doctype_or_field": "DocField",
+        "fieldname": "material_request_type",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1"
+        },
+    ]
 }

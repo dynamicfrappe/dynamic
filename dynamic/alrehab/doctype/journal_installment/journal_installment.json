@@ -1,0 +1,214 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-30 14:21:29.079621",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "column_break_2",
+  "type",
+  "section_break_4",
+  "journal_type",
+  "column_break_o6mbu",
+  "date",
+  "column_break_xzip5",
+  "value",
+  "item_section_section",
+  "unit",
+  "year",
+  "column_break_9",
+  "maintenance_deposit_value",
+  "maintenance_deposit_installments_count",
+  "contracted",
+  "contract",
+  "customer_group_section",
+  "customer_group",
+  "all_customer_section",
+  "exclude",
+  "customers",
+  "one_customer_section",
+  "customer"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Type ",
+   "options": "installment Entry Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "journal_type",
+   "fieldtype": "Select",
+   "label": "Journal Type",
+   "options": "Contract\nCustomer Group\nAll Customer\nOne Customer",
+   "reqd": 1
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.journal_type==\"Contract\";",
+   "depends_on": "eval:doc.journal_type==\"Contract\";",
+   "fieldname": "item_section_section",
+   "fieldtype": "Section Break",
+   "label": "Contract Section "
+  },
+  {
+   "fieldname": "maintenance_deposit_value",
+   "fieldtype": "Data",
+   "label": "Maintenance Deposit Value"
+  },
+  {
+   "fieldname": "maintenance_deposit_installments_count",
+   "fieldtype": "Data",
+   "label": "Maintenance Deposit installments Count"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "mandatory_depends_on": "eval:doc.journal_type==\"Contract\";",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Link",
+   "label": "year",
+   "options": "Commercial year"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "contracted",
+   "fieldtype": "Check",
+   "label": "Contracted"
+  },
+  {
+   "depends_on": "eval:doc.contracted==1 ;",
+   "fieldname": "contract",
+   "fieldtype": "Link",
+   "label": "Contract",
+   "mandatory_depends_on": "eval:doc.contracted==1 ;",
+   "options": "Rehab Contract"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.journal_type==\"Customer Group\";",
+   "depends_on": "eval:doc.journal_type==\"Customer Group\";",
+   "fieldname": "customer_group_section",
+   "fieldtype": "Section Break",
+   "label": "Customer Group Section"
+  },
+  {
+   "fieldname": "customer_group",
+   "fieldtype": "Link",
+   "label": "Customer Group",
+   "mandatory_depends_on": "eval:doc.journal_type==\"Customer Group\";",
+   "options": "Customer Group"
+  },
+  {
+   "depends_on": "eval:doc.journal_type != \"Contract\";",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "mandatory_depends_on": "eval:doc.journal_type != \"Contract\";"
+  },
+  {
+   "depends_on": "eval:doc.journal_type!=\"Contract\";",
+   "fieldname": "value",
+   "fieldtype": "Data",
+   "label": "Value",
+   "mandatory_depends_on": "eval:doc.journal_type != \"Contract\";"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.journal_type==\"All Customer\";",
+   "depends_on": "eval:doc.journal_type==\"All Customer\";",
+   "fieldname": "all_customer_section",
+   "fieldtype": "Section Break",
+   "label": "All Customer Section"
+  },
+  {
+   "collapsible_depends_on": "eval:doc.journal_type==\"All Customer\";",
+   "default": "0",
+   "fieldname": "exclude",
+   "fieldtype": "Check",
+   "label": "Exclude "
+  },
+  {
+   "depends_on": "eval:doc.exclude",
+   "fieldname": "customers",
+   "fieldtype": "Table",
+   "label": "Customers",
+   "mandatory_depends_on": "eval:doc.exclude",
+   "options": "Customer Name"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.journal_type==\"One Customer\";",
+   "depends_on": "eval:doc.journal_type==\"One Customer\";",
+   "fieldname": "one_customer_section",
+   "fieldtype": "Section Break",
+   "label": "One Customer Section"
+  },
+  {
+   "collapsible_depends_on": "eval:doc.journal_type==\"One Customer\";",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "mandatory_depends_on": "eval:doc.journal_type==\"One Customer\";",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "column_break_o6mbu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_xzip5",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-31 12:20:02.237587",
+ "modified_by": "Administrator",
+ "module": "AlRehab",
+ "name": "Journal installment",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
