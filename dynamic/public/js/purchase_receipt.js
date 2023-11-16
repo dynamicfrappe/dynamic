@@ -22,6 +22,18 @@ frappe.ui.form.on('Purchase Receipt', {
 	}
 });
 
+
+frappe.ui.form.on("Purchase Receipt Item", { 
+    stock_uom_rate:function(doc,cdt,cdn){
+        var row = locals[cdt][cdn]
+        if(row.stock_uom_rate){
+            row.rate = row.stock_uom_rate * row.conversion_factor
+            row.price_list_rate = row.stock_uom_rate * row.conversion_factor
+        }
+        cur_frm.refresh_fields("items")
+    }
+})
+
 //******* */
 const override_scan_code = erpnext.stock.PurchaseReceiptController.extend({
     scan_barcode: function() {
