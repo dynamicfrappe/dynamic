@@ -59,7 +59,7 @@ class MarketerRequest(Document):
             coupon.coupon_code = self.referral_code
             coupon.pricing_rule = self.pricing_rule
             coupon.valid_from = utils.today()
-            coupon.data.valid_upto = "2999-01-01"
+            coupon.valid_upto = "2999-01-01"
             coupon.save()
             self.coupon_code = coupon.name
 

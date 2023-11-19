@@ -161,7 +161,12 @@ const override_scan_code = erpnext.stock.DeliveryNoteController.extend({
         });
 
         scan_barcode_field.set_value('');
-        const reversed = this.frm.doc.items.reverse();
+        var reversed = this.frm.doc.items.reverse();
+        let count = 0
+        reversed.forEach((item , index) => {
+          item.idx = count +1;
+          count++;
+        })
         refresh_field("items");
     },
     show_scan_message (idx, exist = null) {
