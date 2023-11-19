@@ -6,16 +6,33 @@ from frappe import _
 from frappe.utils.data import  get_link_to_form 
 from frappe.model.document import Document
 from datetime import date
-
+from frappe.utils import (
+	cint,
+	cstr,
+	flt,
+	fmt_money,
+	format_datetime,
+	format_duration,
+	format_time,
+	format_timedelta,
+	formatdate,
+	getdate,
+)
+from frappe.utils.background_jobs import enqueue
+from datetime import date
 
 Domains=frappe.get_active_domains()
+
 class installmentEntry(Document):
-	def on_change(self) :
-		if "Rehab"  in Domains :
-			self.create_journal_entry()
-			
-	# def validate(self) :
-	# 	self.create_journal_entry()
+
+	def validate(self):
+		if  not self.get('__unsaved') and not self.claiming_entry:
+			self.set_status()
+
+	def after_insert(self):
+		self.set_status()
+
+	
 
 	def create_journal_entry(self):
 		if not self.is_clamed :
@@ -49,13 +66,16 @@ class installmentEntry(Document):
 	def caculate_installment_value(self):
 		eq_string= ""
 		doc = frappe.get_doc("installment Entry" , self.name)
+		# print(f'\n\n\n self.name==>{self.name}')
 		if not doc.ignore_delay_penalty:
 			area_c = frappe.db.get_value('Customer', doc.customer , 'unit_area')
 			pay_template = frappe.get_doc("installment Entry Type" , doc.type)
 			penality_template = False
-			if pay_template.financial_penalty_template :
+			if pay_template.financial_penalty_template  and pay_template.delay_penalty:
 				penality_template  = frappe.get_doc("Financial penalty template" , pay_template.financial_penalty_template)
 			if penality_template :
+				if penality_template.auto_create:
+					equation_value = flt(penality_template.creation_frequency) * flt(penality_template.monthly)
 				if penality_template.equation :
 					variables = [i for i in penality_template.variables]
 					# change string values with current value 
@@ -66,6 +86,7 @@ class installmentEntry(Document):
 								if i.variable == a :
 									if i.filed == "Static Value":
 										eq_string = eq_string +  i.value
+										# print(f'\n\n\n eq_string++==>{eq_string}')
 									if i.filed=="Item Unit Value" :
 										eq_string = eq_string + f"{area_c}"
 									if i.filed=="Days" :
@@ -75,11 +96,60 @@ class installmentEntry(Document):
 										eq_string = eq_string + f"{date_diff.days}" 	
 						else :
 							eq_string = eq_string +  a
-
-			equation_value = eval(eq_string) or 0
-			if equation_value:
-				self.db_set('delay_penalty',equation_value)
-				out_stand = (float(self.total_value or 0) + float(equation_value)) - float(self.total_payed or 0)
-				self.db_set('outstanding_value',out_stand)
+					equation_value = eval(eq_string) or 0
+					
+				if equation_value:
+					self.db_set('delay_penalty',equation_value)
+					# self.db_set('total_value',equation_value)
+					if not self.outstanding_value:
+						out_stand = (float(self.total_value or 0) + float(equation_value)) - float(self.total_payed or 0)
+					if float(self.outstanding_value or 0):
+						out_stand = float(self.outstanding_value or 0) + float(equation_value)
+					self.db_set('outstanding_value',out_stand)
 				
 
+	def set_status(self):
+		if getdate(self.due_date) <= date.today() and self.status=='Under collection':
+			self.status='Not Paid'
+			self.create_journal_entry()
+
+@frappe.whitelist()	
+def get_installment_entry_to_update_status():
+	data = f"""
+	select name,CAST(`tabinstallment Entry`.due_date AS DATE) as due_date
+	,`tabinstallment Entry`.due_date as d2 from `tabinstallment Entry` 
+	where CAST(`tabinstallment Entry`.due_date AS DATE) <= CURDATE()
+	AND `tabinstallment Entry`.status='Under collection'
+	"""
+	notify_role = ''
+	data = frappe.db.sql(data,as_dict=1)
+	if data :
+		prepare_enque_data(notify_role,data,update_installment_entry_status)
+
+
+
+def prepare_enque_data(role,data,method):
+	kwargs={
+		"data":data,
+	}
+	frappe.enqueue( 
+	method=method,
+	job_name="update_installment_entry_status",
+	queue="default", 
+	timeout=500, 
+	is_async=False, # if this is True, method is run in worker
+	now=True, # if this is True, method is run directly (not in a worker) 
+	at_front=False, # put the job at the front of the queue
+	**kwargs,
+)
+
+
+
+def update_installment_entry_status(**kwargs):
+	for row in kwargs.get("data"):
+		installment_entry = frappe.get_doc("installment Entry",row.name)
+		installment_entry.status= 'Not Paid'
+		installment_entry.create_journal_entry()
+		installment_entry.save()
+		frappe.db.commit()
+		

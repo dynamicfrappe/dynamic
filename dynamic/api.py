@@ -29,6 +29,7 @@ from six import string_types
 from dynamic.ifi.api import validate_payemnt_entry
 from frappe.utils import get_host_name
 import pandas as pd
+from dynamic.gebco.api import validate_purchase_recipt
 
 @frappe.whitelist()
 def encode_invoice_data(doc):
@@ -250,6 +251,13 @@ def generate_item_code(item_group):
 
     return serial
 
+def submit_purchase_recipt_based_on_active_domains(doc,*args,**kwargs):
+    if 'Gebco' in DOMAINS:
+        validate_purchase_recipt(doc)
+    if 'Terra' in DOMAINS:
+        check_email_setting_in_stock_setting(doc)
+        #check if PR has Reservation & reserve over warehouse
+        check_pr_reservation(doc)
 
 @frappe.whitelist()
 def create_new_appointment(source_name, target_doc=None):
@@ -263,14 +271,8 @@ def create_new_appointment(source_name, target_doc=None):
     return appointment_doc
 
 
-from dynamic.gebco.api import validate_purchase_recipt
-def submit_purchase_recipt_based_on_active_domains(doc,*args,**kwargs):
-    if 'Gebco' in DOMAINS:
-        validate_purchase_recipt(doc)
-    if 'Terra' in DOMAINS:
-        check_email_setting_in_stock_setting(doc)
-        #check if PR has Reservation & reserve over warehouse
-        check_pr_reservation(doc)
+
+
 
 def check_email_setting_in_stock_setting(doc):
     sql = """
@@ -304,8 +306,11 @@ def loop_over_doc_items(doc):
 
 def get_po_reservation(purchase_order,item,target_warehouse):
     reservation_list_sql = f"""SELECT `tabReservation`.name from `tabReservation` WHERE `tabReservation`.status <> 'Invalid'
-      AND `tabReservation`.order_source='{purchase_order}' AND `tabReservation`.item_code = '{item}' AND sales_order <> 'Invalid' AND `tabReservation`.warehouse_source = '' """
+      AND `tabReservation`.order_source='{purchase_order}' AND `tabReservation`.item_code = '{item}' 
+        AND `tabReservation`.warehouse_source  ='' """
+    # print(f'\n\n\n**reservation_list_sql** {reservation_list_sql} \n\n')
     data = frappe.db.sql(reservation_list_sql,as_dict=1)
+    # print(f'\n\n\n**data** {data} \n\n')
     if data:
         for reservation in data:
             # make reserv over warehouse
@@ -508,6 +513,7 @@ def add_row_for_reservation(self):
         """
         sql_reserv = frappe.db.sql(sql)
         #! edited for reservation module affect in terra
+        # add module reservation if want to check
         warehouse = item.get('item_warehouse') if "Terra" in DOMAINS else item.get('warehouse') or ''
         if not item.get('reservation') or not len(sql_reserv):
             reserv_doc = frappe.new_doc('Reservation')

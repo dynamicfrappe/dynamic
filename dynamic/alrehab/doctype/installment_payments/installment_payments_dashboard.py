@@ -14,7 +14,7 @@ def get_data():
 		# },
 		"transactions": [
 			# {"label": _("Installment Payments"), "items": ["Installment Payments",]},
-			{"label": _("Journal Entry"), "items": ["Journal Entry",]},
+			# {"label": _("Journal Entry"), "items": ["Journal Entry",]},
 			# {"label": _("Pricing"), "items": ["Item Price", "Pricing Rule"]},
 			
 		],

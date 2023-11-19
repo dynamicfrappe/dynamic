@@ -7,7 +7,6 @@ frappe.ui.form.on("Material Request",{
             if (r.message && r.message.length) {
               if (r.message.includes("WEH")) {
                  frm.events.remove_cst_button(frm)
-
           }
         }
         }
