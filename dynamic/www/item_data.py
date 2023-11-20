@@ -103,9 +103,7 @@ def get_item_stock(item) :
     qty=0
     if warehouse:
         sql = f""" SELECT SUM(actual_qty-reserved_qty) as qty FROM `tabBin` WHERE item_code ='{item}' and warehouse='{warehouse}' """
-        # print('\n\n\n======>',sql,'\n\n\n')
         qty = frappe.db.sql(sql,as_dict=1)
-        # print('\n\n\n======>',qty,'\n\n\n')
         if qty and len(qty) > 0 :
             qty= qty[0].get("qty")
         return qty

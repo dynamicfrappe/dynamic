@@ -1,0 +1,230 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{customer}-{#####}",
+ "creation": "2023-10-30 11:42:54.190289",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reference",
+  "section_break_2",
+  "item",
+  "column_break_4",
+  "type",
+  "section_break_6",
+  "installment_value",
+  "ignore_delay_penalty",
+  "status",
+  "column_break_10",
+  "due_date",
+  "section_break_12",
+  "payment_day",
+  "payment_value",
+  "delay_penalty",
+  "is_paid",
+  "column_break_16",
+  "total_value",
+  "total_payed",
+  "outstanding_value",
+  "contract",
+  "customer",
+  "section_break_21",
+  "income_account",
+  "cost_center",
+  "section_break_24",
+  "is_clamed",
+  "claiming_entry",
+  "paid_entry"
+ ],
+ "fields": [
+  {
+   "fieldname": "reference",
+   "fieldtype": "Data",
+   "label": "reference",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "type.item",
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "installment Entry Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "installment_value",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "installment Value",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "ignore_delay_penalty",
+   "fieldtype": "Check",
+   "label": "Ignore Delay penalty "
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nUnder collection\nNot Paid\nPartly Paid\nPaid",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_12",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "payment_day",
+   "fieldtype": "Date",
+   "label": "Payment Day"
+  },
+  {
+   "fieldname": "payment_value",
+   "fieldtype": "Data",
+   "label": "Payment Value"
+  },
+  {
+   "fieldname": "delay_penalty",
+   "fieldtype": "Data",
+   "label": "Delay penalty "
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_payed",
+   "fieldtype": "Data",
+   "label": "Total Payed"
+  },
+  {
+   "fieldname": "total_value",
+   "fieldtype": "Data",
+   "label": "Total Value",
+   "read_only_depends_on": "eval:doc.is_clamed"
+  },
+  {
+   "fieldname": "contract",
+   "fieldtype": "Link",
+   "label": "Contract",
+   "options": "Rehab Contract"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_21",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "type.income_account",
+   "fieldname": "income_account",
+   "fieldtype": "Link",
+   "label": "Income Account",
+   "options": "Account"
+  },
+  {
+   "fetch_from": "type.cost_center",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "section_break_24",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "claiming_entry",
+   "fieldtype": "Table",
+   "label": "Claiming Entry",
+   "options": "installment Entry Items"
+  },
+  {
+   "fieldname": "paid_entry",
+   "fieldtype": "Table",
+   "label": "Paid Entry",
+   "options": "installment Entry Items"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_paid",
+   "fieldtype": "Check",
+   "label": "is Paid"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_clamed",
+   "fieldtype": "Check",
+   "label": "is Clamed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outstanding_value",
+   "fieldtype": "Data",
+   "label": "Outstanding  Value"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-01 15:22:29.353388",
+ "modified_by": "Administrator",
+ "module": "alrehab",
+ "name": "installment Entry",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

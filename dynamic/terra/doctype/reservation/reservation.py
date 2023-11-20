@@ -14,9 +14,13 @@ class Reservation(Document):
 			data = self.validate_warehouse()
 		if target == 'pur':
 			data = self.validate_purchase_order()
+			
 		self.total_warehouse_reseved()
 		self.total_purchase_order_reseved()
-		
+		if self.status == "Invalid" :
+			frappe.db.sql(f""" UPDATE `tabReservation Purchase Order` 
+			     SET reserved_qty = 0 WHERE parent = '{self.name}' """)
+			frappe.db.commmit()
 	def validate_warehouse(self):
 		stock_sql = self.stock_sql()
 		if stock_sql and len(stock_sql) > 0 :

@@ -15,6 +15,13 @@ frappe.ui.form.on("Customer", {
         }
     },
     refresh(frm) {
+        frm.add_custom_button(
+            __("create_cst"),
+            function () {
+                frm.events.create_cst(frm)
+            },
+            
+        );
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
@@ -66,5 +73,19 @@ frappe.ui.form.on("Customer", {
                 "dynamic.terra.api.create_cst_appointment",
             frm: frm,
         });
+    },
+    create_cst:function(frm){
+        frappe.set_route('Form','Customer','test')
+        // frm.call({
+        //     method:"dynamic.master_deals.master_deals_api.create_cst",
+        //     args:{
+        //         cst_name:frm.doc.name
+        //     },
+        //     callback:function(r){
+        //         console.log(r.message)
+        //         frappe.set_route('Form','Sales Invoice',r.message)
+        //     }
+        // })
+        
     }
 })
