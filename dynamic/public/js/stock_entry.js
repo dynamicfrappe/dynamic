@@ -163,7 +163,7 @@ frappe.ui.form.on("Stock Entry", {
     },
     
     comparison : function (frm) {
-        if(frm.doc.against_comparison){
+        if(frm.doc.against_comparison && frm.doc.stock_entry_type){
           frappe.call({
             "method" : "contracting.contracting.doctype.stock_functions.stock_entry_setup" ,
             args:{
