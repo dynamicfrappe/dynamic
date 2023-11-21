@@ -392,8 +392,25 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 		}
 
 		if (!row_to_modify) {
-			// add new row if new item/batch is scanned
 			row_to_modify = frappe.model.add_child(this.frm.doc, cur_grid.doctype, 'items');
+      // var str = JSON.stringify(row_to_modify);
+      // console.log(`-new--row_to_modify-->${row_to_modify}----str${str}`)
+      // console.log(`-row_to_modify.idx-->${row_to_modify.idx}--`)
+      // console.log(`-length-->${this.frm.doc.items.length}--`)
+      // if (row_to_modify.idx>=1){
+      //   const len_arr = this.frm.doc.items.length-1
+      //   // for (let i =len_arr; i >=0; i--) {
+      //   //   // console.log(`-length-->${len_arr}--`)
+      //   //   // console.log(`-row shift-${i}->${this.frm.doc.items[i].item_code}--`)
+      //   //   console.log(`- this.frm.doc.items[i]-==>${ this.frm.doc.items[i].idx}--`)
+      //   //   this.frm.doc.items[i+1]  = this.frm.doc.items[i]
+      //   //   this.frm.doc.items[i+1].idx  = i+1
+      //   // }
+      //   //   row_to_modify.idx = 1
+      //   //   this.frm.doc.items[1] = row_to_modify
+        
+      //   // refresh_field("items");
+      // }
 		}
 
 		this.show_scan_message(row_to_modify.idx, row_to_modify.item_code);
@@ -430,18 +447,32 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 					value = row_to_modify[field] + '\n' + data[field];
 				}
 				frappe.model.set_value(row_to_modify.doctype, row_to_modify.name, field, value);
+        
+        // console.log(this.frm.doc.items)
+      //   console.log('*********row-added afetr')
+      //  frappe.throw('test111')
+
 			}
 		});
-
-		scan_barcode_field.set_value('');
-		var reversed = this.frm.doc.items.reverse();
-    let count = 0
-    reversed.forEach((item , index) => {
-      item.idx = count +1;
-      count++;
-    })
-
+    // let new_arr = []
+    // let len_arr = this.frm.doc.items.length-2
+    // for (let i =len_arr; i >=0; i--) {
+    //   let old_row = frappe.model.copy_doc(this.frm.doc.items[i])
+    //   console.log(old_row)
+    //   old_row.idx = i+2
+    //   new_arr.unshift(old_row)
+    // }
 		refresh_field("items");
+    // let old_row = frappe.model.copy_doc(row_to_modify)
+    // old_row.idx = 1
+    // new_arr.unshift(old_row)
+    // console.log(new_arr)
+    // this.frm.clear_table("items")
+    // this.frm.doc.items = new_arr
+    scan_barcode_field.set_value('');
+		refresh_field("items");
+
+    
 	},
 	show_scan_message (idx, exist = null) {
 		// show new row or qty increase toast
@@ -464,3 +495,11 @@ $.extend(
 	cur_frm.cscript,
 	new override_scan_code({frm: cur_frm}),
 )
+
+	// scan_barcode_field.set_value('');
+		// var reversed = this.frm.doc.items.reverse();
+    // let count = 0
+    // reversed.forEach((item , index) => {
+    //   item.idx = count +1;
+    //   count++;
+    // })
