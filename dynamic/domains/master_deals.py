@@ -107,6 +107,7 @@ data = {
         "property_type": "Check",
         "value": "0"
         },
+        
         {
         "doctype": "Delivery Note Item",
         "doctype_or_field": "DocField",
