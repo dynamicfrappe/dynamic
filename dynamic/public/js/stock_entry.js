@@ -380,7 +380,7 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 		let scan_barcode_field = this.frm.fields_dict["scan_barcode"];
 		let cur_grid = this.frm.fields_dict.items.grid;
 		let row_to_modify = null;
-
+    let new_row = 0
 		// Check if batch is scanned and table has batch no field
 		let batch_no_scan = Boolean(data.batch_no) && frappe.meta.has_field(cur_grid.doctype, "batch_no");
 
@@ -392,12 +392,13 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 		}
 
 		if (!row_to_modify) {
+      new_row = 1
 			row_to_modify = frappe.model.add_child(this.frm.doc, cur_grid.doctype, 'items');
      
 		}
 
 		this.show_scan_message(row_to_modify.idx, row_to_modify.item_code);
-		this.override_set_scanned_values(row_to_modify, data, scan_barcode_field);
+		this.override_set_scanned_values(row_to_modify, data, scan_barcode_field,new_row);
 	},
 	get_row_to_modify_on_scan(row_to_modify, data) {
 		// get an existing item row to increment or blank row to modify
@@ -412,7 +413,7 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 
 		return row_to_modify;
 	},
-	override_set_scanned_values(row_to_modify, data, scan_barcode_field) {
+	override_set_scanned_values(row_to_modify, data, scan_barcode_field,new_row) {
 		// increase qty and set scanned value and item in row
 		// console.log("Child-------------->>")
 		this.frm.from_barcode = this.frm.from_barcode ? this.frm.from_barcode + 1 : 1;
@@ -433,23 +434,23 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 			}
 		});
     
-		refresh_field("items");
     scan_barcode_field.set_value('');
 		refresh_field("items");
-    this.update_grid_ui(row_to_modify)
+    this.update_grid_ui(row_to_modify,new_row)
 
     
 	},
-  update_grid_ui(new_row){
-
-    let last_obj = this.frm.doc.items.pop()
-    this.frm.doc.items.unshift(new_row)
-    let new_arr = this.frm.doc.items
-    let count = 0
-    this.frm.doc.items.forEach((item , index) => {
-        item.idx = count +1;
-        count++;
-      })
+  update_grid_ui(row_to_modify,new_row){
+    if(new_row){
+      let last_obj = this.frm.doc.items.pop()
+      this.frm.doc.items.unshift(row_to_modify)
+      let new_arr = this.frm.doc.items
+      let count = 0
+      this.frm.doc.items.forEach((item , index) => {
+          item.idx = count +1;
+          count++;
+        })
+    }
     
     refresh_field("items");
   },
