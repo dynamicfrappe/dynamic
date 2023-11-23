@@ -1671,8 +1671,12 @@ def get_data(data):
     return reponse
 
 def validate_item_code(item_code) :
-    item_sql = frappe.db.sql(f""" SELECT name FROM `tabItem` 
-                            WHERE item_code = '{item_code}'""",as_dict =1 )
+    sql =f""" SELECT name FROM `tabItem` 
+                            WHERE item_code = '{item_code}'"""
+    frappe.errprint(f'sql==>{sql}')
+    
+    item_sql = frappe.db.sql(sql,as_dict =1 )
+    frappe.errprint(f'item_sql==>{item_sql}')
     if len(item_sql) > 0 and item_sql[0].get("name") :
         return item_code
     else :
