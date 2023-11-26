@@ -1,7 +1,7 @@
 {
- "category": "Domains",
+ "category": "Modules",
  "charts": [],
- "creation": "2023-11-08 11:09:13.595215",
+ "creation": "2023-11-26 08:22:50.572145",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -12,7 +12,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "Rehab",
+ "label": "Demo Rehab",
  "links": [
   {
    "hidden": 0,
@@ -69,12 +69,12 @@
    "type": "Link"
   }
  ],
- "modified": "2023-11-23 10:06:46.676314",
+ "modified": "2023-11-26 08:23:06.591357",
  "modified_by": "Administrator",
  "module": "alrehab",
- "name": "Rehab",
+ "name": "Demo Rehab",
  "owner": "Administrator",
  "pin_to_bottom": 0,
- "pin_to_top": 0,
+ "pin_to_top": 1,
  "shortcuts": []
 }
