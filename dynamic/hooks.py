@@ -150,7 +150,7 @@ doc_events = {
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
         "validate": ["dynamic.api.validate_delivery_note",
                      "dynamic.weh.delevery_note.validate_delevery_note",],
-        # "on_cancel": "dynamic.api.cancel_delivery_note",
+        "before_save": "dynamic.master_deals.master_deals_api.delivery_note_before_save",
     },
    
     "Journal Entry": {
