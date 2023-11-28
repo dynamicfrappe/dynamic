@@ -25,6 +25,7 @@ class MarketerRequest(Document):
         if self.item_groups :
             self.create_pricing_rule()
             self.createcoupon_code()
+
     def create_pricing_rule(self):
         rule = frappe.new_doc("Pricing Rule")
         rule.title = self.marketer_name
@@ -55,7 +56,7 @@ class MarketerRequest(Document):
         if self.pricing_rule :
             coupon = frappe.new_doc("Coupon Code")
             coupon.coupon_type = "Promotional"
-            coupon.coupon_name = self.marketer_name
+            coupon.coupon_name = self.referral_code	
             coupon.coupon_code = self.referral_code
             coupon.pricing_rule = self.pricing_rule
             coupon.valid_from = utils.today()

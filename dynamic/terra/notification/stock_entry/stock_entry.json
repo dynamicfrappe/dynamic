@@ -6,20 +6,20 @@
  "docstatus": 0,
  "doctype": "Notification",
  "document_type": "Stock Entry",
- "enabled": 0,
+ "enabled": 1,
  "event": "Save",
  "idx": 0,
  "is_standard": 1,
  "message": "Add your message here",
- "modified": "2023-09-06 13:56:58.259892",
+ "modified": "2023-11-22 17:13:29.266447",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Stock Entry",
  "owner": "abdallah.shokri@gmail.com",
  "recipients": [
   {
-   "receiver_by_document_field": "",
-   "receiver_by_role": "Stock User"
+   "receiver_by_document_field": "owner",
+   "receiver_by_role": "System Manager"
   }
  ],
  "send_system_notification": 0,

@@ -6,9 +6,14 @@ from frappe import _
 from frappe.utils.user import get_users_with_role
 from erpnext import get_default_company
 from frappe.desk.reportview import get_filters_cond, get_match_cond
-
+from frappe import _
 from erpnext.controllers.queries import get_fields
 from frappe.utils import get_host_name, escape_html,get_url
+from erpnext.accounts.doctype.pos_invoice.pos_invoice import get_bin_qty
+
+
+
+
 DOMAINS = frappe.get_active_domains()
 
 
@@ -213,3 +218,13 @@ def escape_html_demo(text):
 # 	print(f'\n\n=new_doc=>{new_doc.name}')
 	
 # 	return new_doc.name
+
+
+
+def delivery_note_before_save(doc,*args):
+	if 'Master Deals' in DOMAINS:
+		for item in doc.items:
+			act_qty = get_bin_qty(item.item_code,item.warehouse)
+			frappe.errprint(act_qty)
+			if act_qty<item.qty:
+				frappe.throw(_(f"Item '{item.item_code}'  Has No Qty In Warehouse '{item.warehouse}'"))

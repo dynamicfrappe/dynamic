@@ -97,10 +97,9 @@ class installmentEntry(Document):
 						else :
 							eq_string = eq_string +  a
 					equation_value = eval(eq_string) or 0
-					
+				out_stand = 0
 				if equation_value:
 					self.db_set('delay_penalty',equation_value)
-					# self.db_set('total_value',equation_value)
 					if not self.outstanding_value:
 						out_stand = (float(self.total_value or 0) + float(equation_value)) - float(self.total_payed or 0)
 					if float(self.outstanding_value or 0):

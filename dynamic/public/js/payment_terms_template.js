@@ -55,7 +55,7 @@ frappe.ui.form.on("Payment Terms Template", {
                   
                           d.show();
                         }
-                      ).addClass("btn-primary");;
+                      ).addClass("btn-primary");
                 }
             }
         }
