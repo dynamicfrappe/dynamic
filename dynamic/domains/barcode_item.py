@@ -9,16 +9,16 @@ data = {
     'custom_fields': {
         'Item':[
             {
-                "label":_("Barcode"),
-                "fieldname":"barcode",
+                "label":_("Barcode Second"),
+                "fieldname":"barcode_second",
                 "fieldtype":"Data",
                 "insert_after":"stock_uom", 
                 "no_copy":1, 
                 "read_only":1, 
             },
             {
-                "label":_("Item Barcode"),
-                "fieldname":"item_barcode",
+                "label":_("Item Barcode Second"),
+                "fieldname":"item_barcode_second",
                 "fieldtype":"Barcode",
                 "insert_after":"barcode", 
                 "no_copy":1, 
@@ -28,8 +28,8 @@ data = {
         ],
         'Item Barcode':[
             {
-                "label":_("Item Barcode"),
-                "fieldname":"item_barcode",
+                "label":_("Item Barcode Child"),
+                "fieldname":"item_barcode_child",
                 "fieldtype":"Barcode",
                 "insert_after":"barcode", 
                 "no_copy":1, 

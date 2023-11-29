@@ -15,13 +15,6 @@
  ],
  "fields": [
   {
-   "fieldname": "unit",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Unit",
-   "options": "Customer"
-  },
-  {
    "fieldname": "total_paid",
    "fieldtype": "Float",
    "label": "Total Paid"
@@ -41,13 +34,20 @@
    "fieldtype": "Table",
    "label": "Installment Items",
    "options": "Installment Payments Items"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Unit",
+   "options": "Customer"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-01 17:00:15.416137",
+ "modified": "2023-11-26 16:56:50.131348",
  "modified_by": "Administrator",
- "module": "alrehab",
+ "module": "AlRehab",
  "name": "Installment Payments",
  "owner": "Administrator",
  "permissions": [

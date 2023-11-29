@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "creation": "2023-11-26 08:22:50.572145",
+ "creation": "2023-11-26 13:00:15.545277",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -12,7 +12,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "Demo Rehab",
+ "label": "Demo",
  "links": [
   {
    "hidden": 0,
@@ -69,10 +69,10 @@
    "type": "Link"
   }
  ],
- "modified": "2023-11-26 12:38:43.553350",
+ "modified": "2023-11-26 13:00:17.609942",
  "modified_by": "Administrator",
  "module": "AlRehab",
- "name": "Demo Rehab",
+ "name": "Demo",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 1,

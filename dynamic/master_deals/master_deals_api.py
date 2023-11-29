@@ -225,6 +225,5 @@ def delivery_note_before_save(doc,*args):
 	if 'Master Deals' in DOMAINS:
 		for item in doc.items:
 			act_qty = get_bin_qty(item.item_code,item.warehouse)
-			frappe.errprint(act_qty)
 			if act_qty<item.qty:
 				frappe.throw(_(f"Item '{item.item_code}'  Has No Qty In Warehouse '{item.warehouse}'"))
