@@ -108,8 +108,8 @@ def validate_item_code(doc,*args,**kwargs):
 
     if 'Barcode Item' in DOMAINS:
         if len(doc.barcodes) and doc.barcodes[0].get('barcode'):
-            doc.db_set('barcode',doc.barcodes[0].get('barcode'))
-            doc.db_set('item_barcode',doc.barcodes[0].get('barcode'))
+            doc.db_set('barcode_second',doc.barcodes[0].get('barcode'))
+            doc.db_set('item_barcode_second',doc.barcodes[0].get('barcode'))
 
         
 
@@ -124,12 +124,7 @@ def after_insert_variant_item(doc,*args,**kwargs):
                     doc.description += f" <p>  {row.attribute} : {row.attribute_value}</p>"
                 doc.db_set('description',doc.description)
     if 'Barcode Item' in DOMAINS:
-        # Generate a random barcode number
-        # barcodes_exist = frappe.db.get_list("Item",)
         barcode_num = generate_barcode()
-        # old_barcodes = frappe.db.sql(f"""
-        # select barcode from `tabItem Barcode` where barcode ='{barcode_num}'
-        # """,as_list=1)
 
         doc.append("barcodes",
                     {"item_barcode":barcode_num,"barcode":barcode_num}
@@ -141,7 +136,6 @@ def generate_barcode():
     old_barcodes = frappe.db.sql(f"""
         select barcode from `tabItem Barcode` where barcode ='{new_barcode}'
         """,as_list=1)
-    frappe.errprint(f"===>{old_barcodes}")
     if len(old_barcodes):
         generate_barcode()
     if not old_barcodes:
