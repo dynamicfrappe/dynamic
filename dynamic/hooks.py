@@ -150,7 +150,7 @@ doc_events = {
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
         "validate": ["dynamic.api.validate_delivery_note",
                      "dynamic.weh.delevery_note.validate_delevery_note",],
-        # "on_cancel": "dynamic.api.cancel_delivery_note",
+        "before_save": "dynamic.master_deals.master_deals_api.delivery_note_before_save",
     },
    
     "Journal Entry": {
@@ -402,7 +402,7 @@ jenv = {
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_item_data:dynamic.www.item_data.encode_item_data",
-        "test_encode_item_data:dynamic.www.item_data.test_encode_item_data",
+        # "test_encode_item_data:dynamic.www.item_data.test_encode_item_data",
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",
