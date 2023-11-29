@@ -28,8 +28,8 @@ data = {
         ],
         'Item Barcode':[
             {
-                "label":_("Item Barcode"),
-                "fieldname":"item_barcode",
+                "label":_("Item Barcode Child"),
+                "fieldname":"item_barcode_child",
                 "fieldtype":"Barcode",
                 "insert_after":"barcode", 
                 "no_copy":1, 
