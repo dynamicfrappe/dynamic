@@ -941,19 +941,24 @@ def submit_stock_entry(doc ,*args,**kwargs) :
             frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
     if 'stock_transfer' in DOMAINS:
         check_stock_entry_transit(doc ,*args,**kwargs)
-
+    if  'WEH' in DOMAINS:
+        get_allowed_stoc_use_submit(doc)
 
 def check_stock_entry_transit(doc ,*args,**kwargs):
     if not doc.get('to_warehouse') and doc.get('outgoing_stock_entry'):
         frappe.throw('Please Select Default Target Warehouse')
     if doc.get('outgoing_stock_entry'):
-        get_allowed_user = f'''
-        SELECT user  FROM `tabWarehouse User` WHERE parent='{doc.get("to_warehouse")}' and user='{frappe.session.user}'
-        '''
-        get_allowed_user = frappe.db.sql(get_allowed_user,as_dict=1)
-        if not len(get_allowed_user):
-            frappe.throw(f'User "{frappe.session.user}" Not Allowed To Confirm TRansit To Warehouse "{doc.get("to_warehouse")}"')
-            
+        get_allowed_stoc_use_submit(doc)
+       
+def get_allowed_stoc_use_submit(doc):
+    get_allowed_user = f'''
+    SELECT user  FROM `tabWarehouse User` WHERE parent='{doc.get("to_warehouse")}' and user='{frappe.session.user}'
+    '''
+    get_allowed_user = frappe.db.sql(get_allowed_user,as_dict=1)
+    if not len(get_allowed_user):
+        frappe.throw(f'User "{frappe.session.user}" Not Allowed To Confirm Transit To Warehouse "{doc.get("to_warehouse")}"')
+
+
 @frappe.whitelist()           
 def submit_purchase_recipt(doc ,*args,**kwargs) :
 
@@ -1671,8 +1676,12 @@ def get_data(data):
     return reponse
 
 def validate_item_code(item_code) :
-    item_sql = frappe.db.sql(f""" SELECT name FROM `tabItem` 
-                            WHERE item_code = '{item_code}'""",as_dict =1 )
+    sql =f"""SELECT name FROM `tabItem` 
+                            WHERE item_code = '{item_code}'"""
+    frappe.errprint(f'sql==>{sql}')
+    
+    item_sql = frappe.db.sql(sql,as_dict =1 )
+    frappe.errprint(f'item_sql==>{item_sql}')
     if len(item_sql) > 0 and item_sql[0].get("name") :
         return item_code
     else :
