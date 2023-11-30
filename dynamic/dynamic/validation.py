@@ -135,11 +135,16 @@ def after_insert_variant_item(doc, *args, **kwargs):
                     )
                 doc.db_set("description", doc.description)
     if "Barcode Item" in DOMAINS:
-        barcode_num = generate_barcode()
-        doc.append("barcodes", {"item_barcode": barcode_num, "barcode": barcode_num})
+        barcode_num = ""
+        if not len(doc.barcodes):
+            barcode_num = generate_barcode()
+            doc.append(
+                "barcodes", {"item_barcode": barcode_num, "barcode": barcode_num}
+            )
+        if len(doc.barcodes):
+            barcode_num = doc.barcodes[0].get("barcode")
         doc.db_set("barcode_second", barcode_num)
         doc.db_set("item_barcode_second", barcode_num)
-        print(f"\n\n\n\n===>{barcode_num}\n\n\n")
         doc.save()
 
 

@@ -23,13 +23,13 @@ data = {
             },
         ],
         "Item Barcode": [
-            {
-                "label": _("Item Barcode Child"),
-                "fieldname": "item_barcode_child",
-                "fieldtype": "Barcode",
-                "insert_after": "barcode",
-                "no_copy": 1,
-            },
+            # {
+            #     "label": _("Item Barcode Child"),
+            #     "fieldname": "item_barcode_child",
+            #     "fieldtype": "Barcode",
+            #     "insert_after": "barcode",
+            #     "no_copy": 1,
+            # },
         ],
     },
     "properties": [
