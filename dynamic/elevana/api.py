@@ -549,7 +549,6 @@ def create_coupon_code(code , update=False,*args ,**kwargs ) :
     else :
         frappe.throw("No WooCommerce data Found !")
 
-
 def create_new_code(doc, *args ,**kwargs) :
     DOMAINS = frappe.get_active_domains()
     if  'Elevana' in DOMAINS and not doc.is_new() : 

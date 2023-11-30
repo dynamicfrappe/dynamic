@@ -291,12 +291,10 @@ def check_email_setting_in_stock_setting(doc):
             #     pass
 
 def check_pr_reservation(doc):
-    # print(f'\n\n\n**** {doc.__dict__} \n\n')
     if doc.doctype == "Purchase Invoice":
         if  doc.update_stock:
             loop_over_doc_items(doc)
     if doc.doctype == 'Purchase Receipt':
-        # print('\n\n\n------------ purchase recit \n\n')
         loop_over_doc_items(doc)
 
 def loop_over_doc_items(doc):
@@ -309,7 +307,7 @@ def loop_over_doc_items(doc):
 def get_po_reservation(purchase_order,item,target_warehouse):
     reservation_list_sql = f"""SELECT `tabReservation`.name from `tabReservation` WHERE `tabReservation`.status <> 'Invalid'
       AND `tabReservation`.order_source='{purchase_order}' AND `tabReservation`.item_code = '{item}' 
-        AND `tabReservation`.warehouse_source  ='' """
+        AND (`tabReservation`.warehouse_source='' or `tabReservation`.warehouse_source is NULL) """
     # print(f'\n\n\n**reservation_list_sql** {reservation_list_sql} \n\n')
     data = frappe.db.sql(reservation_list_sql,as_dict=1)
     # print(f'\n\n\n**data** {data} \n\n')
