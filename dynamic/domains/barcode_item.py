@@ -7,7 +7,7 @@ data = {
         "Item": [
             {
                 "label": _("Barcode Second"),
-                "fieldname": "barcode_second",
+                "fieldname": "barcode",
                 "fieldtype": "Data",
                 "insert_after": "stock_uom",
                 "no_copy": 1,
@@ -15,9 +15,9 @@ data = {
             },
             {
                 "label": _("Item Barcode Second"),
-                "fieldname": "item_barcode_second",
+                "fieldname": "item_barcode",
                 "fieldtype": "Barcode",
-                "insert_after": "barcode_second",
+                "insert_after": "barcode",
                 "no_copy": 1,
                 # "read_only":1,
             },

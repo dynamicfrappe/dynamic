@@ -143,8 +143,8 @@ def after_insert_variant_item(doc, *args, **kwargs):
             )
         if len(doc.barcodes):
             barcode_num = doc.barcodes[0].get("barcode")
-        doc.db_set("barcode_second", barcode_num)
-        doc.db_set("item_barcode_second", barcode_num)
+        doc.db_set("barcode", barcode_num)
+        doc.db_set("item_barcode", barcode_num)
         doc.save()
 
 
