@@ -111,10 +111,17 @@ def validate_item_code(doc, *args, **kwargs):
             create_item_serial_doc(doc)
             create_item_specs(doc)
 
-    if "Barcode Item" in DOMAINS:
-        if len(doc.barcodes) and doc.barcodes[0].get("barcode"):
-            doc.db_set("barcode", doc.barcodes[0].get("barcode"))
-            doc.db_set("item_barcode", doc.barcodes[0].get("barcode"))
+    # if "Barcode Item" in DOMAINS:
+    #     if len(doc.barcodes) and doc.barcodes[0].get("barcode"):
+    #         doc.db_set("barcode_second", doc.barcodes[0].get("barcode"))
+    #         doc.db_set("item_barcode_second", doc.barcodes[0].get("barcode"))
+
+
+# def before_insert_item(doc, *args, **kwargs):
+#     if "Barcode Item" in DOMAINS:
+#         if len(doc.barcodes) and doc.barcodes[0].get("barcode"):
+#             doc.db_set("barcode_second", doc.barcodes[0].get("barcode"))
+#             doc.db_set("item_barcode_second", doc.barcodes[0].get("barcode"))
 
 
 @frappe.whitelist()
@@ -128,11 +135,11 @@ def after_insert_variant_item(doc, *args, **kwargs):
                     )
                 doc.db_set("description", doc.description)
     if "Barcode Item" in DOMAINS:
-        # Generate a random barcode number
-        # b_list("Item",)
         barcode_num = generate_barcode()
-
         doc.append("barcodes", {"item_barcode": barcode_num, "barcode": barcode_num})
+        doc.db_set("barcode_second", barcode_num)
+        doc.db_set("item_barcode_second", barcode_num)
+        print(f"\n\n\n\n===>{barcode_num}\n\n\n")
         doc.save()
 
 
@@ -144,7 +151,6 @@ def generate_barcode():
         """,
         as_list=1,
     )
-    frappe.errprint(f"===>{old_barcodes}")
     if len(old_barcodes):
         generate_barcode()
     if not old_barcodes:
