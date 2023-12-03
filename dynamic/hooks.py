@@ -166,8 +166,8 @@ doc_events = {
         "validate": [
             "dynamic.api.validate_delivery_note",
             "dynamic.weh.delevery_note.validate_delevery_note",
+            "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty"
         ],
-        "before_save": "dynamic.master_deals.master_deals_api.delivery_note_before_save",
     },
     "Journal Entry": {
         "before_submit": ["dynamic.controllers.journal_entry.submit_journal_entry"],
