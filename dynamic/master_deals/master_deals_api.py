@@ -221,7 +221,7 @@ def escape_html_demo(text):
 
 
 
-def delivery_note_before_save(doc,*args):
+def delivery_note_validate_item_qty(doc,*args):
 	if 'Master Deals' in DOMAINS:
 		for item in doc.items:
 			act_qty = get_bin_qty(item.item_code,item.warehouse)
