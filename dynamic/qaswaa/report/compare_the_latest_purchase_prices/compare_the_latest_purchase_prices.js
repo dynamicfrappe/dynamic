@@ -21,7 +21,7 @@ frappe.query_reports["Compare the latest purchase prices"] = {
 			label: __("Item"),
 			fieldtype: "Link",
 			options: "Item" ,
-			// reqd: 1
+			reqd: 1
 		},
 	]
 };
