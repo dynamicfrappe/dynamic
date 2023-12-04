@@ -227,3 +227,11 @@ def delivery_note_validate_item_qty(doc,*args):
 			act_qty = get_bin_qty(item.item_code,item.warehouse)
 			if act_qty<item.qty:
 				frappe.throw(_(f"Item '{item.item_code}'  Has No Qty In Warehouse '{item.warehouse}'"))
+
+def stock_entry_validate_item_qty(doc,*args):
+	if 'Master Deals' in DOMAINS:
+		for item in doc.items:
+			if (item.item_code and  item.s_warehouse) :
+				act_qty = get_bin_qty(item.item_code,item.s_warehouse)
+				if act_qty<item.qty:
+					frappe.throw(_(f" <b>Item '{item.item_code}'</b>  hasn't this qty in warehouse <b>'{item.s_warehouse}'</b>"))

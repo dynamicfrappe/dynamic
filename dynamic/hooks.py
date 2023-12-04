@@ -209,7 +209,7 @@ doc_events = {
     },
     "Stock Entry": {
         # In This Target check the branches data in cost center
-        "validate": "dynamic.api.validate_stock_entry",
+        "validate": ["dynamic.api.validate_stock_entry",  "dynamic.master_deals.master_deals_api.stock_entry_validate_item_qty"],
         "on_submit": "dynamic.api.submit_stock_entry",
     },
     "Opportunity": {
