@@ -1550,15 +1550,18 @@ def before_insert_invoice(doc , *args , **kwargs) :
     this feature for differrent branches
     change naming of invoice according to user loggin in
     """
-    if 'Master Deals' in DOMAINS:
-        user = frappe.session.user
-        user_roles = frappe.get_roles()
-        selling_settings = frappe.get_single("Selling Settings")
-        if selling_settings.series_role and len(selling_settings.series_role):
-            for row in selling_settings.series_role:
-                if row.role in user_roles and row.naming_series_si:
-                    doc.naming_series = row.naming_series_si
-                    break
+    try:
+        if 'Master Deals' in DOMAINS:
+            user = frappe.session.user
+            user_roles = frappe.get_roles()
+            selling_settings = frappe.get_single("Selling Settings")
+            if selling_settings.series_role and len(selling_settings.series_role):
+                for row in selling_settings.series_role:
+                    if row.role in user_roles and row.naming_series_si:
+                        doc.naming_series = row.naming_series_si
+                        break
+    except Exception as E :
+        pass
 
 
 
