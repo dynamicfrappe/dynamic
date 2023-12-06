@@ -27,7 +27,7 @@ def execute(filters=None):
 		filters.periodicity,
 		company=filters.company,
 	)
-
+	
 	income = get_data(
 		filters.company,
 		"Income",
