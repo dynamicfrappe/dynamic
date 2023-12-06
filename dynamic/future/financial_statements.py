@@ -45,6 +45,7 @@ def get_period_list(
 		year_start_date = getdate(period_start_date)
 		year_end_date = getdate(period_end_date)
 
+
 	months_to_add = {"Yearly": 12, "Half-Yearly": 6, "Quarterly": 3, "Monthly": 1}[periodicity]
 
 	period_list = []
