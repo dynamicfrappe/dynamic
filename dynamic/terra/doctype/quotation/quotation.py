@@ -28,6 +28,7 @@ class Quotation(SellingController):
 		super(Quotation, self).validate()
 		self.set_status()
 		self.validate_uom_is_integer("stock_uom", "qty")
+		self.calculate_item_grand_total()
 		self.validate_valid_till()
 		self.validate_shopping_cart_items()
 		self.set_customer_name()
@@ -44,7 +45,10 @@ class Quotation(SellingController):
 		self.clear_unallocated_advances("Sales Invoice Advance", "advances")
 		self.calculate_total_advance()
 	
-
+	def calculate_item_grand_total(self):
+		for item in self.items:
+			item.grand_total = float(item.price_list_rate or 0) * float(item.qty or 0) 
+			print("grand total ",self.grand_total)
 	def validate_valid_till(self):
 		if self.valid_till and getdate(self.valid_till) < getdate(self.transaction_date):
 			frappe.throw(_("Valid till date cannot be before transaction date"))

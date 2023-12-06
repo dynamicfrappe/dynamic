@@ -23,8 +23,12 @@ class MarketerRequest(Document):
         self.status = "Approved"
         self.db_set("status", self.status)
         if self.item_groups :
-            self.create_pricing_rule()
+            #self.create_pricing_rule()
+            self.validate_price_rule()
             self.createcoupon_code()
+    def validate_price_rule(self):
+        if not self.pricing_rule :
+            frappe.throw(_("Please Select Price Rule "))
     def create_pricing_rule(self):
         rule = frappe.new_doc("Pricing Rule")
         rule.title = self.marketer_name
@@ -55,11 +59,11 @@ class MarketerRequest(Document):
         if self.pricing_rule :
             coupon = frappe.new_doc("Coupon Code")
             coupon.coupon_type = "Promotional"
-            coupon.coupon_name = self.marketer_name
+            coupon.coupon_name = self.referral_code	
             coupon.coupon_code = self.referral_code
             coupon.pricing_rule = self.pricing_rule
             coupon.valid_from = utils.today()
-            coupon.data.valid_upto = "2999-01-01"
+            coupon.valid_upto = "2999-01-01"
             coupon.save()
             self.coupon_code = coupon.name
 

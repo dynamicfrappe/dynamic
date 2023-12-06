@@ -3,7 +3,7 @@
  "align_labels_right": 0,
  "creation": "2023-02-27 15:56:13.438779",
  "custom_format": 0,
- "disabled": 0,
+ "disabled": 1,
  "doc_type": "Payment Entry",
  "docstatus": 0,
  "doctype": "Print Format",

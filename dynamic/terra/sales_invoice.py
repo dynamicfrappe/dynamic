@@ -16,6 +16,7 @@ def validate_sales_invoices(doc):
 
     # validate sales invocie linked with sales order 
     for line in doc.items  :
+        line.grand_total = float(line.price_list_rate or 0) * float(line.qty or 0)
         if not line.sales_order and doc.is_return ==0  : 
             frappe.throw(_(f"""You can not add Sales Invocie withou Sales Order 
                                 Please Check item {line.item_name}"""))

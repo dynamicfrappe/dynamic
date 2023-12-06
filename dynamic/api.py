@@ -307,7 +307,7 @@ def loop_over_doc_items(doc):
 def get_po_reservation(purchase_order,item,target_warehouse):
     reservation_list_sql = f"""SELECT `tabReservation`.name from `tabReservation` WHERE `tabReservation`.status <> 'Invalid'
       AND `tabReservation`.order_source='{purchase_order}' AND `tabReservation`.item_code = '{item}' 
-        AND `tabReservation`.warehouse_source  ='' """
+        AND (`tabReservation`.warehouse_source='' or `tabReservation`.warehouse_source is NULL) """
     # print(f'\n\n\n**reservation_list_sql** {reservation_list_sql} \n\n')
     data = frappe.db.sql(reservation_list_sql,as_dict=1)
     # print(f'\n\n\n**data** {data} \n\n')
@@ -941,19 +941,24 @@ def submit_stock_entry(doc ,*args,**kwargs) :
             frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
     if 'stock_transfer' in DOMAINS:
         check_stock_entry_transit(doc ,*args,**kwargs)
-
+    if  'WEH' in DOMAINS:
+        get_allowed_stoc_use_submit(doc)
 
 def check_stock_entry_transit(doc ,*args,**kwargs):
     if not doc.get('to_warehouse') and doc.get('outgoing_stock_entry'):
         frappe.throw('Please Select Default Target Warehouse')
     if doc.get('outgoing_stock_entry'):
-        get_allowed_user = f'''
-        SELECT user  FROM `tabWarehouse User` WHERE parent='{doc.get("to_warehouse")}' and user='{frappe.session.user}'
-        '''
-        get_allowed_user = frappe.db.sql(get_allowed_user,as_dict=1)
-        if not len(get_allowed_user):
-            frappe.throw(f'User "{frappe.session.user}" Not Allowed To Confirm TRansit To Warehouse "{doc.get("to_warehouse")}"')
-            
+        get_allowed_stoc_use_submit(doc)
+       
+def get_allowed_stoc_use_submit(doc):
+    get_allowed_user = f'''
+    SELECT user  FROM `tabWarehouse User` WHERE parent='{doc.get("to_warehouse")}' and user='{frappe.session.user}'
+    '''
+    get_allowed_user = frappe.db.sql(get_allowed_user,as_dict=1)
+    if not len(get_allowed_user):
+        frappe.throw(f'User "{frappe.session.user}" Not Allowed To Confirm Transit To Warehouse "{doc.get("to_warehouse")}"')
+
+
 @frappe.whitelist()           
 def submit_purchase_recipt(doc ,*args,**kwargs) :
 
@@ -1391,10 +1396,9 @@ def get_hijri_date(posting_date):
     return hijri_date
 
 @frappe.whitelist()
-def get_street_address_html(party_type, party):
-    address_list = frappe.db.sql(
-        """
-        SELECT
+def get_street_address_html(address,party_type, party):
+    sql_old = """
+        SELECT *,
             link.parent
         FROM
             `tabDynamic Link` link,
@@ -1402,34 +1406,43 @@ def get_street_address_html(party_type, party):
         WHERE
             link.parenttype = "Address"
                 AND link.link_name = %(party)s
+                AND link.link_doctype = %(party_type)s
         ORDER BY
             address.address_type="Postal" DESC,
             address.address_type="Billing" DESC
         LIMIT 1
-    """,
-        {"party": party},
+        {"party": party,"party_type":party_type},
         as_dict=True,
+"""
+    sql_new = f"""
+    SELECT address_title,address_type,address_line1,address_line2,city,country
+    FROM `tabAddress`
+    where name='{address}'
+    """
+    address_list = frappe.db.sql(
+        sql_new,as_dict=1
     )
     street_address = city_state = ""
     if address_list:
-        supplier_address = address_list[0]["parent"]
-        doc = frappe.get_doc("Address", supplier_address)
-        if doc.address_line2:
-            street_address = "First address :" +doc.address_line1 + " ,Second address :" + doc.address_line2 
+        address = address_list[0]
+        if address.address_line2:
+            street_address = "F-address :" +address.address_line1 + "<br>S-address :" + address.address_line2 
         else:
-            street_address = doc.address_line1 
+            street_address = address.address_line1 
 
-        city_state = " City: "+ doc.city + ", " if doc.city else ""
-        city_state = city_state + doc.state + " " if doc.state else city_state
-        city_state = city_state + doc.pincode if doc.pincode else city_state
+        city_state = "<br>City: "+ address.city + ", " if address.city else ""
+        city_state = city_state + address.state + " " if address.state else city_state
+        city_state = city_state + address.pincode if address.pincode else city_state
         city_state += ""
     return street_address + ',' + city_state
+
+
 
 @frappe.whitelist()
 def get_party_address(party_type, party):
     address_list = frappe.db.sql(
         """
-        SELECT
+        SELECT name,
             link.parent
         FROM
             `tabDynamic Link` link,
@@ -1447,6 +1460,7 @@ def get_party_address(party_type, party):
         as_dict=True,
     )
     street_address = city_state = ""
+
     if address_list:
         supplier_address = address_list[0]["parent"]
         doc = frappe.get_doc("Address", supplier_address)
@@ -1545,15 +1559,18 @@ def before_insert_invoice(doc , *args , **kwargs) :
     this feature for differrent branches
     change naming of invoice according to user loggin in
     """
-    if 'Master Deals' in DOMAINS:
-        user = frappe.session.user
-        user_roles = frappe.get_roles()
-        selling_settings = frappe.get_single("Selling Settings")
-        if selling_settings.series_role and len(selling_settings.series_role):
-            for row in selling_settings.series_role:
-                if row.role in user_roles and row.naming_series_si:
-                    doc.naming_series = row.naming_series_si
-                    break
+    try:
+        if 'Master Deals' in DOMAINS:
+            user = frappe.session.user
+            user_roles = frappe.get_roles()
+            selling_settings = frappe.get_single("Selling Settings")
+            if selling_settings.series_role and len(selling_settings.series_role):
+                for row in selling_settings.series_role:
+                    if row.role in user_roles and row.naming_series_si:
+                        doc.naming_series = row.naming_series_si
+                        break
+    except Exception as E :
+        pass
 
 
 
@@ -1671,8 +1688,12 @@ def get_data(data):
     return reponse
 
 def validate_item_code(item_code) :
-    item_sql = frappe.db.sql(f""" SELECT name FROM `tabItem` 
-                            WHERE item_code = '{item_code}'""",as_dict =1 )
+    sql =f"""SELECT name FROM `tabItem` 
+                            WHERE item_code = '{item_code}'"""
+    frappe.errprint(f'sql==>{sql}')
+    
+    item_sql = frappe.db.sql(sql,as_dict =1 )
+    frappe.errprint(f'item_sql==>{item_sql}')
     if len(item_sql) > 0 and item_sql[0].get("name") :
         return item_code
     else :

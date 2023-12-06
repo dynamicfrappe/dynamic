@@ -99,6 +99,23 @@ data = {
         "property_type": "Check",
         "value": "0"
         },
+        {
+        "doctype": "Purchase Receipt Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "stock_uom_rate",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "0"
+        },
+        
+        {
+        "doctype": "Delivery Note Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "stock_uom_rate",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "0"
+        },
     ],
   
     # 'on_setup': 'dynamic.teba.setup.setup_teba'

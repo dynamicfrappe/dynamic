@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from . import __version__ as app_version
+
 # from . import JSON as json
 # from . import PATH as Path
 # from . import OS as os
 
 
 # import json
-#import os
-#from pathlib import Path
+# import os
+# from pathlib import Path
 
 # BASE_DIR = Path(__file__).resolve().parent
 # print ("BASE_DIR ====> " , BASE_DIR)
@@ -33,45 +34,53 @@ app_logo_url = "/assets/dynamic/images/dynamic-logo.png"
 
 # include js, css files in header of desk.html
 app_include_css = "/assets/dynamic/css/dynamic.css"
-app_include_js = ["/assets/js/dynamic.min.js",]
+app_include_js = [
+    "/assets/js/dynamic.min.js",
+]
 
 
 # include js in doctype views
 # doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
-# 
+#
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 doctype_calendar_js = {
-    "Appointment":"public/js/appointment_calendar.js"
+    "Appointment": "public/js/appointment_calendar.js"
     # "doctype" : "public/js/appointment.js"
-    }
+}
 
 
 # calendars = ["Appointment"]
 
 doctype_list_js = {
-                    "Customer" : "public/js/customer_list.js",
-                    "Quotation" : "public/js/quotation_list.js"
-                    }
+    "Customer": "public/js/customer_list.js",
+    "Quotation": "public/js/quotation_list.js",
+}
 
-after_install =[ "dynamic.install.after_install","dynamic.dynamic.utils.create_customizations"]
-after_migrate = ["dynamic.install.after_install" ,"dynamic.dynamic.utils.create_customizations"]
+after_install = [
+    "dynamic.install.after_install",
+    "dynamic.dynamic.utils.create_customizations",
+]
+after_migrate = [
+    "dynamic.install.after_install",
+    "dynamic.dynamic.utils.create_customizations",
+]
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
 override_doctype_class = {
     "Product Bundle": "dynamic.product_bundle.doctype.product_bundle.product_bundle.ProductBundle",
-    "Payment Entry" : "dynamic.override_doctype_class.PaymentEntry",
-    "Quotation" : "dynamic.override_doctype_class.Quotation",
-    "Sales Order" : "dynamic.override_doctype_class.SalesOrder",
-    "Salary Slip" : "dynamic.override_doctype_class.SalarySlip",
+    "Payment Entry": "dynamic.override_doctype_class.PaymentEntry",
+    "Quotation": "dynamic.override_doctype_class.Quotation",
+    "Sales Order": "dynamic.override_doctype_class.SalesOrder",
+    "Salary Slip": "dynamic.override_doctype_class.SalarySlip",
     "Sales Invoice": "dynamic.override_doctype_class.SalesInvoice",
     "Customer": "dynamic.teba.doctype.customer.CustomerController",
-    "Stock Entry":"dynamic.override_doctype_class.StockEntry"
+    "Stock Entry": "dynamic.override_doctype_class.StockEntry"
     # "Lead" : "dynamic.override_doctype_class.Lead"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
 }
-#/home/abanoub/frappe-13/apps/frappe/frappe/public/js/frappe/views/reports/report_view.js
+# /home/abanoub/frappe-13/apps/frappe/frappe/public/js/frappe/views/reports/report_view.js
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Sales Order": "public/js/sales_order.js",
@@ -82,27 +91,24 @@ doctype_js = {
     "Payment Entry": "public/js/payment_entry.js",
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
     "Delivery Note": "public/js/delivery_note.js",
-    "Lead":"public/js/lead.js",
-    "Supplier":"public/js/supplier.js",
-    "Customer":"public/js/customer.js",
-    "Quotation":"public/js/quotation.js",
-    "Opportunity":"public/js/opportunity.js",
-    "Material Request" :"public/js/material_request.js",
-    "Work Order":"public/js/work_order.js",
-    "Job Card":"public/js/job_card.js",
-    "Request for Quotation":"public/js/request_for_quotation.js",
-    "Mode of Payment":"public/js/mode_of_payment.js",
-    "Purchase Receipt":"public/js/purchase_receipt.js",
-    "Stock Reconciliation":"public/js/stock_reconciliation.js",
-    "Item":"public/js/item.js",
-    "Journal Entry":"public/js/journal_entry.js",
-    "Payment Terms Template":"public/js/payment_terms_template.js",
-    "Payment Terms Template":"public/js/payment_terms_template.js",
+    "Lead": "public/js/lead.js",
+    "Supplier": "public/js/supplier.js",
+    "Customer": "public/js/customer.js",
+    "Quotation": "public/js/quotation.js",
+    "Opportunity": "public/js/opportunity.js",
+    "Material Request": "public/js/material_request.js",
+    "Work Order": "public/js/work_order.js",
+    "Job Card": "public/js/job_card.js",
+    "Request for Quotation": "public/js/request_for_quotation.js",
+    "Mode of Payment": "public/js/mode_of_payment.js",
+    "Purchase Receipt": "public/js/purchase_receipt.js",
+    "Stock Reconciliation": "public/js/stock_reconciliation.js",
+    "Item": "public/js/item.js",
+    "Journal Entry": "public/js/journal_entry.js",
+    "Payment Terms Template": "public/js/payment_terms_template.js",
+    "Payment Terms Template": "public/js/payment_terms_template.js",
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
-
-
-    
 }
 # doctype_js = {
 #     "Sales Invoice": "public/js/sales_invoice.js",
@@ -117,8 +123,8 @@ doctype_js = {
 # }
 
 
- #! added in terra only comment it in another domains
-#doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
+#! added in terra only comment it in another domains
+# doctype_js ["Payment Entry"] = "terra/doctype/payment_entry/payment_entry.js"
 
 
 # override_doctype_js = open(DOCTYPE_JS_FILE_PATH)
@@ -127,127 +133,139 @@ doctype_js = {
 # print("doctype_js ===========> " , doctype_js.get("Payment Entry"))
 
 doc_events = {
-    "Payment Entry":{
-               "on_submit": "dynamic.api.submit_payment",
+    "Payment Entry": {
+        "on_submit": "dynamic.api.submit_payment",
     },
-
     "Sales Invoice": {
         # "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
-        "on_submit": ["dynamic.gebco.api.validate_sales_invoice","dynamic.controllers.sales_invoice.before_submit"],
-        "validate": ["dynamic.api.validate_active_domains", "dynamic.controllers.sales_invoice.validate"],
-        "on_cancel" :"dynamic.api.invoice_on_cancel",
-        "before_insert": "dynamic.api.before_insert_invoice", 
+        "on_submit": [
+            "dynamic.gebco.api.validate_sales_invoice",
+            "dynamic.controllers.sales_invoice.before_submit",
+        ],
+        "validate": [
+            "dynamic.api.validate_active_domains",
+        ],
+        "on_cancel": "dynamic.api.invoice_on_cancel",
+        "before_insert": "dynamic.api.before_insert_invoice",
         # "before_cancel" : "dynamic.api.before_cancel_invoice",
     },
     "Item": {
         "autoname": "dynamic.api.autoname",
-        "validate": ["dynamic.dynamic.validation.validate_item_code",
-                    ],
+        "validate": [
+            "dynamic.dynamic.validation.validate_item_code",
+        ],
+        # "before_insert": "dynamic.dynamic.validation.before_insert_item",
         "after_insert": "dynamic.dynamic.validation.after_insert_variant_item",
     },
     "Delivery Note": {
-        "on_submit": ["dynamic.gebco.api.validate_delivery_note",],
+        "on_submit": [
+            "dynamic.gebco.api.validate_delivery_note",
+        ],
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
-        "validate": ["dynamic.api.validate_delivery_note",
-                     "dynamic.weh.delevery_note.validate_delevery_note",],
-        # "on_cancel": "dynamic.api.cancel_delivery_note",
+        "validate": [
+            "dynamic.api.validate_delivery_note",
+            "dynamic.weh.delevery_note.validate_delevery_note",
+            "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty"
+        ],
     },
-   
     "Journal Entry": {
-        "before_submit":["dynamic.controllers.journal_entry.submit_journal_entry"],
-        "on_submit": "dynamic.api.submit_journal_entry"
+        "before_submit": ["dynamic.controllers.journal_entry.submit_journal_entry"],
+        "on_submit": "dynamic.api.submit_journal_entry",
     },
     "Sales Order": {
         "before_submit": ["dynamic.api.before_submit_so"],
-        "before_save":[
-            "dynamic.api.check_source_item", 
-            ],
-        "validate" :["dynamic.elevana.hooks.add_partener_to_sales_order"] ,
-        "on_cancel":"dynamic.api.cancel_reservation",
-        "on_submit":["dynamic.real_state.rs_api.so_on_submit",],
+        "before_save": [
+            "dynamic.api.check_source_item",
+        ],
+        "validate": ["dynamic.elevana.hooks.add_partener_to_sales_order",
+                    "dynamic.controllers.sales_order.validate_sales_order",
+                     ],
+        "on_cancel": "dynamic.api.cancel_reservation",
+        "on_submit": [
+            "dynamic.real_state.rs_api.so_on_submit",
+        ],
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
-    "Coupon Code" : {
-        # this hook will apply only elevana Domain to send coupon code to woo commerce api 
-        "after_insert" : ["dynamic.elevana.api.create_new_code" ,] ,
-         "validate" : ["dynamic.elevana.api.create_new_code" ,]
+    "Coupon Code": {
+        # this hook will apply only elevana Domain to send coupon code to woo commerce api
+        "after_insert": [
+            "dynamic.elevana.api.create_new_code",
+        ],
+        "validate": [
+            "dynamic.elevana.api.create_new_code",
+        ],
     },
     "Material Request": {
         "on_submit": "dynamic.api.validate_material_request",
-        "validate" : "dynamic.api.onsave_material_request"
-
+        "validate": "dynamic.api.onsave_material_request",
     },
     "Landed Cost Voucher": {
         "validate": "dynamic.dynamic.validation.validate_landed_cost"
     },
     "Purchase Invoice": {
         "on_submit": "dynamic.api.submit_purchase_invoice",
-        "before_submit": ["dynamic.api.check_crean_amount_after_mapped_doc",],
-     },
-     "Stock Entry":{
-        # In This Target check the branches data in cost center  
-        "validate" :"dynamic.api.validate_stock_entry",
-        "on_submit" : "dynamic.api.submit_stock_entry"
-     },
-     "Opportunity":{
-       "validate" : "dynamic.ifi.api.opportunity_notifiy",
-    #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy" 
+        "before_submit": [
+            "dynamic.api.check_crean_amount_after_mapped_doc",
+        ],
     },
-    "Payment Entry":{
-        "autoname":"dynamic.api.modeofpaymentautoname",
-        "validate" :"dynamic.api.validate_paymentrntry",
-        "on_update_after_submit" : "dynamic.api.update_paymentrntry",
-       
+    "Stock Entry": {
+        # In This Target check the branches data in cost center
+        "validate": ["dynamic.api.validate_stock_entry",  "dynamic.master_deals.master_deals_api.stock_entry_validate_item_qty"],
+        "on_submit": "dynamic.api.submit_stock_entry",
     },
-    "Asset Movement":{
-        "on_submit":"dynamic.api.add_cost_center_to_asset"
-    } ,
-    "Supplier Quotation" :{
+    "Opportunity": {
+        "validate": "dynamic.ifi.api.opportunity_notifiy",
+        #    "on_submit" : "dynamic.ifi.api.opportunity_notifiy"
+    },
+    "Payment Entry": {
+        "autoname": "dynamic.api.modeofpaymentautoname",
+        "validate": "dynamic.api.validate_paymentrntry",
+        "on_update_after_submit": "dynamic.api.update_paymentrntry",
+    },
+    "Asset Movement": {"on_submit": "dynamic.api.add_cost_center_to_asset"},
+    "Supplier Quotation": {
         #  "validate" : "dynamic.terra.api.submit_supplier_quotation",
-          "on_submit":"dynamic.terra.api.submit_supplier_quotation"
+        "on_submit": "dynamic.terra.api.submit_supplier_quotation"
     },
-    "Item Price":{
-        "before_save":"dynamic.ifi.api.check_buying_price"
-    },
-    "Quotation":{
-        # "after_insert":"dynamic.ifi.api.quotation_send_email_cc", 
+    "Item Price": {"before_save": "dynamic.ifi.api.check_buying_price"},
+    "Quotation": {
+        # "after_insert":"dynamic.ifi.api.quotation_send_email_cc",
         "before_submit": "dynamic.api.before_submit_quot",
         "before_save": "dynamic.api.before_save_quotation",
     },
-    "Purchase Order":{
+    "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
         "before_submit": "dynamic.api.before_submit_po",
-        "after_inser" :  "dynamic.api.calculate_orderd_qty",
-        "on_submit":  "dynamic.api.calculate_orderd_qty",
-    } ,
+        "after_inser": "dynamic.api.calculate_orderd_qty",
+        "on_submit": "dynamic.api.calculate_orderd_qty",
+    },
     # "Appointment" :{
     #     "validate":"dynamic.api.appointment_validate"
-
     # },
-    "Accounts Settings":{
-        "validate" : "dynamic.api.onsave_account_settings"
-    },
-    "Lead":{
+    "Accounts Settings": {"validate": "dynamic.api.onsave_account_settings"},
+    "Lead": {
         # "validate":"dynamic.ifi.api.lead_contact_by_email"
-        "before_insert" :"dynamic.api.lead_before_insert"
+        "before_insert": "dynamic.api.lead_before_insert"
     },
-    "Purchase Receipt":{
-         "on_submit" : ["dynamic.api.submit_purchase_recipt","dynamic.api.submit_purchase_recipt_based_on_active_domains",],
-         "before_save" : "dynamic.api.before_save",
-         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
-        # "before_submit": 
+    "Purchase Receipt": {
+        "on_submit": [
+            "dynamic.api.submit_purchase_recipt",
+            "dynamic.api.submit_purchase_recipt_based_on_active_domains",
+        ],
+        "before_save": "dynamic.api.before_save",
+        # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
+        # "before_submit":
         # "before_save":"dynamic.api.check_pr_reservation"
     },
-    "Stock Ledger Entry":{
-        "before_insert":"dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
+    "Stock Ledger Entry": {
+        "before_insert": "dynamic.reservation.reservation_api.stock_ledger_entry_before_insert"
     },
-    "File":{
-        "after_insert":"dynamic.master_deals.master_deals_api.deals_after_insert"
+    "File": {
+        "after_insert": "dynamic.master_deals.master_deals_api.deals_after_insert"
     },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
     # }
-
     # "Purchase Receipt": {
     #     "validate": "dynamic.ifi.api.email_supplier_invoice",
     #  },Installations Furniture
@@ -255,9 +273,6 @@ doc_events = {
     #     "before_submit": "dynamic.ifi.api.check_child_table_qty",
     #  },
 }
-
-
-
 
 
 # Document Events
@@ -279,28 +294,28 @@ scheduler_events = {
         ],
         "0 */12 * * *": [
             "dynamic.api.validate_sales_order_reservation_status",
-        ] ,
-        "0 13 * * *" :[
+        ],
+        "0 13 * * *": [
             "dynamic.product_bundle.doctype.packed_item.new_packed_item.get_old_invocie"
         ],
-        "* 8 * * *":[
+        "* 8 * * *": [
             # "dynamic.ifi.api.send_mail_daily_opportunity_lead",
-            # "dynamic.ifi.api.daily_opportunity_notify" 
+            # "dynamic.ifi.api.daily_opportunity_notify"
         ],
     },
     # 	"all": [
     # 		"dynamic.tasks.all"
     # 	],
-    	"daily": [
-    		"dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
-    		"dynamic.master_deals.master_deals_api.alert_cheque_date",
-    		"dynamic.real_state.rs_api.setup_payment_term_notify",
-    		# "dynamic.alrehab.doctype.installment_entry.installment_entry.get_installment_entry_to_update_status",
-    	],
-    	"hourly": [
-    		# "dynamic.tasks.hourly",
-            "dynamic.dynamic.api.cor_job_cancel_reservation"
-    	],
+    "daily": [
+        "dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
+        "dynamic.master_deals.master_deals_api.alert_cheque_date",
+        "dynamic.real_state.rs_api.setup_payment_term_notify",
+        # "dynamic.alrehab.doctype.installment_entry.installment_entry.get_installment_entry_to_update_status",
+    ],
+    "hourly": [
+        # "dynamic.tasks.hourly",
+        "dynamic.dynamic.api.cor_job_cancel_reservation"
+    ],
     # 	"weekly": [
     # 		"dynamic.tasks.weekly"
     # 	]
@@ -319,8 +334,8 @@ scheduler_events = {
 #
 override_whitelisted_methods = {
     # "frappe.desk.reportview.export_query": "dynamic.api.export_query",
-	# "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
-    #/home/abanoub/frappe/dynamc_projects/frappe-14/apps/erpnext/erpnext/controllers/queries.py
+    # "frappe.desk.doctype.event.event.get_events": "dynamic.event.get_events"
+    # /home/abanoub/frappe/dynamc_projects/frappe-14/apps/erpnext/erpnext/controllers/queries.py
     # "erpnext.controllers.queries.supplier_query":"dynamic.master_deals.master_deals_api.get_supplier_by_code"
 }
 #
@@ -334,11 +349,11 @@ override_doctype_dashboards = {
     "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
     "Purchase Invoice": "dynamic.public.dashboard.purchase_invoice_dashboard.get_data",
     "Purchase Order": "dynamic.public.dashboard.purchase_order_dashboard.get_data",
-    "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data" ,
-    "Work Order" :"dynamic.public.dashboard.work_order.get_data" ,
-    "Job Card" :"dynamic.public.dashboard.job_card.get_data" ,
-    "Opportunity" :"dynamic.public.dashboard.opportunity_dashboard.get_data",
-    "Customer" :"dynamic.public.dashboard.customer_dashboard.get_data",
+    "Payment Entry": "dynamic.public.dashboard.payment_entry_dashboard.get_data",
+    "Work Order": "dynamic.public.dashboard.work_order.get_data",
+    "Job Card": "dynamic.public.dashboard.job_card.get_data",
+    "Opportunity": "dynamic.public.dashboard.opportunity_dashboard.get_data",
+    "Customer": "dynamic.public.dashboard.customer_dashboard.get_data",
 }
 
 # exempt linked doctypes from being automatically cancelled
@@ -347,48 +362,48 @@ override_doctype_dashboards = {
 
 
 domains = {
-    'Dynamic Accounts': 'dynamic.domains.dynamic_accounts',
-    'Dynamic HR': 'dynamic.domains.dynamic_hr',
-    'Dynamic Payroll': 'dynamic.domains.dynamic_payroll',
-    'Gebco': 'dynamic.domains.gebco',
-    "Moyate": 'dynamic.domains.moyate',
-    'Product Bundle': 'dynamic.domains.product_bundle',
-    'Cheques': 'dynamic.domains.cheques',
-    'Terra': 'dynamic.domains.tera',
-    'IFI': 'dynamic.domains.ifi',
-    'textile' :'dynamic.domains.textile',
-    'vero':'dynamic.domains.vero',
-    'Reach Group':'dynamic.domains.reach_group',
-    'Vana' : 'dynamic.domains.vana',
-    'Merge Entries':'dynamic.domains.merge_entries' ,
-    'WEH' :"dynamic.domains.weh",
-    'Owais' :"dynamic.domains.owais",
-    'Elevana' :"dynamic.domains.elevana",
-    'Homrany' :"dynamic.domains.homrany",
-    'Teba' :"dynamic.domains.teba",
-    'Sedia':"dynamic.domains.sedia",
-    'Majestey':"dynamic.domains.majestey",
-    'Kmina':"dynamic.domains.kmina",
-    'Maser2000':"dynamic.domains.maser2000",
-    'Behira Pac':"dynamic.domains.behira_pac",
-    'Future':"dynamic.domains.future",
-    'Elhamd':"dynamic.domains.elhamd",
-    'CRM Advance':"dynamic.domains.crm_advance",
-    'Reservation':"dynamic.domains.reservation",
-    'Real State':"dynamic.domains.real_state",
-    "Master Deals":"dynamic.domains.master_deals",
-    "Barcode Item":"dynamic.domains.barcode_item",
-    "Repack":"dynamic.domains.repack",
-    "Clinic":"dynamic.domains.clinic",
-    "EGY Phar":"dynamic.domains.egy_phar",
-    "ARAM":"dynamic.domains.aram",
-    "Branch":"dynamic.domains.branch",
-    "Cost Center":"dynamic.domains.cost_center",
-    "Lormed":"dynamic.domains.lormed",
-    "Nilex":"dynamic.domains.nilex",
-    "Stock Transfer":"dynamic.domains.stock_transfer",
-    "Qaswaa":"dynamic.domains.qaswaa",
-    "Rehab" :"dynamic.domains.alrehab"
+    "Dynamic Accounts": "dynamic.domains.dynamic_accounts",
+    "Dynamic HR": "dynamic.domains.dynamic_hr",
+    "Dynamic Payroll": "dynamic.domains.dynamic_payroll",
+    "Gebco": "dynamic.domains.gebco",
+    "Moyate": "dynamic.domains.moyate",
+    "Product Bundle": "dynamic.domains.product_bundle",
+    "Cheques": "dynamic.domains.cheques",
+    "Terra": "dynamic.domains.tera",
+    "IFI": "dynamic.domains.ifi",
+    "textile": "dynamic.domains.textile",
+    "vero": "dynamic.domains.vero",
+    "Reach Group": "dynamic.domains.reach_group",
+    "Vana": "dynamic.domains.vana",
+    "Merge Entries": "dynamic.domains.merge_entries",
+    "WEH": "dynamic.domains.weh",
+    "Owais": "dynamic.domains.owais",
+    "Elevana": "dynamic.domains.elevana",
+    "Homrany": "dynamic.domains.homrany",
+    "Teba": "dynamic.domains.teba",
+    "Sedia": "dynamic.domains.sedia",
+    "Majestey": "dynamic.domains.majestey",
+    "Kmina": "dynamic.domains.kmina",
+    "Maser2000": "dynamic.domains.maser2000",
+    "Behira Pac": "dynamic.domains.behira_pac",
+    "Future": "dynamic.domains.future",
+    "Elhamd": "dynamic.domains.elhamd",
+    "CRM Advance": "dynamic.domains.crm_advance",
+    "Reservation": "dynamic.domains.reservation",
+    "Real State": "dynamic.domains.real_state",
+    "Master Deals": "dynamic.domains.master_deals",
+    "Barcode Item": "dynamic.domains.barcode_item",
+    "Repack": "dynamic.domains.repack",
+    "Clinic": "dynamic.domains.clinic",
+    "EGY Phar": "dynamic.domains.egy_phar",
+    "ARAM": "dynamic.domains.aram",
+    "Branch": "dynamic.domains.branch",
+    "Cost Center": "dynamic.domains.cost_center",
+    "Lormed": "dynamic.domains.lormed",
+    "Nilex": "dynamic.domains.nilex",
+    "Stock Transfer": "dynamic.domains.stock_transfer",
+    "Qaswaa": "dynamic.domains.qaswaa",
+    "Rehab": "dynamic.domains.alrehab",
 }
 
 # domain Conatin
@@ -402,20 +417,19 @@ jenv = {
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_item_data:dynamic.www.item_data.encode_item_data",
-        "test_encode_item_data:dynamic.www.item_data.test_encode_item_data",
+        # "test_encode_item_data:dynamic.www.item_data.test_encode_item_data",
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",
         "get_address_display:frappe.contacts.doctype.address.address.get_address_display",
         "get_balance_on:erpnext.accounts.utils.get_balance_on",
         "get_hijri_date:dynamic.api.get_hijri_date",
         "get_cst_address:dynamic.api.get_street_address_html",
-        "get_party_address:dynamic.api.get_party_address",#ifi
+        "get_party_address:dynamic.api.get_party_address",  # ifi
         "get_customer_total_unpaid_amount:dynamic.api.get_customer_total_unpaid_amount",
         "QRcode_Customer_data:dynamic.master_deals.master_deals_api.QRcode_Customer_data",
     ],
-    "filters": []
+    "filters": [],
 }
-
 
 
 fixtures = [
@@ -428,8 +442,8 @@ fixtures = [
                 (
                     "Journal Entry Account-party_name",
                     "Cheque-party_name",
-                )
+                ),
             ]
-        ]
+        ],
     }
 ]

@@ -185,7 +185,7 @@ frappe.ui.form.on("Stock Entry", {
     },
     
     comparison : function (frm) {
-        if(frm.doc.against_comparison){
+        if(frm.doc.against_comparison && frm.doc.stock_entry_type){
           frappe.call({
             "method" : "contracting.contracting.doctype.stock_functions.stock_entry_setup" ,
             args:{
@@ -380,7 +380,7 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 		let scan_barcode_field = this.frm.fields_dict["scan_barcode"];
 		let cur_grid = this.frm.fields_dict.items.grid;
 		let row_to_modify = null;
-
+    let new_row = 0
 		// Check if batch is scanned and table has batch no field
 		let batch_no_scan = Boolean(data.batch_no) && frappe.meta.has_field(cur_grid.doctype, "batch_no");
 
@@ -392,12 +392,13 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 		}
 
 		if (!row_to_modify) {
-			// add new row if new item/batch is scanned
+      new_row = 1
 			row_to_modify = frappe.model.add_child(this.frm.doc, cur_grid.doctype, 'items');
+     
 		}
 
 		this.show_scan_message(row_to_modify.idx, row_to_modify.item_code);
-		this.override_set_scanned_values(row_to_modify, data, scan_barcode_field);
+		this.override_set_scanned_values(row_to_modify, data, scan_barcode_field,new_row);
 	},
 	get_row_to_modify_on_scan(row_to_modify, data) {
 		// get an existing item row to increment or blank row to modify
@@ -412,7 +413,7 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 
 		return row_to_modify;
 	},
-	override_set_scanned_values(row_to_modify, data, scan_barcode_field) {
+	override_set_scanned_values(row_to_modify, data, scan_barcode_field,new_row) {
 		// increase qty and set scanned value and item in row
 		// console.log("Child-------------->>")
 		this.frm.from_barcode = this.frm.from_barcode ? this.frm.from_barcode + 1 : 1;
@@ -432,11 +433,27 @@ const override_scan_code = erpnext.stock.StockEntry.extend({
 				frappe.model.set_value(row_to_modify.doctype, row_to_modify.name, field, value);
 			}
 		});
-
-		scan_barcode_field.set_value('');
-		const reversed = this.frm.doc.items.reverse();
+    
+    scan_barcode_field.set_value('');
 		refresh_field("items");
+    this.update_grid_ui(row_to_modify,new_row)
+
+    
 	},
+  update_grid_ui(row_to_modify,new_row){
+    if(new_row){
+      let last_obj = this.frm.doc.items.pop()
+      this.frm.doc.items.unshift(row_to_modify)
+      let new_arr = this.frm.doc.items
+      let count = 0
+      this.frm.doc.items.forEach((item , index) => {
+          item.idx = count +1;
+          count++;
+        })
+    }
+    
+    refresh_field("items");
+  },
 	show_scan_message (idx, exist = null) {
 		// show new row or qty increase toast
 		if (exist) {
@@ -458,3 +475,29 @@ $.extend(
 	cur_frm.cscript,
 	new override_scan_code({frm: cur_frm}),
 )
+
+
+    // let old_row = frappe.model.copy_doc(row_to_modify)
+    // old_row.idx = 1
+    // new_arr.unshift(old_row)
+    // console.log(new_arr)
+    // this.frm.clear_table("items")
+    // this.frm.doc.items = new_arr
+ // var str = JSON.stringify(row_to_modify);
+      // console.log(`-new--row_to_modify-->${row_to_modify}----str${str}`)
+      // console.log(`-row_to_modify.idx-->${row_to_modify.idx}--`)
+      // console.log(`-length-->${this.frm.doc.items.length}--`)
+      // if (row_to_modify.idx>=1){
+      //   const len_arr = this.frm.doc.items.length-1
+      //   // for (let i =len_arr; i >=0; i--) {
+      //   //   // console.log(`-length-->${len_arr}--`)
+      //   //   // console.log(`-row shift-${i}->${this.frm.doc.items[i].item_code}--`)
+      //   //   console.log(`- this.frm.doc.items[i]-==>${ this.frm.doc.items[i].idx}--`)
+      //   //   this.frm.doc.items[i+1]  = this.frm.doc.items[i]
+      //   //   this.frm.doc.items[i+1].idx  = i+1
+      //   // }
+      //   //   row_to_modify.idx = 1
+      //   //   this.frm.doc.items[1] = row_to_modify
+        
+      //   // refresh_field("items");
+      // }
