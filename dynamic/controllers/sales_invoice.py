@@ -6,7 +6,8 @@ Domains=frappe.get_active_domains()
 def validate(self , event):
     if "Lormed" in Domains :
         validate_items(self)
-
+    
+    
 def before_submit(self , event):
     if "Lormed" in Domains  and not self.ignore_validation: #and not self.ignore_validation
         check_open_sales_invoices(self)

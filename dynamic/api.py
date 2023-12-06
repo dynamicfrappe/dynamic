@@ -1396,10 +1396,9 @@ def get_hijri_date(posting_date):
     return hijri_date
 
 @frappe.whitelist()
-def get_street_address_html(party_type, party):
-    address_list = frappe.db.sql(
-        """
-        SELECT
+def get_street_address_html(address,party_type, party):
+    sql_old = """
+        SELECT *,
             link.parent
         FROM
             `tabDynamic Link` link,
@@ -1407,34 +1406,43 @@ def get_street_address_html(party_type, party):
         WHERE
             link.parenttype = "Address"
                 AND link.link_name = %(party)s
+                AND link.link_doctype = %(party_type)s
         ORDER BY
             address.address_type="Postal" DESC,
             address.address_type="Billing" DESC
         LIMIT 1
-    """,
-        {"party": party},
+        {"party": party,"party_type":party_type},
         as_dict=True,
+"""
+    sql_new = f"""
+    SELECT address_title,address_type,address_line1,address_line2,city,country
+    FROM `tabAddress`
+    where name='{address}'
+    """
+    address_list = frappe.db.sql(
+        sql_new,as_dict=1
     )
     street_address = city_state = ""
     if address_list:
-        supplier_address = address_list[0]["parent"]
-        doc = frappe.get_doc("Address", supplier_address)
-        if doc.address_line2:
-            street_address = "First address :" +doc.address_line1 + " ,Second address :" + doc.address_line2 
+        address = address_list[0]
+        if address.address_line2:
+            street_address = "F-address :" +address.address_line1 + "<br>S-address :" + address.address_line2 
         else:
-            street_address = doc.address_line1 
+            street_address = address.address_line1 
 
-        city_state = " City: "+ doc.city + ", " if doc.city else ""
-        city_state = city_state + doc.state + " " if doc.state else city_state
-        city_state = city_state + doc.pincode if doc.pincode else city_state
+        city_state = "<br>City: "+ address.city + ", " if address.city else ""
+        city_state = city_state + address.state + " " if address.state else city_state
+        city_state = city_state + address.pincode if address.pincode else city_state
         city_state += ""
     return street_address + ',' + city_state
+
+
 
 @frappe.whitelist()
 def get_party_address(party_type, party):
     address_list = frappe.db.sql(
         """
-        SELECT
+        SELECT name,
             link.parent
         FROM
             `tabDynamic Link` link,
@@ -1452,6 +1460,7 @@ def get_party_address(party_type, party):
         as_dict=True,
     )
     street_address = city_state = ""
+
     if address_list:
         supplier_address = address_list[0]["parent"]
         doc = frappe.get_doc("Address", supplier_address)

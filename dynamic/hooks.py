@@ -144,7 +144,6 @@ doc_events = {
         ],
         "validate": [
             "dynamic.api.validate_active_domains",
-            "dynamic.controllers.sales_invoice.validate",
         ],
         "on_cancel": "dynamic.api.invoice_on_cancel",
         "before_insert": "dynamic.api.before_insert_invoice",
@@ -178,7 +177,9 @@ doc_events = {
         "before_save": [
             "dynamic.api.check_source_item",
         ],
-        "validate": ["dynamic.elevana.hooks.add_partener_to_sales_order"],
+        "validate": ["dynamic.elevana.hooks.add_partener_to_sales_order",
+                    "dynamic.controllers.sales_order.validate_sales_order",
+                     ],
         "on_cancel": "dynamic.api.cancel_reservation",
         "on_submit": [
             "dynamic.real_state.rs_api.so_on_submit",
