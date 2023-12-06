@@ -46,7 +46,17 @@ def get_data(filters =None):
    ON a.parent = b.name 
    GROUP BY cost_center
    """,as_dict=1)
-   mais_sql = ""
+
+   condetions = ""
+   if filters.get("item") :
+        condetions = condetions + f""" a.item_code  = '{filters.get("item")}' AND"""
+   if filters.get("customer") :
+        condetions = condetions + f""" b.customer = '{filters.get("customer")}' AND"""
+   if filters.get("cost_center") :
+        cost_centers = [{"cost_center" : filters.get("cost_center")}]
+       
+   if filters.get("warehouse") :
+        condetions = condetions + f""" a.warehouse = '{filters.get("warehouse")}' AND"""  
    monthes = get_dates_labels(filters)
    for cost in cost_centers :
       center ={"cost_center" : cost.get('cost_center')}
@@ -55,7 +65,8 @@ def get_data(filters =None):
              `tabSales Invoice Item`  a 
               INNER JOIN `tabSales Invoice` b 
               ON a.parent = b.name 
-              WHERE a.cost_center = '{cost.get('cost_center')}' AND 
+              WHERE 
+              a.cost_center = '{cost.get('cost_center')}' AND {condetions}
               b.posting_date > date('{month.get("from_date")}') AND b.posting_date < date('{month.get("to_date")}')
               """ ,as_dict=1)
          center[month.get("key")] = float (fil[0].get(month.get("key"))  or 0 )
@@ -71,7 +82,7 @@ def get_columns(filters):
             "fieldname": "cost_center", 
             "fieldtype": "Link", 
             "options": "Cost Center", 
-            "width": 100, 
+            "width": 300, 
         }, 
          
     ]
@@ -79,6 +90,7 @@ def get_columns(filters):
          columns.append({
               "label":_(col.get("label")) ,
               "fieldname" : f"""{col.get("key")}""" ,
-              "fieldtype" :"Data"
+              "fieldtype" :"Data" ,
+              "width":150
          })
     return columns
