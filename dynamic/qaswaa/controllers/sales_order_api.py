@@ -19,7 +19,7 @@ def validate_item_qty_reserved(doc,*args,**kwargs):
     for row in doc.items:
         bin_details = get_bin_details(row.item_code,row.warehouse)
         #{'projected_qty': 20.0, 'actual_qty': 20.0, 'reserved_qty': 0.0}
-        # print(f'\n\n==>{bin_details}\n\n')
+        print(f'\n\n==>{row.item_code}--{bin_details}\n\n')
         if bin_details.get('actual_qty') - bin_details.get('reserved_qty') < row.qty:
             row.required_qty = abs(row.qty - (bin_details.get('actual_qty') - bin_details.get('reserved_qty')))
             msg += f"""
@@ -27,3 +27,6 @@ def validate_item_qty_reserved(doc,*args,**kwargs):
                     """
     if msg:
         frappe.msgprint(_(msg))
+
+
+

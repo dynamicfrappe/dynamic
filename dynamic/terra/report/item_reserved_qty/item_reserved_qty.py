@@ -46,7 +46,7 @@ class ItemReservedQty(object):
 			,`tabBin`.item_code
 			,`tabBin`.actual_qty as bin_actual_qty
 			,`tabBin`.reserved_qty
-			,(`tabBin`.actual_qty  -`tabBin`.reserved_qty) as actual_avail_qty
+			,(`tabBin`.actual_qty  -`tabBin`.reserved_qty) as rest_qty
 			FROM `tabBin`
 			WHERE {conditions}
 		"""
@@ -107,7 +107,7 @@ class ItemReservedQty(object):
             },
 			{
                 "label": _("Actual Avail QTY"),
-                "fieldname": "actual_avail_qty",
+                "fieldname": "rest_qty",
                 "fieldtype": "Float",
                 "width": 180,
             },
