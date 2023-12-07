@@ -42,11 +42,13 @@ class ItemReservedQty(object):
 		# 	conditions += " and so.cost_center = '%s'"%self.filters.get("cost_center")
 		sql_query_new = f"""
 			SELECT `tabBin`.name as 'bin'
-			,`tabBin`.warehouse as 'warehouse'
+			,`tabBin`.warehouse as 'bin_warehouse'
 			,`tabBin`.item_code
 			,`tabBin`.actual_qty as bin_actual_qty
 			,`tabBin`.reserved_qty
 			,(`tabBin`.actual_qty  -`tabBin`.reserved_qty) as actual_avail_qty
+			FROM `tabBin`
+			WHERE {conditions}
 		"""
 		# sql_query_new = f"""
 		# 				SELECT `tabBin`.name as 'bin'
