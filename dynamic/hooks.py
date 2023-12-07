@@ -144,7 +144,6 @@ doc_events = {
         ],
         "validate": [
             "dynamic.api.validate_active_domains",
-            "dynamic.controllers.sales_invoice.validate",
         ],
         "on_cancel": "dynamic.api.invoice_on_cancel",
         "before_insert": "dynamic.api.before_insert_invoice",
@@ -166,8 +165,8 @@ doc_events = {
         "validate": [
             "dynamic.api.validate_delivery_note",
             "dynamic.weh.delevery_note.validate_delevery_note",
+            "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty"
         ],
-        "before_save": "dynamic.master_deals.master_deals_api.delivery_note_before_save",
     },
     "Journal Entry": {
         "before_submit": ["dynamic.controllers.journal_entry.submit_journal_entry"],
@@ -178,7 +177,9 @@ doc_events = {
         "before_save": [
             "dynamic.api.check_source_item",
         ],
-        "validate": ["dynamic.elevana.hooks.add_partener_to_sales_order"],
+        "validate": ["dynamic.elevana.hooks.add_partener_to_sales_order",
+                    "dynamic.controllers.sales_order.validate_sales_order",
+                     ],
         "on_cancel": "dynamic.api.cancel_reservation",
         "on_submit": [
             "dynamic.real_state.rs_api.so_on_submit",
@@ -209,7 +210,7 @@ doc_events = {
     },
     "Stock Entry": {
         # In This Target check the branches data in cost center
-        "validate": "dynamic.api.validate_stock_entry",
+        "validate": ["dynamic.api.validate_stock_entry",  "dynamic.master_deals.master_deals_api.stock_entry_validate_item_qty"],
         "on_submit": "dynamic.api.submit_stock_entry",
     },
     "Opportunity": {

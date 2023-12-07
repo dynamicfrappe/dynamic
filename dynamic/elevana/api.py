@@ -503,7 +503,7 @@ def create_coupon_code(code , update=False,*args ,**kwargs ) :
     pay_load = {
         "code": data.name ,
         "type" : "fixed_cart" ,
-        "amount" : float(rule.discount_amount or 0) if rule else 0 ,
+        "amount" : float(rule.discount_percentage or 0) if rule else 0 ,
         "usage_limit":data.maximum_use , 
         "expiry_date" : data.valid_upto , 
         "minimum_amount":1,

@@ -3,7 +3,7 @@
  "align_labels_right": 1,
  "creation": "2023-04-04 12:03:24.766510",
  "custom_format": 0,
- "disabled": 0,
+ "disabled": 1,
  "doc_type": "Sales Order",
  "docstatus": 0,
  "doctype": "Print Format",
@@ -12,7 +12,11 @@
  "html": "asd",
  "idx": 0,
  "line_breaks": 1,
- "modified": "2023-04-04 14:20:35.039378",
+<<<<<<< HEAD
+ "modified": "2023-09-14 10:25:37.373398",
+=======
+ "modified": "2023-11-16 13:36:37.401885",
+>>>>>>> 9c7f785890b3bc97b7c27dcac926ed55a209ebe6
  "modified_by": "Administrator",
  "module": "Kmina",
  "name": "Kmina SO",
