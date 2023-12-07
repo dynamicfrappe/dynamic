@@ -5,8 +5,6 @@ import frappe
 from frappe import _
 import math
 from dynamic.future.financial_statements import (
-	get_columns,
-	get_data,
 	get_period_list,
 	validate_dates , 
 	get_months,
@@ -14,22 +12,19 @@ from dynamic.future.financial_statements import (
 )
 from frappe.utils import getdate , cint , add_months, get_first_day , add_days , formatdate
 
-
 def execute(filters=None):
 	columns, data = get_columns(filters), get_data(filters)
 	return columns, data
 
-
 def get_period_list(filters):
 	period_start_date =filters.get("period_start_date")
 	period_end_date =  filters.get("period_end_date")
-	periodicity = filters.get("periodicity")
 
 	validate_dates(period_start_date, period_end_date)
 	year_start_date = getdate(period_start_date)
 	year_end_date = getdate(period_end_date)
 
-	months_to_add = {"Yearly": 12, "Half-Yearly": 6, "Quarterly": 3, "Monthly": 1}[periodicity]
+	months_to_add = 1
 
 	start_date = year_start_date
 	months = get_months(year_start_date, year_end_date)
@@ -59,14 +54,9 @@ def get_period_list(filters):
 
 		if period.to_date == year_end_date:
 			break
-	# frappe.throw(str(period_list))
 	for opts in period_list:
 		key = opts["to_date"].strftime("%b_%Y").lower()
-		if periodicity == "Monthly":
-			label = formatdate(opts["to_date"], "MMM YYYY")
-		else:
-			label = get_label(periodicity, opts["from_date"], opts["to_date"])
-
+		label = opts["to_date"].strftime("%b %Y")
 		opts.update(
 			{
 				"key": key.replace(" ", "_").replace("-", "_"),
@@ -79,57 +69,58 @@ def get_period_list(filters):
 
 
 def get_data(filters):
-	sql =  f'''
-		SELECT 
-			PII.cost_center 
-		FROM 
-			`tabPurchase Invoice` PI 
-		INNER JOIN 
-			`tabPurchase Invoice Item` PII
-		ON 
-			PI.name = PII.parent
-		WHERE 
-			PI.docstatus = 1
-		GROUP BY 
-			PII.cost_center
-		'''
-	results = []
-	cost_centers = frappe.db.sql(sql , as_dict= 1)
 	conditions = " 1=1"
 	if filters.get("cost_center") :
-		cost_centers = [{"cost_center" : filters.get("cost_center")}]
+		conditions += f" and SII.cost_center = '{filters.get('cost_center')}'"
 	if filters.get("warehouse") :
-		conditions += f" and PII.warehouse = '{filters.get('warehouse')}'"
-	if filters.get("supplier") :
-		conditions += f" and PI.supplier = '{filters.get('supplier')}'"
+		conditions += f" and SII.warehouse = '{filters.get('warehouse')}'"
+	if filters.get("customer") :
+		conditions += f" and SI.customer = '{filters.get('customer')}'"
 	if filters.get("item_group") :
-		conditions += f" and PII.item_group = '{filters.get('item_group')}'"
+		conditions += f" and SII.item_group = '{filters.get('item_group')}'"
 	if filters.get("item_code") :
-		conditions += f" and PII.item_code = '{filters.get('item_code')}'"
+		conditions += f" and SII.item_code = '{filters.get('item_code')}'"
 
 	period_list = get_period_list(filters)
 
-
-	for center in cost_centers :
-		center = center["cost_center"]
-		dict ={"cost_center" : center}
+	# if filters.get("cost_center") :
+	sql =  f'''
+		SELECT 
+			SI.sales_partner 
+		FROM 
+			`tabSales Invoice` SI 
+		INNER JOIN 
+			`tabSales Invoice Item` SII
+		ON 
+			SI.name = SII.parent
+		WHERE 
+			SI.docstatus = 1
+		GROUP BY 
+			SI.sales_partner  
+		'''
+	results = []
+	parteners = frappe.db.sql(sql , as_dict= 1)
+	for partener in parteners :
+		partener = partener.sales_partner
+		dict ={"sales_partner" : partener}
+		# conditions += f" and SII.cost_center = '{center}'"
 		for period in period_list :
 
 			ss = f'''
 				SELECT 
-					SUM(PII.amount) as {period.key}
+					SUM(SII.amount) as {period.key}
 				FROM 
-					`tabPurchase Invoice` PI 
+					`tabSales Invoice` SI 
 				INNER JOIN 
-					`tabPurchase Invoice Item` PII
+					`tabSales Invoice Item` SII
 				ON 
-					PI.name = PII.parent
+					SI.name = SII.parent
 				WHERE
 				    {conditions} and
-					PI.docstatus = 1 and
-					PII.cost_center = '{center}' and 
-					PI.posting_date >= '{period.from_date}' 
-					and PI.posting_date <= '{period.to_date}'
+					SI.docstatus = 1 and
+					SI.sales_partner = '{partener}' and 
+					SI.posting_date >= '{period.from_date}' 
+					and SI.posting_date <= '{period.to_date}'
 				'''
 			data = frappe.db.sql(ss , as_dict = 1)
 			dict[period.key] = data[0][period.key]
@@ -137,17 +128,16 @@ def get_data(filters):
 		results.append(dict)
 	return results
 
-def get_columns( filters):
-	periodicity = filters.get("periodicity")
+def get_columns(filters):
 	period_list = get_period_list(filters)
 	columns = [
 		{
-			"fieldname": "cost_center",
-			"label": _("Cost Center"),
+			"fieldname": "sales_partner",
+			"label": _("Sales Partner"),
 			"fieldtype": "Link",
-			"options": "Cost Center",
+			"options": "Sales Partner",
 			"width": 300,
-		}
+		},
 	]
 	for period in period_list:
 		columns.append(

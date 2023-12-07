@@ -1,7 +1,7 @@
 {
  "add_total_row": 1,
  "columns": [],
- "creation": "2023-11-28 15:00:05.225554",
+ "creation": "2023-12-07 12:44:47.531532",
  "disable_prepared_report": 0,
  "disabled": 0,
  "docstatus": 0,
@@ -9,30 +9,24 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2023-11-28 15:00:05.225554",
+ "modified": "2023-12-07 12:44:47.531532",
  "modified_by": "Administrator",
  "module": "Qaswaa",
- "name": "\u0639\u0631\u0636 \u0633\u0639\u0631",
+ "name": "Sales Invoice Analytics Warehouse",
  "owner": "Administrator",
  "prepared_report": 0,
- "ref_doctype": "Sales Order",
- "report_name": "\u0639\u0631\u0636 \u0633\u0639\u0631",
+ "ref_doctype": "Sales Invoice",
+ "report_name": "Sales Invoice Analytics Warehouse",
  "report_type": "Script Report",
  "roles": [
   {
-   "role": "Sales User"
-  },
-  {
-   "role": "Sales Manager"
-  },
-  {
-   "role": "Maintenance User"
+   "role": "Accounts Manager"
   },
   {
    "role": "Accounts User"
   },
   {
-   "role": "Stock User"
+   "role": "Employee Self Service"
   }
  ]
 }

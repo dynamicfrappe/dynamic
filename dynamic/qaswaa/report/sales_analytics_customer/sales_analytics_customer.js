@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Monthly Purchases"] = {
+frappe.query_reports["Sales Analytics Customer"] = {
 	"filters": [
 		{
 			"fieldname":"period_start_date",
@@ -18,19 +18,7 @@ frappe.query_reports["Monthly Purchases"] = {
 			"reqd": 1,
 			// "default": frappe.datetime.get_today()
 		},
-		{
-			"fieldname": "periodicity",
-			"label": __("Periodicity"),
-			"fieldtype": "Select",
-			"options": [
-				{ "value": "Monthly", "label": __("Monthly") },
-				{ "value": "Quarterly", "label": __("Quarterly") },
-				{ "value": "Half-Yearly", "label": __("Half-Yearly") },
-				{ "value": "Yearly", "label": __("Yearly") }
-			],
-			"default": "Monthly",
-			"reqd": 1
-		},
+
 		{
 			"fieldname":"cost_center",
 			"label": __("Cost Center"),
@@ -46,10 +34,10 @@ frappe.query_reports["Monthly Purchases"] = {
 			// "reqd": 1,
 		},
 		{
-			"fieldname":"supplier",
-			"label": __("Supplier"),
+			"fieldname":"customer",
+			"label": __("Customer"),
 			"fieldtype": "Link",
-			"options" : "Supplier",
+			"options" : "Customer",
 			// "reqd": 1,
 		},
 		{
@@ -66,6 +54,5 @@ frappe.query_reports["Monthly Purchases"] = {
 			"options" : "Item",
 			// "reqd": 1,
 		}
-
 	]
 };
