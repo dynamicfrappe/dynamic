@@ -37,7 +37,7 @@ class ItemReservedQty(object):
 		if self.filters.get("item_code"):
 			conditions += " and `tabBin`.item_code = '%s'"%self.filters.get("item_code")
 		if self.filters.get("warehosue"):
-			conditions += " and `tabBin`.warehosue = '%s'"%self.filters.get("warehosue")
+			conditions += " and `tabBin`.warehouse = '%s'"%self.filters.get("warehosue")
 		# if self.filters.get("cost_center"):
 		# 	conditions += " and so.cost_center = '%s'"%self.filters.get("cost_center")
 		sql_query_new = f"""
@@ -45,10 +45,18 @@ class ItemReservedQty(object):
 			,`tabBin`.warehouse as 'bin_warehouse'
 			,`tabBin`.item_code
 			,`tabBin`.actual_qty as bin_actual_qty
-			,`tabBin`.reserved_qty
-			,(`tabBin`.actual_qty  -`tabBin`.reserved_qty) as rest_qty
+			,SUM(`tabReservation Warehouse`.reserved_qty) as reserved_qty
+			,(`tabBin`.actual_qty  - SUM(`tabReservation Warehouse`.reserved_qty)) as rest_qty
 			FROM `tabBin`
+			LEFT JOIN `tabReservation`
+			ON `tabBin`.warehouse=`tabReservation`.warehouse_source
+			AND `tabBin`.item_code=`tabReservation`.item_code
+			AND `tabReservation`.status='Active'
+			LEFT JOIN `tabReservation Warehouse`
+			ON `tabReservation Warehouse`.item=`tabReservation`.item_code
+			AND `tabReservation Warehouse`.parent=`tabReservation`.name
 			WHERE {conditions}
+			GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		"""
 		# sql_query_new = f"""
 		# 				SELECT `tabBin`.name as 'bin'
