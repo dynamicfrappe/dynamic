@@ -99,12 +99,13 @@ def get_data(filters):
 		conditions += f" and SII.item_code = '{filters.get('item_code')}'"
 
 	period_list = get_period_list(filters)
-
+	# frappe.throw(str(period_list))
 
 	for warehouse in warehouses :
 		warehouse = warehouse["warehouse"]
 		dict ={"warehouse" : warehouse}
 		# conditions += f" and SII.cost_center = '{center}'"
+		frappe.throw(str(period_list))
 		for period in period_list :
 
 			ss = f'''

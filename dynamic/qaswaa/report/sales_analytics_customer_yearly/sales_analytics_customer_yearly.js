@@ -19,28 +19,24 @@ frappe.query_reports["Sales Analytics Customer Yearly"] = {
 		// 	// "default": frappe.datetime.get_today()
 		// },
 		{
-			"fieldname":"fiscal_year",
-			"label": __("Fiscal Year"),
+			"fieldname":"fiscal_year_start",
+			"label": __("Fiscal Year Start"),
 			"fieldtype": "Link",
 			"options" : "Fiscal Year",
+			"reqd" : 1
 		},
 		{
-			"fieldname":"fiscal_year1",
-			"label": __("Fiscal Year"),
+			"fieldname":"fiscal_year_end",
+			"label": __("Fiscal Year End"),
 			"fieldtype": "Link",
 			"options" : "Fiscal Year",
+			"reqd" : 1
 		},
 		{
 			"fieldname":"cost_center",
 			"label": __("Cost Center"),
 			"fieldtype": "Link",
 			"options" : "Cost Center",
-		},
-		{
-			"fieldname":"warehouse",
-			"label": __("Warehouse"),
-			"fieldtype": "Link",
-			"options" : "Warehouse",
 		},
 		{
 			"fieldname":"customer",
