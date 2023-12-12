@@ -85,19 +85,20 @@ def create_item_specs(doc):
 
 
 def generate_item_code(item_group):
-    group_doc = frappe.get_doc("Item Group", item_group)
-    group_code = group_doc.code
-    if not group_code:
-        frappe.msgprint(_("Item Group Doesnt Have Code"))
-        return "false"
-    sql = f"""
-    select count(*) +1 as 'serial' from `tabitem code serial` where item_group= '{group_doc.name}'
-    """
-    res = frappe.db.sql(sql, as_dict=1)
+    if 'Terra' in DOMAINS:
+        group_doc = frappe.get_doc("Item Group", item_group)
+        group_code = group_doc.code
+        if not group_code:
+            frappe.msgprint(_("Item Group Doesnt Have Code"))
+            return "false"
+        sql = f"""
+        select count(*) +1 as 'serial' from `tabitem code serial` where item_group= '{group_doc.name}'
+        """
+        res = frappe.db.sql(sql, as_dict=1)
 
-    serial = str(group_code or "") + "-" + str(res[0].serial or "")
+        serial = str(group_code or "") + "-" + str(res[0].serial or "")
 
-    return serial
+        return serial
 
 
 def validate_item_code(doc, *args, **kwargs):
