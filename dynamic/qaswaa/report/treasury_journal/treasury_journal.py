@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from erpnext.accounts.utils import get_balance_on
 from frappe import _
 
 
@@ -41,7 +42,7 @@ def get_data(filters):
 	s = f'''
 	SELECT
 		account , posting_date , voucher_no , against 
-		, remarks , debit , credit
+		, remarks , debit , credit 
 	FROM
 		`tabGL Entry` P
 	WHERE
@@ -54,7 +55,10 @@ def get_data(filters):
 		credit 
 	'''
 	gl_entries = frappe.db.sql(s , as_dict = 1)
-	return gl_entries
+	if gl_entries :
+		balance = get_balance_on (account =f'{data[0]["default_account"]}' ,date =f'{gl_entries[0]["posting_date"]}')
+		gl_entries.append({"account" :f'{data[0]["default_account"]}' , "posting_date" : f'{gl_entries[0]["posting_date"]}' , "balance" : balance })
+		return gl_entries
 	
 def get_columns():
 	columns = [
@@ -100,6 +104,13 @@ def get_columns():
 		{
 			"fieldname": "credit",
 			"label": "Credit",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 150,
+		},
+		{
+			"fieldname": "balance",
+			"label": "Balance",
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 150,
