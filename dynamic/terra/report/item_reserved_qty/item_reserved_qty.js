@@ -4,16 +4,16 @@
 
 frappe.query_reports["Item Reserved QTY"] = {
 	"filters": [
-		{
-			fieldname: "from_date",
-			label: __("From Date"),
-			fieldtype: "Date"
-		},
-		{
-			fieldname: "to_date",
-			label: __("To Date"),
-			fieldtype: "Date"
-		},
+		// {
+		// 	fieldname: "from_date",
+		// 	label: __("From Date"),
+		// 	fieldtype: "Date"
+		// },
+		// {
+		// 	fieldname: "to_date",
+		// 	label: __("To Date"),
+		// 	fieldtype: "Date"
+		// },
 		{
 			fieldname: "item_code",
 			label: __("Item"),
@@ -21,10 +21,16 @@ frappe.query_reports["Item Reserved QTY"] = {
 			options:"Item"
 		},
 		{
-			fieldname: "cost_center",
-			label: __("Cost Center"),
+			fieldname: "warehosue",
+			label: __("Warehouse"),
 			fieldtype: "Link",
-			options:"Cost Center"
+			options:"Warehouse"
 		},
+		// {
+		// 	fieldname: "cost_center",
+		// 	label: __("Cost Center"),
+		// 	fieldtype: "Link",
+		// 	options:"Cost Center"
+		// },
 	]
 };

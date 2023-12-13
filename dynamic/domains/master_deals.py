@@ -7,14 +7,16 @@ from frappe import _
 data = {
 
     'custom_fields': {
-        'Company':[
-            # {
-            #     "label":_("Notification Cheque Role"),
-            #     "fieldname":"notification_cheque_role",
-            #     "fieldtype":"Link",
-            #     "options":"Role",
-            #     "insert_after":"rejected_cheques_bank_account", 
-            # },
+        
+        
+        'Item':[
+            {
+                "label":_("Next Item Name"),
+                "fieldname":"next_name",
+                "fieldtype":"Data",
+                "insert_after":"naming_series", 
+                "read_only":"1", 
+            },
             
         ],
         'Supplier':[

@@ -898,7 +898,7 @@ data = {
             
             },
             {
-                "label": "Grand Total",
+                "label": _("Grand Total"),
                 "fieldname": "grand_total",
                 "fieldtype": "Float",
                 "insert_after": "price_list_rate",

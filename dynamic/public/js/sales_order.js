@@ -41,6 +41,14 @@ frappe.ui.form.on("Sales Order", {
         if (r.message.includes("Terra") && frm.doc.docstatus == 2) {
             frm.page.clear_primary_action();  
         }
+        if (r.message.includes("Qaswaa") && frm.doc.docstatus == 1) {
+          
+          frm.add_custom_button(__("Create Purchase Invoice Prepaid"),()=>{
+            frm.events.create_prepaid_purchase_invoice(frm)
+          },
+          __("Create")
+          );  
+      }
       }
     })
     frm.events.add_cheque_button(frm);
@@ -243,6 +251,13 @@ frappe.ui.form.on("Sales Order", {
         },
       });
     }
+  },
+  create_prepaid_purchase_invoice(frm) {
+    frappe.model.open_mapped_doc({
+      // installation_request_doc    /home/abanoub/dynamic-projects/frapp-13-master/apps/dynamic/dynamic/qaswaa/controllers/qaswaa_api.py
+      method: "dynamic.qaswaa.controllers.qaswaa_api.create_purchase_invoice",
+      frm: frm,
+    });
   },
   make_cheque_doc(frm) {
     return frappe.call({

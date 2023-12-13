@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-06 11:01:26.230585",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "posting_date",
+  "invoice_type",
+  "invoice_name",
+  "shipping_company",
+  "column_break_jamwc",
+  "policy_number",
+  "delivery_number",
+  "delivery_date",
+  "charged",
+  "charged_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "invoice_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Invoice Type",
+   "options": "Sales Order\nSales Invoice",
+   "translatable": 1
+  },
+  {
+   "fieldname": "invoice_name",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Invoice Name",
+   "options": "invoice_type"
+  },
+  {
+   "fieldname": "shipping_company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Shipping Company",
+   "options": "Shipping Company"
+  },
+  {
+   "fieldname": "column_break_jamwc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "policy_number",
+   "fieldtype": "Data",
+   "label": "Policy number"
+  },
+  {
+   "default": "0",
+   "fieldname": "delivery_number",
+   "fieldtype": "Check",
+   "label": "Delivery number"
+  },
+  {
+   "depends_on": "eval:doc.delivery_number",
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Delivery Date",
+   "mandatory_depends_on": "eval:doc.delivery_number"
+  },
+  {
+   "default": "0",
+   "fieldname": "charged",
+   "fieldtype": "Check",
+   "label": "Charged"
+  },
+  {
+   "depends_on": "eval:doc.charged",
+   "fieldname": "charged_date",
+   "fieldtype": "Date",
+   "label": "Charged Date",
+   "mandatory_depends_on": "eval:doc.charged"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-06 11:13:43.398242",
+ "modified_by": "Administrator",
+ "module": "Qaswaa",
+ "name": "Sales Document States",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
