@@ -1,22 +1,14 @@
 frappe.query_reports["Sales Analytics Cost Center"] = {
 	"filters": [
       {
-<<<<<<< HEAD
-			fieldname: "from_date",
-=======
 			fieldname: "period_start_date",
->>>>>>> b68437acb5951ab4f88a965e164979e776287914
 			label: __("From Date"),
 			fieldtype: "Date",
 			default: frappe.datetime.get_today(),
 			reqd : 1
 		},
 		{
-<<<<<<< HEAD
-			fieldname: "to_date",
-=======
 			fieldname: "period_end_date",
->>>>>>> b68437acb5951ab4f88a965e164979e776287914
 			label: __("To Date"),
 			fieldtype: "Date",
 			default: frappe.datetime.add_days(frappe.datetime.get_today(),10),
