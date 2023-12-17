@@ -181,3 +181,11 @@ def get_payment_entry(
 		pe.set_difference_amount()
 		
 	return pe
+
+@frappe.whitelist()
+def x(item_tax_template):
+	amount = 0 
+	template = frappe.get_doc("Item Tax Template" ,item_tax_template)
+	for tax in template.taxes :
+		amount = amount + tax.tax_rate
+	return amount
