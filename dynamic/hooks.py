@@ -404,6 +404,7 @@ domains = {
     "Stock Transfer": "dynamic.domains.stock_transfer",
     "Qaswaa": "dynamic.domains.qaswaa",
     "Rehab": "dynamic.domains.alrehab",
+    "Logistics": "dynamic.domains.logistics",
 }
 
 # domain Conatin
