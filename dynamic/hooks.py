@@ -285,6 +285,7 @@ doc_events = {
 
 scheduler_events = {
     "cron": {
+        "*/1 * * * *": ["dynamic.logistics.logistics_api.check_data_remaining"],
         "0 */2 * * *": [
             "dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",
             "erpnext.stock.reorder_item.reorder_item",
