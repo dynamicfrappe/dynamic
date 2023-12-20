@@ -227,6 +227,7 @@ def delivery_note_validate_item_qty(doc,*args):
 			act_qty = get_bin_qty(item.item_code,item.warehouse)
 			rqd_qty = float(item.qty or 0) * float(item.conversion_factor	or 0)
 			if act_qty<item.qty:
+
 				frappe.throw(_(f"Item '{item.item_code}'  Has No Qty In Warehouse '{item.warehouse}'"))
 
 def stock_entry_validate_item_qty(doc,*args):
@@ -235,4 +236,5 @@ def stock_entry_validate_item_qty(doc,*args):
 			act_qty = get_bin_qty(item.item_code,item.s_warehouse)
 			rqd_qty = float(item.qty or 0) * float(item.conversion_factor	or 0)
 			if act_qty< rqd_qty:
+				
 				frappe.throw(_(f" <b>Item '{item.item_code}'</b>  hasn't this qty in warehouse <b>'{item.s_warehouse}'</b>"))
