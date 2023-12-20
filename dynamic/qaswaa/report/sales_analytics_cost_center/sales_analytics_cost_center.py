@@ -2,11 +2,7 @@ import frappe
 from frappe import _
 from frappe.utils import  getdate
 from frappe.utils import add_days, add_months, cint, cstr, flt, formatdate, get_first_day, getdate
-<<<<<<< HEAD
-
-=======
 from dynamic.future.financial_statements import validate_dates 
->>>>>>> b68437acb5951ab4f88a965e164979e776287914
 
 import math
 import re
