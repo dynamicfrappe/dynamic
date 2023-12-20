@@ -234,3 +234,9 @@ def stock_entry_validate_item_qty(doc,*args):
 			act_qty = get_bin_qty(item.item_code,item.s_warehouse)
 			if act_qty<item.qty:
 				frappe.throw(_(f" <b>Item '{item.item_code}'</b>  hasn't this qty in warehouse <b>'{item.s_warehouse}'</b>"))
+
+				
+@frappe.whitelist()
+def get_last_doctype(doc_type=None):
+	if 'Master Deals' in DOMAINS:
+		return frappe.get_last_doc(doc_type)

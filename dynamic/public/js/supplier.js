@@ -1,6 +1,18 @@
 
 
 frappe.ui.form.on("Supplier", {
+    onload: function(frm){
+        frappe.call({
+            method:"dynamic.master_deals.master_deals_api.get_last_doctype",
+            args:{
+                doc_type: frm.doctype
+            },
+            callback:function(r){
+                frm.set_value('last_supplier',r.message.supplier_name)
+				frm.refresh_field("last_supplier")
+            }
+        })
+    },
     check_url:function(frm){
         if(frm.doc.url){
             frappe.call({

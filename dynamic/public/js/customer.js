@@ -87,5 +87,17 @@ frappe.ui.form.on("Customer", {
         //     }
         // })
         
-    }
+    },
+    onload: function(frm){
+        frappe.call({
+            method:"dynamic.master_deals.master_deals_api.get_last_doctype",
+            args:{
+                doc_type: frm.doctype
+            },
+            callback:function(r){
+                frm.set_value('last_customer',r.message.customer_name)
+				frm.refresh_field("last_customer")
+            }
+        })
+    },
 })

@@ -7,15 +7,22 @@ from frappe import _
 data = {
 
     'custom_fields': {
-        
-        
+
+
         'Item':[
             {
                 "label":_("Next Item Name"),
                 "fieldname":"next_name",
                 "fieldtype":"Data",
                 "insert_after":"naming_series", 
-                "read_only":"1", 
+                "read_only":1, 
+            },
+            {
+                "label":_("Last Item"),
+                "fieldname":"last_item",
+                "fieldtype":"Data",
+                "insert_after":"account_currency",
+                "read_only":1, 
             },
             
         ],
@@ -27,6 +34,14 @@ data = {
                 "insert_after":"supplier_name", 
                 "in_global_search":1, 
             },
+            {
+                "label":_("Last Supplier"),
+                "fieldname":"last_supplier",
+                "fieldtype":"Data",
+                "insert_after":"naming_series", 
+                "read_only":1, 
+
+            },
             
         ],
         'Customer':[
@@ -36,6 +51,13 @@ data = {
                 "fieldtype":"Data",
                 "insert_after":"customer_name", 
                 "in_global_search":1, 
+            },
+            {
+                "label":_("Last Customer"),
+                "fieldname":"last_customer",
+                "fieldtype":"Data",
+                "insert_after":"salutation", 
+                "read_only":1, 
             },
             
         ],
