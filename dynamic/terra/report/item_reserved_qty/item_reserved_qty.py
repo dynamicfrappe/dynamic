@@ -28,7 +28,7 @@ class ItemReservedQty(object):
 		get_new = self.get_new_opportunity(conditions)
 		# frappe.errprint(f"all is ==> {get_new}")
 		return get_new
-
+	
 	def get_new_opportunity(self,conditions):
 		# if self.filters.get("from_date"):
 		# 	conditions += " and `tabReservation`.creation >= '%s'"%self.filters.get("from_date")
@@ -44,9 +44,9 @@ class ItemReservedQty(object):
 			SELECT `tabBin`.name as 'bin'
 			,`tabBin`.warehouse as 'bin_warehouse'
 			,`tabBin`.item_code
-			,`tabBin`.actual_qty as bin_actual_qty
-			,SUM(`tabReservation Warehouse`.reserved_qty) as reserved_qty
-			,(`tabBin`.actual_qty  - SUM(`tabReservation Warehouse`.reserved_qty)) as rest_qty
+			,IFNULL(`tabBin`.actual_qty ,0 )as bin_actual_qty
+			,IFNULL(SUM(`tabReservation Warehouse`.reserved_qty)  ,0) as reserved_qty
+			,(`tabBin`.actual_qty  - IFNULL(SUM(`tabReservation Warehouse`.reserved_qty)  ,0) ) as rest_qty
 			FROM `tabBin`
 			LEFT JOIN `tabReservation`
 			ON `tabBin`.warehouse=`tabReservation`.warehouse_source

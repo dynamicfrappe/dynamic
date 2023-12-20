@@ -25,11 +25,15 @@ def get_data(filters):
 			tpoi.qty - sum(tpri.qty) as 'remaining_qty'
 			from
 			`tabReservation Purchase Order` por
+			INNER JOIN `tabReservation` res
+			ON por.parent = res.name 
 			inner join `tabPurchase Order Item` tpoi 
 			on tpoi.parent  = por.purchase_order  and tpoi.item_code = por.item
 			left join `tabPurchase Receipt Item` tpri
-			on tpoi.parent = tpri.purchase_order  and tpoi.item_code  = tpri.item_code and tpri.purchase_order is not null and tpri.docstatus =1
-			{conditions}
+			on tpoi.parent = tpri.purchase_order  and 
+			tpoi.item_code  = tpri.item_code and tpri.purchase_order is not null
+			  and tpri.docstatus =1 and res.status = "Active"
+			and {conditions}
 			GROUP by  por.purchase_order,tpri.purchase_order
 		
 	"""
