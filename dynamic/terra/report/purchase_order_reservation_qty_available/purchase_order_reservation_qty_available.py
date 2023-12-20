@@ -61,8 +61,8 @@ class PurchaseOrderAvailREservedQth(object):
 		LEFT JOIN
 		`tabReservation`
 		ON  `tabReservation Purchase Order`.parent = `tabReservation`.name 
-		AND `tabReservation`.status <> "Invalid"
-		WHERE {conditions}
+		
+		WHERE `tabReservation`.status in   ("Active" , "Partial Delivered") and  {conditions}
 		GROUP BY `tabPurchase Order Item`.name,`tabPurchase Order Item`.item_code
 		) table1
 		"""
