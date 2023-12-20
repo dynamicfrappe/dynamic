@@ -1594,6 +1594,13 @@ def set_advences_to_schedules(doc , *args , **kwargs):
                     total_advance -= advance_added_amount
 
 
+@frappe.whitelist()
+def get_taxes_amount(item_tax_template):
+	amount = 0 
+	template = frappe.get_doc("Item Tax Template" ,item_tax_template)
+	for tax in template.taxes :
+		amount = amount + tax.tax_rate
+	return amount
 
 
     

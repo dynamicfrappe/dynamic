@@ -404,6 +404,7 @@ domains = {
     "Stock Transfer": "dynamic.domains.stock_transfer",
     "Qaswaa": "dynamic.domains.qaswaa",
     "Rehab": "dynamic.domains.alrehab",
+    "Logistics": "dynamic.domains.logistics",
 }
 
 # domain Conatin
@@ -414,6 +415,7 @@ domains = {
 
 jenv = {
     "methods": [
+        "get_taxes_amount:dynamic.api.get_taxes_amount",
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_item_data:dynamic.www.item_data.encode_item_data",

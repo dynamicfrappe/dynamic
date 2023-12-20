@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2023-12-18 09:52:48.451528",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "container_number",
+  "container_status",
+  "description",
+  "shipping_company",
+  "purchase_order_containers"
+ ],
+ "fields": [
+  {
+   "fieldname": "container_number",
+   "fieldtype": "Data",
+   "label": "Container Number"
+  },
+  {
+   "fieldname": "container_status",
+   "fieldtype": "Data",
+   "label": "Container Status"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Table",
+   "label": "Description",
+   "options": "Container Description"
+  },
+  {
+   "fieldname": "shipping_company",
+   "fieldtype": "Data",
+   "label": "Shipping Company"
+  },
+  {
+   "fieldname": "purchase_order_containers",
+   "fieldtype": "Table",
+   "label": "Purchase Order containers",
+   "options": "Purchase Order container"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "PO-CON-.YYYY.-"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-18 10:47:48.646341",
+ "modified_by": "Administrator",
+ "module": "Logistics",
+ "name": "PO Container",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
