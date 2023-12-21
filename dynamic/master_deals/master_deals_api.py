@@ -231,8 +231,11 @@ def delivery_note_validate_item_qty(doc,*args):
 
 def stock_entry_validate_item_qty(doc,*args):
 	if 'Master Deals' in DOMAINS:
-		for item in doc.items:
-			act_qty = get_bin_qty(item.item_code,item.s_warehouse)
-			reqd_qty = float(item.qty or 0) *float(item.conversion_factor or 1)
-			if float(act_qty)<float(reqd_qty) :
-				frappe.throw(_(f" <b>Item '{item.item_code}'</b>  hasn't this qty in warehouse <b>'{item.s_warehouse}'</b>"))
+		entry_type = frappe.get_doc("Stock Entry Type" ,doc.stock_entry_type)
+		if entry_type.purpose in ["Material Issue" , "Material Transfer" , 
+			   						 "Material Transfer for Manufacture" , "Send to Subcontractor"] :
+			for item in doc.items:
+				act_qty = get_bin_qty(item.item_code,item.s_warehouse)
+				reqd_qty = float(item.qty or 0) *float(item.conversion_factor or 1)
+				if float(act_qty)<float(reqd_qty) :
+					frappe.throw(_(f" <b>Item '{item.item_code}'</b>  hasn't this qty in warehouse <b>'{item.s_warehouse}'</b>"))
