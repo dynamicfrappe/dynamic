@@ -9,7 +9,7 @@ frappe.ui.form.on("Supplier", {
             },
             callback:function(r){
                 if (r){
-                    frm.set_value('last_supplier',r.message.supplier_name)
+                    frm.set_value('last_supplier',r.message.name)
                     frm.refresh_field("last_supplier")
                 }
             }

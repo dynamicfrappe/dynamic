@@ -32,7 +32,7 @@ frappe.ui.form.on("Item", {
             },
             callback:function(r){
                 if(r){
-                    frm.set_value('last_item',r.message.item_name)
+                    frm.set_value('last_item',r.message.name)
                     frm.refresh_field("last_item")
                 }
             }
