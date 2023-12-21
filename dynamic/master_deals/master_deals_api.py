@@ -216,7 +216,6 @@ def escape_html_demo(text):
 # 	new_doc.run_method("set_missing_values")
 # 	print(f'\n\n=new_doc=>{new_doc.__dict__}')
 # 	print(f'\n\n=new_doc=>{new_doc.name}')
-	
 # 	return new_doc.name /home/beshoy/Dynamic-13/tera/frappe-tera/apps/dynamic/dynamic/master_deals/master_deals_api.py
 
 
@@ -239,3 +238,9 @@ def stock_entry_validate_item_qty(doc,*args):
 				reqd_qty = float(item.qty or 0) *float(item.conversion_factor or 1)
 				if float(act_qty)<float(reqd_qty) :
 					frappe.throw(_(f" <b>Item '{item.item_code}'</b>  hasn't this qty in warehouse <b>'{item.s_warehouse}'</b>"))
+
+
+@frappe.whitelist()
+def get_last_doctype(doc_type=None):
+	if 'Master Deals' in DOMAINS:
+		return frappe.get_last_doc(doc_type)
