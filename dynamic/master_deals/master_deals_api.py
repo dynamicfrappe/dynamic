@@ -217,7 +217,7 @@ def escape_html_demo(text):
 # 	print(f'\n\n=new_doc=>{new_doc.__dict__}')
 # 	print(f'\n\n=new_doc=>{new_doc.name}')
 	
-# 	return new_doc.name
+# 	return new_doc.name /home/beshoy/Dynamic-13/tera/frappe-tera/apps/dynamic/dynamic/master_deals/master_deals_api.py
 
 
 
@@ -225,18 +225,21 @@ def delivery_note_validate_item_qty(doc,*args):
 	if 'Master Deals' in DOMAINS:
 		for item in doc.items:
 			act_qty = get_bin_qty(item.item_code,item.warehouse)
-			if act_qty<item.qty:
+			reqd_qty = float(item.qty or 0) *float(item.conversion_factor or 1)
+			if float(act_qty)<float(reqd_qty) :
 				frappe.throw(_(f"Item '{item.item_code}'  Has No Qty In Warehouse '{item.warehouse}'"))
 
 def stock_entry_validate_item_qty(doc,*args):
 	if 'Master Deals' in DOMAINS:
 		for item in doc.items:
 			act_qty = get_bin_qty(item.item_code,item.s_warehouse)
-			if act_qty<item.qty:
+	    reqd_qty = float(item.qty or 0) *float(item.conversion_factor or 1)
+			if float(act_qty)<float(reqd_qty) :
 				frappe.throw(_(f" <b>Item '{item.item_code}'</b>  hasn't this qty in warehouse <b>'{item.s_warehouse}'</b>"))
 
-				
 @frappe.whitelist()
 def get_last_doctype(doc_type=None):
 	if 'Master Deals' in DOMAINS:
 		return frappe.get_last_doc(doc_type)
+
+		
