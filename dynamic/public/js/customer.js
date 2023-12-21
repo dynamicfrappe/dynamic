@@ -96,6 +96,7 @@ frappe.ui.form.on("Customer", {
             },
             callback:function(r){
                 if(r){
+                    console.log(r.message)
                     frm.set_value('last_customer',r.message.name)
                     frm.refresh_field("last_customer")
                 }
