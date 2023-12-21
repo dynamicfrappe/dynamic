@@ -13,7 +13,11 @@ class POContainer(Document):
                "Purchase Order", purchase_order, ["supplier", "grand_total"], as_dict=1)
 			return purchase_order.get("supplier") , purchase_order.get("grand_total")
 		
-	def before_save(self):
+	@frappe.whitelist()
+	def change_status(self):
+		self.db_set("status", "Delivered")
+		
+	def before_submit(self):
 		if 'Logistics' in DOMAINS: 
 			for purchase_order_container in self.purchase_order_containers:
 				frappe.db.set_value('Purchase Order',purchase_order_container.purchase_order,'has_shipped','1')

@@ -24,6 +24,20 @@ frappe.ui.form.on("Item", {
         
         frm.events.add_custom_btn(frm)
     },
+    onload: function(frm){
+        frappe.call({
+            method:"dynamic.master_deals.master_deals_api.get_last_doctype",
+            args:{
+                doc_type: frm.doctype
+            },
+            callback:function(r){
+                if(r){
+                    frm.set_value('last_item',r.message.item_name)
+                    frm.refresh_field("last_item")
+                }
+            }
+        })
+    },
     add_custom_btn:function(frm){
         frappe.call({
             method: "dynamic.api.get_active_domains",
@@ -57,5 +71,5 @@ frappe.ui.form.on("Item", {
                 frm.set_value('next_name',r.message.new_name)
             }
         })
-    }
+    },
 })
