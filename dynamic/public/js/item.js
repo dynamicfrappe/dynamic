@@ -31,8 +31,10 @@ frappe.ui.form.on("Item", {
                 doc_type: frm.doctype
             },
             callback:function(r){
-                frm.set_value('last_item',r.message.item_name)
-				frm.refresh_field("last_item")
+                if(r){
+                    frm.set_value('last_item',r.message.item_name)
+                    frm.refresh_field("last_item")
+                }
             }
         })
     },

@@ -95,8 +95,10 @@ frappe.ui.form.on("Customer", {
                 doc_type: frm.doctype
             },
             callback:function(r){
-                frm.set_value('last_customer',r.message.customer_name)
-				frm.refresh_field("last_customer")
+                if(r){
+                    frm.set_value('last_customer',r.message.customer_name)
+                    frm.refresh_field("last_customer")
+                }
             }
         })
     },

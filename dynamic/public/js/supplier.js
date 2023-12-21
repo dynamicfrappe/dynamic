@@ -8,8 +8,10 @@ frappe.ui.form.on("Supplier", {
                 doc_type: frm.doctype
             },
             callback:function(r){
-                frm.set_value('last_supplier',r.message.supplier_name)
-				frm.refresh_field("last_supplier")
+                if (r){
+                    frm.set_value('last_supplier',r.message.supplier_name)
+                    frm.refresh_field("last_supplier")
+                }
             }
         })
     },
