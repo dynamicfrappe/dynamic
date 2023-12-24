@@ -59,6 +59,9 @@ frappe.ui.form.on("Quotation",{
                     
                
                 };
+                if (r.message.includes("Qaswaa")){
+                    cur_frm.cscript['Make Sales Order'] = create_qaswaa_sales_order
+                };
                    
             }
         }
@@ -213,7 +216,13 @@ var create_terra_sales_order = function() {
 }
 
 
+var create_qaswaa_sales_order = function() {
 
+    frappe.model.open_mapped_doc({
+		method: "dynamic.qaswaa.controllers.qaswaa_api.create_qaswaa_sales_order",
+		frm: cur_frm
+	})
+}
 
 
 // var create_ifi_payment_entry = function() {
