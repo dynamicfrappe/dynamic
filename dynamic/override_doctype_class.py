@@ -45,6 +45,14 @@ active_domains = frappe.get_active_domains()
 
 # print("override doctype_js in hooks",'hooks.doctype_js')
 
+if "Logistics" in active_domains:
+    from dynamic.terra.doctype.payment_entry.payment_entry import PaymentEntry as TerraPaymentEntry
+    PaymentEntry = TerraPaymentEntry
+    from dynamic.terra.doctype.quotation.quotation import Quotation as TerraQuotation
+    
+    Quotation = TerraQuotation
+
+
 if "Terra" in active_domains:
     # frappe.msgprint('terra')
     # override doctype clesses

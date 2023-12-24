@@ -1,5 +1,6 @@
 from erpnext.accounts.doctype.account.account import get_account_currency
 import frappe
+from frappe import _
 
 from frappe.utils import add_days, nowdate, today
 from dynamic.terra.doctype.payment_entry.payment_entry import get_party_details
@@ -141,8 +142,14 @@ def get_payment_entry_quotation(source_name):
 	from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 	# from erpnext.accounts.party import get_party_account
 	pe = frappe.new_doc("Payment Entry")
-	pe.payment_type = "Receive"
-	pe.mode_of_payment = "Cash"
+	if 'Logistics' in Domains:
+		default_mode_of_payment_quotation = frappe.db.get_single_value("Selling Settings", "default_mode_of_payment_quotation")
+		if default_mode_of_payment_quotation :
+				pe.mode_of_payment = default_mode_of_payment_quotation
+		else :
+			frappe.throw(_("Please select mode of payment in Selling Settings"))
+	else :
+		pe.mode_of_payment = "Cash"
 	pe.company = qutation_doc.company
 	pe.paid_to = (get_bank_cash_account(pe.mode_of_payment,pe.company) or {}).get("account")
 	if pe.paid_to :

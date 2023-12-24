@@ -20,3 +20,22 @@ def check_data_remaining():
                 if differance < 0 :
                     container.status = "Overdue"
                 container.save()
+
+@frappe.whitelist()
+def calculate_payments(quotation):
+    if 'Logistics' in DOMAINS:
+        sql = f'''
+            SELECT SUM(PE.paid_amount) AS sum 
+            FROM 
+                `tabPayment Entry` PE
+            INNER JOIN 
+                `tabPayment Entry Reference` PER
+            ON
+                PE.name = PER.parent
+            WHERE
+                PER.reference_name = '{quotation}'
+                '''
+        
+        data = frappe.db.sql(sql , as_dict = 1)
+        total_payments = data[0]["sum"]
+        return total_payments

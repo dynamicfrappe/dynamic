@@ -140,17 +140,44 @@ const QuotationController_Extend = erpnext.selling.QuotationController.extend({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
               if (r.message && r.message.length) {
-                if (r.message.includes("IFI")) {
-                    cur_frm.page.remove_inner_button('Subscription','Create')
-                    cur_frm.cscript['Make Sales Order'] = create_ifi_sales_order
-                    // cur_frm.cscript['Make Payment Entry'] = create_ifi_payment_entry
-                    if(doc.docstatus == 1 && doc.status!=='Lost') {
-                        if(!doc.valid_till || frappe.datetime.get_diff(doc.valid_till, frappe.datetime.get_today()) >= 0) {
-                            cur_frm.page.remove_inner_button('Sales Order','Create')
-                            cur_frm.add_custom_button(__('Sales Order'),
-                                cur_frm.cscript['Make Sales Order'], __('Create'));
+                  if (r.message.includes("IFI")) {
+                      cur_frm.page.remove_inner_button('Subscription','Create')
+                      cur_frm.cscript['Make Sales Order'] = create_ifi_sales_order
+                      // cur_frm.cscript['Make Payment Entry'] = create_ifi_payment_entry
+                      if(doc.docstatus == 1 && doc.status!=='Lost') {
+                          if(!doc.valid_till || frappe.datetime.get_diff(doc.valid_till, frappe.datetime.get_today()) >= 0) {
+                              cur_frm.page.remove_inner_button('Sales Order','Create')
+                              cur_frm.add_custom_button(__('Sales Order'),
+                              cur_frm.cscript['Make Sales Order'], __('Create'));
+                            }
                         }
                     }
+                else if (r.message.includes("Logistics")) {
+                    if (cur_frm.doc.docstatus == 1){
+                        cur_frm.add_custom_button(__('Payment Entry'),
+                        cur_frm.cscript['Make Payment Entry'], __('Create'));
+
+                        cur_frm.page.remove_inner_button('Subscription','Create')
+                        cur_frm.page.remove_inner_button('Sales Order','Create')
+                    }
+                    frappe.call({
+                        method:"dynamic.logistics.logistics_api.calculate_payments",
+                        args:{
+                            quotation:cur_frm.doc.name,
+                        },
+                        callback:function(r){
+                            // 30% of quotation total
+                            let allowed_amount = (cur_frm.doc.grand_total * 30 ) /100
+                            // if total of payment entry > or equal 30% of quotation total 
+                            if (r.message >= allowed_amount){
+                                cur_frm.add_custom_button(__('Sales Order'),
+                                cur_frm.cscript['Sales Order'], __('Create'));
+                            }
+                        }
+
+                    })
+         
+
                 }
               }
             }

@@ -12,6 +12,15 @@ data = {
                 "read_only" : 1
             },
         ],
+        'Selling Settings': [
+            {
+                "label": _("Default Mode of Payment Quotation"),
+                "fieldname": "default_mode_of_payment_quotation",
+                "fieldtype": "Link",
+                "insert_after": "campaign_naming_by",
+                "options":"Mode of Payment"
+            },
+        ],
     }
 
 }
