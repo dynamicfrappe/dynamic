@@ -41,6 +41,7 @@ class ItemReservedQty(object):
 		# if self.filters.get("cost_center"):
 		# 	conditions += " and so.cost_center = '%s'"%self.filters.get("cost_center")
 		sql_query_new = f"""
+			
 			SELECT `tabBin`.name as 'bin'
 			,`tabBin`.warehouse as 'bin_warehouse'
 			,`tabBin`.item_code
@@ -81,6 +82,7 @@ class ItemReservedQty(object):
 		# 				WHERE {conditions} 
 		# 				GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		# """.format(conditions=conditions)
+		frappe.db.sql("SET @@SQL_BIG_SELECTS=1;")
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 		return sql_data
 
