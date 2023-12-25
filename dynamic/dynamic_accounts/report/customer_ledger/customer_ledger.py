@@ -104,11 +104,20 @@ def get_columns(filters=None):
 		
 	]
 	return columns
-
+"""
+"""
 def get_cutomer_sales_invoice(customer ,from_date , to_date) :
 	
 	data_sales_invoice = frappe.db.sql(f"""SELECT "Sales Invoice" as document_type ,b.posting_date as cur_date ,
-							a.parent as document_Name  ,b.grand_total as  depit , 0 as credit
+							a.parent as document_Name
+							,case 
+							WHEN b.docstatus =1 and b.is_return=1 then b.grand_total
+							else 0
+							END as credit
+							,case 
+							WHEN b.docstatus =1 and b.is_return=0 then b.grand_total
+							else 0
+							END as debit
 							FROM `tabSales Invoice Item` as a 
 							INNER JOIN  `tabSales Invoice` as b 
 							ON a.parent=b.name
@@ -120,14 +129,17 @@ def get_cutomer_sales_invoice(customer ,from_date , to_date) :
 def get_cutomer_sales_return(customer ,from_date , to_date) :
 	
 	data_sales_invoice = frappe.db.sql(f"""SELECT "Sales Invoice" as document_type ,b.posting_date as cur_date ,
-							a.parent as document_Name  ,b.grand_total as depit  , 0 as  credit
+							a.parent as document_Name  ,b.grand_total as credit  , 0 as depit 
 							FROM `tabSales Invoice Item` as a 
 							INNER JOIN  `tabSales Invoice` as b 
 							ON a.parent=b.name
 							WHERE b.customer = '{customer}' and  b.docstatus =1 and b.is_return=1 and
 							b.posting_date between date('{from_date}')   and date('{to_date}')
+							AND b.name='ACC-SINV-2023-03235'
 							GROUP BY a.parent	""",as_dict=True)
+	
 	return data_sales_invoice
+
 def get_customer_journal_entry(customer ,from_date , to_date) :
 	data_journal_entry = frappe.db.sql(f""" SELECT a.name ,b.posting_date as cur_date,
 	 "Journal Entry" as document_type , a.parent as document_Name ,
