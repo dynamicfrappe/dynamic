@@ -69,13 +69,14 @@
    "type": "Link"
   }
  ],
- "modified": "2023-11-27 11:43:29.416423",
+ "modified": "2023-12-25 12:21:57.820987",
  "modified_by": "Administrator",
- "module": "AlRehab",
+ "module": "alrehab",
  "name": "Rehab",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 1,
+ "restrict_to_domain": "Rehab",
  "shortcuts": [
   {
    "doc_view": "List",
