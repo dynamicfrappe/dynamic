@@ -45,14 +45,13 @@ def validate_qotation(self):
                             PE.name = PER.parent 
                         WHERE 
                             PER.reference_name = '{d.prevdoc_docname}' 
-
+                            AND 
+                            PE.docstatus = 1
                     '''
                 data = frappe.db.sql(sql , as_dict = 1)
                 total_paid_amout = data[0]["sum"]
-                if total_paid_amout :
-                    if not (total_paid_amout >= allowed_amount):
-                        frappe.throw("Total paid amount must be bigger than or eqal 30% of quotation total")
- 
-
-
+                if not total_paid_amout :
+                    frappe.throw("30% of quotion must be paid")
+                if not (total_paid_amout >= allowed_amount):
+                    frappe.throw("Total paid amount must be bigger than or eqal 30% of quotation total")
 

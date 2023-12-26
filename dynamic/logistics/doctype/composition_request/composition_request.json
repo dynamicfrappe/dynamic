@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-26 21:51:14.811314",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "sales_order",
+  "column_break_cemjg",
+  "status",
+  "customer",
+  "section_break_dzx6c",
+  "items",
+  "section_break_v7zcq",
+  "address",
+  "phone_number_1",
+  "phone_number_2",
+  "column_break_zqqsp",
+  "phone_number_3",
+  "link_location",
+  "column_break_mtyk5",
+  "customer_comment",
+  "location_is_ready",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nDelivered\nCompleted"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Sales Order Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Link",
+   "label": "Address",
+   "options": "Address"
+  },
+  {
+   "fieldname": "phone_number_1",
+   "fieldtype": "Data",
+   "label": "Phone Number 1"
+  },
+  {
+   "fieldname": "phone_number_2",
+   "fieldtype": "Data",
+   "label": "Phone Number 2"
+  },
+  {
+   "fieldname": "link_location",
+   "fieldtype": "Data",
+   "label": "Link Location "
+  },
+  {
+   "fieldname": "customer_comment",
+   "fieldtype": "Data",
+   "label": " Customer Comment"
+  },
+  {
+   "default": "0",
+   "fieldname": "location_is_ready",
+   "fieldtype": "Check",
+   "label": "Location Is Ready"
+  },
+  {
+   "fieldname": "phone_number_3",
+   "fieldtype": "Data",
+   "label": "Phone Number 3"
+  },
+  {
+   "fieldname": "column_break_cemjg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_dzx6c",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_zqqsp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_mtyk5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_v7zcq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Composition Request",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-12-26 22:23:08.514149",
+ "modified_by": "Administrator",
+ "module": "Logistics",
+ "name": "Composition Request",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
