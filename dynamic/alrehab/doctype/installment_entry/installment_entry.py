@@ -94,7 +94,7 @@ class installmentEntry(Document):
 										c_days= 1 
 										date_diff = date.today() - doc.due_date 
 										eq_string = eq_string + f"{date_diff.days}" 	
-									if i.filed=="months" :
+									if i.filed=="Months" :
 										eq_string = eq_string + "1"
 						else :
 							eq_string = eq_string +  a
