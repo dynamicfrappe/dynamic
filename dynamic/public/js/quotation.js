@@ -159,6 +159,7 @@ const QuotationController_Extend = erpnext.selling.QuotationController.extend({
 
                         cur_frm.page.remove_inner_button('Subscription','Create')
                         cur_frm.page.remove_inner_button('Sales Order','Create')
+                        cur_frm.page.remove_inner_button('Set as Lost')
                     }
                     frappe.call({
                         method:"dynamic.logistics.logistics_api.calculate_payments",
@@ -171,7 +172,7 @@ const QuotationController_Extend = erpnext.selling.QuotationController.extend({
                             // if total of payment entry > or equal 30% of quotation total 
                             if (r.message >= allowed_amount){
                                 cur_frm.add_custom_button(__('Sales Order'),
-                                cur_frm.cscript['Sales Order'], __('Create'));
+                                cur_frm.cscript['Make Sales Order'], __('Create'));
                             }
                         }
 
@@ -201,6 +202,7 @@ var create_ifi_sales_order = function() {
 }
 
 var create_terra_sales_order = function() {
+    console.log("ASgasdghdashf")
 
     frappe.model.open_mapped_doc({
 		method: "dynamic.terra.doctype.quotation.quotation.make_sales_order",
@@ -254,6 +256,14 @@ cur_frm.cscript['Make Payment Entry'] = function() {
     frappe.model.open_mapped_doc({
         method:
         "dynamic.terra.api.get_payment_entry_quotation",
+        frm: cur_frm,
+      });
+}
+
+cur_frm.cscript['Make Sales Order'] = function() {
+    frappe.model.open_mapped_doc({
+        method:
+        "dynamic.terra.doctype.quotation.quotation.make_sales_order",
         frm: cur_frm,
       });
 }

@@ -14,11 +14,23 @@ data = {
         ],
         'Selling Settings': [
             {
+                "fieldname": "quotation_settings",
+                "fieldtype": "Section Break",
+                "insert_after": "close_opportunity_after_days",
+                "label": _("Quotation Settings"),
+            },
+            {
                 "label": _("Default Mode of Payment Quotation"),
                 "fieldname": "default_mode_of_payment_quotation",
                 "fieldtype": "Link",
-                "insert_after": "campaign_naming_by",
+                "insert_after": "quotation_settings",
                 "options":"Mode of Payment"
+            },
+            {
+                "label": _("Diable Order Without Quotation"),
+                "fieldname": "diable_order_without_quotation",
+                "fieldtype": "Check",
+                "insert_after": "default_mode_of_payment_quotation",
             },
         ],
         'Quotation' :[
