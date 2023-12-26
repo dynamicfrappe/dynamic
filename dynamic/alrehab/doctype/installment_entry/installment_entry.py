@@ -20,7 +20,8 @@ from frappe.utils import (
 )
 from frappe.utils.background_jobs import enqueue
 from datetime import date
-
+from dateutil import relativedelta
+# from dateutil import relativedelta
 Domains=frappe.get_active_domains()
 
 class installmentEntry(Document):
@@ -95,17 +96,23 @@ class installmentEntry(Document):
 										date_diff = date.today() - doc.due_date 
 										eq_string = eq_string + f"{date_diff.days}" 	
 									if i.filed=="Months" :
-										eq_string = eq_string + "1"
+										delta = relativedelta.relativedelta( date.today() ,doc.due_date )
+										# print("mothes" ,delta.months)
+										months = (float(delta.years or 0) *12 )+ float(delta.months) +  (float(delta.days) / 30)
+										print("Mothes" , months)
+										eq_string = eq_string + f"{months}"
 						else :
 							eq_string = eq_string +  a
+
+					print( "eq --------------------" , eq_string)
 					equation_value = eval(eq_string) or 0
 				out_stand = 0
 				if equation_value:
 					self.db_set('delay_penalty',equation_value)
 					if not self.outstanding_value:
-						out_stand = (float(self.total_value or 0) + float(equation_value)) - float(self.total_payed or 0)
+						out_stand =  float(equation_value or 0 ) - float(self.total_payed or 0)
 					if float(self.outstanding_value or 0):
-						out_stand = float(self.outstanding_value or 0) + float(equation_value)
+						out_stand = float(equation_value)
 					self.db_set('outstanding_value',out_stand)
 				
 
