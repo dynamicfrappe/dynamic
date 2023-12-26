@@ -74,8 +74,8 @@ class installmentEntry(Document):
 			if pay_template.financial_penalty_template  and pay_template.delay_penalty:
 				penality_template  = frappe.get_doc("Financial penalty template" , pay_template.financial_penalty_template)
 			if penality_template :
-				if penality_template.auto_create:
-					equation_value = flt(penality_template.creation_frequency) * flt(penality_template.monthly)
+				# if penality_template.auto_create:
+				# 	equation_value = flt(penality_template.creation_frequency) * flt(penality_template.monthly)
 				if penality_template.equation :
 					variables = [i for i in penality_template.variables]
 					# change string values with current value 
