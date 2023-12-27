@@ -1,7 +1,7 @@
 // Copyright (c) 2023, Dynamic and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Composition Order', {
+frappe.ui.form.on('Composition', {
 	sales_order: function(frm) {
 		frappe.call({
 			method: "dynamic.api.get_active_domains",
@@ -19,16 +19,13 @@ frappe.ui.form.on('Composition Order', {
 								frm.refresh_fields("items");
 							},			 
 						})	
-
 					}
-
 				}
 			}
 		})
 
-
 	},
-	refresh: function(frm){
+	status: function(frm){
 		frappe.call({
 			method: "dynamic.api.get_active_domains",
 			callback: function (r) {
@@ -39,8 +36,7 @@ frappe.ui.form.on('Composition Order', {
 							method: "update_status",
 							callback: function (r) {
 							},			 
-						})
-	
+						})	
 					}
 				}
 			}

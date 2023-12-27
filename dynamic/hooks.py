@@ -184,7 +184,7 @@ doc_events = {
         "on_submit": [
             "dynamic.real_state.rs_api.so_on_submit",
         ],
-        "on_update_after_submit":"dynamic.controllers.sales_order.on_update_after_submit"
+        # "on_update_after_submit":"dynamic.controllers.sales_order.on_update_after_submit"
     },
     "Coupon Code": {
         # this hook will apply only elevana Domain to send coupon code to woo commerce api

@@ -14,10 +14,6 @@ def validate_sales_order(self , event):
     if 'Logistics' in Domains :
         validate_qotation(self)
 
-def on_update_after_submit(self , event):
-    if 'Logistics' in Domains :
-        check_composition_request_with_order(self)
-
 def validate_qotation(self):
     diable_order_without_quotation = frappe.db.get_single_value("Selling Settings", "diable_order_without_quotation")
     if diable_order_without_quotation == 0 :
@@ -67,15 +63,3 @@ def validate_total_payment_of_quotation(self , d):
             frappe.throw("30% of quotion must be paid")
         if not (total_paid_amout >= allowed_amount):
             frappe.throw("Total paid amount must be bigger than or eqal 30% of quotation total")
-
-def check_composition_request_with_order(self):
-    frappe.db.sql(f""" 
-                UPDATE 
-                    `tabComposition Request` CR
-                SET 
-                    CR.status = 'Delivered' 
-                WHERE 
-                    CR.sales_order = '{self.name}' 
-                    AND
-                    CR.docstatus = 1
-                """)

@@ -20,9 +20,13 @@
   "column_break_zqqsp",
   "phone_number_3",
   "link_location",
-  "column_break_mtyk5",
   "customer_comment",
+  "column_break_mtyk5",
   "location_is_ready",
+  "engineering_name",
+  "composition",
+  "section_break_19",
+  "referances",
   "amended_from"
  ],
  "fields": [
@@ -121,13 +125,38 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Items",
-   "options": "Sales Order Item"
+   "options": "Sales Order Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "engineering_name",
+   "fieldtype": "Data",
+   "label": "Engineering Name"
+  },
+  {
+   "fieldname": "section_break_19",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "referances",
+   "fieldtype": "Table",
+   "label": "Referances",
+   "options": "Referance",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "composition",
+   "fieldtype": "Link",
+   "label": "Composition",
+   "options": "Composition",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-27 11:19:12.612645",
+ "modified": "2023-12-27 16:36:46.084293",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Order",

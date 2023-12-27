@@ -43,3 +43,27 @@ def calculate_payments(quotation):
             total_payments = data[0]["sum"]
             if total_payments :
               return total_payments
+            
+@frappe.whitelist()            
+def check_composition_request_with_order(name):
+    frappe.db.sql(f""" 
+                UPDATE 
+                    `tabComposition Request` CR
+                SET 
+                    CR.status = 'Delivered' 
+                WHERE 
+                    CR.sales_order = '{name}' 
+                    AND
+                    CR.docstatus = 1
+                """)
+    
+    frappe.db.sql(f""" 
+            UPDATE 
+                `tabComposition Order` CO
+            SET 
+                CO.status = 'Delivered' 
+            WHERE 
+                CO.sales_order = '{name}' 
+                AND
+                CO.docstatus = 1
+            """)

@@ -34,6 +34,7 @@ class CompositionRequest(Document):
 		composition_order.location_is_ready = self.location_is_ready
 		composition_order.insert()
 		composition_order.submit()
+		self.db_set("composition_order",composition_order.name )
 
 		lnk = get_link_to_form(composition_order.doctype, composition_order.name)
 		frappe.msgprint(_("{} {} was Created").format(

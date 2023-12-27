@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2023-12-26 21:51:14.811314",
+ "creation": "2023-12-27 14:03:12.429079",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -20,10 +20,12 @@
   "column_break_zqqsp",
   "phone_number_3",
   "link_location",
-  "composition_order",
-  "column_break_mtyk5",
   "customer_comment",
+  "column_break_mtyk5",
   "location_is_ready",
+  "engineering_name",
+  "from",
+  "to",
   "amended_from"
  ],
  "fields": [
@@ -32,19 +34,36 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date",
+   "read_only": 1,
    "reqd": 1
   },
   {
    "fieldname": "sales_order",
    "fieldtype": "Link",
    "label": "Sales Order",
-   "options": "Sales Order"
+   "options": "Sales Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cemjg",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Pending\nDelivered\nCompleted"
+   "options": "Pending\nCompleted"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_dzx6c",
+   "fieldtype": "Section Break"
   },
   {
    "allow_on_submit": 1,
@@ -55,92 +74,102 @@
    "read_only": 1
   },
   {
-   "fieldname": "customer",
-   "fieldtype": "Link",
-   "label": "Customer",
-   "options": "Customer"
+   "fieldname": "section_break_v7zcq",
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "address",
    "fieldtype": "Link",
    "label": "Address",
-   "options": "Address"
+   "options": "Address",
+   "read_only": 1
   },
   {
    "fieldname": "phone_number_1",
    "fieldtype": "Data",
-   "label": "Phone Number 1"
+   "label": "Phone Number 1",
+   "read_only": 1
   },
   {
    "fieldname": "phone_number_2",
    "fieldtype": "Data",
-   "label": "Phone Number 2"
-  },
-  {
-   "fieldname": "link_location",
-   "fieldtype": "Data",
-   "label": "Link Location "
-  },
-  {
-   "fieldname": "customer_comment",
-   "fieldtype": "Data",
-   "label": " Customer Comment"
-  },
-  {
-   "default": "0",
-   "fieldname": "location_is_ready",
-   "fieldtype": "Check",
-   "label": "Location Is Ready"
-  },
-  {
-   "fieldname": "phone_number_3",
-   "fieldtype": "Data",
-   "label": "Phone Number 3"
-  },
-  {
-   "fieldname": "column_break_cemjg",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_dzx6c",
-   "fieldtype": "Section Break"
+   "label": "Phone Number 2",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_zqqsp",
    "fieldtype": "Column Break"
   },
   {
+   "fieldname": "phone_number_3",
+   "fieldtype": "Data",
+   "label": "Phone Number 3",
+   "read_only": 1
+  },
+  {
+   "fieldname": "link_location",
+   "fieldtype": "Data",
+   "label": "Link Location ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer_comment",
+   "fieldtype": "Data",
+   "label": " Customer Comment",
+   "read_only": 1
+  },
+  {
    "fieldname": "column_break_mtyk5",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_v7zcq",
-   "fieldtype": "Section Break"
+   "default": "0",
+   "fieldname": "location_is_ready",
+   "fieldtype": "Check",
+   "label": "Location Is Ready",
+   "read_only": 1
+  },
+  {
+   "fieldname": "engineering_name",
+   "fieldtype": "Data",
+   "label": "Engineering Name"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Date",
+   "label": "From"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Date",
+   "label": "To"
   },
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Composition Request",
+   "options": "Composition",
    "print_hide": 1,
    "read_only": 1
   },
   {
-   "fieldname": "composition_order",
+   "fieldname": "amended_from",
    "fieldtype": "Link",
-   "label": "Composition Order",
-   "options": "Composition Order",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Composition",
+   "print_hide": 1,
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-27 16:15:12.458322",
+ "modified": "2023-12-27 17:37:50.611678",
  "modified_by": "Administrator",
  "module": "Logistics",
- "name": "Composition Request",
+ "name": "Composition",
  "owner": "Administrator",
  "permissions": [
   {

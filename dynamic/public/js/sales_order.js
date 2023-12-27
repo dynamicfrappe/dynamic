@@ -41,6 +41,16 @@ frappe.ui.form.on("Sales Order", {
         if (r.message.includes("Terra") && frm.doc.docstatus == 2) {
             frm.page.clear_primary_action();  
         }
+        if (r.message.includes("Logistics")) {
+          if(frm.doc.status == 'To Bill'){
+            frappe.call({
+              method:"dynamic.logistics.logistics_api.check_composition_request_with_order",
+              args:{
+                name:  frm.doc.name
+                },
+            })
+          };  
+      }
         if (r.message.includes("Qaswaa") && frm.doc.docstatus == 1) {
           
           frm.add_custom_button(__("Create Purchase Invoice Prepaid"),()=>{
