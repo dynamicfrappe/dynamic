@@ -167,12 +167,14 @@ const QuotationController_Extend = erpnext.selling.QuotationController.extend({
                             quotation:cur_frm.doc.name,
                         },
                         callback:function(r){
-                            // 30% of quotation total
-                            let allowed_amount = (cur_frm.doc.grand_total * 30 ) /100
-                            // if total of payment entry > or equal 30% of quotation total 
-                            if (r.message >= allowed_amount){
-                                cur_frm.add_custom_button(__('Sales Order'),
-                                cur_frm.cscript['Make Sales Order'], __('Create'));
+                            if (r.message){
+                                // 30% of quotation total
+                                let allowed_amount = (cur_frm.doc.grand_total * 30 ) /100
+                                // if total of payment entry > or equal 30% of quotation total 
+                                if (r.message >= allowed_amount){
+                                    cur_frm.add_custom_button(__('Sales Order'),
+                                    cur_frm.cscript['Make Sales Order'], __('Create'));
+                                }
                             }
                         }
 

@@ -381,10 +381,10 @@ def get_list_context(context=None):
 
 @frappe.whitelist()
 def make_sales_order(source_name, target_doc=None):
-	if 'Logistics' in DOMAINS :
-		diable_order_without_quotation = frappe.db.get_single_value("Selling Settings", "diable_order_without_quotation")
-		if diable_order_without_quotation :
-			frappe.throw(str("Can't create sales order"))
+	# if 'Logistics' in DOMAINS :
+	# 	diable_order_without_quotation = frappe.db.get_single_value("Selling Settings", "diable_order_without_quotation")
+	# 	if diable_order_without_quotation :
+	# 		frappe.throw(str("Can't create sales order"))
 	quotation = frappe.db.get_value(
 		"Quotation", source_name, ["transaction_date", "valid_till"], as_dict=1
 	)

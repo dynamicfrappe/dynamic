@@ -34,8 +34,12 @@ def calculate_payments(quotation):
                 PE.name = PER.parent
             WHERE
                 PER.reference_name = '{quotation}'
+                AND 
+                PE.docstatus = 1
                 '''
         
         data = frappe.db.sql(sql , as_dict = 1)
-        total_payments = data[0]["sum"]
-        return total_payments
+        if data :
+            total_payments = data[0]["sum"]
+            if total_payments :
+              return total_payments
