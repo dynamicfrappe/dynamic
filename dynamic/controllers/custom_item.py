@@ -17,8 +17,11 @@ from frappe.utils import cint, cstr, now_datetime
 @frappe.whitelist()
 def show_next_name(doc):
 	# pass
-	doc = json.loads(doc)
-	nex_name = make_autoname(doc.get('naming_series'), "", doc)
+	item_naming_by = frappe.db.get_single_value('Stock Settings','item_naming_by')
+	nex_name = ''
+	if item_naming_by == "Naming Series":
+		doc = json.loads(doc)
+		nex_name = make_autoname(doc.get('naming_series'), "", doc)
 	return {'new_name':nex_name}
 	
 
