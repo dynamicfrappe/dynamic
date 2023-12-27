@@ -111,8 +111,9 @@ def validate_cost(self , *args , **kwargs):
                         frappe.throw(_(f""" {item.base_amount} + {line_avaiable} """))
 
                     allocated =  allocated + float(item.base_amount or 0)
-            if allocated > invocie.allocated_amount :
-                frappe.throw(_(""" Allocated Amount  """))
+                    # frappe.errprint(f'allocated---{float(allocated or 0)}')
+            if round(allocated,4) > round(invocie.allocated_amount,4) :
+                frappe.throw(_(""" Allocated Amount >  Invocie Allocated Amount """))
 
             invocie.unallocated_amount = invocie.allocated_amount - allocated
             invocie.allocated_amount = allocated
@@ -169,7 +170,7 @@ def get_doctype_info(doc_type , document  ,*args , **kwargs) :
     on a.parent = b.name
     WHERE 
     b.docstatus = 1 AND
-    doc_type ='{doc_type}' and invoice ='{document}'
+    a.doc_type ='{doc_type}' and a.invoice ='{document}'
     """,as_dict =1)
     if caculate_old and len(caculate_old) > 0 :
         old_allocated = float(caculate_old[0].get("allocated") or 0 )
