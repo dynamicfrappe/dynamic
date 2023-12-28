@@ -306,5 +306,7 @@ def get_avail_qty_in_draft_stock_delivry(doc,*args):
 			for row in doc.items:
 				if row.get('item_code') == item_dic.get('item_code') and row.get(warehouse) == item_dic.get('warehouse'):
 					if(actual_bin_qty-item_dic.get('prev_qty') < row.qty):
-						frappe.throw(_(f"Warehouse {item_dic.get('warehouse')} Has No Qty For Item Code '{row.item_code}' "))
+						frappe.throw(_(f"""Warehouse {item_dic.get('warehouse')}  Has No Qty For Item Code '{row.item_code}' <br>
+					 	Acrual QTY {actual_bin_qty} AND Reserved {item_dic.get('prev_qty')}
+					  """))
 		
