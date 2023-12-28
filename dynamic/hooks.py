@@ -36,8 +36,8 @@ app_logo_url = "/assets/dynamic/images/dynamic-logo.png"
 app_include_css = "/assets/dynamic/css/dynamic.css"
 app_include_js = [
     "/assets/js/dynamic.min.js",
+    "/assets/js/desk_sidebar.min.js",
 ]
-
 
 # include js in doctype views
 # doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
