@@ -19,6 +19,13 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "primary_address",
             },
+            {
+                "label": _("Location"),
+                "fieldname": "location",
+                "fieldtype": "Link",
+                "insert_after": "support",
+                "options":"Location"
+            },
         ],
         'Selling Settings': [
             {

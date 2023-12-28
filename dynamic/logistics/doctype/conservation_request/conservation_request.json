@@ -12,6 +12,7 @@
   "customer_primary_address",
   "support",
   "column_break_3",
+  "location",
   "type_for_request",
   "name_of_maintenance",
   "number",
@@ -67,14 +68,16 @@
    "fetch_from": "customer.customer_name",
    "fieldname": "customer_name",
    "fieldtype": "Data",
-   "label": "Customer Name"
+   "label": "Customer Name",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.customer_primary_contact",
    "fieldname": "customer_primary_contact",
    "fieldtype": "Link",
    "label": "Customer Primary Contact",
-   "options": "Contact"
+   "options": "Contact",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.customer_primary_address",
@@ -101,7 +104,8 @@
    "fetch_from": "customer.support",
    "fieldname": "support",
    "fieldtype": "Check",
-   "label": "Support"
+   "label": "Support",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_14",
@@ -110,11 +114,19 @@
   {
    "fieldname": "section_break_13",
    "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "customer.location",
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-28 13:53:48.492368",
+ "modified": "2023-12-28 16:37:57.382574",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",
