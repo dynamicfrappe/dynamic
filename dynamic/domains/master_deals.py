@@ -109,6 +109,12 @@ data = {
                 "options":"Sales Naming Series Role",
                 "insert_after":"sales_series_section", 
             },
+            {
+                "label":_("Check Actual QTY IN Save"),
+                "fieldname":"check_qty",
+                "fieldtype":"Check",
+                "insert_after":"series_role", 
+            },
             
         ],
         

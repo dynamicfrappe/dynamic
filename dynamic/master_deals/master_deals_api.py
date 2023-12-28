@@ -10,6 +10,7 @@ from frappe import _
 from erpnext.controllers.queries import get_fields
 from frappe.utils import get_host_name, escape_html,get_url
 from erpnext.accounts.doctype.pos_invoice.pos_invoice import get_bin_qty
+from collections import defaultdict
 
 
 
@@ -244,3 +245,66 @@ def stock_entry_validate_item_qty(doc,*args):
 def get_last_doctype(doc_type=None):
 	if 'Master Deals' in DOMAINS:
 		return frappe.get_last_doc(doc_type)
+	
+
+@frappe.whitelist()
+def get_avail_qty_in_draft_stock_delivry(doc,*args):
+	#add stock setting flage 
+	if frappe.db.get_single_value('Selling Settings','check_qty'):
+		items = ','.join(f"'{(item.item_code)}'" for item in doc.items)
+		# frappe.errprint(f'data=>{items}=\n\n')
+
+		stock_sql = f"""
+			SELECT `tabStock Entry Detail`.item_code ,`tabStock Entry Detail`.s_warehouse as warehouse
+			,SUM(`tabStock Entry Detail`.qty) as prev_qty
+			FROM `tabStock Entry`
+			INNER JOIN `tabStock Entry Type`
+			ON `tabStock Entry Type`.name=`tabStock Entry`.stock_entry_type 
+			INNER JOIN `tabStock Entry Detail`  
+			ON `tabStock Entry Detail`.parent=`tabStock Entry`.name
+			WHERE `tabStock Entry Type`.purpose IN ('Material Transfer','Material Issue')
+			AND `tabStock Entry Detail`.item_code 
+			IN ({items})
+			AND `tabStock Entry`.docstatus=0 AND `tabStock Entry Detail`.qty>0
+			GROUP BY  `tabStock Entry Detail`.item_code ,`tabStock Entry Detail`.s_warehouse 
+		"""
+		stock_data = frappe.db.sql(stock_sql,as_dict=1)
+		frappe.errprint(f'stock_data=>{stock_data}=\n\n')
+		dn_sql = f"""
+			SELECT `tabDelivery Note Item`.item_code ,`tabDelivery Note Item`.warehouse
+			,SUM(`tabDelivery Note Item`.qty) as prev_qty 
+			FROM `tabDelivery Note`
+			INNER JOIN `tabDelivery Note Item` 
+			ON `tabDelivery Note Item`.parent=`tabDelivery Note`.name
+			WHERE `tabDelivery Note`.docstatus=0 AND `tabDelivery Note Item`.qty>0
+			AND`tabDelivery Note Item`.item_code 
+			IN ({items})
+			GROUP BY `tabDelivery Note Item`.item_code ,`tabDelivery Note Item`.warehouse  
+		"""
+		dn_data = frappe.db.sql(dn_sql,as_dict=1)
+		# frappe.errprint(f'dn_data=>{dn_data}=\n\n')
+		# Merge lists x and y
+		combined_list = stock_data + dn_data
+		# Create a defaultdict to store the sums
+		sums = defaultdict(int)
+		# Sum 'age' values based on mutual 'id' and 'name' keys
+		for item in combined_list:
+			key = (item['item_code'], item['warehouse'])
+			sums[key] += item['prev_qty']
+		# Reconstruct the list of dictionaries with summed 'age' values
+		result = [{'item_code': key[0], 'warehouse': key[1], 'prev_qty': value} for key, value in sums.items()]
+		# frappe.errprint(f'result=>{result}=\n\n')
+		# frappe.throw('test')
+		warehouse = ''
+		if doc.doctype == 'Stock Entry':
+			warehouse='s_warehouse'
+		else:
+			warehouse='warehouse'
+
+		for item_dic in result:
+			actual_bin_qty = frappe.db.get_value("Bin",{'item_code':item_dic.get('item_code'),'warehouse':item_dic.get('warehouse') }, ['actual_qty'])
+			for row in doc.items:
+				if row.get('item_code') == item_dic.get('item_code') and row.get(warehouse) == item_dic.get('warehouse'):
+					if(actual_bin_qty-item_dic.get('prev_qty') < row.qty):
+						frappe.throw(_(f"Warehouse {item_dic.get('warehouse')} Has No Qty For Item Code '{row.item_code}' "))
+		
