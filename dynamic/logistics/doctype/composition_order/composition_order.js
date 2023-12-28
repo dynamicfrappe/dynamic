@@ -45,5 +45,20 @@ frappe.ui.form.on('Composition Order', {
 				}
 			}
 		})
+	},
+	customer: function(frm) {
+		frappe.call({
+			method: "dynamic.api.get_active_domains",
+			callback: function (r) {
+				if (r.message && r.message.length) {
+					if (r.message.includes("Logistics")) {
+						frm.call({
+							doc : frm.doc ,
+							method: "set_address_and_numbers",	 
+						})	
+					}
+				}
+			}
+		})
 	}
 });

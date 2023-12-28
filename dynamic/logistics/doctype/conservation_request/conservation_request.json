@@ -7,12 +7,21 @@
  "engine": "InnoDB",
  "field_order": [
   "customer",
+  "customer_name",
+  "customer_primary_contact",
+  "customer_primary_address",
+  "support",
+  "column_break_3",
   "type_for_request",
   "name_of_maintenance",
   "number",
+  "section_break_9",
   "warranties",
   "machines",
-  "cus_comment"
+  "section_break_13",
+  "cus_comment",
+  "column_break_14",
+  "history_maintenance"
  ],
  "fields": [
   {
@@ -47,17 +56,65 @@
    "fieldname": "machines",
    "fieldtype": "Table",
    "label": "Machines",
-   "options": "Cus Machine"
+   "options": "Customer Machine"
   },
   {
    "fieldname": "cus_comment",
    "fieldtype": "Data",
    "label": "Cus Comment"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "fetch_from": "customer.customer_primary_contact",
+   "fieldname": "customer_primary_contact",
+   "fieldtype": "Link",
+   "label": "Customer Primary Contact",
+   "options": "Contact"
+  },
+  {
+   "fetch_from": "customer.customer_primary_address",
+   "fieldname": "customer_primary_address",
+   "fieldtype": "Link",
+   "label": "Customer Primary Address",
+   "options": "Address"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "history_maintenance",
+   "fieldtype": "Button",
+   "label": "History Maintenance"
+  },
+  {
+   "default": "0",
+   "fetch_from": "customer.support",
+   "fieldname": "support",
+   "fieldtype": "Check",
+   "label": "Support"
+  },
+  {
+   "fieldname": "column_break_14",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_13",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-27 16:09:15.518575",
+ "modified": "2023-12-28 13:53:48.492368",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",

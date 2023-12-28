@@ -12,6 +12,14 @@ data = {
                 "read_only" : 1
             },
         ],
+        'Customer': [
+            {
+                "label": _("Support"),
+                "fieldname": "support",
+                "fieldtype": "Check",
+                "insert_after": "primary_address",
+            },
+        ],
         'Selling Settings': [
             {
                 "fieldname": "quotation_settings",

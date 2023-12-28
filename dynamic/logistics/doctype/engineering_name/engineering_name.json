@@ -6,24 +6,23 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "composition"
+  "name1"
  ],
  "fields": [
   {
-   "fieldname": "composition",
-   "fieldtype": "Link",
+   "fieldname": "name1",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Composition",
-   "options": "Composition"
+   "label": "Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-27 16:22:07.904286",
+ "modified": "2023-12-28 13:13:18.257153",
  "modified_by": "Administrator",
  "module": "Logistics",
- "name": "Referance",
+ "name": "Engineering Name",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

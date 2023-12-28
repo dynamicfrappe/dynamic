@@ -13,6 +13,47 @@ class CompositionRequest(Document):
 	def get_items(self):
 		sales_order = frappe.get_doc("Sales Order" , self.sales_order)
 		return sales_order.items
+	
+	@frappe.whitelist()
+	def set_address_and_numbers(self):
+		sql = f'''
+			SELECT 
+			 	CP.phone , C.address 
+			FROM 
+			  	`tabContact Phone` CP
+			INNER JOIN 
+				`tabContact` C
+			ON 
+				C.name = CP.parent
+			INNER JOIN 
+				`tabDynamic Link` DL
+			ON 
+				C.name = DL.parent
+			WHERE 
+				link_name = '{self.customer}'
+			limit 3
+			'''
+		data = frappe.db.sql(sql , as_dict = 1)
+		self.address = ''
+		self.phone_number_1 = ''
+		self.phone_number_2 = ''
+		self.phone_number_3 = ''
+
+		if data :
+			if len(data) == 1:
+				self.address = data[0]['address']
+				self.phone_number_1 = data[0]['phone']
+			if len(data) == 2:
+				self.address = data[0]['address']
+				self.phone_number_1 = data[0]['phone']
+				self.phone_number_2 = data[1]["phone"]
+			if len(data) == 3:
+				self.address = data[0]['address']
+				self.phone_number_1 = data[0]['phone']
+				self.phone_number_2 = data[1]["phone"]
+				self.phone_number_3 = data[2]["phone"]
+		
+				
 
 	def on_submit(self):
 		if 'Logistics' in DOMAINS :

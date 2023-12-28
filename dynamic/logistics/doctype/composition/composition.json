@@ -23,8 +23,11 @@
   "customer_comment",
   "column_break_mtyk5",
   "location_is_ready",
-  "engineering_name",
+  "section_break_18",
+  "engineers",
+  "section_break_20",
   "from",
+  "column_break_21",
   "to",
   "amended_from"
  ],
@@ -34,8 +37,7 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "sales_order",
@@ -130,11 +132,7 @@
    "read_only": 1
   },
   {
-   "fieldname": "engineering_name",
-   "fieldtype": "Data",
-   "label": "Engineering Name"
-  },
-  {
+   "allow_on_submit": 1,
    "fieldname": "from",
    "fieldtype": "Date",
    "label": "From"
@@ -161,12 +159,32 @@
    "options": "Composition",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "engineers",
+   "fieldtype": "Table",
+   "label": "Engineers",
+   "options": "Engineering Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_18",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_20",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-27 17:37:50.611678",
+ "modified": "2023-12-28 13:39:24.674112",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition",
