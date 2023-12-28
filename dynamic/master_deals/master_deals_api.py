@@ -300,7 +300,7 @@ def get_avail_qty_in_draft_stock_delivry(doc,*args):
 			warehouse='s_warehouse'
 		else:
 			warehouse='warehouse'
-
+				
 		for item_dic in result:
 			actual_bin_qty = frappe.db.get_value("Bin",{'item_code':item_dic.get('item_code'),'warehouse':item_dic.get('warehouse') }, ['actual_qty'])
 			for row in doc.items:
