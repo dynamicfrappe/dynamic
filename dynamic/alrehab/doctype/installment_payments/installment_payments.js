@@ -24,7 +24,8 @@ frappe.ui.form.on('Installment Payments', {
 			frm.call({
 				method:"dynamic.alrehab.doctype.installment_payments.installment_payments.get_customer_instllment",
 				args:{
-					cst:frm.doc.unit
+					cst:frm.doc.unit,
+					item:frm.doc.item
 				},
 				callback:function(r){
 					if(!r.exc){
