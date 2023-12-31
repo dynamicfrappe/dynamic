@@ -18,7 +18,7 @@ class InstallmentPayments(Document):
 
 
 @frappe.whitelist()
-def get_customer_instllment(cst):
+def get_customer_instllment(cst,item):
 	sql_before_taxes = f"""
 	SELECT name 
 	FROM `tabinstallment Entry`
@@ -35,7 +35,7 @@ def get_customer_instllment(cst):
 	,total_payed,total_value
 	,outstanding_value
 	FROM `tabinstallment Entry`
-	WHERE customer='{cst}' AND  IFNULL(total_payed,0)<total_value
+	WHERE customer='{cst}' AND `tabinstallment Entry`.item='{item}' AND IFNULL(total_payed,0)<total_value
 	"""
 	print(sql)
 	data_sql = frappe.db.sql(sql,as_dict=1)
