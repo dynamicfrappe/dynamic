@@ -31,6 +31,7 @@ frappe.ui.form.on('Installment Payments', {
 					if(!r.exc){
 						//append childs
 						frm.clear_table("items")
+						console.log(r.message)
 						$.each(r.message || [], function(i, element) {
 							let row = frm.add_child('items', {
 								installment_entry: element.name,

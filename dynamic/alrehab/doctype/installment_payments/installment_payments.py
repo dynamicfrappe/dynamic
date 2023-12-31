@@ -56,6 +56,11 @@ def create_journal_entry(doc_name):
 
 def create_je_row(row):
 	installment_entry_doc = frappe.get_doc('installment Entry',row.installment_entry)
+	total_payed = float(installment_entry_doc.total_payed or 0) + float(row.total_payed or 0) 
+	outstanding_value = float(installment_entry_doc.outstanding_value or 0) - float(row.total_payed or 0)
+	if float(row.total_payed) > float(installment_entry_doc.outstanding_value):
+		frappe.throw(_("Total Paid Amount More Than Total Value"))
+
 	# frappe.errprint(f'-installment_entry_doc->{installment_entry_doc.__dict__}')
 	journal_entry = frappe.new_doc("Journal Entry")
 	journal_entry.posting_date = getdate()
@@ -86,13 +91,7 @@ def create_je_row(row):
 	journal_entry.insert()
 	journal_entry.submit()
 	#**update 
-	total_payed = float(installment_entry_doc.total_payed or 0) + float(row.total_payed or 0) 
-	outstanding_value = float(installment_entry_doc.outstanding_value or 0) - float(row.total_payed or 0)
-	# print(f'\n\n\n=installment_entry_doc.total_payed=>{installment_entry_doc.total_payed}\n\n')
-	# print(f'\n\n\n=row.total_payed=>{row.total_payed}\n\n')
-	# print(f'\n\n\n=installment_entry_doc.delay_penalty=>{float(total_payed)}--{float(installment_entry_doc.outstanding_value)}\n\n')
-	if float(row.total_payed) > float(installment_entry_doc.outstanding_value):
-		frappe.throw(_("Totla Paid Amount More Than Total Value"))
+	
 	installment_entry_doc.db_set("total_payed",total_payed)
 	installment_entry_doc.db_set("outstanding_value",outstanding_value)
 	installment_entry_doc.append("paid_entry",{

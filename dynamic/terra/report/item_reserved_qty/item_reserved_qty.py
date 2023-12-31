@@ -71,10 +71,11 @@ class ItemReservedQty(object):
 			LEFT JOIN `tabReservation`
 			ON `tabBin`.warehouse=`tabReservation`.warehouse_source
 			AND `tabBin`.item_code=`tabReservation`.item_code
+			AND  `tabReservation`.status IN ('Active','Partial Delivered')
 			LEFT JOIN `tabReservation Warehouse`
 			ON `tabReservation Warehouse`.item=`tabReservation`.item_code
 			AND `tabReservation Warehouse`.parent=`tabReservation`.name
-			WHERE {conditions} AND  `tabReservation`.status IN ('Active','Partial Delivered')
+			WHERE {conditions} 
 			GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		"""
 		# sql_query_new = f"""
@@ -100,7 +101,7 @@ class ItemReservedQty(object):
 		# 				WHERE {conditions} 
 		# 				GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		# """.format(conditions=conditions)
-		frappe.db.sql("SET @@SQL_BIG_SELECTS=1;")
+		# frappe.db.sql("SET @@SQL_BIG_SELECTS=1;")
 		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
 		return sql_data
 
@@ -122,23 +123,23 @@ class ItemReservedQty(object):
 				"width": 170,
 			},
 			{
-                "label": _("Actual QTY"),
-                "fieldname": "bin_actual_qty",
-                "fieldtype": "Float",
-                "width": 180,
-            },
+				"label": _("Actual QTY"),
+				"fieldname": "bin_actual_qty",
+				"fieldtype": "Float",
+				"width": 180,
+			},
 			{
-                "label": _("Reserved QTY"),
-                "fieldname": "reserved_qty",
-                "fieldtype": "Float",
-                "width": 180,
-            },
+				"label": _("Reserved QTY"),
+				"fieldname": "reserved_qty",
+				"fieldtype": "Float",
+				"width": 180,
+			},
 			{
-                "label": _("Actual Avail QTY"),
-                "fieldname": "rest_qty",
-                "fieldtype": "Float",
-                "width": 180,
-            },
+				"label": _("Actual Avail QTY"),
+				"fieldname": "rest_qty",
+				"fieldtype": "Float",
+				"width": 180,
+			},
 		]
 		if self.filters.get("cost_center"):
 			self.columns.append(
