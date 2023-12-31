@@ -25,4 +25,5 @@ class RehabContract(Document):
 		installment_entry.due_date = row.due_date
 		installment_entry.status = "Under collection"
 		installment_entry.customer = self.unit
+		installment_entry.contract = self.name
 		installment_entry.insert()
