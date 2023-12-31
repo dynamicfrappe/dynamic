@@ -40,44 +40,43 @@ class ItemReservedQty(object):
 			conditions += " and `tabBin`.warehouse = '%s'"%self.filters.get("warehosue")
 		# if self.filters.get("cost_center"):
 		# 	conditions += " and so.cost_center = '%s'"%self.filters.get("cost_center")
-		sql_query_new = f"""
-			
-			SELECT `tabBin`.name as 'bin'
-			,`tabBin`.warehouse as 'bin_warehouse'
-			,`tabBin`.item_code
-			,`tabBin`.actual_qty as bin_actual_qty
-			,`tabDelivery Note`.name delivery_name
-			,`tabBin`.reserved_qty as reserved_qty
-			,`tabBin`.actual_qty -  (`tabBin`.reserved_qty +SUM(ABS(`tabDelivery Note Item`.qty)) )  as rest_qty
-			FROM `tabBin`
-			Left Join `tabDelivery Note Item` 
-			ON `tabDelivery Note Item`.item_code=`tabBin`.item_code
-			AND `tabDelivery Note Item`.warehouse=`tabBin`.warehouse
-			AND `tabDelivery Note Item`.qty < 0
-			Left Join `tabDelivery Note`
-			ON `tabDelivery Note`.name=`tabDelivery Note Item`.parent
-			AND `tabDelivery Note`.is_return=1 
-			WHERE {conditions}
-			GROUP BY `tabBin`.warehouse,`tabBin`.item_code
-		"""
 		# sql_query_new = f"""
+			
 		# 	SELECT `tabBin`.name as 'bin'
 		# 	,`tabBin`.warehouse as 'bin_warehouse'
 		# 	,`tabBin`.item_code
 		# 	,`tabBin`.actual_qty as bin_actual_qty
-		# 	,SUM(`tabReservation Warehouse`.reserved_qty) as reserved_qty
-		# 	,(`tabBin`.actual_qty  - SUM(`tabReservation Warehouse`.reserved_qty)) as rest_qty
+		# 	,`tabDelivery Note`.name delivery_name
+		# 	,`tabBin`.reserved_qty as reserved_qty
+		# 	,`tabBin`.actual_qty -  (`tabBin`.reserved_qty +SUM(ABS(`tabDelivery Note Item`.qty)) )  as rest_qty
 		# 	FROM `tabBin`
-		# 	LEFT JOIN `tabReservation`
-		# 	ON `tabBin`.warehouse=`tabReservation`.warehouse_source
-		# 	AND `tabBin`.item_code=`tabReservation`.item_code
-		# 	AND `tabReservation`.status='Active'
-		# 	LEFT JOIN `tabReservation Warehouse`
-		# 	ON `tabReservation Warehouse`.item=`tabReservation`.item_code
-		# 	AND `tabReservation Warehouse`.parent=`tabReservation`.name
+		# 	Left Join `tabDelivery Note Item` 
+		# 	ON `tabDelivery Note Item`.item_code=`tabBin`.item_code
+		# 	AND `tabDelivery Note Item`.warehouse=`tabBin`.warehouse
+		# 	AND `tabDelivery Note Item`.qty < 0
+		# 	Left Join `tabDelivery Note`
+		# 	ON `tabDelivery Note`.name=`tabDelivery Note Item`.parent
+		# 	AND `tabDelivery Note`.is_return=1 
 		# 	WHERE {conditions}
 		# 	GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		# """
+		sql_query_new = f"""
+			SELECT `tabBin`.name as 'bin'
+			,`tabBin`.warehouse as 'bin_warehouse'
+			,`tabBin`.item_code
+			,`tabBin`.actual_qty as bin_actual_qty
+			,SUM(`tabReservation Warehouse`.reserved_qty) as reserved_qty
+			,(`tabBin`.actual_qty  - SUM(`tabReservation Warehouse`.reserved_qty)) as rest_qty
+			FROM `tabBin`
+			LEFT JOIN `tabReservation`
+			ON `tabBin`.warehouse=`tabReservation`.warehouse_source
+			AND `tabBin`.item_code=`tabReservation`.item_code
+			LEFT JOIN `tabReservation Warehouse`
+			ON `tabReservation Warehouse`.item=`tabReservation`.item_code
+			AND `tabReservation Warehouse`.parent=`tabReservation`.name
+			WHERE {conditions} AND  `tabReservation`.status IN ('Active','Partial Delivered')
+			GROUP BY `tabBin`.warehouse,`tabBin`.item_code
+		"""
 		# sql_query_new = f"""
 		# 				SELECT `tabBin`.name as 'bin'
 		# 				,so.cost_center as cost_center
