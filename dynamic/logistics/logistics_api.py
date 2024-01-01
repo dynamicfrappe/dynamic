@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.utils import date_diff , now
 DOMAINS = frappe.get_active_domains()
 
@@ -67,3 +68,43 @@ def check_composition_request_with_order(name):
                 AND
                 CO.docstatus = 1
             """)
+    
+@frappe.whitelist()            
+def validate_items():
+    selling_settings = frappe.get_single("Selling Settings")
+    if not selling_settings.item_group :
+        frappe.throw(_("Please set <b>item group</b> in selling settings"))
+    return selling_settings.item_group 
+
+@frappe.whitelist()            
+def get_item_price(item):
+    selling_settings = frappe.get_single("Selling Settings")
+    if not selling_settings.price_list :
+        frappe.throw(_("Please set <b>price list</b> in selling settings "))
+    sql = f'''
+            select 
+                price_list_rate 
+            from 
+                `tabItem Price` 
+            where
+                item_code = '{item}'
+                and 
+                price_list = '{selling_settings.price_list}'
+            limit 1
+            '''
+    data = frappe.db.sql(sql , as_dict = 1)
+    if data :
+        if data[0]["price_list_rate"] :
+            return data[0]["price_list_rate"]
+        
+@frappe.whitelist()
+def create_sales_invoice(source_name):
+    conservation = frappe.get_doc('Conservation',source_name)
+    sales_invoice = frappe.new_doc("Sales Invoice")
+    sales_invoice.customer = conservation.customer
+    for item in conservation.items :
+        sales_invoice.append("items" , {"item_code" : item.item , "rate" : item.rate})
+    for item in conservation.service_items :
+        sales_invoice.append("items" , {"item_code" : item.item , "rate" : item.rate})
+    return sales_invoice
+    

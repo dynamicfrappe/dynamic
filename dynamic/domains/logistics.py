@@ -47,6 +47,26 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "default_mode_of_payment_quotation",
             },
+            {
+                "fieldname": "maintenance_settings",
+                "fieldtype": "Section Break",
+                "insert_after": "diable_order_without_quotation",
+                "label": _("Maintenance Settings"),
+            },
+            {
+                "label": _("Item Group"),
+                "fieldname": "item_group",
+                "fieldtype": "Link",
+                "insert_after": "maintenance_settings",
+                "options":"Item Group"
+            },
+            {
+                "label": _("Price List"),
+                "fieldname": "price_list",
+                "fieldtype": "Link",
+                "insert_after": "item_group",
+                "options":"Price List"
+            }
         ],
         'Quotation' :[
              {

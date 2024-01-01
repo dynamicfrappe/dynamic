@@ -20,9 +20,10 @@
   "warranties",
   "machines",
   "section_break_13",
-  "cus_comment",
+  "customer_comment",
   "column_break_14",
-  "history_maintenance"
+  "history_maintenance",
+  "amended_from"
  ],
  "fields": [
   {
@@ -58,11 +59,6 @@
    "fieldtype": "Table",
    "label": "Machines",
    "options": "Customer Machine"
-  },
-  {
-   "fieldname": "cus_comment",
-   "fieldtype": "Data",
-   "label": "Cus Comment"
   },
   {
    "fetch_from": "customer.customer_name",
@@ -122,11 +118,26 @@
    "label": "Location",
    "options": "Location",
    "read_only": 1
+  },
+  {
+   "fieldname": "customer_comment",
+   "fieldtype": "Data",
+   "label": "Customer Comment"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Conservation Request",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2023-12-28 16:37:57.382574",
+ "modified": "2023-12-31 12:18:11.279080",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",

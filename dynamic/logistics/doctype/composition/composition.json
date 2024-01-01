@@ -40,6 +40,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "sales_order",
    "fieldtype": "Link",
    "label": "Sales Order",
@@ -72,8 +73,7 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Items",
-   "options": "Sales Order Item",
-   "read_only": 1
+   "options": "Sales Order Item"
   },
   {
    "fieldname": "section_break_v7zcq",
@@ -184,7 +184,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-28 13:39:24.674112",
+ "modified": "2023-12-31 10:46:48.906738",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition",

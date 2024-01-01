@@ -65,6 +65,7 @@ class CompositionOrder(Document):
 				self.phone_number_1 = data[0]['phone']
 				self.phone_number_2 = data[1]["phone"]
 				self.phone_number_3 = data[2]["phone"]
+
 	def on_submit(self):
 		if 'Logistics' in DOMAINS :
 			self.create_composition()
@@ -75,7 +76,28 @@ class CompositionOrder(Document):
 		composition.sales_order = self.sales_order
 		composition.status = self.status
 		composition.customer = self.customer
-		composition.items = self.items
+		for item in self.items :
+			composition.append("items" , {"item_code" :item.item_code ,"qty" :item.qty ,
+								"delivery_date" :item.delivery_date ,"image" :item.image,
+								"stock_uom" :item.stock_uom, "picked_qty" :item.picked_qty,
+								"price_list_rate" :item.price_list_rate, "stock_qty" :item.stock_qty,
+								"base_price_list_rate" :item.base_price_list_rate, 
+								"rate" :item.rate ,"amount" :item.amount ,"base_rate" :item.base_rate , 
+								"base_amount" :item.base_amount ,"is_free_item" :item.is_free_item ,
+								"grant_commission" :item.grant_commission ,"net_rate" :item.net_rate ,
+								"net_amount" :item.net_amount ,"base_net_rate" :item.base_net_rate ,
+								"base_net_amount" :item.base_net_amount , "billed_amt" :item.billed_amt , 
+								"valuation_rate" :item.valuation_rate ,  "gross_profit" :item.gross_profit , 
+								"delivered_by_supplier" : item.delivered_by_supplier , "supplier" : item.supplier , 
+								"weight_per_unit" : item.weight_per_unit , "total_weight" : item.total_weight ,
+								"warehouse" : item.warehouse ,  "against_blanket_order" : item.against_blanket_order ,
+								"projected_qty" : item.projected_qty ,  "actual_qty" : item.actual_qty ,
+								"ordered_qty" : item.ordered_qty ,"work_order_qty" : item.work_order_qty ,
+								"delivered_qty" : item.delivered_qty ,"produced_qty" : item.produced_qty ,
+								"ensure_delivery_based_on_produced_serial_no" :item.ensure_delivery_based_on_produced_serial_no ,
+								"item_name" :item.item_name , "description" :item.description ,
+								"page_break" : item.page_break,
+								"uom" :item.uom , "conversion_factor" : item.conversion_factor})
 		composition.address = self.address
 		composition.phone_number_1 = self.phone_number_1
 		composition.phone_number_2 = self.phone_number_2
@@ -84,7 +106,6 @@ class CompositionOrder(Document):
 		composition.engineers = self.engineers
 		composition.customer_comment = self.customer_comment
 		composition.location_is_ready = self.location_is_ready
-		composition.insert()
 		composition.save()
 		self.composition = composition.name
 		self.submit()
