@@ -22,7 +22,7 @@ frappe.ui.form.on('Conservation order', {
 									}
 								};
 							}
-						  })
+						})
 						frm.fields_dict["service_items"].grid.get_field("item").get_query =
 						  function (doc, cdt, cdn) {
 							  var row = locals[cdt][cdn];
@@ -32,8 +32,22 @@ frappe.ui.form.on('Conservation order', {
 								  }
 					  
 							  }
-						  };
-
+						};
+						frappe.call({
+							method:"dynamic.logistics.logistics_api.validate_engineering_name",
+							callback:function(r){
+								frm.fields_dict["engineering_name"].grid.get_field("employee").get_query =
+								function (doc, cdt, cdn) {
+									var row = locals[cdt][cdn];
+									return {
+										filters: {
+										'department': r.message,
+										}
+							
+									}
+								};
+							}
+						})
 					}
 				}
 			}

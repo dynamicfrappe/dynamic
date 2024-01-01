@@ -66,6 +66,13 @@ data = {
                 "fieldtype": "Link",
                 "insert_after": "item_group",
                 "options":"Price List"
+            },
+            {
+                "label": _("Department"),
+                "fieldname": "department",
+                "fieldtype": "Link",
+                "insert_after": "price_list",
+                "options":"Department"
             }
         ],
         'Quotation' :[

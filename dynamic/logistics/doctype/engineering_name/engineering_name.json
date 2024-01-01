@@ -6,20 +6,35 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "name1"
+  "employee",
+  "from",
+  "to"
  ],
  "fields": [
   {
-   "fieldname": "name1",
-   "fieldtype": "Data",
+   "fieldname": "employee",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Name"
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "To"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-28 13:13:18.257153",
+ "modified": "2024-01-01 16:44:57.398434",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Engineering Name",

@@ -76,6 +76,14 @@ def validate_items():
         frappe.throw(_("Please set <b>item group</b> in selling settings"))
     return selling_settings.item_group 
 
+
+@frappe.whitelist()            
+def validate_engineering_name():
+    selling_settings = frappe.get_single("Selling Settings")
+    if not selling_settings.department :
+        frappe.throw(_("Please set <b>department</b> in selling settings"))
+    return selling_settings.department 
+
 @frappe.whitelist()            
 def get_item_price(item):
     selling_settings = frappe.get_single("Selling Settings")

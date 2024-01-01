@@ -23,11 +23,11 @@
   "customer_comment",
   "history_maintenance",
   "description_of_maintenance_manager",
-  "maintenance_type",
   "column_break_14",
-  "type_of_maintenance",
+  "maintenance_type",
   "planed_amount_for_price_list",
   "section_break_22",
+  "type_of_maintenance",
   "items",
   "service_items",
   "transfer_cost",
@@ -143,8 +143,9 @@
   },
   {
    "fieldname": "type_of_maintenance",
-   "fieldtype": "Data",
-   "label": "Type of Maintenance"
+   "fieldtype": "Table",
+   "label": "Types of Maintenance",
+   "options": "Maintenance Item"
   },
   {
    "fieldname": "planed_amount_for_price_list",
@@ -218,7 +219,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-01 09:50:15.668469",
+ "modified": "2024-01-01 16:11:08.227894",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation",
