@@ -40,12 +40,7 @@ class ItemReservedQty(object):
 			conditions += " and `tabBin`.warehouse = '%s'"%self.filters.get("warehosue")
 		# if self.filters.get("cost_center"):
 		# 	conditions += " and so.cost_center = '%s'"%self.filters.get("cost_center")
-<<<<<<< HEAD
-		sql_query_new = f"""
-			
-=======
 		sql_test = f"""
->>>>>>> 9bf8eceb (merge)
 			SELECT `tabBin`.name as 'bin'
 			,`tabBin`.warehouse as 'bin_warehouse'
 			,`tabBin`.item_code
@@ -105,12 +100,7 @@ class ItemReservedQty(object):
 		# 				WHERE {conditions} 
 		# 				GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		# """.format(conditions=conditions)
-<<<<<<< HEAD
-		frappe.db.sql("SET @@SQL_BIG_SELECTS=1;")
-		sql_data = frappe.db.sql(sql_query_new,as_dict=1)
-=======
 		sql_data = frappe.db.sql(sql_test,as_dict=1)
->>>>>>> 9bf8eceb (merge)
 		return sql_data
 
 	def get_columns(self):
