@@ -219,6 +219,16 @@ def escape_html_demo(text):
 # 	return new_doc.name /home/beshoy/Dynamic-13/tera/frappe-tera/apps/dynamic/dynamic/master_deals/master_deals_api.py
 
 
+@frappe.whitelist()
+def get_current_item_available_qty( item , s_warehouse ,purpose  ,factor = None) :
+	if 'Master Deals' in DOMAINS:
+		if purpose in ["Material Issue" , "Material Transfer" , 
+			   						 "Material Transfer for Manufacture" , "Send to Subcontractor"] :
+			actual_qty = get_bin_qty(item ,s_warehouse )
+			# available Qty in current Uom  
+			if (float(actual_qty or 0 ) != 0 )and (factor and factor != 1) :
+				actual_qty = float(actual_qty) / float(factor or 0)
+			return actual_qty
 
 def delivery_note_validate_item_qty(doc,*args):
 	if 'Master Deals' in DOMAINS:

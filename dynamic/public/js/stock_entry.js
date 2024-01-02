@@ -184,38 +184,7 @@ frappe.ui.form.on("Stock Entry", {
       
     },
     
-    comparison : function (frm) {
-        if(frm.doc.against_comparison && frm.doc.stock_entry_type){
-          frappe.call({
-            "method" : "contracting.contracting.doctype.stock_functions.stock_entry_setup" ,
-            args:{
-              "comparison" : frm.doc.comparison,
-            },
-            callback :function(r){
-              if (r.message){
 
-                frm.set_query("comparison_item",function () {
-                  return {
-                    filters: [
-                      ["item_code", "in", r.message],
-                    ],
-                  };
-                });
-                frm.refresh_field("comparison_item")
-                frm.set_query("comparison_item","items",function () {
-                  return {
-                    filters: [
-                      ["item_code", "in", r.message],
-                    ],
-                  };
-                });
-                frm.refresh_field("items")
-              }
-            } 
-         
-          })
-      }
-    },
 
     
     cost_center:function(frm){
@@ -294,6 +263,19 @@ frappe.ui.form.on('Stock Entry Detail', {
       }
   })
   },
+
+  item_code:function(frm){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+          if (r.message && r.message.length) {
+              if (r.message.includes("Master Deals")) {
+               pass
+              }
+          }
+      }
+  })
+  }
   
 })
 

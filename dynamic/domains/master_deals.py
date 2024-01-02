@@ -44,6 +44,15 @@ data = {
             },
             
         ],
+        'Stock Entry Detail':[
+                {
+                "label":_("Available Qty"),
+                "fieldname":"available_qty",
+                "fieldtype":"Float",
+                "insert_after":"actual_qty", 
+              
+            },
+        ],
         'Customer':[
             {
                 "label":_("Customer Code"),
