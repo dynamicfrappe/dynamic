@@ -217,7 +217,7 @@ doc_events = {
 			,  "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",    
         ],
         "before_save":[
-             "dynamic.master_deals.master_deals_api.",
+             "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",
              "dynamic.controllers.stock_entry.before_save_stock_entry"
         ],
         "on_submit": "dynamic.api.submit_stock_entry",
