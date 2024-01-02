@@ -1084,12 +1084,12 @@ def check_stock_entry_transit(doc, *args, **kwargs):
     if not doc.get("to_warehouse") and doc.get("outgoing_stock_entry"):
         frappe.throw("Please Select Default Target Warehouse")
     if doc.get("outgoing_stock_entry"):
-        get_allowed_stoc_use_submit(doc)
+        get_allowed_stoc_use_submit(doc,doc.get("to_warehouse"))
 
 
-def get_allowed_stoc_use_submit(doc):
+def get_allowed_stoc_use_submit(doc,warehouse):
     get_allowed_user = f"""
-    SELECT user  FROM `tabWarehouse User` WHERE parent='{doc.get("to_warehouse")}' and user='{frappe.session.user}'
+    SELECT user  FROM `tabWarehouse User` WHERE parent='{warehouse}' and user='{frappe.session.user}'
     """
     get_allowed_user = frappe.db.sql(get_allowed_user, as_dict=1)
     if not len(get_allowed_user):

@@ -172,7 +172,7 @@ doc_events = {
         ]
     },
     "Journal Entry": {
-        "before_submit": ["dynamic.controllers.journal_entry.submit_journal_entry"],
+        "before_submit": ["dynamic.controllers.journal_entry.before_submit_journal_entry"],
         "on_submit": "dynamic.api.submit_journal_entry",
     },
     "Sales Order": {
@@ -218,6 +218,7 @@ doc_events = {
         ],
         "before_save":[
              "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_delivry",
+             "dynamic.controllers.stock_entry.before_save_stock_entry"
         ],
         "on_submit": "dynamic.api.submit_stock_entry",
     },
