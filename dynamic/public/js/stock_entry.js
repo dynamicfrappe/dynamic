@@ -244,6 +244,52 @@ frappe.ui.form.on("Stock Entry", {
       }
 
     },
+    item_code_update:function(frm ,cdt , cdn){
+      // this function work with domain master Deals only 
+      var local = locals[cdt][cdn]
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length) {
+                if (r.message.includes("Master Deals")) {
+                    console.log("Master Deals In Active Domains ")
+                    // call api to get current available qty 
+                    if (frm.doc.from_warehouse || local.s_warehouse ) {
+                    
+                      var args = {"item" : local.item_code ,
+                      "s_warehouse" :local.s_warehouse || frm.doc.from_warehouse ,
+                      "purpose" :frm.doc.stock_entry_type ,
+                     }
+                      if (!frm.__islocal) {
+                        console.log("Old Document !")
+                        args = {"item" : local.item_code ,
+                                "s_warehouse" :local.s_warehouse || frm.doc.from_warehouse ,
+                                "purpose" :frm.doc.stock_entry_type ,
+                                "doc" : frm.doc.name
+                                }
+                      }
+                      frappe.call({
+                        method :"dynamic.master_deals.master_deals_api.get_current_item_available_qty" ,
+                        "args" :args ,
+                        callback:function(r){
+                          console.log(r)
+                          if (r.message){
+                            local.available_qty = r.message
+                            frm.refresh_field("items")
+                          }
+                        }
+                      })
+                    }
+                   
+  
+  
+  
+  
+                }
+            }
+        }
+    })
+    }
 
 
 })
@@ -263,19 +309,12 @@ frappe.ui.form.on('Stock Entry Detail', {
       }
   })
   },
-
-  item_code:function(frm){
-    frappe.call({
-      method: "dynamic.api.get_active_domains",
-      callback: function (r) {
-          if (r.message && r.message.length) {
-              if (r.message.includes("Master Deals")) {
-               pass
-              }
-          }
-      }
-  })
-  }
+  item_code:function(frm ,cdt , cdn){
+    frm.events.item_code_update(frm ,cdt , cdn)
+  },
+  s_warehouse:function(frm ,cdt , cdn){
+    frm.events.item_code_update(frm ,cdt , cdn)
+  },
   
 })
 

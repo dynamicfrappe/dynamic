@@ -50,9 +50,21 @@ data = {
                 "fieldname":"available_qty",
                 "fieldtype":"Float",
                 "insert_after":"actual_qty", 
+                "read_only":1
               
             },
         ],
+        'Delivery Note Item':[
+               {
+                "label":_("Available Qty"),
+                "fieldname":"available_qty",
+                "fieldtype":"Float",
+                "insert_after":"stock_qty", 
+                "read_only":1
+              
+            },
+        ],
+
         'Customer':[
             {
                 "label":_("Customer Code"),
@@ -117,6 +129,12 @@ data = {
                 "fieldtype":"Table",
                 "options":"Sales Naming Series Role",
                 "insert_after":"sales_series_section", 
+            },
+            {
+                "label":_("Check Actual QTY IN Save"),
+                "fieldname":"check_qty",
+                "fieldtype":"Check",
+                "insert_after":"series_role", 
             },
             
         ],
