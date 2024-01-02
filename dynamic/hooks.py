@@ -415,6 +415,7 @@ domains = {
     "Qaswaa": "dynamic.domains.qaswaa",
     "Rehab": "dynamic.domains.alrehab",
     "Logistics": "dynamic.domains.logistics",
+    "Notebook": "dynamic.domains.notebook",
 }
 
 # domain Conatin
