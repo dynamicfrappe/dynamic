@@ -3,7 +3,7 @@ from frappe import _
 
 Domains=frappe.get_active_domains()
 
-def submit_journal_entry(self , event):
+def before_submit_journal_entry(self , event):
     if "Rehab"  in Domains :
         set_claiming_entry(self)
 
