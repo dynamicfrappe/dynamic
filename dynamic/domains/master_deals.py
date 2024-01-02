@@ -73,12 +73,7 @@ data = {
         ],
         
         'Journal Entry':[
-            {
-                "label":_("Notebook No"),
-                "fieldname":"notebook_no",
-                "fieldtype":"Data",
-                "insert_after":"multi_currency", 
-            },
+           
             {
                 "label":_("Main Currency"),
                 "fieldname":"main_currency",
