@@ -74,7 +74,10 @@ frappe.ui.form.on("Delivery Note", {
                             if (r.message){
                               local.available_qty = r.message
                               frm.refresh_field("items")
-                            }
+                            }  else {
+                                local.available_qty =0
+                                frm.refresh_field("items")
+                              }
                           }
                         })
                       }

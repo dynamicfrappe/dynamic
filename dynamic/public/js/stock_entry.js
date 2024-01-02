@@ -277,6 +277,10 @@ frappe.ui.form.on("Stock Entry", {
                             local.available_qty = r.message
                             frm.refresh_field("items")
                           }
+                          else {
+                            local.available_qty =0
+                            frm.refresh_field("items")
+                          }
                         }
                       })
                     }
