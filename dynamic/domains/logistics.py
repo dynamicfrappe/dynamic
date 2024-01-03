@@ -11,6 +11,13 @@ data = {
                 "insert_after": "tax_withholding_category",
                 "read_only" : 1
             },
+            {
+                "label": _("Has Delivered"),
+                "fieldname": "has_delivered",
+                "fieldtype": "Check",
+                "insert_after": "has_shipped",
+                "read_only" : 1
+            },
         ],
         'Customer': [
             {

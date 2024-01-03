@@ -21,15 +21,20 @@ frappe.ui.form.on('PO Container', {
 						};
 						if(frm.doc.docstatus == 1 && frm.doc.status == "Ordered"){
 							frm.add_custom_button('Close',()=>{
-								// frm.doc.status = "Delivered"
-								// frm.refresh()
-								// frm.save()
 								frm.call({
 									doc: frm.doc,
 									method: "change_status",
 	
 								})
 							})	
+						}
+						if (frm.doc.docstatus == 1 && frm.doc.status == "Delivered"){
+							frm.call({
+								doc: frm.doc,
+								method: "close_request_item",
+
+							})
+
 						}
 					}
 				}

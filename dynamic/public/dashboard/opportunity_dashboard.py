@@ -13,4 +13,13 @@ def get_data(data={}):
                 'items': ['Sales Order']
             }
         )
+    if "Logistics" in DOMAINS:
+       
+        data['transactions'].append(
+            {
+                'label': _('Request Editing Item'),
+                'items': ['Request Editing Item']
+            }
+        )
     return data
+    

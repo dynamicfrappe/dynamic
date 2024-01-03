@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import date_diff , now
 DOMAINS = frappe.get_active_domains()
 
 class POContainer(Document):
@@ -16,8 +17,17 @@ class POContainer(Document):
 	@frappe.whitelist()
 	def change_status(self):
 		self.db_set("status", "Delivered")
+
+	@frappe.whitelist()
+	def close_request_item(self):
+		if 'Logistics' in DOMAINS: 
+			for purchase_order_container in self.purchase_order_containers:
+				frappe.db.set_value('Purchase Order',purchase_order_container.purchase_order,'has_delivered','1')
+		
 		
 	def before_submit(self):
 		if 'Logistics' in DOMAINS: 
 			for purchase_order_container in self.purchase_order_containers:
 				frappe.db.set_value('Purchase Order',purchase_order_container.purchase_order,'has_shipped','1')
+			differance = date_diff( self.arrived_date ,now() )
+			self.remaining_date = f'{differance}' + " days"

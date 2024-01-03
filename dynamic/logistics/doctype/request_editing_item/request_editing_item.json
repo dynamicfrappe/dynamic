@@ -15,6 +15,7 @@
   "section_break_6",
   "main_item",
   "spear_part_item",
+  "opportunity",
   "approve",
   "approve_by",
   "amended_from"
@@ -88,12 +89,19 @@
    "options": "Request Editing Item",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "opportunity",
+   "fieldtype": "Link",
+   "label": "Opportunity",
+   "options": "Opportunity",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-18 14:33:32.768833",
+ "modified": "2024-01-03 18:12:52.307696",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Request Editing Item",

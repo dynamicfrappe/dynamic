@@ -116,3 +116,10 @@ def create_sales_invoice(source_name):
         sales_invoice.append("items" , {"item_code" : item.item , "rate" : item.rate})
     return sales_invoice
     
+@frappe.whitelist()
+def create_request_item(source_name):
+    opportunity = frappe.get_doc('Opportunity',source_name)
+    request_item = frappe.new_doc("Request Editing Item")
+    request_item.opportunity = opportunity.name
+    return request_item
+    
