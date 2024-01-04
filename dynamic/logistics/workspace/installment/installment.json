@@ -12,32 +12,41 @@
  "is_default": 0,
  "is_standard": 1,
  "label": "installment",
- "links": [],
- "modified": "2024-01-04 10:49:31.612040",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Composition Request",
+   "link_to": "Composition Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Composition Order",
+   "link_to": "Composition Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Composition",
+   "link_to": "Composition",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2024-01-04 11:15:54.093747",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "installment",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 1,
- "shortcuts": [
-  {
-   "doc_view": "",
-   "label": "Composition Request",
-   "link_to": "Composition Request",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "",
-   "label": "Composition Order",
-   "link_to": "Composition Order",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "",
-   "label": "Composition",
-   "link_to": "Composition",
-   "type": "DocType"
-  }
- ]
+ "shortcuts": []
 }
