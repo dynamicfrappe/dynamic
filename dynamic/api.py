@@ -1077,7 +1077,7 @@ def submit_stock_entry(doc, *args, **kwargs):
     if "stock_transfer" in DOMAINS:
         check_stock_entry_transit(doc, *args, **kwargs)
     if "WEH" in DOMAINS:
-        get_allowed_stoc_use_submit(doc)
+        get_allowed_stoc_use_submit(doc, doc.get("to_warehouse"))
 
 
 def check_stock_entry_transit(doc, *args, **kwargs):
