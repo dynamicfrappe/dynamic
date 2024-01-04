@@ -122,4 +122,28 @@ def create_request_item(source_name):
     request_item = frappe.new_doc("Request Editing Item")
     request_item.opportunity = opportunity.name
     return request_item
-    
+
+
+@frappe.whitelist()
+def create_stock_entry(source_name):
+    request_item = frappe.get_doc('Request Editing Item',source_name)
+    stock_entry = frappe.new_doc("Stock Entry")
+    stock_entry.request_editing_item = request_item.name
+    stock_entry.stock_entry_type = "Repack"
+    stock_entry.from_warehouse = request_item.source_warehouse
+    stock_entry.to_warehouse = request_item.target_warehouse
+    for item in request_item.main_item:
+        stock_entry.append("items" ,{
+            "item_code" : item.item_code ,
+            "qty" : item.reqd_qty
+        })
+    for item in request_item.spear_part_item:
+        stock_entry.append("items" ,{
+            "item_code" : item.item_code ,
+            "qty" : item.reqd_qty
+        })
+    stock_entry.append("items" ,{
+            "item_code" : request_item.item_code ,
+            "qty" : float(1)
+        })
+    return stock_entry

@@ -19,6 +19,17 @@ data = {
                 "read_only" : 1
             },
         ],
+        'Stock Entry': [
+            {
+                "label": _("Request Editing Item"),
+                "fieldname": "request_editing_item",
+                "fieldtype": "Link",
+                "insert_after": "purchase_receipt_no",
+                "options":"Request Editing Item",
+                "read_only" : 1
+            },
+            
+        ],
         'Customer': [
             {
                 "label": _("Support"),

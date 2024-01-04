@@ -9,15 +9,20 @@
  "field_order": [
   "naming_series",
   "item_code",
+  "item_name",
   "column_break_3",
   "source_warehouse",
   "target_warehouse",
   "section_break_6",
   "main_item",
   "spear_part_item",
+  "section_break_10",
   "opportunity",
   "approve",
   "approve_by",
+  "column_break_13",
+  "rejected",
+  "rejected_by",
   "amended_from"
  ],
  "fields": [
@@ -96,12 +101,39 @@
    "label": "Opportunity",
    "options": "Opportunity",
    "read_only": 1
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name"
+  },
+  {
+   "default": "0",
+   "fieldname": "rejected",
+   "fieldtype": "Check",
+   "label": "Rejected"
+  },
+  {
+   "depends_on": "eval: doc.rejected == 1;",
+   "fieldname": "rejected_by",
+   "fieldtype": "Link",
+   "label": "Rejected By",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-03 18:12:52.307696",
+ "modified": "2024-01-04 09:21:23.349102",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Request Editing Item",

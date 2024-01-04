@@ -11,11 +11,13 @@ frappe.ui.form.on('Request Editing Item', {
 					if (r.message.includes("Logistics")) {
 						if(frm.doc.docstatus == 1 && frm.doc.approve_by){
 							frm.add_custom_button('Create Stock Entry',()=>{
-								frm.call({
-									doc: frm.doc,
-									method: "create_stock_entry",
-									callback: function (r) {
-									},
+								frappe.model.open_mapped_doc({
+									method:
+										"dynamic.logistics.logistics_api.create_stock_entry",
+									frm: frm,
+									args: {
+										doctype: frm.doc.doctype,
+									}
 								});
 							})		 
 				
@@ -30,7 +32,6 @@ frappe.ui.form.on('Request Editing Item', {
 });
 frappe.ui.form.on("Request Item", {
 	item_code: function(frm, cdt, cdn) {
-		
 		frappe.call({
 			method: "dynamic.api.get_active_domains",
 			callback: function (r) {
@@ -44,14 +45,17 @@ frappe.ui.form.on("Request Item", {
 							frm.call({
 								doc: frm.doc,
 								method: "get_item_qty",
-								args :{item_code : row.item_code , 
-									warehouse : row.in_warehouse},
+								args :
+									{
+										item_code : row.item_code , 
+										warehouse : row.in_warehouse
+									},
 								callback: function (r) {
+									row.qty = r.message
 									if(r.message){
-										row.qty = r.message
+										frm.refresh_fields("main_item")
 									}
-									frm.refresh_fields("main_item")
-								},
+								}
 							});
 						}
 					}
