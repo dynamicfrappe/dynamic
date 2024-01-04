@@ -22,7 +22,7 @@ def get_data(filters):
 	sql = f'''
 		SELECT
 			SII.item_code , SII.item_name , SII.qty , SI.creation ,
-			SII.amount , SII.rate , SII.warehouse 
+			SII.amount , SII.rate , SII.warehouse , SI.name
 		FROM 
 			`tabSales Invoice Item` SII
 		INNER JOIN 
@@ -30,9 +30,9 @@ def get_data(filters):
 		ON 
 			SI.name = SII.parent
 		WHERE 
-			{conditions}
+			{conditions} and SI.docstatus = 1
 		ORDER BY 
-				SII.idx
+				SI.name
 		'''
 	items = frappe.db.sql(sql , as_dict = 1)
 	for item in items :
@@ -50,7 +50,9 @@ def get_data(filters):
 				PII.item_code = '{item['item_code']}'
 
 		'''
-		purchase_items = frappe.db.sql(sql , as_dict = 1)[0]
+		purchase = frappe.db.sql(sql , as_dict = 1)
+		if purchase :
+			purchase_items = purchase[0]
 	
 		sql1 =f'''
 			SELECT
@@ -62,7 +64,9 @@ def get_data(filters):
 				and
 					warehouse = '{item['warehouse']}'
 		'''
-		valuation_rate = frappe.db.sql(sql1 , as_dict = 1)[0]
+		valuation = frappe.db.sql(sql1 , as_dict = 1)
+		if valuation :
+			valuation_rate = valuation[0]
 		
 		sql2 = f'''
 			SELECT
@@ -78,7 +82,6 @@ def get_data(filters):
 				and SI.creation < '{item["creation"]}'
 			ORDER BY 
 				SII.parent 
-			LIMIT 3
 		'''
 		post_rate = frappe.db.sql(sql2 , as_dict = 1)
 
@@ -93,21 +96,23 @@ def get_data(filters):
 		dict["item_price"] = item["rate"]
 		dict["last_purchase"] = f'{purchase_items["last_purchase"]}' + ' - '  + f'{purchase_items["purchase_date"]}' 
 		dict["unit_cost"] = valuation_rate["valuation_rate"]
-		try:
-			dict["rate_1"] = f'{post_rate[0]["rate"]}' + ' - ' + f'{post_rate[0]["posting_date"]}' 
-		except (IndexError, KeyError):
-			dict["rate_1"] = 0.0
-
-		try:
-			dict["rate_2"] = post_rate[1]["rate"] + ' - ' + f'{post_rate[0]["posting_date"]}' 
-		except (IndexError, KeyError):
-			dict["rate_2"] = 0.0 
-
-		try:
-			dict["rate_3"] = post_rate[2]["rate"] + ' - ' + f'{post_rate[0]["posting_date"]}' 
-		except (IndexError, KeyError):
-			dict["rate_3"] = 0.0
 		final_data.append(dict)
+
+		# try:
+		# 	dict["rate_1"] = f'{post_rate[0]["rate"]}' + ' - ' + f'{post_rate[0]["posting_date"]}' 
+		# except (IndexError, KeyError):
+		# 	dict["rate_1"] = 0.0
+
+		# try:
+		# 	dict["rate_2"] = post_rate[1]["rate"] + ' - ' + f'{post_rate[0]["posting_date"]}' 
+		# except (IndexError, KeyError):
+		# 	dict["rate_2"] = 0.0 
+
+		# try:
+		# 	dict["rate_3"] = post_rate[2]["rate"] + ' - ' + f'{post_rate[0]["posting_date"]}' 
+		# except (IndexError, KeyError):
+		# 	dict["rate_3"] = 0.0
+		# final_data.append(dict)
 	return final_data
 
 def get_rate_and_date(post_rate, index):
@@ -121,6 +126,13 @@ def get_rate_and_date(post_rate, index):
 
 def get_columns( num_rates=3 ):
 	columns = [ 
+				# { 
+				# 	"label": _("Sale Invoice"), 
+				# 	"fieldname": "sale_invoice", 
+				# 	"fieldtype": "Link", 
+				# 	"options": "Sale Invoice", 
+				# 	"width": 100, 
+				# }, 
 				{ 
 					"label": _("Item Code"), 
 					"fieldname": "item_code", 

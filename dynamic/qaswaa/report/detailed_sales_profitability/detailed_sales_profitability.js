@@ -9,14 +9,14 @@ frappe.query_reports["Detailed Sales Profitability"] = {
 			label: __("Sales Invoice"),
 			fieldtype: "Link",
 			options: "Sales Invoice" ,
-			reqd: 1
+			// reqd: 1
 		},
 		{
 			fieldname: "customer",
 			label: __("Customer"),
 			fieldtype: "Link",
 			options: "Customer" ,
-			reqd: 1
+			// reqd: 1
 		},
 	]
 };
