@@ -9,6 +9,7 @@
   "item_code",
   "name1",
   "qty",
+  "unit",
   "reqd_qty",
   "in_warehouse"
  ],
@@ -46,12 +47,20 @@
    "in_list_view": 1,
    "label": "In Warehouse",
    "options": "Warehouse"
+  },
+  {
+   "fetch_from": "item_code.stock_uom",
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Unit",
+   "options": "UOM"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-04 10:54:10.433043",
+ "modified": "2024-01-04 18:11:07.725102",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Request Item",

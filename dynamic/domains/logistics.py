@@ -45,6 +45,26 @@ data = {
                 "options":"Location"
             },
         ],
+        # 'Lead': [
+        #     {
+        #         "fieldname": "logistic_column",
+        #         "fieldtype": "Column Break",
+        #         "insert_after": "fax",
+        #         "label": "",
+        #     },
+        #     {
+        #         "label": _("Phone 1"),
+        #         "fieldname": "phone_number_1",
+        #         "fieldtype": "Data",
+        #         "insert_after": "website",
+        #     },
+        #     {
+        #         "label": _("Phone 2"),
+        #         "fieldname": "phone_number_2",
+        #         "fieldtype": "Data",
+        #         "insert_after": "phone_number_1",
+        #     },
+        # ],
         'Selling Settings': [
             {
                 "fieldname": "quotation_settings",

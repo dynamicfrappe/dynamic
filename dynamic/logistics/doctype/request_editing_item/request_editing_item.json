@@ -16,8 +16,8 @@
   "section_break_6",
   "main_item",
   "spear_part_item",
-  "section_break_10",
   "opportunity",
+  "section_break_10",
   "approve",
   "approve_by",
   "column_break_13",
@@ -70,6 +70,7 @@
   },
   {
    "default": "0",
+   "depends_on": "eval: doc.rejected != 1;",
    "fieldname": "approve",
    "fieldtype": "Check",
    "label": "Approve"
@@ -110,6 +111,7 @@
   },
   {
    "default": "0",
+   "depends_on": "eval: doc.approve != 1;",
    "fieldname": "rejected",
    "fieldtype": "Check",
    "label": "Rejected"
@@ -133,7 +135,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-04 09:21:23.349102",
+ "modified": "2024-01-04 17:54:06.010149",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Request Editing Item",

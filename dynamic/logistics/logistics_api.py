@@ -135,15 +135,21 @@ def create_stock_entry(source_name):
     for item in request_item.main_item:
         stock_entry.append("items" ,{
             "item_code" : item.item_code ,
-            "qty" : item.reqd_qty
+            "qty" : item.reqd_qty,
+            "s_warehouse" : request_item.source_warehouse,
+            # "t_warehouse" : request_item.target_warehouse,
         })
     for item in request_item.spear_part_item:
         stock_entry.append("items" ,{
             "item_code" : item.item_code ,
-            "qty" : item.reqd_qty
+            "qty" : item.reqd_qty,
+            "s_warehouse" : request_item.source_warehouse,
+            # "t_warehouse" : request_item.target_warehouse,
         })
     stock_entry.append("items" ,{
             "item_code" : request_item.item_code ,
-            "qty" : float(1)
+            "qty" : float(1),
+            # "s_warehouse" : request_item.source_warehouse,
+            "t_warehouse" : request_item.target_warehouse,
         })
     return stock_entry
