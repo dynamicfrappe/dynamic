@@ -41,12 +41,13 @@
    "type": "Link"
   }
  ],
- "modified": "2024-01-04 11:16:51.649134",
+ "modified": "2024-01-04 12:50:35.046702",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Maintenance",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 1,
+ "restrict_to_domain": "Logistics",
  "shortcuts": []
 }

@@ -6,9 +6,9 @@
  "disable_user_customization": 0,
  "docstatus": 0,
  "doctype": "Workspace",
- "extends_another_page": 0,
+ "extends_another_page": 1,
  "hide_custom": 0,
- "icon": "sell",
+ "icon": "",
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
@@ -24,12 +24,13 @@
    "type": "Link"
   }
  ],
- "modified": "2024-01-04 09:22:40.100196",
+ "modified": "2024-01-04 12:52:04.832484",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Container",
  "owner": "Administrator",
  "pin_to_bottom": 0,
- "pin_to_top": 0,
+ "pin_to_top": 1,
+ "restrict_to_domain": "Logistics",
  "shortcuts": []
 }
