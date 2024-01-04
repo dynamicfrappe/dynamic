@@ -1,0 +1,31 @@
+{
+ "category": "Places",
+ "charts": [],
+ "creation": "2024-01-04 09:25:11.517739",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Logistics",
+ "links": [],
+ "modified": "2024-01-04 09:25:11.517739",
+ "modified_by": "Administrator",
+ "module": "Logistics",
+ "name": "Logistics",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 1,
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Customer",
+   "link_to": "Customer",
+   "type": "DocType"
+  }
+ ]
+}
