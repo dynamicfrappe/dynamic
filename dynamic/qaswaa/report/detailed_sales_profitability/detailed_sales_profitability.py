@@ -35,6 +35,7 @@ def get_data(filters):
 				SI.name
 		'''
 	items = frappe.db.sql(sql , as_dict = 1)
+	# frappe.throw(str(items))
 	for item in items :
 		dict = {}
 		sql = f'''
@@ -96,23 +97,38 @@ def get_data(filters):
 		dict["item_price"] = item["rate"]
 		dict["last_purchase"] = f'{purchase_items["last_purchase"]}' + ' - '  + f'{purchase_items["purchase_date"]}' 
 		dict["unit_cost"] = valuation_rate["valuation_rate"]
+
+		if post_rate :
+			try:
+				dict["rate_1"] = f'{post_rate[0]["rate"]}' 
+			except (IndexError, KeyError):
+				dict["rate_1"] = 0.0
+
+			try:
+				dict["rate_2"] = post_rate[1]["rate"]  
+			except (IndexError, KeyError):
+				dict["rate_2"] = 0.0 
+
+			try:
+				dict["rate_3"] = post_rate[2]["rate"] 
+			except (IndexError, KeyError):
+				dict["rate_3"] = 0.0
+		# if post_rate :
+		# 	try:
+		# 		dict["rate_1"] = f'{post_rate[0]["rate"]}' + ' - ' + f'{post_rate[0]["posting_date"]}' 
+		# 	except (IndexError, KeyError):
+		# 		dict["rate_1"] = 0.0
+
+		# 	try:
+		# 		dict["rate_2"] = post_rate[1]["rate"] + ' - ' + f'{post_rate[0]["posting_date"]}' 
+		# 	except (IndexError, KeyError):
+		# 		dict["rate_2"] = 0.0 
+
+		# 	try:
+		# 		dict["rate_3"] = post_rate[2]["rate"] + ' - ' + f'{post_rate[0]["posting_date"]}' 
+		# 	except (IndexError, KeyError):
+		# 		dict["rate_3"] = 0.0
 		final_data.append(dict)
-
-		# try:
-		# 	dict["rate_1"] = f'{post_rate[0]["rate"]}' + ' - ' + f'{post_rate[0]["posting_date"]}' 
-		# except (IndexError, KeyError):
-		# 	dict["rate_1"] = 0.0
-
-		# try:
-		# 	dict["rate_2"] = post_rate[1]["rate"] + ' - ' + f'{post_rate[0]["posting_date"]}' 
-		# except (IndexError, KeyError):
-		# 	dict["rate_2"] = 0.0 
-
-		# try:
-		# 	dict["rate_3"] = post_rate[2]["rate"] + ' - ' + f'{post_rate[0]["posting_date"]}' 
-		# except (IndexError, KeyError):
-		# 	dict["rate_3"] = 0.0
-		# final_data.append(dict)
 	return final_data
 
 def get_rate_and_date(post_rate, index):

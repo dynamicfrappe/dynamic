@@ -23,14 +23,14 @@ frappe.query_reports["Sales Analytics Customer Yearly"] = {
 			"label": __("Fiscal Year Start"),
 			"fieldtype": "Link",
 			"options" : "Fiscal Year",
-			"reqd" : 1
+			// "reqd" : 1
 		},
 		{
 			"fieldname":"fiscal_year_end",
 			"label": __("Fiscal Year End"),
 			"fieldtype": "Link",
 			"options" : "Fiscal Year",
-			"reqd" : 1
+			// "reqd" : 1
 		},
 		{
 			"fieldname":"cost_center",
