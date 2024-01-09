@@ -2,6 +2,11 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Composition Request', {
+	refresh : function(frm){
+		frm.set_query("sales_order", () => {
+			return { filters: {"docstatus" : 1}};
+		});
+	},
 	sales_order: function(frm) {
 		frappe.call({
 			method: "dynamic.api.get_active_domains",

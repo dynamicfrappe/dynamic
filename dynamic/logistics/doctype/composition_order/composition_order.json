@@ -34,13 +34,15 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date",
+   "read_only": 1,
    "reqd": 1
   },
   {
    "fieldname": "sales_order",
    "fieldtype": "Link",
    "label": "Sales Order",
-   "options": "Sales Order"
+   "options": "Sales Order",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_cemjg",
@@ -50,13 +52,15 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Pending\nDelivered\nCompleted"
+   "options": "Pending\nDelivered\nCompleted",
+   "read_only": 1
   },
   {
    "fieldname": "customer",
    "fieldtype": "Link",
    "label": "Customer",
-   "options": "Customer"
+   "options": "Customer",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_dzx6c",
@@ -70,17 +74,20 @@
    "fieldname": "address",
    "fieldtype": "Link",
    "label": "Address",
-   "options": "Address"
+   "options": "Address",
+   "read_only": 1
   },
   {
    "fieldname": "phone_number_1",
    "fieldtype": "Data",
-   "label": "Phone Number 1"
+   "label": "Phone Number 1",
+   "read_only": 1
   },
   {
    "fieldname": "phone_number_2",
    "fieldtype": "Data",
-   "label": "Phone Number 2"
+   "label": "Phone Number 2",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_zqqsp",
@@ -89,12 +96,14 @@
   {
    "fieldname": "phone_number_3",
    "fieldtype": "Data",
-   "label": "Phone Number 3"
+   "label": "Phone Number 3",
+   "read_only": 1
   },
   {
    "fieldname": "link_location",
    "fieldtype": "Data",
-   "label": "Link Location "
+   "label": "Link Location ",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_mtyk5",
@@ -103,13 +112,15 @@
   {
    "fieldname": "customer_comment",
    "fieldtype": "Data",
-   "label": " Customer Comment"
+   "label": " Customer Comment",
+   "read_only": 1
   },
   {
    "default": "0",
    "fieldname": "location_is_ready",
    "fieldtype": "Check",
-   "label": "Location Is Ready"
+   "label": "Location Is Ready",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -150,7 +161,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-31 10:02:00.278908",
+ "modified": "2024-01-08 14:24:37.265047",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Order",

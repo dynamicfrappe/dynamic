@@ -73,7 +73,8 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Items",
-   "options": "Sales Order Item"
+   "options": "Sales Order Item",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_v7zcq",
@@ -184,7 +185,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-31 10:46:48.906738",
+ "modified": "2024-01-08 14:29:13.769428",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition",

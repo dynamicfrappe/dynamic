@@ -8,6 +8,7 @@ from frappe.client import attach_file
 from frappe.model.document import Document
 from frappe.utils.data import flt, get_link_to_form, nowdate
 
+DOMAINS = frappe.get_active_domains()
 
 validate_reference_dict = {
     "Supplier": ["Purchase Invoice", "Purchase Order"],
@@ -571,6 +572,11 @@ def make_cheque_doc(dt, dn):
         row.amount = ref_doc.outstanding_amount
     else:
         row.amount = ref_doc.base_rounded_total or ref_doc.base_grand_total
+    # if 'Logistics' in DOMAINS :
+    #     for payment in ref_doc.payment_schedule :
+    #         cheque.append("items" , 
+    #                       {"cheque_date" : payment.due_date , "amount" : payment.payment_amount ,
+    #                        "password" :payment.description })
     return cheque
 
 

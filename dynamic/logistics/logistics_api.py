@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import date_diff , now
+from frappe.utils import date_diff , now , add_days
 DOMAINS = frappe.get_active_domains()
 
 
@@ -12,7 +12,6 @@ def check_data_remaining():
                         "status": "Ordered",
                     },
                     pluck = "name")
-        print(containers)
         for container in containers :
             container = frappe.get_doc("PO Container" , container)
             if not container.remaining_date :
@@ -21,6 +20,21 @@ def check_data_remaining():
                 if differance < 0 :
                     container.status = "Overdue"
                 container.save()
+
+# def validate_so():
+#     if "Logistics" in DOMAINS:
+#         threshod_date =  add_days(now(), -7)
+#         sales_orders = frappe.db.get_list(
+#                     "Sales Order",
+#                     filters={
+#                         "creation": ["<=" , threshod_date] , "docstatus" : 1,
+#                     },
+#                     pluck = "name")
+#         for sales_order in sales_orders :
+#             s_order = frappe.get_doc("Sales Order" , sales_order)
+#             s_order.docstatus = 2
+#             s_order.save()
+
 
 @frappe.whitelist()
 def calculate_payments(quotation):
@@ -116,6 +130,16 @@ def create_sales_invoice(source_name):
         sales_invoice.append("items" , {"item_code" : item.item , "rate" : item.rate})
     return sales_invoice
     
+@frappe.whitelist()
+def create_composition_request(source_name):
+    sales_order = frappe.get_doc('Sales Order',source_name)
+    composition_request = frappe.new_doc("Composition Request")
+    composition_request.sales_order = sales_order.name
+    composition_request.customer = sales_order.customer
+    composition_request.items = sales_order.items
+    composition_request.set_address_and_numbers()
+    return composition_request
+
 @frappe.whitelist()
 def create_request_item(source_name):
     opportunity = frappe.get_doc('Opportunity',source_name)

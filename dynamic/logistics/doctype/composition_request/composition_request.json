@@ -51,8 +51,7 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Items",
-   "options": "Sales Order Item",
-   "read_only": 1
+   "options": "Sales Order Item"
   },
   {
    "fieldname": "customer",
@@ -137,7 +136,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-27 16:15:12.458322",
+ "modified": "2024-01-08 14:05:22.210866",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Request",

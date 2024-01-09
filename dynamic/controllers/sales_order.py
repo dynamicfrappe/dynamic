@@ -13,6 +13,7 @@ def validate_sales_order(self , event):
         validate_item_qty_reserved(self,event)
     if 'Logistics' in Domains :
         validate_qotation(self)
+        validate_sales_order_items(self)
 
 def validate_qotation(self):
     diable_order_without_quotation = frappe.db.get_single_value("Selling Settings", "diable_order_without_quotation")
@@ -63,3 +64,20 @@ def validate_total_payment_of_quotation(self , d):
             frappe.throw("30% of quotion must be paid")
         if not (total_paid_amout >= allowed_amount):
             frappe.throw("Total paid amount must be bigger than or eqal 30% of quotation total")
+
+
+def validate_sales_order_items(self):
+    for item in self.items:
+        sql = f'''
+                SELECT 
+                    B.name 
+                FROM
+                    `tabBin` B
+                WHERE 
+                    B.actual_qty != 0 
+                    AND 
+                    B.item_code = '{item.item_code}' 
+                '''
+        data = frappe.db.sql(sql , as_dict = 1)
+        if not data :
+            frappe.throw(_("Item <b>{0}</b> don't has actual qty in bin").format(item.item_name))

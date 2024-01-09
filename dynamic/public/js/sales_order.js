@@ -49,7 +49,18 @@ frappe.ui.form.on("Sales Order", {
                 name:  frm.doc.name
                 },
             })
-          };  
+          };
+          if(frm.doc.docstatus == 1){
+          frm.add_custom_button(__("Composition Request"),()=>{
+            frappe.model.open_mapped_doc({
+              method:
+              "dynamic.logistics.logistics_api.create_composition_request",
+              frm: frm,
+            })
+          },
+          __("Create")
+          ); 
+          }  
       }
         if (r.message.includes("Qaswaa") && frm.doc.docstatus == 1) {
           
