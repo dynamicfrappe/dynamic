@@ -36,7 +36,7 @@ class Journalinstallment(Document):
 			for index in range(cint(self.maintenance_deposit_installments_count)):
 				contract.append('maintenance_deposit_installments_items',{
 					"item":item,
-					"installment_value":flt(flt(self.maintenance_deposit_value) / cint(self.maintenance_deposit_installments_count) ),
+					"installment_value":flt(flt(self.maintenance_deposit_value) ),#/ cint(self.maintenance_deposit_installments_count) ),
 					"due_date":getdate()
 				})
 			contract.save()
