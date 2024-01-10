@@ -105,7 +105,6 @@ def get_data(filters):
 		warehouse = warehouse["warehouse"]
 		dict ={"warehouse" : warehouse}
 		# conditions += f" and SII.cost_center = '{center}'"
-		frappe.throw(str(period_list))
 		for period in period_list :
 
 			ss = f'''

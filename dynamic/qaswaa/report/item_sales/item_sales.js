@@ -24,21 +24,21 @@ frappe.query_reports["Item sales"] = {
 			label: __("Item"),
 			fieldtype: "Link",
 			options: "Item" ,
-			reqd: 1
+			// reqd: 1
 		},
 		{
 			fieldname: "customer",
 			label: __("Customer"),
 			fieldtype: "Link",
 			options: "Customer" ,
-			reqd: 1
+			// reqd: 1
 		},
 		{
 			fieldname: "item_group",
 			label: __("Item Group"),
 			fieldtype: "Link",
 			options: "Item Group" ,
-			reqd: 1
+			// reqd: 1
 		},
 	]
 };

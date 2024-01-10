@@ -8,13 +8,13 @@ frappe.query_reports["offer price"] = {
 			fieldname: "from_date",
 			label: __("From Date"),
 			fieldtype: "Date",
-			default: frappe.datetime.get_today(),
+			// default: frappe.datetime.get_today(),
 		},
 		{
 			fieldname: "to_date",
 			label: __("To Date"),
 			fieldtype: "Date",
-			default: frappe.datetime.add_days(frappe.datetime.get_today(),1),
+			// default: frappe.datetime.add_days(frappe.datetime.get_today(),1),
 		},
 		{
 			fieldname: "customer",
@@ -28,7 +28,7 @@ frappe.query_reports["offer price"] = {
 			label: __("Item"),
 			fieldtype: "Link",
 			options: "Item" ,
-			reqd : 1
+			// reqd : 1
 		},
 	]
 };
