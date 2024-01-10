@@ -104,7 +104,7 @@ class installmentEntry(Document):
 						else :
 							eq_string = eq_string +  a
 
-					print( "eq --------------------" , eq_string)
+					print( "\n\nn\eq --------------------" , eq_string,'\n\n\n')
 					equation_value = eval(eq_string) or 0
 				out_stand = 0
 				if equation_value:
