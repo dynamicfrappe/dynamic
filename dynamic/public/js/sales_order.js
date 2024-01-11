@@ -42,6 +42,9 @@ frappe.ui.form.on("Sales Order", {
             frm.page.clear_primary_action();  
         }
         if (r.message.includes("Logistics")) {
+          if(frm.doc.is_local = 1){
+            frm.set_df_property('advancess','read_only',1)
+          }
           if(frm.doc.status == 'To Bill'){
             frappe.call({
               method:"dynamic.logistics.logistics_api.check_composition_request_with_order",
@@ -60,7 +63,15 @@ frappe.ui.form.on("Sales Order", {
           },
           __("Create")
           ); 
-          }  
+          } 
+          frm.set_query('serial_number', 'items', function(doc, cdt, cdn) {
+            let row = locals[cdt][cdn];
+            return {
+              filters:{"item_code":row.item_code , 
+                  // "customer" : ["is" , "NULL"]
+                }
+            };
+          }); 
       }
         if (r.message.includes("Qaswaa") && frm.doc.docstatus == 1) {
           
@@ -88,13 +99,28 @@ frappe.ui.form.on("Sales Order", {
 			});
 		}
   },
+  update_validation_date : function(frm){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("Logistics")) {
+            if (frm.doc.update_validation_date){
+              frm.set_df_property('valid_until','read_only',0)
+            }
+
+          }
+      }}
+    })
+  },
   get_advancess:function(frm){
     if(!frm.is_return) {
 			frappe.call({
         method: "dynamic.api.get_active_domains",
         callback: function (r) {
           if (r.message && r.message.length) {
-            if (r.message.includes("IFI") || r.message.includes("Real State")) {
+            if (r.message.includes("IFI") || r.message.includes("Real State")|| r.message.includes("Logistics") ) {
+              console.log(frm.doc.name)
               return frappe.call({
                 method: "dynamic.ifi.api.get_advanced_so_ifi",//get_advanced_so_ifi
                 args:{
@@ -117,6 +143,30 @@ frappe.ui.form.on("Sales Order", {
                 }
               })
             }
+
+            // if (r.message.includes("Logistics")){
+            //   return frappe.call({
+            //     method: "dynamic.logistics.logistics_api.get_advanced_so_ifi",//get_advanced_so_ifi
+            //     args:{
+            //       doc_name: frm.doc.name,
+            //     },
+            //     callback: function(r, rt) {
+            //       frm.clear_table("advancess");
+            //       r.message.forEach(row => {
+            //         // console.log(row)
+            //         let child = frm.add_child("advancess");
+            //         child.reference_type = row.reference_type,
+            //         child.reference_name = row.reference_name,
+            //         child.reference_row = row.reference_row,
+            //         child.remarks = row.remarks,
+            //         child.advance_amount = flt(row.amount),
+            //         child.allocated_amount = row.allocated_amount,
+            //         child.ref_exchange_rate = flt(row.exchange_rate)
+            //       });
+            //       refresh_field("advancess");
+            //     }
+            //   })
+            // }
         }}
     })
 		}
@@ -1011,7 +1061,45 @@ frappe.ui.form.on("Sales Order Item", {
 					row.total =  res.message.price_list_rate;
 				}
 			});
-      
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Logistics")){
+              frappe.call({
+                method: "dynamic.logistics.logistics_api.validate_sales_order_items",
+                args: {
+                  item : row.item_code ,
+                },
+                callback :function(r){
+                  if (r.message){
+                    console.log(row.item_code)
+                    frm.fields_dict.items.grid.update_docfield_property(
+                      "serial_number",
+                      "reqd",
+                      "1"
+                    );    
+                    // frm.fields_dict.items.grid.get_field("serial_number").get_query = function () {
+                    //   return {
+                    //     filters: 
+                    //       {"customer" : NULL , "item_code" : row.item_code},
+                    //   };
+                    // };
+                    // frm.set_query("serial_number", "items", function () {
+                    //   return {
+                    //     filters: [
+                    //       { "item_code" : row.item_code},
+                    //     ],
+                    //   };
+                    // });
+                                   
+                  }
+
+                }
+            });
+            }
+        }}
+    })
       frm.refresh_fields('items')
     }
   },

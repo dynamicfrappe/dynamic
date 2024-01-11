@@ -82,6 +82,49 @@ frappe.ui.form.on("Lead", {
                           );
                             }
                     }
+                    if(r.message.includes("Logistics")){
+                    
+                        if (frm.doc.docstatus == 0){
+                            frm.add_custom_button(__("Contact"), function () {
+                                let d = new frappe.ui.Dialog({
+                                    title: 'Enter details',
+                                    fields: [
+                                        {
+                                            label: 'Type',
+                                            fieldname: 'type',
+                                           fieldtype: 'Select',
+                                           options: [
+                                            "Phone",
+                                            "Email",
+                                          ],
+                                          reqd : 1
+
+                                        },
+                                        {
+                                            label: 'Contact',
+                                            fieldname: 'contact',
+                                            fieldtype: 'Data',
+                                            reqd : 1
+                                        },
+                                     ],
+                                    primary_action_label: 'Save',
+                                    primary_action(values) {
+                                        frappe.call({
+                                            method: "dynamic.logistics.logistics_api.create_contact",
+                                            args: {
+                                                name: frm.doc.name,
+                                                type : values.type ,
+                                                contact : values.contact
+                                            },
+                                        });
+                                        d.hide();
+                                    }
+                                });
+                                  
+                                 d.show();
+                            }, __("Create"));
+                        }
+                     }
                 }
             }
         })
