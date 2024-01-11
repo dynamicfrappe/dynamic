@@ -39,12 +39,21 @@ def get_data(filters):
 			SI.name = SII.parent
 		WHERE
 			SI.docstatus = 1 and {conditions}
+		group by 
+			SII.item_code , SI.customer
 	'''
 	data = frappe.db.sql(sql , as_dict = 1)
 	return data
 
 def get_columns():
 	return[
+		{ 
+            "label": _("Customer"), 
+            "fieldname": "customer", 
+            "fieldtype": "Link", 
+            "options": "Customer", 
+            "width": 300, 
+        },
 		{ 
             "label": _("Item Code"), 
             "fieldname": "item_code", 

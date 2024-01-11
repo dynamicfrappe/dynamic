@@ -39,6 +39,7 @@ frappe.ui.form.on('Installment Payments', {
 								total_payed: element.total_total_payed,
 								delay_penalty: element.delay_penalty,
 								outstanding_value: element.outstanding_value,
+								due_date: element.due_date,
 							
 						});
 						})

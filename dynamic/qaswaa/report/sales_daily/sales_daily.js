@@ -8,14 +8,14 @@ frappe.query_reports["Sales Daily"] = {
 			fieldname: "from_date",
 			label: __("From Date"),
 			fieldtype: "Date",
-			default: frappe.datetime.get_today(),
+			// default: frappe.datetime.get_today(),
 			// reqd : 1
 		},
 		{
 			fieldname: "to_date",
 			label: __("To Date"),
 			fieldtype: "Date",
-			default: frappe.datetime.add_days(frappe.datetime.get_today(),1),
+			// default: frappe.datetime.add_days(frappe.datetime.get_today(),1),
 			// reqd : 1
 		},
 		{
@@ -36,7 +36,7 @@ frappe.query_reports["Sales Daily"] = {
 			label: __("Customer"),
 			fieldtype: "Link",
 			options: "Customer" ,
-			reqd: 1
+			// reqd: 1
 		},
 		{
 			"fieldname": "sales_partner",

@@ -19,10 +19,14 @@ class InstallmentPayments(Document):
 
 @frappe.whitelist()
 def get_customer_instllment(cst,item):
+	cond = f"""
+	customer='{cst}' AND `tabinstallment Entry`.item='{item}' AND IFNULL(total_payed,0)<total_value
+	AND `tabinstallment Entry`.due_date <= '{getdate()}'
+	"""
 	sql_before_taxes = f"""
 	SELECT name 
 	FROM `tabinstallment Entry`
-	WHERE customer='{cst}'
+	WHERE {cond}
 	"""
 	sql_before_taxes_data = frappe.db.sql(sql_before_taxes,as_dict=1)
 	for entry in sql_before_taxes_data:
@@ -34,10 +38,11 @@ def get_customer_instllment(cst,item):
 	,delay_penalty
 	,total_payed,total_value
 	,outstanding_value
+	,`tabinstallment Entry`.due_date
 	FROM `tabinstallment Entry`
-	WHERE customer='{cst}' AND `tabinstallment Entry`.item='{item}' AND IFNULL(total_payed,0)<total_value
+	WHERE {cond}
 	"""
-	print(sql)
+	# print(sql)
 	data_sql = frappe.db.sql(sql,as_dict=1)
 	return data_sql
 

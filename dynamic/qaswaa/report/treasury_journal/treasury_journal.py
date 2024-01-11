@@ -11,13 +11,10 @@ def execute(filters=None):
 	return columns, data
 
 def get_data(filters):
-	# final_data = []
-	# dict = {}
-	# dict["remarks"] = "Receivables"
-	# final_data.append(dict)
 	conditions = " 1=1"
-	if filters.get("mode_of_payment"):
-		conditions += f" and P.name = '{filters.get('mode_of_payment')}' "
+	if filters.get("mode_of_payment"):	
+		result_string = str(filters.get("mode_of_payment")).replace('[', '(').replace(']', ')')
+		conditions += f" and P.name in {result_string} "
 
 	sql = f'''
 	 	SELECT
@@ -33,32 +30,38 @@ def get_data(filters):
 		'''
 	data = frappe.db.sql(sql , as_dict = 1)
 	if not data :
-		frappe.throw(_("Select <b>account</b> in this mode of payment"))
+		frappe.throw(_("Select <b>account</b> in mode of payment"))
 	gl_conditions = " 1=1"
 	if filters.get("from_date"):
 		gl_conditions += f" and posting_date >= '{filters.get('from_date')}'"
 	if filters.get("to_date"):
 		gl_conditions += f" and posting_date <= '{filters.get('to_date')}'"
+	accounts = []
+	for entry in data :
+		accounts.append(entry["default_account"])
+	account_list = tuple(accounts)
+	if not len(account_list) > 1 :
+		account_list = f" ('{str(account_list[0]).replace(',', '')}' )"
+
 	s = f'''
-	SELECT
-		account , posting_date , voucher_no , against 
-		, remarks , debit , credit 
-	FROM
-		`tabGL Entry` P
-	WHERE
-		{gl_conditions}
-		and 
-		account = '{data[0]["default_account"]}' 
-		and 
-		voucher_type = "Payment Entry"
-	ORDER BY 
-		credit 
-	'''
+			SELECT
+				account , posting_date , voucher_no , against 
+				, remarks , debit , credit 
+			FROM
+				`tabGL Entry` P
+			WHERE
+				{gl_conditions}
+				and 
+				account in {account_list} 
+				and 
+				voucher_type = "Payment Entry"
+			ORDER BY 
+				credit 
+		'''
 	gl_entries = frappe.db.sql(s , as_dict = 1)
-	if gl_entries :
-		balance = get_balance_on (account =f'{data[0]["default_account"]}' ,date =f'{gl_entries[0]["posting_date"]}')
-		gl_entries.append({"account" :f'{data[0]["default_account"]}' , "posting_date" : f'{gl_entries[0]["posting_date"]}' , "balance" : balance })
-		return gl_entries
+	for gl_entry in gl_entries:
+		gl_entry["balance"] = get_balance_on (account =f'{gl_entry["account"]}' ,date =f'{gl_entry["posting_date"]}')
+	return gl_entries
 	
 def get_columns():
 	columns = [

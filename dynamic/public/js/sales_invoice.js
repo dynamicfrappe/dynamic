@@ -1,6 +1,14 @@
 frappe.ui.form.on("Sales Invoice", {
   setup(frm) {
-    frm.custom_make_buttons["Cheque"] = "Cheque";
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("Cheques")) {
+              frm.custom_make_buttons["Cheque"] = "Cheque";
+          }
+      }}
+  })
   },
   domian_valid: function (frm) {
     var tera = false;

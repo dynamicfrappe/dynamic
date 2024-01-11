@@ -39,6 +39,8 @@ def get_data(filters):
 			PI.name = PII.parent
 		WHERE
 			PI.docstatus = 1 and {conditions}
+        group by
+			PI.name , PII.item_code
 	'''
 	data = frappe.db.sql(sql , as_dict = 1)
 	return data

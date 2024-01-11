@@ -9,7 +9,8 @@ def execute(filters=None):
 	return columns, data
 
 def get_data(filters): 
-	conditions = f" PII.item_code  = '{filters.get('item_code')}'" 
+	conditions = " 1=1"
+	# conditions = f" PII.item_code  = '{filters.get('item_code')}'" 
 	
 	if filters.get("from_date"): 
 		conditions += " and PI.posting_date >= '%s'"%filters.get("from_date") 
