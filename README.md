@@ -49,3 +49,27 @@ Use these steps to clone from SourceTree, our client for using the repository co
 4. Open the directory you just created to see your repository’s files.
 
 Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+
+
+
+
+
+
+
+
+Click To Call API
+POST Request
+https://vpn.mersany.com:64002/api/v2/core/click_to_call
+
+Headers
+Key = app-key
+Value = 10231059fa6ad88d97b9aceb97993ee9
+
+Body 
+{
+    "caller": "USER_EXTENSION"
+    "callee": "CUSTOMER_NUMBER"
+    "cos_id": 1,
+    "cid_name": "Displayed_Customer_Name",
+    "cid_number": "Displayed_Customer_Number",
+}

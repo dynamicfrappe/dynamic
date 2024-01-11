@@ -567,3 +567,45 @@ def create_new_code(doc, *args ,**kwargs) :
         # frappe.throw("New Doc")
         if doc.wooid :
             create_coupon_code(doc.name , update=True)
+
+
+
+
+
+@frappe.whitelist()
+def create_call(caller , callee ,cid_name = None ,cid_number = None) :
+    """
+    params caller:"USER_EXTENSION" 
+            callee : customer phone number this number will dialed 
+            cid_name : customer display name 
+            cid_number : customer display number 
+    """
+    import requests 
+    payload = {
+        "caller" : caller ,
+        "callee" : callee ,
+        "cos_id": 1, 
+      
+        "cid_number": cid_number,
+    }
+    if cid_name :
+        payload["cid_name"] = cid_name
+
+    if cid_number :
+        payload["cid_number"] = cid_number
+
+    end_point = "https://vpn.mersany.com:64002/api/v2/core/click_to_call"
+    headers = {"app-key" : "10231059fa6ad88d97b9aceb97993ee9"}
+
+    try :
+        call = requests.post(end_point , headers=headers , data= payload)
+        print(call.status_code)
+        return True 
+    except Exception as E :
+        print(f"Error {E}")
+        error = frappe.new_doc("Error Log")
+        error.method = "Create Call Error From call center"
+        error.error = str(E) if len(str(E)) < 120 else str(E)[0:120]
+        error.save()
+        frappe.msgprint("Error Created")
+        return False
