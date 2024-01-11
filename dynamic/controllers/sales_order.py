@@ -20,6 +20,7 @@ def validate_sales_order(self , event):
         validate_advances_item(self)
 
 def validate_so(self):
+    grand_total = self.grand_total 
     sql1 = f'''
         SELECT 
             SO.name 
@@ -27,7 +28,9 @@ def validate_so(self):
             `tabSales Order` SO
         WHERE 
             DATE(SO.valid_until) < DATE('{getdate(now())}')
-    '''
+            and
+            SO.grand_total <
+        '''
     data = frappe.db.sql(sql1, as_dict=1)
     if data :
         for entry in data :   
@@ -43,6 +46,7 @@ def validate_so(self):
             if sales_invoice_item :
                 pass
                 # frappe.throw(str(sales_invoice_item))
+        
 def validate_advances_item(self):
     sum = 0
     if self.advancess :
