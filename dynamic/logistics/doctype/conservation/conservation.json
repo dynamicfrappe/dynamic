@@ -1,11 +1,13 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series: ",
  "creation": "2023-12-31 15:49:28.677941",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "naming_series",
   "customer",
   "customer_name",
   "customer_primary_contact",
@@ -214,12 +216,18 @@
    "fieldname": "description_of_maintenance_manager",
    "fieldtype": "Data",
    "label": "Description of Maintenance Manager"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "CON-.YYYY.-"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-01 16:11:08.227894",
+ "modified": "2024-01-14 18:14:10.935403",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation",
