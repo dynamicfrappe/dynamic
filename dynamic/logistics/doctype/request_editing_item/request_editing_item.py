@@ -26,5 +26,10 @@ class RequestEditingItem(Document):
 			return float(actual_qty[0]["actual_qty"])
 	
 			
-			
-			
+	def on_submit(self) :
+		if not self.approve and not self.rejected		 :
+			frappe.throw(_("Can not submit without approve or reject !"))
+		if self.approve and not self.approve_by :
+			frappe.throw(_("please Set Approved By "))
+		if self.rejected and not self.rejected_by :
+			frappe.throw(_("please Set Rejected By ! "))

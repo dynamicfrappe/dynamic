@@ -51,10 +51,11 @@ frappe.ui.form.on("Opportunity", {
                                 function () {
                                     frappe.model.open_mapped_doc({
                                         method:
-                                            "dynamic.logistics.logistics_api.create_request_item",
+                                            "dynamic.logistics.logistics_api.create_request_item_opportunity",
                                         frm: frm,
                                         args: {
                                             doctype: frm.doc.doctype,
+                                            
                                         }
                                     });
                                 },

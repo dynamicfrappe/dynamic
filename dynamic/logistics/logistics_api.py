@@ -149,11 +149,23 @@ def create_composition_request(source_name):
     composition_request.set_address_and_numbers()
     return composition_request
 
+
+
 @frappe.whitelist()
-def create_request_item(source_name):
-    opportunity = frappe.get_doc('Opportunity',source_name)
+def create_request_item_opportunity(source_name)  :
+    return create_request_item(source_name  ,doctype ='Opportunity')
+@frappe.whitelist()
+def create_request_item_lead(source_name)  :
+    return create_request_item(source_name  ,doctype ='Lead')
+@frappe.whitelist()
+def create_request_item_customer(source_name)  :
+    return create_request_item(source_name  ,doctype ='Customer')
+@frappe.whitelist()
+def create_request_item(source_name  ,doctype = None):
+    # opportunity = frappe.get_doc('Opportunity',source_name)
     request_item = frappe.new_doc("Request Editing Item")
-    request_item.opportunity = opportunity.name
+    request_item.link_type = doctype
+    request_item.opportunity = source_name
     return request_item
 
 

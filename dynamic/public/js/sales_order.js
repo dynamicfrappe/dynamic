@@ -42,6 +42,9 @@ frappe.ui.form.on("Sales Order", {
             frm.page.clear_primary_action();  
         }
         if (r.message.includes("Logistics")) {
+          if (frm.doc.status == "Closed"){
+            console.log("dddd")
+          }
           if(frm.doc.is_local = 1){
             frm.set_df_property('advancess','read_only',1)
           }
@@ -120,7 +123,6 @@ frappe.ui.form.on("Sales Order", {
         callback: function (r) {
           if (r.message && r.message.length) {
             if (r.message.includes("IFI") || r.message.includes("Real State")|| r.message.includes("Logistics") ) {
-              console.log(frm.doc.name)
               return frappe.call({
                 method: "dynamic.ifi.api.get_advanced_so_ifi",//get_advanced_so_ifi
                 args:{

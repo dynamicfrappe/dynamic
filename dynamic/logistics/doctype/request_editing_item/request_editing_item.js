@@ -9,7 +9,7 @@ frappe.ui.form.on('Request Editing Item', {
 			callback: function (r) {
 				if (r.message && r.message.length) {
 					if (r.message.includes("Logistics")) {
-						if(frm.doc.docstatus == 1 && frm.doc.approve_by){
+						if(frm.doc.docstatus == 1 && frm.doc.approve ){
 							frm.add_custom_button('Create Stock Entry',()=>{
 								frappe.model.open_mapped_doc({
 									method:

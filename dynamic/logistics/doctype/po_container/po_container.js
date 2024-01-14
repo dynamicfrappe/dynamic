@@ -20,7 +20,7 @@ frappe.ui.form.on('PO Container', {
 							}
 						};
 						if(frm.doc.docstatus == 1 && frm.doc.status == "Ordered"){
-							frm.add_custom_button('Close',()=>{
+							frm.add_custom_button('Arrive',()=>{
 								frm.call({
 									doc: frm.doc,
 									method: "change_status",

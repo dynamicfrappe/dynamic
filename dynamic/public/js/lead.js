@@ -83,7 +83,21 @@ frappe.ui.form.on("Lead", {
                             }
                     }
                     if(r.message.includes("Logistics")){
-                    
+                        frm.add_custom_button(
+                            __("Request Editing Item"),
+                            function () {
+                                frappe.model.open_mapped_doc({
+                                    method:
+                                        "dynamic.logistics.logistics_api.create_request_item_lead",
+                                    frm: frm,
+                                    args: {
+                                        doctype: frm.doc.doctype,
+                                        
+                                    }
+                                });
+                            },
+                            __("Create")
+                        )    
                         if (frm.doc.docstatus == 0){
                             frm.add_custom_button(__("Contact"), function () {
                                 let d = new frappe.ui.Dialog({

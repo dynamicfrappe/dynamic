@@ -16,6 +16,7 @@
   "section_break_6",
   "main_item",
   "spear_part_item",
+  "link_type",
   "opportunity",
   "section_break_10",
   "approve",
@@ -98,9 +99,9 @@
   },
   {
    "fieldname": "opportunity",
-   "fieldtype": "Link",
+   "fieldtype": "Dynamic Link",
    "label": "Opportunity",
-   "options": "Opportunity",
+   "options": "link_type",
    "read_only": 1
   },
   {
@@ -130,12 +131,19 @@
   {
    "fieldname": "section_break_10",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "link_type",
+   "fieldtype": "Link",
+   "label": "Link Type",
+   "options": "DocType",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-04 17:54:06.010149",
+ "modified": "2024-01-11 20:02:10.344601",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Request Editing Item",

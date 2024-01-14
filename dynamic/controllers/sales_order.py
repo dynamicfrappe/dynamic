@@ -15,8 +15,10 @@ def validate_sales_order(self , event):
     if 'Logistics' in Domains :
         validate_qotation(self)
         validate_sales_order_items(self)
-        set_vaild_until_date(self)
-        validate_so(self)
+        if not self.update_validation_date :
+
+            set_vaild_until_date(self)
+        # validate_so(self)
         validate_advances_item(self)
 
 def validate_so(self):
@@ -115,26 +117,34 @@ def validate_total_payment_of_quotation(self , d):
 
 
 def validate_sales_order_items(self):
+    items = []
     for item in self.items:
+        if item.item_code in items :
+            frappe.throw(_(f" Please Dont duplicat Item {item.item_code } in many lines !"))
+        if not item.warehouse : 
+            frappe.throw(_(f"Please Set item {item.item_code}"))
         sql = f'''
                 SELECT 
                     B.name 
+                    ,     (B.actual_qty +  B.ordered_qty - B.reserved_qty) as qty
                 FROM
                     `tabBin` B
                 WHERE 
-                    B.actual_qty != 0 
-                    AND 
-                    B.item_code = '{item.item_code}' 
+                    B.item_code = '{item.item_code}' AND B.warehouse = '{item.warehouse}' 
+
                 '''
         data = frappe.db.sql(sql , as_dict = 1)
         if not data :
             frappe.throw(_("Item <b>{0}</b> don't has actual qty in bin").format(item.item_name))
-
-
+        if data and len(data) > 0 :
+            actual_qty =  data[0].get("qty")
+            if float(actual_qty  or 0 ) < float(item.qty) :
+                frappe.throw(_(f"Available  item {item.item_code} qty for sales is {actual_qty} and you try to order {item.qty}"))
+        items.append(item.item_code)
 def set_serial_number_customer(self):
     if self.customer :
         for item in self.items:
-            if item.serial_number :
+            if len(item.serial_number) > 0  :
                 serial_doc = frappe.get_doc("Serial No" , item.serial_number)
                 serial_doc.customer = self.customer
                 serial_doc.save()
