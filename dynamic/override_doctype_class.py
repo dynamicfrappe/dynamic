@@ -48,10 +48,11 @@ active_domains = frappe.get_active_domains()
 if "Logistics" in active_domains:
     from dynamic.terra.doctype.payment_entry.payment_entry import PaymentEntry as TerraPaymentEntry
     from dynamic.terra.doctype.quotation.quotation import Quotation as TerraQuotation
+    from dynamic.terra.doctype.sales_order.sales_order import SalesOrder as TerraSalesOrder
 
     PaymentEntry = TerraPaymentEntry
     Quotation = TerraQuotation
-
+    SalesOrder = TerraSalesOrder
 
 if "Terra" in active_domains:
     # frappe.msgprint('terra')

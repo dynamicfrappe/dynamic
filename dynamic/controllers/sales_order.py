@@ -51,8 +51,8 @@ def validate_so(self):
         
 def validate_advances_item(self):
     sum = 0
-    if self.advancess :
-        for item in self.advancess :
+    if self.advances :
+        for item in self.advances :
             sum += item.allocated_amount
         self.advance_paid = sum 
         self.outstanding_amount = self.grand_total - self.advance_paid
