@@ -20,35 +20,7 @@ def validate_sales_order(self , event):
             set_vaild_until_date(self)
         # validate_so(self)
         validate_advances_item(self)
-
-def validate_so(self):
-    grand_total = self.grand_total 
-    sql1 = f'''
-        SELECT 
-            SO.name 
-        FROM
-            `tabSales Order` SO
-        WHERE 
-            DATE(SO.valid_until) < DATE('{getdate(now())}')
-            and
-            SO.grand_total <
-        '''
-    data = frappe.db.sql(sql1, as_dict=1)
-    if data :
-        for entry in data :   
-            sql1 = f'''
-                SELECT 
-                    SI.name 
-                FROM
-                    `tabSales Invoice Item` SI
-                WHERE 
-                    SI.sales_order = '{entry["name"]}'
-                '''
-            sales_invoice_item = frappe.db.sql(sql1 , as_dict = 1)
-            if sales_invoice_item :
-                pass
-                # frappe.throw(str(sales_invoice_item))
-        
+                   
 def validate_advances_item(self):
     sum = 0
     if self.advances :
@@ -144,10 +116,9 @@ def validate_sales_order_items(self):
 def set_serial_number_customer(self):
     if self.customer :
         for item in self.items:
-            if len(item.serial_number) > 0  :
-                serial_doc = frappe.get_doc("Serial No" , item.serial_number)
-                serial_doc.customer = self.customer
-                serial_doc.save()
+            serial_doc = frappe.get_doc("Serial No" , item.serial_number)
+            serial_doc.customer = self.customer
+            serial_doc.save()
 
 def set_vaild_until_date(self):
     self.valid_until = add_days(now() , 7)

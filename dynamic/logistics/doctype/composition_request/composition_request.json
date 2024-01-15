@@ -65,17 +65,20 @@
    "fieldname": "address",
    "fieldtype": "Link",
    "label": "Address",
-   "options": "Address"
+   "options": "Address",
+   "read_only": 1
   },
   {
    "fieldname": "phone_number_1",
    "fieldtype": "Data",
-   "label": "Phone Number 1"
+   "label": "Phone Number 1",
+   "read_only": 1
   },
   {
    "fieldname": "phone_number_2",
    "fieldtype": "Data",
-   "label": "Phone Number 2"
+   "label": "Phone Number 2",
+   "read_only": 1
   },
   {
    "fieldname": "link_location",
@@ -96,7 +99,8 @@
   {
    "fieldname": "phone_number_3",
    "fieldtype": "Data",
-   "label": "Phone Number 3"
+   "label": "Phone Number 3",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_cemjg",
@@ -144,7 +148,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-11 13:30:53.866460",
+ "modified": "2024-01-15 10:53:09.873818",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Request",

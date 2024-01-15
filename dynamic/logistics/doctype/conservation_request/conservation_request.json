@@ -9,6 +9,7 @@
  "field_order": [
   "naming_series",
   "customer",
+  "user",
   "customer_name",
   "customer_primary_contact",
   "customer_primary_address",
@@ -23,8 +24,8 @@
   "machines",
   "section_break_13",
   "customer_comment",
-  "column_break_14",
   "history_maintenance",
+  "maintenance",
   "amended_from"
  ],
  "fields": [
@@ -38,7 +39,8 @@
    "fieldname": "type_for_request",
    "fieldtype": "Select",
    "label": "Type For Request",
-   "options": "Within Warranty\nOut of Warranty\nMaintenance"
+   "options": "Within Warranty\nOut of Warranty\nMaintenance",
+   "read_only": 1
   },
   {
    "fieldname": "name_of_maintenance",
@@ -106,10 +108,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_14",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "section_break_13",
    "fieldtype": "Section Break"
   },
@@ -140,12 +138,26 @@
    "fieldtype": "Select",
    "label": "Series",
    "options": "CON-REQ-.YYYY.-"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "maintenance",
+   "fieldtype": "Table",
+   "label": "Maintenance",
+   "options": "History Maintenance",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-14 18:02:27.938913",
+ "modified": "2024-01-15 15:30:47.022753",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",

@@ -22,6 +22,38 @@ frappe.ui.form.on('Conservation Request', {
 				}
 			}
 		})
+	},
+	history_maintenance : function(frm){
+		frappe.call({
+			method: "dynamic.api.get_active_domains",
+			callback: function (r) {
+				if (r.message && r.message.length) {
+					if (r.message.includes("Logistics")) {
+						// frappe.call({
+						// 	method:"dynamic.logistics.logistics_api.get_maintenance_item",
+						// 	args : {doc : frm.doc , name : frm.doc.name} ,
+						// 	callback:function(r){
+
+						// 	}
+						// })
+						frm.call({
+							doc :frm.doc,
+							// args : {serial_number : row.serial_number},
+							method : "get_maintenance_item" ,
+							callback:function(r){
+								// row.item_code = r.message[0]
+								// row.name1 = r.message[1]
+								// row.description = r.message[2]
+								// row.warranty = r.message[3]
+
+								// frm.refresh_field("warranties")
+							}
+							
+						})
+					}
+				}
+			}
+		})
 	} 
 });
 frappe.ui.form.on('Maintenance Warranty', {

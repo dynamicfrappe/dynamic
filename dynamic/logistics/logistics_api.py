@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import date_diff , now , add_days
+from frappe.utils import date_diff , now , add_days , getdate
 DOMAINS = frappe.get_active_domains()
 
 def check_data_remaining():
@@ -19,6 +19,46 @@ def check_data_remaining():
                 if differance < 0 :
                     container.status = "Overdue"
                 container.save()
+
+def validate_so():
+    sql1 = f'''
+        SELECT 
+            SO.name 
+        FROM
+            `tabSales Order` SO
+        WHERE 
+            DATE(SO.valid_until) < DATE('{getdate(now())}')
+            and
+            SO.advance_paid < (SO.grand_total * 30 )/100
+        '''
+    data = frappe.db.sql(sql1, as_dict=1)
+    if data :
+        for entry in data :   
+            sql1 = f'''
+                SELECT 
+                    SI.name 
+                FROM
+                    `tabSales Invoice Item` SI
+                WHERE 
+                    SI.sales_order = '{entry["name"]}'
+                '''
+            sales_invoice_item = frappe.db.sql(sql1 , as_dict = 1)
+            if not sales_invoice_item :
+                sales_order = frappe.get_doc("Sales Order" , entry["name"])
+                for item in sales_order.items :
+                    if item.serial_number != 'None' :
+                        # frappe.db.set_value('Serial No',item.serial_number,'customer','')
+                        # frappe.db.set_value('Serial No',item.serial_number,'customer_name','')
+                        frappe.db.sql(f""" UPDATE `tabSerial No` s
+                                    SET 
+                                        customer = "" ,
+                                        customer_name = ""
+                                    WHERE
+                                      s.name = '{item.serial_number }'
+                                      and 
+                                      item_code = '{item.item_code}' 
+                                      and
+                                       customer = '{sales_order.customer}' """)
 
 # def validate_so():
 #     if "Logistics" in DOMAINS:
@@ -98,6 +138,19 @@ def validate_items():
     if not selling_settings.item_group :
         frappe.throw(_("Please set <b>item group</b> in selling settings"))
     return selling_settings.item_group 
+
+@frappe.whitelist()            
+def get_maintenance_item(doc , name):
+    conservation_requestes = frappe.get_all("Conservation Request" ,
+                                       filters = {"docstatus" : 1} , pluck = "name") 
+    conservation_request = frappe.get_doc("Conservation Request"  , name)
+    for req in conservation_requestes :
+        conservation_request.append("maintenance" , {"conservation_request" : req})
+
+    # selling_settings = frappe.get_single("Selling Settings")
+    # if not selling_settings.item_group :
+    #     frappe.throw(_("Please set <b>item group</b> in selling settings"))
+    # return frappe.throw(str(conservation_requestes))
 
 
 @frappe.whitelist()            

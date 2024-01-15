@@ -108,7 +108,7 @@ class CompositionOrder(Document):
 		composition.customer_comment = self.customer_comment
 		composition.location_is_ready = self.location_is_ready
 		composition.save()
-		self.composition = composition.name
+		self.db_set("composition",composition.name)
 
 		lnk = get_link_to_form(composition.doctype, composition.name)
 		frappe.msgprint(_("{} {} was Created").format(

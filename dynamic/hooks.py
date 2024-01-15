@@ -286,7 +286,7 @@ doc_events = {
 scheduler_events = {
     "cron": {
         "*/1 * * * *": ["dynamic.logistics.logistics_api.check_data_remaining" ,
-                         "dynamic.logistics.logistics_api.validate_so" 
+                        #  "dynamic.logistics.logistics_api.validate_so" 
                          ],
         "0 */2 * * *": [
             "dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",
@@ -298,6 +298,7 @@ scheduler_events = {
         "0 */12 * * *": [
             "dynamic.api.validate_sales_order_reservation_status",
         ],
+        "0 */24 * * *": ["dynamic.logistics.logistics_api.validate_so" ],
         "0 13 * * *": [
             "dynamic.product_bundle.doctype.packed_item.new_packed_item.get_old_invocie"
         ],
