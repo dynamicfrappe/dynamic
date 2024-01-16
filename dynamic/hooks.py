@@ -199,7 +199,8 @@ doc_events = {
         ],
     },
     "Material Request": {
-        "on_submit": "dynamic.api.validate_material_request",
+        "on_submit": ["dynamic.api.validate_material_request",
+                     ],
         "validate": "dynamic.api.onsave_material_request",
         "before_save":[
             "dynamic.controllers.stock_entry.update_target_warehouse"

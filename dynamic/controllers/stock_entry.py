@@ -15,7 +15,6 @@ def before_save_stock_entry(doc, *args, **kwargs):
 
 
 
-DOMAINS = frappe.get_active_domains()
 def update_target_warehouse(doc, *args, **kwargs):
 	if "WEH" in DOMAINS:
 		for row in doc.items:
