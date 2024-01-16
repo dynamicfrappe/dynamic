@@ -78,6 +78,7 @@ class ItemReservedQty(object):
 			WHERE {conditions} 
 			GROUP BY `tabBin`.warehouse,`tabBin`.item_code
 		"""
+		# frappe.errprint(f"all is ==> {sql_query_new}")
 		# sql_query_new = f"""
 		# 				SELECT `tabBin`.name as 'bin'
 		# 				,so.cost_center as cost_center

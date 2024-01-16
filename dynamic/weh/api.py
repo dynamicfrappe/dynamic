@@ -197,3 +197,7 @@ def make_stock_in_entry(source_name, target_doc=None):
 	)
 
 	return doclist
+
+
+
+
