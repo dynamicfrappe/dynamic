@@ -24,16 +24,6 @@ class ConservationRequest(Document):
                "Item", item.get("item_code"), ["item_name", "description"], as_dict=1)
 		return item.get("item_code") ,item_code.get("item_name") , item_code.get("description") ,item.get("warranty_expiry_date")
 
-	# @frappe.whitelist()
-	# def get_maintenance_item(self):
-	# 	conservation_requestes = frappe.get_all("Conservation Request" ,
-	# 									filters = {"docstatus" : 1} , pluck = "name") 
-
-	# 	if  not self.get("maintenance") :
-	# 		for req in conservation_requestes :
-	# 			self.append("maintenance" , {"conservation_request" : req})
-
-
 	def create_Conservation_order(self):
 		conservation_order = frappe.new_doc("Conservation order")
 		conservation_order.customer = self.customer
