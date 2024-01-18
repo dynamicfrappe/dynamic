@@ -26,6 +26,13 @@ data = {
                 "fieldtype":"Data",
                 "insert_after":"commercial_year",  
             },  
+            {
+                 "label":_("Building Number"),
+                "fieldname":"building_number",
+                "fieldtype":"Data",
+                "insert_after":"unit_area", 
+
+            }
 
         ],
         'Journal Entry':[
