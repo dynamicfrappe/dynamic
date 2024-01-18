@@ -28,6 +28,7 @@
   "composition",
   "section_break_19",
   "engineers",
+  "survey",
   "amended_from"
  ],
  "fields": [
@@ -36,8 +37,7 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "sales_order",
@@ -164,12 +164,17 @@
    "fieldtype": "Select",
    "label": "Series",
    "options": "COM-ORD-.YYYY.-"
+  },
+  {
+   "fieldname": "survey",
+   "fieldtype": "Data",
+   "label": "Survey"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-11 13:14:59.987519",
+ "modified": "2024-01-18 11:58:00.097331",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Order",

@@ -1,13 +1,13 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2023-12-27 16:20:58.067707",
+ "creation": "2024-01-16 11:51:38.699890",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "employee",
-  "from1",
+  "from",
   "to"
  ],
  "fields": [
@@ -19,25 +19,25 @@
    "options": "Employee"
   },
   {
-   "fieldname": "to",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "To"
-  },
-  {
-   "fieldname": "from1",
-   "fieldtype": "Datetime",
+   "fieldname": "from",
+   "fieldtype": "Duration",
    "in_list_view": 1,
    "label": "From"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Duration",
+   "in_list_view": 1,
+   "label": "To"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-16 15:56:26.471685",
+ "modified": "2024-01-16 11:51:38.699890",
  "modified_by": "Administrator",
  "module": "Logistics",
- "name": "Engineering Name",
+ "name": "Engineer",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

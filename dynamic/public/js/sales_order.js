@@ -43,7 +43,6 @@ frappe.ui.form.on("Sales Order", {
         }
         if (r.message.includes("Logistics")) {
           if (frm.doc.status == "Closed"){
-            console.log("dddd")
           }
           if(frm.doc.is_local = 1){
             frm.set_df_property('advancess','read_only',1)
@@ -56,26 +55,9 @@ frappe.ui.form.on("Sales Order", {
                 },
             })
           };
-          if(frm.doc.docstatus == 1){
-          frm.add_custom_button(__("Composition Request"),()=>{
-            frappe.model.open_mapped_doc({
-              method:
-              "dynamic.logistics.logistics_api.create_composition_request",
-              frm: frm,
-            })
-          },
-          __("Create")
-          ); 
-          } 
-          frm.set_query('serial_number', 'items', function(doc, cdt, cdn) {
-            let row = locals[cdt][cdn];
-            return {
-              filters:{"item_code":row.item_code , 
-                  // "customer" : ["is" , "NULL"]
-                }
-            };
-          }); 
-      }
+          frm.events.create_button(frm);
+          frm.events.filter_serial_no(frm); 
+        }
         if (r.message.includes("Qaswaa") && frm.doc.docstatus == 1) {
           
           frm.add_custom_button(__("Create Purchase Invoice Prepaid"),()=>{
@@ -101,6 +83,59 @@ frappe.ui.form.on("Sales Order", {
 				})
 			});
 		}
+  },
+  filter_serial_no : function(frm){
+    var serial_numbers;
+      frm.set_query('serial_number', 'items', function(doc, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        if (row.item_code){
+          frappe.call({
+            method: "dynamic.logistics.logistics_api.get_serial_no",
+            args : {item_code : row.item_code},
+            callback: function(r) {
+              if(r.message){
+                serial_numbers = r.message; // Fix the typo here  
+              }
+            }
+        });
+        }
+        return {
+            filters: {
+                "name": ["in", serial_numbers] // Use the correct variable name here
+            }
+        };
+    })
+           // frappe.call({
+          //     method: "dynamic.logistics.logistics_api.get_serial_no",
+          //     callback: function(r) {
+          //         serial_numbers = r.message; // Fix the typo here
+          //         console.log(serial_numbers);
+
+          //         frm.set_query('serial_number', 'items', function(doc, cdt, cdn) {
+          //             let row = locals[cdt][cdn];
+          //             console.log(row.item_code)
+          //             return {
+          //                 filters: {
+          //                     "item_code": row.item_code,
+          //                     "name": ["in", serial_numbers] // Use the correct variable name here
+          //                 }
+          //             };
+          //         });
+          //     }
+          // });
+  },
+  create_button : function(frm){
+    if(frm.doc.docstatus == 1){
+      frm.add_custom_button(__("Composition Request"),()=>{
+        frappe.model.open_mapped_doc({
+          method:
+          "dynamic.logistics.logistics_api.create_composition_request",
+          frm: frm,
+        })
+      },
+      __("Create")
+      ); 
+      } 
   },
   update_validation_date : function(frm){
     frappe.call({
@@ -1075,7 +1110,7 @@ frappe.ui.form.on("Sales Order Item", {
                 },
                 callback :function(r){
                   if (r.message){
-                    console.log(row.item_code)
+                    // console.log(row.item_code)
                     frm.fields_dict.items.grid.update_docfield_property(
                       "serial_number",
                       "reqd",

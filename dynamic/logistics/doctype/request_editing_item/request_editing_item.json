@@ -10,6 +10,7 @@
   "naming_series",
   "item_code",
   "item_name",
+  "required_date",
   "column_break_3",
   "source_warehouse",
   "target_warehouse",
@@ -21,9 +22,11 @@
   "section_break_10",
   "approve",
   "approve_by",
+  "survey",
   "column_break_13",
   "rejected",
   "rejected_by",
+  "notes",
   "amended_from"
  ],
  "fields": [
@@ -122,6 +125,7 @@
    "fieldname": "rejected_by",
    "fieldtype": "Link",
    "label": "Rejected By",
+   "mandatory_depends_on": "eval: doc.rejected == 1;",
    "options": "User"
   },
   {
@@ -138,12 +142,30 @@
    "label": "Link Type",
    "options": "DocType",
    "read_only": 1
+  },
+  {
+   "fieldname": "required_date",
+   "fieldtype": "Date",
+   "label": "Required Date",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval: doc.rejected == 1;",
+   "fieldname": "notes",
+   "fieldtype": "Data",
+   "label": "Notes",
+   "mandatory_depends_on": "eval: doc.rejected == 1;"
+  },
+  {
+   "fieldname": "survey",
+   "fieldtype": "Data",
+   "label": "Survey"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-11 20:02:10.344601",
+ "modified": "2024-01-18 11:55:01.058391",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Request Editing Item",

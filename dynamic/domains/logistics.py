@@ -56,6 +56,17 @@ data = {
                 "columns":1
             },
         ],
+        'Purchase Order Item': [
+            {
+                "label": "Shipped qty",
+                "fieldname": "shipped_qty",
+                "fieldtype": "Float",
+                'default' : '0' ,
+                "insert_after": "item_code",
+                "in_list_view": "1",
+                "columns":1
+            },
+        ],
         # 'Lead': [
         #     {
         #         "fieldname": "logistic_column",
@@ -117,11 +128,24 @@ data = {
                 "options":"Price List"
             },
             {
+                "fieldname": "maintenance_settings_column",
+                "fieldtype": "Column Break",
+                "insert_after": "price_list",
+                "label": "",
+            },
+            {
                 "label": _("Department"),
                 "fieldname": "department",
                 "fieldtype": "Link",
                 "insert_after": "price_list",
                 "options":"Department"
+            },
+            {
+                "label": _("Account"),
+                "fieldname": "account",
+                "fieldtype": "Link",
+                "insert_after": "department",
+                "options":"Account"
             }
         ],
         'Quotation' :[
@@ -291,6 +315,12 @@ data = {
                 "fieldname": "update_validation_date",
                 "fieldtype": "Check",
                 "insert_after": "valid_until",
+            },
+            {
+                "label": _("Survey"),
+                "fieldname": "survey",
+                "fieldtype": "Data",
+                "insert_after": "update_validation_date",
             },
             # {
             #     "label": "Advance Payment",

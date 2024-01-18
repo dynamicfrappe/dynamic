@@ -19,6 +19,7 @@
   "address",
   "phone_number_1",
   "phone_number_2",
+  "survey",
   "column_break_zqqsp",
   "phone_number_3",
   "link_location",
@@ -143,12 +144,17 @@
    "fieldtype": "Select",
    "label": "Series",
    "options": "COM-REQ-.YYYY.-"
+  },
+  {
+   "fieldname": "survey",
+   "fieldtype": "Data",
+   "label": "Survey"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-15 10:53:09.873818",
+ "modified": "2024-01-18 11:57:33.035168",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Request",

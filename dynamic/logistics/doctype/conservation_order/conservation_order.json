@@ -41,7 +41,8 @@
    "fieldname": "customer",
    "fieldtype": "Link",
    "label": "Customer",
-   "options": "Customer"
+   "options": "Customer",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.customer_name",
@@ -89,17 +90,20 @@
    "fieldname": "type_for_request",
    "fieldtype": "Select",
    "label": "Type For Request",
-   "options": "Within Warranty\nOut of Warranty\nMaintenance"
+   "options": "Within Warranty\nOut of Warranty\nMaintenance",
+   "read_only": 1
   },
   {
    "fieldname": "name_of_maintenance",
    "fieldtype": "Data",
-   "label": "Name of Maintenance"
+   "label": "Name of Maintenance",
+   "read_only": 1
   },
   {
    "fieldname": "number",
    "fieldtype": "Data",
-   "label": "Number"
+   "label": "Number",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_9",
@@ -109,13 +113,15 @@
    "fieldname": "warranties",
    "fieldtype": "Table",
    "label": "Warranties",
-   "options": "Maintenance Warranty"
+   "options": "Maintenance Warranty",
+   "read_only": 1
   },
   {
    "fieldname": "machines",
    "fieldtype": "Table",
    "label": "Machines",
-   "options": "Customer Machine"
+   "options": "Customer Machine",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_13",
@@ -133,7 +139,8 @@
   {
    "fieldname": "customer_comment",
    "fieldtype": "Data",
-   "label": "Customer Comment"
+   "label": "Customer Comment",
+   "read_only": 1
   },
   {
    "fieldname": "maintenance_type",
@@ -206,7 +213,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-14 18:12:21.279703",
+ "modified": "2024-01-16 12:03:46.040865",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation order",

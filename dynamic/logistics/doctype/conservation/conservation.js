@@ -21,5 +21,17 @@ frappe.ui.form.on('Conservation', {
 				}
 			}
 		})
-	}
+	},
+	history_maintenance : function(frm){
+		frappe.call({
+			method: "dynamic.api.get_active_domains",
+			callback: function (r) {
+				if (r.message && r.message.length) {
+					if (r.message.includes("Logistics")) {
+						frappe.set_route("query-report", "Conservation");
+					}
+				}
+			}
+		})
+	} 
 });

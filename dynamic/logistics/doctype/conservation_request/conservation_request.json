@@ -25,7 +25,7 @@
   "section_break_13",
   "customer_comment",
   "history_maintenance",
-  "maintenance",
+  "survey",
   "amended_from"
  ],
  "fields": [
@@ -147,17 +147,15 @@
    "read_only": 1
   },
   {
-   "fieldname": "maintenance",
-   "fieldtype": "Table",
-   "label": "Maintenance",
-   "options": "History Maintenance",
-   "read_only": 1
+   "fieldname": "survey",
+   "fieldtype": "Data",
+   "label": "Survey"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-15 15:30:47.022753",
+ "modified": "2024-01-18 12:03:32.427279",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",

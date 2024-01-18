@@ -29,6 +29,7 @@
   "engineers",
   "section_break_20",
   "from",
+  "survey",
   "column_break_21",
   "to",
   "amended_from"
@@ -188,12 +189,17 @@
    "fieldtype": "Select",
    "label": "Series",
    "options": "COM-.YYYY.-"
+  },
+  {
+   "fieldname": "survey",
+   "fieldtype": "Data",
+   "label": "Survey"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-11 13:18:06.343490",
+ "modified": "2024-01-18 11:59:46.729573",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition",

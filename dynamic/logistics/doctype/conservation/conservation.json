@@ -35,7 +35,7 @@
   "transfer_cost",
   "total_cost",
   "engineering_name",
-  "survey_text",
+  "survey",
   "amended_from"
  ],
  "fields": [
@@ -43,7 +43,8 @@
    "fieldname": "customer",
    "fieldtype": "Link",
    "label": "Customer",
-   "options": "Customer"
+   "options": "Customer",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.customer_name",
@@ -65,7 +66,8 @@
    "fieldname": "customer_primary_address",
    "fieldtype": "Link",
    "label": "Customer Primary Address",
-   "options": "Address"
+   "options": "Address",
+   "read_only": 1
   },
   {
    "default": "0",
@@ -91,17 +93,20 @@
    "fieldname": "type_for_request",
    "fieldtype": "Select",
    "label": "Type For Request",
-   "options": "Within Warranty\nOut of Warranty\nMaintenance"
+   "options": "Within Warranty\nOut of Warranty\nMaintenance",
+   "read_only": 1
   },
   {
    "fieldname": "name_of_maintenance",
    "fieldtype": "Data",
-   "label": "Name of Maintenance"
+   "label": "Name of Maintenance",
+   "read_only": 1
   },
   {
    "fieldname": "number",
    "fieldtype": "Data",
-   "label": "Number"
+   "label": "Number",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_9",
@@ -111,13 +116,15 @@
    "fieldname": "warranties",
    "fieldtype": "Table",
    "label": "Warranties",
-   "options": "Maintenance Warranty"
+   "options": "Maintenance Warranty",
+   "read_only": 1
   },
   {
    "fieldname": "machines",
    "fieldtype": "Table",
    "label": "Machines",
-   "options": "Customer Machine"
+   "options": "Customer Machine",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_13",
@@ -126,7 +133,8 @@
   {
    "fieldname": "customer_comment",
    "fieldtype": "Data",
-   "label": "Customer Comment"
+   "label": "Customer Comment",
+   "read_only": 1
   },
   {
    "fieldname": "history_maintenance",
@@ -137,7 +145,8 @@
    "fieldname": "maintenance_type",
    "fieldtype": "Select",
    "label": "Maintenance Type",
-   "options": "Visit\nCall"
+   "options": "Visit\nCall",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_14",
@@ -147,12 +156,14 @@
    "fieldname": "type_of_maintenance",
    "fieldtype": "Table",
    "label": "Types of Maintenance",
-   "options": "Maintenance Item"
+   "options": "Maintenance Item",
+   "read_only": 1
   },
   {
    "fieldname": "planed_amount_for_price_list",
    "fieldtype": "Data",
-   "label": "Planed Amount For Price List"
+   "label": "Planed Amount For Price List",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_22",
@@ -162,19 +173,22 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Items",
-   "options": "Planed Item"
+   "options": "Planed Item",
+   "read_only": 1
   },
   {
    "fieldname": "service_items",
    "fieldtype": "Table",
    "label": "Service Items",
-   "options": "Service Item"
+   "options": "Service Item",
+   "read_only": 1
   },
   {
    "fieldname": "transfer_cost",
    "fieldtype": "Currency",
    "label": "Transfer Cost",
-   "options": "currency"
+   "options": "currency",
+   "read_only": 1
   },
   {
    "fieldname": "total_cost",
@@ -187,15 +201,7 @@
    "fieldname": "engineering_name",
    "fieldtype": "Table",
    "label": "Engineering Name ",
-   "options": "Engineering Name"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Conservation",
-   "print_hide": 1,
+   "options": "Engineering Name",
    "read_only": 1
   },
   {
@@ -208,26 +214,36 @@
    "read_only": 1
   },
   {
-   "fieldname": "survey_text",
-   "fieldtype": "Data",
-   "label": "Survey Text"
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Conservation",
+   "print_hide": 1,
+   "read_only": 1
   },
   {
    "fieldname": "description_of_maintenance_manager",
    "fieldtype": "Data",
-   "label": "Description of Maintenance Manager"
+   "label": "Description of Maintenance Manager",
+   "read_only": 1
   },
   {
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
    "options": "CON-.YYYY.-"
+  },
+  {
+   "fieldname": "survey",
+   "fieldtype": "Data",
+   "label": "Survey"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-14 18:14:10.935403",
+ "modified": "2024-01-18 12:02:03.196990",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation",

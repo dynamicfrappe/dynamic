@@ -186,12 +186,41 @@ def create_sales_invoice(source_name):
     conservation = frappe.get_doc('Conservation',source_name)
     sales_invoice = frappe.new_doc("Sales Invoice")
     sales_invoice.customer = conservation.customer
+    sales_invoice.update_stock = 1
     for item in conservation.items :
         sales_invoice.append("items" , {"item_code" : item.item , "rate" : item.rate})
-    for item in conservation.service_items :
-        sales_invoice.append("items" , {"item_code" : item.item , "rate" : item.rate})
+    if conservation.service_items :
+        selling_settings = frappe.get_single("Selling Settings")
+        if not selling_settings.account :
+           frappe.throw(_("Please set <b>account</b> in selling settings to fetch in account head in taxes"))
+        for item in conservation.service_items :
+            sales_invoice.append("taxes" , {"charge_type" : "Actual" ,
+                                            "account_head" :selling_settings.account ,"rate" : item.rate})
+    sales_invoice.total = conservation.total_cost
     return sales_invoice
-    
+
+
+@frappe.whitelist()
+def get_serial_no(item_code):
+    list = []
+    sql =f'''
+        SELECT 
+            S.name
+        FROM
+            `tabSerial No` S
+        WHERE
+            S.item_code = '{item_code}'
+            AND
+            S.customer = '' 
+        '''
+    data = frappe.db.sql(sql , as_dict = 1)
+    if data :
+        for row in data :
+            list.append(row["name"])
+
+        return list
+
+
 @frappe.whitelist()
 def create_composition_request(source_name):
     sales_order = frappe.get_doc('Sales Order',source_name)

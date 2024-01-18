@@ -24,14 +24,14 @@ class ConservationRequest(Document):
                "Item", item.get("item_code"), ["item_name", "description"], as_dict=1)
 		return item.get("item_code") ,item_code.get("item_name") , item_code.get("description") ,item.get("warranty_expiry_date")
 
-	@frappe.whitelist()
-	def get_maintenance_item(self):
-		conservation_requestes = frappe.get_all("Conservation Request" ,
-										filters = {"docstatus" : 1} , pluck = "name") 
+	# @frappe.whitelist()
+	# def get_maintenance_item(self):
+	# 	conservation_requestes = frappe.get_all("Conservation Request" ,
+	# 									filters = {"docstatus" : 1} , pluck = "name") 
 
-		if  not self.get("maintenance") :
-			for req in conservation_requestes :
-				self.append("maintenance" , {"conservation_request" : req})
+	# 	if  not self.get("maintenance") :
+	# 		for req in conservation_requestes :
+	# 			self.append("maintenance" , {"conservation_request" : req})
 
 
 	def create_Conservation_order(self):
@@ -57,9 +57,10 @@ class ConservationRequest(Document):
 	def validate_warranties(self):
 		for warranty in self.warranties :
 			if warranty.idx == 1 :
-				if not warranty.warranty :
-					self.type_for_request = "Maintenance"
-				if warranty.warranty < now() :
-					self.type_for_request = "Out of Warranty"
-				if warranty.warranties >= now() :
-					self.type_for_request = "Out of Warranty"
+				if warranty.warranty :
+					if not warranty.warranty :
+						self.type_for_request = "Maintenance"
+					if warranty.warranty < now() :
+						self.type_for_request = "Out of Warranty"
+					if warranty.warranty >= now() :
+						self.type_for_request = "Out of Warranty"
