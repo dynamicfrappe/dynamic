@@ -10,7 +10,7 @@ class ConservationRequest(Document):
 	def before_naming(self):
 		self.user = frappe.session.user
 	
-	def before_submit(self):
+	def before_validate(self):
 		self.validate_warranties()
 
 	def on_submit(self):
@@ -45,12 +45,5 @@ class ConservationRequest(Document):
 		conservation_order.doctype, lnk))
 	
 	def validate_warranties(self):
-		for warranty in self.warranties :
-			if warranty.idx == 1 :
-				if warranty.warranty :
-					if not warranty.warranty :
-						self.type_for_request = "Maintenance"
-					if warranty.warranty < now() :
-						self.type_for_request = "Out of Warranty"
-					if warranty.warranty >= now() :
-						self.type_for_request = "Out of Warranty"
+		if not self.warranties :
+			self.type_for_request = "Maintenance"

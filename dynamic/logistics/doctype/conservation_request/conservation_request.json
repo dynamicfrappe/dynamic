@@ -39,8 +39,7 @@
    "fieldname": "type_for_request",
    "fieldtype": "Select",
    "label": "Type For Request",
-   "options": "Within Warranty\nOut of Warranty\nMaintenance",
-   "read_only": 1
+   "options": "Within Warranty\nOut of Warranty\nMaintenance"
   },
   {
    "fieldname": "name_of_maintenance",
@@ -155,7 +154,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-18 12:03:32.427279",
+ "modified": "2024-01-21 16:30:12.012128",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",

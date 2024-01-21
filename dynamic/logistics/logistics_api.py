@@ -199,6 +199,13 @@ def create_sales_invoice(source_name):
     sales_invoice.total = conservation.total_cost
     return sales_invoice
 
+@frappe.whitelist()
+def create_stock_entry_from_conservation(source_name):
+    conservation = frappe.get_doc('Conservation',source_name)
+    stock_entry = frappe.new_doc("Stock Entry")
+    for item in conservation.items:
+        stock_entry.append("items" , {"item_code" : item.item , "basic_rate" : item.rate})
+    return stock_entry
 
 @frappe.whitelist()
 def get_serial_no(item_code):

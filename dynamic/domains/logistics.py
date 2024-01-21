@@ -19,6 +19,22 @@ data = {
                 "read_only" : 1
             },
         ],
+        'Serial No':[
+            {
+                "label": _("Customer 2"),
+                "fieldname": "customer_2",
+                "fieldtype": "Link",
+                "insert_after": "work_order",
+                "options":"Customer",
+            },
+            {
+                "label": _("Contact"),
+                "fieldname": "contact",
+                "fieldtype": "Link",
+                "insert_after": "customer_2",
+                "options":"Contact",
+            },
+        ],
         'Stock Entry': [
             {
                 "label": _("Request Editing Item"),

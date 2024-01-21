@@ -8,15 +8,8 @@ frappe.ui.form.on('Conservation', {
 			callback: function (r) {
 				if (r.message && r.message.length) {
 					if (r.message.includes("Logistics")) {
-						if (frm.doc.docstatus == 1){
-							frm.add_custom_button(__("Create Sales Invoice"),()=>{
-								frappe.model.open_mapped_doc({
-									method:
-									"dynamic.logistics.logistics_api.create_sales_invoice",
-									frm: frm,
-								  });
-							})
-						}
+						frm.events.add_buttons(frm)
+
 					}
 				}
 			}
@@ -33,5 +26,25 @@ frappe.ui.form.on('Conservation', {
 				}
 			}
 		})
-	} 
+	},
+	add_buttons : function(frm){
+		if (frm.doc.docstatus == 1){
+			frm.add_custom_button(__("Sales Invoice"),()=>{
+				frappe.model.open_mapped_doc({
+					method:
+					"dynamic.logistics.logistics_api.create_sales_invoice",
+					frm: frm,
+				  });
+			} , "Create")
+		}
+		if ((frm.doc.docstatus == 1) && (frm.doc.items.length > 0 )){
+			frm.add_custom_button(__("Stock entry"),()=>{
+				frappe.model.open_mapped_doc({
+					method:
+					"dynamic.logistics.logistics_api.create_stock_entry_from_conservation",
+					frm: frm,
+				});
+			}, "Create")
+	}
+	}
 });
