@@ -1,0 +1,98 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-18 17:36:21.808537",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "installment_entry",
+  "maintenance_deposit",
+  "due_date",
+  "amount",
+  "penalety",
+  "total",
+  "days_count",
+  "months_count",
+  "payment"
+ ],
+ "fields": [
+  {
+   "fieldname": "installment_entry",
+   "fieldtype": "Link",
+   "label": "installment Entry",
+   "options": "installment Entry",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "maintenance_deposit",
+   "fieldtype": "Link",
+   "label": "Maintenance deposit",
+   "options": "Maintenance deposit"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Due Date",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Amount",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "penalety",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Penalety"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "total",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Total",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "days_count",
+   "fieldtype": "Float",
+   "label": "Days Count"
+  },
+  {
+   "fieldname": "months_count",
+   "fieldtype": "Float",
+   "label": "Months Count"
+  },
+  {
+   "fieldname": "payment",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Payment",
+   "non_negative": 1,
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-01-18 17:39:20.467087",
+ "modified_by": "Administrator",
+ "module": "AlRehab",
+ "name": "Maintenance deposit Calculation Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

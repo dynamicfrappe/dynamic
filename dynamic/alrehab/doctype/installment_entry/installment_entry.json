@@ -35,7 +35,9 @@
   "section_break_24",
   "is_clamed",
   "claiming_entry",
-  "paid_entry"
+  "paid_entry",
+  "reference_doc",
+  "document"
  ],
  "fields": [
   {
@@ -54,8 +56,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item",
-   "options": "Item",
-   "reqd": 1
+   "options": "Item"
   },
   {
    "fieldname": "column_break_4",
@@ -66,8 +67,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Type",
-   "options": "installment Entry Type",
-   "reqd": 1
+   "options": "installment Entry Type"
   },
   {
    "fieldname": "section_break_6",
@@ -87,12 +87,12 @@
    "label": "Ignore Delay penalty "
   },
   {
+   "default": "Under collection",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "\nUnder collection\nNot Paid\nPartly Paid\nPaid",
-   "reqd": 1
+   "options": "\nUnder collection\nNot Paid\nPartly Paid\nPaid\nCanceled"
   },
   {
    "fieldname": "column_break_10",
@@ -142,12 +142,12 @@
    "fieldname": "contract",
    "fieldtype": "Link",
    "label": "Contract",
-   "options": "Rehab Contract"
+   "options": "Maintenance deposit"
   },
   {
    "fieldname": "customer",
    "fieldtype": "Link",
-   "label": "Customer",
+   "label": "unit",
    "options": "Customer",
    "reqd": 1
   },
@@ -202,13 +202,25 @@
    "fieldname": "outstanding_value",
    "fieldtype": "Data",
    "label": "Outstanding  Value"
+  },
+  {
+   "fieldname": "reference_doc",
+   "fieldtype": "Link",
+   "label": "Reference",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "document",
+   "fieldtype": "Dynamic Link",
+   "label": "Document",
+   "options": "reference_doc"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-01 15:22:29.353388",
+ "modified": "2024-01-21 15:01:34.920330",
  "modified_by": "Administrator",
- "module": "alrehab",
+ "module": "AlRehab",
  "name": "installment Entry",
  "owner": "Administrator",
  "permissions": [

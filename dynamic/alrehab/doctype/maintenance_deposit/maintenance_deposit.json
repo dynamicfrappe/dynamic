@@ -1,0 +1,145 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-30 11:20:09.673078",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "name1",
+  "section_break_2",
+  "unit",
+  "column_break_4",
+  "unit_area",
+  "year",
+  "deposit_shortfall_difference",
+  "section_break_6",
+  "installment_entry_type",
+  "maintenance_deposit_item",
+  "column_break_8",
+  "maintenance_deposit_value",
+  "maintenance_deposit_installments_count",
+  "section_break_11",
+  "maintenance_deposit_installments_items",
+  "section_break_14",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "name"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "unit.unit_area",
+   "fieldname": "unit_area",
+   "fieldtype": "Data",
+   "label": "Unit Area "
+  },
+  {
+   "fetch_from": "unit.commercial_year",
+   "fieldname": "year",
+   "fieldtype": "Link",
+   "label": "Year",
+   "options": "Commercial year"
+  },
+  {
+   "fieldname": "deposit_shortfall_difference",
+   "fieldtype": "Link",
+   "label": "Deposit shortfall difference",
+   "options": "Item"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "installment_entry_type",
+   "fieldtype": "Link",
+   "label": "installment Entry Type",
+   "options": "installment Entry Type"
+  },
+  {
+   "fetch_from": "installment_entry_type.item",
+   "fieldname": "maintenance_deposit_item",
+   "fieldtype": "Link",
+   "label": "Maintenance Deposit Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "maintenance_deposit_value",
+   "fieldtype": "Data",
+   "label": "Maintenance Deposit Value"
+  },
+  {
+   "fieldname": "maintenance_deposit_installments_count",
+   "fieldtype": "Data",
+   "label": "Maintenance Deposit installments Count"
+  },
+  {
+   "fieldname": "section_break_11",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "maintenance_deposit_installments_items",
+   "fieldtype": "Table",
+   "label": "Maintenance Deposit installments Items",
+   "options": "Maintenance Deposit installments Items"
+  },
+  {
+   "fieldname": "section_break_14",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Maintenance deposit",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-18 15:30:43.865685",
+ "modified_by": "Administrator",
+ "module": "AlRehab",
+ "name": "Maintenance deposit",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

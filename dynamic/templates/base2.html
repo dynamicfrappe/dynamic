@@ -3,7 +3,7 @@
       <!-- Required meta tags -->
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.15/vue.cjs.js" integrity="sha512-v43CHylp2byK4H0o5WYD3XvfXhDD2infaA/ObwTLKru+zYNNCzye3Z1lv3dWZo0MGrTiXU+nhqPg/BH6HCwGuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
       <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="{{currenturl}}/assets/dynamic/css/bootstrap.min.css">
           <title> Welcome !</title>
@@ -23,5 +23,33 @@
    <script src="{{currenturl}}/assets/dynamic/js/jquery-3.7.0.min.js" ></script>
    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" ></script> -->
    <script src="{{currenturl}}/assets/dynamic/js/bootstrap.min.js" ></script>
+   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+
+   <script> 
+      const vm = new Vue({
+        el:"#app",
+        delimiters: ['[[', ']]'],
+        data: {
+            "data" : "main"  },
+            
+   
+        mounted: async ()=> {
+         this.data = "Batik"
+         console.log( "data" , this.data)
+        } ,
+        methods:{
+
+         mainApp: async() =>{
+               console.log("Vew Work ")
+               return ""
+         },
+
+
+         }
+      } ,
+
+
+      )
+   </script>
 </body>
 </html>

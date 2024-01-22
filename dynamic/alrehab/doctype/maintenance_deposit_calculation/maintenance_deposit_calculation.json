@@ -1,0 +1,108 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format: MDS-{#####}",
+ "creation": "2024-01-18 16:00:17.899728",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "unit",
+  "owner",
+  "column_break_3",
+  "unit_area",
+  "building_number",
+  "section_break_6",
+  "get_outstandign",
+  "data_8",
+  "items",
+  "total_payment",
+  "payment_method"
+ ],
+ "fields": [
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Unit",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "unit.owner_name",
+   "fieldname": "owner",
+   "fieldtype": "Link",
+   "label": "Owner",
+   "options": "Owner"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "unit.unit_area",
+   "fieldname": "unit_area",
+   "fieldtype": "Data",
+   "label": "Unit Area"
+  },
+  {
+   "fetch_from": "unit.building_number",
+   "fieldname": "building_number",
+   "fieldtype": "Data",
+   "label": "Building Number"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "get_outstandign",
+   "fieldtype": "Button",
+   "label": "Get Outstandign"
+  },
+  {
+   "fieldname": "data_8",
+   "fieldtype": "Section Break",
+   "label": "Maintenance deposit Calculation Items"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Maintenance deposit Calculation Items"
+  },
+  {
+   "fieldname": "total_payment",
+   "fieldtype": "Data",
+   "label": "Total Payment"
+  },
+  {
+   "fieldname": "payment_method",
+   "fieldtype": "Data",
+   "label": "Payment Method"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-01-18 17:37:06.984127",
+ "modified_by": "Administrator",
+ "module": "AlRehab",
+ "name": "Maintenance deposit Calculation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

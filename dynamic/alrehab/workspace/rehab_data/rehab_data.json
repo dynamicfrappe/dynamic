@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "creation": "2023-11-08 11:09:13.595215",
+ "creation": "2024-01-18 14:18:01.794941",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -12,7 +12,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "Rehab",
+ "label": "Rehab Data",
  "links": [
   {
    "hidden": 0,
@@ -60,10 +60,10 @@
    "type": "Link"
   }
  ],
- "modified": "2024-01-18 14:15:12.897165",
+ "modified": "2024-01-18 14:18:01.794941",
  "modified_by": "Administrator",
  "module": "AlRehab",
- "name": "Rehab",
+ "name": "Rehab Data",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,

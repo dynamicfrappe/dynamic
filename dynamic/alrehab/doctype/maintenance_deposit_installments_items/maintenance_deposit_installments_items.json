@@ -7,20 +7,23 @@
  "engine": "InnoDB",
  "field_order": [
   "item",
-  "installment_value",
   "due_date",
+  "installment_value",
   "paid",
   "paid_document",
-  "payment_day"
+  "payment_day",
+  "payed_amount",
+  "outstanding_amount",
+  "reference_entry"
  ],
  "fields": [
   {
    "fieldname": "item",
    "fieldtype": "Link",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Item",
-   "options": "Item",
-   "reqd": 1
+   "options": "Item"
   },
   {
    "fieldname": "installment_value",
@@ -53,14 +56,31 @@
    "fieldname": "payment_day",
    "fieldtype": "Date",
    "label": "Payment Day"
+  },
+  {
+   "fieldname": "payed_amount",
+   "fieldtype": "Float",
+   "label": "Payed Amount"
+  },
+  {
+   "fieldname": "outstanding_amount",
+   "fieldtype": "Float",
+   "label": "Outstanding Amount"
+  },
+  {
+   "fieldname": "reference_entry",
+   "fieldtype": "Link",
+   "label": "Reference Entry",
+   "options": "installment Entry",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-08 11:50:29.536132",
+ "modified": "2024-01-21 15:24:18.405895",
  "modified_by": "Administrator",
- "module": "alrehab",
+ "module": "AlRehab",
  "name": "Maintenance Deposit installments Items",
  "owner": "Administrator",
  "permissions": [],

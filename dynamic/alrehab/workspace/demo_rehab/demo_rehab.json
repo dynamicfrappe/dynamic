@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "creation": "2023-11-08 11:09:13.595215",
+ "creation": "2023-11-26 08:22:50.572145",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -12,13 +12,22 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "Rehab",
+ "label": "Demo Rehab",
  "links": [
   {
    "hidden": 0,
    "is_query_report": 0,
    "label": "Journal installment",
    "link_to": "Journal installment",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "installment Entry",
+   "link_to": "installment Entry",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -54,31 +63,24 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Rehab Contract",
-   "link_to": "Rehab Contract",
+   "link_to": "Maintenance deposit",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2024-01-18 14:15:12.897165",
+ "modified": "2024-01-18 15:34:44.751805",
  "modified_by": "Administrator",
  "module": "AlRehab",
- "name": "Rehab",
+ "name": "Demo Rehab",
  "owner": "Administrator",
  "pin_to_bottom": 0,
- "pin_to_top": 0,
- "restrict_to_domain": "Rehab",
+ "pin_to_top": 1,
  "shortcuts": [
   {
    "doc_view": "List",
-   "label": "Customer",
+   "label": "Unit",
    "link_to": "Customer",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "List",
-   "label": "Item",
-   "link_to": "Item",
    "type": "DocType"
   },
   {
@@ -87,5 +89,6 @@
    "link_to": "Owner",
    "type": "DocType"
   }
- ]
+ ],
+ "shortcuts_label": "Mian"
 }

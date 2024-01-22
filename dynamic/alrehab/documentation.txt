@@ -6,3 +6,11 @@ we Have
 1 - unit-- with building number and unit Area -- We use customer module to handel unit data 
 2 - Unit owner Name and Code 
 
+
+1 - 
+
+3 -  Payments 
+      types -- 1- وديعة صيانة -- Maintenance deposit
+      2 - صيانة سنوية --Item
+      3 - فرق عجز وديعه   -- Item
+      4 - Cam /or any other service Item

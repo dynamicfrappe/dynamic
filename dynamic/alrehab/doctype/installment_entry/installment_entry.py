@@ -27,8 +27,8 @@ Domains=frappe.get_active_domains()
 class installmentEntry(Document):
 
 	def validate(self):
-		if  not self.get('__unsaved') and not self.claiming_entry:
-			self.set_status()
+		#if  not self.get('__unsaved') and not self.claiming_entry:
+		self.set_status()
 
 	def after_insert(self):
 		self.set_status()
@@ -117,9 +117,10 @@ class installmentEntry(Document):
 				
 
 	def set_status(self):
-		if getdate(self.due_date) <= date.today() and self.status=='Under collection':
-			self.status='Not Paid'
-			self.create_journal_entry()
+		if getdate(self.due_date) <= date.today() and self.is_paid != 1:
+			if self.status != "Canceled" :
+				self.status='Not Paid'
+			#self.create_journal_entry()
 
 @frappe.whitelist()	
 def get_installment_entry_to_update_status():
