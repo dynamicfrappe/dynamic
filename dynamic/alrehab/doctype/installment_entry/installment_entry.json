@@ -66,6 +66,7 @@
    "fieldname": "type",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Type",
    "options": "installment Entry Type"
   },
@@ -91,6 +92,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
    "options": "\nUnder collection\nNot Paid\nPartly Paid\nPaid\nCanceled"
   },
@@ -147,6 +149,7 @@
   {
    "fieldname": "customer",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "unit",
    "options": "Customer",
    "reqd": 1
@@ -206,19 +209,21 @@
   {
    "fieldname": "reference_doc",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Reference",
    "options": "DocType"
   },
   {
    "fieldname": "document",
    "fieldtype": "Dynamic Link",
+   "in_standard_filter": 1,
    "label": "Document",
    "options": "reference_doc"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-21 15:01:34.920330",
+ "modified": "2024-01-23 19:40:07.536131",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "installment Entry",

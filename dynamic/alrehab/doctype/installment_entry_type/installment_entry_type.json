@@ -8,7 +8,6 @@
  "engine": "InnoDB",
  "field_order": [
   "name1",
-  "item",
   "auto_create",
   "section_break_3",
   "delay_penalty",
@@ -32,13 +31,6 @@
    "fieldname": "delay_penalty",
    "fieldtype": "Check",
    "label": "Delay penalty"
-  },
-  {
-   "fieldname": "item",
-   "fieldtype": "Link",
-   "label": "Item",
-   "options": "Item",
-   "reqd": 1
   },
   {
    "fieldname": "section_break_3",
@@ -79,7 +71,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-23 11:08:32.007036",
+ "modified": "2024-01-23 19:47:26.665478",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "installment Entry Type",
