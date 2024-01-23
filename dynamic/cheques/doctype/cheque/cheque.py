@@ -10,8 +10,8 @@ from frappe.utils.data import flt, get_link_to_form, nowdate
 
 
 validate_reference_dict = {
-    "Supplier": ["Purchase Invoice", "Purchase Order"],
-    "Customer": ["Sales Invoice", "Sales Order"],
+    "Supplier": ["Purchase Invoice", "Purchase Order","Clearance"],
+    "Customer": ["Sales Invoice", "Sales Order","Clearance"],
 }
 
 collect_cheque_commission_name = "Collect"
@@ -46,56 +46,96 @@ class Cheque(Document):
 
     @frappe.whitelist()
     def create_payment_entries(self):
-        for row in self.items:
-            payment_entry = frappe.new_doc("Payment Entry")
-            payment_entry.payment_type = self.payment_type
-            payment_entry.posting_date = self.posting_date
-            payment_entry.company = self.company
-            payment_entry.mode_of_payment = self.mode_of_payment
-            payment_entry.party_type = self.party_type
-            payment_entry.party = self.party
-            payment_entry.cheque = self.name
-            payment_entry.cheque_status = self.status
-            payment_entry.paid_from = self.account_paid_from
-            payment_entry.paid_to = self.account_paid_to
-            payment_entry.paid_amount = row.amount
-            payment_entry.received_amount = row.amount
-            payment_entry.reference_no = row.cheque_no
-            payment_entry.reference_date = row.cheque_date
-            payment_entry.cheque_type = row.cheque_type
-            payment_entry.first_benefit = row.first_benefit
-            payment_entry.drawn_bank = row.bank
-            payment_entry.person_name = row.person_name
-            if self.reference_type:
-                ref = payment_entry.append("references")
-                ref.reference_doctype = self.reference_type
-                ref.reference_name = self.reference_name
-                ref.allocated_amount = row.amount
-            payment_entry.save()
-            if row.attachment:
-                attachment_name = frappe.db.get_value(
-                    "File", {"file_url": row.attachment}, 'name')
-                if attachment_name:
-                    attachment = frappe.get_doc("File", attachment_name)
-                    attached_file = frappe.copy_doc(attachment)
-                    attached_file.attached_to_doctype = payment_entry.doctype
-                    attached_file.attached_to_name = payment_entry.name
-                    attached_file.save()
-                    # print("attachment.attachment  ===> ", attachment.file_name)
-                    # attach_file(
-                    # 	filename=attachment.file_name,
-                    # 	doctype=payment_entry.doctype,
-                    # 	docname=payment_entry.name,
-                    # 	folder=attachment.folder,
-                    # 	decode_base64=attachment.content,
-                    # 	is_private=attachment.is_private
-                    # )
+        if self.reference_type == 'Clearance' and self.reference_name:
+            self.create_gl_entry_for_clearance()
+        else:
+            for row in self.items:
+                payment_entry = frappe.new_doc("Payment Entry")
+                payment_entry.payment_type = self.payment_type
+                payment_entry.posting_date = self.posting_date
+                payment_entry.company = self.company
+                payment_entry.mode_of_payment = self.mode_of_payment
+                payment_entry.party_type = self.party_type
+                payment_entry.party = self.party
+                payment_entry.cheque = self.name
+                payment_entry.cheque_status = self.status
+                payment_entry.paid_from = self.account_paid_from
+                payment_entry.paid_to = self.account_paid_to
+                payment_entry.paid_amount = row.amount
+                payment_entry.received_amount = row.amount
+                payment_entry.reference_no = row.cheque_no
+                payment_entry.reference_date = row.cheque_date
+                payment_entry.cheque_type = row.cheque_type
+                payment_entry.first_benefit = row.first_benefit
+                payment_entry.drawn_bank = row.bank
+                payment_entry.person_name = row.person_name
+                if self.reference_type:
+                    ref = payment_entry.append("references")
+                    ref.reference_doctype = self.reference_type
+                    ref.reference_name = self.reference_name
+                    ref.allocated_amount = row.amount
+                
+                payment_entry.save()
+                if row.attachment:
+                    attachment_name = frappe.db.get_value(
+                        "File", {"file_url": row.attachment}, 'name')
+                    if attachment_name:
+                        attachment = frappe.get_doc("File", attachment_name)
+                        attached_file = frappe.copy_doc(attachment)
+                        attached_file.attached_to_doctype = payment_entry.doctype
+                        attached_file.attached_to_name = payment_entry.name
+                        attached_file.save()
+                        # print("attachment.attachment  ===> ", attachment.file_name)
+                        # attach_file(
+                        # 	filename=attachment.file_name,
+                        # 	doctype=payment_entry.doctype,
+                        # 	docname=payment_entry.name,
+                        # 	folder=attachment.folder,
+                        # 	decode_base64=attachment.content,
+                        # 	is_private=attachment.is_private
+                        # )
 
-            lnk = get_link_to_form(payment_entry.doctype, payment_entry.name)
-            frappe.msgprint(_("{} {} was Created").format(
-                payment_entry.doctype, lnk))
+                lnk = get_link_to_form(payment_entry.doctype, payment_entry.name)
+                frappe.msgprint(_("{} {} was Created").format(
+                    payment_entry.doctype, lnk))
 
-
+def create_gl_entry_for_clearance(self):
+    precision = frappe.get_precision(
+			"Journal Entry Account", "debit_in_account_currency")
+    clearance_doc = frappe.get_doc('Clearance',self.reference_name)
+    journal_entry = frappe.new_doc('Journal Entry')
+    journal_entry.company = self.company
+    journal_entry.posting_date = nowdate()
+    # credit
+    credit_row = journal_entry.append("accounts", {})
+    credit_row.party_type = "Customer"
+    credit_row.account = self.account_paid_from 
+    credit_row.party = clearance_doc.customer
+    credit_row.cost_center = clearance_doc.cost_center
+    credit_row.project = clearance_doc.project
+    credit_row.credit_in_account_currency = flt(
+        clearance_doc.grand_total, precision) if self.party_type=="Customer" else 0
+    credit_row.debit_in_account_currency = flt(
+        clearance_doc.grand_total, precision) if self.party_type=="Supplier" else 0
+    credit_row.reference_type = clearance_doc.doctype
+    credit_row.reference_name = clearance_doc.name
+    # debit
+    debit_row = journal_entry.append("accounts", {})
+    debit_row.account = self.account_paid_to
+    credit_row.cost_center = clearance_doc.cost_center
+    credit_row.project = clearance_doc.project
+    debit_row.debit_in_account_currency = flt(clearance_doc.grand_total, precision) if self.party_type=="Customer" else 0
+    debit_row.credit_in_account_currency =flt(clearance_doc.grand_total, precision) if self.party_type=="Supplier" else 0
+    debit_row.reference_type = clearance_doc.doctype
+    debit_row.reference_name = clearance_doc.name
+    journal_entry.save()
+    # journal_entry.submit()
+    frappe.db.sql(
+    """update tabClearance set paid=1 where name='%s'""" % self.reference_name)
+    frappe.db.commit()
+    form_link = get_link_to_form(journal_entry.doctype, journal_entry.name)
+    frappe.msgprint("Journal Entry %s Create Successfully" % form_link)
+    
 @frappe.whitelist()
 def make_cheque_endorsement(payment_entry):
     payment_entry = frappe.get_doc("Payment Entry", payment_entry)
