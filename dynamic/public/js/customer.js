@@ -90,17 +90,27 @@ frappe.ui.form.on("Customer", {
     },
     onload: function(frm){
         frappe.call({
-            method:"dynamic.master_deals.master_deals_api.get_last_doctype",
-            args:{
-                doc_type: frm.doctype
-            },
-            callback:function(r){
-                if(r){
-                    console.log(r.message)
-                    frm.set_value('last_customer',r.message.name)
-                    frm.refresh_field("last_customer")
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+                if (r.message && r.message.length) {
+                    if (r.message.includes("Master Deals")) {
+                        frappe.call({
+                            method:"dynamic.master_deals.master_deals_api.get_last_doctype",
+                            args:{
+                                doc_type: frm.doctype
+                            },
+                            callback:function(r){
+                                if(r){
+                                    console.log(r.message)
+                                    frm.set_value('last_customer',r.message.name)
+                                    frm.refresh_field("last_customer")
+                                }
+                            }
+                        })
+                    }
                 }
             }
         })
+        
     },
 })

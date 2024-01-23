@@ -26,17 +26,27 @@ frappe.ui.form.on("Item", {
     },
     onload: function(frm){
         frappe.call({
-            method:"dynamic.master_deals.master_deals_api.get_last_doctype",
-            args:{
-                doc_type: frm.doctype
-            },
-            callback:function(r){
-                if(r){
-                    frm.set_value('next_name',r.message.name)
-                    frm.refresh_field("next_name")
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+                if (r.message && r.message.length) {
+                    if (r.message.includes("Master Deals")) {
+                        frappe.call({
+                            method:"dynamic.master_deals.master_deals_api.get_last_doctype",
+                            args:{
+                                doc_type: frm.doctype
+                            },
+                            callback:function(r){
+                                if(r){
+                                    frm.set_value('next_name',r.message.name)
+                                    frm.refresh_field("next_name")
+                                }
+                            }
+                        })
+                    }
                 }
             }
         })
+        
     },
     add_custom_btn:function(frm){
         frappe.call({
