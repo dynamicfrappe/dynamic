@@ -7,17 +7,26 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "company",
+  "type",
   "unit",
   "owner",
   "column_break_3",
   "unit_area",
   "building_number",
-  "section_break_6",
-  "get_outstandign",
+  "posting_date",
+  "edit_posting_date",
+  "totals_section",
+  "total_amount",
+  "total_penalty",
+  "column_break_13",
+  "grand_total",
   "data_8",
   "items",
+  "payment_section_section",
   "total_payment",
-  "payment_method"
+  "payment_method",
+  "amended_from"
  ],
  "fields": [
   {
@@ -33,7 +42,8 @@
    "fieldname": "owner",
    "fieldtype": "Link",
    "label": "Owner",
-   "options": "Owner"
+   "options": "Owner",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_3",
@@ -43,22 +53,15 @@
    "fetch_from": "unit.unit_area",
    "fieldname": "unit_area",
    "fieldtype": "Data",
-   "label": "Unit Area"
+   "label": "Unit Area",
+   "read_only": 1
   },
   {
    "fetch_from": "unit.building_number",
    "fieldname": "building_number",
    "fieldtype": "Data",
-   "label": "Building Number"
-  },
-  {
-   "fieldname": "section_break_6",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "get_outstandign",
-   "fieldtype": "Button",
-   "label": "Get Outstandign"
+   "label": "Building Number",
+   "read_only": 1
   },
   {
    "fieldname": "data_8",
@@ -72,19 +75,90 @@
    "options": "Maintenance deposit Calculation Items"
   },
   {
+   "default": "0",
    "fieldname": "total_payment",
-   "fieldtype": "Data",
-   "label": "Total Payment"
+   "fieldtype": "Currency",
+   "label": "Total Payment",
+   "read_only": 1
   },
   {
    "fieldname": "payment_method",
-   "fieldtype": "Data",
-   "label": "Payment Method"
+   "fieldtype": "Link",
+   "label": "Payment Method",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_penalty",
+   "fieldtype": "Currency",
+   "label": "Total penalty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_section_section",
+   "fieldtype": "Section Break",
+   "label": "Payment section"
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only_depends_on": "eval:doc.edit_posting_date==0 ;"
+  },
+  {
+   "default": "0",
+   "fieldname": "edit_posting_date",
+   "fieldtype": "Check",
+   "label": "Edit Posting Date"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Maintenance deposit Calculation",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "Maintenance deposit\nYearly Payment"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2024-01-18 17:37:06.984127",
+ "modified": "2024-01-23 19:26:43.947397",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "Maintenance deposit Calculation",

@@ -8,10 +8,44 @@ from frappe import _
 
 class InstallmentPayments(Document):
 	def validate(self):
+		self.get_all_installments()
 		if self.items:
 			# t = sum(item.get('total_payed') for item in self.items)
 			# totla_paid = sum(x.total_payed for x in self.items)
 			self.total_paid = sum(item.get('total_payed') for item in self.items)
+	def get_all_installments(self):
+
+		"""Map data :
+		Document -- Journal installment  (to get year variable )
+		Type     -- installment Entry Type to check if it has late penalty or not and if it depend on year variable
+				"""
+		entry_list = frappe.get_list("installment Entry" ,
+			                        fields = ["name" ,"installment_value" , "due_date" ,"document" ,"type"] ,
+			        						filters = {"reference_doc" :"Journal installment" ,
+						     				"customer" :self.unit ,"status": "Not Paid"} )
+		
+		for entry in entry_list :
+			#set default value 
+			value = float(entry.installment_value) 
+
+			#set penalty variable value 
+			penalty_variable = 0
+			#check type 
+			# template = 
+			installment_type = frappe.get_doc("installment Entry Type" , entry.type) 
+			if installment_type.delay_penalty == 1 :
+				#calculate penalty 
+				# 1- get template   
+				template = frappe.get_doc("Financial penalty template" ,installment_type.financial_penalty_template )
+				if template.required_year_value ==1 :
+					year = frappe.get_value("Journal installment" ,entry.document ,"year" )
+					#calculate factor 
+					penalty_variable  =  frappe.get_value("Commercial year" ,year ,"factor" )
+
+
+					#get yearly variable
+			#validate Type value 
+			print(entry)
 
 
 

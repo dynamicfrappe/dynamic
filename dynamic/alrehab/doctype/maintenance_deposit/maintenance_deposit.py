@@ -30,7 +30,7 @@ class Maintenancedeposit(Document):
 				journal_entry = frappe.get_doc("Journal Entry" ,doc.document )
 				journal_entry.cancel()
 				# journal_entry.save(ignore_permissions = True)
-			pass
+		
 		#pass
    #remove linked docs from installment Entry /  Paid Entry
 	def remove_payments_links_docs(self ,entry) :
@@ -38,8 +38,8 @@ class Maintenancedeposit(Document):
 		cancel all ref payment entry  
 		"""
 		for doc in entry.paid_entry :
-			if doc.type == "Payment Entry" :
-				payment_entry = frappe.get_doc("Payment Entry" ,doc.document )
+			if doc.type in ["Payment Entry" , "Journal Entry" ] :
+				payment_entry = frappe.get_doc(doc.type ,doc.document )
 				payment_entry.cancel()
 	def on_cancel(self) :
 		entries = frappe.get_list("installment Entry" , {"reference_doc" :"Maintenance deposit" , 

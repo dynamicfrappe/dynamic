@@ -10,15 +10,14 @@
   "name1",
   "auto_create",
   "monthly_section",
-  "one_month",
-  "three_month",
-  "six_month",
-  "year",
+  "monthly_method",
+  "required_year_value",
   "has_eq_sec",
   "has_equation",
   "section_break_3",
   "variables",
-  "equation"
+  "equation",
+  "monthly_caculated_value"
  ],
  "fields": [
   {
@@ -66,40 +65,33 @@
    "label": "Monthly"
   },
   {
-   "default": "0",
-   "fieldname": "one_month",
-   "fieldtype": "Check",
-   "label": "One Month"
-  },
-  {
-   "default": "0",
-   "fieldname": "three_month",
-   "fieldtype": "Check",
-   "label": "Three Month"
-  },
-  {
-   "default": "0",
-   "fieldname": "six_month",
-   "fieldtype": "Check",
-   "label": "Six Month"
-  },
-  {
-   "default": "0",
-   "fieldname": "year",
-   "fieldtype": "Check",
-   "label": "Year"
-  },
-  {
    "fieldname": "has_eq_sec",
    "fieldtype": "Section Break",
    "label": "Has Equation"
+  },
+  {
+   "fieldname": "monthly_method",
+   "fieldtype": "Select",
+   "label": "Monthly Method",
+   "options": "One Month\nThree Months\nsix Months\nYearly"
+  },
+  {
+   "fieldname": "monthly_caculated_value",
+   "fieldtype": "Float",
+   "label": "Monthly Caculated Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "required_year_value",
+   "fieldtype": "Check",
+   "label": "Required Year Value"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-08 16:35:34.255425",
+ "modified": "2024-01-23 18:28:08.901174",
  "modified_by": "Administrator",
- "module": "alrehab",
+ "module": "AlRehab",
  "name": "Financial penalty template",
  "owner": "Administrator",
  "permissions": [

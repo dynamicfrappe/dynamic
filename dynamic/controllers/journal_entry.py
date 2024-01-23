@@ -8,7 +8,9 @@ def before_submit_journal_entry(self , event):
         set_claiming_entry(self)
 
 def set_claiming_entry(self):
-    installment_entry = frappe.get_doc("installment Entry", self.installment_entry)
-    installment_entry.is_clamed = 1
-    installment_entry.append("claiming_entry" , {"type" :self.doctype , "document" :self.name})
-    installment_entry.save()
+    if self.installment_entry :
+        installment_entry = frappe.get_doc("installment Entry", self.installment_entry)
+        if installment_entry.status != "Paid"  :
+            installment_entry.is_clamed = 1
+            installment_entry.append("claiming_entry" , {"type" :self.doctype , "document" :self.name})
+            installment_entry.save()

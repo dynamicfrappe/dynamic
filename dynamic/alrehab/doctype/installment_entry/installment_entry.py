@@ -58,7 +58,6 @@ class installmentEntry(Document):
 						 ,"cost_center" : self.cost_center})
 			journal_entry.insert()
 			journal_entry.submit()
-
 			lnk = get_link_to_form(journal_entry.doctype, journal_entry.name)
 			frappe.msgprint(_("{} {} was Created").format(
 				journal_entry.doctype, lnk))
@@ -122,6 +121,36 @@ class installmentEntry(Document):
 				self.status='Not Paid'
 			#self.create_journal_entry()
 
+	def clear_ledger (self) :
+		self.status = "Not Paid"
+		self.is_clamed = 0 
+		self.is_paid = 0 
+		self.remove_linked_docs_entry()
+		self.remove_payments_links_docs()
+	def remove_linked_docs_entry(self ) :
+		"""
+		cancel all ref journal entry  
+		"""
+		for doc in self.claiming_entry :
+			if doc.type == "Journal Entry" :
+				journal_entry = frappe.get_doc("Journal Entry" ,doc.document )
+				journal_entry.cancel()
+				# journal_entry.save(ignore_permissions = True)
+		
+		#pass
+   #remove linked docs from installment Entry /  Paid Entry
+	def remove_payments_links_docs(self ) :
+		"""
+		cancel all ref payment entry  
+		"""
+		for doc in self.paid_entry :
+			if doc.type in ["Payment Entry" , "Journal Entry" ] :
+				payment_entry = frappe.get_doc(doc.type ,doc.document )
+				payment_entry.cancel()
+				self.remove(doc)
+
+
+				
 @frappe.whitelist()	
 def get_installment_entry_to_update_status():
 	data = f"""

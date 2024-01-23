@@ -9,6 +9,7 @@
  "field_order": [
   "name1",
   "item",
+  "auto_create",
   "section_break_3",
   "delay_penalty",
   "financial_penalty_template",
@@ -68,13 +69,19 @@
    "label": "Cost center",
    "options": "Cost Center",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_create",
+   "fieldtype": "Check",
+   "label": "Auto Create"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-30 12:36:54.474239",
+ "modified": "2024-01-23 11:08:32.007036",
  "modified_by": "Administrator",
- "module": "alrehab",
+ "module": "AlRehab",
  "name": "installment Entry Type",
  "owner": "Administrator",
  "permissions": [

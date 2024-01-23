@@ -6,13 +6,13 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "due_date",
   "installment_entry",
   "total_value",
   "total_payed",
   "delay_penalty",
   "outstanding_value",
-  "mode_of_payment",
-  "due_date"
+  "mode_of_payment"
  ],
  "fields": [
   {
@@ -72,9 +72,9 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-10 10:10:25.301176",
+ "modified": "2024-01-23 16:34:11.833790",
  "modified_by": "Administrator",
- "module": "alrehab",
+ "module": "AlRehab",
  "name": "Installment Payments Items",
  "owner": "Administrator",
  "permissions": [],

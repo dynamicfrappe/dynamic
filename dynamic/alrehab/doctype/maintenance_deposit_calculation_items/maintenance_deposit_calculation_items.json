@@ -14,7 +14,8 @@
   "total",
   "days_count",
   "months_count",
-  "payment"
+  "payment",
+  "line"
  ],
  "fields": [
   {
@@ -29,7 +30,8 @@
    "fieldname": "maintenance_deposit",
    "fieldtype": "Link",
    "label": "Maintenance deposit",
-   "options": "Maintenance deposit"
+   "options": "Maintenance deposit",
+   "read_only": 1
   },
   {
    "fieldname": "due_date",
@@ -77,17 +79,23 @@
   },
   {
    "fieldname": "payment",
-   "fieldtype": "Float",
+   "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Payment",
    "non_negative": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "line",
+   "fieldtype": "Data",
+   "label": "Line",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-18 17:39:20.467087",
+ "modified": "2024-01-22 17:26:34.233362",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "Maintenance deposit Calculation Items",

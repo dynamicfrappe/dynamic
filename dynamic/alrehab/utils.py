@@ -57,3 +57,27 @@ def caculate_installment_value(entry):
             if float(entry.outstanding_value or 0):
                out_stand = float(entry.outstanding_value or 0) + float(equation_value)
             entry.db_set('outstanding_value',out_stand)
+
+
+
+def create_journal_entry(date  ,debit , credit):
+   entry = frappe.new_doc("Journal Entry")
+   entry.voucher_type = "Journal Entry"
+   entry.posting_date = date 
+
+
+   pass
+def get_customer_default_account(customer ,company):
+   get_default_account = frappe.db.sql(f"""
+      SELECT account from `tabParty Account` WHERE company='{company}' and parent = '{customer}' 
+      """,as_dict = 1) 
+   if get_default_account and len(get_default_account)>0 :
+      return get_default_account[0].get("account")
+   return False
+
+def get_mode_of_payment_account(payment , company) :
+	mode_of_payment = frappe.get_doc("Mode of Payment" , payment )
+	for account  in mode_of_payment.accounts :
+		if account.company == company :
+			return account.default_account
+	return False
