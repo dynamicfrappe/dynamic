@@ -1852,18 +1852,17 @@ def add_stcok_reconciliation(file):
         "Item Group",
         "Serial No",
         "Batch No",
-    ]  # ,'Serial No','Batch No'
-    # data = pd.read_csv(frappe.get_site_path('private', 'files', str(pat[-1])), usecols=usecols)
-    #!---
+    ] 
     data = pd.read_excel(
         frappe.get_site_path("private", "files", str(pat[-1])),
         sheet_name=0,
         engine="openpyxl",
         usecols=usecols,
+        dtype='object',
     )
+    # df = pd.read_excel(frappe.get_site_path("private", "files", str(pat[-1])), dtype='object',index_col=None, na_values=['NA'], usecols=usecols)
     data = data.fillna("")
     return get_data(data)
-    # print('\n\n\n=data=>',data,'\n\n\n')
     # t = pd.read_excel()
     #! refer to e.beshoy
 
@@ -1958,10 +1957,8 @@ def get_data(data):
 def validate_item_code(item_code):
     sql = f"""SELECT name FROM `tabItem` 
                             WHERE item_code = '{item_code}'"""
-    frappe.errprint(f"sql==>{sql}")
 
     item_sql = frappe.db.sql(sql, as_dict=1)
-    frappe.errprint(f"item_sql==>{item_sql}")
     if len(item_sql) > 0 and item_sql[0].get("name"):
         return item_code
     else:

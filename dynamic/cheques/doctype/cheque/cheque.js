@@ -26,9 +26,9 @@ frappe.ui.form.on("Cheque", {
     frm.set_query("reference_type", function () {
       let filters = [];
       if (frm.doc.party_type == "Supplier") {
-        filters.push(["name", "in", ["Purchase Order", "Purchase Invoice"]]);
+        filters.push(["name", "in", ["Purchase Order", "Purchase Invoice","Clearance"]]);
       } else if (frm.doc.party_type == "Customer") {
-        filters.push(["name", "in", ["Sales Order", "Sales Invoice"]]);
+        filters.push(["name", "in", ["Sales Order", "Sales Invoice","Clearance"]]);
       } else {
         filters.push(["name", "=", ""]);
       }
