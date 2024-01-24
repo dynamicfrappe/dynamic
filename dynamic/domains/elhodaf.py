@@ -7,7 +7,7 @@ data = {
             {
                 "label": _("Date"),
                 "fieldname": "date_1",
-                "fieldtype": "Data",
+                "fieldtype": "Date",
                 "insert_after": "item_code",
             },
             {
