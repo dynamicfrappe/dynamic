@@ -99,11 +99,14 @@ frappe.ui.form.on("Sales Order", {
             }
         });
         }
-        return {
-            filters: {
-                "name": ["in", serial_numbers] // Use the correct variable name here
-            }
+        if (serial_numbers){
+
+          return {
+              filters: {
+                  "name": ["in", serial_numbers] // Use the correct variable name here
+              }
         };
+        }
     })
            // frappe.call({
           //     method: "dynamic.logistics.logistics_api.get_serial_no",

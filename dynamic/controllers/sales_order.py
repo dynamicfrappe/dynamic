@@ -116,9 +116,10 @@ def validate_sales_order_items(self):
 def set_serial_number_customer(self):
     if self.customer :
         for item in self.items:
-            serial_doc = frappe.get_doc("Serial No" , item.serial_number)
-            serial_doc.customer = self.customer
-            serial_doc.save()
+            if item.serial_number:
+                serial_doc = frappe.get_doc("Serial No" , item.serial_number)
+                serial_doc.customer = self.customer
+                serial_doc.save()
 
 def set_vaild_until_date(self):
     self.valid_until = add_days(now() , 7)

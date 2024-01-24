@@ -504,7 +504,6 @@ data = {
                 "insert_after": "source",
                 "label": "Opportunity",
                 'options' : 'Opportunity' ,
-                "reqd" : 1
             },  
         ],
     }
