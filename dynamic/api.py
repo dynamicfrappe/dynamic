@@ -1835,12 +1835,13 @@ def get_all_total_amount(items):
     total_taxes = 0
     total_taxes_and_amount = 0
     for item in items :
-        total_amount += item.amount
-        taxes = get_taxes_amount(item.item_tax_template)
-        if taxes :
-            total_taxes += (item.amount * taxes) /100 
-            total_taxes_and_amount += ((item.amount * taxes) /100 ) + item.amount 
-    return total_amount , total_taxes , total_taxes_and_amount
+        if item.item_tax_template :
+            total_amount += item.amount
+            taxes = get_taxes_amount(item.item_tax_template)
+            if taxes :
+                total_taxes += (item.amount * taxes) /100 
+                total_taxes_and_amount += ((item.amount * taxes) /100 ) + item.amount 
+        return total_amount , total_taxes , total_taxes_and_amount
 
 
 @frappe.whitelist()
