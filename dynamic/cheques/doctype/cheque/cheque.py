@@ -87,7 +87,7 @@ class Cheque(Document):
                                 order by `tabJournal Entry`.creation
                     """
                     data = frappe.db.sql(journal_entry_sql,as_dict=1)[0]or ''
-                    print(f'====>{journal_entry_sql}')
+                    # print(f'====>{journal_entry_sql}')
                     ref.reference_name = data.get("parent")
                     ref.allocated_amount = data.get("total_debit")
                 else:
