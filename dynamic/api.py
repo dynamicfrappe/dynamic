@@ -1825,8 +1825,9 @@ def set_advences_to_schedules(doc, *args, **kwargs):
 def get_taxes_amount(item_tax_template):
     amount = 0
     template = frappe.get_doc("Item Tax Template", item_tax_template)
-    for tax in template.taxes:
-        amount = amount + tax.tax_rate
+    if template :
+        for tax in template.taxes:
+            amount = amount + tax.tax_rate
     return amount
 
 @frappe.whitelist()
@@ -1835,8 +1836,8 @@ def get_all_total_amount(items):
     total_taxes = 0
     total_taxes_and_amount = 0
     for item in items :
-        if item.item_tax_template :
-            total_amount += item.amount
+        total_amount += item.amount
+        if item.item_tax_template and item.item_tax_template != None :
             taxes = get_taxes_amount(item.item_tax_template)
             if taxes :
                 total_taxes += (item.amount * taxes) /100 
