@@ -8,6 +8,7 @@ from frappe.utils import flt, getdate
 
 from erpnext.accounts.report.accounts_receivable.accounts_receivable import ReceivablePayableReport
 
+DOMAINS = frappe.get_active_domains()
 
 def execute(filters=None):
 	if not filters:
@@ -22,8 +23,10 @@ def execute(filters=None):
 	data = []
 	for d in entries:
 		invoice = invoice_details.get(d.against_voucher) or frappe._dict()
-		sales_person = frappe.db.get_value(d.voucher_type,d.voucher_no,'sales_person')
-		d['sales_person'] = sales_person
+		d['sales_person'] = ''
+		if "Reach Group" in DOMAINS:
+			sales_person = frappe.db.get_value(d.voucher_type,d.voucher_no,'sales_person')
+			d['sales_person'] = sales_person
 
 		if d.reference_type == "Purchase Invoice":
 			payment_amount = flt(d.debit) or -1 * flt(d.credit)
