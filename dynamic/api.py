@@ -1824,7 +1824,6 @@ def set_advences_to_schedules(doc, *args, **kwargs):
 @frappe.whitelist()
 def get_taxes_amount(item_tax_template):
     amount = 0
-    frappe.throw(str(item_tax_template))
     if item_tax_template:
         template = frappe.get_doc("Item Tax Template", item_tax_template)
         if template :
