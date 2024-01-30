@@ -188,6 +188,7 @@ def get_item_details():
 
 
 def get_sales_order_details(company_list, filters):
+	post_date=''
 	if filters.get("invoice") and filters.get("invoice")=="Sales Invoice":
 		db_so = frappe.qb.DocType('Sales Invoice')
 		db_so_item = frappe.qb.DocType('Sales Invoice Item')
@@ -215,15 +216,16 @@ def get_sales_order_details(company_list, filters):
 		.where(db_so.company.isin(tuple(company_list)))
 	)
 	else :
-		post_date = db_so.transaction_date
+		db_so = frappe.qb.DocType("Sales Order")
+		db_so_item = frappe.qb.DocType("Sales Order Item")
 		query = (
-			frappe.qb.from_('Sales Order')
-			.inner_join('Sales Order Item')
+			frappe.qb.from_(db_so)
+			.inner_join(db_so_item)
 			.on(db_so_item.parent == db_so.name)
 			.select(
 				db_so.name,
 				db_so.customer,
-				post_date,
+				db_so.transaction_date,
 				db_so.territory,
 				db_so.project,
 				db_so.company,

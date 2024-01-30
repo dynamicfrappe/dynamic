@@ -81,12 +81,12 @@ def encode_invoice_data(doc):
 
         # hexa_tag = total_hex_str.encode("utf-8")
         total_hex += total_hex_str
-        print("**********************************************")
-        print(row["value"])
-        print("value => ", value)
-        print("value_len => ", value_len)
-        print("tagNumber => ", tagNumber)
-        print("total_hex_str => ", total_hex_str)
+        # print("**********************************************")
+        # print(row["value"])
+        # print("value => ", value)
+        # print("value_len => ", value_len)
+        # print("tagNumber => ", tagNumber)
+        # print("total_hex_str => ", total_hex_str)
         # print ("hexa_tag => ", hexa_tag)
     total_hex_b64 = codecs.encode(codecs.decode(total_hex, "hex"), "base64").decode(
         "utf-8"
@@ -1022,7 +1022,7 @@ def create_naming_reord(series):
 
 
 @frappe.whitelist()
-def submit_stock_entry(doc, *args, **kwargs):
+def get_allowed_stoc_use_submit(doc, *args, **kwargs):
     if "Terra" in DOMAINS:
         # validate against terra branches settings
         user_list = []
