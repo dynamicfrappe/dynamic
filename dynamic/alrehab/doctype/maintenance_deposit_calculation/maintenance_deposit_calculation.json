@@ -24,6 +24,7 @@
   "data_8",
   "items",
   "payment_section_section",
+  "total",
   "total_payment",
   "payment_method",
   "amended_from"
@@ -153,12 +154,17 @@
    "fieldtype": "Select",
    "label": "Type",
    "options": "Maintenance deposit\nYearly Payment"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total Amount"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-23 19:26:43.947397",
+ "modified": "2024-01-24 13:56:48.842247",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "Maintenance deposit Calculation",

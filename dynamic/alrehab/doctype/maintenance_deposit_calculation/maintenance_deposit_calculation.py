@@ -27,7 +27,7 @@ class MaintenancedepositCalculation(Document):
 		self.calculate_total_payment()
 		if not self.posting_date :
 			self.posting_date = utils.today()
-		
+		self.calculate_total()
 	def on_submit(self):
 		"""
 		last validation 
@@ -60,7 +60,8 @@ class MaintenancedepositCalculation(Document):
 	# VALIDATE METHOD 
 	def set_installment_items(self) :
 		if self.type == "Maintenance deposit" :
-				self.set_installment_items_maintenance 
+				
+				self.set_installment_items_maintenance()
 
 		if self.type == "Yearly Payment" :
 			self.set_installment_items_yearly()
@@ -139,7 +140,11 @@ class MaintenancedepositCalculation(Document):
 					item.penalety =  allocated_info[0]
 					item.total = float(item.amount  or 0 ) + float(item.penalety or 0)
 					item.payment = item.total
-	
+	def calculate_total(self) :
+		self.total=0 
+		for i in self.items  :
+			self.total += float(i.total)
+
 	def calculate_total_payment(self) :
 		#total section calculation
 		self.total_amount = 0 
@@ -293,7 +298,7 @@ def calculate_penalty_amount(unit_area , due_date ,posting_date =False ,daily =F
 		penalty_value = (float(monthly_value) * float(months_count) ) * float(unit_area)
 		return (penalty_value ,months_count ,  difference_days.days)
 	if daily :
-		penalty_value =  float(unit_area) * float(difference_days.days or 0) * float(variable or 0)
+		penalty_value =  (float(unit_area)  *4 )* float(difference_days.days or 0) * float(variable or 0)
 		return (penalty_value ,months_count ,  difference_days.days)
 
 
