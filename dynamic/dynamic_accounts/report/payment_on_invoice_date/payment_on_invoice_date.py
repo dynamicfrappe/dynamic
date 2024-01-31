@@ -8,6 +8,7 @@ from frappe.utils import flt, getdate
 
 from erpnext.accounts.report.accounts_receivable.accounts_receivable import ReceivablePayableReport
 
+DOMAINS = frappe.get_active_domains()
 
 def execute(filters=None):
 	if not filters:
@@ -22,8 +23,10 @@ def execute(filters=None):
 	data = []
 	for d in entries:
 		invoice = invoice_details.get(d.against_voucher) or frappe._dict()
-		sales_person = frappe.db.get_value(d.voucher_type,d.voucher_no,'sales_person')
-		d['sales_person'] = sales_person
+		d['sales_person'] = ''
+		if "Reach Group" in DOMAINS:
+			sales_person = frappe.db.get_value(d.voucher_type,d.voucher_no,'sales_person')
+			d['sales_person'] = sales_person
 
 		if d.reference_type == "Purchase Invoice":
 			payment_amount = flt(d.debit) or -1 * flt(d.credit)
@@ -173,7 +176,7 @@ def get_entries(filters):
 		"""select
 		gl.voucher_type, gl.voucher_no, gl.party_type, gl.party, gl.posting_date, gl.debit, gl.credit, gl.remarks, gl.against_voucher
 		from `tabGL Entry` gl
-		where company=%(company)s and voucher_type in ('Journal Entry', 'Payment Entry') {0}
+		where  gl.is_cancelled=0 and gl.company=%(company)s and gl.voucher_type in ('Journal Entry', 'Payment Entry') {0}
 	""".format(
 			get_conditions(filters)
 		),
@@ -186,7 +189,7 @@ def get_entries(filters):
 def get_invoice_posting_date_map(filters):
 	invoice_details = {}
 	dt = "Sales Invoice" if filters.get("payment_type") == _("Incoming") else "Purchase Invoice"
-	for t in frappe.db.sql("select name, posting_date, due_date from `tab{0}`".format(dt), as_dict=1):
+	for t in frappe.db.sql("select name, posting_date, due_date from `tab{0}` WHERE docstatus=1".format(dt), as_dict=1):
 		invoice_details[t.name] = t
 
 	return invoice_details

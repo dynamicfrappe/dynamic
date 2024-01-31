@@ -1,0 +1,39 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2024-01-30 14:02:02.153303",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "ARAM - Logo",
+ "modified": "2024-01-30 14:02:02.153303",
+ "modified_by": "Administrator",
+ "module": "dynamic",
+ "name": "Item-wise Sales PO-INV",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Sales Order",
+ "report_name": "Item-wise Sales PO-INV",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Maintenance User"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Stock User"
+  }
+ ]
+}
