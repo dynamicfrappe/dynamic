@@ -31,6 +31,9 @@ from erpnext.controllers.accounts_controller import (
 	validate_taxes_and_charges,
 )
 from erpnext.accounts.utils import get_balance_on
+
+from dynamic.terra.doctype.sales_order.sales_order import validate_outstand_value
+
 DOMAINS = frappe.get_active_domains()
 
 try :
@@ -117,6 +120,8 @@ class PaymentEntry(AccountsController):
 		self.update_donation()
 		self.update_payment_schedule()
 		self.set_status()
+		validate_outstand_value(self,'Payment Entry')
+
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ("GL Entry", "Stock Ledger Entry")
