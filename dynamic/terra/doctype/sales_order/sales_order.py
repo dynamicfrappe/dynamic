@@ -34,7 +34,7 @@ from erpnext.stock.stock_balance import get_reserved_qty, update_bin_qty
 from erpnext.controllers.accounts_controller import get_advance_journal_entries, get_advance_payment_entries
 
 form_grid_templates = {"items": "templates/form_grid/item_grid.html"}
-
+DOMAINS = frappe.get_active_domains()
 
 class WarehouseRequired(frappe.ValidationError):
 	pass
@@ -1498,23 +1498,24 @@ def update_produced_qty_in_so_item(sales_order, sales_order_item):
 
 
 def validate_outstand_value(doc,doctype="Sales Order"):
-		if doctype=="Sales Order":
-			update_outstand_value(doc)
-		elif doctype=="Payment Entry" and doc.docstatus==1:
-			for row in doc.references:
-				if row.reference_doctype == "Sales Order":
-					sales_order_doc = frappe.get_doc("Sales Order",row.reference_name)
-					update_outstand_value(sales_order_doc)
-		elif doctype=="Payment Entry" and doc.docstatus==2:
-			for row in doc.references:
-				if row.reference_doctype == "Sales Order":
-					sales_order_doc = frappe.get_doc("Sales Order",row.reference_name)
-					# minus advance paid from sales order by return amount in payment entry
-					if sales_order_doc.advance_paid >= doc.paid_amount:
-						advance_paid = sales_order_doc.advance_paid - doc.paid_amount
-						doc.db_set('advance_paid', advance_paid)
-						outstand_amount = doc.grand_total - (advance_paid or doc.get("total_advance",0))
-						doc.db_set('outstanding_amount', outstand_amount)
+		if "Terra" in DOMAINS:
+			if doctype=="Sales Order":
+				update_outstand_value(doc)
+			elif doctype=="Payment Entry" and doc.docstatus==1:
+				for row in doc.references:
+					if row.reference_doctype == "Sales Order":
+						sales_order_doc = frappe.get_doc("Sales Order",row.reference_name)
+						update_outstand_value(sales_order_doc)
+			elif doctype=="Payment Entry" and doc.docstatus==2:
+				for row in doc.references:
+					if row.reference_doctype == "Sales Order":
+						sales_order_doc = frappe.get_doc("Sales Order",row.reference_name)
+						# minus advance paid from sales order by return amount in payment entry
+						if sales_order_doc.advance_paid >= doc.paid_amount:
+							advance_paid = sales_order_doc.advance_paid - doc.paid_amount
+							doc.db_set('advance_paid', advance_paid)
+							outstand_amount = doc.grand_total - (advance_paid or doc.get("total_advance",0))
+							doc.db_set('outstanding_amount', outstand_amount)
 
 def update_outstand_value(doc):
 	if doc.advance_paid or doc.total_advance :
