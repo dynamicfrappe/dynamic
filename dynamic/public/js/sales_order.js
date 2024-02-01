@@ -735,43 +735,51 @@ const extend_sales_order = erpnext.selling.SalesOrderController.extend({
   refresh: function(doc, dt, dn) {
     var me = this;
 		this._super(doc);
-    if(doc.status !== 'Closed') {
-      if(doc.status !== 'On Hold') {
-        frappe.call({
-          method: "dynamic.api.get_active_domains",
-          callback: function (r) {
-            if (r.message && r.message.length) {
-              // console.log('domains ',r.message)
-              if (r.message.includes("IFI")){
-                // Make Purchase Order
-                if (!cur_frm.doc.is_internal_customer) {
-                  cur_frm.cscript['make_sales_invoice'] = create_ifi_sales_invoice
-                  cur_frm.page.remove_inner_button('Purchase Order', 'Create')
-                  cur_frm.add_custom_button(__('Purchase Order'), () => me.frm.trigger("make_purchase_order_ifi"), __('Create'));
+      if(doc.status !== 'Closed') {
+        if(doc.status !== 'On Hold') {
+          
+          frappe.call({
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+              if (r.message && r.message.length) {
+                // console.log('domains ',r.message)
+                if (r.message.includes("IFI")){
+                  // Make Purchase Order
+                  if (!cur_frm.doc.is_internal_customer) {
+                    cur_frm.cscript['make_sales_invoice'] = create_ifi_sales_invoice
+                    cur_frm.page.remove_inner_button('Purchase Order', 'Create')
+                    cur_frm.add_custom_button(__('Purchase Order'), () => me.frm.trigger("make_purchase_order_ifi"), __('Create'));
+                  }
                 }
-              }
-              if(r.message.includes("Kmina")){
-                // sales invoice
-                if(flt(doc.per_billed, 6) < 100) {
-                  cur_frm.cscript['make_sales_invoice'] = create_kmina_sales_invoice //new
+                if(r.message.includes("Kmina")){
+                  // sales invoice
+                  if(flt(doc.per_billed, 6) < 100) {
+                    cur_frm.cscript['make_sales_invoice'] = create_kmina_sales_invoice //new
+                  }
                 }
-              }
-              if (r.message.includes("Future")){
-                cur_frm.page.remove_inner_button('Sales Invoice','Create')
-              }
-              if (r.message.includes("Real State")){
-                // console.log('domains real state')
-                // me.get_method_for_payment()
-                cur_frm.cscript['get_method_for_payment'] = create_payment_for_real_state
+                if (r.message.includes("Future")){
+                  cur_frm.page.remove_inner_button('Sales Invoice','Create')
+                }
+                if (r.message.includes("Real State")){
+                  // console.log('domains real state')
+                  cur_frm.cscript['get_method_for_payment'] = create_payment_for_real_state
+                }
+                // payment request
+                if (r.message.includes("Terra")){
+                  if(flt(doc.per_billed, precision('per_billed', doc)) < 100 + frappe.boot.sysdefaults.over_billing_allowance) {
+                    cur_frm.cscript['get_method_for_payment'] = terra_create_payment
+                  }
+                }
               }
             }
-          }
-        })
+          })
 
+        }
       }
-    }
     
   },
+ 
+
   make_purchase_order_ifi: function(){
 		let pending_items = this.frm.doc.items.some((item) =>{
 			let pending_qty = flt(item.stock_qty) - flt(item.ordered_qty);
@@ -952,19 +960,18 @@ var create_ifi_sales_invoice = function() {
 })
 }
 
-// cur_frm.cscript.get_method_for_payment  = function() {
-//   console.log('in ----> get_method_for_payment')
-//   var method = "dynamic.real_state.rs_api.get_payment_entry";
-// 		if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
-// 			if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){
-// 				method = "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_invoice";
-// 			}else {
-// 				method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
-// 			}
-// 		}
-//     console.log(method)
-// 		return method
-// }
+var terra_create_payment = function(){
+  var method = "dynamic.terra.doctype.payment_entry.payment_entry.terra_get_payment_entry";
+  if(cur_frm.doc.__onload && cur_frm.doc.__onload.make_payment_via_journal_entry){
+    if(in_list(['Sales Invoice', 'Purchase Invoice'],  cur_frm.doc.doctype)){
+      method = "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_invoice";
+    }else {
+      method= "erpnext.accounts.doctype.journal_entry.journal_entry.get_payment_entry_against_order";
+    }
+  }
+
+  return method
+}
 
 $.extend(
 	cur_frm.cscript,
