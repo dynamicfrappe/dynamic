@@ -420,6 +420,7 @@ domains = {
     "Rehab": "dynamic.domains.alrehab",
     "Logistics": "dynamic.domains.logistics",
     "Notebook": "dynamic.domains.notebook",
+    "Smart Vision": "dynamic.domains.smart_vision",
 }
 
 # domain Conatin
