@@ -1520,5 +1520,4 @@ def update_outstand_value(doc):
 	if doc.advance_paid or doc.total_advance :
 		outstand_amount = doc.grand_total - (doc.get("advance_paid",0) or doc.get("total_advance",0))
 		if outstand_amount >=0:
-			# print(f"\n\n\n====>{outstand_amount}\n\n\n")
 			doc.db_set('outstanding_amount', outstand_amount)
