@@ -667,57 +667,41 @@ def validate_warehouse_stock_reservation(
 ):
     """get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
     sql = f""" 
-				SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
-				CASE 
-						WHEN `tabReservation Warehouse`.reserved_qty > 0
-						then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
-						ELSE `tabBin`.actual_qty 
-						END  as qty
-				FROM 
-				`tabBin`
-				LEFT JOIN 
-				`tabReservation Warehouse`
-				ON `tabBin`.name = `tabReservation Warehouse`.bin 
-				LEFT JOIN 
-				`tabReservation` 
-				ON `tabReservation Warehouse`.parent = `tabReservation`.name 
-				AND `tabBin`.name = `tabReservation Warehouse`.bin
-				WHERE `tabBin`.warehouse = '{warehouse_source}'
-				AND `tabBin`.item_code = '{item_code}'
-				AND `tabReservation`.status NOT IN ("Invalid","Closed")
+				SELECT `tabBin`.name as bin , 'Bin' as `doctype`, `tabReservation`.name ,
+                `tabBin`.actual_qty,
+                CASE 
+                    WHEN `tabReservation Warehouse`.reserved_qty > 0
+                    then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
+                    ELSE `tabBin`.actual_qty 
+                END as qty
+                FROM 
+                `tabBin`
+                LEFT JOIN 
+                `tabReservation` 
+                ON
+                `tabBin`.warehouse=`tabReservation`.warehouse_source 
+                AND `tabReservation`.item_code='{item_code}'
+                AND `tabReservation`.status NOT IN ("Invalid","Closed")
+                LEFT JOIN 
+                `tabReservation Warehouse`
+                ON 
+                `tabReservation Warehouse`.parent = `tabReservation`.name AND
+                `tabBin`.name = `tabReservation Warehouse`.bin 
+                WHERE `tabBin`.warehouse = '{warehouse_source}'
+                AND `tabBin`.item_code = '{item_code}'
 				"""
     # frappe.errprint(f"\n\n\n=={sql}===\n\n\n")
-    data = frappe.db.sql(
-        f""" 
-				SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
-				CASE 
-						WHEN `tabReservation Warehouse`.reserved_qty > 0
-						then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
-						ELSE `tabBin`.actual_qty 
-						END  as qty
-				FROM 
-				`tabBin`
-				LEFT JOIN 
-				`tabReservation Warehouse`
-				ON `tabBin`.name = `tabReservation Warehouse`.bin 
-				LEFT JOIN 
-				`tabReservation` 
-				ON `tabReservation Warehouse`.parent = `tabReservation`.name 
-				AND `tabBin`.name = `tabReservation Warehouse`.bin
-				WHERE `tabBin`.warehouse = '{warehouse_source}'
-				AND `tabBin`.item_code = '{item_code}'
-				AND `tabReservation`.status NOT IN ("Invalid","Closed")
-				""",
-        as_dict=1,
-    )
+    data = frappe.db.sql(sql,as_dict=1)
 
     # print('\n\n\n\nreservation_amount--<',reservation_amount,data,'\n\n\n\n')
     # frappe.throw('test')
-
+    # print(f"\n\n\n=={sql}===\n\n\n")
+    # print('\n\n\n\nreservation_amount--<',reservation_amount,data,'\n\n\n\n')
+    # print('\n\n\n\n data[0].get("qty")--<',data[0].get("qty"),float(data[0].get("qty")),'\n\n\n\n')
     if data and len(data) > 0:
         if (
-            data[0].get("qty") == 0
-            or float(data[0].get("qty") or 0) < reservation_amount
+            (data[0].get("qty") == 0
+            or float(data[0].get("qty",0))) < reservation_amount
         ):
             # print('\n\n\n\n data[0].get("qty")--<', data[0].get("qty"),'\n\n\n\n')
             frappe.throw(

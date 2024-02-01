@@ -113,6 +113,7 @@ class PaymentEntry(AccountsController):
 		self.update_expense_claim()
 		self.update_outstanding_amounts()
 		self.update_advance_paid()
+		#self.validate_outstand_value()
 		self.update_donation()
 		self.update_payment_schedule()
 		self.set_status()
@@ -123,6 +124,7 @@ class PaymentEntry(AccountsController):
 		self.update_expense_claim()
 		self.update_outstanding_amounts()
 		self.update_advance_paid()
+		#self.validate_outstand_value()
 		self.update_donation(cancel=1)
 		self.delink_advance_entry_references()
 		self.update_payment_schedule(cancel=1)
@@ -1022,6 +1024,8 @@ class PaymentEntry(AccountsController):
 					"Gratuity",
 				):
 					frappe.get_doc(d.reference_doctype, d.reference_name).set_total_advance_paid()
+
+	
 
 	def update_expense_claim(self):
 		if self.payment_type in ("Pay") and self.party:
