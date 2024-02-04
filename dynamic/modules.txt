@@ -30,3 +30,5 @@ Qaswaa
 AlRehab
 Logistics
 ICE
+Trecom
+Smart Vision
