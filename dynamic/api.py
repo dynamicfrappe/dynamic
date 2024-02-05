@@ -214,6 +214,65 @@ def validate_delivery_note(doc, *args, **kwargs):
         validate_delivery_notes_sal_ord(doc)
         # check_so_approval(doc)
 
+@frappe.whitelist()
+def submit_stock_entry(doc, *args, **kwargs):
+    if "Terra" in DOMAINS:
+        # validate against terra branches settings
+        user_list = []
+        acceess_target = []
+        acccess_source = []
+        target_types = ["Material Issue", "Material Transfer", "Send to Subcontractor"]
+        recive_types = ["Material Receipt", "Material Transfer"]
+        user = frappe.session.user
+        target_w = False
+        source_w = False
+        if doc.from_warehouse:
+            target_w = frappe.get_doc("Warehouse", doc.from_warehouse)
+        if doc.to_warehouse:
+            source_w = frappe.get_doc("Warehouse", doc.to_warehouse)
+        entry_type = frappe.get_doc("Stock Entry Type", doc.stock_entry_type).purpose
+
+        if target_w and entry_type in target_types and not target_w.warehouse_type:
+            # frappe.throw(str("case@ happend"))
+            cost_center = frappe.db.sql(
+                f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.from_warehouse}' """,
+                as_dict=1,
+            )
+            if cost_center and len(cost_center) > 0:
+                for obj in cost_center:
+                    acceess_target.append(obj.get("name"))
+
+        if source_w and entry_type in recive_types and not source_w.warehouse_type:
+            cost_center = frappe.db.sql(
+                f""" SELECT name FROM `tabCost Center` WHERE warehouse ='{doc.to_warehouse}' """,
+                as_dict=1,
+            )
+            if cost_center and len(cost_center) > 0:
+                for obj in cost_center:
+                    acccess_source.append(obj.get("name"))
+        access_group = acceess_target + acccess_source
+        if len(access_group) > 0:
+            for access in access_group:
+                # frappe.throw(str(access))
+                users = frappe.db.sql(
+                    f""" SELECT branch_manager FROM `tabBranch Managers` WHERE parenttype ='Cost Center'
+                and parent = '{access}' 
+                   """
+                )
+                # frappe.throw(str(users))
+                for usr in users:
+                    user_list.append(usr[0])
+
+        # validate user access
+        if user not in user_list:
+            frappe.throw(
+                f"you can Not Complete this action for Branch  { access_group}"
+            )
+    if "stock_transfer" in DOMAINS:
+        check_stock_entry_transit(doc, *args, **kwargs)
+    if "WEH" in DOMAINS:
+        get_allowed_stoc_use_submit(doc, doc.get("to_warehouse"))
+
 
 @frappe.whitelist()
 def submit_journal_entry_cheques(doc):
@@ -607,37 +666,42 @@ def validate_warehouse_stock_reservation(
     item_code, warehouse_source, reservation_amount
 ):
     """get bin which its choosen and check its qty before this transaction and reserv name != self.name"""
-    data = frappe.db.sql(
-        f""" 
-				SELECT `tabBin`.name as bin , 'Bin' as `doctype`,
-				CASE 
-						WHEN `tabReservation Warehouse`.reserved_qty > 0
-						then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
-						ELSE `tabBin`.actual_qty 
-						END  as qty
-				FROM 
-				`tabBin`
-				LEFT JOIN 
-				`tabReservation Warehouse`
-				ON `tabBin`.name = `tabReservation Warehouse`.bin 
-				LEFT JOIN 
-				`tabReservation` 
-				ON `tabReservation Warehouse`.parent = `tabReservation`.name 
-				AND `tabBin`.name = `tabReservation Warehouse`.bin
-				WHERE `tabBin`.warehouse = '{warehouse_source}'
-				AND `tabBin`.item_code = '{item_code}'
-				AND `tabReservation`.status NOT IN ("Invalid","Closed")
-				""",
-        as_dict=1,
-    )
+    sql = f""" 
+				SELECT `tabBin`.name as bin , 'Bin' as `doctype`, `tabReservation`.name ,
+                `tabBin`.actual_qty,
+                CASE 
+                    WHEN `tabReservation Warehouse`.reserved_qty > 0
+                    then `tabBin`.actual_qty - SUM(`tabReservation Warehouse`.reserved_qty)
+                    ELSE `tabBin`.actual_qty 
+                END as qty
+                FROM 
+                `tabBin`
+                LEFT JOIN 
+                `tabReservation` 
+                ON
+                `tabBin`.warehouse=`tabReservation`.warehouse_source 
+                AND `tabReservation`.item_code='{item_code}'
+                AND `tabReservation`.status NOT IN ("Invalid","Closed")
+                LEFT JOIN 
+                `tabReservation Warehouse`
+                ON 
+                `tabReservation Warehouse`.parent = `tabReservation`.name AND
+                `tabBin`.name = `tabReservation Warehouse`.bin 
+                WHERE `tabBin`.warehouse = '{warehouse_source}'
+                AND `tabBin`.item_code = '{item_code}'
+				"""
+    # frappe.errprint(f"\n\n\n=={sql}===\n\n\n")
+    data = frappe.db.sql(sql,as_dict=1)
 
     # print('\n\n\n\nreservation_amount--<',reservation_amount,data,'\n\n\n\n')
     # frappe.throw('test')
-
+    # print(f"\n\n\n=={sql}===\n\n\n")
+    # print('\n\n\n\nreservation_amount--<',reservation_amount,data,'\n\n\n\n')
+    # print('\n\n\n\n data[0].get("qty")--<',data[0].get("qty"),float(data[0].get("qty")),'\n\n\n\n')
     if data and len(data) > 0:
         if (
-            data[0].get("qty") == 0
-            or float(data[0].get("qty") or 0) < reservation_amount
+            (data[0].get("qty") == 0
+            or float(data[0].get("qty",0))) < reservation_amount
         ):
             # print('\n\n\n\n data[0].get("qty")--<', data[0].get("qty"),'\n\n\n\n')
             frappe.throw(

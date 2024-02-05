@@ -177,12 +177,13 @@
    "type": "Link"
   }
  ],
- "modified": "2024-01-10 11:01:34.389063",
+ "modified": "2024-02-01 11:56:56.677221",
  "modified_by": "Administrator",
  "module": "Qaswaa",
  "name": "Qaswaa",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 1,
+ "restrict_to_domain": "Qaswaa",
  "shortcuts": []
 }
