@@ -14,7 +14,7 @@ data = {
                 "label": _("Work Number"),
                 "fieldname": "work_number",
                 "fieldtype": "Data",
-                "insert_after": "actual_supply",
+                "insert_after": "date_1",
             },
         ],
     }

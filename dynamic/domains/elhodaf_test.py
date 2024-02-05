@@ -5,7 +5,7 @@ data = {
     'custom_fields': {
         'Sales Invoice': [
             {
-                "label": _("Contract Number"),
+                "label": _("Number of Contract"),
                 "fieldname": "contract_number",
                 "fieldtype": "Data",
                 "insert_after": "naming_series",
