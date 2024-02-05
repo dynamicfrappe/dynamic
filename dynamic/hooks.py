@@ -421,6 +421,7 @@ domains = {
     "Logistics": "dynamic.domains.logistics",
     "Notebook": "dynamic.domains.notebook",
     "Elhodaf": "dynamic.domains.elhodaf",
+    "Elhodaf Test": "dynamic.domains.elhodaf_test",
 }
 
 # domain Conatin

@@ -11,12 +11,6 @@ data = {
                 "insert_after": "item_code",
             },
             {
-                "label": _("Actual Supply"),
-                "fieldname": "actual_supply",
-                "fieldtype": "Data",
-                "insert_after": "date_1",
-            },
-            {
                 "label": _("Work Number"),
                 "fieldname": "work_number",
                 "fieldtype": "Data",
