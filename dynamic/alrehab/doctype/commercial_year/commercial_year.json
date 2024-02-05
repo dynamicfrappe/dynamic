@@ -9,7 +9,9 @@
  "field_order": [
   "year",
   "factor",
-  "deposit_shortfall_difference"
+  "deposit_shortfall_difference",
+  "section_break_4",
+  "dates"
  ],
  "fields": [
   {
@@ -27,13 +29,23 @@
    "fieldname": "deposit_shortfall_difference",
    "fieldtype": "Data",
    "label": "Deposit shortfall difference"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "dates",
+   "fieldtype": "Table",
+   "label": "Dates",
+   "options": "Commercial year Due Dates"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-30 10:48:12.769391",
+ "modified": "2024-01-31 14:35:26.505095",
  "modified_by": "Administrator",
- "module": "alrehab",
+ "module": "AlRehab",
  "name": "Commercial year",
  "owner": "Administrator",
  "permissions": [

@@ -14,7 +14,8 @@
   "financial_penalty_template",
   "accounting_section",
   "income_account",
-  "cost_center"
+  "cost_center",
+  "auto_cal"
  ],
  "fields": [
   {
@@ -67,11 +68,17 @@
    "fieldname": "auto_create",
    "fieldtype": "Check",
    "label": "Auto Create"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_cal",
+   "fieldtype": "Check",
+   "label": "Auot Calculate Amount"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-23 19:47:26.665478",
+ "modified": "2024-01-31 13:49:15.015206",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "installment Entry Type",

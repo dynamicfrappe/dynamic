@@ -572,14 +572,48 @@ def create_new_code(doc, *args ,**kwargs) :
 
 
 
+
+def get_user_extension(user) :
+    extension =False 
+    
+    return  extension
+
+
+
+
+
 @frappe.whitelist()
-def create_call(caller , callee ,cid_name = None ,cid_number = None) :
+def create_call_js(doc ,name): 
+    extension = frappe.get_value("User" ,frappe.session.user ,"extension"  )
+    if not extension :
+        frappe.throw(""" Please Set user extension from your call center !""")
+    # if doc == "Customer" :
+    current_contact = False
+    customer_name =False
+    contacts =frappe.db.sql(f"""select  b.phone as phone  ,b.first_name as name  
+                               From `tabDynamic Link`  a 
+                                INNER JOIN `tabContact` b
+                                ON a.parent = b.name
+                                WHERE  a.link_doctype = '{doc}' and a.link_name ='{name}' and
+                                b.phone IS NOT NULL ;""" ,as_dict = True )
+    for contact in contacts :
+        if contact.get("phone") and len(contact.get("phone")) > 5 :
+            current_contact = contact.get("phone")
+            customer_name  = contact.get("name")
+    if not current_contact  :
+        frappe.throw(f"{doc}  with name {name} has no contact ")
+    create_call(extension , current_contact , customer_name ,current_contact )
+    frappe.msgprint(f"Create Call With {customer_name} Phone number {current_contact}")
+    return True
+@frappe.whitelist()
+def create_call( caller , callee ,cid_name = None ,cid_number = None) :
     """
-    params caller:"USER_EXTENSION" 
+            params caller:"USER_EXTENSION" 
             callee : customer phone number this number will dialed 
             cid_name : customer display name 
             cid_number : customer display number 
     """
+    
     import requests 
     payload = {
         "caller" : caller ,
@@ -593,12 +627,12 @@ def create_call(caller , callee ,cid_name = None ,cid_number = None) :
 
     if cid_number :
         payload["cid_number"] = cid_number
-
-    end_point = "https://vpn.mersany.com:64002/api/v2/core/click_to_call"
+    end_point = "https://integration.mersany.com:60004/api/v2/core/click_to_call"
+    #end_point = "https://vpn.mersany.com:64002/api/v2/core/click_to_call"
     headers = {"app-key" : "10231059fa6ad88d97b9aceb97993ee9"}
 
     try :
-        call = requests.post(end_point , headers=headers , data= payload)
+        call = requests.post(end_point , headers=headers , data= payload ,verify=False)
         print(call.status_code)
         return True 
     except Exception as E :

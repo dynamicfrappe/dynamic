@@ -96,7 +96,25 @@ class Journalinstallment(Document):
 				#get repetition count 
 				penalty_repetition  = monthly_methods[penalty_template.monthly_method] or None
 		months_add = 0	
-			
+
+		# if type is auto_cal (auto calculation)
+		installment_type = frappe.get_value("installment Entry Type" , self.type , "auto_cal")
+
+		if installment_type :
+			year = frappe.get_doc("Commercial year" ,self.year)
+			for due in year.dates :
+				installment_entry = frappe.new_doc("installment Entry")
+				installment_entry.item = frappe.get_value("installment Entry Type" , self.type , "item")
+				installment_entry.type = self.type
+				installment_entry.installment_value = self.value
+				installment_entry.total_value = self.value
+				installment_entry.due_date = due.due_date
+				installment_entry.status = "Under collection"
+				installment_entry.customer      = customer
+				installment_entry.reference_doc = "Journal installment"
+				installment_entry.document      = self.name
+				installment_entry.insert()
+			return 1
 		for i in range(1 ,(int(penalty_repetition) +1 )):
 			due_date =  self.date
 			value = self.value
@@ -107,6 +125,7 @@ class Journalinstallment(Document):
 				#update due_date 
 				print(months_add)
 				due_date = frappe.utils.add_months(due_date, months_add)
+
 			installment_entry = frappe.new_doc("installment Entry")
 			installment_entry.item = frappe.get_value("installment Entry Type" , self.type , "item")
 			installment_entry.type = self.type

@@ -14,6 +14,18 @@ frappe.ui.form.on("Customer", {
             })
         }
     },
+    create_call(frm) {
+        /// Work only on elevana store domain 
+        frappe.call(
+            {
+                "method" :"dynamic.elevana.api.create_call_js" , 
+                args :{
+                    "doc" : "Customer" ,
+                    "name" : frm.doc.name
+                }
+            }
+        )
+    },
     refresh(frm) {
         frm.add_custom_button(
             __("create_cst"),
@@ -25,6 +37,15 @@ frappe.ui.form.on("Customer", {
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
+
+                if (r.message.includes("Elevana")) {
+                    frm.add_custom_button(
+                        __("Call"),function(){
+                            frm.events.create_call(frm)
+                        }
+                        
+                        )
+                }
                 if (r.message && r.message.length) {
                     if (r.message.includes("Terra") || r.message.includes("Elevana") || r.message.includes("CRM Advance")) {
                         frm.add_custom_button(
