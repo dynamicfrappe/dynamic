@@ -7,7 +7,7 @@ data = {
             {
                 "label": _("Contract Number"),
                 "fieldname": "contract_number",
-                "fieldtype": "Date",
+                "fieldtype": "Data",
                 "insert_after": "naming_series",
             },
             {
