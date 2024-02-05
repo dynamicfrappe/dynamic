@@ -8,7 +8,7 @@ frappe.ui.form.on("Lead", {
             {
                 "method" :"dynamic.elevana.api.create_call_js" , 
                 args :{
-                    "doc" : "Customer" ,
+                    "doc" : "Lead" ,
                     "name" : frm.doc.name
                 }
             }

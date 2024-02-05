@@ -596,6 +596,8 @@ def create_call_js(doc ,name):
                                 ON a.parent = b.name
                                 WHERE  a.link_doctype = '{doc}' and a.link_name ='{name}' and
                                 b.phone IS NOT NULL ;""" ,as_dict = True )
+    
+   
     for contact in contacts :
         if contact.get("phone") and len(contact.get("phone")) > 5 :
             current_contact = contact.get("phone")
