@@ -1,16 +1,45 @@
-#
+الرحاب اكتوبر  
 
-Case 
+البيانات الرئيسية
+ 
+Commercial year
 
-we Have
-1 - unit-- with building number and unit Area -- We use customer module to handel unit data 
-2 - Unit owner Name and Code 
+ضبط السنه المالية 
+1- (Factor) – المتغير السنوى  مثال  :
+	2.5% / 30 
+2- (Deposit shortfall difference)  معامل فرق عجز الوديعة السنوى  :
+مثال 4 جنية 
+3- (Dates) تواريخ احتساب الغرامات  
 
 
-1 - 
+Financial penalty template 
+هيكل احتساب الغرامات 
+1-(Auto Create)  الاحتساب التلقائي لعدد من المرات 
+2- (Monthly Method) التكرار الشهري للغرامة في السنه الواحده 
+3- (Required Year Value) يجب اختيار السنه المالية فب حالة اختيار هذا النوع من الغرامات 
 
-3 -  Payments 
-      types -- 1- وديعة صيانة -- Maintenance deposit
-      2 - صيانة سنوية --Item
-      3 - فرق عجز وديعه   -- Item
-      4 - Cam /or any other service Item
+
+installment Entry Type  
+ انواع المستحقات 
+مثال فرق عجز الوديعه 2022 
+1- (Delay penalty)  يحتسب له غرامه تاخير ام بدون 
+2- (Financial penalty template)  هيكل احتساب الغرامة 
+3- (Auot Calculate Amount) في حالة الاختيار يقوم النظام باعادة احتساب قيمة القسط بناء على متغيرات 
+
+
+
+
+
+
+
+Maintenance deposit Calculation
+احتساب ارصدة مستحقات العملاء 
+1 – Type
+yearly payment – مدفوعات سنوية 
+Maintenance deposit – ودائع الصيانة
+
+2- UNIT 
+3- Payment Method 
+فى حالة الحفظ يتم احتساب المتاخرات 
+يتم تسجيل المستحقات كالتزام على العميل في قيد
+يتم تسجيل المدفوعات بقيد لحساب طريقه الدفع 

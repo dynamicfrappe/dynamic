@@ -19,7 +19,12 @@ from frappe.utils import (
 	getdate,
 )
 
+#set DEBUG to 0 for production 
+DEBUG  =0 
 class Journalinstallment(Document):
+	def validate(self) :
+			if DEBUG == 1 :
+				self.create_installment_entry()
 	def on_submit(self):
 		#self.cerate_contract()
 		self.create_installment_entry()

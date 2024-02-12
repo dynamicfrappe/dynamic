@@ -16,7 +16,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "filed",
-   "options": "Static Value\nItem Unit Value\nDays\nMonths",
+   "options": "Static Value\nItem Unit Value\nDays\nMonths\nDocument Value",
    "reqd": 1
   },
   {
@@ -36,9 +36,9 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-10-30 16:17:07.873344",
+ "modified": "2024-02-12 15:26:08.485098",
  "modified_by": "Administrator",
- "module": "alrehab",
+ "module": "AlRehab",
  "name": "Financial penalty template variables",
  "owner": "Administrator",
  "permissions": [],

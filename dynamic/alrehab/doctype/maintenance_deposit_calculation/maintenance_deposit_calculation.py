@@ -7,7 +7,7 @@ from frappe import _ ,throw
 from frappe import utils 
 
 
-from dynamic.alrehab.utils import get_mode_of_payment_account ,get_customer_default_account
+from dynamic.alrehab.utils import get_mode_of_payment_account ,get_customer_default_account ,calculate_equation
 
 
 class MaintenancedepositCalculation(Document):
@@ -103,18 +103,31 @@ class MaintenancedepositCalculation(Document):
 					#calculate factor 
 					penalty_variable  =  frappe.get_value("Commercial year" ,year ,"factor" )
 					deposit_shortfall_difference = frappe.get_value("Commercial year" ,year ,"deposit_shortfall_difference" )
-			row = self.append("items" , {})
-			row.installment_entry = entry.name
-			row.due_date = entry.due_date 
-			#row.line = item.name 
-			row.amount = entry.installment_value
-			allocated_info = calculate_penalty_amount(self.unit_area ,entry.due_date ,self.posting_date ,True ,penalty_variable ,deposit_shortfall_difference )
-			print("Allocated" , allocated_info)
-			row.penalety = allocated_info[0]
-			row.days_count = allocated_info[2]
-			row.months_count = allocated_info[1]
-			row.total =  float(entry.installment_value or 0 ) + float(row.penalety or 0)
-			row.payment = row.total
+					row = self.append("items" , {})
+					row.installment_entry = entry.name
+					row.due_date = entry.due_date 
+					#row.line = item.name 
+					row.amount = entry.installment_value
+					allocated_info = calculate_penalty_amount(self.unit_area ,entry.due_date ,self.posting_date ,True ,penalty_variable ,deposit_shortfall_difference )
+					print("Allocated" , allocated_info)
+					row.penalety = allocated_info[0]
+					row.days_count = allocated_info[2]
+					row.months_count = allocated_info[1]
+					row.total =  float(entry.installment_value or 0 ) + float(row.penalety or 0)
+					row.payment = row.total
+				if template.required_year_value ==0 and template.has_equation == 1:
+					row = self.append("items" , {})
+
+					#calculate equqation  
+					calculation  = calculate_equation(entry.name ,self.posting_date)
+					# frappe.throw(str(calculation.get("value")))
+					row.installment_entry = entry.name
+					row.due_date = entry.due_date 
+					row.penalety = calculation.get("penalty")
+					row.days_count = calculation.get("days")
+					row.amount = entry.installment_value
+					row.total = calculation.get("value")
+					row.payment = calculation.get("value")
 	# end Update
 	def set_installment_items_maintenance(self) :
 		maintenance_deposit = frappe.db.sql(f""" SELECT name FROM `tabMaintenance deposit` 
