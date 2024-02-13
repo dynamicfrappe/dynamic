@@ -63,7 +63,7 @@ def encode_invoice_data(doc):
             "tagNumber": 4,
             "value": str((doc.base_rounded_total or doc.base_grand_total) or ""),
         },
-        {"tagNumber": 5, "value": str(invoice_data.get("total_tax_amount") or "")},
+        {"tagNumber": 5, "value": str(invoice_data.get("base_total_taxes_and_charges") or "")},
     ]
     total_hex = ""
     for row in data_dict:
@@ -143,7 +143,17 @@ def validate_active_domains(doc, *args, **kwargs):
     if "IFI" in DOMAINS:
         # check sINV items valutaion rate
         check_item_valuation_rate(doc)
+    # alhodief re set money in words 
+    if "Elhodaf" in DOMAINS:
+        re_set_money_in_words(doc)
 
+
+def re_set_money_in_words(doc) :
+    if doc.in_words :
+        words = f"{doc.in_words}"
+        if words[-4::] == "فقط.":
+            doc.in_words = words[0:-5]  + " "+"ﻻغير."
+        #frappe.throw(words[-4::])
 
 @frappe.whitelist()
 def test_api(doc, *args, **kwargs):
