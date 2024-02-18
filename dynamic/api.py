@@ -53,7 +53,7 @@ from dynamic.gebco.api import validate_purchase_recipt
 def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice", doc)
     company = frappe.get_doc("Company", doc.company)
-    invoice_data = get_invoice_tax_data(doc.name) or {}
+    # invoice_data = get_invoice_tax_data(doc.name) or {}
     data_dict = [
         {"tagNumber": 1, "value": str(company.company_name or "")},
         {"tagNumber": 2, "value": str(company.tax_id or "")},
