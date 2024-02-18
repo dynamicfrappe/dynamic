@@ -54,7 +54,6 @@ def encode_invoice_data(doc):
     doc = frappe.get_doc("Sales Invoice", doc)
     company = frappe.get_doc("Company", doc.company)
     invoice_data = get_invoice_tax_data(doc.name) or {}
-    # print('doc => ' ,doc)
     data_dict = [
         {"tagNumber": 1, "value": str(company.company_name or "")},
         {"tagNumber": 2, "value": str(company.tax_id or "")},
@@ -63,7 +62,7 @@ def encode_invoice_data(doc):
             "tagNumber": 4,
             "value": str((doc.base_rounded_total or doc.base_grand_total) or ""),
         },
-        {"tagNumber": 5, "value": str(doc.total_taxes_and_charges or "")},
+        {"tagNumber": 5, "value": str(doc.base_total_taxes_and_charges or "")},
     ]
     total_hex = ""
     for row in data_dict:
