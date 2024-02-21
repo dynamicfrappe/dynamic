@@ -30,12 +30,21 @@ frappe.query_reports["Customer Ledger"] = {
 				"width": "60px"
 			},
 			{
-				"fieldname":"customer",
+				"fieldname": "customer",
 				"label": __("Customer"),
 				"fieldtype": "Link",
 				"options": "Customer",
-				"reqd": 1
-			
+				"reqd": 1,
+				on_change: () => {
+					var customer = frappe.query_report.get_filter_value('customer');
+					if (customer) {
+						frappe.db.get_value('Customer', customer, "customer_name", function(value) {
+							frappe.query_report.set_filter_value('customer_name', value["customer_name"]);
+						});
+					} else {
+						frappe.query_report.set_filter_value('customer_name', "");
+					}
+				}
 			},
 			{
 				"fieldname":"show_items",
@@ -45,5 +54,11 @@ frappe.query_reports["Customer Ledger"] = {
 				
 			
 			},
+			{
+				"fieldname":"customer_name",
+				"label": __("Customer Name"),
+				"fieldtype": "Data",
+				"hidden": 1
+			}
 	]
 };
