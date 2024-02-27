@@ -1,12 +1,14 @@
 frappe.ui.form.on("Material Request",{
     refresh(frm){
+
         frm.events.trea_setup(frm)
         frappe.call({
           method: "dynamic.api.get_active_domains",
-          callback: function (r) {
+          callback: function (r) { 
             if (r.message && r.message.length) {
               if (r.message.includes("WEH")) {
                  frm.events.remove_cst_button(frm)
+                 frm.events.read_only_fields(frm)
           }
         }
         }
@@ -23,6 +25,21 @@ frappe.ui.form.on("Material Request",{
             }
         }
     })
+    },
+    read_only_fields:function(frm){
+      frappe.call({
+        method:"dynamic.weh.api.get_roles_hidden_field",
+        args:{
+          "field":"material_request_read_only"
+        },
+        callback:function(r) {
+          frm.set_df_property("set_warehouse", "read_only", r.message.hide);
+          if(r.message.empty){
+            frm.set_value("set_from_warehouse","")
+          }
+          frm.refresh_fields("set_warehouse","set_from_warehouse")
+        }
+       })
     },
     trea_setup(frm){
         frappe.call({

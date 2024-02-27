@@ -121,6 +121,32 @@ frappe.ui.form.on("Stock Entry", {
       frm.events.set_field_property(frm)
       frm.events.transit_btn(frm)
     },
+    read_only_fields:function(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) { 
+          if (r.message && r.message.length) {
+            if (r.message.includes("WEH")) {
+              frappe.call({
+                method:"dynamic.weh.api.get_roles_hidden_field",
+                args:{
+                  "field":"stock_entry_read_only"
+                },
+                callback:function(r) {
+                  frm.set_df_property("from_warehouse", "read_only", r.message.hide);
+                  if(r.message.empty){
+                    frm.set_value("from_warehouse","")
+                  }
+                  frm.refresh_fields("from_warehouse")
+                }
+               })
+               
+        }
+      }
+      }
+    })
+      
+    },
     stock_entry_type : function (frm){
       frm.events.filter_stock_entry_transfer(frm)
       // frm.events.set_property_domain(frm)

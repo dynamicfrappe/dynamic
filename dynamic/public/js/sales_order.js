@@ -29,6 +29,7 @@ frappe.ui.form.on("Sales Order", {
     frm.events.setup_doc_event(frm)
   },
   refresh: function (frm) {  
+   
     // console.log(frm.get_docfield('set_warehouse'))
     // console.log('data===>')
     // console.log(frappe.datetime.get_diff(frm.doc.delivery_date))
