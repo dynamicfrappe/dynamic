@@ -16,6 +16,7 @@
   "installment_value",
   "ignore_delay_penalty",
   "status",
+  "auto_cal",
   "column_break_10",
   "due_date",
   "section_break_12",
@@ -219,11 +220,18 @@
    "in_standard_filter": 1,
    "label": "Document",
    "options": "reference_doc"
+  },
+  {
+   "default": "0",
+   "fetch_from": "type.auto_cal",
+   "fieldname": "auto_cal",
+   "fieldtype": "Check",
+   "label": "Auto Calculate Amount "
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-23 19:40:07.536131",
+ "modified": "2024-01-31 13:49:53.313486",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "installment Entry",

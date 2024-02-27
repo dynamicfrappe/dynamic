@@ -59,6 +59,48 @@ def caculate_installment_value(entry):
             entry.db_set('outstanding_value',out_stand)
 
 
+def calculate_equation(entry ,date_ex=False):
+   """
+   params :
+   entry : installment Entry name 
+   
+   """
+   doc = frappe.get_doc("installment Entry" , entry)
+   eq_string= ""
+   area_c = frappe.db.get_value('Customer', doc.customer , 'unit_area')
+   pay_template = frappe.get_doc("installment Entry Type" , doc.type)
+   penality_template  = frappe.get_doc("Financial penalty template" , pay_template.financial_penalty_template)
+   if penality_template.equation :
+      variables = [i for i in penality_template.variables]
+      date_diff = 0
+      value =0 
+      for a in penality_template.equation :
+         if a.isalnum() :
+            for  i in variables :
+               if i.variable == a :
+                  if i.filed == "Static Value":
+                     eq_string = eq_string +  i.value
+                     # print(f'\n\n\n eq_string++==>{eq_string}')
+                  if i.filed=="Item Unit Value" :
+                     eq_string = eq_string + f"{area_c}"
+                  if i.filed=="Days" :
+                     #caculate days 
+                     c_days= 1 
+                     start_date = getdate(date_ex) if date_ex else date.today()
+                     date_diff = start_date - doc.due_date 
+                     eq_string = eq_string + f"{date_diff.days}" 	
+
+                  if i.filed == "Document Value" :
+                      value = doc.total_value
+                      eq_string+= f"{value}"
+
+         else :
+                  eq_string = eq_string +  a
+      equation_value = eval(eq_string) or 0  
+      penalty = float( equation_value or 0 ) -float(value or 0 ) 
+      return {"value"  : equation_value , "days" :date_diff.days , "penalty" : penalty}    
+
+
 
 def create_journal_entry(date  ,debit , credit):
    entry = frappe.new_doc("Journal Entry")

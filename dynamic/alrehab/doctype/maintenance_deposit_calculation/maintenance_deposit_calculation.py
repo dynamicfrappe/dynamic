@@ -7,7 +7,7 @@ from frappe import _ ,throw
 from frappe import utils 
 
 
-from dynamic.alrehab.utils import get_mode_of_payment_account ,get_customer_default_account
+from dynamic.alrehab.utils import get_mode_of_payment_account ,get_customer_default_account ,calculate_equation
 
 
 class MaintenancedepositCalculation(Document):
@@ -27,7 +27,10 @@ class MaintenancedepositCalculation(Document):
 		self.calculate_total_payment()
 		if not self.posting_date :
 			self.posting_date = utils.today()
-		
+		self.calculate_total()
+
+
+
 	def on_submit(self):
 		"""
 		last validation 
@@ -60,7 +63,8 @@ class MaintenancedepositCalculation(Document):
 	# VALIDATE METHOD 
 	def set_installment_items(self) :
 		if self.type == "Maintenance deposit" :
-				self.set_installment_items_maintenance 
+				
+				self.set_installment_items_maintenance()
 
 		if self.type == "Yearly Payment" :
 			self.set_installment_items_yearly()
@@ -68,22 +72,23 @@ class MaintenancedepositCalculation(Document):
 
 
 	# update start 
-
 	def set_installment_items_yearly(self):
 
-		"""Map data :
-		Document -- Journal installment  (to get year variable )
-		Type     -- installment Entry Type to check if it has late penalty or not and if it depend on year variable
+		"""
+		Map data :
+				Document -- Journal installment  (to get year variable )
+				Type     -- installment Entry Type to check if it has late penalty or
+								not and if it depend on year variable
 				"""
 		entry_list = frappe.get_list("installment Entry" ,
 			                        fields = ["name" ,"installment_value" , "due_date" ,"document" ,"type"] ,
 			        						filters = {"reference_doc" :"Journal installment" ,
 						     				"customer" :self.unit ,"status": "Not Paid"} )
-		
+		deposit_shortfall_difference = 4
+		penalty_variable = 0
 		for entry in entry_list :
 			#set default value 
 			value = float(entry.installment_value) 
-			print(entry)
 			#set penalty variable value 
 			penalty_variable = 0
 			#check type 
@@ -97,18 +102,32 @@ class MaintenancedepositCalculation(Document):
 					year = frappe.get_value("Journal installment" ,entry.document ,"year" )
 					#calculate factor 
 					penalty_variable  =  frappe.get_value("Commercial year" ,year ,"factor" )
-			row = self.append("items" , {})
-			row.installment_entry = entry.name
-			row.due_date = entry.due_date 
-			#row.line = item.name 
-			row.amount = entry.installment_value
-			allocated_info = calculate_penalty_amount(self.unit_area ,entry.due_date ,self.posting_date ,True ,penalty_variable )
-			print("Allocated" , allocated_info)
-			row.penalety = allocated_info[0]
-			row.days_count = allocated_info[2]
-			row.months_count = allocated_info[1]
-			row.total =  float(entry.installment_value or 0 ) + float(row.penalety or 0)
-			row.payment = row.total
+					deposit_shortfall_difference = frappe.get_value("Commercial year" ,year ,"deposit_shortfall_difference" )
+					row = self.append("items" , {})
+					row.installment_entry = entry.name
+					row.due_date = entry.due_date 
+					#row.line = item.name 
+					row.amount = entry.installment_value
+					allocated_info = calculate_penalty_amount(self.unit_area ,entry.due_date ,self.posting_date ,True ,penalty_variable ,deposit_shortfall_difference )
+					print("Allocated" , allocated_info)
+					row.penalety = allocated_info[0]
+					row.days_count = allocated_info[2]
+					row.months_count = allocated_info[1]
+					row.total =  float(entry.installment_value or 0 ) + float(row.penalety or 0)
+					row.payment = row.total
+				if template.required_year_value ==0 and template.has_equation == 1:
+					row = self.append("items" , {})
+
+					#calculate equqation  
+					calculation  = calculate_equation(entry.name ,self.posting_date)
+					# frappe.throw(str(calculation.get("value")))
+					row.installment_entry = entry.name
+					row.due_date = entry.due_date 
+					row.penalety = calculation.get("penalty")
+					row.days_count = calculation.get("days")
+					row.amount = entry.installment_value
+					row.total = calculation.get("value")
+					row.payment = calculation.get("value")
 	# end Update
 	def set_installment_items_maintenance(self) :
 		maintenance_deposit = frappe.db.sql(f""" SELECT name FROM `tabMaintenance deposit` 
@@ -139,7 +158,11 @@ class MaintenancedepositCalculation(Document):
 					item.penalety =  allocated_info[0]
 					item.total = float(item.amount  or 0 ) + float(item.penalety or 0)
 					item.payment = item.total
-	
+	def calculate_total(self) :
+		self.total=0 
+		for i in self.items  :
+			self.total += float(i.total)
+
 	def calculate_total_payment(self) :
 		#total section calculation
 		self.total_amount = 0 
@@ -273,7 +296,20 @@ class MaintenancedepositCalculation(Document):
 
 			""")
 			frappe.db.commit()
-def calculate_penalty_amount(unit_area , due_date ,posting_date =False ,daily =False ,variable =False):
+
+
+
+def calculate_penalty_amount(unit_area , due_date ,posting_date =False ,daily =False ,variable =False ,diff_value=False):
+	"""
+	params  :
+		unit_area    : number 
+		due_date     : date format  -- for document due date
+		posting_date : date format -- document date
+		daily : True or False if daily app will calculate days difference else will calculate months difference    
+		variable : float value we got it from commercial year factor 
+		diff_value  : float value we got it from commercial year Deposit shortfall difference
+	"""
+	
 	# days / years / months values 
 	if not posting_date :
 		today = utils.get_datetime( utils.today())
@@ -293,7 +329,9 @@ def calculate_penalty_amount(unit_area , due_date ,posting_date =False ,daily =F
 		penalty_value = (float(monthly_value) * float(months_count) ) * float(unit_area)
 		return (penalty_value ,months_count ,  difference_days.days)
 	if daily :
-		penalty_value =  float(unit_area) * float(difference_days.days or 0) * float(variable or 0)
+		penalty_value =  (float(unit_area)  *float(diff_value or 0) )* float(difference_days.days or 0) * float(variable or 0)
+		print( "Value " ,penalty_value)
+		
 		return (penalty_value ,months_count ,  difference_days.days)
 
 

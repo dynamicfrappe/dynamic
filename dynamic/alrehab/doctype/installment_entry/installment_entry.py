@@ -29,11 +29,18 @@ class installmentEntry(Document):
 	def validate(self):
 		#if  not self.get('__unsaved') and not self.claiming_entry:
 		self.set_status()
-
+		self.auto_calculate_installment_amount()
 	def after_insert(self):
 		self.set_status()
 
-	
+	def auto_calculate_installment_amount(self) :
+		if self.auto_cal :
+			area = frappe.get_value("Customer" , self.customer , 'unit_area')
+			year = frappe.get_value("Journal installment" , self.document , "year")
+			year_value = frappe.get_value("Commercial year" ,year ,"deposit_shortfall_difference" )
+			self.total_value =float(area or 0) * float(year_value or 0 )
+			self.installment_value	=self.total_value
+
 
 	def create_journal_entry(self):
 		if not self.is_clamed :

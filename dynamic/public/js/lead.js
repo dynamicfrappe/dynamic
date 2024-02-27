@@ -2,6 +2,18 @@
 frappe.provide("erpnext");
 
 frappe.ui.form.on("Lead", {
+    create_call(frm) {
+        /// Work only on elevana store domain 
+        frappe.call(
+            {
+                "method" :"dynamic.elevana.api.create_call_js" , 
+                args :{
+                    "doc" : "Lead" ,
+                    "name" : frm.doc.name
+                }
+            }
+        )
+    },
     check_url: function (frm) {
         if (frm.doc.url) {
             frappe.call({
@@ -42,6 +54,14 @@ frappe.ui.form.on("Lead", {
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
                 if (r.message && r.message.length) {
+                    if (r.message.includes("Elevana")) {
+                        frm.add_custom_button(
+                            __("Call"),function(){
+                                frm.events.create_call(frm)
+                            }
+                            
+                            )
+                    }
                     if (r.message.includes("Terra") || r.message.includes("Elevana") || r.message.includes("CRM Advance")) {
                         frm.add_custom_button(
                             __("Action"),
