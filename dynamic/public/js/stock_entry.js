@@ -120,6 +120,7 @@ frappe.ui.form.on("Stock Entry", {
       // frm.events.set_property_domain(frm)
       frm.events.set_field_property(frm)
       frm.events.transit_btn(frm)
+      frm.events.read_only_fields(frm)
     },
     read_only_fields:function(frm){
       frappe.call({
@@ -364,8 +365,8 @@ frappe.ui.form.on('Stock Entry Detail', {
 
 
 function _toggle_related_fields_weh(){
-  cur_frm.toggle_enable("from_warehouse", cur_frm.doc.purpose!='Material Receipt');
-  cur_frm.toggle_enable("from_warehouse", !cur_frm.doc.outgoing_stock_entry);
+  // cur_frm.toggle_enable("from_warehouse", cur_frm.doc.purpose!='Material Receipt');
+  // cur_frm.toggle_enable("from_warehouse", !cur_frm.doc.outgoing_stock_entry);
   cur_frm.toggle_enable("to_warehouse", cur_frm.doc.purpose!='Material Issue');
 
   cur_frm.fields_dict["items"].grid.set_column_disp("retain_sample", cur_frm.doc.purpose=='Material Receipt');
