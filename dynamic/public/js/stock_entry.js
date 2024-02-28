@@ -131,7 +131,8 @@ frappe.ui.form.on("Stock Entry", {
               frappe.call({
                 method:"dynamic.weh.api.get_roles_hidden_field",
                 args:{
-                  "field":"stock_entry_read_only"
+                  "field_hide":"stock_entry_read_only",
+                  "field_empty":"empty_source_warehouse_role",
                 },
                 callback:function(r) {
                   frm.set_df_property("from_warehouse", "read_only", r.message.hide);
