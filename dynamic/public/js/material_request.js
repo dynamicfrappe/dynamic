@@ -31,7 +31,8 @@ frappe.ui.form.on("Material Request",{
       frappe.call({
         method:"dynamic.weh.api.get_roles_hidden_field",
         args:{
-          "field":"material_request_read_only"
+          "field_hide":"material_request_read_only",
+          "field_empty":"empty_source_warehouse_role",
         },
         callback:function(r) {
           frm.set_df_property("set_warehouse", "read_only", r.message.hide);

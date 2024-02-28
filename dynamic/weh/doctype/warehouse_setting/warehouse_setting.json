@@ -8,7 +8,8 @@
  "field_order": [
   "material_request_read_only",
   "stock_entry_read_only",
-  "empty_source_warehouse_role"
+  "empty_source_warehouse_role",
+  "empty_source_delivery_note_role"
  ],
  "fields": [
   {
@@ -28,12 +29,18 @@
    "fieldtype": "Link",
    "label": "Empty source Warehouse Role",
    "options": "Role"
+  },
+  {
+   "fieldname": "empty_source_delivery_note_role",
+   "fieldtype": "Link",
+   "label": "Empty source Delivery Note Role",
+   "options": "Role"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-28 00:49:22.005683",
+ "modified": "2024-02-28 12:17:05.237371",
  "modified_by": "Administrator",
  "module": "WEH",
  "name": "Warehouse Setting",
