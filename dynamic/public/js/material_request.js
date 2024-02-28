@@ -1,5 +1,6 @@
 frappe.ui.form.on("Material Request",{
     refresh(frm){
+      frm.events.read_only_fields(frm)
 
         frm.events.trea_setup(frm)
         frappe.call({

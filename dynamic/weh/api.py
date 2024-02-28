@@ -204,7 +204,7 @@ def get_roles_hidden_field(field):
 	user_roles = frappe.get_roles()
 	warehouse_settings = frappe.get_single("Warehouse Setting")
 	empty = True if warehouse_settings.empty_source_warehouse_role in  user_roles else False
-	hide = True if warehouse_settings.field in  user_roles else False
+	hide = True if warehouse_settings.get(field) in  user_roles else False
 	return {"hide":hide,"empty":empty}
    
 
