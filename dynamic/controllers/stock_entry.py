@@ -8,8 +8,9 @@ DOMAINS = frappe.get_active_domains()
 
 
 def before_save_stock_entry(doc, *args, **kwargs):
-    if "WEH" in DOMAINS:
-        get_allowed_stoc_use_submit(doc,doc.get("from_warehouse"))
+	if "WEH" in DOMAINS:
+		...
+		# get_allowed_stoc_use_submit(doc,doc.get("from_warehouse"))
 
 
 
