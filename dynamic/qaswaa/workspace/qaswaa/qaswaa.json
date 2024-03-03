@@ -25,7 +25,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Collections statement",
    "link_to": "Collections statement",
    "link_type": "Report",
@@ -34,7 +34,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Compare the latest purchase prices",
    "link_to": "Compare the latest purchase prices",
    "link_type": "Report",
@@ -43,7 +43,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Daily sales collected by customers",
    "link_to": "Daily sales collected by customers",
    "link_type": "Report",
@@ -52,7 +52,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Deliverables",
    "link_to": "Deliverables",
    "link_type": "Report",
@@ -61,7 +61,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Detailed Sales Profitability",
    "link_to": "Detailed Sales Profitability",
    "link_type": "Report",
@@ -70,7 +70,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Item sales",
    "link_to": "Item sales",
    "link_type": "Report",
@@ -79,7 +79,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Monthly analysis of purchases",
    "link_to": "Monthly analysis of purchases",
    "link_type": "Report",
@@ -88,7 +88,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Monthly Purchases",
    "link_to": "Monthly Purchases",
    "link_type": "Report",
@@ -97,7 +97,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Monthly sales",
    "link_to": "Monthly sales",
    "link_type": "Report",
@@ -106,7 +106,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "offer price",
    "link_to": "offer price",
    "link_type": "Report",
@@ -115,7 +115,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Purchases of items price",
    "link_to": "Purchases of items",
    "link_type": "Report",
@@ -124,7 +124,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Sales Analytics Cost Center",
    "link_to": "Sales Analytics Cost Center",
    "link_type": "Report",
@@ -142,7 +142,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Sales Analytics Customer Yearly",
    "link_to": "Sales Analytics Customer Yearly",
    "link_type": "Report",
@@ -151,7 +151,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Sales Daily",
    "link_to": "Sales Daily",
    "link_type": "Report",
@@ -160,7 +160,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Sales Invoice Analytics Warehouse",
    "link_to": "Sales Invoice Analytics Warehouse",
    "link_type": "Report",
@@ -169,7 +169,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Treasury journal",
    "link_to": "Treasury journal",
    "link_type": "Report",
@@ -177,7 +177,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-02-01 11:56:56.677221",
+ "modified": "2024-03-03 15:19:30.569913",
  "modified_by": "Administrator",
  "module": "Qaswaa",
  "name": "Qaswaa",
