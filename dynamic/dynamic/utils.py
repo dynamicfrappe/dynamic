@@ -15,7 +15,15 @@ def create_customizations(*args , **kwargs) :
    create_currency_exchange()
    # add field to journal entry account fuction 
    create_currency_exchange_je()
+   create_domain_if_not_exists("Qaswaa")
 
+def create_domain_if_not_exists(domain_name):
+	domains = frappe.get_all("Domain" , pluck="domain")
+	if domain_name not in domains :
+		doc = frappe.new_doc("Domain")
+		doc.domain = domain_name
+		doc.insert(ignore_permissions=True)
+		doc.save(ignore_permissions=True)
 
 # Create Field Exchange rate to journal entry account 
 def create_currency_exchange_je(*args,**kwargs) :
