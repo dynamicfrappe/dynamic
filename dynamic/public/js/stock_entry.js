@@ -120,6 +120,34 @@ frappe.ui.form.on("Stock Entry", {
       // frm.events.set_property_domain(frm)
       frm.events.set_field_property(frm)
       frm.events.transit_btn(frm)
+      frm.events.read_only_fields(frm)
+    },
+    read_only_fields:function(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) { 
+          if (r.message && r.message.length) {
+            if (r.message.includes("WEH")) {
+              frappe.call({
+                method:"dynamic.weh.api.get_roles_hidden_field",
+                args:{
+                  "field_hide":"stock_entry_read_only",
+                  "field_empty":"empty_source_warehouse_role",
+                },
+                callback:function(r) {
+                  frm.set_df_property("from_warehouse", "read_only", r.message.hide);
+                  if(r.message.empty){
+                    frm.set_value("from_warehouse","")
+                  }
+                  frm.refresh_fields("from_warehouse")
+                }
+               })
+               
+        }
+      }
+      }
+    })
+      
     },
     stock_entry_type : function (frm){
       frm.events.filter_stock_entry_transfer(frm)
@@ -338,8 +366,8 @@ frappe.ui.form.on('Stock Entry Detail', {
 
 
 function _toggle_related_fields_weh(){
-  cur_frm.toggle_enable("from_warehouse", cur_frm.doc.purpose!='Material Receipt');
-  cur_frm.toggle_enable("from_warehouse", !cur_frm.doc.outgoing_stock_entry);
+  // cur_frm.toggle_enable("from_warehouse", cur_frm.doc.purpose!='Material Receipt');
+  // cur_frm.toggle_enable("from_warehouse", !cur_frm.doc.outgoing_stock_entry);
   cur_frm.toggle_enable("to_warehouse", cur_frm.doc.purpose!='Material Issue');
 
   cur_frm.fields_dict["items"].grid.set_column_disp("retain_sample", cur_frm.doc.purpose=='Material Receipt');

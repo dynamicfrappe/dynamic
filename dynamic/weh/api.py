@@ -199,5 +199,12 @@ def make_stock_in_entry(source_name, target_doc=None):
 	return doclist
 
 
-
+@frappe.whitelist()
+def get_roles_hidden_field(field_hide=None,field_empty=None):
+	user_roles = frappe.get_roles()
+	warehouse_settings = frappe.get_single("Warehouse Setting")
+	empty = True if warehouse_settings.get(field_empty) in  user_roles else False
+	hide = True if warehouse_settings.get(field_hide) in  user_roles else False
+	return {"hide":hide,"empty":empty}
+   
 
