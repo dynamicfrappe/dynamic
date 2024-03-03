@@ -8,15 +8,15 @@ frappe.query_reports["Sales Analytics Customer"] = {
 			"fieldname":"period_start_date",
 			"label": __("Start Date"),
 			"fieldtype": "Date",
-			"reqd": 1,
+			// "reqd": 1,
 			"default": frappe.datetime.add_months(frappe.datetime.get_today(), -1)
 		},
 		{
 			"fieldname":"period_end_date",
 			"label": __("End Date"),
 			"fieldtype": "Date",
-			"reqd": 1,
-			// "default": frappe.datetime.get_today()
+			// "reqd": 1,
+			"default": frappe.datetime.get_today()
 		},
 
 		{
