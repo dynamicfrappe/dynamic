@@ -93,7 +93,10 @@ def get_data(filters):
 		dict["cost"] = valuation_rate["valuation_rate"] * item["qty"]
 		dict["purchases"] = item["qty"] * purchase_items["last_purchase"]
 		dict["profit"] = dict["sales"] - dict["purchases"]
-		dict["percentage"] = dict["profit"] /dict["purchases"] * 100
+		if dict["purchases"] == 0 :
+			dict["percentage"] = 0
+		else :
+			dict["percentage"] = dict["profit"] /dict["purchases"] * 100
 		dict["item_price"] = item["rate"]
 		dict["last_purchase"] = f'{purchase_items["last_purchase"]}' + ' - '  + f'{purchase_items["purchase_date"]}' 
 		dict["unit_cost"] = valuation_rate["valuation_rate"]
