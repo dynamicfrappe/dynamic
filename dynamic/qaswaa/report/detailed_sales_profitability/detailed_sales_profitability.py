@@ -21,8 +21,8 @@ def get_data(filters):
 
 	sql = f'''
 		SELECT
-			SII.item_code , SII.item_name , SII.qty , SI.creation ,
-			SII.amount , SII.rate , SII.warehouse , SI.name
+			SII.item_code , SII.item_name , SII.qty , SI.creation , SII.brand ,
+			SII.amount , SII.rate , SII.warehouse , SI.name , SI.selling_price_list 
 		FROM 
 			`tabSales Invoice Item` SII
 		INNER JOIN 
@@ -87,6 +87,9 @@ def get_data(filters):
 		post_rate = frappe.db.sql(sql2 , as_dict = 1)
 
 		dict["item_code"] = f'{item["item_code"]}'
+		dict["selling_price_list"] = f'{item["selling_price_list"]}'
+		dict["brand"] = f'{item["brand"]}'
+
 		dict["item_name"] = f'{item["item_name"]}'
 		dict["qty"] = item["qty"]
 		dict["sales"] = item["amount"]
@@ -178,6 +181,19 @@ def get_columns( num_rates=3 ):
 					"options": "currency",
 					"width": 150,
 				}, 
+				{ 
+					"label": _("Price List"), 
+					"fieldname": "selling_price_list", 
+					"fieldtype": "Link", 
+					"options": "Price List", 
+					"width": 100, 
+				}, 
+				{ 
+					"label": _("Brand"), 
+					"fieldname": "brand", 
+					"fieldtype": "Data", 
+					"width": 100, 
+				},
 				{
 					"label": _("Cost"),
 					"fieldname": "cost",

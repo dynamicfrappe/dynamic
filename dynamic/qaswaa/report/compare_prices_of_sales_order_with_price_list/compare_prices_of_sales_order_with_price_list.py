@@ -4,7 +4,6 @@
 import frappe
 from frappe import _
 
-
 def execute(filters=None):
 	columns, data = get_columns(), get_date(filters)
 	return columns, data
@@ -13,17 +12,17 @@ def get_date(filters):
 	conditions = " 1=1 "
 	condition = " 1=1 "
 	if filters.get("customer") :
-		conditions +=f" and Q.customer_name = '{filters.get('customer')}' "
-
+		conditions +=f" and so.customer = '{filters.get('customer')}' "
+		
 	if filters.get("warehouse") :
-		conditions +=f" and QI.warehouse = '{filters.get('warehouse')}' "
+		conditions +=f" and soi.warehouse = '{filters.get('warehouse')}' "
 		condition +=f" and PII.warehouse = '{filters.get('warehouse')}' "
 
-	if filters.get("quotation") :
-		conditions +=f" and Q.name = '{filters.get('quotation')}' "
+	if filters.get("sales_order") :
+		conditions +=f" and so.name = '{filters.get('sales_order')}' "
 
 	if filters.get("price_list") :
-		conditions +=f" and Q.selling_price_list = '{filters.get('price_list')}' "
+		conditions +=f" and so.selling_price_list = '{filters.get('price_list')}' "
 
 	if filters.get("sales_person") :
 		conditions +=f" and ST.sales_person = '{filters.get('sales_person')}' "
@@ -34,18 +33,18 @@ def get_date(filters):
 
 	sql =f'''
 			SELECT
-				Q.name , QI.item_code , QI.item_name, QI.qty ,
-				(QI.rate - QI.discount_amount) as item_rate 
+				so.name , soi.item_code , soi.item_name, soi.qty ,
+				(soi.rate - soi.discount_amount) as item_rate 
 			FROM 
-				`tabQuotation` Q
+				`tabSales Order` so
 			INNER JOIN 
-				`tabQuotation Item` QI
+				`tabSales Order Item` soi
 			ON 
-				Q.name = QI.parent
+				so.name = soi.parent
 			LEFT JOIN 
 				`tabSales Team` ST
 			ON 
-				Q.name = ST.parent
+				so.name = ST.parent
 			WHERE 
 				{conditions}
 		'''
@@ -77,14 +76,13 @@ def get_date(filters):
 			entry["differance_percentage"] = str(entry["differance"] / entry["sales_rate"] *100) + "%"
 	return data
 
-
 def get_columns():
 	return[
 		{
 			"fieldname": "name",
-			"label": _("Quotation"),
+			"label": _("Sales Order"),
 			"fieldtype": "Link",
-			"options": "Quotation",
+			"options": "Sales Order",
 			"width": 200,
 		},
 		{
