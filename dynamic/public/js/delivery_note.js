@@ -49,13 +49,13 @@ frappe.ui.form.on("Delivery Note", {
         frappe.call({
           method:"dynamic.weh.api.get_roles_hidden_field",
           args:{
-            "field_empty":"empty_source_delivery_note_role",
+            "field_empty":"empty_target_delivery_note_role",
           },
           callback:function(r) {
             if(r.message.empty){
-              frm.set_value("set_warehouse","")
+              frm.set_value("set_target_warehouse","")
             }
-            frm.refresh_fields("set_warehouse")
+            frm.refresh_fields("set_target_warehouse")
           }
          })
       },
