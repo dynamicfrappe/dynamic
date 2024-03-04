@@ -53,7 +53,7 @@ def get_data(filters):
 			row["last_purchase_receipt"] = 0.0
 		row["total_profit"] =row["rate"] - (row["qty"]* row["last_purchase_receipt"])
 		if not row["last_purchase_receipt"] == 0.0 :
-			row["percentage_profit"] =(row["discount_amount"]- row["last_purchase_receipt"]) /( row["last_purchase_receipt"] * 1000)
+			row["percentage_profit"] =str((row["discount_amount"]- row["last_purchase_receipt"]) /( row["last_purchase_receipt"] ) ) + "%" 
 		final_data.append(row)
 
 		dict1={}
@@ -148,8 +148,7 @@ def get_columns():
 			{
 				"label": _("Percentage Profit"),
 				"fieldname": "percentage_profit",
-				"fieldtype": "Currency",
-				"options": "currency",
+				"fieldtype": "Data",
 				"width": 150,
 			},
 	]
