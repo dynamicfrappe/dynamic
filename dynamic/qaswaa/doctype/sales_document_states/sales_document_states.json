@@ -1,26 +1,40 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2023-12-06 11:01:26.230585",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "naming_series",
   "posting_date",
   "invoice_type",
-  "invoice_name",
   "shipping_company",
+  "customer",
+  "customer_name",
+  "charged_date",
   "column_break_jamwc",
   "policy_number",
-  "delivery_number",
-  "delivery_date",
-  "charged",
-  "charged_date"
+  "invoice_name",
+  "delivery_type",
+  "driver",
+  "grand_total",
+  "delivered",
+  "delivered_date",
+  "section_break_dsles",
+  "accounting_notes",
+  "column_break_lstu6",
+  "collection",
+  "sales_person_notes_section",
+  "sales_person_notes"
  ],
  "fields": [
   {
    "fieldname": "posting_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Posting Date"
   },
   {
@@ -55,38 +69,98 @@
   {
    "fieldname": "policy_number",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "Policy number"
   },
   {
-   "default": "0",
-   "fieldname": "delivery_number",
-   "fieldtype": "Check",
-   "label": "Delivery number"
-  },
-  {
-   "depends_on": "eval:doc.delivery_number",
-   "fieldname": "delivery_date",
-   "fieldtype": "Date",
-   "label": "Delivery Date",
-   "mandatory_depends_on": "eval:doc.delivery_number"
-  },
-  {
-   "default": "0",
-   "fieldname": "charged",
-   "fieldtype": "Check",
-   "label": "Charged"
-  },
-  {
-   "depends_on": "eval:doc.charged",
    "fieldname": "charged_date",
    "fieldtype": "Date",
-   "label": "Charged Date",
-   "mandatory_depends_on": "eval:doc.charged"
+   "label": "Charged Date"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total",
+   "options": "currency"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "default": "0",
+   "fieldname": "delivered",
+   "fieldtype": "Check",
+   "label": "Delivered"
+  },
+  {
+   "fieldname": "collection",
+   "fieldtype": "Text",
+   "label": "Collection"
+  },
+  {
+   "fieldname": "accounting_notes",
+   "fieldtype": "Text",
+   "label": "Accounting Notes"
+  },
+  {
+   "fieldname": "delivery_type",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Delivery Type",
+   "options": "Delivery Type"
+  },
+  {
+   "fieldname": "sales_person_notes",
+   "fieldtype": "Text",
+   "label": "Sales Person Notes"
+  },
+  {
+   "fieldname": "delivered_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Delivered Date"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_dsles",
+   "fieldtype": "Section Break",
+   "label": "Notes Section"
+  },
+  {
+   "fieldname": "column_break_lstu6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sales_person_notes_section",
+   "fieldtype": "Section Break",
+   "label": "Sales Person Notes"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "SAL-DOC-STA-.YYYY.-"
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Link",
+   "label": "Driver",
+   "options": "Driver Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-06 11:13:43.398242",
+ "modified": "2024-03-06 15:25:13.916045",
  "modified_by": "Administrator",
  "module": "Qaswaa",
  "name": "Sales Document States",

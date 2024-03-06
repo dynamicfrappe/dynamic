@@ -11,10 +11,10 @@ def create_customizations(*args , **kwargs) :
 		this run on migrate to create custom field in payment entry to avoid any crash 
       """
    # add exchange rate to payment entry
-   create_currency_exchange()
+	create_currency_exchange()
    # add field to journal entry account fuction 
-   create_currency_exchange_je()
-   create_domain_if_not_exists("Qaswaa")
+	create_currency_exchange_je()
+	create_domain_if_not_exists("Qaswaa")
 
 
 def create_domain_if_not_exists(domain_name):
