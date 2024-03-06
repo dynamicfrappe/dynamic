@@ -1,28 +1,28 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:company_name",
- "creation": "2023-12-06 11:00:18.372199",
+ "autoname": "field:name1",
+ "creation": "2024-03-06 15:24:19.048810",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "company_name"
+  "name1"
  ],
  "fields": [
   {
-   "fieldname": "company_name",
+   "fieldname": "name1",
    "fieldtype": "Data",
-   "label": "Company Name",
+   "label": "Name",
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-06 14:34:01.527821",
+ "modified": "2024-03-06 15:24:31.241453",
  "modified_by": "Administrator",
  "module": "Qaswaa",
- "name": "Shipping Company",
+ "name": "Driver Name",
  "owner": "Administrator",
  "permissions": [
   {
