@@ -1152,17 +1152,17 @@ def get_allowed_stoc_use_submit(doc, *args, **kwargs):
     if "stock_transfer" in DOMAINS:
         check_stock_entry_transit(doc, *args, **kwargs)
     if "WEH" in DOMAINS:
-        get_allowed_user(doc, doc.get("to_warehouse"))
+        get_allowed_user_warehouse(doc, doc.get("to_warehouse"))
 
 
 def check_stock_entry_transit(doc, *args, **kwargs):
     if not doc.get("to_warehouse") and doc.get("outgoing_stock_entry"):
         frappe.throw("Please Select Default Target Warehouse")
     if doc.get("outgoing_stock_entry"):
-        get_allowed_user(doc,doc.get("to_warehouse"))
+        get_allowed_user_warehouse(doc,doc.get("to_warehouse"))
 
 
-def get_allowed_user(doc,warehouse):
+def get_allowed_user_warehouse(doc,warehouse):
     get_allowed_user = f"""
     SELECT user  FROM `tabWarehouse User` WHERE parent='{warehouse}' and user='{frappe.session.user}'
     """
