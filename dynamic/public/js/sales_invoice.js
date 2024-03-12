@@ -1,5 +1,6 @@
 frappe.ui.form.on("Sales Invoice", {
   setup(frm) {
+    frm.set_value("update_stock","1")
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {
@@ -48,11 +49,10 @@ frappe.ui.form.on("Sales Invoice", {
   },
 
   refresh(frm) {
+
     frm.events.add_cheque_button(frm);
     frm.events.set_query(frm)
     // const myTimeout = setTimeout(get_customer_query, 1300);
-
-
     var check_domain = frm.events.domian_valid();
     if (check_domain && frm.doc.docstatus == 0) {
       frm.add_custom_button(
