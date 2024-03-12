@@ -143,6 +143,7 @@ doc_events = {
             "dynamic.controllers.sales_invoice.before_submit",
         ],
         "validate": [
+            "dynamic.controllers.sales_invoice.validate",
             "dynamic.api.validate_active_domains",
         ],
         "on_cancel": "dynamic.api.invoice_on_cancel",
@@ -163,6 +164,7 @@ doc_events = {
         ],
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
         "validate": [
+            "dynamic.controllers.delivery_note.validate_delivery_note",
             "dynamic.api.validate_delivery_note",
             "dynamic.weh.delevery_note.validate_delevery_note",
             "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty",
