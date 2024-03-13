@@ -6,7 +6,7 @@ Domains=frappe.get_active_domains()
 def validate_purchase_receipt(self , event):
     if "Qaswaa"  in Domains :
         validtate_items_qty(self)
-        validate_purchase_receipt_items(self)
+        validate_purchase_invoice_items(self)
 
 def validtate_items_qty(self):
     if self.is_return :
@@ -32,7 +32,7 @@ def validtate_items_qty(self):
                 frappe.throw(_( f"<b>Rae</b> of item {item.item_code} in row {item.idx} should be equal {data[0].rate}"))
 
 
-def validate_purchase_receipt_items(self):
+def validate_purchase_invoice_items(self):
     for item in self.items :
         if item.purchase_invoice :
             sql = f'''
