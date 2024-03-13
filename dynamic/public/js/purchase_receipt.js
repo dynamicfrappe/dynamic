@@ -183,38 +183,3 @@ const override_scan_code = erpnext.stock.PurchaseReceiptController.extend({
       cur_frm.cscript,
       new override_scan_code({frm: cur_frm}),
   )
-  
-
-
-const make_items_read_only = erpnext.stock.PurchaseReceiptController.extend({
-
-    refresh: function (frm) {
-        console.log(frm.items)
-        frappe.call({
-            method: "dynamic.api.get_active_domains",
-            callback: function (r) {
-                if (r.message && r.message.length) {
-                    if (r.message.includes("Qaswaa")) {
-                        cur_frm.fields_dict.items.grid.update_docfield_property(
-                            "qty",
-                            "read_only",
-                            "1"
-                        );
-                        cur_frm.fields_dict.items.grid.update_docfield_property(
-                            "rate",
-                            "read_only",
-                            "1"
-                        );
-                    }
-                }
-            }
-        })
-    },
-
-
-})
-
-$.extend(
-    cur_frm.cscript,
-    new make_items_read_only({ frm: cur_frm }),
-);
