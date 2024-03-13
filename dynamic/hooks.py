@@ -268,6 +268,9 @@ doc_events = {
             "dynamic.api.submit_purchase_recipt_based_on_active_domains",
         ],
         "before_save": "dynamic.api.before_save",
+        "validate": [
+            "dynamic.controllers.purchase_receipt.validate_purchase_receipt",
+        ],
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
         # "before_submit":
         # "before_save":"dynamic.api.check_pr_reservation"
