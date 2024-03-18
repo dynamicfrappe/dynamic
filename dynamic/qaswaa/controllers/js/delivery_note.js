@@ -1,5 +1,24 @@
 frappe.ui.form.on('Delivery Note', {
-    refresh: function(frm) {
+    refresh: function (frm){
+
+            frm.events.check_url(frm);
+            console.log("hehehee");
+    } ,
+       check_url: function (frm) {
+        
+            frappe.call({
+                method: "dynamic.api.get_active_domains",
+                callback: function (r) {
+                    if (r.message && r.message.length) {
+                        if (r.message.includes("Qaswaa")) {
+                            frm.events.setup_button(frm);
+                        }
+                    }
+                }
+            })
+        
+    },
+    setup_button: function(frm) {
         frm.add_custom_button(__('Sales Invoice'),
 			function() {
 				if (!frm.doc.customer) {

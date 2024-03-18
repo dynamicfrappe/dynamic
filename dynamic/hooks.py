@@ -90,7 +90,7 @@ doctype_js = {
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
-    "Delivery Note": "public/js/delivery_note.js",
+    "Delivery Note": ["public/js/delivery_note.js","qaswaa/controllers/js/delivery_note.js"],
     "Lead": "public/js/lead.js",
     "Supplier": "public/js/supplier.js",
     "Customer": "public/js/customer.js",
