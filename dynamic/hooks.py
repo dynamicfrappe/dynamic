@@ -103,7 +103,9 @@ doctype_js = {
     "Mode of Payment": "public/js/mode_of_payment.js",
     "Purchase Receipt": "public/js/purchase_receipt.js",
     "Stock Reconciliation": "public/js/stock_reconciliation.js",
-    "Item": "public/js/item.js",
+    "Item": [
+        "public/js/item.js",
+        "qaswaa/controllers/js/item.js"],
     "Journal Entry": "public/js/journal_entry.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",

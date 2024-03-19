@@ -36,7 +36,7 @@ def submit_invoice(self):
     sales_document.invoice_type = self.doctype
     sales_document.invoice_name = self.name
     # sales_document.shipping_company = self.company
-    sales_document.Customer = self.customer
+    sales_document.customer = self.customer
     sales_document.customer_name = self.customer_name
     sales_document.grand_total = self.grand_total
     sales_document.insert()
