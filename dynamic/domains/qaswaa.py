@@ -84,6 +84,43 @@ data = {
                 "insert_after": "territory" ,
             },
         ],
+        "Stock Entry Type":
+        [
+            {
+                "label": "Mendatory Fields",
+                "fieldname": "mendatory_fields",
+                "fieldtype": "Check",
+                "insert_after": "purpose" ,
+            },
+        ],
+        "Stock Entry":
+        [
+             {
+                "label": "Mendatory Fields",
+                "fieldname": "mendatory_fields",
+                "fieldtype": "Check",
+                "insert_after": "sales_team" ,
+                "fetch_from":"stock_entry_type.mendatory_fields",
+                # "hidden": 1
+            },
+            {
+                "label": "Customer",
+                "fieldname": "customer_id",
+                "fieldtype": "Link",
+                "insert_after": "stock_entry_type",
+                "options": "Customer",
+                "depends_on":"eval:doc.mendatory_fields == true",
+                "mandatory_depends_on":"eval:doc.mendatory_fields == true"
+            },
+            {
+                "label": "Sales Team",
+                "fieldname": "sales_team",
+                "fieldtype": "Table",
+                "insert_after": "get_stock_and_rate",
+                "options": "Sales Team",
+                "depends_on": "eval:doc.mendatory_fields == true",
+            },
+        ],
         "Item":[
             {
                 "label": "Material",

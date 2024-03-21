@@ -5,9 +5,11 @@ Domains=frappe.get_active_domains()
 
 def validate_delivery_note(self , event):
     if "Qaswaa"  in Domains :
-        validtate_items_qty(self)
+        if self.is_return == 1:
+            validtate_items_qty(self)
 
 def validtate_items_qty(self):
+    
     for item in self.items :
         sql = f'''
                 SELECT 
