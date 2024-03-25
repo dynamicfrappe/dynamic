@@ -90,7 +90,7 @@ doctype_js = {
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
-    "Delivery Note": "public/js/delivery_note.js",
+    "Delivery Note": ["public/js/delivery_note.js","qaswaa/controllers/js/delivery_note.js"],
     "Lead": "public/js/lead.js",
     "Supplier": "public/js/supplier.js",
     "Customer": "public/js/customer.js",
@@ -103,7 +103,9 @@ doctype_js = {
     "Mode of Payment": "public/js/mode_of_payment.js",
     "Purchase Receipt": "public/js/purchase_receipt.js",
     "Stock Reconciliation": "public/js/stock_reconciliation.js",
-    "Item": "public/js/item.js",
+    "Item": [
+        "public/js/item.js",
+        "qaswaa/controllers/js/item.js"],
     "Journal Entry": "public/js/journal_entry.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
@@ -143,6 +145,7 @@ doc_events = {
             "dynamic.controllers.sales_invoice.before_submit",
         ],
         "validate": [
+            "dynamic.controllers.sales_invoice.validate",
             "dynamic.api.validate_active_domains",
         ],
         "on_cancel": "dynamic.api.invoice_on_cancel",
@@ -163,6 +166,7 @@ doc_events = {
         ],
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
         "validate": [
+            "dynamic.controllers.delivery_note.validate_delivery_note",
             "dynamic.api.validate_delivery_note",
             "dynamic.weh.delevery_note.validate_delevery_note",
             # "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty",
@@ -266,6 +270,9 @@ doc_events = {
             "dynamic.api.submit_purchase_recipt_based_on_active_domains",
         ],
         "before_save": "dynamic.api.before_save",
+        "validate": [
+            "dynamic.controllers.purchase_receipt.validate_purchase_receipt",
+        ],
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
         # "before_submit":
         # "before_save":"dynamic.api.check_pr_reservation"

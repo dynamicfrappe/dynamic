@@ -6,6 +6,8 @@ Domains=frappe.get_active_domains()
 def validate(self , event):
     if "Lormed" in Domains :
         validate_items(self)
+    if "Qaswaa" in Domains :
+        validate_rate_of_items(self)
     
     
 def before_submit(self , event):
@@ -18,6 +20,11 @@ def validate_items(self):
     for item in self.items :
         if item.brand != self.brand:
             frappe.throw(_("Brand of <b>{0}</b> should be <b>{1}</b>").format(item.item_code , self.brand))
+            
+def validate_rate_of_items(self):
+    for item in self.items:
+        if item.rate <= 0:
+            frappe.throw(_(f"<b>Rae</b> of item {item.item_code} in row {item.idx} should be equal bigger than 0")) 
 
 def check_open_sales_invoices(self):
    if frappe.db.exists("Sales Invoice", {"customer": self.customer ,"brand" :self.brand , "docstatus" : 1 ,"outstanding_amount" : [">" ,1.00] , "name" :["!=", self.name]}):
@@ -29,7 +36,7 @@ def submit_invoice(self):
     sales_document.invoice_type = self.doctype
     sales_document.invoice_name = self.name
     # sales_document.shipping_company = self.company
-    sales_document.Customer = self.customer
+    sales_document.customer = self.customer
     sales_document.customer_name = self.customer_name
     sales_document.grand_total = self.grand_total
     sales_document.insert()
