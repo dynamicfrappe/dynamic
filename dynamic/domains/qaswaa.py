@@ -83,6 +83,87 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "territory" ,
             },
+        ],
+        "Stock Entry Type":
+        [
+            {
+                "label": "Mendatory Fields",
+                "fieldname": "mendatory_fields",
+                "fieldtype": "Check",
+                "insert_after": "purpose" ,
+            },
+        ],
+        "Stock Entry":
+        [
+             {
+                "label": "Mendatory Fields",
+                "fieldname": "mendatory_fields",
+                "fieldtype": "Check",
+                "insert_after": "sales_team" ,
+                "fetch_from":"stock_entry_type.mendatory_fields",
+                # "hidden": 1
+            },
+            {
+                "label": "Customer",
+                "fieldname": "customer_id",
+                "fieldtype": "Link",
+                "insert_after": "stock_entry_type",
+                "options": "Customer",
+                "depends_on":"eval:doc.mendatory_fields == true",
+                "mandatory_depends_on":"eval:doc.mendatory_fields == true"
+            },
+            {
+                "label": "Sales Team",
+                "fieldname": "sales_team",
+                "fieldtype": "Table",
+                "insert_after": "get_stock_and_rate",
+                "options": "Sales Team",
+                "depends_on": "eval:doc.mendatory_fields == true",
+            },
+        ],
+        "Item":[
+            {
+                "label": "Material",
+                "fieldname": "material",
+                "fieldtype": "Link",
+                "insert_after": "brand" ,
+                "options":"Material",
+            },
+            {
+                "label": "Origin",
+                "fieldname": "origin",
+                "fieldtype": "Link",
+                "insert_after": "material" ,
+                "options":"Origin",
+            },
+            {
+                "label": "Electroic Code",
+                "fieldname": "electroic_code",
+                "fieldtype": "Link",
+                "insert_after": "origin" ,
+                "options":"Electroic Code",
+            },
+            {
+                "label": "Old Code",
+                "fieldname": "old_code",
+                "fieldtype": "Link",
+                "insert_after": "electroic_code" ,
+                "options":"Old Code",
+            },
+            {
+                "label": "Size",
+                "fieldname": "size",
+                "fieldtype": "Link",
+                "insert_after": "old_code" ,
+                "options":"Size",
+            },
+            {
+                "label": "Group Code",
+                "fieldname": "group_code",
+                "fieldtype": "Data",
+                "insert_after": "item_group" ,
+            },
+            
         ]
     },
      "properties": [

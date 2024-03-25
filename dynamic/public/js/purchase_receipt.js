@@ -183,4 +183,3 @@ const override_scan_code = erpnext.stock.PurchaseReceiptController.extend({
       cur_frm.cscript,
       new override_scan_code({frm: cur_frm}),
   )
-  
