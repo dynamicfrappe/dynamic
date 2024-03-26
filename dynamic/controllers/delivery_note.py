@@ -8,6 +8,28 @@ def validate_delivery_note(self , event):
         if self.is_return == 1:
             validtate_items_qty(self)
 
+def after_submit(self , event):
+    if "Stock Reservation" in Domains :
+        edit_of_reseration(self)
+
+
+def edit_of_reseration(self):
+    items = self.get("items")
+    for item in items:
+        doc = frappe.get_doc("Stock Reservation Entry" , {
+            "item_code":item.item_code,
+            "warehouse":item.warehouse,
+            "voucher_no":item.against_sales_order,
+            "voucher_detail_no" : item.so_detail
+            })
+        qty = (doc.delivered_qty if doc.delivered_qty else 0 ) + item.stock_qty 
+        doc.delivered_qty = qty 
+        doc.save()
+        frappe.db.commit()
+
+
+
+
 def validtate_items_qty(self):
     
     for item in self.items :

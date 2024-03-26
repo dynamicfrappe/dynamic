@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestOldCode(unittest.TestCase):
+class TestStockReservationEntry(unittest.TestCase):
 	pass

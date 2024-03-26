@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "name1",
+ "autoname": "field:name1",
  "creation": "2024-03-19 16:28:14.870601",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -15,12 +15,13 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Name",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-19 16:44:16.055350",
+ "modified": "2024-03-25 14:17:06.126406",
  "modified_by": "Administrator",
  "module": "Qaswaa",
  "name": "Electroic Code",

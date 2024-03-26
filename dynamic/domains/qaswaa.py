@@ -121,50 +121,7 @@ data = {
                 "depends_on": "eval:doc.mendatory_fields == true",
             },
         ],
-        "Item":[
-            {
-                "label": "Material",
-                "fieldname": "material",
-                "fieldtype": "Link",
-                "insert_after": "brand" ,
-                "options":"Material",
-            },
-            {
-                "label": "Origin",
-                "fieldname": "origin",
-                "fieldtype": "Link",
-                "insert_after": "material" ,
-                "options":"Origin",
-            },
-            {
-                "label": "Electroic Code",
-                "fieldname": "electroic_code",
-                "fieldtype": "Link",
-                "insert_after": "origin" ,
-                "options":"Electroic Code",
-            },
-            {
-                "label": "Old Code",
-                "fieldname": "old_code",
-                "fieldtype": "Link",
-                "insert_after": "electroic_code" ,
-                "options":"Old Code",
-            },
-            {
-                "label": "Size",
-                "fieldname": "size",
-                "fieldtype": "Link",
-                "insert_after": "old_code" ,
-                "options":"Size",
-            },
-            {
-                "label": "Group Code",
-                "fieldname": "group_code",
-                "fieldtype": "Data",
-                "insert_after": "item_group" ,
-            },
-            
-        ]
+        
     },
      "properties": [
         {

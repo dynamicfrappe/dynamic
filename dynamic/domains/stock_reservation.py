@@ -1,0 +1,68 @@
+
+from __future__ import unicode_literals
+import frappe
+from frappe import _
+
+data = {
+
+    'custom_fields': {
+        "Stock Settings":
+        [ 
+            {
+                "label": "Stock Reservation",
+                "fieldname": "section_break_101",
+                "fieldtype": "Section Break",
+                "insert_after": "disable_serial_no_and_batch_selector" ,
+            },
+            {
+                "label": "Enable Stock Reservation",
+                "fieldname": "enable_stock_reservation",
+                "fieldtype": "Check",
+                "insert_after": "section_break_101" ,
+                "description": "Allows to keep aside a specific quantity of inventory for a particular order."
+            }, 
+            {
+                "label": "",
+                "fieldname": "column_break_101",
+                "fieldtype": "Column Break",
+                "insert_after": "enable_stock_reservation" ,
+            },
+            {
+                "label": "Allow Partial Reservation",
+                "fieldname": "allow_partial_reservation",
+                "fieldtype": "Check",
+                "insert_after": "column_break_101" ,
+                "description": "Partial stock can be reserved. For example, If you have a Sales Order of 100 units and the Available Stock is 90 units then a Stock Reservation Entry will be created for 90 units.",
+                "depends_on": "eval: doc.enable_stock_reservation == 1"
+            },
+            {
+                "label": "Auto Reserve Stock for Sales Order on Purchase",
+                "fieldname": "auto_reserve_stock_for_sales_order_on_purchase",
+                "fieldtype": "Check",
+                "insert_after": "allow_partial_reservation" ,
+                "description": "Stock will be reserved on submission of Purchase Receipt created against Material Receipt for Sales Order.",
+                "depends_on": "eval: doc.enable_stock_reservation == 1"
+            },
+        ],
+        "Sales Order":[
+            {
+                "label": "Reserve Stock",
+                "fieldname": "reserve_stock",
+                "fieldtype": "Check",
+                "insert_after": "order_type" ,
+                "depends_on": "eval: (doc.docstatus == 0 || doc.reserve_stock)",
+                "description": "If checked, Stock will be reserved on <b>Submit</b>"
+            },
+        ]
+    },
+     "properties": [
+        {
+        # "doctype": "Sales Invoice",
+        # "doctype_or_field": "DocField",
+        # "fieldname": "customer_name",
+        # "property": "read_only",
+        # "property_type": "Check",
+        # "value": "0"
+        },
+     ]
+}

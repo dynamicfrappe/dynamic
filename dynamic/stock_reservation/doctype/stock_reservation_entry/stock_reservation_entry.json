@@ -1,0 +1,252 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-21 13:32:40.853906",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "warehouse",
+  "has_serial_no",
+  "has_batch_no",
+  "column_break_7gbgh",
+  "voucher_type",
+  "voucher_no",
+  "voucher_detail_no",
+  "column_break_r6nzy",
+  "from_voucher_type",
+  "from_voucher_no",
+  "from_voucher_detail_no",
+  "section_break_6rx22",
+  "stock_uom",
+  "column_break_hljsx",
+  "available_qty_to_reserve",
+  "voucher_qty",
+  "column_break_fvztc",
+  "reserved_qty",
+  "delivered_qty",
+  "serial_and_batch_reservation_section",
+  "reservation_based_on",
+  "sb_entries",
+  "more_information_section",
+  "company",
+  "column_break_xx4bc",
+  "project",
+  "status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "has_serial_no",
+   "fieldtype": "Check",
+   "label": "Has Serial No",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "has_batch_no",
+   "fieldtype": "Check",
+   "label": "Has Batch No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_7gbgh",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "fieldname": "voucher_type",
+   "fieldtype": "Select",
+   "label": "Voucher Type",
+   "options": "\nSales Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "voucher_no",
+   "fieldtype": "Dynamic Link",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Voucher No",
+   "options": "voucher_type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "voucher_detail_no",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "label": "Voucher Detail No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_r6nzy",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "fieldname": "from_voucher_type",
+   "fieldtype": "Select",
+   "label": "From Voucher Type",
+   "options": "\nPick List\nPurchase Receipt",
+   "read_only": 1
+  },
+  {
+   "fieldname": "from_voucher_no",
+   "fieldtype": "Dynamic Link",
+   "label": "From Voucher No",
+   "options": "from_voucher_type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "from_voucher_detail_no",
+   "fieldtype": "Data",
+   "label": "From Voucher Detail No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_6rx22",
+   "fieldtype": "Section Break",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Stock UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hljsx",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "fieldname": "available_qty_to_reserve",
+   "fieldtype": "Float",
+   "label": "Available Qty to Reserve",
+   "read_only": 1
+  },
+  {
+   "fieldname": "voucher_qty",
+   "fieldtype": "Float",
+   "label": "Voucher Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fvztc",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reserved_qty",
+   "fieldtype": "Float",
+   "label": "Reserved Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delivered_qty",
+   "fieldtype": "Float",
+   "label": "Delivered Qty"
+  },
+  {
+   "fieldname": "serial_and_batch_reservation_section",
+   "fieldtype": "Section Break",
+   "label": "Serial and Batch Reservation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reservation_based_on",
+   "fieldtype": "Select",
+   "label": "Reservation Based On",
+   "options": "Qty\nSerial and Batch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_entries",
+   "fieldtype": "Table",
+   "options": "Serial and Batch Entry",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "more_information_section",
+   "fieldtype": "Section Break",
+   "label": "More Information",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xx4bc",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nPartially Reserved\nReserved\nPartially Delivered\nDelivered\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Stock Reservation Entry",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "in_create": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-25 13:39:37.433277",
+ "modified_by": "Administrator",
+ "module": "Stock Reservation",
+ "name": "Stock Reservation Entry",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
