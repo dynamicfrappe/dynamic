@@ -13,6 +13,11 @@ def validate(self , event):
 def after_submit(self , event):
 	if "Stock Reservation" in Domains:
 		edit_of_reseration(self)
+
+def after_cancel(self , event):
+    if "Stock Reservation" in Domains :
+        validate_when_cancel(self)
+
 	
 	
 def before_submit(self , event):
@@ -60,6 +65,22 @@ def edit_of_reseration(self ):
 		doc.delivered_qty = qty 
 		doc.save()
 		frappe.db.commit()
+
+
+def validate_when_cancel(self):
+	items = self.get("items")
+	for item in items:
+		doc = frappe.get_doc("Stock Reservation Entry" , {
+			"item_code":item.item_code,
+			"warehouse":item.warehouse,
+			"voucher_no":item.sales_order,
+			"voucher_detail_no" : item.so_detail
+			})
+		qty = (doc.delivered_qty if doc.delivered_qty else 0 ) - item.stock_qty 
+		doc.delivered_qty = qty 
+		doc.save()
+		frappe.db.commit()
+	
 
 
 

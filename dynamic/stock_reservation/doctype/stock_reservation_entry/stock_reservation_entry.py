@@ -12,11 +12,16 @@ class StockReservationEntry(Document):
 
 @frappe.whitelist()
 def validation(doc):
+	if float(doc.delivered_qty or 0 ) < 0:
+		doc.delivered_qty = 0
+	if float(doc.reserved_qty or 0) < 0 :
+		doc.reserved_qty = 0
+	
 	if doc.delivered_qty is None or doc.delivered_qty == 0:
 		delivered_qty = 0
 		if float(delivered_qty) >= float(doc.reserved_qty):
 			doc.status = "Delivered"
-		elif delivered_qty > 0:
+		elif delivered_qty > 0 and doc.delivered_qty < doc.reserved_qty:
 			doc.status = "Partially Delivered"
 		elif doc.delivered_qty <= 0:
 			doc.status = "Reserved"
@@ -28,5 +33,11 @@ def validation(doc):
 			doc.status = "Partially Delivered"
 		elif doc.delivered_qty <= 0:
 			doc.status = "Reserved"
+	
+	if float(doc.delivered_qty or 0 )  > float(doc.reserved_qty):
+		doc.delivered_qty = doc.reserved_qty
+	
+	if doc.delivered_qty < 0 or doc.delivered_qty < 0 :
+		frappe.throw("Error Qty")
 	doc.db_update()
 

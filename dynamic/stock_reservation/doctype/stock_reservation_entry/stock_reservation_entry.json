@@ -161,7 +161,8 @@
   {
    "fieldname": "delivered_qty",
    "fieldtype": "Float",
-   "label": "Delivered Qty"
+   "label": "Delivered Qty",
+   "read_only": 1
   },
   {
    "fieldname": "serial_and_batch_reservation_section",
@@ -228,7 +229,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-25 13:39:37.433277",
+ "modified": "2024-03-27 11:24:02.113234",
  "modified_by": "Administrator",
  "module": "Stock Reservation",
  "name": "Stock Reservation Entry",
