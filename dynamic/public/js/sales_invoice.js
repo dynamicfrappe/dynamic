@@ -49,9 +49,9 @@ frappe.ui.form.on("Sales Invoice", {
   },
 
   refresh(frm) {
-
     frm.events.add_cheque_button(frm);
     frm.events.set_query(frm)
+    frm.events.upload_data_file(frm)
     // const myTimeout = setTimeout(get_customer_query, 1300);
     var check_domain = frm.events.domian_valid();
     if (check_domain && frm.doc.docstatus == 0) {
@@ -70,9 +70,59 @@ frappe.ui.form.on("Sales Invoice", {
         },
         "view Item Shortage"
       );
+      
     }
     
   },
+  upload_data_file:function(frm){
+    frm.fields_dict["items"].grid.add_custom_button(
+      __("Upload Xlxs Data"),
+      function() {
+          let d = new frappe.ui.Dialog({
+              title: "Enter details",
+              fields: [
+                {
+                  label: "Excel File",
+                  fieldname: "first_name",
+                  fieldtype: "Attach",
+                },
+              ],
+              primary_action_label: "Submit",
+              primary_action(values) {
+                console.log(`values===>${JSON.stringify(values)}`);
+                var f = values.first_name;
+                frappe.call({
+                  method:"dynamic.api.get_data_from_template_file",
+                  args: {
+                    file_url: values.first_name
+                    // file: values.first_name,
+                    // colms:['item_code','qty',]
+                  },
+                  callback: function(r) {
+                    if (r.message) {
+                      console.log(r.message)
+                      frm.clear_table("items");
+                      frm.refresh_fields("items");
+                      r.message.forEach(object => {
+                        var row = frm.add_child("items");
+                        Object.entries(object).forEach(([key, value]) => {
+                          //  console.log(`${key}: ${value}`);
+                          row[key] = value;
+                        });
+                       });
+                      frm.refresh_fields("items");
+                    }
+                  },
+                });
+                d.hide();
+              },
+            });
+            d.show();
+      }).addClass("btn-success");
+      frm.fields_dict["items"].grid.grid_buttons
+      .find(".btn-custom")
+      .removeClass("btn-default")
+},
   brand:function(frm){
     frm.fields_dict.items.grid.get_field("item_code").get_query = function () {
       return {
@@ -223,7 +273,8 @@ frappe.ui.form.on("Sales Invoice Item", {
     let row = locals[cdt][cdn]
     row.total = row.base_price_list_rate * row.qty
     frm.refresh_fields('items')
-  }
+  },
+
 })
 
 
