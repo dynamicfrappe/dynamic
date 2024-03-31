@@ -29,6 +29,7 @@ def get_data(filters):
 			PI.supplier , 
 			PII.item_code,
 			PII.item_name,
+			PII.warehouse,
 			SUM(PII.qty) as qty,
 			SUM(PII.amount) as amount
 		FROM
@@ -65,7 +66,14 @@ def get_columns():
             "fieldname": "qty", 
             "fieldtype": "Data", 
             "width": 200, 
-        }, 
+        },
+		{
+			"fieldname": "warehouse",
+			"label": _("Warehouse"),
+			"fieldtype": "Link",
+			"options": "Warehouse",
+			"width": 200,
+		},	 
 		{ 
             "label": _("Amount"), 
             "fieldname": "amount", 
