@@ -40,18 +40,35 @@ def get_data(filters):
 		item_code = entry['item_code']
 		row_num = entry['row_num']
 
+		item_sql = f''' 
+				SELECT 
+					brand , material , origin , electroic_code ,
+					old_code , description 
+				FROM 
+					`tabItem`
+				WHERE 
+					name = '{item_code}'
+				'''
+		item_data = frappe.db.sql(item_sql , as_dict = 1)
+
 		if item_code not in result_dict:
-			result_dict[item_code] = {'item_code': item_code, 'item_name': entry['item_name']}
+			result_dict[item_code] = {'item_code': item_code, 'item_name': entry['item_name'] , 
+							 'brand' : item_data[0]["brand"] , 'material' : item_data[0]["material"],
+							 'origin' : item_data[0]["origin"] , 'electroic_code' : item_data[0]["electroic_code"],
+							 'old_code' : item_data[0]["old_code"] , 'description' : item_data[0]["description"],
+
+							 }
 
 		result_dict[item_code][f'rate{row_num}'] = entry['rate']
 		result_dict[item_code][f'posting_date{row_num}'] = entry['posting_date']
 
 		# Set a limit for rates and posting dates (up to rate6 and posting_date6)
-		if row_num == 6:
-			break
+		# if row_num == 6:
+		# 	break
 
 	# Convert the result_dict to a list
 	final_result = list(result_dict.values())
+	# frappe.throw(str(final_result))
 
 	return final_result
 
@@ -62,14 +79,55 @@ def get_columns(num_rates=6):
             "fieldname": "item_code", 
             "fieldtype": "Link", 
             "options": "Item", 
-            "width": 100, 
+            "width": 200, 
         }, 
         { 
             "label": _("Item Name"), 
             "fieldname": "item_name", 
             "fieldtype": "Data", 
             "width": 100, 
-        }, 
+        }, 	
+		{ 
+            "label": _("Description"), 
+            "fieldname": "description", 
+            "fieldtype": "Text Editor", 
+            "width": 200, 
+        },
+		{ 
+            "label": _("Brand"), 
+            "fieldname": "brand", 
+            "fieldtype": "Link", 
+            "options": "Brand", 
+            "width": 60, 
+        },		
+		{ 
+            "label": _("Material"), 
+            "fieldname": "material", 
+            "fieldtype": "Link", 
+            "options": "Material", 
+            "width": 80, 
+        },		
+		{ 
+            "label": _("Origin"), 
+            "fieldname": "origin", 
+            "fieldtype": "Link", 
+            "options": "Origin", 
+            "width": 90, 
+        },		
+		{ 
+            "label": _("Electroic Code"), 
+            "fieldname": "electroic_code", 
+            "fieldtype": "Link", 
+            "options": "Electroic Code", 
+            "width": 80, 
+        },
+		{ 
+            "label": _("Old Code"), 
+            "fieldname": "old_code", 
+            "fieldtype": "Link", 
+            "options": "Old Code", 
+            "width": 80, 
+        },		
     ] 
  
     for i in range(1, num_rates + 1): 
@@ -78,13 +136,13 @@ def get_columns(num_rates=6):
                 "label": _("Rate {}".format(i)), 
                 "fieldname": "rate{}".format(i), 
                 "fieldtype": "Data", 
-                "width": 200, 
+                "width": 100, 
             }, 
             { 
                 "label": _("Posting Date {}".format(i)), 
                 "fieldname": "posting_date{}".format(i), 
                 "fieldtype": "Data", 
-                "width": 200, 
+                "width": 120, 
             }, 
         ]) 
  
