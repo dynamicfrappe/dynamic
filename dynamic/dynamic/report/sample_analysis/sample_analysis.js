@@ -12,6 +12,20 @@ frappe.query_reports["Sample analysis"] = {
 			// "reqd": 1
 		},
 		{
+			"fieldname":"item",
+			"label": __("Item"),
+			"fieldtype": "Link",
+			"options": "Item",
+			// "reqd": 1
+		},
+		{
+			"fieldname":"cost_center",
+			"label": __("Cost Center"),
+			"fieldtype": "Link",
+			"options": "Cost Center",
+			// "reqd": 1
+		},
+		{
 			"fieldname":"from_date",
 			"label": __("From Date"),
 			"fieldtype": "Date",

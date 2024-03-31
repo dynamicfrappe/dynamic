@@ -92,6 +92,16 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "purpose" ,
             },
+			{
+                "label": "Matrial Type",
+                "fieldname": "matrial_type",
+                "fieldtype": "Select",
+                "insert_after": "mendatory_fields" ,
+				"options":"\nDispensing Simples\nReceived Simples\nDispensing Gift",
+				"depends_on":"eval:doc.mendatory_fields == true",
+                "mandatory_depends_on":"eval:doc.mendatory_fields == true"
+            },
+
         ],
         "Stock Entry":
         [
@@ -101,7 +111,7 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "sales_team" ,
                 "fetch_from":"stock_entry_type.mendatory_fields",
-                # "hidden": 1
+                "hidden": 1
             },
             {
                 "label": "Customer",
@@ -109,6 +119,15 @@ data = {
                 "fieldtype": "Link",
                 "insert_after": "stock_entry_type",
                 "options": "Customer",
+                "depends_on":"eval:doc.mendatory_fields == true",
+                "mandatory_depends_on":"eval:doc.mendatory_fields == true"
+            },
+			{
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "customer_id",
+                "options": "Cost Center",
                 "depends_on":"eval:doc.mendatory_fields == true",
                 "mandatory_depends_on":"eval:doc.mendatory_fields == true"
             },
