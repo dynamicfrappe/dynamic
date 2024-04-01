@@ -92,16 +92,6 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "purpose" ,
             },
-			{
-                "label": "Matrial Type",
-                "fieldname": "matrial_type",
-                "fieldtype": "Select",
-                "insert_after": "mendatory_fields" ,
-				"options":"\nDispensing Simples\nReceived Simples\nDispensing Gift",
-				"depends_on":"eval:doc.mendatory_fields == true",
-                "mandatory_depends_on":"eval:doc.mendatory_fields == true"
-            },
-
         ],
         "Stock Entry":
         [
@@ -111,7 +101,7 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "sales_team" ,
                 "fetch_from":"stock_entry_type.mendatory_fields",
-                "hidden": 1
+                # "hidden": 1
             },
             {
                 "label": "Customer",
@@ -119,15 +109,6 @@ data = {
                 "fieldtype": "Link",
                 "insert_after": "stock_entry_type",
                 "options": "Customer",
-                "depends_on":"eval:doc.mendatory_fields == true",
-                "mandatory_depends_on":"eval:doc.mendatory_fields == true"
-            },
-			{
-                "label": "Cost Center",
-                "fieldname": "cost_center",
-                "fieldtype": "Link",
-                "insert_after": "customer_id",
-                "options": "Cost Center",
                 "depends_on":"eval:doc.mendatory_fields == true",
                 "mandatory_depends_on":"eval:doc.mendatory_fields == true"
             },
@@ -140,7 +121,50 @@ data = {
                 "depends_on": "eval:doc.mendatory_fields == true",
             },
         ],
-        
+        "Item":[
+            {
+                "label": "Material",
+                "fieldname": "material",
+                "fieldtype": "Link",
+                "insert_after": "brand" ,
+                "options":"Material",
+            },
+            {
+                "label": "Origin",
+                "fieldname": "origin",
+                "fieldtype": "Link",
+                "insert_after": "material" ,
+                "options":"Origin",
+            },
+            {
+                "label": "Electroic Code",
+                "fieldname": "electroic_code",
+                "fieldtype": "Link",
+                "insert_after": "origin" ,
+                "options":"Electroic Code",
+            },
+            {
+                "label": "Old Code",
+                "fieldname": "old_code",
+                "fieldtype": "Link",
+                "insert_after": "electroic_code" ,
+                "options":"Old Code",
+            },
+            {
+                "label": "Size",
+                "fieldname": "size",
+                "fieldtype": "Link",
+                "insert_after": "old_code" ,
+                "options":"Size",
+            },
+            {
+                "label": "Group Code",
+                "fieldname": "group_code",
+                "fieldtype": "Data",
+                "insert_after": "item_group" ,
+            },
+            
+        ]
     },
      "properties": [
         {

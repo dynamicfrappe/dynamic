@@ -317,6 +317,7 @@ def get_item_sum_draft_qty(item ,s_warehouse , document_name =None):
 	if delivery_note_data and len(delivery_note_data) > 0 :
 				total_draft_qty +=  float( delivery_note_data[0].get("valid_qty") or 0 )
 	return total_draft_qty
+
 def delivery_note_validate_item_qty(doc, *args):
     if "Master Deals" in DOMAINS:
         for item in doc.items:

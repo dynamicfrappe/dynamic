@@ -186,14 +186,11 @@ doc_events = {
             "dynamic.controllers.delivery_note.validate_delivery_note",
             "dynamic.api.validate_delivery_note",
             "dynamic.weh.delevery_note.validate_delevery_note",
-            "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty",
+            # "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty",
         ],
         "before_save":[
              "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_delivery",
-        ],
-        "on_cancel": [
-            "dynamic.controllers.delivery_note.after_cancel",
-        ],
+        ]
     },
     "Journal Entry": {
         "before_submit": ["dynamic.controllers.journal_entry.before_submit_journal_entry"],
@@ -243,13 +240,11 @@ doc_events = {
     },
     "Stock Entry": {
         # In This Target check the branches data in cost center
-        "validate": [
-            "dynamic.api.validate_stock_entry",  
-            "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",
-            "dynamic.controllers.stock_entry.validate",
+        "validate": ["dynamic.api.validate_stock_entry"
+			,  "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",    
         ],
         "before_save":[
-             "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",
+            #  "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",
              "dynamic.controllers.stock_entry.before_save_stock_entry"
         ],
         "on_submit": "dynamic.api.submit_stock_entry",
