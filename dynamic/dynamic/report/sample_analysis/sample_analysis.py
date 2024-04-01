@@ -44,11 +44,11 @@ def execute(filters=None):
             st.sales_person , 
             se.cost_center
         FROM 
-            `tabStock Entry` se
+            `tabStock Entry` AS se
         JOIN
-            `tabStock Entry Detail` sed ON se.name = sed.parent
+            `tabStock Entry Detail` AS sed ON se.name = sed.parent
         LEFT JOIN
-            `tabSales Team` st ON se.name = st.parent
+            `tabSales Team` AS st ON se.name = st.parent
         {where_clause} AND se.stock_entry_type = '{dispensing_simples}'
 
     """
@@ -66,11 +66,11 @@ def execute(filters=None):
             st.sales_person ,
             se.cost_center
         FROM 
-            `tabStock Entry` se
+            `tabStock Entry` AS se
         JOIN
-            `tabStock Entry Detail` sed ON se.name = sed.parent
+            `tabStock Entry Detail` AS sed ON se.name = sed.parent
         LEFT JOIN
-            `tabSales Team` st ON se.name = st.parent
+            `tabSales Team` AS st ON se.name = st.parent
         {where_clause} AND se.stock_entry_type = '{received_simples}'
 
     """

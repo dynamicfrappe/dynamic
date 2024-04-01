@@ -44,24 +44,18 @@ def execute(filters=None):
             st.sales_person , 
             se.cost_center
         FROM 
-            `tabStock Entry` se
+            `tabStock Entry` AS se
         JOIN
-            `tabStock Entry Detail` sed ON se.name = sed.parent
+            `tabStock Entry Detail` AS sed ON se.name = sed.parent
         LEFT JOIN
-            `tabSales Team` st ON se.name = st.parent
+            `tabSales Team` AS st ON se.name = st.parent
         {where_clause} AND se.stock_entry_type = '{dispensing_simples}'
         GROUP BY 
             se.customer_id, 
-<<<<<<< HEAD
-            se.stock_entry_type
-    """.format(where_clause=where_clause), as_dict=True)
-
-=======
             se.stock_entry_type,
             sed.item_code
         """
     gift_transfer_data = frappe.db.sql(main_query, as_dict=True)
->>>>>>> 2c1013c00f143cc027516b2c3578486c9890d716
 
     received_simples = frappe.db.get_value("Stock Entry Type" , {"matrial_type":"Received Simples"} , 'name')
     second_query = f"""
@@ -74,21 +68,14 @@ def execute(filters=None):
             st.sales_person ,
             se.cost_center
         FROM 
-            `tabStock Entry` se
+            `tabStock Entry` AS se
         JOIN
-            `tabStock Entry Detail` sed ON se.name = sed.parent
+            `tabStock Entry Detail` AS sed ON se.name = sed.parent
         LEFT JOIN
-            `tabSales Team` st ON se.name = st.parent
+            `tabSales Team` AS st ON se.name = st.parent
         {where_clause} AND se.stock_entry_type = '{received_simples}'
         GROUP BY 
             se.customer_id, 
-<<<<<<< HEAD
-            se.stock_entry_type
-    """.format(where_clause=where_clause), as_dict=True)
-    if gift_received_data and gift_transfer_data:
-        result = [{'stock_entry_type':'total' , 'total_quantity': gift_received_data[0]['total_quantity'] - gift_transfer_data[0]['total_quantity']}]
-        data = gift_transfer_data + gift_received_data + result
-=======
             se.stock_entry_type,
             sed.item_code
     """
@@ -98,7 +85,6 @@ def execute(filters=None):
     if get_revieved_data and gift_transfer_data:
         result = [{'stock_entry_type':'total' , 'total_quantity': get_revieved_data[0]['total_quantity'] - gift_transfer_data[0]['total_quantity']}]
         data = gift_transfer_data + get_revieved_data + result
->>>>>>> 2c1013c00f143cc027516b2c3578486c9890d716
         return columns, data
     if not get_revieved_data or not gift_transfer_data:
         data = gift_transfer_data + get_revieved_data
