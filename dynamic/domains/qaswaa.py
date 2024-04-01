@@ -92,6 +92,13 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "purpose" ,
             },
+            {
+                "label": "Matrial Type",
+                "fieldname": "matrial_type",
+                "fieldtype": "Select",
+                "insert_after": "mendatory_fields" ,
+                "options":"\nDispensing Simples\nReceived Simples\nDispensing Gift"
+            },
         ],
         "Stock Entry":
         [
