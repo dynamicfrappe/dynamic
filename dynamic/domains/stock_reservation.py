@@ -36,12 +36,20 @@ data = {
                 "depends_on": "eval: doc.enable_stock_reservation == 1"
             },
             {
-                "label": "Auto Reserve Stock for Sales Order on Purchase",
-                "fieldname": "auto_reserve_stock_for_sales_order_on_purchase",
+                "label": "Auto Reserve Stock in Warehouse",
+                "fieldname": "auto_reserve_stock_in_warehouse",
                 "fieldtype": "Check",
                 "insert_after": "allow_partial_reservation" ,
-                "description": "Stock will be reserved on submission of Purchase Receipt created against Material Receipt for Sales Order.",
+                # "description": "Stock will be reserved on submission of Purchase Receipt created against Material Receipt for Sales Order.",
                 "depends_on": "eval: doc.enable_stock_reservation == 1"
+            },
+            {
+                "label": "Warehouse",
+                "fieldname": "warehouse",
+                "fieldtype": "Link",
+                "insert_after": "auto_reserve_stock_in_warehouse" ,
+                "depends_on": "eval: doc.auto_reserve_stock_in_warehouse == 1",
+                "options":"Warehouse"
             },
         ],
         "Sales Order":[
@@ -52,6 +60,41 @@ data = {
                 "insert_after": "order_type" ,
                 "depends_on": "eval: (doc.docstatus == 0 || doc.reserve_stock)",
                 "description": "If checked, Stock will be reserved on <b>Submit</b>"
+            },
+            {
+                "label": "Reserved for warehouse",
+                "fieldname": "reserve_for_warehouse",
+                "fieldtype": "Link",
+                "insert_after": "set_warehouse" ,
+                "read_only": 1 ,
+                "options":"Warehouse"
+            },
+        ],
+        "Stock Entry":[
+            {
+                "label": "Refrence Sales Order",
+                "fieldname": "ref_sales_order",
+                "fieldtype": "Link",
+                "insert_after": "from_warehouse" ,
+                "options":"Sales Order",
+                "read_only": 1
+            },
+        ],
+        "Stock Entry Detail":[
+            {
+                "label": "Refrence Sales Order",
+                "fieldname": "ref_sales_order",
+                "fieldtype": "Link",
+                "insert_after": "job_card_item" ,
+                "options":"Sales Order",
+                "read_only": 1
+            },
+            {
+                "label": "Refrence Index",
+                "fieldname": "ref_idx",
+                "fieldtype": "Data",
+                "insert_after": "ref_sales_order" ,
+                "read_only": 1
             },
         ]
     },

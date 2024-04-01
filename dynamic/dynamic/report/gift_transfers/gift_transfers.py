@@ -89,8 +89,3 @@ def execute(filters=None):
     if not get_revieved_data or not gift_transfer_data:
         data = gift_transfer_data + get_revieved_data
         return columns, data
-
-
-
-# AND se.stock_entry_type = {dispensing_simples}
-# AND se.stock_entry_type = {received_simples}
