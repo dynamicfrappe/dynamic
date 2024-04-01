@@ -45,7 +45,7 @@ def execute(filters=None):
             AND se.stock_entry_type = 'صرف عينات'
             AND ({where_clause})
         GROUP BY 
-            se.customer, 
+            se.customer_id, 
             se.stock_entry_type
     """.format(where_clause=where_clause), as_dict=True)
 
@@ -69,7 +69,7 @@ def execute(filters=None):
             AND se.stock_entry_type = 'استلام عينات'
             AND ({where_clause})
         GROUP BY 
-            se.customer, 
+            se.customer_id, 
             se.stock_entry_type
     """.format(where_clause=where_clause), as_dict=True)
     if gift_received_data and gift_transfer_data:
