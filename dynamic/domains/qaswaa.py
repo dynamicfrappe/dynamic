@@ -159,10 +159,17 @@ data = {
 				"insert_after": "size_" ,
 			},
 			{
+				"label": "Group Code 2",
+				"fieldname": "group_code2",
+				"fieldtype": "Data",
+				"insert_after": "group_code" ,
+				"fetch_from": "item_group.group_code"
+			},
+			{
 				"label": "Objective",
 				"fieldname": "objective_",
 				"fieldtype": "Link",
-				"insert_after": "group_code" ,
+				"insert_after": "group_code2" ,
 				"options":"Objective",
 			},
 		]
