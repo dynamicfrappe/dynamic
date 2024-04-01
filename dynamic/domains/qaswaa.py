@@ -112,6 +112,14 @@ data = {
                 "depends_on":"eval:doc.mendatory_fields == true",
                 "mandatory_depends_on":"eval:doc.mendatory_fields == true"
             },
+			{
+				"label": "Old Stock Entry",
+				"fieldname": "old_stock_entry",
+				"fieldtype": "Link",
+				"insert_after": "customer_id",
+				"options": "Stock Entry",
+				"hidden": 1,
+			},
             {
                 "label": "Sales Team",
                 "fieldname": "sales_team",
