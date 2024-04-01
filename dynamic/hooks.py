@@ -59,10 +59,12 @@ doctype_list_js = {
 after_install = [
     "dynamic.install.after_install",
     "dynamic.dynamic.utils.create_customizations",
+    "dynamic.stock_reservation.setup.setup",
 ]
 after_migrate = [
     "dynamic.install.after_install",
     "dynamic.dynamic.utils.create_customizations",
+    "dynamic.stock_reservation.setup.setup",
 ]
 # Desk Notifications
 # ------------------
@@ -84,13 +86,21 @@ override_doctype_class = {
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Sales Order": "public/js/sales_order.js",
-    "Stock Entry": "public/js/stock_entry.js",
+    "Stock Entry": 
+    [
+        "public/js/stock_entry.js",
+        "qaswaa/controllers/js/stock_entry.js",
+    ],
     "Purchase Order": "public/js/purchase_order.js",
     "Purchase Invoice": "public/js/purchase_invoice.js",
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
-    "Delivery Note": ["public/js/delivery_note.js","qaswaa/controllers/js/delivery_note.js"],
+    "Delivery Note": 
+    [
+        "public/js/delivery_note.js",
+        "qaswaa/controllers/js/delivery_note.js"
+    ],
     "Lead": "public/js/lead.js",
     "Supplier": "public/js/supplier.js",
     "Customer": "public/js/customer.js",
@@ -143,12 +153,18 @@ doc_events = {
         "on_submit": [
             "dynamic.gebco.api.validate_sales_invoice",
             "dynamic.controllers.sales_invoice.before_submit",
+            
         ],
         "validate": [
             "dynamic.controllers.sales_invoice.validate",
             "dynamic.api.validate_active_domains",
+            "dynamic.controllers.sales_invoice.after_submit",
+            
         ],
-        "on_cancel": "dynamic.api.invoice_on_cancel",
+        "on_cancel": [
+            "dynamic.api.invoice_on_cancel",
+            "dynamic.controllers.sales_invoice.after_cancel",
+        ],
         "before_insert": "dynamic.api.before_insert_invoice",
         # "before_cancel" : "dynamic.api.before_cancel_invoice",
     },
@@ -163,6 +179,7 @@ doc_events = {
     "Delivery Note": {
         "on_submit": [
             "dynamic.gebco.api.validate_delivery_note",
+            "dynamic.controllers.delivery_note.after_submit",
         ],
         # "before_submit": ["dynamic.api.delivery_note_before_submit"],
         "validate": [
@@ -172,7 +189,7 @@ doc_events = {
             # "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty",
         ],
         "before_save":[
-            #  "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_delivery",
+             "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_delivery",
         ]
     },
     "Journal Entry": {
@@ -186,10 +203,12 @@ doc_events = {
         ],
         "validate": ["dynamic.elevana.hooks.add_partener_to_sales_order",
                     "dynamic.controllers.sales_order.validate_sales_order",
+                    "dynamic.controllers.sales_order.validate_sales_order_for_stock",
                      ],
         "on_cancel": "dynamic.api.cancel_reservation",
         "on_submit": [
             "dynamic.real_state.rs_api.so_on_submit",
+            "dynamic.controllers.sales_order.on_submit",
         ],
         # "on_update_after_submit":"dynamic.api.change_row_after_submit"
     },
@@ -222,7 +241,7 @@ doc_events = {
     "Stock Entry": {
         # In This Target check the branches data in cost center
         "validate": ["dynamic.api.validate_stock_entry"
-			# ,  "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",    
+			,  "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",    
         ],
         "before_save":[
             #  "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",
@@ -428,6 +447,7 @@ domains = {
     "Logistics": "dynamic.domains.logistics",
     "Notebook": "dynamic.domains.notebook",
     "Smart Vision": "dynamic.domains.smart_vision",
+    "Stock Reservation": "dynamic.domains.stock_reservation"
 }
 
 # domain Conatin
