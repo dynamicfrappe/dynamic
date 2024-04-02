@@ -1,6 +1,7 @@
 frappe.ui.form.on("Stock Entry", {  
   customer_id:function(frm){
     let stock_entry_type = frm.doc.stock_entry_type;
+    console.log(stock_entry_type);
       if (stock_entry_type){
         let matrial_type = get_data("Stock Entry Type" , stock_entry_type);
         if (matrial_type.matrial_type === "Received Simples"){
@@ -51,6 +52,41 @@ frappe.ui.form.on("Stock Entry", {
       }
     }
   })
+
+
+  function get_ops(){
+    var temp ;
+    frappe.call({
+      async:false,
+      method: 'frappe.client.get',
+      args: {
+          doctype: "Stock Entry Type",
+          filters:{
+            "matrial_type" : "Dispensing Simples"
+          },
+      },
+      callback: (r) => {
+        temp = r.message.name;
+      },
+    })
+    return temp ;
+  }
+  
+  function get_data(doctype , name ){
+    var temp ;
+    frappe.call({
+      async:false,
+      method: 'frappe.client.get',
+      args: {
+          doctype: doctype,
+          name:name,
+      },
+      callback: (r) => {
+        temp = r.message;
+      },
+    })
+    return temp ;
+  }
 
 
 frappe.ui.form.on("Stock Entry", {
