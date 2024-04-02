@@ -5,6 +5,7 @@ from frappe import _
 
 data = {
 
+
     'custom_fields': {
         "Sales Order":
         [ 
@@ -92,6 +93,7 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "purpose" ,
             },
+
             {
                 "label": "Matrial Type",
                 "fieldname": "matrial_type",
@@ -99,6 +101,7 @@ data = {
                 "insert_after": "mendatory_fields" ,
                 "options":"\nDispensing Simples\nReceived Simples\nDispensing Gift"
             },
+
         ],
         "Stock Entry":
         [
@@ -119,6 +122,7 @@ data = {
                 "depends_on":"eval:doc.mendatory_fields == true",
                 "mandatory_depends_on":"eval:doc.mendatory_fields == true"
             },
+
 			{
 				"label": "Old Stock Entry",
 				"fieldname": "old_stock_entry",
@@ -127,6 +131,7 @@ data = {
 				"options": "Stock Entry",
 				"hidden": 1,
 			},
+
             {
                 "label": "Sales Team",
                 "fieldname": "sales_team",
@@ -136,6 +141,7 @@ data = {
                 "depends_on": "eval:doc.mendatory_fields == true",
             },
         ],
+
         "Item":[
             {
 				"label": "Material",
@@ -188,6 +194,7 @@ data = {
 			},
             
         ]
+
     },
      "properties": [
         {
@@ -199,4 +206,5 @@ data = {
         # "value": "0"
         },
      ]
+
 }

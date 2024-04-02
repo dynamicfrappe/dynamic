@@ -1,6 +1,5 @@
 frappe.ui.form.on("Sales Invoice", {
   setup(frm) {
-    frm.set_value("update_stock","1")
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {

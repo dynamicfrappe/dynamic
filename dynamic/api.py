@@ -106,13 +106,14 @@ from .api_hooks.sales_invoice import validate_sales_invocie_to_moyate
 from dynamic.dynamic.validation import get_active_domain, validate_sales_invoice
 from dynamic.gebco.doctype.sales_invocie.stock_settings import caculate_shortage_item
 from dynamic.gebco.doctype.stock_ledger import get_valuation_rate
-
+from dynamic.moyaty.doctype.sales_invoice.vat_qr import create_qr_code
 DOMAINS = frappe.get_active_domains()
 
 
 @frappe.whitelist()
 def validate_active_domains(doc, *args, **kwargs):
 	if "Moyate" in DOMAINS:
+		create_qr_code(doc)
 		"""Validate Sales Commition With Moyate"""
 		if isinstance(doc, str):
 			doc = json.loads(doc)
