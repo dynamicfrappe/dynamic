@@ -67,6 +67,7 @@ class PayandReceiptDocument(Document):
 		account_currency = get_account_currency(self.account)
 		account_exchange_rate = flt(self.exchange_rate)
 		amount_in_account_currency = self.amount
+		DOMAINS = frappe.get_active_domains()
 		if account_currency != self.currency:
 			if account_currency == company_currency:
 				account_exchange_rate = 1
@@ -170,7 +171,15 @@ class PayandReceiptDocument(Document):
 				})
 
 		je.multi_currency = 1
-		je.submit()
+
+		
+		if "Maser2000" in DOMAINS :
+			for i in je.accounts :
+				i.user_remark=" Add Note "
+				
+			je.save()
+		else :
+			je.submit()
 		self.journal_entry = je.name
 		self.db_set("journal_entry",je.name)
 		lnk = get_link_to_form(je.doctype, je.name)
