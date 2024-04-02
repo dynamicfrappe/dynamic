@@ -93,6 +93,15 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "purpose" ,
             },
+
+            {
+                "label": "Matrial Type",
+                "fieldname": "matrial_type",
+                "fieldtype": "Select",
+                "insert_after": "mendatory_fields" ,
+                "options":"\nDispensing Simples\nReceived Simples\nDispensing Gift"
+            },
+
         ],
         "Stock Entry":
         [
@@ -113,6 +122,16 @@ data = {
                 "depends_on":"eval:doc.mendatory_fields == true",
                 "mandatory_depends_on":"eval:doc.mendatory_fields == true"
             },
+
+			{
+				"label": "Old Stock Entry",
+				"fieldname": "old_stock_entry",
+				"fieldtype": "Link",
+				"insert_after": "customer_id",
+				"options": "Stock Entry",
+				"hidden": 1,
+			},
+
             {
                 "label": "Sales Team",
                 "fieldname": "sales_team",
@@ -122,7 +141,60 @@ data = {
                 "depends_on": "eval:doc.mendatory_fields == true",
             },
         ],
-        
+
+        "Item":[
+            {
+				"label": "Material",
+				"fieldname": "material",
+				"fieldtype": "Link",
+				"insert_after": "brand" ,
+				"options":"Material",
+			},
+			{
+				"label": "Origin",
+				"fieldname": "origin",
+				"fieldtype": "Link",
+				"insert_after": "material" ,
+				"options":"Origin",
+			},
+			{
+				"label": "Electroic Code",
+				"fieldname": "electroic_code",
+				"fieldtype": "Link",
+				"insert_after": "origin" ,
+				"options":"Electroic Code",
+			},
+ 
+			{
+				"label": "Size",
+				"fieldname": "size_",
+				"fieldtype": "Link",
+				"insert_after": "electroic_code" ,
+				"options":"Size",
+			},
+			{
+				"label": "Group Code",
+				"fieldname": "group_code",
+				"fieldtype": "Data",
+				"insert_after": "size_" ,
+			},
+			{
+				"label": "Group Code 2",
+				"fieldname": "group_code2",
+				"fieldtype": "Data",
+				"insert_after": "group_code" ,
+				"fetch_from": "item_group.group_code"
+			},
+			{
+				"label": "Objective",
+				"fieldname": "objective_",
+				"fieldtype": "Link",
+				"insert_after": "group_code2" ,
+				"options":"Objective",
+			},
+            
+        ]
+
     },
      "properties": [
         {

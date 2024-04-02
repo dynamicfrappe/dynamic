@@ -86,13 +86,21 @@ override_doctype_class = {
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Sales Order": "public/js/sales_order.js",
-    "Stock Entry": "public/js/stock_entry.js",
+    "Stock Entry": 
+    [
+        "public/js/stock_entry.js",
+        "qaswaa/controllers/js/stock_entry.js",
+    ],
     "Purchase Order": "public/js/purchase_order.js",
     "Purchase Invoice": "public/js/purchase_invoice.js",
     "Product Bundle": "product_bundle/doctype/product_bundle/product_bundle.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
-    "Delivery Note": ["public/js/delivery_note.js","qaswaa/controllers/js/delivery_note.js"],
+    "Delivery Note": 
+    [
+        "public/js/delivery_note.js",
+        "qaswaa/controllers/js/delivery_note.js"
+    ],
     "Lead": "public/js/lead.js",
     "Supplier": "public/js/supplier.js",
     "Customer": "public/js/customer.js",
@@ -182,11 +190,13 @@ doc_events = {
         ],
         "before_save":[
 
+
              "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_delivery",
         ],
         "on_cancel": [
             "dynamic.controllers.delivery_note.after_cancel",
         ],
+
 
     },
     "Journal Entry": {
@@ -238,10 +248,12 @@ doc_events = {
     "Stock Entry": {
         # In This Target check the branches data in cost center
 
+
         "validate": [
             "dynamic.api.validate_stock_entry",  
             "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",
             "dynamic.controllers.stock_entry.validate",
+
 
         ],
         "before_save":[

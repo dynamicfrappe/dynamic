@@ -72,5 +72,8 @@ def get_all_qty_reserved (item_code, warehouse):
     actual_qty = (qty_reserved if qty_reserved else 0 ) - (qty_delivered if qty_delivered else 0)
 
     bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
-    total = bin_qty - actual_qty
+
+    total = float(bin_qty or 0 )- actual_qty
+
+
     return total
