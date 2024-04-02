@@ -5,6 +5,7 @@ from frappe import _
 
 data = {
 
+
     'custom_fields': {
         "Sales Order":
         [ 
@@ -133,4 +134,5 @@ data = {
         # "value": "0"
         },
      ]
+
 }
