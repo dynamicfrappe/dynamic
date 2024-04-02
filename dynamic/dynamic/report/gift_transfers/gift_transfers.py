@@ -5,13 +5,15 @@ from frappe import _
 
 def execute(filters=None):
     columns = [
-        _("Customer") + ":Link/Customer:120",
-        _("Transaction") + ":Link/Stock Entry:200",
-        _("Item") + ":Link/Item:250",
-        _("Stock Entry Type") + "::150",
-        _("Total Quantity") + ":Float:120",
-        _("Sales Person") + ":Link/Sales Person:120",
-        _("Cost Center") + ":Link/Cost Center:150",
+        ("Customer") + ":Link/Customer:120",
+        ("Transaction") + ":Link/Stock Entry:200",
+        ("Item") + ":Link/Item:200",
+        ("Stock Entry Type") + "::150",
+        ("Total Quantity") + ":Float:100",
+        ("Sales Person") + ":Link/Sales Person:120",
+        ("Cost Center") + ":Link/Cost Center:100",
+        ("Target Warehouse") + ":Link/Warehouse:150",
+        ("Source Warehouse") + ":Link/Warehouse:150",
     ]
     
     conditions = []
@@ -25,6 +27,12 @@ def execute(filters=None):
     if filters.get("item"):
         conditions.append("sed.item_code = '{}'".format(filters.get("item")))
         where_clause = where_clause + f"""AND sed.item_code = '{filters.get("item")}'"""
+    if filters.get("t_warehouse"):
+        conditions.append("sed.t_warehouse = '{}'".format(filters.get("t_warehouse")))
+        where_clause = where_clause + f"""AND sed.t_warehouse = '{filters.get("t_warehouse")}'"""
+    if filters.get("s_warehouse"):
+        conditions.append("sed.s_warehouse = '{}'".format(filters.get("s_warehouse")))
+        where_clause = where_clause + f"""AND sed.s_warehouse = '{filters.get("s_warehouse")}'"""
     if filters.get("from_date"):
         conditions.append("se.posting_date >= '{}'".format(filters.get("from_date")))
         where_clause = where_clause + f"""AND se.posting_date >= '{filters.get("from_date")}'"""
@@ -42,7 +50,9 @@ def execute(filters=None):
             se.stock_entry_type, 
             SUM(sed.qty) AS total_quantity, 
             st.sales_person , 
-            se.cost_center
+            se.cost_center,
+            sed.t_warehouse AS "target_warehouse",
+            sed.s_warehouse AS "source_warehouse"
         FROM 
             `tabStock Entry` AS se
         JOIN
@@ -66,7 +76,9 @@ def execute(filters=None):
             se.stock_entry_type, 
             SUM(sed.qty) AS total_quantity, 
             st.sales_person ,
-            se.cost_center
+            se.cost_center , 
+            sed.t_warehouse AS "target_warehouse",
+            sed.s_warehouse AS "source_warehouse"
         FROM 
             `tabStock Entry` AS se
         JOIN

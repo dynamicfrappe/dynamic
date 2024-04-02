@@ -29,12 +29,24 @@ frappe.query_reports["gift transfers"] = {
 			"fieldname":"from_date",
 			"label": __("From Date"),
 			"fieldtype": "Date",
-			"default" : frappe.datetime.get_today()
+			// "default" : frappe.datetime.get_today()
 		},
 		{
 			"fieldname":"to_date",
 			"label": __("To Date"),
 			"fieldtype": "Date",
+		},
+		{
+			"fieldname":"t_warehouse",
+			"label": __("Target Warehouse"),
+			"fieldtype": "Link",
+			"options": "Warehouse",
+		},
+		{
+			"fieldname":"s_warehouse",
+			"label": __("Source Warehouse"),
+			"fieldtype": "Link",
+			"options": "Warehouse",
 		},
 	]
 };
