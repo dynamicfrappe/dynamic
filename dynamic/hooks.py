@@ -208,16 +208,22 @@ doc_events = {
         "before_save": [
             "dynamic.api.check_source_item",
         ],
-        "validate": ["dynamic.elevana.hooks.add_partener_to_sales_order",
-                    "dynamic.controllers.sales_order.validate_sales_order",
-                    "dynamic.controllers.sales_order.validate_sales_order_for_stock",
-                     ],
-        "on_cancel": "dynamic.api.cancel_reservation",
+        "validate": [
+            "dynamic.elevana.hooks.add_partener_to_sales_order",
+            "dynamic.controllers.sales_order.validate_sales_order",
+            "dynamic.controllers.sales_order.validate_sales_order_for_stock",
+                    ],
+        "on_cancel": [
+            "dynamic.api.cancel_reservation",
+            "dynamic.controllers.sales_order.on_cancel",
+            ],
         "on_submit": [
             "dynamic.real_state.rs_api.so_on_submit",
             "dynamic.controllers.sales_order.on_submit",
         ],
-        # "on_update_after_submit":"dynamic.api.change_row_after_submit"
+        "before_update_after_submit":[
+            "dynamic.controllers.sales_order.on_submit"
+        ],
     },
     "Coupon Code": {
         # this hook will apply only elevana Domain to send coupon code to woo commerce api

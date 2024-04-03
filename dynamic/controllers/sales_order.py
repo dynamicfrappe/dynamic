@@ -25,14 +25,27 @@ def validate_sales_order_for_stock(self , event):
 def on_submit(self , event):
     if "Stock Reservation" in Domains:
         if frappe.db.get_single_value("Stock Settings" , "allow_partial_reservation"):
-            creation_of_reseration(self , event)
+            if self.reserve_stock:
+                creation_of_reseration(self , event)
         if frappe.db.get_single_value("Stock Settings" , "auto_reserve_stock_in_warehouse"):
                 transfer_items(self , event)
         
+def on_cancel(self , event):
+    if "Stock Reservation" in Domains:
+        cencel_reservation(self , event)
         
-    
 
-
+def cencel_reservation(self , event):
+    items = self.get("items")
+    for item in items:
+        doc = frappe.get_doc("Stock Reservation Entry" , {
+            "item_code":item.item_code,
+            "warehouse":item.warehouse,
+            "voucher_no":self.name ,
+            "voucher_detail_no" : item.name
+            })
+        doc.status = "Cancelled" 
+        doc.db_update()
 
 def transfer_items(self , *args, **kwargs):
     items = self.get("items")
@@ -64,19 +77,20 @@ def transfer_items(self , *args, **kwargs):
 
 
 
-def on_submit(self , event):
-    if "Stock Reservation" in Domains:
-        creation_of_reseration(self , event)
+# def on_submit(self , event):
+#     if "Stock Reservation" in Domains:
+#         creation_of_reseration(self , event)
     
 
 
     
 def reserve_in_warehouse(self, *args, **kwargs):
     warehouse = frappe.db.get_single_value("Stock Settings" , "warehouse")
-    self.reserve_for_warehouse = warehouse
-    items = self.get("items")
-    for item in items:
-        item.warehouse = warehouse
+    if warehouse:
+        self.reserve_for_warehouse = warehouse
+        items = self.get("items")
+        for item in items:
+            item.warehouse = warehouse
 
 
 
@@ -215,10 +229,17 @@ def get_all_qty_reserved (item_code, warehouse):
     """, (item_code, warehouse), as_dict=1)
     qty_reserved = item_reserved[0]['reserved_qty']
 
-
-
-  
-
+    item_delivered = frappe.db.sql("""
+    SELECT
+        SUM(`delivered_qty`) as delivered_qty
+    FROM 
+        `tabStock Reservation Entry`
+    WHERE
+        (`status` = 'Partially Reserved' OR `status` = 'Reserved' OR `status` = 'Partially Delivered') 
+        AND `item_code` = %s 
+        AND `warehouse` = %s
+    """, (item_code, warehouse), as_dict=1)
+    qty_delivered = item_delivered[0]['delivered_qty']
 
     actual_qty = float(qty_reserved or 0 ) - float( qty_delivered or 0 )
     bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
