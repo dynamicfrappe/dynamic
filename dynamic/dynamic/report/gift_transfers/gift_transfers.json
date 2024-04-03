@@ -27,12 +27,19 @@
    "label": "To Date",
    "mandatory": 0,
    "wildcard_filter": 1
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "mandatory": 0,
+   "wildcard_filter": 0
   }
  ],
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "El Qaswaa",
- "modified": "2024-03-20 13:28:50.511717",
+ "modified": "2024-03-28 12:12:38.090187",
  "modified_by": "Administrator",
  "module": "dynamic",
  "name": "gift transfers",

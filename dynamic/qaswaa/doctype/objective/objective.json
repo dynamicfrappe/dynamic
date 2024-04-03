@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:name1",
  "creation": "2024-03-19 16:28:24.350557",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -12,15 +13,16 @@
   {
    "fieldname": "name1",
    "fieldtype": "Data",
-   "label": "Name"
+   "label": "Name",
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-19 16:28:24.350557",
+ "modified": "2024-03-25 14:17:56.704345",
  "modified_by": "Administrator",
  "module": "Qaswaa",
- "name": "Old Code",
+ "name": "Objective",
  "owner": "Administrator",
  "permissions": [
   {
