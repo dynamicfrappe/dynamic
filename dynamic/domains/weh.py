@@ -103,6 +103,16 @@ data = {
             },
            
        ],
+
+     #   "User" :[
+     #      {"lable" :"Defaulte Warehouse"  ,
+     #        "fieldname":"defaulte_ware_house",
+     #        "fieldtype":"Link",
+     #        "insert_after":"user_allowed",
+     #        "options":"Warehouse User",
+          
+     #      }
+     #  ]
     },"properties": [
      {
         "doctype": "Material Request",

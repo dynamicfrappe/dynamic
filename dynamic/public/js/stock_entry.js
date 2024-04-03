@@ -49,6 +49,34 @@ frappe.ui.form.on("Stock Entry", {
         }
     })
     },
+
+    setup_source_warehouse(frm){
+      frappe.call({
+        "method" : "dynamic.weh.controllers.get_defaulte_source_warehouse",
+        callback:function(r) {
+          if (r.message) {
+           frm.set_value("set_warehouse" , r.message[0]) 
+           frm.refresh_field("set_warehouse")
+           
+          frm.set_query("set_warehouse", function(){
+            return {
+              "filters": [
+                  ["Warehouse", "name", "in", r.message],
+              
+              ]
+          }
+          })
+
+         if (r.message.length == 1){
+          frm.set_df_property("set_warehouse", "read_only", 1);
+          frm.refresh_field("set_warehouse")
+         }
+        }
+        }
+      })
+
+
+    },
     set_field_property(frm){
       if(frm.doc.stock_entry_type == 'Material Transfer'){
         frappe.call({
@@ -114,6 +142,8 @@ frappe.ui.form.on("Stock Entry", {
      
     },
     refresh:function(frm){
+      
+     
       // frm.custom_transaction_controller = new erpnext.CustomTransactionController(frm);
       frm.events.trea_setup(frm)
       frm.events.set_property(frm)
@@ -126,6 +156,9 @@ frappe.ui.form.on("Stock Entry", {
       frappe.call({
         method: "dynamic.api.get_active_domains",
         callback: function (r) { 
+          if (frm.doc.owner != frappe.session.user) {
+            frm.set_read_only()
+          }
           if (r.message && r.message.length) {
             if (r.message.includes("WEH")) {
               frappe.call({
