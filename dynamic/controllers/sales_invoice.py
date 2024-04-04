@@ -55,13 +55,18 @@ def submit_invoice(self):
 def edit_of_reseration(self ):
 	items = self.get("items")
 	for item in items:
-		doc = frappe.get_doc("Stock Reservation Entry" , {
-			"item_code":item.item_code,
-			"warehouse":item.warehouse,
-			"voucher_no":item.sales_order,
-			"voucher_detail_no" : item.so_detail
-			})
-		if doc:
+		if frappe.db.exists("Stock Reservation Entry" ,{
+				"item_code":item.item_code,
+				"warehouse":item.warehouse,
+				"voucher_no":item.sales_order,
+				"voucher_detail_no" : item.so_detail
+				}):
+			doc = frappe.get_doc("Stock Reservation Entry" , {
+				"item_code":item.item_code,
+				"warehouse":item.warehouse,
+				"voucher_no":item.sales_order,
+				"voucher_detail_no" : item.so_detail
+				})
 			qty = (doc.delivered_qty if doc.delivered_qty else 0 ) + item.stock_qty 
 			doc.delivered_qty = qty 
 			doc.save()
@@ -71,13 +76,18 @@ def edit_of_reseration(self ):
 def validate_when_cancel(self):
 	items = self.get("items")
 	for item in items:
-		doc = frappe.get_doc("Stock Reservation Entry" , {
+		if frappe.db.exists("Stock Reservation Entry" ,{
+				"item_code":item.item_code,
+				"warehouse":item.warehouse,
+				"voucher_no":item.sales_order,
+				"voucher_detail_no" : item.so_detail
+				}):
+			doc = frappe.get_doc("Stock Reservation Entry" , {
 			"item_code":item.item_code,
 			"warehouse":item.warehouse,
 			"voucher_no":item.sales_order,
 			"voucher_detail_no" : item.so_detail
 			})
-		if doc:
 			qty = (doc.delivered_qty if doc.delivered_qty else 0 ) - item.stock_qty 
 			doc.delivered_qty = qty 
 			doc.save()
