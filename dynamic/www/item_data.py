@@ -23,7 +23,7 @@ def get_context(context):
     context.item_doc = item_doc
     context.img_link = img_link 
     context.item_price = item_price or 0
-    context.qty = get_item_stock(item_code) or 0
+    context.qty = get_item_stock2(item_code) or 0
     return context
 
 def escape_html_show(text):
@@ -107,3 +107,27 @@ def get_item_stock(item) :
         if qty and len(qty) > 0 :
             qty= qty[0].get("qty")
         return qty
+
+
+def get_item_stock2(item) :
+    warehouse  = frappe.db.get_single_value('Stock Settings','warehouse')
+    sum_of_item = 0
+    if warehouse:
+        sql = f""" 
+        SELECT
+            SUM( rw.current_available_qty - rw.reserved_qty ) as qty
+        FROM
+            `tabReservation` r
+        JOIN
+            `tabReservation Warehouse` rw ON r.name = rw.parent
+        WHERE
+            r.status = 'Active'
+            AND rw.warehouse = '{warehouse}'
+            AND rw.item = '{item}' ;  """
+        qty = frappe.db.sql(sql,as_dict=1)
+        if qty and len(qty) > 0 :
+            sum_of_item= qty[0].get("qty")
+        return sum_of_item
+
+
+        
