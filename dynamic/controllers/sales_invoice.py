@@ -61,10 +61,11 @@ def edit_of_reseration(self ):
 			"voucher_no":item.sales_order,
 			"voucher_detail_no" : item.so_detail
 			})
-		qty = (doc.delivered_qty if doc.delivered_qty else 0 ) + item.stock_qty 
-		doc.delivered_qty = qty 
-		doc.save()
-		frappe.db.commit()
+		if doc:
+			qty = (doc.delivered_qty if doc.delivered_qty else 0 ) + item.stock_qty 
+			doc.delivered_qty = qty 
+			doc.save()
+			frappe.db.commit()
 
 
 def validate_when_cancel(self):
@@ -76,10 +77,11 @@ def validate_when_cancel(self):
 			"voucher_no":item.sales_order,
 			"voucher_detail_no" : item.so_detail
 			})
-		qty = (doc.delivered_qty if doc.delivered_qty else 0 ) - item.stock_qty 
-		doc.delivered_qty = qty 
-		doc.save()
-		frappe.db.commit()
+		if doc:
+			qty = (doc.delivered_qty if doc.delivered_qty else 0 ) - item.stock_qty 
+			doc.delivered_qty = qty 
+			doc.save()
+			frappe.db.commit()
 	
 
 

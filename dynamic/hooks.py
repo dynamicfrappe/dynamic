@@ -222,7 +222,7 @@ doc_events = {
             "dynamic.controllers.sales_order.on_submit",
         ],
         "before_update_after_submit":[
-            "dynamic.controllers.sales_order.on_submit"
+            "dynamic.controllers.sales_order.on_update"
         ],
     },
     "Coupon Code": {
