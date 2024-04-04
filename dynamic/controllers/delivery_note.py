@@ -23,7 +23,7 @@ def edit_of_reseration(self):
         if frappe.db.exists("Stock Reservation Entry" ,{
 				"item_code":item.item_code,
 				"warehouse":item.warehouse,
-				"voucher_no":item.sales_order,
+				"voucher_no":item.against_sales_order,
 				"voucher_detail_no" : item.so_detail
 				}):
             doc = frappe.get_doc("Stock Reservation Entry" , {
@@ -43,7 +43,7 @@ def validate_when_cancel(self):
         if frappe.db.exists("Stock Reservation Entry" ,{
 				"item_code":item.item_code,
 				"warehouse":item.warehouse,
-				"voucher_no":item.sales_order,
+				"voucher_no":item.against_sales_order,
 				"voucher_detail_no" : item.so_detail
 				}):
             doc = frappe.get_doc("Stock Reservation Entry" , {
