@@ -7,7 +7,7 @@ data = {
 
     'custom_fields': {
         "Stock Settings":
-        [ 
+        [
             {
                 "label": "Stock Reservation",
                 "fieldname": "section_break_101",
@@ -42,7 +42,8 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "allow_partial_reservation" ,
                 # "description": "Stock will be reserved on submission of Purchase Receipt created against Material Receipt for Sales Order.",
-                "depends_on": "eval: doc.enable_stock_reservation == 1"
+                "depends_on": "eval: doc.enable_stock_reservation == 1",
+                
             },
             {
                 "label": "Warehouse",
@@ -52,7 +53,7 @@ data = {
                 "depends_on": "eval: doc.auto_reserve_stock_in_warehouse == 1",
                 "options":"Warehouse"
             },
-
+            {
                 "label": "Auto Reserve Stock for Sales Order on Purchase",
                 "fieldname": "auto_reserve_stock_for_sales_order_on_purchase",
                 "fieldtype": "Check",
@@ -60,7 +61,6 @@ data = {
                 "description": "Stock will be reserved on submission of Purchase Receipt created against Material Receipt for Sales Order.",
                 "depends_on": "eval: doc.enable_stock_reservation == 1"
             },
-
         ],
         "Sales Order":[
             {
@@ -68,8 +68,8 @@ data = {
                 "fieldname": "reserve_stock",
                 "fieldtype": "Check",
                 "insert_after": "order_type" ,
-                "depends_on": "eval: (doc.docstatus == 0 || doc.reserve_stock)",
-                "description": "If checked, Stock will be reserved on <b>Submit</b>"
+                "description": "If checked, Stock will be reserved on <b>Submit</b>" , 
+                "allow_on_submit": 1
             },
 
             {

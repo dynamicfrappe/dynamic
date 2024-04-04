@@ -24,7 +24,7 @@ def validation(doc):
 		elif delivered_qty > 0 and doc.delivered_qty < doc.reserved_qty:
 			doc.status = "Partially Delivered"
 
-		elif doc.delivered_qty <= 0:
+		elif doc.delivered_qty == 0:
 
 			doc.status = "Reserved"
 
@@ -40,8 +40,8 @@ def validation(doc):
 		doc.delivered_qty = doc.reserved_qty
 	
 
-	if doc.delivered_qty < 0 or doc.delivered_qty < 0 :
-		frappe.throw("Error Qty")
+	# if doc.delivered_qty < 0 or doc.delivered_qty < 0 :
+	# 	frappe.throw("Error Qty")
 
 	doc.db_update()
 
