@@ -17,6 +17,7 @@ frappe.ui.form.on("Stock Entry", {
         }
       }
     },
+     
     old_stock_entry:function(frm){
       let old_stock_entry = frm.doc.old_stock_entry ;
         if(old_stock_entry){
@@ -53,7 +54,7 @@ frappe.ui.form.on("Stock Entry", {
     }
   })
 
-
+ 
   function get_ops(){
     var temp ;
     frappe.call({
@@ -140,16 +141,40 @@ frappe.ui.form.on("Stock Entry", {
         }
     })
     },
-
+    set_posting_time:function(frm){
+      frm.events.set_field_property(frm)
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length) {
+                if (r.message.includes("WEH")) {
+                   if (frm.is_dirty) {
+                    frm.enable_save()
+                   }
+                }
+            }
+        }
+    })
+      
+    },
     setup_source_warehouse(frm){
       frappe.call({
         "method" : "dynamic.weh.controllers.get_defaulte_source_warehouse",
         callback:function(r) {
           if (r.message) {
+          
             if(frm.is_new()){
               frm.set_value("from_warehouse" , r.message[0]) 
            frm.refresh_field("from_warehouse")
             } 
+            if(!frm.is_new()){
+              if (! r.message.includes(frm.doc.to_warehouse) ){
+                console.log("Disable Save")
+                frm.disable_save()
+              }
+            }
+            
+           
            
            
           frm.set_query("from_warehouse", function(){
