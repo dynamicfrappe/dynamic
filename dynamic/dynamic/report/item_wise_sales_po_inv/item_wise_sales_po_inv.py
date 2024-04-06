@@ -7,6 +7,7 @@ from frappe import _
 from frappe.utils import flt
 from frappe.utils.nestedset import get_descendants_of
 
+DOMAINS = frappe.get_active_domains()
 
 def execute(filters=None):
 	filters = frappe._dict(filters or {})
@@ -22,7 +23,56 @@ def execute(filters=None):
 
 
 def get_columns(filters):
-	return [
+	if "Qaswaa" in DOMAINS:
+		return [
+		{
+			"label": _("Customer"),
+			"fieldtype": "Link",
+			"fieldname": "customer",
+			"options": "Customer",
+			"width": 100,
+		},
+		{
+			"label": _("Transaction Date"),
+			"fieldtype": "Date",
+			"fieldname": "transaction_date",
+			"width": 90,
+		},
+		{
+			"label": _("Item Code"),
+			"fieldtype": "Link",
+			"fieldname": "item_code",
+			"options": "Item",
+			"width": 120,
+		},
+		{"label": _("Item Name"), "fieldtype": "Data", "fieldname": "item_name", "width": 140},
+		{"label": _("Description"), "fieldtype": "Data", "fieldname": "description", "width": 150},
+		{"label": _("Quantity"), "fieldtype": "Float", "fieldname": "quantity", "width": 150},
+		{
+			"label": _("Rate"),
+			"fieldname": "rate",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		},
+		{
+			"label": _("Amount"),
+			"fieldname": "amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		},
+		{
+			"label": _("Discount Amount"),
+			"fieldname": "discount_amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		},
+	]
+		
+	else :
+		return [
 		{
 			"label": _("Item Code"),
 			"fieldtype": "Link",
@@ -143,6 +193,7 @@ def get_data(filters):
 		item_record = item_details.get(record.item_code)
 		row = {
 			"item_code": record.get("item_code"),
+			"discount_amount": record.get("discount_amount"),
 			"item_name": item_record.get("item_name"),
 			"item_group": item_record.get("item_group"),
 			"description": record.get("description"),
@@ -205,6 +256,7 @@ def get_sales_order_details(company_list, filters):
 			db_so.project,
 			db_so.company,
 			db_so_item.item_code,
+			db_so_item.discount_amount,
 			db_so_item.description,
 			db_so_item.qty,
 			db_so_item.uom,
@@ -230,6 +282,7 @@ def get_sales_order_details(company_list, filters):
 				db_so.project,
 				db_so.company,
 				db_so_item.item_code,
+				db_so_item.discount_amount,
 				db_so_item.description,
 				db_so_item.qty,
 				db_so_item.uom,

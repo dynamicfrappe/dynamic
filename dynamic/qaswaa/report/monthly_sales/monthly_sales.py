@@ -122,6 +122,11 @@ def get_data(filters):
 					SI.posting_date >= '{period.from_date}' 
 					and SI.posting_date <= '{period.to_date}'
 				'''
+								# , ST.sales_person
+				# 			LEFT JOIN 
+				# 	`tabSales Team` ST
+				# ON
+				# 	ST.parent = SI.name
 			data = frappe.db.sql(ss , as_dict = 1)
 			dict[period.key] = data[0][period.key]
 
@@ -138,6 +143,13 @@ def get_columns(filters):
 			"options": "Sales Partner",
 			"width": 300,
 		},
+		# {
+		# 	"fieldname": "sales_person",
+		# 	"label": _("Sales Person"),
+		# 	"fieldtype": "Link",
+		# 	"options": "Sales Person",
+		# 	"width": 300,
+		# },
 	]
 	for period in period_list:
 		columns.append(
