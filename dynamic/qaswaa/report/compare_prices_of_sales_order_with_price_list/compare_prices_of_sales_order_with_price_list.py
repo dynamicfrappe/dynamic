@@ -34,7 +34,9 @@ def get_date(filters):
 	sql =f'''
 			SELECT
 				so.name , soi.item_code , soi.item_name, soi.qty ,
-				(soi.rate - soi.discount_amount) as item_rate 
+				soi.price_list_rate , soi.rate , soi.discount_amount ,
+				(soi.rate - soi.discount_amount) as differance_amount ,
+				(soi.rate - soi.discount_amount) / 100 as differance_percentage
 			FROM 
 				`tabSales Order` so
 			INNER JOIN 
@@ -70,7 +72,7 @@ def get_date(filters):
 			sales_rate = frappe.db.sql(sql , as_dict = 1) 
 			entry["sales_rate"] = sales_rate[0]["rate"]
 		entry["total_sales"] = entry["qty"] * entry["sales_rate"] 
-		entry["differance"] = entry["item_rate"] - entry["sales_rate"]
+		entry["differance"] = entry["differance_amount"] - entry["sales_rate"]
 		entry["total_differance"] = entry["qty"] * entry["differance"]
 		if entry["sales_rate"] :
 			entry["differance_percentage"] = str(entry["differance"] / entry["sales_rate"] *100) + "%"
@@ -104,10 +106,37 @@ def get_columns():
 			"width": 50,
 		},
 		{
-			"fieldname": "item_rate",
-			"label": "Item Rate",
+			"fieldname": "price_list_rate",
+			"label": "Price List Rate",
 			"fieldtype": "Currency",
 			"options": "currency",
+			"width": 100,
+		},
+		{
+			"fieldname": "rate",
+			"label": "Rate",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"fieldname": "discount_amount",
+			"label": "Discount Amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"fieldname": "differance_amount",
+			"label": "Differance Amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+				{
+			"fieldname": "differance_percentage",
+			"label": "Differance Percentage",
+			"fieldtype": "Percent",
 			"width": 100,
 		},
 		{

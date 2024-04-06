@@ -60,6 +60,22 @@ def get_data(filters):
 		'''
 	gl_entries = frappe.db.sql(s , as_dict = 1)
 	for gl_entry in gl_entries:
+		payment_query = f'''
+							SELECT 
+								payment_type , mode_of_payment ,
+								party_type , party_name , paid_amount
+							FROM
+								`tabPayment Entry`
+							WHERE 
+								name = '{gl_entry["voucher_no"]}'
+ 							'''
+		payment_details = frappe.db.sql(payment_query , as_dict = 1)
+		gl_entry["payment_type"] = payment_details[0]["payment_type"]
+		gl_entry["mode_of_payment"] = payment_details[0]["mode_of_payment"]
+		gl_entry["party_type"] = payment_details[0]["party_type"]
+		gl_entry["party_name"] = payment_details[0]["party_name"]
+		gl_entry["paid_amount"] = payment_details[0]["paid_amount"]
+
 		gl_entry["balance"] = get_balance_on (account =f'{gl_entry["account"]}' ,date =f'{gl_entry["posting_date"]}')
 	return gl_entries
 	
@@ -71,12 +87,6 @@ def get_columns():
 			"fieldtype": "Link",
 			"options": "Account",
 			"width": 250,
-		},
-		{
-			"fieldname": "posting_date",
-			"label": _("Posting Date"),
-			"fieldtype": "Date",
-			"width": 300,
 		},
 		{
 			"label": _("Payment Entry"),
@@ -96,6 +106,46 @@ def get_columns():
 			"fieldname": "remarks",
 			"fieldtype": "Text",
 			"width": 250,
+		},
+		{
+			"label": _("Payment Type"),
+			"fieldname": "payment_type",
+			"fieldtype": "Data",
+			"width": 250,
+		},
+		{
+			"label": _("Mode of Payment"),
+			"fieldname": "mode_of_payment",
+			"fieldtype": "Link",
+			"options": "Mode of Payment",
+			"width": 250,
+		},
+		{
+			"label": _("Party Type"),
+			"fieldname": "party_type",
+			"fieldtype": "Link",
+			"options": "DocType",
+			"width": 250,
+		},
+		{
+			"label": _("Party Name"),
+			"fieldname": "party_name",
+			"fieldtype": "Dynamic Link",
+			"options": "party_type",
+			"width": 250,
+		},
+		{
+			"fieldname": "paid_amount",
+			"label": "Paid Amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 150,
+		},
+		{
+			"fieldname": "posting_date",
+			"label": _("Posting Date"),
+			"fieldtype": "Date",
+			"width": 300,
 		},
 		{
 			"fieldname": "debit",

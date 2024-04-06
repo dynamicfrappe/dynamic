@@ -22,7 +22,8 @@ def get_data(filters):
 	sql = f'''
 		SELECT
 			SII.item_code , SII.item_name , SII.qty , SI.creation , SII.brand ,
-			SII.amount , SII.rate , SII.warehouse , SI.name , SI.selling_price_list 
+			SII.amount , SII.rate , SII.warehouse , SI.name , SI.selling_price_list ,
+			SII.item_group
 		FROM 
 			`tabSales Invoice Item` SII
 		INNER JOIN 
@@ -89,6 +90,8 @@ def get_data(filters):
 		dict["item_code"] = f'{item["item_code"]}'
 		dict["selling_price_list"] = f'{item["selling_price_list"]}'
 		dict["brand"] = f'{item["brand"]}'
+		dict["item_group"] = f'{item["item_group"]}'
+
 
 		dict["item_name"] = f'{item["item_name"]}'
 		dict["qty"] = item["qty"]
@@ -160,6 +163,13 @@ def get_columns( num_rates=3 ):
 					"fieldname": "item_code", 
 					"fieldtype": "Link", 
 					"options": "Item", 
+					"width": 100, 
+				}, 
+				{ 
+					"label": _("Item Grouo"), 
+					"fieldname": "item_group", 
+					"fieldtype": "Link", 
+					"options": "Item Group", 
 					"width": 100, 
 				}, 
 				{ 

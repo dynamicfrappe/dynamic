@@ -29,6 +29,9 @@ def get_data(filters):
 			SI.customer , 
 			SII.item_code,
 			SII.item_name,
+			SII.sales_order , SII.rate , SII.price_list_rate ,
+			(SII.rate - SII.price_list_rate) as diffrance , 
+			((SII.rate - SII.price_list_rate) / 100 ) as diffrance_percentage ,
 			SUM(SII.qty) as qty,
 			SUM(SII.amount) as amount
 		FROM
@@ -61,6 +64,13 @@ def get_columns():
             "options": "Item", 
             "width": 300, 
         }, 
+		{ 
+            "label": _("Sales Order"), 
+            "fieldname": "sales_order", 
+            "fieldtype": "Link", 
+            "options": "Sales Order", 
+            "width": 300, 
+        }, 
         { 
             "label": _("Item Name"), 
             "fieldname": "item_name", 
@@ -74,8 +84,36 @@ def get_columns():
             "width": 200, 
         }, 
 		{ 
+            "label": _("Rate"), 
+            "fieldname": "rate", 
+            "fieldtype": "Currency",
+			"options": "currency",  
+            "width": 200, 
+        },
+		{ 
+            "label": _("Price List Rate"), 
+            "fieldname": "price_list_rate", 
+            "fieldtype": "Currency",
+			"options": "currency",  
+            "width": 200, 
+        },
+		{ 
             "label": _("Amount"), 
             "fieldname": "amount", 
+            "fieldtype": "Currency",
+			"options": "currency",  
+            "width": 200, 
+        },
+		{ 
+            "label": _("Diffrance"), 
+            "fieldname": "diffrance", 
+            "fieldtype": "Currency",
+			"options": "currency",  
+            "width": 200, 
+        },
+		{ 
+            "label": _("Diffrance percentage"), 
+            "fieldname": "diffrance_percentage", 
             "fieldtype": "Currency",
 			"options": "currency",  
             "width": 200, 
