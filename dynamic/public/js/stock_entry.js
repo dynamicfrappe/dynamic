@@ -177,14 +177,15 @@ frappe.ui.form.on("Stock Entry", {
            
            
            
-          frm.set_query("from_warehouse", function(){
-            return {
-              "filters": [
-                  ["Warehouse", "name", "in", r.message],
+          // frm.set_query("from_warehouse", function(){
+          //   console.log(r.message)
+          //   return {
+          //     "filters": [
+          //         ["Warehouse", "name", "in", r.message],
               
-              ]
-          }
-          })
+          //     ]
+          // }
+          // })
 
          if (r.message.length == 1){
           frm.set_df_property("from_warehouse", "read_only", 1);
