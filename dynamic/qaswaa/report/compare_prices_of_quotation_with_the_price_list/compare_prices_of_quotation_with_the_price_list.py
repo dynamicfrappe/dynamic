@@ -34,7 +34,8 @@ def get_date(filters):
 
 	sql =f'''
 			SELECT
-				Q.name , QI.item_code , QI.item_name, QI.qty ,
+				Q.name , QI.item_code , QI.item_name, QI.qty , 
+				Q.party_name , ST.sales_person , QI.warehouse ,
 				QI.price_list_rate , QI.rate , QI.discount_amount ,
 				(QI.rate - QI.discount_amount) as differance_amount , 
 				(QI.rate - QI.discount_amount) / 100 as differance_percentage
@@ -90,6 +91,20 @@ def get_columns():
 			"width": 200,
 		},
 		{
+			"fieldname": "party_name",
+			"label": _("Customer"),
+			"fieldtype": "Link",
+			"options": "Customer",
+			"width": 200,
+		},		
+		{
+			"fieldname": "sales_person",
+			"label": _("Sales Person"),
+			"fieldtype": "Link",
+			"options": "Sales Person",
+			"width": 200,
+		},		
+		{
 			"fieldname": "item_code",
 			"label": _("Item code"),
 			"fieldtype": "Data",
@@ -106,6 +121,13 @@ def get_columns():
 			"label": _("Qty"),
 			"fieldtype": "Data",
 			"width": 50,
+		},
+		{
+			"fieldname": "warehouse",
+			"label": _("Warehouse"),
+			"fieldtype": "Link",
+			"options": "Warehouse",
+			"width": 200,
 		},
 		{
 			"fieldname": "price_list_rate",
