@@ -95,6 +95,8 @@ def get_data(filters):
 			SI.name = SII.parent
 		WHERE 
 			SI.docstatus = 1
+			AND 
+			SI.sales_partner IS NOT NULL
 		GROUP BY 
 			SI.sales_partner  
 		'''
