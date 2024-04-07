@@ -167,12 +167,12 @@ frappe.ui.form.on("Stock Entry", {
               frm.set_value("from_warehouse" , r.message[0]) 
            frm.refresh_field("from_warehouse")
             } 
-            if(!frm.is_new()){
-              if (! r.message.includes(frm.doc.to_warehouse) ){
-                console.log("Disable Save")
-                frm.disable_save()
-              }
-            }
+            // if(!frm.is_new()){
+            //   if (! r.message.includes(frm.doc.to_warehouse) ){
+            //     console.log("Disable Save")
+            //     // frm.disable_save()
+            //   }
+            // }
             
            
            
