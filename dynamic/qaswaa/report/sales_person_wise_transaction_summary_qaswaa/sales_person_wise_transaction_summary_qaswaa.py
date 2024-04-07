@@ -22,7 +22,7 @@ def execute(filters=None):
 		reserved_qty = 0
 		sql = f'''
 				SELECT 
-					reserved_qty 
+					reserved_qty , actual_qty
 				FROM
 					`tabBin`
 				WHERE
@@ -41,6 +41,8 @@ def execute(filters=None):
 					d.item_group ,
 					d.stock_qty,
 					reserved_qty[0]["reserved_qty"] ,
+					reserved_qty[0]["actual_qty"] ,
+
 					d.base_net_amount,
 					d.sales_person,
 					d.warehouse
@@ -90,14 +92,16 @@ def get_columns(filters):
 			"width": 140,
 		},
 				{
-			"label": _("Item Code"),
+			"label": _("Item"),
 			"options": "Item",
 			"fieldname": "item_code",
 			"fieldtype": "Link",
 			"width": 140,
 		},
 		{"label": _("Qty"), "fieldname": "qty", "fieldtype": "Float", "width": 140},
-		{"label": _("Reserved Qty"), "fieldname": "reserved_qty", "fieldtype": "Float", "width": 140},
+		{"label": _("Reserved qty"), "fieldname": "reserved_qty", "fieldtype": "Float", "width": 140},
+		{"label": _("Actual Qty In Warehouse"), "fieldname": "actual_qty", "fieldtype": "Float", "width": 140},
+
 
 		{
 			"label": _("Amount"),
