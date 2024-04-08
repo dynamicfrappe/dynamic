@@ -123,24 +123,32 @@ def get_validation(self , *args, **kwargs):
 def creation_of_reseration(self , *args , **kargs):
     items = self.get("items")
     for item in items:
-        log = frappe.new_doc("Stock Reservation Entry")
-        log.item_code = item.item_code
-        log.warehouse = item.warehouse
-        log.voucher_type = "Sales Order"
-        log.voucher_no = self.name
-        log.voucher_detail_no = item.name
-        log.stock_uom = item.uom
-        bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item.item_code, "warehouse":item.warehouse} , fieldname = 'actual_qty')
-        reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item.item_code, "warehouse":item.warehouse} , fieldname = 'reserved_qty')
-        total_qty = bin_qty + (reservation_qty if reservation_qty else 0)
-        log.available_qty_to_reserve = get_all_qty_reserved(item.item_code , item.warehouse)
-        log.reserved_qty = float(item.qty) * float(item.conversion_factor)
-        log.voucher_qty = item.qty 
-        log.company = self.company
-        log.status = "Reserved"
-        frappe.msgprint("Item Reservation")
-        log.insert()
-        frappe.db.commit()
+        if frappe.db.exists("Stock Reservation Entry" ,{
+				"item_code": item.item_code,
+				"warehouse": item.warehouse,
+				"voucher_no": self.name,
+				"voucher_detail_no" : item.name
+				}):
+            frappe.msgprint("Create Reservation Before")
+        else:
+            log = frappe.new_doc("Stock Reservation Entry")
+            log.item_code = item.item_code
+            log.warehouse = item.warehouse
+            log.voucher_type = "Sales Order"
+            log.voucher_no = self.name
+            log.voucher_detail_no = item.name
+            log.stock_uom = item.uom
+            bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item.item_code, "warehouse":item.warehouse} , fieldname = 'actual_qty')
+            reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item.item_code, "warehouse":item.warehouse} , fieldname = 'reserved_qty')
+            total_qty = bin_qty + (reservation_qty if reservation_qty else 0)
+            log.available_qty_to_reserve = get_all_qty_reserved(item.item_code , item.warehouse)
+            log.reserved_qty = float(item.qty) * float(item.conversion_factor)
+            log.voucher_qty = item.qty 
+            log.company = self.company
+            log.status = "Reserved"
+            frappe.msgprint("Item Reservation")
+            log.insert()
+            frappe.db.commit()
                 
 
 def convertor( item_code , uom ):

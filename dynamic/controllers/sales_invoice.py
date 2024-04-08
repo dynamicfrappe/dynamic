@@ -71,6 +71,9 @@ def edit_of_reseration(self ):
 			doc.delivered_qty = qty 
 			doc.save()
 			frappe.db.commit()
+			print("Updated")
+		else:
+			print("Not Updated")
 
 
 def validate_when_cancel(self):
