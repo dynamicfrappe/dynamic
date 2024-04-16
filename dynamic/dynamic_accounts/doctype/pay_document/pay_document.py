@@ -139,7 +139,8 @@ class PayDocument(Document):
             })
 
         je.multi_currency = 1
-        je.submit()
+        if not 'Maser2000' in DOMAINS: 
+           je.submit()
         self.journal_entry = je.name
         self.db_set("journal_entry", je.name)
         lnk = get_link_to_form(je.doctype, je.name)
