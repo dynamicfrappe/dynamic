@@ -49,7 +49,7 @@ def submit_invoice(self):
 	sales_document.customer = self.customer
 	sales_document.customer_name = self.customer_name
 	sales_document.grand_total = self.grand_total
-	sales_document.insert()
+	sales_document.insert(ignore_permissions=True)
 
 
 def edit_of_reseration(self ):
