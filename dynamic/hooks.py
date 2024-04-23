@@ -363,12 +363,13 @@ scheduler_events = {
         ],
     },
     # 	"all": [
-    # 		"dynamic.tasks.all"
+    # 		"dynamic.tasks.all" from dynamic.controllers.opportunity import close_ended_opportunity
     # 	],
     "daily": [
         "dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
         "dynamic.master_deals.master_deals_api.alert_cheque_date",
         "dynamic.real_state.rs_api.setup_payment_term_notify",
+        "dynamic.controllers.opportunity.close_ended_opportunity"
         # "dynamic.alrehab.doctype.installment_entry.installment_entry.get_installment_entry_to_update_status",
     ],
     "hourly": [

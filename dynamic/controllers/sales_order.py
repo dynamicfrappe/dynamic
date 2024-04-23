@@ -6,13 +6,13 @@ import frappe
 from frappe import _
 from frappe import _, bold
 from dynamic.qaswaa.controllers.sales_order_api import validate_item_qty_reserved
-
+from dynamic.terra.api import sales_order_submit_comlete_opportunity
 Domains=frappe.get_active_domains()
 
 def validate_sales_order(self , event):
     if "Qaswaa" in Domains :
         validate_item_qty_reserved(self,event)
-
+  
 
 def validate_sales_order_for_stock(self , event):
     if "Stock Reservation" in Domains:
@@ -29,7 +29,8 @@ def on_submit(self , event):
                 creation_of_reseration(self , event)
         if frappe.db.get_single_value("Stock Settings" , "auto_reserve_stock_in_warehouse"):
                 transfer_items(self , event)
-
+    if "Terra"  in Domains : 
+        sales_order_submit_comlete_opportunity(self)
 def on_update(self , event):
     if "Stock Reservation" in Domains:
         if frappe.db.get_single_value("Stock Settings" , "allow_partial_reservation"):

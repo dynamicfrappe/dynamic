@@ -2,7 +2,7 @@ frappe.ui.form.on("Material Request",{
     refresh(frm){
 
    
-      frm.events.read_only_fields(frm)
+      
 
         frm.events.trea_setup(frm)
         frappe.call({
@@ -10,6 +10,8 @@ frappe.ui.form.on("Material Request",{
           callback: function (r) { 
             if (r.message && r.message.length) {
               if (r.message.includes("WEH")) {
+               
+                frm.events.read_only_fields(frm)
                  frm.events.remove_cst_button(frm)
                  frm.events.read_only_fields(frm)
           }

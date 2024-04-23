@@ -102,7 +102,7 @@ def get_item_stock(item) :
     warehouse  = frappe.db.get_single_value('Stock Settings','warehouse')
     qty=0
     if warehouse:
-        sql = f""" SELECT SUM(actual_qty-reserved_qty) as qty FROM `tabBin` WHERE item_code ='{item}' and warehouse='{warehouse}' """
+        sql = f""" SELECT SUM(actual_qty) as qty FROM `tabBin` WHERE item_code ='{item}' and warehouse='{warehouse}' """
         qty = frappe.db.sql(sql,as_dict=1)
         if qty and len(qty) > 0 :
             qty= qty[0].get("qty")
@@ -115,7 +115,7 @@ def get_item_stock2(item) :
     if warehouse:
         sql = f""" 
         SELECT
-            SUM( rw.current_available_qty - rw.reserved_qty ) as qty
+            SUM(rw.reserved_qty ) as qty
         FROM
             `tabReservation` r
         JOIN
@@ -127,7 +127,9 @@ def get_item_stock2(item) :
         qty = frappe.db.sql(sql,as_dict=1)
         if qty and len(qty) > 0 :
             sum_of_item= qty[0].get("qty")
-        return sum_of_item
+
+        current_stock = float(get_item_stock(item) or 0) - float(sum_of_item or 0)
+        return current_stock
 
 
         

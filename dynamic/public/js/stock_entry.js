@@ -230,6 +230,11 @@ frappe.ui.form.on("Stock Entry", {
           frm.remove_custom_button(__('End Transit')) 
         
         }
+        if (frm.doc.outgoing_stock_entry ){
+            console.log("Remove end transit")
+          frm.remove_custom_button(__('End Transit')) 
+        
+        }
       if (frm.doc.__islocal && frm.doc.outgoing_stock_entry) {
 
         frappe.call({

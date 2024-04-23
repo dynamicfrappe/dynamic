@@ -1,6 +1,5 @@
 import frappe
 from frappe import _
-
 Domains=frappe.get_active_domains()
 
 def validate(self , event):
@@ -13,7 +12,7 @@ def validate(self , event):
 def after_submit(self , event):
 	if "Stock Reservation" in Domains:
 		edit_of_reseration(self)
-
+	
 def after_cancel(self , event):
     if "Stock Reservation" in Domains :
         validate_when_cancel(self)

@@ -56,17 +56,18 @@ frappe.ui.form.on("Sales Order", {
     frm.events.add_installation_button(frm);
     frm.events.add_furniture_installation_button(frm);
     // cur_frm.page.remove_inner_button(__('Update Items'))
-    if(frm.doc.docstatus === 1 && frm.doc.status !== 'Closed'
-			&& flt(frm.doc.per_delivered, 6) < 100 && flt(frm.doc.per_billed, 6) < 100) {
-			frm.add_custom_button(__('Update Items'), () => {
-        erpnext.utils.update_child_items({
-					frm: frm,
-					child_docname: "items",
-					child_doctype: "Sales Order Detail",
-					cannot_add_row: true,
-				})
-			});
-		}
+    // if(frm.doc.docstatus === 1 && frm.doc.status !== 'Closed'
+		// 	&& flt(frm.doc.per_delivered, 6) < 100 &&
+    //    flt(frm.doc.per_billed, 6) < 100) {
+		// 	frm.add_custom_button(__('Update Items'), () => {
+    //     erpnext.utils.update_child_items({
+		// 			frm: frm,
+		// 			child_docname: "items",
+		// 			child_doctype: "Sales Order Detail",
+		// 			cannot_add_row: true,
+		// 		})
+		// 	});
+		// }
   },
   get_advancess:function(frm){
     if(!frm.is_return) {
@@ -319,14 +320,16 @@ frappe.ui.form.on("Sales Order", {
   },
 
   domian_valid: function (frm) {
-    if(cur_frm.doc.docstatus === 1){
+    if(frm.doc.docstatus === 1){
       frappe.call({
         method :"dynamic.api.get_active_domains" ,
         async: false,
         callback:function (r){
          if (r.message.includes("Terra")) {
+          console.log("terral validation applies")
+          frm.page.remove_inner_button(__('Update Items'))
           cur_frm.cscript['make_sales_invoice'] = create_terra_sales_invoice
-            cur_frm.page.remove_inner_button(__('Update Items'))
+            
             }
         }
     })
