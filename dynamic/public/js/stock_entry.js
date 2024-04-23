@@ -282,9 +282,11 @@ frappe.ui.form.on("Stock Entry", {
       frappe.call({
         method: "dynamic.api.get_active_domains",
         callback: function (r) { 
+
+          if (r.message.includes("WEH")) {
           if (frm.doc.owner != frappe.session.user) {
             console.log("not Owner")
-            frm.set_read_only()
+            frm.set_read_only() }
           }
       //     if (r.message && r.message.length) {
       //       if (r.message.includes("WEH")) {
