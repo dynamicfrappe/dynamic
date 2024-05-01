@@ -186,6 +186,7 @@ doc_events = {
             "dynamic.controllers.delivery_note.validate_delivery_note",
             "dynamic.api.validate_delivery_note",
             "dynamic.weh.delevery_note.validate_delevery_note",
+            "dynamic.terra.delivery_note.validate_terra_delievery_not"
             # "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty",
         ],
         "before_save":[

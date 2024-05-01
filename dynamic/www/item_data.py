@@ -121,7 +121,7 @@ def get_item_stock2(item) :
         JOIN
             `tabReservation Warehouse` rw ON r.name = rw.parent
         WHERE
-            r.status  in ('Active' , 'Partial Delivered')
+            r.status in ('Active' , 'Partial Delivered')
             AND rw.warehouse = '{warehouse}'
             AND rw.item = '{item}' ;  """
         qty = frappe.db.sql(sql,as_dict=1)
