@@ -5,6 +5,8 @@ import frappe
 from frappe import _
 
 
+
+
 def validate_delivery_notes_sal_ord(doc):
     # validate sales invocie linked with sales order 
     for line in doc.items :
