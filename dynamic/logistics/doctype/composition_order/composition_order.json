@@ -1,0 +1,198 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2023-12-26 22:04:16.791571",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "date",
+  "sales_order",
+  "column_break_cemjg",
+  "status",
+  "customer",
+  "section_break_dzx6c",
+  "items",
+  "section_break_v7zcq",
+  "address",
+  "phone_number_1",
+  "phone_number_2",
+  "column_break_zqqsp",
+  "phone_number_3",
+  "link_location",
+  "customer_comment",
+  "column_break_mtyk5",
+  "location_is_ready",
+  "composition",
+  "section_break_19",
+  "engineers",
+  "survey",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cemjg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nDelivered\nCompleted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_dzx6c",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_v7zcq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Link",
+   "label": "Address",
+   "options": "Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "phone_number_1",
+   "fieldtype": "Data",
+   "label": "Phone Number 1",
+   "read_only": 1
+  },
+  {
+   "fieldname": "phone_number_2",
+   "fieldtype": "Data",
+   "label": "Phone Number 2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zqqsp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phone_number_3",
+   "fieldtype": "Data",
+   "label": "Phone Number 3",
+   "read_only": 1
+  },
+  {
+   "fieldname": "link_location",
+   "fieldtype": "Data",
+   "label": "Link Location ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_mtyk5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_comment",
+   "fieldtype": "Data",
+   "label": " Customer Comment",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "location_is_ready",
+   "fieldtype": "Check",
+   "label": "Location Is Ready",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Composition Order",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Sales Order Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_19",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "composition",
+   "fieldtype": "Link",
+   "label": "Composition",
+   "options": "Composition",
+   "read_only": 1
+  },
+  {
+   "fieldname": "engineers",
+   "fieldtype": "Table",
+   "label": "Engineers",
+   "options": "Engineering Name"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "COM-ORD-.YYYY.-"
+  },
+  {
+   "fieldname": "survey",
+   "fieldtype": "Data",
+   "label": "Survey"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-18 11:58:00.097331",
+ "modified_by": "Administrator",
+ "module": "Logistics",
+ "name": "Composition Order",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

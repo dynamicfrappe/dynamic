@@ -1,0 +1,237 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2023-12-31 10:38:48.132291",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "customer",
+  "customer_name",
+  "customer_primary_contact",
+  "customer_primary_address",
+  "support",
+  "column_break_3",
+  "location",
+  "type_for_request",
+  "name_of_maintenance",
+  "number",
+  "section_break_9",
+  "warranties",
+  "machines",
+  "section_break_13",
+  "customer_comment",
+  "history_maintenance",
+  "description_of_maintenance_manager",
+  "column_break_14",
+  "maintenance_type",
+  "section_break_22",
+  "type_of_maintenance",
+  "items",
+  "service_items",
+  "transfer_cost",
+  "total_cost",
+  "engineering_name",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.customer_primary_contact",
+   "fieldname": "customer_primary_contact",
+   "fieldtype": "Link",
+   "label": "Customer Primary Contact",
+   "options": "Contact",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.customer_primary_address",
+   "fieldname": "customer_primary_address",
+   "fieldtype": "Link",
+   "label": "Customer Primary Address",
+   "options": "Address"
+  },
+  {
+   "default": "0",
+   "fetch_from": "customer.support",
+   "fieldname": "support",
+   "fieldtype": "Check",
+   "label": "Support",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.location",
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location",
+   "read_only": 1
+  },
+  {
+   "fieldname": "type_for_request",
+   "fieldtype": "Select",
+   "label": "Type For Request",
+   "options": "Within Warranty\nOut of Warranty\nMaintenance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "name_of_maintenance",
+   "fieldtype": "Data",
+   "label": "Name of Maintenance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "number",
+   "fieldtype": "Data",
+   "label": "Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "warranties",
+   "fieldtype": "Table",
+   "label": "Warranties",
+   "options": "Maintenance Warranty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "machines",
+   "fieldtype": "Table",
+   "label": "Machines",
+   "options": "Customer Machine",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_13",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_14",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "history_maintenance",
+   "fieldtype": "Button",
+   "label": "History Maintenance"
+  },
+  {
+   "fieldname": "customer_comment",
+   "fieldtype": "Data",
+   "label": "Customer Comment",
+   "read_only": 1
+  },
+  {
+   "fieldname": "maintenance_type",
+   "fieldtype": "Select",
+   "label": "Maintenance Type",
+   "options": "Visit\nCall"
+  },
+  {
+   "fieldname": "type_of_maintenance",
+   "fieldtype": "Table",
+   "label": "Types of Maintenance",
+   "options": "Maintenance Item"
+  },
+  {
+   "fieldname": "engineering_name",
+   "fieldtype": "Table",
+   "label": "Engineering Name ",
+   "options": "Engineering Name"
+  },
+  {
+   "fieldname": "section_break_22",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Conservation order",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Planed Item"
+  },
+  {
+   "fieldname": "service_items",
+   "fieldtype": "Table",
+   "label": "Service Items",
+   "options": "Service Item"
+  },
+  {
+   "fieldname": "transfer_cost",
+   "fieldtype": "Currency",
+   "label": "Transfer Cost",
+   "options": "currency"
+  },
+  {
+   "fieldname": "total_cost",
+   "fieldtype": "Currency",
+   "label": "Total Cost",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "description_of_maintenance_manager",
+   "fieldtype": "Data",
+   "label": "Description of Maintenance Manager"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "CON-ORD-.YYYY.-"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-16 12:03:46.040865",
+ "modified_by": "Administrator",
+ "module": "Logistics",
+ "name": "Conservation order",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
