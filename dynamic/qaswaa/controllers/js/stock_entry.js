@@ -2,7 +2,7 @@ frappe.ui.form.on('Stock Entry', {
     refresh: function (frm){
 
             frm.events.check_url(frm);
-            console.log("hehehee");
+            // console.log("hehehee");
     } ,
        check_url: function (frm) {
         
