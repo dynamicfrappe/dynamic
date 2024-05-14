@@ -75,6 +75,13 @@ data = {
                 "fieldtype": "Small Text",
                 "insert_after": "to_date" ,
             },
+            {
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "options" : "Cost Center" ,
+                "insert_after": "to_date" ,
+            },
         ],
         "Selling Settings":
         [

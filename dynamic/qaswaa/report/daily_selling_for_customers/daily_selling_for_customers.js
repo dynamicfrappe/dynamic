@@ -1,58 +1,52 @@
-// Copyright (c) 2023, Dynamic and contributors
+// Copyright (c) 2024, Dynamic and contributors
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Sales Invoice Analytics Warehouse"] = {
+frappe.query_reports["Daily selling for customers"] = {
 	"filters": [
 		{
 			"fieldname":"period_start_date",
 			"label": __("Start Date"),
 			"fieldtype": "Date",
 			"reqd": 1,
-			"default": frappe.datetime.add_months(frappe.datetime.get_today(), -1)
+			// "default": frappe.datetime.add_months(frappe.datetime.get_today(), -1)
 		},
 		{
 			"fieldname":"period_end_date",
 			"label": __("End Date"),
 			"fieldtype": "Date",
 			"reqd": 1,
-			"default": frappe.datetime.get_today()
+			// "default": frappe.datetime.get_today()
 		},
-
 		{
 			"fieldname":"cost_center",
 			"label": __("Cost Center"),
 			"fieldtype": "Link",
-			"options" : "Cost Center",
-			// "reqd": 1,
+			"options": "Cost Center"
 		},
 		{
 			"fieldname":"warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
-			"options" : "Warehouse",
-			// "reqd": 1,
+			"options": "Warehouse"
 		},
 		{
 			"fieldname":"customer",
 			"label": __("Customer"),
 			"fieldtype": "Link",
-			"options" : "Customer",
-			// "reqd": 1,
+			"options": "Customer"
 		},
 		{
-			"fieldname":"item_group",
-			"label": __("Item Group"),
+			"fieldname":"sales_person",
+			"label": __("Sales Person"),
 			"fieldtype": "Link",
-			"options" : "Item Group",
-			// "reqd": 1,
+			"options": "Sales Person"
 		},
 		{
-			"fieldname":"item_code",
-			"label": __("Item"),
+			"fieldname":"sales_partner",
+			"label": __("Sales Partner"),
 			"fieldtype": "Link",
-			"options" : "Item",
-			// "reqd": 1,
-		}
+			"options": "Sales Partner"
+		},
 	]
 };
