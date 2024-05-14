@@ -69,81 +69,72 @@ def get_period_list(filters):
 
 
 def get_data(filters):
-	conditions = " 1=1"
+	conditions = ""
 	if filters.get("cost_center") :
-		conditions += f" and SII.cost_center = '{filters.get('cost_center')}'"
-	if filters.get("warehouse") :
-		conditions += f" and SII.warehouse = '{filters.get('warehouse')}'"
+		conditions += f""" and si.cost_center = '{filters.get('cost_center')}' """
+	if filters.get("warehouse"):
+		conditions += f" and si.set_warehouse = '{filters.get('warehouse')}' "
 	if filters.get("customer") :
-		conditions += f" and SI.customer = '{filters.get('customer')}'"
+		conditions += f""" and si.customer = "{filters.get('customer')}" """
 	if filters.get("item_group") :
-		conditions += f" and SII.item_group = '{filters.get('item_group')}'"
-	if filters.get("item_code") :
-		conditions += f" and SII.item_code = '{filters.get('item_code')}'"
+		conditions += f""" and sii.item_group = "{filters.get('item_group')}" """
 
 	period_list = get_period_list(filters)
+	print(conditions)
 
-	# if filters.get("cost_center") :
 	sql =  f'''
 		SELECT 
-			ST.sales_person
+			st.sales_person
 		FROM 
-			`tabSales Invoice Item` SII
+			`tabSales Invoice Item` sii
 		INNER JOIN 
-			`tabSales Invoice` SI 
+			`tabSales Invoice` si
 		ON 
-			SI.name = SII.parent
+			si.name = sii.parent
 		INNER JOIN
-			`tabSales Team` ST
+			`tabSales Team` st
 		ON
-			SI.name = ST.parent
+			si.name = st.parent
 		WHERE 
-			SI.docstatus = 1
+			si.docstatus = 1
 			AND 
-			ST.sales_person IS NOT NULL
+			st.sales_person IS NOT NULL 
 		GROUP BY 
-			ST.sales_person  
+			st.sales_person  ;
 		'''
 	results = []
 	sales_persones = frappe.db.sql(sql , as_dict= 1)
-	# frappe.throw(str(sales_persons))
 	for sales_person in sales_persones :
 		dict ={"sales_person" : sales_person.sales_person}
-		# conditions += f" and SII.cost_center = '{center}'"
 		for period in period_list :
-			# frappe.throw(str(sales_person.sales_person))
 
-			ss = f'''
+			ss = f"""
 				SELECT 
-					SUM(SII.amount) as {period.key}
+					SUM(si.net_total) as {period.key}
 				FROM 
-					`tabSales Invoice Item` SII
+					`tabSales Invoice Item` as sii
 				INNER JOIN 
-					`tabSales Invoice` SI 
+					`tabSales Invoice` as si
 				ON 
-					SI.name = SII.parent
+					si.name = sii.parent
 				LEFT JOIN
-					`tabSales Team` ST
+					`tabSales Team` as st
 				ON
-					SI.name = ST.parent
+					si.name = st.parent
 				WHERE
-					SI.docstatus = 1 and
-					ST.sales_person = '{sales_person.sales_person}' and 
-					SI.posting_date >= '{period.from_date}' 
-					and SI.posting_date <= '{period.to_date}'
-				'''
-				    # {conditions} and
-								# , ST.sales_person
-				# 			LEFT JOIN 
-				# 	`tabSales Team` ST
-				# ON
-				# 	ST.parent = SI.name
+					si.docstatus = 1 
+					and st.sales_person = '{sales_person.sales_person}' 
+					and	si.posting_date >= '{period.from_date}' 
+					and si.posting_date <= '{period.to_date}' 
+					{conditions}  """
 			data = frappe.db.sql(ss , as_dict = 1)
-			# frappe.throw(str(data))
+			print(ss)
 			dict[period.key] = data[0][period.key]
 
 		results.append(dict)
-	# frappe.throw(str(results))
+	for record in results:
+		total_sales = sum(value for value in record.values() if isinstance(value, (int, float)))
+		record['total'] = total_sales
 	return results
 
 def get_columns(filters):
@@ -174,6 +165,15 @@ def get_columns(filters):
 				"width": 150,
 			}
 		)
+	columns.append(
+			{
+				"fieldname": "total",
+				"label": "Total",
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 100,
+			}
+	)
 
 	return columns
 

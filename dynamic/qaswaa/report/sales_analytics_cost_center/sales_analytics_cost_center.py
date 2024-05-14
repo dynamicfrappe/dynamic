@@ -24,9 +24,9 @@ def get_dates_labels(filters) :
          key = opts["to_date"].strftime("%b_%Y").lower()
          label = formatdate(opts["to_date"], "MMM YYYY")
          opts.update(
-			{
-				"key": key.replace(" ", "_").replace("-", "_"),
-				"label": label, 
+               {
+                    "key": key.replace(" ", "_").replace("-", "_"),
+                    "label": label, 
             
          })
    return period_list
@@ -34,8 +34,8 @@ def execute(filters=None):
      columns, data = get_columns(filters), get_data(filters)
      return columns, data
 def get_months(start_date, end_date):
-	diff = (12 * end_date.year + end_date.month) - (12 * start_date.year + start_date.month)
-	return diff + 1
+     diff = (12 * end_date.year + end_date.month) - (12 * start_date.year + start_date.month)
+     return diff + 1
 
 def get_data(filters =None):
    data = []
@@ -55,14 +55,19 @@ def get_data(filters =None):
         condetions = condetions + f""" b.customer = '{filters.get("customer")}' AND"""
    if filters.get("cost_center") :
         cost_centers = [{"cost_center" : filters.get("cost_center")}]
+        condetions = condetions + f""" b.cost_center = '{filters.get("cost_center")}' AND """
        
    if filters.get("warehouse") :
-        condetions = condetions + f""" a.warehouse = '{filters.get("warehouse")}' AND"""  
+        condetions = condetions + f""" b.set_warehouse = '{filters.get("warehouse")}' AND"""  
+        
+   if filters.get("item_group") :
+        condetions = condetions + f""" a.item_group = '{filters.get("item_group")}' AND"""  
+
    period_list = get_period_list(filters=filters)
    for cost in cost_centers :
       center ={"cost_center" : cost.get('cost_center')}
       for month in period_list :
-         fil = frappe.db.sql(f""" SELECT  SUM(amount) as {month.get('key')} FROM 
+         fil = frappe.db.sql(f""" SELECT  SUM(net_total) as {month.get('key')} FROM 
              `tabSales Invoice Item`  a 
               INNER JOIN `tabSales Invoice` b 
               ON a.parent = b.name 
@@ -72,7 +77,10 @@ def get_data(filters =None):
               b.posting_date > date('{month.get('from_date')}') AND b.posting_date < date('{month.get('to_date')}')
               """ ,as_dict=1)
          center[month.get('key')] = float (fil[0].get(month.get('key'))  or 0 )
-      data.append(center)  
+      data.append(center)
+      for record in data:
+          total_sales = sum(value for value in record.values() if isinstance(value, (int, float)))
+          record['total'] = total_sales
    return data
 def get_columns(filters):
     period_list = get_period_list(filters=filters)
@@ -88,14 +96,23 @@ def get_columns(filters):
     ]
     for period in period_list:
          columns.append(
-			{
-				"fieldname": period.key,
-				"label": period.label,
-				"fieldtype": "Currency",
-				"options": "currency",
-				"width": 150,
-			}
-		)
+               {
+                    "fieldname": period.key,
+                    "label": period.label,
+                    "fieldtype": "Currency",
+                    "options": "currency",
+                    "width": 150,
+               }
+          )
+    columns.append(
+               {
+                    "fieldname": "total",
+                    "label": "Total",
+                    "fieldtype": "Currency",
+                    "options": "currency",
+                    "width": 150,
+               }
+     )
     return columns
 
 def get_period_list(filters):
@@ -120,14 +137,14 @@ def get_period_list(filters):
           
           start_date = to_date
 
-		# Subtract one day from to_date, as it may be first day in next fiscal year or month
+          # Subtract one day from to_date, as it may be first day in next fiscal year or month
           to_date = add_days(to_date, -1)
           
           if to_date <= year_end_date:
-			# the normal case
+               # the normal case
                period.to_date = to_date
           else:
-			# if a fiscal year ends before a 12 month period
+               # if a fiscal year ends before a 12 month period
                period.to_date = year_end_date
           
           period_list.append(period)
@@ -138,11 +155,11 @@ def get_period_list(filters):
           key = opts["to_date"].strftime("%b_%Y").lower()
           label = opts["to_date"].strftime("%b %Y")
           opts.update(
-			{
-				"key": key.replace(" ", "_").replace("-", "_"),
-				"label": label,
-				"year_start_date": year_start_date,
-				"year_end_date": year_end_date,
-			}
-		)
+               {
+                    "key": key.replace(" ", "_").replace("-", "_"),
+                    "label": label,
+                    "year_start_date": year_start_date,
+                    "year_end_date": year_end_date,
+               }
+          )
      return period_list
