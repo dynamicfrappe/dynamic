@@ -147,6 +147,43 @@ frappe.ui.form.on("Sales Invoice", {
     })
 },
 
+add_item_discount_rate: function(frm) {
+  var item_discount_rate = frm.doc.item_discount_rate;
+        frm.doc.items.forEach(function(item) {
+            frappe.model.set_value(item.doctype, item.name, 'discount_percentage', item_discount_rate);
+        });
+        frm.refresh_field('items');
+},
+
+ item_discount_rate:function(frm){
+  frappe.call({
+    method:"dynamic.api.get_active_domains",
+    callback:function (r) {
+      if (r.message && r.message.length){
+        if (r.message.includes("Qaswaa")) {
+          frm.events.add_item_discount_rate(frm);
+        }
+      }
+    }
+  })
+
+ },
+ items_add: function(frm) {
+  frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function(r) {
+          if (r.message && r.message.length && r.message.includes("Qaswaa")) {
+            frm.fields_dict['items'].grid.on_grid_row_opened(function(e) {
+                  add_item_discount_rate(frm);
+              });
+          }
+      }
+  });
+},
+
+
+
+
   add_cheque_button(frm) {
     if (frm.doc.docstatus == 1) {
       frappe.call({
@@ -308,6 +345,7 @@ const extend_sales_invoice = erpnext.accounts.SalesInvoiceController.extend({
 
     
   },
+  
 
   // make_purchase_invoice() {
 	// 	let data = [];

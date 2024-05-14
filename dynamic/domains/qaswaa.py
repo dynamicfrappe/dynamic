@@ -15,6 +15,12 @@ data = {
                 "fieldtype": "Small Text",
                 "insert_after": "to_date" ,
             },
+            {
+                "label": "Item Discount rate",
+                "fieldname": "item_discount_rate",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
+            },
         ],
         "Quotation":
         [ 
@@ -37,6 +43,19 @@ data = {
                 "fieldname": "notes",
                 "fieldtype": "Small Text",
                 "insert_after": "source" ,
+            },
+            {
+                "label": "Account Dimension",
+                "fieldname": "account_dimension_section",
+                "fieldtype": "Section Break",
+                "insert_after": "order_type" ,
+            },
+            {
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "account_dimension_section" ,
+                "options":"Cost Center",
             },
         
         ],
@@ -74,6 +93,12 @@ data = {
                 "fieldname": "notes",
                 "fieldtype": "Small Text",
                 "insert_after": "to_date" ,
+            },
+            {
+                "label": "Item Discount rate",
+                "fieldname": "item_discount_rate",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
             },
         ],
         "Selling Settings":
