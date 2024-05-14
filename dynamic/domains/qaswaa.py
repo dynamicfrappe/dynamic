@@ -95,10 +95,19 @@ data = {
                 "insert_after": "to_date" ,
             },
             {
+
                 "label": "Item Discount rate",
                 "fieldname": "item_discount_rate",
                 "fieldtype": "Float",
-                "insert_after": "discount_amount" ,
+                "insert_after": "discount_amount" , } ,
+          {
+
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "options" : "Cost Center" ,
+                "insert_after": "to_date" ,
+
             },
         ],
         "Selling Settings":
