@@ -29,7 +29,33 @@ from frappe.utils import cint, comma_or, flt, get_link_to_form, getdate, nowdate
 from functools import reduce
 
 
+@frappe.whitelist()
+def get_last_purchase_sales_invoice(item_code):
+	"""
+	String: item_code 
 
+	"""
+	sql = f"""
+		SELECT
+			pi.name as name,
+			pi.posting_date as posting_date, 
+			pii.rate as rate,
+			pii.item_code as item_code
+		FROM
+			`tabPurchase Invoice` pi
+		JOIN
+			`tabPurchase Invoice Item` pii
+		ON 
+			pi.name = pii.parent
+		WHERE
+			pii.item_code = '{item_code}'
+			AND pi.docstatus = 1
+		"""
+	doc = frappe.db.sql(sql , as_dict= 1)
+	last_date = max( i.get("posting_date") for i in doc)
+
+	invoices_with_last_date = [i for i in doc if i.get('posting_date') == last_date]
+	return invoices_with_last_date[0]['rate']
 
 
 @frappe.whitelist()
