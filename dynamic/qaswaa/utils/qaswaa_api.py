@@ -30,7 +30,7 @@ from functools import reduce
 
 
 @frappe.whitelist()
-def get_last_purchase_sales_invoice(item_code):
+def get_last_purchase_invoice_for_item(item_code):
 	"""
 	String: item_code 
 
@@ -56,6 +56,37 @@ def get_last_purchase_sales_invoice(item_code):
 
 	invoices_with_last_date = [i for i in doc if i.get('posting_date') == last_date]
 	return invoices_with_last_date[0]['rate']
+
+
+@frappe.whitelist()
+def get_last_sales_invoice_for_item(item_code):
+	"""
+	String: item_code 
+
+	"""
+	sql = f"""
+		SELECT
+			si.name as name,
+			si.posting_date as posting_date, 
+			sii.rate as rate,
+			sii.item_code as item_code
+		FROM
+			`tabSales Invoice` si
+		JOIN
+			`tabSales Invoice Item` sii
+		ON 
+			si.name = sii.parent
+		WHERE
+			sii.item_code = '{item_code}'
+			AND si.docstatus = 1
+		"""
+	doc = frappe.db.sql(sql , as_dict= 1)
+	# Sort the list of invoices by posting_date in descending order
+	sorted_invoices = sorted(doc, key=lambda x: x['posting_date'], reverse=True)
+
+	# Get the last three invoices
+	last_three_invoices = sorted_invoices[:3]
+	return last_three_invoices
 
 
 @frappe.whitelist()
