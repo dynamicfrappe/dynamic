@@ -22,8 +22,9 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import (
 try :
 	from erpnext.accounts.doctype.payment_entry.payment_entry import 	split_early_payment_discount_loss ,set_pending_discount_loss
 except :
-	from .utils import split_early_payment_discount_loss ,set_pending_discount_loss
-
+	from dynamic.real_state.utils import split_early_payment_discount_loss ,set_pending_discount_loss
+finally :
+	pass
 from frappe import ValidationError, _, scrub, throw
 from frappe.utils import cint, comma_or, flt, get_link_to_form, getdate, nowdate
 from functools import reduce
@@ -90,14 +91,48 @@ def get_last_sales_invoice_for_item(item_code):
 
 
 @frappe.whitelist()
+def get_last_purchase_invoice_for_item_with_date(item_code):
+	"""
+	String: item_code 
+
+	"""
+	sql = f"""
+		SELECT
+			pi.name as name,
+			pi.posting_date as posting_date, 
+			pii.rate as rate,
+			pii.item_code as item_code
+		FROM
+			`tabPurchase Invoice` pi
+		JOIN
+			`tabPurchase Invoice Item` pii
+		ON 
+			pi.name = pii.parent
+		WHERE
+			pii.item_code = '{item_code}'
+			AND pi.docstatus = 1
+		"""
+	doc = frappe.db.sql(sql , as_dict= 1)
+	last_date = False
+	last_rate = 0
+	if doc and len(doc) > 0 :
+		last_date = max( i.get("posting_date") for i in doc)
+		if last_date  :
+			invoices_with_last_date = [i for i in doc if i.get('posting_date') == last_date]
+			last_rate = invoices_with_last_date[0]['rate']
+	return last_rate ,last_date
+
+
+
+@frappe.whitelist()
 def get_payment_entry(
-	dt,
-	dn,
-	party_amount=None,
-	bank_account=None,
-	bank_amount=None,
-	reference_date=None,
-):
+			dt,
+			dn,
+			party_amount=None,
+			bank_account=None,
+			bank_amount=None,
+			reference_date=None,
+	):
 	# frappe.throw('in child payment ')
 	reference_doc = None
 	doc = frappe.get_doc(dt, dn)
