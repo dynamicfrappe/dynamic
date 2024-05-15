@@ -141,7 +141,7 @@ def creation_of_reseration(self , *args , **kargs):
             log.stock_uom = item.uom
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item.item_code, "warehouse":item.warehouse} , fieldname = 'actual_qty')
             reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item.item_code, "warehouse":item.warehouse} , fieldname = 'reserved_qty')
-            total_qty = bin_qty + (reservation_qty if reservation_qty else 0)
+            total_qty = float(bin_qty or 0 ) + (reservation_qty if reservation_qty else 0)
             log.available_qty_to_reserve = get_all_qty_reserved(item.item_code , item.warehouse)
             log.reserved_qty = float(item.qty) * float(item.conversion_factor)
             log.voucher_qty = item.qty 

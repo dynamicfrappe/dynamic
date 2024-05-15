@@ -6,60 +6,61 @@ from frappe import _
 
 
 def execute(filters=None):
-	columns, data = get_columns(filters) , get_data(filters)
+	columns, data = get_columns(filters), get_date(filters)
 	return columns, data
 
-def get_data(filters):
-	quotation = filters.get("quotation")
+def get_date(filters):
+	sales_order = filters.get("sales_order")
 	price_list = filters.get("price_list")
 
-	doc = frappe.get_doc("Quotation" , quotation)
+	doc = frappe.get_doc("Sales Order" , sales_order)
 	items = doc.get("items")
 
 	results = []
 
-	price_of_quotation = 0
-	total_of_quotation = 0
+	price_of_sales_order = 0
+	total_of_sales_order = 0
 	diff = 0
 
 	for i in items:
 		data = {}
-		data['quotation'] = quotation
+		data['sales_order'] = sales_order
 		data['item_code'] = i.item_code
 		data['item_name'] = i.item_name
 		data['qty'] = i.qty
-		data['price_of_quotation'] = i.rate
+		data['price_of_sales_order'] = i.rate
 
 		price = frappe.db.get_value("Item Price" , {"price_list" : price_list , "item_code" : i.item_code} , "price_list_rate")
 
 		data['price_of_price_list'] = price
-		data['total_of_quotation'] = float(i.qty or 0) * float(price or 0)
+
+		temp = float(i.qty or 0) * float(price or 0)
+		data['total_of_sales_order'] = temp
+		
 		data['diff'] = float(i.rate or 0) - float(price or 0)
 		data['total_diff'] = float(i.qty or 0) * (float(i.rate or 0) - float(price or 0))
 		data['per_diff'] = (float(i.rate or 0) - float(price or 0)) / float(price or 0) * 100
 
-
-		price_of_quotation += data['price_of_quotation']
-		total_of_quotation += data['total_of_quotation']
+		price_of_sales_order += data['price_of_sales_order']
+		total_of_sales_order += temp
 		diff += data['diff']
 
 		results.append(data)
-
 	results.append(())
-	results.append(("","","","","Total rates of sales with sales order" , price_of_quotation))
-	results.append(("","","","","Total rates of sales with item price" , total_of_quotation))
+	results.append(("","","","","Total rates of sales with sales order" , price_of_sales_order))
+	results.append(("","","","","Total rates of sales with item price" , total_of_sales_order))
 	results.append(("","","","","Total Differante" , diff))
-	results.append(("","","","","Percentage of Sales Order" , float(diff) / float(total_of_quotation) * 100))
-
+	results.append(("","","","","Percentage of Sales Order" , float(diff) / float(total_of_sales_order) * 100))
 	return results
+	
 
 def get_columns(filters):
 	columns = [
 		{
-			"fieldname": "quotation",
-			"label": _("Quotation"),
+			"fieldname": "sales_order",
+			"label": _("Sales Order"),
 			"fieldtype": "Link",
-			"options": "Quotation",
+			"options": "Sales Order",
 			"width": 200,
 		},
 		{
@@ -82,8 +83,8 @@ def get_columns(filters):
 			"width": 100,
 		},
 		{
-			"fieldname": "price_of_quotation",
-			"label": _("Price of Quotation"),
+			"fieldname": "price_of_sales_order",
+			"label": _("Price of Sales Order"),
 			"fieldtype": "Data",
 			"width": 250,
 		},
@@ -94,8 +95,8 @@ def get_columns(filters):
 			"width": 100,
 		},
 		{
-			"fieldname": "total_of_quotation",
-			"label": _("Total of Quotation"),
+			"fieldname": "total_of_sales_order",
+			"label": _("Total of Sales Order"),
 			"fieldtype": "Data",
 			"width": 100,
 		},
