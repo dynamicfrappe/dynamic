@@ -141,7 +141,7 @@ def creation_of_reseration(self , *args , **kargs):
             log.stock_uom = item.uom
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item.item_code, "warehouse":item.warehouse} , fieldname = 'actual_qty')
             reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item.item_code, "warehouse":item.warehouse} , fieldname = 'reserved_qty')
-            total_qty = bin_qty + (reservation_qty if reservation_qty else 0)
+            total_qty = float(bin_qty or 0 ) + (reservation_qty if reservation_qty else 0)
             log.available_qty_to_reserve = get_all_qty_reserved(item.item_code , item.warehouse)
             log.reserved_qty = float(item.qty) * float(item.conversion_factor)
             log.voucher_qty = item.qty 
@@ -188,7 +188,7 @@ def get_validation(self , *args, **kwargs):
             warehouse = item.warehouse
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
             reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'reserved_qty')
-            total_qty = bin_qty + (reservation_qty if reservation_qty else 0)
+            total_qty = float(bin_qty or 0) + float(reservation_qty or 0)
             if qty > total_qty:
                 wanted_qty = float(qty) - float(total_qty)
                 msg = f"""
@@ -237,5 +237,5 @@ def get_all_qty_reserved (item_code, warehouse):
 
     actual_qty = float(qty_reserved or 0 ) - float( qty_delivered or 0 )
     bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
-    total = bin_qty - actual_qty
+    total = float(bin_qty or 0) - float(actual_qty or 0)
     return total
