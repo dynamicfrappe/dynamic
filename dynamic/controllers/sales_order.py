@@ -188,7 +188,7 @@ def get_validation(self , *args, **kwargs):
             warehouse = item.warehouse
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
             reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'reserved_qty')
-            total_qty = float(bin_qty or 0) + (reservation_qty if reservation_qty else 0)
+            total_qty = float(bin_qty or 0) + float(reservation_qty or 0)
             if qty > total_qty:
                 wanted_qty = float(qty) - float(total_qty)
                 msg = f"""
