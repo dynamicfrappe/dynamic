@@ -43,14 +43,8 @@ def get_data(filters):
             SI.customer, 
             SII.item_code,
             SII.item_name,
-            SUM(SII.qty) AS qty,
-            SUM(SII.net_amount) AS net_amount,
-            SUM(CASE WHEN SI.status = 'overdue' THEN SII.qty ELSE 0 END) AS overdue_qty,
-            SUM(CASE WHEN SI.status = 'return' THEN SII.qty ELSE 0 END) AS return_qty,
-            SUM(CASE WHEN SI.status = 'overdue' THEN SII.qty ELSE 0 END) - SUM(CASE WHEN SI.status = 'return' THEN SII.qty ELSE 0 END) AS difference_qty,
-            SUM(CASE WHEN SI.status = 'overdue' THEN SII.net_amount ELSE 0 END) AS overdue_amount,
-            SUM(CASE WHEN SI.status = 'return' THEN SII.net_amount ELSE 0 END) AS return_amount,
-            SUM(CASE WHEN SI.status = 'overdue' THEN SII.net_amount ELSE 0 END) - SUM(CASE WHEN SI.status = 'return' THEN SII.net_amount ELSE 0 END) AS difference_amount
+            SII.qty,
+            SII.net_amount
         FROM
             `tabSales Invoice` SI
         LEFT JOIN
@@ -58,14 +52,16 @@ def get_data(filters):
         ON 
             SI.name = SII.parent
         {sql_join}
-        WHERE
-            SI.status IN ('overdue', 'return')
-            AND {conditions}
         GROUP BY
             SI.customer, 
             SII.item_code,
             SII.item_name
     '''
+
+
+
+
+
     data = frappe.db.sql(sql, as_dict=True)
     return data
 

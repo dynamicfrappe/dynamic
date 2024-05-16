@@ -6,11 +6,6 @@ def execute(filters=None):
     return columns, data
 
 
-
-def execute(filters=None):
-    columns, data = get_columns(), get_data(filters)
-    return columns, data
-
 def get_data(filters):
     conditions = " 1=1"
     sql_join = ""
