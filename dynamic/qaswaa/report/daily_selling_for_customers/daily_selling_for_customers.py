@@ -76,6 +76,8 @@ def get_data(filters):
 				babe.append(('set_warehouse' , '=' , filters.get('warehouse')))
 			if filters.get("sales_partner") :
 				babe.append(('sales_partner' , '=' , filters.get('sales_partner')))
+			babe.append(("posting_date" , "<=" , filters.get("period_end_date")))
+			babe.append(("posting_date" , ">=" , filters.get("period_start_date")))
 			
 			babe.append(('customer', '=', i.customer))
 			
