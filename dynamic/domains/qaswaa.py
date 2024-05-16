@@ -57,6 +57,13 @@ data = {
                 "insert_after": "account_dimension_section" ,
                 "options":"Cost Center",
             },
+            {
+
+                "label": "Item Discount rate",
+                "fieldname": "item_discount_rate",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
+            } 
         
         ],
         "Quotation Item":
@@ -99,7 +106,8 @@ data = {
                 "label": "Item Discount rate",
                 "fieldname": "item_discount_rate",
                 "fieldtype": "Float",
-                "insert_after": "discount_amount" , } ,
+                "insert_after": "discount_amount" ,
+            } 
           
         ],
         "Selling Settings":

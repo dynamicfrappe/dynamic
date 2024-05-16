@@ -22,19 +22,19 @@ def get_data(filters):
     if filters.get("item_group"):
         conditions += f" and SII.item_group = '{filters.get('item_group')}'"
     if filters.get("cost_center"):
-        conditions += f" and sii_cc.cost_center = '{filters.get('cost_center')}'"
+        conditions += f" and SII.cost_center = '{filters.get('cost_center')}'"
         sql_join += """
-        INNER JOIN `tabSales Invoice Item` sii_cc ON SI.name = sii_cc.parent
+        INNER JOIN `tabSales Invoice Item` SII ON SI.name = SII.parent
             """
     if filters.get("warehouse"):
-        conditions += f" and sii_cc.warehouse = '{filters.get('warehouse')}'"
+        conditions += f" and SII.warehouse = '{filters.get('warehouse')}'"
         sql_join += """
-        INNER JOIN `tabSales Invoice Item` sii_cc ON SI.name = sii_cc.parent
+        INNER JOIN `tabSales Invoice Item` SII ON SI.name = SII.parent
             """
     if filters.get("sales_person"):
-        conditions += f" and sii_cc.sales_person = '{filters.get('sales_person')}'"
+        conditions += f" and SII.sales_person = '{filters.get('sales_person')}'"
         sql_join += """
-        INNER JOIN `tabSales Team` sii_cc ON SI.name = sii_cc.parent
+        INNER JOIN `tabSales Team` SII ON SI.name = SII.parent
             """         
 
     

@@ -97,6 +97,7 @@ frappe.ui.form.on("Quotation",{
             }}
         })
     },
+    
 
     get_advancess:function(frm){
         if(!frm.is_return) {

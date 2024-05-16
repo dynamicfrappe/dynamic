@@ -512,6 +512,7 @@ add_furniture_installation_button(frm) {
   }
 },
 
+
 make_furniture_installation_order(frm) {
   frappe.model.open_mapped_doc({
     // installation_request_doc
@@ -523,6 +524,7 @@ make_furniture_installation_order(frm) {
 },
 
 });
+
 
 frappe.ui.form.on("Sales Order Item", { 
   item_warehouse: function (frm, cdt, cdn) {
