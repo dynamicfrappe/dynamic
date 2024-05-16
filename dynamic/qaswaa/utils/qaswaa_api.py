@@ -58,6 +58,21 @@ def get_last_purchase_invoice_for_item(item_code):
 	invoices_with_last_date = [i for i in doc if i.get('posting_date') == last_date]
 	return invoices_with_last_date[0]['rate']
 
+@frappe.whitelist()
+def get_purcashe_invoice_return(purchase_invoice):
+	sql =  f'''
+		SELECT 
+			p.name as name
+		FROM 
+			`tabPurchase Invoice` p
+		WHERE 
+			p.is_return = 1
+			AND p.return_against = '{purchase_invoice}';
+		'''
+	supplier = frappe.db.sql(sql , as_dict= 1)
+
+	return supplier[0]['name'] if supplier else None
+
 
 @frappe.whitelist()
 def get_last_sales_invoice_for_item(item_code):
