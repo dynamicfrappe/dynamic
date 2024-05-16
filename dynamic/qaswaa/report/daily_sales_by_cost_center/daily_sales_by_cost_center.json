@@ -13,7 +13,7 @@
  "modified": "2024-05-13 10:25:37.077379",
  "modified_by": "Administrator",
  "module": "Qaswaa",
- "name": "daily_sales_by_cost_center",
+ "name": "Daily Sales by cost center",
  "owner": "Administrator",
  "prepared_report": 0,
  "ref_doctype": "Sales Invoice",
