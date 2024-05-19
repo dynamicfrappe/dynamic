@@ -22,19 +22,19 @@ def get_data(filters):
     if filters.get("item_group"):
         conditions += f" and SII.item_group = '{filters.get('item_group')}'"
     if filters.get("cost_center"):
-        conditions += f" and sii_cc.cost_center = '{filters.get('cost_center')}'"
+        conditions += f" and SII.cost_center = '{filters.get('cost_center')}'"
         sql_join += """
-        INNER JOIN `tabSales Invoice Item` sii_cc ON SI.name = sii_cc.parent
+        INNER JOIN `tabSales Invoice Item` SII ON SI.name = SII.parent
             """
     if filters.get("warehouse"):
-        conditions += f" and sii_cc.warehouse = '{filters.get('warehouse')}'"
+        conditions += f" and SII.warehouse = '{filters.get('warehouse')}'"
         sql_join += """
-        INNER JOIN `tabSales Invoice Item` sii_cc ON SI.name = sii_cc.parent
+        INNER JOIN `tabSales Invoice Item` SII ON SI.name = SII.parent
             """
     if filters.get("sales_person"):
-        conditions += f" and sii_cc.sales_person = '{filters.get('sales_person')}'"
+        conditions += f" and SII.sales_person = '{filters.get('sales_person')}'"
         sql_join += """
-        INNER JOIN `tabSales Team` sii_cc ON SI.name = sii_cc.parent
+        INNER JOIN `tabSales Team` SII ON SI.name = SII.parent
             """         
 
     
@@ -43,14 +43,8 @@ def get_data(filters):
             SI.customer, 
             SII.item_code,
             SII.item_name,
-            SUM(SII.qty) AS qty,
-            SUM(SII.net_amount) AS net_amount,
-            SUM(CASE WHEN SI.status = 'overdue' THEN SII.qty ELSE 0 END) AS overdue_qty,
-            SUM(CASE WHEN SI.status = 'return' THEN SII.qty ELSE 0 END) AS return_qty,
-            SUM(CASE WHEN SI.status = 'overdue' THEN SII.qty ELSE 0 END) - SUM(CASE WHEN SI.status = 'return' THEN SII.qty ELSE 0 END) AS difference_qty,
-            SUM(CASE WHEN SI.status = 'overdue' THEN SII.net_amount ELSE 0 END) AS overdue_amount,
-            SUM(CASE WHEN SI.status = 'return' THEN SII.net_amount ELSE 0 END) AS return_amount,
-            SUM(CASE WHEN SI.status = 'overdue' THEN SII.net_amount ELSE 0 END) - SUM(CASE WHEN SI.status = 'return' THEN SII.net_amount ELSE 0 END) AS difference_amount
+            SII.qty,
+            SII.net_amount
         FROM
             `tabSales Invoice` SI
         LEFT JOIN
@@ -58,14 +52,16 @@ def get_data(filters):
         ON 
             SI.name = SII.parent
         {sql_join}
-        WHERE
-            SI.docstatus =1
-            AND {conditions}
         GROUP BY
             SI.customer, 
             SII.item_code,
             SII.item_name
     '''
+
+
+
+
+
     data = frappe.db.sql(sql, as_dict=True)
     return data
 

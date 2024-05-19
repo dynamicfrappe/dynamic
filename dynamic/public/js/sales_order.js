@@ -335,6 +335,28 @@ frappe.ui.form.on("Sales Order", {
     })
     }
  } ,
+ add_item_discount_rate: function(frm) {
+  var item_discount_rate = frm.doc.item_discount_rate;
+        frm.doc.items.forEach(function(item) {
+            frappe.model.set_value(item.doctype, item.name, 'discount_percentage', item_discount_rate);
+        });
+        frm.refresh_field('items');
+},
+
+
+  item_discount_rate: function(frm) {
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function(r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("Qaswaa")) {
+            console.log("ass")
+            frm.events.add_item_discount_rate(frm);
+          }
+        }
+      }
+    });
+  },
 update_child_items : function(frm,child_docname,child_doctype,cannot_add_row) {
 	var cannot_add_row = (typeof cannot_add_row === 'undefined') ? true : cannot_add_row;
 	var child_docname = (typeof cannot_add_row === 'undefined') ? "items" : child_docname;
@@ -491,6 +513,7 @@ update_child_items : function(frm,child_docname,child_doctype,cannot_add_row) {
 	dialog.show();
 },
 
+
 add_furniture_installation_button(frm) {
   if (frm.doc.docstatus == 1) {
     frappe.call({
@@ -512,6 +535,7 @@ add_furniture_installation_button(frm) {
   }
 },
 
+
 make_furniture_installation_order(frm) {
   frappe.model.open_mapped_doc({
     // installation_request_doc
@@ -523,6 +547,7 @@ make_furniture_installation_order(frm) {
 },
 
 });
+
 
 frappe.ui.form.on("Sales Order Item", { 
   item_warehouse: function (frm, cdt, cdn) {
