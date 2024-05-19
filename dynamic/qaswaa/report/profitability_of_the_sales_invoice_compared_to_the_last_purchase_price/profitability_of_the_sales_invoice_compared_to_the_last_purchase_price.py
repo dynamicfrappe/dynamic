@@ -5,10 +5,8 @@ def execute(filters=None):
     columns, data = get_columns(), get_data(filters)
     return columns, data
 
-
 def get_data(filters):
     conditions = " 1=1"
-    sql_join = ""
     
     if filters.get("customer"):
         conditions += f" AND sd.customer = '{filters.get('customer')}'"
@@ -24,16 +22,9 @@ def get_data(filters):
         conditions += f" AND sd.transaction_date <= '{filters.get('to_date')}'"
   
     if filters.get("cost_center"):
-        sql_join += """
-            INNER JOIN `tabSales Order Item` sii_cc ON so_cc.name = sii_cc.parent
-            AND sii_cc.cost_center = '{filters.get('cost_center')}'
-        """
-        
+        conditions += f" AND sd.cost_center = '{filters.get('cost_center')}'"
     if filters.get("sales_person"):
-        sql_join += """
-            INNER JOIN `tabSales Team` sii_sp ON si_sp.name = sii_sp.parent
-            AND sii_sp.sales_person = '{filters.get('sales_person')}'
-        """   
+        conditions += f" AND sii_sp.sales_person = '{filters.get('sales_person')}'"
 
     sql = f'''
         SELECT 
@@ -125,12 +116,16 @@ def get_data(filters):
             `tabSales Order` sd
         INNER JOIN
             `tabSales Order Item` item ON item.parent = sd.name
-        {sql_join}
+        LEFT JOIN
+            `tabSales Team` sii_sp ON sd.name = sii_sp.parent 
         WHERE {conditions}
     '''
     data = frappe.db.sql(sql, as_dict=True)
 
     return data
+
+
+
 
 
 

@@ -10,6 +10,10 @@ def get_data(filters):
     conditions = "1=1"
     if filters.get("supplier"):
         conditions += f" AND pi.supplier = '{filters.get('supplier')}'"
+    if filters.get("cost_center"):
+        conditions += f" AND pi.cost_center = '{filters.get('cost_center')}'"
+    if filters.get("purchase_invoice"):
+        conditions += f" AND pi.name = '{filters.get('purchase_invoice')}'"        
     if filters.get("from_date"):
         conditions += f" AND pi.posting_date >= '{filters.get('from_date')}'"
     if filters.get("to_date"):
