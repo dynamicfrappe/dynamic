@@ -59,7 +59,7 @@ def get_data(filters):
             SI.name = SII.parent
         {sql_join}
         WHERE
-            SI.status IN ('overdue', 'return')
+            SI.docstatus =1
             AND {conditions}
         GROUP BY
             SI.customer, 

@@ -50,7 +50,8 @@ def get_data(filters):
 			sd.posting_date , sd.invoice_name , sd.customer , sd.grand_total ,
 			sd.collection , sd.delivery_type , sd.delivered_date ,
 			sd.sales_person_notes , sd.shipping_company, sd.policy_number ,
-			sd.driver , sd.delivered
+			sd.driver , sd.delivered 
+			
 		FROM 
 			`tabSales Document States` sd
 		{sql_join}
@@ -58,8 +59,7 @@ def get_data(filters):
 			{conditions}
 		'''
 	data = frappe.db.sql(sql , as_dict = 1)
-	for entry in data:
-		entry["sales_document_status"] = "Sales Document Status"
+	
 	return data
 
 
