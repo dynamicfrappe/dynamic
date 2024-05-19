@@ -117,19 +117,6 @@ def get_data(filters):
 def get_columns(filters):
 	columns = [
 		{
-			"fieldname": "customer",
-			"label": _("Customer"),
-			"fieldtype": "Link",
-			"options": "Customer",
-			"width": 200,
-		},
-		{
-			"fieldname": "sales_person",
-			"label": _("Sales Person"),
-			"fieldtype": "Data",
-			"width": 200,
-		},
-		{
 			"fieldname": "posting_date",
 			"label": _("Date"),
 			"fieldtype": "Data",

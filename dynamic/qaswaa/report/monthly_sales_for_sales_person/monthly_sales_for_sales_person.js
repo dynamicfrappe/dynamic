@@ -47,5 +47,12 @@ frappe.query_reports["Monthly sales for sales person"] = {
 			"options" : "Item Group",
 			// "reqd": 1,
 		},
+		{
+			"fieldname": "sales_person",
+            "label": __("Sales Person"),
+            "fieldtype": "Link",
+            "options": "Sales Person",
+            "reqd": 0
+		},
 	]
 };

@@ -13,7 +13,6 @@ def execute(filters=None):
 
 def get_data(filters):
     conditions = " 1=1"
-    sql_join = ""
     
     if filters.get("customer"):
         conditions += f" AND sd.customer = '{filters.get('customer')}'"
@@ -106,7 +105,6 @@ def get_data(filters):
 			`tabSales Invoice` so
 		INNER JOIN
 			`tabSales Invoice Item` item ON item.parent = so.name
-        {sql_join}
         WHERE {conditions}
         '''
 
