@@ -155,32 +155,20 @@ add_item_discount_rate: function(frm) {
         frm.refresh_field('items');
 },
 
- item_discount_rate:function(frm){
-  frappe.call({
-    method:"dynamic.api.get_active_domains",
-    callback:function (r) {
-      if (r.message && r.message.length){
-        if (r.message.includes("Qaswaa")) {
-          frm.events.add_item_discount_rate(frm);
-        }
-      }
-    }
-  })
 
- },
- items_add: function(frm) {
-  frappe.call({
+  item_discount_rate: function(frm) {
+    frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function(r) {
-          if (r.message && r.message.length && r.message.includes("Qaswaa")) {
-            frm.fields_dict['items'].grid.on_grid_row_opened(function(e) {
-                  add_item_discount_rate(frm);
-              });
+        if (r.message && r.message.length) {
+          if (r.message.includes("Qaswaa")) {
+            console.log("ass")
+            frm.events.add_item_discount_rate(frm);
           }
+        }
       }
-  });
-},
-
+    });
+  },
 
 
 
@@ -284,18 +272,17 @@ frappe.ui.form.on("Sales Team", {
 
 
 frappe.ui.form.on("Sales Invoice Item", {
-  items_add: function(frm) {
-    frappe.call({
-        method: "dynamic.api.get_active_domains",
-        callback: function(r) {
-            if (r.message && r.message.length && r.message.includes("Qaswaa")) {
-              frm.fields_dict['items'].grid.on_grid_row_opened(function(e) {
-                    add_item_discount_rate(frm);
-                });
-            }
-        }
-    });
-  },
+//   items_add: function(frm,cdt,cdn) {
+//     console.log("baio");
+//     frappe.call({
+//         method: "dynamic.api.get_active_domains",
+//         callback: function(r) {
+//             if (r.message && r.message.length && r.message.includes("Qaswaa")) {
+//               frm.events.add_item_discount_rate(frm);
+//             }
+//         }
+//     });
+// },
   item_code:function(frm,cdt,cdn){
     let row = locals[cdt][cdn]
     if(row.item_code){
@@ -313,8 +300,26 @@ frappe.ui.form.on("Sales Invoice Item", {
 					row.total =  res.message.price_list_rate;
 				}
 			});
-      
-      frm.refresh_fields('items')
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length && r.message.includes("Qaswaa")) {
+                // console.log("bgg");
+                var item_discount_rate = frm.doc.item_discount_rate;
+                // console.log(item_discount_rate);
+                // row.discount_percentage = item_discount_rate
+                frm.set_value("items","discount_percentage",item_discount_rate)
+                frm.refresh_fields("items");
+                // frm.doc.items.forEach(function(row) {
+                //   console.log("gh");
+                //   row.discount_percentage = item_discount_rate
+                //   console.log(row.discount_percentage);
+                //   frm.refresh_field('items');
+                // });
+            }
+        }
+    }); 
+      frm.refresh_fields('items');
     }
   },
   qty:function(frm,cdt,cdn){
