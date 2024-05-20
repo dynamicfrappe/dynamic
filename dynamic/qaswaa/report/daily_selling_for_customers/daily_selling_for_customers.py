@@ -80,14 +80,15 @@ def get_data(filters):
 			babe.append(("posting_date" , ">=" , filters.get("period_start_date")))
 			
 			babe.append(('customer', '=', i.customer))
-			
+			babe.append(('is_return', '=', 0))
+
 			temp = frappe.get_list(doctype = "Sales Invoice" , filters = babe , fields = ['*'])
 			for j in temp:
 				data1 = {}
 				data1['posting_date'] = j.posting_date
 				data1['name'] = j.name
 				data1['cost_center'] = j.cost_center
-				data1['warehouse'] = j.warehouse
+				data1['warehouse'] = j.set_warehouse
 				data1['net_total'] = j.net_total
 				data1['base_total_taxes_and_charges'] = j.base_total_taxes_and_charges
 				data1['base_grand_total'] = j.base_grand_total
@@ -112,6 +113,20 @@ def get_data(filters):
 
 			
 	return resulte
+
+def get_purcashe_invoice_return(sales_invoice):
+	sql =  f'''
+		SELECT 
+			p.name as name
+		FROM 
+			`tabSales Invoice` p
+		WHERE 
+			p.is_return = 1
+			AND p.return_against = '{sales_invoice}';
+		'''
+	customer = frappe.db.sql(sql , as_dict= 1)
+
+	return customer[0]['name'] if customer else None
 
 
 def get_columns(filters):
