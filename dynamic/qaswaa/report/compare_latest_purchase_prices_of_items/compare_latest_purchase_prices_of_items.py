@@ -20,6 +20,10 @@ def get_data(filters):
         conditions += f" AND pi.posting_date <= '{filters.get('to_date')}'"
     if filters.get("item_code"):
         conditions += f" AND pii1.item_code = '{filters.get('item_code')}'"
+    if filters.get("item_group"):
+        conditions += f" AND pii1.item_group = '{filters.get('item_group')}'"    
+    if filters.get("warehouse"):
+        conditions += f" AND pii1.warehouse = '{filters.get('warehouse')}'"    
 
     sql = f'''
         SELECT 

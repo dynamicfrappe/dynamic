@@ -78,6 +78,8 @@ def get_data(filters):
 		conditions += f""" and si.customer = "{filters.get('customer')}" """
 	if filters.get("item_group") :
 		conditions += f""" and sii.item_group = "{filters.get('item_group')}" """
+	if filters.get("sales_person") :
+		conditions += f""" and st.sales_person = "{filters.get('sales_person')}" """	
 
 	period_list = get_period_list(filters)
 	print(conditions)
