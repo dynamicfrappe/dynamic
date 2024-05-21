@@ -5,25 +5,16 @@
 frappe.query_reports["Deliveries Item depend om Customer"] = {
 	"filters": [
 		{
-			"fieldname":"period_start_date",
-			"label": __("Start Date"),
-			"fieldtype": "Date",
-			"reqd": 1,
-			// "default": frappe.datetime.add_months(frappe.datetime.get_today(), -1)
-		},
-		{
-			"fieldname":"period_end_date",
-			"label": __("End Date"),
-			"fieldtype": "Date",
-			"reqd": 1,
-			// "default": frappe.datetime.get_today()
-		},
-		{
-			"fieldname":"customer",
+			"fieldname":"customer_id",
 			"label": __("Customer"),
 			"fieldtype": "Link",
 			"options":"Customer",
-			// "reqd": 1,
+		},
+		{
+			"fieldname":"sales_person",
+			"label": __("Sales Person"),
+			"fieldtype": "Link",
+			"options":"Sales Person",
 		},
 	]
 };
