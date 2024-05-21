@@ -5,36 +5,35 @@
 frappe.query_reports["Daily selling for customers"] = {
 	"filters": [
 		{
-			"fieldname":"period_start_date",
+			"fieldname":"start_date",
 			"label": __("Start Date"),
 			"fieldtype": "Date",
-			"reqd": 1,
-			// "default": frappe.datetime.add_months(frappe.datetime.get_today(), -1)
+			"reqd": 0,
 		},
 		{
-			"fieldname":"period_end_date",
+			"fieldname":"end_date",
 			"label": __("End Date"),
 			"fieldtype": "Date",
-			"reqd": 1,
-			// "default": frappe.datetime.get_today()
+			"reqd": 0,
 		},
 		{
 			"fieldname":"cost_center",
 			"label": __("Cost Center"),
 			"fieldtype": "Link",
-			"options": "Cost Center"
+			"options": "Cost Center" ,
+			"reqd": 0,
 		},
 		{
 			"fieldname":"warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
-			"options": "Warehouse"
+			"options" : "Warehouse"
 		},
 		{
 			"fieldname":"customer",
 			"label": __("Customer"),
 			"fieldtype": "Link",
-			"options": "Customer"
+			"options" : "Customer"
 		},
 		{
 			"fieldname":"sales_person",
@@ -48,5 +47,6 @@ frappe.query_reports["Daily selling for customers"] = {
 			"fieldtype": "Link",
 			"options": "Sales Partner"
 		},
+
 	]
 };

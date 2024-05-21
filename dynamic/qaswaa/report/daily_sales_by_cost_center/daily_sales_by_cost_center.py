@@ -10,53 +10,52 @@ def execute(filters=None):
 	return columns, data
 
 def get_data(filters):
+    conditions = []
 
-	start_date = filters.get("start_date")
-	end_date = filters.get("end_date")
+    if filters.get("start_date"):
+        conditions.append(['posting_date', '>=', filters.get("start_date")])
+    if filters.get("end_date"):
+        conditions.append(['posting_date', '<=', filters.get("end_date")])
+    if filters.get("cost_center"):
+        conditions.append(['cost_center', '=', filters.get("cost_center")])
+    if filters.get("warehouse"):
+        conditions.append(['warehouse', '=', filters.get("warehouse")])
+    if filters.get("customer"):
+        conditions.append(['customer', '=', filters.get("customer")])
+    if filters.get("sales_person"):
+        conditions.append(['sales_person', '=', filters.get("sales_person")])
+    if filters.get("sales_partner"):
+        conditions.append(['sales_partner', '=', filters.get("sales_partner")])    
+                       
+    
+    result = []
+    sales_invoices = frappe.get_all("Sales Invoice", fields=["posting_date", "name", "set_warehouse", "customer",
+                                                             "net_total", "base_total_taxes_and_charges",
+                                                             "base_grand_total", "total_advance"], filters=conditions)
 
-	cost_center = filters.get("cost_center")
+    for doc in sales_invoices:
+        num = frappe.db.get_value("Sales Invoice", {"is_return": 1, "return_against": doc.name}, 'base_grand_total') or 0
+        
+        total_advance = frappe.db.get_value("Payment Entry Reference",
+                                             {"reference_name": doc.name, "reference_doctype": "Sales Invoice"},
+                                             "allocated_amount") or 0
+        
+        temp = {}
+        temp['posting_date'] = doc.posting_date
+        temp['name'] = doc.name
+        temp['warehouse'] = doc.set_warehouse
+        temp['customer'] = doc.customer
+        temp['net_total'] = doc.net_total
+        temp['base_total_taxes_and_charges'] = doc.base_total_taxes_and_charges
+        temp['base_grand_total'] = doc.base_grand_total
+        temp['total_advance'] = total_advance
+        temp['refund'] = num if num else 0
+        temp['diff'] = float(total_advance) + (float(num or 0))
+        
+        result.append(temp)
 
-	conditions = []
+    return result
 
-	conditions.append(('posting_date' , '>=' , start_date))
-	conditions.append(('posting_date' , '<=' , end_date))
-	conditions.append(('cost_center' , '=' , cost_center))
-
-
-	if filters.get("warehouse") :
-		conditions.append(('set_warehouse' , '=' , filters.get('warehouse')))
-		
-	if filters.get("customer") :
-		conditions.append(('customer' , '=' , filters.get('customer')))
-
-	if filters.get("sales_person") :
-		conditions.append(('sales_person' , '=' , filters.get('sales_person')))
-
-	if filters.get("sales_partner") :
-		conditions.append(('sales_partner' , '=' , filters.get('sales_partner')))
-
-	resulte = []
-	invoices = frappe.db.get_list( "Sales Invoice", filters=conditions)
-
-	for invoice in invoices:
-		doc = frappe.get_doc("Sales Invoice" , invoice.name)
-		temp = {}
-		temp['posting_date'] = doc.posting_date
-		temp['name'] = invoice.name
-		temp['warehouse'] = doc.set_warehouse
-		temp['customer'] = doc.customer
-		temp['net_total'] = doc.net_total
-		temp['base_total_taxes_and_charges'] = doc.base_total_taxes_and_charges
-		temp['base_grand_total'] = doc.base_grand_total
-		temp['total_advance'] = doc.total_advance
-		num = frappe.db.get_value("Sales Invoice" , {"is_return": 1, "return_against": invoice.name},'base_grand_total') if not None else 0
-		if num:
-			temp['refund'] = num
-			temp['diff'] = float(doc.base_grand_total or 0 ) - (float(doc.total_advance or 0 ) + float(num or 0))
-		resulte.append(temp)
-
-	
-	return resulte
 
 def get_columns(filters):
 	columns = [

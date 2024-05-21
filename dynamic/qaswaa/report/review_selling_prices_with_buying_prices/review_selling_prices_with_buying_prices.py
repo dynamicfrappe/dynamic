@@ -45,15 +45,6 @@ def get_data(filters):
     else:
         return []
 
-
-
-
-
-
-
-
-
-
 def get_columns(filters):
     columns = [
         {
