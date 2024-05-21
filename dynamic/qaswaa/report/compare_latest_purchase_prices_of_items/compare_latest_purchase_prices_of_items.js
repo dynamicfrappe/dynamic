@@ -41,6 +41,20 @@ frappe.query_reports["Compare Latest purchase prices of items"] = {
 			"options": "Supplier" ,
 			"reqd": 0
 		},
+		{
+			"fieldname": "warehouse",
+			"label": __("Warehouse"),
+			"fieldtype": "Link",
+			"options": "Warehouse" ,
+			"reqd": 0
+		},
+		{
+			"fieldname": "item_group",
+			"label": __("Item Group"),
+			"fieldtype": "Link",
+			"options": "Item Group" ,
+			"reqd": 0
+		},
 
 	]
 };
