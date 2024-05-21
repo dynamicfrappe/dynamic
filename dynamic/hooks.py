@@ -54,6 +54,7 @@ doctype_calendar_js = {
 doctype_list_js = {
     "Customer": "public/js/customer_list.js",
     "Quotation": "public/js/quotation_list.js",
+     "Stock Entry": "public/js/stock_entry_list.js",
 }
 
 after_install = [

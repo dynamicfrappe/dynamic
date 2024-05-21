@@ -95,7 +95,7 @@ frappe.ui.form.on("Stock Entry", {
 
     setup :function(frm){
       frm.events.set_field_property(frm)
-
+      
     //   frappe.call({
     //       "method" : "dynamic.contracting.doctype.stock_functions.fetch_contracting_data" ,
     //       callback :function(r){
@@ -257,17 +257,19 @@ frappe.ui.form.on("Stock Entry", {
     },
     onload:function(frm) {
     //  add tarra customization 
-    
+ 
      frm.events.trea_setup(frm)
      
     },
     refresh:function(frm){
       
-      if (frm.doc.owner == frappe.session.user){
-        
+
+      if (!frm.is_new()){
+        console.log("local2")
+        frm.set_df_property('items', 'cannot_add_rows', true);
       }
 
-     
+      cur_frm.clear_custom_buttons();
       // frm.custom_transaction_controller = new erpnext.CustomTransactionController(frm);
       frm.events.trea_setup(frm)
       frm.events.set_property(frm)
@@ -735,3 +737,10 @@ $.extend(
         
       //   // refresh_field("items");
       // }
+
+
+
+      function remove_btn() {
+        console.log("function Called")
+        cur_frm.$wrapper.find(".grid-add-row").hide()
+      }

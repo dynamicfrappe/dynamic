@@ -3,13 +3,17 @@
 
 frappe.ui.form.on("Purchase Order", {
   onload:function(frm){
-
+    cur_frm.page.remove_inner_button(__('Update Items'))
+    cur_frm.remove_custom_button("Update Items")
   },
   setup:function(frm){
-   
+    cur_frm.page.remove_inner_button(__('Update Items'))
+    frm.remove_custom_button("Update Items");
   },
   refresh: function (frm) {
-
+    cur_frm.page.remove_inner_button(__('Update Items'))
+    frm.remove_custom_button("Update Items");
+    console.log("SEE me")
     frm.custom_make_buttons["Cheque"] = "Cheque";
     frm.events.add_cheque_button(frm);
     
@@ -90,6 +94,8 @@ const purchase_order_extend = erpnext.buying.PurchaseOrderController.extend({
   refresh: function(doc, dt, dn) {
 		var me = this;
 		this._super(doc);
+    cur_frm.remove_custom_button("Update Items");
+   
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {

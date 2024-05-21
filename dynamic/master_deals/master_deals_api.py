@@ -374,14 +374,14 @@ def get_avail_qty_in_draft_delivery(self, *args):
 
 @frappe.whitelist()
 def get_avail_qty_in_draft_stock_entry(self, *args):
-	if "Master Deals" in DOMAINS:
-		# add stock setting flage
-		if frappe.db.get_single_value("Selling Settings", "check_qty"):
-			for item in self.items :
-				if item.available_qty < item.transfer_qty :
-					frappe.throw(_(f""" item {item.item_code} Has Not Enough qty 
-										in warehouse {item.s_warehouse} \n Current Qty = {item.available_qty} 
-																				And required qty {item.transfer_qty}"""))
+    if "Master Deals" or "WEH" in DOMAINS:
+        # add stock setting flage
+        #if frappe.db.get_single_value("Selling Settings", "check_qty"):
+        for item in self.items :
+            if item.actual_qty < item.transfer_qty :
+                frappe.throw(_(f""" item {item.item_code} Has Not Enough qty 
+                                    in warehouse {item.s_warehouse} \n Current Qty = { item.actual_qty} 
+                                                                            And required qty {item.transfer_qty}"""))
 @frappe.whitelist()
 def get_avail_qty_in_draft_stock_delivry_2(doc, *args):
    

@@ -3,6 +3,7 @@
 
 frappe.ui.form.on("Delivery Note", {
     refresh:function(frm){
+      frm.events.remove_buttons(frm)
         frm.events.read_only_fields(frm)
     },
     domian_valid: function (frm) {
@@ -21,7 +22,22 @@ frappe.ui.form.on("Delivery Note", {
       return tera
  
      } ,
+
+     remove_buttons(frm) {
+      console.log("Remove Button Function ")
+      setTimeout(() => {
+        
+      me.frm.remove_custom_button("Sales Return" , "Create")
+      cur_frm.remove_custom_button("Delivery Trip" , "Create")
+      cur_frm.remove_custom_button("Sales Invoice" , "Create")
+      cur_frm.remove_custom_button("Subscription" , "Create")
+      cur_frm.remove_custom_button("Installation Note" , "Create")
+
+     },2);
+    
+    },
      onload(frm) {
+      
         var check_domain = frm.events.domian_valid()
         if (check_domain && frm.doc.docstatus == 0) {
             frm.add_custom_button(
@@ -278,7 +294,24 @@ const override_scan_code = erpnext.stock.DeliveryNoteController.extend({
 
 
 
+
+
+const delivery_note_extend = erpnext.stock.DeliveryNoteController.extend({
+  refresh: function(doc, dt, dn) {
+    console.log("My update")
+		var me = this;
+		this._super(doc);
+    me.frm.page.remove_inner_button(__("Shipment") , __("Create"))
+    me.frm.remove_custom_button(__("Delivery Trip") , __("Create"))
+    me.frm.remove_custom_button( __("Sales Invoice") ,  __("Create"))
+    me.frm.remove_custom_button( __("Subscription") ,  __("Create"))
+    me.frm.remove_custom_button( __("Installation Note") ,  __("Create"))
+    me.frm.remove_custom_button(__("Sales Return"), __("Create"));}
+
+})
+
 $.extend(
-    cur_frm.cscript,
-    new override_scan_code({frm: cur_frm}),
+  cur_frm.cscript,
+  new override_scan_code({frm: cur_frm}),
+  new delivery_note_extend({frm: cur_frm})
 )
