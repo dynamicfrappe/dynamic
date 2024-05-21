@@ -8,20 +8,20 @@ frappe.query_reports["Daily Sales by cost center"] = {
 			"fieldname":"start_date",
 			"label": __("Start Date"),
 			"fieldtype": "Date",
-			"reqd": 1,
+			"reqd": 0,
 		},
 		{
 			"fieldname":"end_date",
 			"label": __("End Date"),
 			"fieldtype": "Date",
-			"reqd": 1,
+			"reqd": 0,
 		},
 		{
 			"fieldname":"cost_center",
 			"label": __("Cost Center"),
 			"fieldtype": "Link",
 			"options": "Cost Center" ,
-			"reqd": 1,
+			"reqd": 0,
 		},
 		{
 			"fieldname":"warehouse",
