@@ -31,11 +31,11 @@ def get_data(filters=None):
 		Inner Join
 			`tabBin` bin
 		On
-			item.name = bin.item_code
+			item.item_code = bin.item_code
 		Left Join 
 			`tabItem Reorder` item_reorder
 		On
-			item.name = item_reorder.parent
+			item.name = item_reorder.parent AND item_reorder.warehouse = bin.warehouse
 		Where {conditions}
 
 	'''
