@@ -81,7 +81,7 @@ def get_reservation_qty( item , warehouse):
             sum_of_item = qty_reservation[0].get("qty")
 
         current_stock = float(qty_bin or 0) - float(sum_of_item or 0)
-        return current_stock
+        return current_stock  ,sum_of_item
 
 def get_item_stock(item) :
     warehouse  = frappe.db.get_single_value('Stock Settings','warehouse')

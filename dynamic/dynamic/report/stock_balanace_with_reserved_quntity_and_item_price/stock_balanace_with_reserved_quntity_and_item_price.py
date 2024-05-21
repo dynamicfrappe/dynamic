@@ -129,8 +129,9 @@ def execute(filters=None):
 
 def get_item_price_and_total_reservation(data):
 	for i in data:
-		total_reservation_qty = get_reservation_qty(i['item_code'] , i['warehouse'])
-		i['total_reservation_qty'] = total_reservation_qty
+		total_reservation_qty , total_reseverd_qty= get_reservation_qty(i['item_code'] , i['warehouse'])
+		i['total_reservation_qty'] ,i["available_qty"]  = float(total_reseverd_qty or 0) ,float(total_reservation_qty or 0)
+	
 
 		default_price_list = frappe.db.get_single_value('Selling Settings', 'selling_price_list')
 		if default_price_list:
@@ -182,6 +183,13 @@ def get_columns(filters):
 			"options": "Total Reserved Qty",
 			"width": 100,
 		},
+		{
+			"label": _("Available Qty "),
+			"fieldname": "available_qty",
+			"fieldtype": "Data",
+			"width": 100,
+		},
+		
 		{
 			"label": _("Stock UOM"),
 			"fieldname": "stock_uom",
