@@ -39,7 +39,7 @@ def get_columns(filters):
         #4
         {
             "label": _("Customer"),
-            "fieldname": "customer",
+            "fieldname": "customer_name",
             "fieldtype": "Link",
             "options": "Customer",
             "width": 120
