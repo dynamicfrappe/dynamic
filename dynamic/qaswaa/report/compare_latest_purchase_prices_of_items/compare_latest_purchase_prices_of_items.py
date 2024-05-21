@@ -10,12 +10,20 @@ def get_data(filters):
     conditions = "1=1"
     if filters.get("supplier"):
         conditions += f" AND pi.supplier = '{filters.get('supplier')}'"
+    if filters.get("cost_center"):
+        conditions += f" AND pi.cost_center = '{filters.get('cost_center')}'"
+    if filters.get("purchase_invoice"):
+        conditions += f" AND pi.name = '{filters.get('purchase_invoice')}'"        
     if filters.get("from_date"):
         conditions += f" AND pi.posting_date >= '{filters.get('from_date')}'"
     if filters.get("to_date"):
         conditions += f" AND pi.posting_date <= '{filters.get('to_date')}'"
     if filters.get("item_code"):
         conditions += f" AND pii1.item_code = '{filters.get('item_code')}'"
+    if filters.get("item_group"):
+        conditions += f" AND pii1.item_group = '{filters.get('item_group')}'"    
+    if filters.get("warehouse"):
+        conditions += f" AND pii1.warehouse = '{filters.get('warehouse')}'"    
 
     sql = f'''
         SELECT 

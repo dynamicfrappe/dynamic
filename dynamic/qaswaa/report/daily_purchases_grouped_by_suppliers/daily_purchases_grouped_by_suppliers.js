@@ -2,51 +2,43 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Daily selling for customers"] = {
+frappe.query_reports["Daily Purchases Grouped by Suppliers"] = {
 	"filters": [
 		{
-			"fieldname":"start_date",
+			"fieldname":"period_start_date",
 			"label": __("Start Date"),
 			"fieldtype": "Date",
-			"reqd": 0,
+			"reqd": 1,
 		},
 		{
-			"fieldname":"end_date",
+			"fieldname":"period_end_date",
 			"label": __("End Date"),
 			"fieldtype": "Date",
-			"reqd": 0,
+			"reqd": 1,
 		},
 		{
 			"fieldname":"cost_center",
 			"label": __("Cost Center"),
 			"fieldtype": "Link",
-			"options": "Cost Center" ,
-			"reqd": 0,
+			"options": "Cost Center"
 		},
 		{
 			"fieldname":"warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
-			"options" : "Warehouse"
+			"options": "Warehouse"
 		},
 		{
-			"fieldname":"customer",
-			"label": __("Customer"),
+			"fieldname":"supplier",
+			"label": __("Supplier"),
 			"fieldtype": "Link",
-			"options" : "Customer"
+			"options": "Supplier"
 		},
 		{
-			"fieldname":"sales_person",
-			"label": __("Sales Person"),
+			"fieldname":"company",
+			"label": __("Company"),
 			"fieldtype": "Link",
-			"options": "Sales Person"
+			"options": "Company"
 		},
-		{
-			"fieldname":"sales_partner",
-			"label": __("Sales Partner"),
-			"fieldtype": "Link",
-			"options": "Sales Partner"
-		},
-
 	]
 };

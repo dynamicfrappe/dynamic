@@ -9,7 +9,6 @@ def execute(filters=None):
 
 def get_data(filters):
     conditions = " 1=1"
-    sql_join = ""
 
     if filters.get("from_date"):
         conditions += f" and SI.posting_date >= '{filters.get('from_date')}'"
@@ -21,49 +20,52 @@ def get_data(filters):
         conditions += f" and SII.item_code = '{filters.get('item_code')}'"
     if filters.get("item_group"):
         conditions += f" and SII.item_group = '{filters.get('item_group')}'"
-    if filters.get("cost_center"):
-        conditions += f" and SII.cost_center = '{filters.get('cost_center')}'"
-        sql_join += """
-        INNER JOIN `tabSales Invoice Item` SII ON SI.name = SII.parent
-            """
-    if filters.get("warehouse"):
-        conditions += f" and SII.warehouse = '{filters.get('warehouse')}'"
-        sql_join += """
-        INNER JOIN `tabSales Invoice Item` SII ON SI.name = SII.parent
-            """
-    if filters.get("sales_person"):
-        conditions += f" and SII.sales_person = '{filters.get('sales_person')}'"
-        sql_join += """
-        INNER JOIN `tabSales Team` SII ON SI.name = SII.parent
-            """         
+    # if filters.get("cost_center"):
+    #     conditions += f" and sii_cc.cost_center = '{filters.get('cost_center')}'"
+    #     sql_join += """
+    #     INNER JOIN `tabSales Invoice Item` sii_cc ON SI.name = sii_cc.parent
+    #         """
+    # if filters.get("warehouse"):
+    #     conditions += f" and sii_cc.warehouse = '{filters.get('warehouse')}'"
+    #     sql_join += """
+    #     INNER JOIN `tabSales Invoice Item` sii_cc ON SI.name = sii_cc.parent
+    #         """
+    # if filters.get("sales_person"):
+    #     conditions += f" and sii_cc.sales_person = '{filters.get('sales_person')}'"
+    #     sql_join += """
+    #     INNER JOIN `tabSales Team` sii_cc ON SI.name = sii_cc.parent
+    #         """         
 
     
-    sql = f'''
+    sql = '''
         SELECT
             SI.customer, 
             SII.item_code,
             SII.item_name,
-            SII.qty,
-            SII.net_amount
+            SUM(CASE WHEN SI.status = 'Overdue' THEN SII.qty ELSE 0 END) AS qty_overdue
         FROM
             `tabSales Invoice` SI
         LEFT JOIN
             `tabSales Invoice Item` SII
         ON 
             SI.name = SII.parent
-        {sql_join}
+        WHERE
+            SI.docstatus = 1
+            AND SI.status = 'Overdue'
+            AND SI.name IN (
+                SELECT return_against 
+                FROM `tabSales Invoice` 
+                WHERE status = 'Return' AND return_against IS NOT NULL
+            )
         GROUP BY
             SI.customer, 
             SII.item_code,
             SII.item_name
     '''
 
-
-
-
-
     data = frappe.db.sql(sql, as_dict=True)
     return data
+
 
 
 def get_columns():
@@ -90,7 +92,7 @@ def get_columns():
         },
         {
             "label": _("Difference Quantity"), 
-            "fieldname": "qty", 
+            "fieldname": "qty_overdue", 
             "fieldtype": "Float",
             "width": 200, 
         },
