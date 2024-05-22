@@ -304,11 +304,12 @@ frappe.ui.form.on("Sales Invoice Item", {
         method: "dynamic.api.get_active_domains",
         callback: function (r) {
             if (r.message && r.message.length && r.message.includes("Qaswaa")) {
-                // console.log("bgg");
+                console.log("bgg");
                 var item_discount_rate = frm.doc.item_discount_rate;
-                // console.log(item_discount_rate);
+                console.log(item_discount_rate);
                 // row.discount_percentage = item_discount_rate
                 frm.set_value("items","discount_percentage",item_discount_rate)
+                console.log("discount_percentage");
                 frm.refresh_fields("items");
                 // frm.doc.items.forEach(function(row) {
                 //   console.log("gh");

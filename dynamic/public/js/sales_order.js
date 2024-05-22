@@ -574,7 +574,24 @@ frappe.ui.form.on("Sales Order Item", {
       }
     })
     
-  }
+  },
+  item_code: function(frm, cdt, cdn) {
+    var child = locals[cdt][cdn];
+    var parent_discount_rate = frm.doc.item_discount_rate;
+
+    frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length && r.message.includes("Qaswaa")) {
+                console.log("bgg");
+                console.log(parent_discount_rate);
+                frm.set_value(child.doctype, child.name, "discount_percentage", parent_discount_rate);
+                console.log("discount_percentage");
+                frm.refresh_fields();
+            }
+        }
+    });
+}
   
  
 });

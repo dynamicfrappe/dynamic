@@ -8,75 +8,96 @@ def execute(filters=None):
     return columns, data
 
 def get_data(filters):
-    conditions = " 1=1"
+    conditions = " 1=1 "
+    from_date = filters.get("from_date")
+    to_date = filters.get("to_date")
+    item_code = filters.get("item_code")
+    item_group = filters.get("item_group")
+    customer = filters.get("customer")
+    cost_center = filters.get("cost_center")
+    warehouse = filters.get("warehouse")
+    sales_person = filters.get("sales_person")
 
-    if filters.get("from_date"):
-        conditions += f" and SI.posting_date >= '{filters.get('from_date')}'"
-    if filters.get("to_date"):
-        conditions += f" and SI.posting_date <= '{filters.get('to_date')}'"
-    if filters.get("customer"):
-        conditions += f" and SI.customer = '{filters.get('customer')}'"
-    if filters.get("item_code"):
-        conditions += f" and SII.item_code = '{filters.get('item_code')}'"
-    if filters.get("item_group"):
-        conditions += f" and SII.item_group = '{filters.get('item_group')}'"
-    # if filters.get("cost_center"):
-    #     conditions += f" and sii_cc.cost_center = '{filters.get('cost_center')}'"
-    #     sql_join += """
-    #     INNER JOIN `tabSales Invoice Item` sii_cc ON SI.name = sii_cc.parent
-    #         """
-    # if filters.get("warehouse"):
-    #     conditions += f" and sii_cc.warehouse = '{filters.get('warehouse')}'"
-    #     sql_join += """
-    #     INNER JOIN `tabSales Invoice Item` sii_cc ON SI.name = sii_cc.parent
-    #         """
-    # if filters.get("sales_person"):
-    #     conditions += f" and sii_cc.sales_person = '{filters.get('sales_person')}'"
-    #     sql_join += """
-    #     INNER JOIN `tabSales Team` sii_cc ON SI.name = sii_cc.parent
-    #         """         
+    if from_date:
+        conditions += f" AND s.posting_date >= '{from_date}'"
+    if to_date:
+        conditions += f" AND s.posting_date <= '{to_date}'"
+    if customer:
+        conditions += f" AND s.customer = '{customer}'"
+    if cost_center:
+        conditions += f" AND s.cost_center = '{cost_center}'"        
+    if item_code:
+        conditions += f" AND si.item_code = '{item_code}'"
+    if warehouse:
+        conditions += f" AND si.warehouse = '{warehouse}'"    
+    if item_group:
+        conditions += f" AND i.item_group = '{item_group}'"
+    if sales_person:
+        conditions += f" AND stt.sales_person = '{sales_person}'"    
 
-    
-    sql = '''
-        SELECT
-            SI.customer, 
-            SII.item_code,
-            SII.item_name,
-            SUM(CASE WHEN SI.status = 'Overdue' THEN SII.qty ELSE 0 END) AS qty_overdue
-        FROM
-            `tabSales Invoice` SI
-        LEFT JOIN
-            `tabSales Invoice Item` SII
+    data = frappe.db.sql(f"""
+        SELECT 
+            si.item_code,
+            si.item_name,
+            si.qty AS qty_difference1,
+            si.net_amount AS net_amount_difference1,
+            (SELECT qty 
+            FROM `tabSales Invoice Item` 
+            WHERE parent = s2.name 
+            AND item_code = si.item_code 
+            LIMIT 1) AS qty_difference2,
+            (SELECT net_amount 
+            FROM `tabSales Invoice Item` 
+            WHERE parent = s2.name 
+            AND item_code = si.item_code 
+            LIMIT 1) AS net_amount_difference2,
+            si.qty + IFNULL((SELECT qty 
+                    FROM `tabSales Invoice Item` 
+                    WHERE parent = s2.name 
+                     AND item_code = si.item_code 
+                 LIMIT 1), 0) AS qty_difference,
+            si.net_amount + IFNULL((SELECT net_amount 
+                    FROM `tabSales Invoice Item` 
+                    WHERE parent = s2.name 
+                     AND item_code = si.item_code 
+                 LIMIT 1), 0) AS net_amount_difference             
+        FROM 
+        `tabSales Invoice Item` AS si
+        JOIN 
+        `tabSales Invoice` AS s
         ON 
-            SI.name = SII.parent
+            si.parent = s.name
+        JOIN
+            `tabSales Invoice` AS s2
+        ON
+            s.name = s2.return_against
+        LEFT JOIN
+            `tabItem` AS i               
+        ON
+            si.item_code = i.name
+        LEFT JOIN
+            `tabSales Team` AS stt
+        ON
+            stt.parent = s.name
         WHERE
-            SI.docstatus = 1
-            AND SI.status = 'Overdue'
-            AND SI.name IN (
-                SELECT return_against 
-                FROM `tabSales Invoice` 
-                WHERE status = 'Return' AND return_against IS NOT NULL
-            )
-        GROUP BY
-            SI.customer, 
-            SII.item_code,
-            SII.item_name
-    '''
+            s.name IN (SELECT DISTINCT return_against FROM `tabSales Invoice` WHERE return_against IS NOT NULL)
+            AND {conditions}
+    """,  as_dict=True)
 
-    data = frappe.db.sql(sql, as_dict=True)
     return data
+
 
 
 
 def get_columns():
     return [
-        { 
-            "label": _("Customer"), 
-            "fieldname": "customer", 
-            "fieldtype": "Link", 
-            "options": "Customer", 
-            "width": 300, 
-        },
+        # {
+        #    "label": _("ID"), 
+        #     "fieldname": "sales_invoice_name", 
+        #     "fieldtype": "Link", 
+        #     "options": "Sales Invoice", 
+        #     "width": 300,  
+        # },
         { 
             "label": _("Item Code"), 
             "fieldname": "item_code", 
@@ -92,13 +113,13 @@ def get_columns():
         },
         {
             "label": _("Difference Quantity"), 
-            "fieldname": "qty_overdue", 
+            "fieldname": "qty_difference", 
             "fieldtype": "Float",
             "width": 200, 
         },
         {
             "label": _("Difference Amount"), 
-            "fieldname": "net_amount", 
+            "fieldname": "net_amount_difference", 
             "fieldtype": "Currency",
             "options":"currency",
             "width": 200, 

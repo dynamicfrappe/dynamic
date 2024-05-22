@@ -10,7 +10,6 @@ def execute(filters=None):
 
 def get_date(filters):
 	conditions = " 1=1 "
-	condition = " 1=1 "
 	if filters.get("customer") :
 		conditions +=f" and so.customer = '{filters.get('customer')}' "
 		
