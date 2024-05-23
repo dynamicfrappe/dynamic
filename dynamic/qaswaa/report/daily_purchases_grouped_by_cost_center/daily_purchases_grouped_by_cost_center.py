@@ -125,7 +125,7 @@ def get_columns(filters):
 			"width": 200,
 		},
 		{
-			"fieldname": "Unpaid",
+			"fieldname": "unpaid",
 			"label": _("Unpaid"),
 			"fieldtype": "Data",
 			"width": 200,
