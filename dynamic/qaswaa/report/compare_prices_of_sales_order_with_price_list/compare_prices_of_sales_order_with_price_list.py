@@ -9,78 +9,83 @@ def execute(filters=None):
 	return columns, data
 
 def get_date(filters):
-	conditions = " 1=1 "
-	if filters.get("customer") :
-		conditions +=f" and so.customer = '{filters.get('customer')}' "
-		
-	if filters.get("warehouse") :
-		conditions +=f" and soi.warehouse = '{filters.get('warehouse')}' "
-		condition +=f" and PII.warehouse = '{filters.get('warehouse')}' "
+    conditions = " 1=1 "
+    if filters.get("customer"):
+        conditions += f" and so.customer = '{filters.get('customer')}' "
+    if filters.get("sales_order"):
+        conditions += f" and so.name = '{filters.get('sales_order')}' "
+    if filters.get("date"):
+        conditions += f" and so.transaction_date = '{filters.get('date')}' "
+    if filters.get("price_list"):
+        conditions += f" and so.selling_price_list = '{filters.get('price_list')}' "
+    if filters.get("sales_person"):
+        conditions += f" and st.sales_person = '{filters.get('sales_person')}' "
+    if filters.get("set_warehouse"):
+        conditions += f" and so.set_warehouse = '{filters.get('set_warehouse')}' "     
 
-	if filters.get("sales_order") :
-		conditions +=f" and so.name = '{filters.get('sales_order')}' "
+    sql_query = f"""
+        SELECT 
+            so.name AS sales_order_name,
+            soi.item_code,
+            soi.item_name,
+            soi.qty,
+            soi.rate AS sales_rate,
+            (SELECT pii.rate 
+             FROM `tabPurchase Invoice` pi
+             INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+             WHERE pi.docstatus = 1
+             ORDER BY pi.creation DESC
+             LIMIT 1) AS purchase_rate,
+            soi.qty * (SELECT pii.rate 
+                       FROM `tabPurchase Invoice` pi
+                       INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                       WHERE pi.docstatus = 1
+                       ORDER BY pi.creation DESC
+                       LIMIT 1) AS total_cost,
+            soi.rate - (SELECT pii.rate 
+                         FROM `tabPurchase Invoice` pi
+                         INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                         WHERE pi.docstatus = 1
+                         ORDER BY pi.creation DESC
+                         LIMIT 1) AS difference,
+            soi.qty * (soi.rate - (SELECT pii.rate 
+                                   FROM `tabPurchase Invoice` pi
+                                   INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                                   WHERE pi.docstatus = 1
+                                   ORDER BY pi.creation DESC
+                                   LIMIT 1)) AS total_difference,
+            ((soi.rate - (SELECT pii.rate 
+                           FROM `tabPurchase Invoice` pi
+                           INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                           WHERE pi.docstatus = 1
+                           ORDER BY pi.creation DESC
+                           LIMIT 1)) / (SELECT pii.rate 
+                                        FROM `tabPurchase Invoice` pi
+                                        INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                                        WHERE pi.docstatus = 1
+                                        ORDER BY pi.creation DESC
+                                        LIMIT 1)) * 100 AS difference_percentage
+        FROM 
+            `tabSales Order` so
+        INNER JOIN 
+            `tabSales Order Item` soi ON so.name = soi.parent
+        LEFT JOIN
+            `tabSales Team` st ON so.name = st.parent
+        WHERE {conditions}
+        """
+        
+    result = frappe.db.sql(sql_query, as_dict=True)
+    return result
 
-	if filters.get("price_list") :
-		conditions +=f" and so.selling_price_list = '{filters.get('price_list')}' "
-
-	if filters.get("sales_person") :
-		conditions +=f" and ST.sales_person = '{filters.get('sales_person')}' "
-	
-	if filters.get("date") :
-		condition +=f" and PI.posting_date = '{filters.get('date')}' "
 
 
-	sql =f'''
-			SELECT
-				so.name , soi.item_code , soi.item_name, soi.qty ,
-				soi.price_list_rate , soi.rate , soi.discount_amount ,
-				(soi.rate - soi.discount_amount) as differance_amount ,
-				(soi.rate - soi.discount_amount) / 100 as differance_percentage
-			FROM 
-				`tabSales Order` so
-			INNER JOIN 
-				`tabSales Order Item` soi
-			ON 
-				so.name = soi.parent
-			LEFT JOIN 
-				`tabSales Team` ST
-			ON 
-				so.name = ST.parent
-			WHERE 
-				{conditions}
-		'''
-	data = frappe.db.sql(sql , as_dict = 1)
-	for entry in data :
-		entry["sales_rate"]  = 0
-		sql =f'''
-				SELECT
-					PII.rate
-				FROM 
-					`tabPurchase Invoice Item` PII
-				INNER JOIN 
-					`tabPurchase Invoice` PI 
-				ON
-					PI.name = PII.parent
-				WHERE 
-					PII.item_code = '{entry["item_code"]}' 
-					and
-					{condition}
-				LIMIT 1
-			'''
-		if frappe.db.sql(sql , as_dict = 1)  :
-			sales_rate = frappe.db.sql(sql , as_dict = 1) 
-			entry["sales_rate"] = sales_rate[0]["rate"]
-		entry["total_sales"] = entry["qty"] * entry["sales_rate"] 
-		entry["differance"] = entry["differance_amount"] - entry["sales_rate"]
-		entry["total_differance"] = entry["qty"] * entry["differance"]
-		if entry["sales_rate"] :
-			entry["differance_percentage"] = str(entry["differance"] / entry["sales_rate"] *100) + "%"
-	return data
+
+
 
 def get_columns():
 	return[
 		{
-			"fieldname": "name",
+			"fieldname": "sales_order_name",
 			"label": _("Sales Order"),
 			"fieldtype": "Link",
 			"options": "Sales Order",
@@ -105,40 +110,6 @@ def get_columns():
 			"width": 50,
 		},
 		{
-			"fieldname": "price_list_rate",
-			"label": "Price List Rate",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"fieldname": "rate",
-			"label": "Rate",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"fieldname": "discount_amount",
-			"label": "Discount Amount",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"fieldname": "differance_amount",
-			"label": "Differance Amount",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-				{
-			"fieldname": "differance_percentage",
-			"label": "Differance Percentage",
-			"fieldtype": "Percent",
-			"width": 100,
-		},
-		{
 			"fieldname": "sales_rate",
 			"label": "Sales Rate",
 			"fieldtype": "Currency",
@@ -146,32 +117,73 @@ def get_columns():
 			"width": 100,
 		},
 		{
-			"fieldname": "total_sales",
-			"label": "Total Sales",
+			"fieldname": "purchase_rate",
+			"label": "Purchase Rate",
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 100,
 		},
 		{
-			"fieldname": "differance",
-			"label": "Differance",
+			"fieldname": "total_cost",
+			"label": "Total Cost",
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 100,
 		},
 		{
-			"fieldname": "total_differance",
-			"label": "Total Differance",
+			"fieldname": "difference",
+			"label": "Difference",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 100,
+		},
+	    {
+			"fieldname": "total_difference",
+			"label": "Total Difference",
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 100,
 		},
 		{
-			"fieldname": "differance_percentage",
-			"label": _("Differance Percentage"),
-			"fieldtype": "Data",
+			"fieldname": "difference_percentage",
+			"label": _("Difference Percentage"),
+			"fieldtype": "Percent",
 			"width": 100,
 		}
+		# {
+		# 	"fieldname": "sales_rate",
+		# 	"label": "Sales Rate",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 100,
+		# },
+		# {
+		# 	"fieldname": "total_sales",
+		# 	"label": "Total Sales",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 100,
+		# },
+		# {
+		# 	"fieldname": "differance",
+		# 	"label": "Differance",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 100,
+		# },
+		# {
+		# 	"fieldname": "total_difference",
+		# 	"label": "Total Difference",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 100,
+		# },
+		# {
+		# 	"fieldname": "differance_percentage",
+		# 	"label": _("Differance Percentage"),
+		# 	"fieldtype": "Data",
+		# 	"width": 100,
+		# }
 	]
 
 
