@@ -1,0 +1,39 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-05-23 13:04:09.358643",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "El Qaswaa",
+ "modified": "2024-05-23 13:04:09.358643",
+ "modified_by": "Administrator",
+ "module": "Qaswaa",
+ "name": "Profitability of sales order compared to average cost",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Sales Order",
+ "report_name": "Profitability of sales order compared to average cost",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Maintenance User"
+  },
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "Accounts User"
+  }
+ ]
+}

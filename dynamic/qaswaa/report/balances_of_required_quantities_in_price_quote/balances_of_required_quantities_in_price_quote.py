@@ -57,13 +57,20 @@ def get_date(filters):
     conditions = "1=1"
     sql_join = ""
     data = []
-
+    from_date = filters.get("from_date")
+    to_date = filters.get("to_date")
+    if from_date:
+        conditions += f" and Q.transaction_date >= '{from_date}'"
+    if to_date:
+        conditions += f" and Q.transaction_date <= '{to_date}'" 
     if filters.get("quotation"):
         conditions += f" and Q.name = '{filters.get('quotation')}' "
     if filters.get("customer"):
         conditions += f" and Q.customer = '{filters.get('customer')}' "
     if filters.get("cost_center"):
         conditions += f" and Q.cost_center = '{filters.get('cost_center')}' "
+    if filters.get("sales_person"):
+        conditions += f" and st.sales_person = '{filters.get('sales_person')}' "       
     
     warehouses = frappe.get_all("Warehouse", filters={"disabled": 0}, pluck="name")
 
@@ -85,7 +92,9 @@ def get_date(filters):
                     `tabQuotation Item` QI
                 ON 
                     Q.name = QI.parent
-                {sql_join}
+                LEFT JOIN
+                    `tabSales Team` st ON Q.name = st.parent    
+
                 WHERE {conditions}    
             '''
 

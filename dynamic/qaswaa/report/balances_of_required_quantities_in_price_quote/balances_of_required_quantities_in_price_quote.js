@@ -25,6 +25,22 @@ frappe.query_reports["Balances of required quantities in price quote"] = {
 			"fieldtype": "Link",
 			"options": "Warehouse"
 		},
+		{
+			"fieldname": "from_date",
+			"label": __("From Date"),
+			"fieldtype": "Date",
+		},
+		{
+			"fieldname": "to_date",
+			"label": __("To Date"),
+			"fieldtype": "Date",
+		},
+		{
+			"fieldname": "sales_person",
+			"label": __("Sales Person"),
+			"fieldtype": "Link",
+			"options": "Sales Person"
+		},
 
 	]
 };
