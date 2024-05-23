@@ -15,10 +15,10 @@ frappe.query_reports["Profitability of the sales invoice compared to the last pu
 			"fieldtype": "Date",
 		},
 		{
-			"fieldname": "sales_order",
-			"label": __("Sales Order"),
+			"fieldname": "sales_invoice",
+			"label": __("Sales Invoice"),
 			"fieldtype": "Link",
-			"options": "Sales Order"
+			"options": "Sales Invoice"
 		},
 		{
 			"fieldname": "cost_center",
@@ -28,7 +28,7 @@ frappe.query_reports["Profitability of the sales invoice compared to the last pu
 			"reqd": 0
 		},
 		{
-			"fieldname": "set_warehouse",
+			"fieldname": "warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
 			"options": "Warehouse"
