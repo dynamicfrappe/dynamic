@@ -55,7 +55,6 @@ def get_columns():
 
 def get_date(filters):
     conditions = "1=1"
-    sql_join = ""
     data = []
     from_date = filters.get("from_date")
     to_date = filters.get("to_date")
@@ -65,24 +64,18 @@ def get_date(filters):
         conditions += f" and Q.transaction_date <= '{to_date}'" 
     if filters.get("quotation"):
         conditions += f" and Q.name = '{filters.get('quotation')}' "
-    if filters.get("customer"):
-        conditions += f" and Q.customer = '{filters.get('customer')}' "
+    if filters.get("party_name"):
+        conditions += f" and Q.party_name = '{filters.get('party_name')}' "
     if filters.get("cost_center"):
         conditions += f" and Q.cost_center = '{filters.get('cost_center')}' "
     if filters.get("sales_person"):
-        conditions += f" and st.sales_person = '{filters.get('sales_person')}' "       
+        conditions += f" and st.sales_person = '{filters.get('sales_person')}' "
+    if filters.get("warehouse"):
+        conditions += f" and QI.warehouse = '{filters.get('warehouse')}' "           
     
     warehouses = frappe.get_all("Warehouse", filters={"disabled": 0}, pluck="name")
 
     for warehouse in warehouses:
-        sql_join = ""
-
-        if filters.get("warehouse"):
-            sql_join += f"""
-                INNER JOIN `tabQuotation Item` QI_cc ON Q.name = QI_cc.parent
-                AND QI_cc.warehouse = '{warehouse}'
-            """
-
         sql = f'''
                 SELECT
                     Q.name, QI.item_code, QI.item_name, QI.qty
@@ -93,7 +86,7 @@ def get_date(filters):
                 ON 
                     Q.name = QI.parent
                 LEFT JOIN
-                    `tabSales Team` st ON Q.name = st.parent    
+                    `tabSales Team` st ON Q.name = st.parent   
 
                 WHERE {conditions}    
             '''
