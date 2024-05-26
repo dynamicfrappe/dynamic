@@ -11,17 +11,17 @@ def execute(filters=None):
 def get_date(filters):
     conditions = " 1=1 "
     if filters.get("customer"):
-        conditions += f" and so.customer = '{filters.get('customer')}' "
+        conditions += f""" and so.customer = "{filters.get('customer')}" """
     if filters.get("sales_order"):
-        conditions += f" and so.name = '{filters.get('sales_order')}' "
+        conditions += f""" and so.name = "{filters.get('sales_order')}" """
     if filters.get("date"):
-        conditions += f" and so.transaction_date = '{filters.get('date')}' "
+        conditions += f""" and so.transaction_date = date("{filters.get('date')}") """
     if filters.get("price_list"):
-        conditions += f" and so.selling_price_list = '{filters.get('price_list')}' "
+        conditions += f""" and so.selling_price_list = "{filters.get('price_list')}" """
     if filters.get("sales_person"):
-        conditions += f" and st.sales_person = '{filters.get('sales_person')}' "
+        conditions += f""" and st.sales_person = "{filters.get('sales_person')}" """
     if filters.get("set_warehouse"):
-        conditions += f" and so.set_warehouse = '{filters.get('set_warehouse')}' "     
+        conditions += f""" and so.set_warehouse = "{filters.get('set_warehouse')}" """     
 
     sql_query = f"""
         SELECT 
