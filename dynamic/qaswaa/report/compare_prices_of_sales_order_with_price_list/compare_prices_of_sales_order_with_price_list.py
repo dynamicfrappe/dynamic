@@ -118,7 +118,7 @@ def get_columns():
 		},
 		{
 			"fieldname": "purchase_rate",
-			"label": "Purchase Rate",
+			"label": "Rate for Price List",
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 100,
