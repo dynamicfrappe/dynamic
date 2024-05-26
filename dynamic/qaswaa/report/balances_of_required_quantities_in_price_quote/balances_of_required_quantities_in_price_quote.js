@@ -8,7 +8,7 @@ frappe.query_reports["Balances of required quantities in price quote"] = {
 			"options": "Quotation"
 		},
 		{
-			"fieldname": "customer",
+			"fieldname": "party_name",
 			"label": __("Customer"),
 			"fieldtype": "Link",
 			"options": "Customer"

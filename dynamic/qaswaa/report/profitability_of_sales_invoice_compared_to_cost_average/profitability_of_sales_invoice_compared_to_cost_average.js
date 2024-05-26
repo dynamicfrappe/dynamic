@@ -15,8 +15,8 @@ frappe.query_reports["Profitability of sales invoice compared to cost average"] 
 			"fieldtype": "Date",
 		},
 		{
-			"fieldname": "sales_order",
-			"label": __("Sales Order"),
+			"fieldname": "sales_invoice",
+			"label": __("Sales Invoice"),
 			"fieldtype": "Link",
 			"options": "Sales Order"
 		},
@@ -28,7 +28,7 @@ frappe.query_reports["Profitability of sales invoice compared to cost average"] 
 			"reqd": 0
 		},
 		{
-			"fieldname": "set_warehouse",
+			"fieldname": "warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
 			"options": "Warehouse"
