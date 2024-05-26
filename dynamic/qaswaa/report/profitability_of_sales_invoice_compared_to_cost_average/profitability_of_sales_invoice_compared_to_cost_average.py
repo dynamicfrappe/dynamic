@@ -15,98 +15,45 @@ def get_data(filters):
     conditions = " 1=1"
     
     if filters.get("customer"):
-        conditions += f" AND sd.customer = '{filters.get('customer')}'"
-    if filters.get("sales_order"):
-        conditions += f" AND sd.name = '{filters.get('sales_order')}'"
-    if filters.get("set_warehouse"):
-        conditions += f" AND sd.set_warehouse = '{filters.get('set_warehouse')}'"
+        conditions += f" AND so.customer = '{filters.get('customer')}'"
+    if filters.get("sales_invoice"):
+        conditions += f" AND so.name = '{filters.get('sales_invoice')}'"
+    if filters.get("warehouse"):
+        conditions += f" AND item.warehouse = '{filters.get('warehouse')}'"
     if filters.get("selling_price_list"):
-        conditions += f" AND sd.selling_price_list = '{filters.get('selling_price_list')}'"    
+        conditions += f" AND so.selling_price_list = '{filters.get('selling_price_list')}'"    
     if filters.get("from_date"):
-        conditions += f" AND sd.transaction_date >= '{filters.get('from_date')}'"
+        conditions += f" AND so.posting_date >= '{filters.get('from_date')}'"
     if filters.get("to_date"):
-        conditions += f" AND sd.transaction_date <= '{filters.get('to_date')}'"
-  
+        conditions += f" AND so.posting_date <= '{filters.get('to_date')}'"
     if filters.get("cost_center"):
-        sql_join += f"""
-            INNER JOIN `tabSales Invoice Item` sii_cc ON so_cc.name = sii_cc.parent
-            AND sii_cc.cost_center = '{filters.get('cost_center')}'
-        """
-        
+        conditions += f" AND so.cost_center = '{filters.get('cost_center')}'"
     if filters.get("sales_person"):
-        sql_join += f"""
-            INNER JOIN `tabSales Team` sii_sp ON si_sp.name = sii_sp.parent
-            AND sii_sp.sales_person = '{filters.get('sales_person')}'
-        """   
+        conditions += f" AND sales_team.sales_person = '{filters.get('sales_person')}'"
 
     sql = f'''
-		SELECT 
-			so.name AS sales_invoice,
-			item.item_code,
-			item.item_name,
-			item.qty,
-			item.rate,
-			(
-				SELECT pii.rate
-				FROM `tabPurchase Invoice Item` pii
-				INNER JOIN `tabPurchase Invoice` pi ON pi.name = pii.parent
-				WHERE pii.item_code = item.item_code
-				ORDER BY pi.creation DESC
-				LIMIT 1
-			) AS purchase_invoice_rate,
-			item.qty * (
-				SELECT pii.rate
-				FROM `tabPurchase Invoice` pi
-				INNER JOIN `tabPurchase Invoice Item` pii ON pii.parent = pi.name
-				WHERE pii.item_code = item.item_code
-				ORDER BY pi.creation DESC
-				LIMIT 1
-			) AS total_purchase,
-			item.rate - (
-				SELECT pii.rate
-				FROM `tabPurchase Invoice` pi
-				INNER JOIN `tabPurchase Invoice Item` pii ON pii.parent = pi.name
-				WHERE pii.item_code = item.item_code
-				ORDER BY pi.creation DESC
-				LIMIT 1
-			) AS variance,
-			(item.rate - (
-				SELECT pii.rate
-				FROM `tabPurchase Invoice` pi
-				INNER JOIN `tabPurchase Invoice Item` pii ON pii.parent = pi.name
-				WHERE pii.item_code = item.item_code
-				ORDER BY pi.creation DESC
-				LIMIT 1
-			)) * item.qty AS total_variance,
-			CONCAT(
-				ROUND(
-					(
-						(item.rate - (
-							SELECT pii.rate
-							FROM `tabPurchase Invoice` pi
-							INNER JOIN `tabPurchase Invoice Item` pii ON pii.parent = pi.name
-							WHERE pii.item_code = item.item_code
-							ORDER BY pi.creation DESC
-							LIMIT 1
-						)) / (
-							SELECT pii.rate
-							FROM `tabPurchase Invoice` pi
-							INNER JOIN `tabPurchase Invoice Item` pii ON pii.parent = pi.name
-							WHERE pii.item_code = item.item_code
-							ORDER BY pi.creation DESC
-							LIMIT 1
-						) * 100
-					),
-					2
-				),
-				'%'
-			) AS variance_percentage
-		FROM 
-			`tabSales Invoice` so
-		INNER JOIN
-			`tabSales Invoice Item` item ON item.parent = so.name
+        SELECT 
+            so.name AS sales_invoice,
+            item.item_code,
+            item.item_name,
+            item.qty,
+            item.rate,
+            bin.valuation_rate AS average_cost,
+            item.qty * bin.valuation_rate AS total_cost,
+            item.rate - bin.valuation_rate AS variance,
+            item.qty * (item.rate - bin.valuation_rate) AS total_variance,
+            ((item.rate - bin.valuation_rate) / bin.valuation_rate) * 100 AS variance_percentage 
+        FROM 
+            `tabSales Invoice` so
+        INNER JOIN
+            `tabSales Invoice Item` item ON item.parent = so.name
+        LEFT JOIN
+            `tabBin` bin ON bin.item_code = item.item_code
+                AND bin.warehouse = item.warehouse
+        LEFT JOIN
+            `tabSales Team` sales_team ON sales_team.parent = so.name
         WHERE {conditions}
-        '''
+    '''
 
     data = frappe.db.sql(sql, as_dict=1)
     return data
@@ -147,14 +94,14 @@ def get_columns():
             "width": 100
         },
         {
-            "fieldname": "purchase_invoice_rate",
-            "label": _("Purchase Invoice Rate"),
+            "fieldname": "average_cost",
+            "label": _("Average cost"),
             "fieldtype": "Currency",
             "width": 100
         },
         {
-            "fieldname": "total_purchase",
-            "label": _("Total Purchase"),
+            "fieldname": "total_cost",
+            "label": _("Total Cost"),
             "fieldtype": "Currency",
             "width": 100
         },
@@ -173,9 +120,8 @@ def get_columns():
         {
             "fieldname": "variance_percentage",
             "label": _("Variance Percentage"),
-            "fieldtype": "Data",
-            "width": 100,
-            "options": "%"
+            "fieldtype": "Percent",
+            "width": 100
         },
     ]
     return columns

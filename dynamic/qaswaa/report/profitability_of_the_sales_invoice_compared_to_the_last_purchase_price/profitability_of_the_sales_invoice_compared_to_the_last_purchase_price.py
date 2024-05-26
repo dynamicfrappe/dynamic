@@ -10,16 +10,16 @@ def get_data(filters):
     
     if filters.get("customer"):
         conditions += f" AND sd.customer = '{filters.get('customer')}'"
-    if filters.get("sales_order"):
-        conditions += f" AND sd.name = '{filters.get('sales_order')}'"
-    if filters.get("set_warehouse"):
-        conditions += f" AND sd.set_warehouse = '{filters.get('set_warehouse')}'"
+    if filters.get("sales_invoice"):
+        conditions += f" AND sd.name = '{filters.get('sales_invoice')}'"
+    if filters.get("warehouse"):
+        conditions += f" AND item.warehouse = '{filters.get('warehouse')}'"
     if filters.get("selling_price_list"):
         conditions += f" AND sd.selling_price_list = '{filters.get('selling_price_list')}'"    
     if filters.get("from_date"):
-        conditions += f" AND sd.transaction_date >= '{filters.get('from_date')}'"
+        conditions += f" AND sd.posting_date >= '{filters.get('from_date')}'"
     if filters.get("to_date"):
-        conditions += f" AND sd.transaction_date <= '{filters.get('to_date')}'"
+        conditions += f" AND sd.posting_date <= '{filters.get('to_date')}'"
   
     if filters.get("cost_center"):
         conditions += f" AND sd.cost_center = '{filters.get('cost_center')}'"
@@ -28,7 +28,7 @@ def get_data(filters):
 
     sql = f'''
         SELECT 
-            sd.name AS sales_order,
+            sd.name AS sales_invoice,
             item.item_code,
             item.item_name,
             item.qty,
@@ -113,9 +113,9 @@ def get_data(filters):
                 LIMIT 2,1
             ) AS last_price_3
         FROM 
-            `tabSales Order` sd
+            `tabSales Invoice` sd
         INNER JOIN
-            `tabSales Order Item` item ON item.parent = sd.name
+            `tabSales Invoice Item` item ON item.parent = sd.name
         LEFT JOIN
             `tabSales Team` sii_sp ON sd.name = sii_sp.parent 
         WHERE {conditions}
@@ -134,10 +134,10 @@ def get_data(filters):
 def get_columns():
     columns = [
         {
-            "fieldname": "sales_order",
-            "label": _("Sales Order"),
+            "fieldname": "sales_invoice",
+            "label": _("Sales Invoice"),
             "fieldtype": "Link",
-            "options": "Sales Order",
+            "options": "Sales Invoice",
             "width": 300,
         },
         {
