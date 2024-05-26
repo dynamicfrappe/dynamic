@@ -17,12 +17,6 @@ frappe.query_reports["Purchase Invoices and Received Quantities"] = {
 			"options": "Supplier",
 		},
 		{
-			"fieldname": "cost_center",
-			"label": __("Cost Center"),
-			"fieldtype": "Link",
-			"options": "Cost Center",
-		},
-		{
 			"fieldname": "warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",

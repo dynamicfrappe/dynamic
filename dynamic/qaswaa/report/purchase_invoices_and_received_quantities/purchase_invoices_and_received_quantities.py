@@ -18,9 +18,6 @@ def get_data(filters):
     supplier = filters.get("supplier")
     if supplier:
         conditions += f" AND pi.supplier = '{supplier}'"
-    cost_center = filters.get("cost_center")
-    if cost_center:
-        conditions += f" AND pi.cost_center = '{cost_center}'"
     warehouse = filters.get("warehouse")
     if warehouse:
         conditions += f" AND pii.warehouse = '{warehouse}'"

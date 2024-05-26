@@ -44,7 +44,7 @@ def get_data(filters):
             soi.net_rate,
             sre.available_qty_to_reserve AS available_qty,
             sre.reserved_qty,
-            (sre.reserved_qty + soi.qty) - sre.available_qty_to_reserve AS residual_qty
+            soi.qty - sre.reserved_qty AS residual_qty
         FROM 
             `tabSales Order` so
         INNER JOIN
