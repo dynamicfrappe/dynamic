@@ -12,39 +12,51 @@ def execute(filters=None):
 
 def get_data(filters=None):
     conditions = [('is_return', '=', 0)]
-
+    
     if filters and filters.get("period_start_date"):
         conditions.append(('posting_date', '>=', filters.get("period_start_date")))
     if filters and filters.get("period_end_date"):
         conditions.append(('posting_date', '<=', filters.get("period_end_date")))
 
-    resulte = []
-    doc = frappe.get_list("Purchase Invoice", filters=conditions)
-    for i in doc:
-        temp = frappe.get_doc("Purchase Invoice", i.name)
+    result = []
+    purchase_invoices = frappe.get_list("Purchase Invoice", filters=conditions)
+    
+    for invoice in purchase_invoices:
+        temp = frappe.get_doc("Purchase Invoice", invoice.name)
         refund_doc = None
-        refund_name = get_purcashe_invoice_return(i.name)
+        refund_name = get_purcashe_invoice_return(invoice.name)
         
         if refund_name:
             refund_doc = frappe.get_doc("Purchase Invoice", refund_name)
 
         refund_doc_total = refund_doc.base_grand_total if refund_doc else 0
-
+        
+        allocated_amount = 0
+        payment_references = frappe.get_all("Payment Entry Reference",
+                                             filters={"reference_doctype": "Purchase Invoice",
+                                                      "reference_name": invoice.name},
+                                             fields=["allocated_amount"])
+        for reference in payment_references:
+            allocated_amount += reference.allocated_amount
+        
         temp1 = {
             'posting_date': temp.posting_date,
             'name': temp.name,
             'cost_center': temp.cost_center,
             'warehouse': temp.set_warehouse,
             'supplier': temp.supplier,
-            'net_total': float(temp.net_total or 0), 
+            'net_total': float(temp.net_total or 0),
             'base_total_taxes_and_charges': float(temp.base_total_taxes_and_charges or 0),
             'base_grand_total': float(temp.base_grand_total or 0),
-            'base_total_allocated_amount': float(temp.outstanding_amount or 0),
-            'refund': refund_doc_total, 
+            'base_total_allocated_amount': allocated_amount,
+            'refund': refund_doc_total,
             'unpaid': float(temp.base_grand_total or 0) - abs(float(temp.outstanding_amount))
         }
-        resulte.append(temp1)
-    return resulte
+        result.append(temp1)
+    return result
+
+
+
 
 
 

@@ -27,7 +27,13 @@ frappe.query_reports["Review selling prices with buying prices"] = {
                 };
             },
             "reqd": 1 
-        }
+        },
+        {
+			"fieldname":"item_group",
+			"label": __("Item Group"),
+			"fieldtype": "Link",
+			"options": "Item Group"
+		},
     ]
 };
 
