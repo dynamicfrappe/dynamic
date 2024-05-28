@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Profitability of the sales invoice compared to the last purchase price"] = {
+frappe.query_reports["Profitability of the sales order compared to the last purchase price"] = {
 	"filters": [
 		{
 			"fieldname": "from_date",
@@ -15,10 +15,10 @@ frappe.query_reports["Profitability of the sales invoice compared to the last pu
 			"fieldtype": "Date",
 		},
 		{
-			"fieldname": "sales_invoice",
-			"label": __("Sales Invoice"),
+			"fieldname": "sales_order",
+			"label": __("Sales Order"),
 			"fieldtype": "Link",
-			"options": "Sales Invoice"
+			"options": "Sales Order"
 		},
 		{
 			"fieldname": "cost_center",
@@ -28,7 +28,7 @@ frappe.query_reports["Profitability of the sales invoice compared to the last pu
 			"reqd": 0
 		},
 		{
-			"fieldname": "warehouse",
+			"fieldname": "set_warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
 			"options": "Warehouse"
@@ -58,8 +58,7 @@ frappe.query_reports["Profitability of the sales invoice compared to the last pu
                     }
                 };
             },
-            "reqd": 0 
+            "reqd": 0
         },
-
 	]
 };
