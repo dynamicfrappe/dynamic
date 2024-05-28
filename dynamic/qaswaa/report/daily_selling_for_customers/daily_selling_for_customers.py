@@ -33,8 +33,7 @@ def get_data(filters):
         conditions.append(['sales_person', '=', filters.get("sales_person")])
     if filters.get("sales_partner"):
         conditions.append(['sales_partner', '=', filters.get("sales_partner")])    
-                       
-    
+                   
     result = []
     sales_invoices = frappe.get_all("Sales Invoice", fields=["posting_date", "name", "set_warehouse", "customer",
                                                              "net_total", "base_total_taxes_and_charges",
@@ -48,87 +47,106 @@ def get_data(filters):
                                              "allocated_amount") or 0
         
         temp = {}
-        temp['posting_date'] = doc.posting_date
-        temp['name'] = doc.name
-        temp['warehouse'] = doc.set_warehouse
         temp['customer'] = doc.customer
-        temp['net_total'] = doc.net_total
-        temp['base_total_taxes_and_charges'] = doc.base_total_taxes_and_charges
-        temp['base_grand_total'] = doc.base_grand_total
-        temp['total_advance'] = total_advance
-        temp['refund'] = num if num else 0
-        temp['diff'] = float(total_advance) + (float(num or 0))
-        
+        temp['sales_person'] = get_sales_person(doc.name)  
         result.append(temp)
+
+        temp_details = {}
+        temp_details['posting_date'] = doc.posting_date
+        temp_details['name'] = doc.name
+        temp_details['warehouse'] = doc.set_warehouse
+        temp_details['net_total'] = doc.net_total
+        temp_details['base_total_taxes_and_charges'] = doc.base_total_taxes_and_charges
+        temp_details['base_grand_total'] = doc.base_grand_total
+        temp_details['total_advance'] = total_advance
+        temp_details['refund'] = num if num else 0
+        temp_details['diff'] = float(total_advance) + (float(num or 0))
+        
+        result.append(temp_details)
+        result.append({})
 
     return result
 
+def get_sales_person(sales_invoice_name):
+    sales_team = frappe.get_all("Sales Team", filters={"parent": sales_invoice_name}, fields=["sales_person"])
+    if sales_team:
+        return sales_team[0].get("sales_person")
+    else:
+        return None
+
+
+
 
 def get_columns(filters):
-	columns = [
-		{
-			"fieldname": "posting_date",
-			"label": _("Date"),
-			"fieldtype": "Data",
-			"width": 200,
-		},
-		{
-			"fieldname": "name",
-			"label": _("Serial"),
-			"fieldtype": "Link",
-			"options": "Sales Invoice",
-			"width": 200,
-		},
-		{
-			"fieldname": "warehouse",
-			"label": _("Warehouse"),
-			"fieldtype": "Link",
-			"options": "Warehouse",
-			"width": 200,
-		},
-		{
-			"fieldname": "customer",
-			"label": _("Customer"),
-			"fieldtype": "Link",
-			"options": "Customer",
-			"width": 200,
-		},	
-		{
-			"fieldname": "net_total",
-			"label": _("Total"),
-			"fieldtype": "Data",
-			"width": 200,
-		},
-		{
-			"fieldname": "base_total_taxes_and_charges",
-			"label": _("Total Taxes And Charges"),
-			"fieldtype": "Data",
-			"width": 200,
-		},
-		{
-			"fieldname": "base_grand_total",
-			"label": _("Grand Total"),
-			"fieldtype": "Data",
-			"width": 200,
-		},
-		{
-			"fieldname": "total_advance",
-			"label": _("Total Allocated Amount"),
-			"fieldtype": "Data",
-			"width": 200,
-		},
-		{
-			"fieldname": "refund",
-			"label": _("Refund"),
-			"fieldtype": "Data",
-			"width": 200,
-		},
-		{
-			"fieldname": "diff",
-			"label": _("Differante"),
-			"fieldtype": "Data",
-			"width": 200,
-		},
-	]
-	return columns
+    columns_customer = [
+        {
+            "fieldname": "customer",
+            "label": _("Customer"),
+            "fieldtype": "Link",
+            "options": "Customer",
+            "width": 200,
+        },
+        {
+            "fieldname": "sales_person",
+            "label": _("Sales Person"),
+            "fieldtype": "Link",
+            "options": "Sales Person",
+            "width": 200,
+        },
+    ]
+
+    columns_details = [
+        {
+            "fieldname": "posting_date",
+            "fieldtype": "Data",
+            "width": 200,
+        },
+        {
+            "fieldname": "name",
+            "fieldtype": "Link",
+            "options": "Sales Invoice",
+            "width": 200,
+        },
+        {
+            "fieldname": "warehouse",
+            "fieldtype": "Link",
+            "options": "Warehouse",
+            "width": 200,
+        },
+        {
+            "fieldname": "net_total",
+            "fieldtype": "Data",
+            "width": 200,
+        },
+        {
+            "fieldname": "base_total_taxes_and_charges",
+            "fieldtype": "Data",
+            "width": 200,
+        },
+        {
+            "fieldname": "base_grand_total",
+            "fieldtype": "Data",
+            "width": 200,
+        },
+        {
+            "fieldname": "total_advance",
+            "fieldtype": "Data",
+            "width": 200,
+        },
+        {
+            "fieldname": "refund",
+            "fieldtype": "Data",
+            "width": 200,
+        },
+        {
+            "fieldname": "diff",
+            "fieldtype": "Data",
+            "width": 200,
+        },
+    ]
+
+    # Concatenate columns
+    columns = columns_customer + columns_details[1:]
+    return columns
+
 

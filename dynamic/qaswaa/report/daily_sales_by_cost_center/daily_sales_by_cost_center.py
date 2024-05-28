@@ -26,7 +26,7 @@ def get_data(filters):
         conditions.append(['sales_person', '=', filters.get("sales_person")])
     if filters.get("sales_partner"):
         conditions.append(['sales_partner', '=', filters.get("sales_partner")])
-    conditions.append(['is_return', '!=', 1])        
+    conditions.append(['docstatus', '!=', 2])        
                        
     
     result = []

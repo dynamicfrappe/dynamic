@@ -41,10 +41,8 @@ def get_data(filters =None):
    data = []
    cost_centers = frappe.db.sql(""" 
    SELECT  a.cost_center  as cost_center  
-   FROM `tabPurchase Invoice Item` a 
-   INNER JOIN `tabPurchase Invoice` b 
-   ON a.parent = b.name 
-   WHERE b.docstatus = 1 
+   FROM `tabPurchase Invoice` a 
+   WHERE a.docstatus != 2 
    GROUP BY cost_center
    """,as_dict=1)
 
@@ -72,8 +70,8 @@ def get_data(filters =None):
               INNER JOIN `tabPurchase Invoice` b 
               ON a.parent = b.name 
               WHERE 
-              b.docstatus = 1 and
-              a.cost_center = '{cost.get('cost_center')}' AND {condetions}
+              b.docstatus != 2 and
+              b.cost_center = '{cost.get('cost_center')}' AND {condetions}
               b.posting_date > date('{month.get('from_date')}') AND b.posting_date < date('{month.get('to_date')}')
               """ ,as_dict=1)
          center[month.get('key')] = float (fil[0].get(month.get('key'))  or 0 )
