@@ -65,6 +65,7 @@ after_migrate = [
     "dynamic.install.after_install",
     "dynamic.dynamic.utils.create_customizations",
     "dynamic.stock_reservation.setup.setup",
+    'dynamic.megaback.controllers.setup.create_domain'
 ]
 # Desk Notifications
 # ------------------
