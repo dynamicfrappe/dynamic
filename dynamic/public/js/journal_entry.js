@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Journal Entry Account", {
     account:function(frm,cdt,cdn) {
-      console.log("00000000000000000000000000000000000000000")
+    
       var row = locals[cdt][cdn]
       row.account_currency_exchange =1
       frm.set_df_property("account_currency_exchange" , "hidden" , 1) 
