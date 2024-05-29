@@ -17,7 +17,7 @@ def make_stock_entry(source_name, target_doc=None, skip_item_mapping=False):
 	def set_missing_values(source, target):
 		target.run_method("set_missing_values")
 		target.run_method("set_po_nos")
-		target.run_method("calculate_taxes_and_totals")
+		# target.run_method("calculate_taxes_and_totals")
 
 		if source.company:
 			target.update({"company": source.company})
