@@ -1,5 +1,5 @@
 {
- "add_total_row": 1,
+ "add_total_row": 0,
  "columns": [],
  "creation": "2024-03-03 17:20:34.263690",
  "disable_prepared_report": 0,
@@ -10,7 +10,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "El Qaswaa",
- "modified": "2024-03-03 17:20:34.263690",
+ "modified": "2024-05-29 12:51:17.099261",
  "modified_by": "Administrator",
  "module": "Qaswaa",
  "name": "Compare Prices of Sales Order With Price List",
