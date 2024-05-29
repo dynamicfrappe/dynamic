@@ -24,14 +24,14 @@ frappe.query_reports["Daily selling for customers"] = {
 			"reqd": 0,
 		},
 		{
-			"fieldname":"warehouse",
+			"fieldname":"set_warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
 			"options" : "Warehouse"
 		},
 		{
-			"fieldname":"customer",
-			"label": __("Customer"),
+			"fieldname":"customer_name",
+			"label": __("Customer Name"),
 			"fieldtype": "Link",
 			"options" : "Customer"
 		},
