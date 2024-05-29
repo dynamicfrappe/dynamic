@@ -17,9 +17,9 @@ def get_data(filters):
     if filters.get("selling_price_list"):
         conditions += f" AND sd.selling_price_list = '{filters.get('selling_price_list')}'"    
     if filters.get("from_date"):
-        conditions += f" AND sd.posting_date >= '{filters.get('from_date')}'"
+        conditions += f""" AND sd.posting_date >= date('{filters.get("from_date")}')"""
     if filters.get("to_date"):
-        conditions += f" AND sd.posting_date <= '{filters.get('to_date')}'"
+        conditions += f""" AND sd.posting_date <= date('{filters.get("to_date")}')"""
   
     if filters.get("cost_center"):
         conditions += f" AND sd.cost_center = '{filters.get('cost_center')}'"
