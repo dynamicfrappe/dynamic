@@ -33,9 +33,9 @@ def on_submit(self , event):
         sales_order_submit_comlete_opportunity(self)
 def on_update(self , event):
     if "Stock Reservation" in Domains:
-        if frappe.db.get_single_value("Stock Settings" , "allow_partial_reservation"):
-            if self.reserve_stock:
-                creation_of_reseration(self , event)
+        # if frappe.db.get_single_value("Stock Settings" , "allow_partial_reservation"):
+        if self.reserve_stock:
+            creation_of_reseration(self , event)
         
 def on_cancel(self , event):
     if "Stock Reservation" in Domains:

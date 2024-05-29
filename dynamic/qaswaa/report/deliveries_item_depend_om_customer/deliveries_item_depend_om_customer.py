@@ -15,40 +15,32 @@ def get_data(filters):
         conditions += f" AND se.customer_id = '{filters.get('customer_id')}'"
     if filters.get("sales_person"):
         conditions += f" AND st.sales_person = '{filters.get('sales_person')}'"
-
+    
     sql_query = f"""
         SELECT 
             se.posting_date, 
-            se.name, 
+            se.name,
             sed.item_code, 
-            sed.item_name, 
-            st.sales_person,
-            CASE 
-                WHEN se.stock_entry_type = 'صرف عينات' THEN sed.qty
-                ELSE 0 
-            END AS outgoing,
-            CASE 
-                WHEN se.stock_entry_type = 'استلام عينات' THEN sed.qty
-                ELSE 0 
-            END AS recovered,
-            CASE 
-                WHEN se.stock_entry_type = 'صرف عينات' THEN sed.qty
-                ELSE 0 
-            END - 
-            CASE 
-                WHEN se.stock_entry_type = 'استلام عينات' THEN sed.qty
-                ELSE 0 
-            END AS residual
+            sed.item_name,
+            se.stock_entry_type IN (
+                SELECT name FROM `tabStock Entry Type` WHERE material_type = 'Dispensing Simples'
+            ) AS outgoing, 
+            st.sales_person
         FROM 
             `tabStock Entry` AS se
         INNER JOIN 
             `tabStock Entry Detail` AS sed ON se.name = sed.parent
         LEFT JOIN 
             `tabSales Team` AS st ON se.name = st.parent
-        WHERE {conditions}
+        WHERE 
+            {conditions} 
+            AND se.docstatus = 1
     """
+
     result = frappe.db.sql(sql_query, as_dict=True)
     return result
+
+
 
 
 def get_columns(filters):
@@ -66,6 +58,13 @@ def get_columns(filters):
 			"options": "Stock Entry",
 			"width": 200,
 		},
+        # {
+		# 	"fieldname": "stock_entry_type",
+		# 	"label": _("Stock Entry Type"),
+		# 	"fieldtype": "Link",
+		# 	"options": "Stock Entry Type",
+		# 	"width": 200,
+		# }, 
 		{
 			"fieldname": "sales_person",
 			"label": _("Sales Person"),

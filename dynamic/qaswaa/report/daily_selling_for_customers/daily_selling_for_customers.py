@@ -203,13 +203,7 @@ def get_columns(filters):
 
         
 
-     
-# def get_sales_person(sales_invoice_name):
-#     sales_team = frappe.get_all("Sales Team", filters={"parent": sales_invoice_name}, fields=["sales_person"])
-#     if sales_team:
-#         return sales_team[0].get("sales_person")
-#     else:
-#         return None
+
 
 
 
