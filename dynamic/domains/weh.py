@@ -4,6 +4,18 @@ from frappe import _
 data = {
 
     'custom_fields': {
+        "Item":[
+               {
+                    "fieldname":"item_parent_group",
+                    "fieldtype":"Link",
+                    "insert_after":"item_group",
+                    "label":"Parent Group",
+                    "read_only" : 1 ,
+                    "options" :'Item Group',
+              
+               },
+
+               ],
      "Material Request":[
         {
             "fieldname":"material_request_purpose",

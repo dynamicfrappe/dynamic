@@ -100,18 +100,25 @@ def generate_item_code(item_group):
 
         return serial
 
-
+def get_item_group_parent(item_group) :
+    try :
+        parent_group = frappe.db.get_value("Item Group" , item_group , "parent_item_group")
+        # frappe.throw(str(parent_group))
+        if parent_group :
+            return parent_group
+    except Exception as E :
+        print(E)
+        return None
 def validate_item_code(doc, *args, **kwargs):
-    print("mohsen22")
+
     if "Terra" in DOMAINS:
-        print("mohsen33")
         if doc.is_new():
-            item_code = generate_item_code(doc.item_group)
-            print("mohsen44", item_code)
-            doc.item_code = item_code
+            item_group = generate_item_code(doc.item_group) 
+            doc.item_code = item_group if item_group  else None
             create_item_serial_doc(doc)
             create_item_specs(doc)
-
+    if "WEH" in DOMAINS:
+        doc.item_parent_group = get_item_group_parent(doc.item_group)
     # if "Barcode Item" in DOMAINS:
     #     if len(doc.barcodes) and doc.barcodes[0].get("barcode"):
     #         doc.db_set("barcode_second", doc.barcodes[0].get("barcode"))
