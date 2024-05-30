@@ -5,6 +5,16 @@
 frappe.query_reports["Deliveries Item depend om Customer"] = {
 	"filters": [
 		{
+			"fieldname":"from_date",
+			"label": __("From Date"),
+			"fieldtype": "Date",
+		},
+		{
+			"fieldname":"to_date",
+			"label": __("To Date"),
+			"fieldtype": "Date",
+		},
+		{
 			"fieldname":"customer_id",
 			"label": __("Customer"),
 			"fieldtype": "Link",
