@@ -5,6 +5,18 @@
 frappe.query_reports["Group Total Wieght"] = {
 	"filters": [
 		{
+
+			"label": ("Company"),
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"options" :"Company" ,
+			"width": 200,
+			"reqd": 1,
+			"default": frappe.defaults.get_user_default("Company")
+		
+
+		},
+		{
 			fieldname: "from_date",
 			label: __("From Date"),
 			fieldtype: "Date"
@@ -20,5 +32,22 @@ frappe.query_reports["Group Total Wieght"] = {
 			fieldtype: "Link",
 			options:"Item Group"
 		},
+		{	
+			"label": ("Item Parent  Group"),
+			"fieldname": "parent_group",
+			"fieldtype": "Link",
+			"options" :"Item Group" ,
+			"width": 200,
+			get_query: () => {
+		
+				return {
+					filters: {
+						'is_group': 1 ,
+						
+					}
+				}
+			}
+		},
+		
 	]
 };

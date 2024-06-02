@@ -49,9 +49,15 @@ def get_data(filters=None) :
 		condetion = condetion + f""" AND  SO.transaction_date >= date('{filters.get("from_date")}')"""
 	if filters.get("to_date")  : 
 		condetion = condetion + f""" AND  SO.transaction_date <= date('{filters.get("to_date")}')"""
-	
+	if filters.get("parent_group") :
+		condetion = condetion + f""" AND SOI.item_group  in 
+				(select name from 
+				`tabItem Group` WHERE parent_item_group  = '{filters.get("parent_group")}')"""
 	if filters.get("item_group") :
 		condetion = condetion +f"""AND SOI.item_group = '{filters.get("item_group")}'"""
+
+
+	
 	sql = f"""
 	SELECT 
 	SOI.item_group as item_group  ,
