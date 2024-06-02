@@ -12,10 +12,9 @@ def execute(filters=None):
 def get_report_summary(data):
     if not data:
         return None
-
-    total_sales_rate = round(sum([float(row.get("sales_rate") or 0) for  row in data]),2)
+    total_sales_rate = round(sum([float(row.get("sales_rate") or 0) * float(row.get("qty") or 0) for  row in data]),2)
     total_of_total_cost = round(sum([float(row.get("total_cost") or 0) for  row in data]),2)
-    total_difference  = round(sum([float(row.get("difference") or 0) for  row in data]),2)
+    total_difference  = round(sum([float(row.get("total_difference") or 0) for  row in data]),2)
     ratio = calc_ratio(total_of_total_cost, total_difference)
     return[
         {
@@ -32,14 +31,14 @@ def get_report_summary(data):
         },
         {
             'value' : total_difference,
-            'indicator' : 'Blue',
+            'indicator' : 'Green' if total_difference > 0 else 'Red',
             'label' : _('Total Difference'),
             'datatype' : 'Currency',
         },
         {
             'value' : ratio,
-            'indicator' : 'Blue',
-            'label' : _('Ratio'),
+            'indicator' : 'Green' if ratio > 0 else 'Red',
+            'label' : _('Total difference/Total Cost'),
             'datatype' : 'Percent',
         }
     ]
@@ -117,7 +116,7 @@ def get_date(filters):
             `tabSales Team` st ON so.name = st.parent
         WHERE {conditions}
         """
-        
+
     result = frappe.db.sql(sql_query, as_dict=True)
     return result
 
@@ -193,41 +192,9 @@ def get_columns():
             "label": _("Difference Percentage"),
             "fieldtype": "Percent",
             "width": 100,
+            
         }
-        # {
-        # 	"fieldname": "sales_rate",
-        # 	"label": "Sales Rate",
-        # 	"fieldtype": "Currency",
-        # 	"options": "currency",
-        # 	"width": 100,
-        # },
-        # {
-        # 	"fieldname": "total_sales",
-        # 	"label": "Total Sales",
-        # 	"fieldtype": "Currency",
-        # 	"options": "currency",
-        # 	"width": 100,
-        # },
-        # {
-        # 	"fieldname": "differance",
-        # 	"label": "Differance",
-        # 	"fieldtype": "Currency",
-        # 	"options": "currency",
-        # 	"width": 100,
-        # },
-        # {
-        # 	"fieldname": "total_difference",
-        # 	"label": "Total Difference",
-        # 	"fieldtype": "Currency",
-        # 	"options": "currency",
-        # 	"width": 100,
-        # },
-        # {
-        # 	"fieldname": "differance_percentage",
-        # 	"label": _("Differance Percentage"),
-        # 	"fieldtype": "Data",
-        # 	"width": 100,
-        # }
+        
     ]
 
 

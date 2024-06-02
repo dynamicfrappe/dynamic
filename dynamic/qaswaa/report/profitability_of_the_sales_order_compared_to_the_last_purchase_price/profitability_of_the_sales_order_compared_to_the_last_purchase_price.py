@@ -3,7 +3,51 @@ from frappe import _
 
 def execute(filters=None):
     columns, data = get_columns(), get_data(filters)
-    return columns, data
+    summary = get_report_summary(data)
+    return columns, data, None, None, summary
+
+def get_report_summary(data):
+    if not data:
+        return None
+
+    total_rate = round(sum([float(row.get("rate") or 0) for  row in data]),2)
+    total_purchase = round(sum([float(row.get("total_purchase") or 0) for  row in data]),2)
+    total_variance  = round(sum([float(row.get("total_variance") or 0) for  row in data]),2)
+    ratio = calc_ratio(total_purchase, total_variance)
+    return[
+        {
+            'value' : total_rate,
+            'indicator' : 'Blue',
+            'label' : _('Total Rate'),
+            'datatype' : 'Currency',
+        },
+        {
+            'value' : total_purchase,
+            'indicator' : 'Blue',
+            'label' :  _('Total Purchase Value'),
+            'datatype' : 'Currency',
+        },
+        {
+            'value' : total_variance,
+            'indicator' : 'Green' if total_variance > 0 else 'Red',
+            'label' : _('Total Variance'),
+            'datatype' : 'Currency',
+        },
+        {
+            'value' : ratio,
+            'indicator' : 'Green' if ratio > 0 else 'Red',
+            'label' : _('Ratio'),
+            'datatype' : 'Percent',
+        }
+    ]
+
+def calc_ratio(total_purchase, total_variance):
+    ratio = 0.0
+    if total_purchase:
+        ratio  = (total_variance/total_purchase) *100
+    else:
+        frappe.msgprint("Total Purchase value is Zero. Can't calculate the ratio.")
+    return ratio
 
 def get_data(filters):
     conditions = " 1=1"
