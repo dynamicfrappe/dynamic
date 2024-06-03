@@ -9,7 +9,51 @@ from dynamic.qaswaa.utils.qaswaa_api import get_last_purchase_invoice_for_item
 
 def execute(filters=None):
     columns, data = get_columns(), get_data(filters)
-    return columns, data
+    summary = get_report_summary(data)
+    return columns, data, None, None, summary
+
+def get_report_summary(data):
+    if not data:
+        return None
+
+    total_rate = round(sum([float(row.get("rate") or 0) for  row in data]),2)
+    total_cost = round(sum([float(row.get("total_cost") or 0) for  row in data]),2)
+    total_variance  = round(sum([float(row.get("total_variance") or 0) for  row in data]),2)
+    ratio = calc_ratio(total_cost, total_variance)
+    return[
+        {
+            'value' : total_rate,
+            'indicator' : 'Blue',
+            'label' : _('Total Rate'),
+            'datatype' : 'Currency',
+        },
+        {
+            'value' : total_cost,
+            'indicator' : 'Blue',
+            'label' :  _('Total Cost Value'),
+            'datatype' : 'Currency',
+        },
+        {
+            'value' : total_variance,
+            'indicator' : 'Green' if total_variance > 0 else 'Red',
+            'label' : _('Total Variance'),
+            'datatype' : 'Currency',
+        },
+        {
+            'value' : ratio,
+            'indicator' : 'Green' if ratio > 0 else 'Red',
+            'label' : _('Ratio'),
+            'datatype' : 'Percent',
+        }
+    ]
+
+def calc_ratio(total_cost, total_variance):
+    ratio = 0.0
+    if total_cost:
+        ratio  = (total_variance/total_cost) *100
+    else:
+        frappe.msgprint("Total Purchase value is Zero. Can't calculate the ratio.")
+    return ratio
 
 def get_data(filters):
     conditions = " 1=1"

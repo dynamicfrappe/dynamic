@@ -18,7 +18,7 @@ def get_report_summary(data):
 
     total_rate = round(sum([float(row.get("rate") or 0) for  row in data]),2)
     total_of_total_cost = round(sum([float(row.get("total_cost") or 0) for  row in data]),2)
-    total_variance  = round(sum([float(row.get("variance") or 0) for  row in data]),2)
+    total_variance  = round(sum([float(row.get("total_variance") or 0) for  row in data]),2)
     ratio = calc_ratio(total_of_total_cost, total_variance)
     return[
         {
@@ -35,13 +35,13 @@ def get_report_summary(data):
         },
         {
             'value' : total_variance,
-            'indicator' : 'Blue',
+            'indicator' : 'Green' if total_variance > 0 else 'Red',
             'label' : _('Total Variance'),
             'datatype' : 'Currency',
         },
         {
             'value' : ratio,
-            'indicator' : 'Blue',
+            'indicator' : 'Green' if ratio > 0 else 'Red',
             'label' : _('Ratio'),
             'datatype' : 'Percent',
         }
