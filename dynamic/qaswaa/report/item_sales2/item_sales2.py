@@ -19,9 +19,11 @@ def get_data(filters):
     sales_person = filters.get("sales_person")
 
     if from_date:
+
         conditions += f""" AND s.posting_date >= date('{from_date}')"""
     if to_date:
-        conditions += f""" AND s.posting_date <= date('{to_date}')"""
+
+        conditions += f""" AND s.posting_date >= '{from_date}'"""
     if customer:
         conditions += f""" AND s.customer = '{customer}'"""
     if cost_center:

@@ -8,7 +8,7 @@ frappe.query_reports["Compare Prices of Quotation With The Price List"] = {
 			fieldname: "date",
 			label: __("Date"),
 			fieldtype: "Date",
-			default: frappe.datetime.get_today(),
+			// default: frappe.datetime.get_today(),
 			// reqd : 1
 		},
 		{
@@ -18,7 +18,7 @@ frappe.query_reports["Compare Prices of Quotation With The Price List"] = {
 			"options": "Warehouse"
 		},
 		{
-			fieldname: "customer",
+			fieldname: "party_name",
 			label: __("Customer"),
 			fieldtype: "Link",
 			options: "Customer" ,

@@ -22,6 +22,7 @@ def get_data(filters):
         conditions += f""" AND st.sales_person = '{filters.get('sales_person')}'"""
 
     sql_query = f"""
+
         SELECT 
             se.posting_date,
             se.name, 
@@ -76,6 +77,7 @@ def get_data(filters):
                 WHERE matrial_type = 'Dispensing Simples'
             )
     """
+
     result = frappe.db.sql(sql_query, as_dict=True)
     
     # for row in result:
