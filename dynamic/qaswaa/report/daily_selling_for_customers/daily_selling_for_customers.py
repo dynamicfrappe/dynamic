@@ -47,7 +47,10 @@ def get_data(filters):
         elif filters.get("start_date") and not filters.get("end_date"):
             sales_invoices_filters["posting_date"] = [">=", filters.get("start_date")]
         elif filters.get("end_date") and not filters.get("start_date"):
-            sales_invoices_filters["posting_date"] = ["<=", filters.get("end_date")]                
+            sales_invoices_filters["posting_date"] = ["<=", filters.get("end_date")]
+        if filters.get("status"):
+           status = filters.get("status")
+           sales_invoices_filters['status'] = ['in', status]                   
         
 
         sales_invoices = frappe.get_all("Sales Invoice", filters=sales_invoices_filters, fields=["name", "posting_date", "set_warehouse","net_total", "base_total_taxes_and_charges", "grand_total"])

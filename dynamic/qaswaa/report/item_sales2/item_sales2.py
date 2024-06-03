@@ -19,21 +19,21 @@ def get_data(filters):
     sales_person = filters.get("sales_person")
 
     if from_date:
-        conditions += f" AND s.posting_date >= '{from_date}'"
+        conditions += f""" AND s.posting_date >= '{from_date}'"""
     if to_date:
-        conditions += f" AND s.posting_date <= '{to_date}'"
+        conditions += f""" AND s.posting_date <= '{to_date}'"""
     if customer:
-        conditions += f" AND s.customer = '{customer}'"
+        conditions += f""" AND s.customer = '{customer}'"""
     if cost_center:
-        conditions += f" AND s.cost_center = '{cost_center}'"        
+        conditions += f""" AND s.cost_center = '{cost_center}'"""        
     if item_code:
-        conditions += f" AND si.item_code = '{item_code}'"
+        conditions += f""" AND si.item_code = '{item_code}'"""
     if warehouse:
-        conditions += f" AND si.warehouse = '{warehouse}'"    
+        conditions += f""" AND si.warehouse = '{warehouse}'"""    
     if item_group:
-        conditions += f" AND i.item_group = '{item_group}'"
+        conditions += f""" AND i.item_group = '{item_group}'"""
     if sales_person:
-        conditions += f" AND stt.sales_person = '{sales_person}'"    
+        conditions += f""" AND stt.sales_person = '{sales_person}'"""    
 
     data = frappe.db.sql(f"""
         SELECT 

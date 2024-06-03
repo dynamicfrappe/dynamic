@@ -47,6 +47,12 @@ frappe.query_reports["Daily selling for customers"] = {
 			"fieldtype": "Link",
 			"options": "Sales Partner"
 		},
+		{
+            "fieldname": "status",
+            "label": __("Status"),
+            "fieldtype": "MultiSelect",
+            "options": "\nDraft\nReturn\nCredit Note Issued\nSubmitted\nPaid\nPartly Paid\nUnpaid\nUnpaid and Discounted\nPartly Paid and Discounted\nOverdue and Discounted\nOverdue\nCancelled\nInternal Transfer"
+        }
 
 	]
 };

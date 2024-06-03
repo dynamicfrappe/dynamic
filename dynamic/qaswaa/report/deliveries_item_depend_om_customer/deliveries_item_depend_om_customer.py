@@ -22,42 +22,43 @@ def get_data(filters):
         conditions += f""" AND st.sales_person = '{filters.get('sales_person')}'"""
 
     sql_query = f"""
-        SELECT 
-            se.posting_date,
-            se.name, 
-            sed.item_code, 
-            sed.item_name, 
-            st.sales_person,
-            CASE 
-                WHEN se.stock_entry_type = (SELECT name FROM `tabStock Entry Type` WHERE matrial_type = 'Dispensing Simples') THEN sed.qty
-                ELSE NULL
-            END AS outgoing,
-            (SELECT SUM(sed_inner.qty)
-             FROM `tabStock Entry` AS se_inner 
-             INNER JOIN `tabStock Entry Detail` AS sed_inner ON se_inner.name = sed_inner.parent 
-             WHERE se.name = se_inner.old_stock_entry 
-             AND sed_inner.item_code = sed.item_code
-            ) AS recovered,
-            CASE 
-                WHEN se.stock_entry_type = (SELECT name FROM `tabStock Entry Type` WHERE matrial_type = 'Dispensing Simples') THEN sed.qty - 
-                    (SELECT SUM(sed_inner.qty)
-                     FROM `tabStock Entry` AS se_inner 
-                     INNER JOIN `tabStock Entry Detail` AS sed_inner ON se_inner.name = sed_inner.parent 
-                     WHERE se.name = se_inner.old_stock_entry 
-                     AND sed_inner.item_code = sed.item_code
-                    )
-                ELSE NULL
-            END AS residual
-        FROM 
-            `tabStock Entry` AS se
-        INNER JOIN 
-            `tabStock Entry Detail` AS sed ON se.name = sed.parent
-        LEFT JOIN 
-            `tabSales Team` AS st ON se.name = st.parent
-        WHERE 
-            {conditions} 
-            AND se.docstatus = 1
-    """
+			SELECT 
+				se.posting_date,
+				se.name, 
+				sed.item_code, 
+				sed.item_name, 
+				st.sales_person,
+				CASE 
+					WHEN se.stock_entry_type = (SELECT name FROM `tabStock Entry Type` WHERE matrial_type = 'Dispensing Simples') THEN sed.qty
+					ELSE NULL
+				END AS outgoing,
+				COALESCE((SELECT SUM(sed_inner.qty)
+						FROM `tabStock Entry` AS se_inner 
+						INNER JOIN `tabStock Entry Detail` AS sed_inner ON se_inner.name = sed_inner.parent 
+						WHERE se.name = se_inner.old_stock_entry 
+						AND sed_inner.item_code = sed.item_code
+						), 0) AS recovered,
+				CASE 
+					WHEN se.stock_entry_type = (SELECT name FROM `tabStock Entry Type` WHERE matrial_type = 'Dispensing Simples') THEN sed.qty - 
+						COALESCE((SELECT SUM(sed_inner.qty)
+								FROM `tabStock Entry` AS se_inner 
+								INNER JOIN `tabStock Entry Detail` AS sed_inner ON se_inner.name = sed_inner.parent 
+								WHERE se.name = se_inner.old_stock_entry 
+								AND sed_inner.item_code = sed.item_code
+								), 0)
+					ELSE NULL
+				END AS residual
+			FROM 
+				`tabStock Entry` AS se
+			INNER JOIN 
+				`tabStock Entry Detail` AS sed ON se.name = sed.parent
+			LEFT JOIN 
+				`tabSales Team` AS st ON se.name = st.parent
+			WHERE 
+				{conditions} 
+				AND se.docstatus = 1
+		"""
+
 
     result = frappe.db.sql(sql_query, as_dict=True)
     return result

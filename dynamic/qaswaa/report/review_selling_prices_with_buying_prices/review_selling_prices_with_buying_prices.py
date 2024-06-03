@@ -31,10 +31,10 @@ def get_data(filters):
                 MAX(CASE WHEN ip.buying = 1 THEN ip.price_list END) as price_list2,
                 MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END) as selling_price,
                 MAX(CASE WHEN ip.buying = 1 THEN ip.price_list_rate END) as buying_price,
-                (MAX(CASE WHEN ip.buying = 1 THEN ip.price_list_rate END) -
-                MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END)) as price_difference,
-                ROUND(((MAX(CASE WHEN ip.buying = 1 THEN ip.price_list_rate END) -
-                MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END)) / MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END)) * 100, 2) as difference_percentage
+                (MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END) -
+                MAX(CASE WHEN ip.buying = 1 THEN ip.price_list_rate END)) as price_difference,
+                ROUND(((MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END) -
+                MAX(CASE WHEN ip.buying = 1 THEN ip.price_list_rate END)) / MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END)) * 100, 2) as difference_percentage
             FROM
                 `tabItem Price` ip
             INNER JOIN

@@ -38,9 +38,15 @@ def get_columns():
             "fieldtype": "Data",
             "width": 50,
         },
+            {
+            "fieldname": "sales_warehouse",
+            "label": _("Sales Warehouse"),
+            "fieldtype": "Data",
+            "width": 150,
+        },
         {
-            "fieldname": "warehouse",
-            "label": _("Warehouse"),
+            "fieldname": "balance_warehouse",
+            "label": _("Balance Warehouse"),
             "fieldtype": "Data",
             "width": 150,
         },
@@ -54,7 +60,6 @@ def get_columns():
 
 def get_date(filters):
     conditions = "1=1"
-    sql_join = ""
     data = []
 
     if filters.get("sales_order"):
@@ -63,32 +68,25 @@ def get_date(filters):
         conditions += f" and Q.customer = '{filters.get('customer')}' "
     
     if filters.get("cost_center"):
-        sql_join += """
-            INNER JOIN `tabSales Order Item` sii_cc ON si_cc.name = sii_cc.parent
-        """
-        conditions += f" AND sii_cc.cost_center = '{filters.get('cost_center')}'"   
+        conditions += f" and Q.cost_center = '{filters.get('cost_center')}' "   
     
     warehouses = frappe.get_all("Warehouse", filters={"disabled": 0}, pluck="name")
 
     for warehouse in warehouses:
-        sql_join = ""
+        
 
         if filters.get("warehouse"):
-            sql_join += f"""
-                INNER JOIN `tabSales Order Item` QI_cc ON Q.name = QI_cc.parent
-                AND QI_cc.warehouse = '{warehouse}'
-            """
+            conditions += f" and QI.warehouse = '{filters.get('warehouse')}' "
 
         sql = f'''
             SELECT
-                Q.name, QI.item_code, QI.item_name, QI.qty
+                Q.name, QI.item_code, QI.item_name, QI.qty ,QI.warehouse as sales_warehouse
             FROM 
                 `tabSales Order` Q
             INNER JOIN 
                 `tabSales Order Item` QI
             ON 
                 Q.name = QI.parent
-            {sql_join}
             WHERE {conditions}    
         '''
 
@@ -98,7 +96,7 @@ def get_date(filters):
             stock_balance = get_stock_balance(item['item_code'], warehouse)
             if stock_balance > 0:
                 item['stock_balance'] = stock_balance
-                item['warehouse'] = warehouse
+                item['balance_warehouse'] = warehouse
                 data.append(item)
 
     return data
