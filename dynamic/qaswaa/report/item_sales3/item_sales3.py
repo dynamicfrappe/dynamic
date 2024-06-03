@@ -19,11 +19,9 @@ def get_data(filters):
     sales_person = filters.get("sales_person")
 
     if from_date:
-
         conditions += f""" AND s.posting_date >= date('{from_date}')"""
     if to_date:
-
-        conditions += f""" AND s.posting_date >= '{from_date}'"""
+        conditions += f""" AND s.posting_date <= date('{to_date}')"""
     if customer:
         conditions += f""" AND s.customer = '{customer}'"""
     if cost_center:
@@ -36,60 +34,26 @@ def get_data(filters):
         conditions += f""" AND i.item_group = '{item_group}'"""
     if sales_person:
         conditions += f""" AND st.sales_person = '{sales_person}'"""
+
     data = frappe.db.sql(f"""
-        SELECT 
-            si.item_code,
-            si.item_name,
-            si.qty AS qty_difference1,
-            si.net_amount AS net_amount_difference1,
-            (SELECT qty 
-            FROM `tabSales Invoice Item` 
-            WHERE parent = s2.name 
-            AND item_code = si.item_code 
-            LIMIT 1) AS qty_difference2,
-            (SELECT net_amount 
-            FROM `tabSales Invoice Item` 
-            WHERE parent = s2.name 
-            AND item_code = si.item_code 
-            LIMIT 1) AS net_amount_difference2,
-            si.qty + IFNULL((SELECT qty 
-                    FROM `tabSales Invoice Item` 
-                    WHERE parent = s2.name 
-                     AND item_code = si.item_code 
-                 LIMIT 1), 0) AS qty_difference,
-            si.net_amount + IFNULL((SELECT net_amount 
-                    FROM `tabSales Invoice Item` 
-                    WHERE parent = s2.name 
-                     AND item_code = si.item_code 
-                 LIMIT 1), 0) AS net_amount_difference             
-        FROM 
-        `tabSales Invoice Item` AS si
-        JOIN 
-        `tabSales Invoice` AS s
-        ON 
-            si.parent = s.name
-        JOIN
-            `tabSales Invoice` AS s2
-        ON
-            s.name = s2.return_against
-        LEFT JOIN
-            `tabItem` AS i               
-        ON
-            si.item_code = i.name
-        LEFT JOIN
-            `tabSales Team` AS stt
-        ON
-            stt.parent = s.name
-        WHERE
-            s.name IN (SELECT DISTINCT return_against FROM `tabSales Invoice` WHERE return_against IS NOT NULL)
-            AND {conditions}
-    """,  as_dict=True)
+        SELECT si.item_code, si.item_name, 
+               SUM(CASE WHEN s.status != 'Return' THEN si.qty ELSE 0 END) as qty_difference1,
+               SUM(CASE WHEN s.status = 'Return' THEN si.qty ELSE 0 END) as qty_difference2,
+               (SUM(CASE WHEN s.status != 'Return' THEN si.qty ELSE 0 END) +
+                SUM(CASE WHEN s.status = 'Return' THEN si.qty ELSE 0 END)) as qty_difference,
+               SUM(CASE WHEN s.status != 'Return' THEN si.net_amount ELSE 0 END) as net_amount_difference1,
+               SUM(CASE WHEN s.status = 'Return' THEN si.net_amount ELSE 0 END) as net_amount_difference2,
+               (SUM(CASE WHEN s.status != 'Return' THEN si.net_amount ELSE 0 END) +
+                SUM(CASE WHEN s.status = 'Return' THEN si.net_amount ELSE 0 END)) as net_amount_difference                             
+        FROM `tabSales Invoice` s
+        INNER JOIN `tabSales Invoice Item` si ON s.name = si.parent
+        INNER JOIN `tabItem` i ON si.item_code = i.name
+        LEFT JOIN `tabSales Team` st ON s.name = st.parent
+        WHERE {conditions} AND s.docstatus != 2
+        GROUP BY si.item_code
+    """, as_dict=True)
 
     return data
-
-
-
-
 def get_columns():
     return [
         # {
