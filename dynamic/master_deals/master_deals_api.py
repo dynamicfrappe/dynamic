@@ -463,3 +463,28 @@ def get_avail_qty_in_draft_stock_delivry_2(doc, *args):
 						"""
                                 )
                             )
+
+
+@frappe.whitelist()
+def update_price_list(doc ,*args ,**kwags) :
+       print(doc.doctype)
+       for item in doc.items :
+            ## check price and price list and uom 
+            #  item_price = frappe.get_doc("Item Price"  ,{"item_code" : "STO-ITEM-2024-00258" , "uom" :"UI"})
+            if doc.doctype in ["Purchase Invoice"  ,"Purchase Receipt"]:
+                item_price = frappe.get_list("Item Price"  ,{"item_code" : item.item_code , "uom" :item.uom , "price_list" : doc.buying_price_list} , "name")
+
+            if len(item_price) ==0 :
+                    price = frappe.new_doc("Item Price") 
+                    price.item_code = item.item_code 
+                    price.uom = item.uom 
+                    price.price_list = doc.buying_price_list
+                    price.price_list_rate = item.price_list_rate
+                    price.save()
+                    frappe.db.commit()
+                    frappe.msgprint("Item Price created")
+            if len(item_price) > 0  :
+                   for price in item_price :
+                          frappe.db.set_value("Item Price" ,  price.get("name") ,"price_list_rate" , item.price_list_rate)
+                          frappe.msgprint("Item Price updated")
+

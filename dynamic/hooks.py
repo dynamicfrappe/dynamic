@@ -218,6 +218,7 @@ doc_events = {
         "before_submit": [
             "dynamic.api.check_crean_amount_after_mapped_doc",
         ],
+        "validate" :  "dynamic.master_deals.master_deals_api.update_price_list"
     },
     "Stock Entry": {
         # In This Target check the branches data in cost center
@@ -272,6 +273,7 @@ doc_events = {
         "before_save": "dynamic.api.before_save",
         "validate": [
             "dynamic.controllers.purchase_receipt.validate_purchase_receipt",
+            "dynamic.master_deals.master_deals_api.update_price_list"
         ],
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
         # "before_submit":
