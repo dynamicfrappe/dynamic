@@ -41,6 +41,7 @@ frappe.ui.form.on('Stock Entry', {
 						company: frm.doc.company,
 						project: frm.doc.project || undefined,
                         mendatory_fields: 1,
+						stock_entry_type: "صرف عينات"
 					}
 				})
 			}, __("Get Items From"));

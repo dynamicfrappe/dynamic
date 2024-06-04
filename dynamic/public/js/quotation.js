@@ -159,8 +159,6 @@ const QuotationController_Extend = erpnext.selling.QuotationController.extend({
               }
             }
             })
-        
-
 	},
 })
 

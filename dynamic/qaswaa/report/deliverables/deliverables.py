@@ -12,9 +12,9 @@ def execute(filters=None):
 def get_data(filters):
 	conditions = " 1=1"
 	if filters.get("from_date"):
-		conditions += f" and posting_date >= '{filters.get('from_date')}'"
+		conditions += f" and posting_date >= date('{filters.get('from_date')}')"
 	if filters.get("to_date"):
-		conditions += f" and posting_date <= '{filters.get('to_date')}'"
+		conditions += f" and posting_date <= date('{filters.get('to_date')}')"
 	if filters.get("customer"):
 		conditions += f" and customer = '{filters.get('customer')}'"
 	if filters.get("cost_center"):
