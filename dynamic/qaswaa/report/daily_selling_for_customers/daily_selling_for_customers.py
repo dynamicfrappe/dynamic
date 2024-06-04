@@ -53,7 +53,7 @@ def get_data(filters):
            sales_invoices_filters['status'] = ['in', status]                   
         
 
-        sales_invoices = frappe.get_all("Sales Invoice", filters=sales_invoices_filters, fields=["name", "posting_date", "set_warehouse","net_total", "base_total_taxes_and_charges", "grand_total"])
+        sales_invoices = frappe.get_all("Sales Invoice", filters=sales_invoices_filters, fields=["name", "posting_date", "set_warehouse","net_total", "base_total_taxes_and_charges", "grand_total","outstanding_amount"])
         customer_data = []
         total_refund_amount = 0
         total_advance_amount = 0 
@@ -65,6 +65,7 @@ def get_data(filters):
             net_total = invoice.get("net_total")
             base_total_taxes_and_charges = invoice.get("base_total_taxes_and_charges")
             grand_total = invoice.get("grand_total")
+            diff = invoice.get("outstanding_amount")
 
             
             sales_person = frappe.db.get_value("Sales Team", {"parent": invoice_name, "parenttype": "Sales Invoice", "parentfield": "sales_team"}, "sales_person")
@@ -78,7 +79,7 @@ def get_data(filters):
                 total_advance += entry.get("allocated_amount")
             total_advance_amount += total_advance
 
-            diff = total_advance + refund_amount
+            
             
             if idx == 0:
                 customer_data.append({
@@ -123,7 +124,7 @@ def get_data(filters):
                 "grand_total": total_grand_total,
                 "refund_amount": total_refund_amount,
                 "total_advance_amount": total_advance_amount,
-                "diff": total_advance_amount + total_refund_amount
+                "diff": diff
             })
 
     return data

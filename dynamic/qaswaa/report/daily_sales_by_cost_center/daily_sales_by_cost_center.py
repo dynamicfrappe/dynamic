@@ -43,10 +43,6 @@ def get_data(filters):
                                              {"reference_name": doc.name, "reference_doctype": "Sales Invoice"},
                                              "allocated_amount") or 0
         
-        
-        
-        return_agent = frappe.db.get_value("Sales Invoice",{"is_return": 1, "return_against": doc.name}, "return_against")
-        
         temp = {}
         temp['posting_date'] = doc.posting_date
         temp['name'] = doc.name
@@ -58,11 +54,12 @@ def get_data(filters):
         temp['total_advance'] = total_advance
         temp['refund'] = num if num else 0
         temp['diff'] = float(total_advance) + (float(num or 0))
-        temp['return_agent'] = return_agent
+        temp['return_agent'] = doc.return_against
         
         result.append(temp)
 
     return result
+
 
 
 

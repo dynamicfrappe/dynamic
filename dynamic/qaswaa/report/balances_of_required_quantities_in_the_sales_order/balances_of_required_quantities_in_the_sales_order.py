@@ -45,6 +45,12 @@ def get_columns():
             "width": 150,
         },
         {
+            "fieldname": "sales_balance",
+            "label": _("Sales Balance"),
+            "fieldtype": "Data",
+            "width": 100,
+        },
+        {
             "fieldname": "balance_warehouse",
             "label": _("Balance Warehouse"),
             "fieldtype": "Data",
@@ -73,14 +79,12 @@ def get_date(filters):
     warehouses = frappe.get_all("Warehouse", filters={"disabled": 0}, pluck="name")
 
     for warehouse in warehouses:
-        
-
         if filters.get("warehouse"):
             conditions += f" and QI.warehouse = '{filters.get('warehouse')}' "
 
         sql = f'''
             SELECT
-                Q.name, QI.item_code, QI.item_name, QI.qty ,QI.warehouse as sales_warehouse
+                Q.name, QI.item_code, QI.item_name, QI.qty, QI.warehouse as sales_warehouse
             FROM 
                 `tabSales Order` Q
             INNER JOIN 
@@ -97,9 +101,16 @@ def get_date(filters):
             if stock_balance > 0:
                 item['stock_balance'] = stock_balance
                 item['balance_warehouse'] = warehouse
+                item['sales_balance'] = stock_balance if item['sales_warehouse'] == warehouse else 0
+                data.append(item)
+            elif stock_balance == 0 and item['sales_warehouse'] == warehouse:
+                item['sales_balance'] = 0
                 data.append(item)
 
     return data
+
+
+
 
 
 
