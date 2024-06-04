@@ -63,5 +63,6 @@ def get_data(filters=None) :
 	GROUP BY SOI.item_group
 	
 	"""
+	print(sql)
 	data = frappe.db.sql(sql ,as_dict =1)
 	return data

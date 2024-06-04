@@ -55,6 +55,13 @@ import pandas as pd
 from dynamic.gebco.api import validate_purchase_recipt
 
 
+
+
+@frappe.whitelist(allow_guest = True)
+def test_login(*args , **kwargs) :
+	frappe.local.response['message'] = f"token_asdwasdasd"
+	frappe.local.response['http_status_code'] = 200
+	return 
 @frappe.whitelist()
 def encode_invoice_data(doc):
 	doc = frappe.get_doc("Sales Invoice", doc)
