@@ -28,6 +28,8 @@ def make_stock_entry(source_name, target_doc=None, skip_item_mapping=False):
 		if target.company:
 			target.update(get_fetch_values("Stock Entry", "company", target.company))
 
+		target.old_stock_entry = source.name	
+        
 	# def update_item(source, target, source_parent):
 	# 	target.base_amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.base_rate)
 	# 	target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
@@ -42,6 +44,7 @@ def make_stock_entry(source_name, target_doc=None, skip_item_mapping=False):
 	# 			or item.get("buying_cost_center")
 	# 			or item_group.get("buying_cost_center")
 	# 		)
+	
 
 	mapper = {
 		"Stock Entry": {"doctype": "Stock Entry", "validation": {"docstatus": ["=", 1]}},
