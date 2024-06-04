@@ -103,9 +103,12 @@ def get_date(filters):
                 item['balance_warehouse'] = warehouse
                 item['sales_balance'] = stock_balance if item['sales_warehouse'] == warehouse else 0
                 data.append(item)
-            # else stock_balance = 0 :    
+            elif stock_balance == 0 and item['sales_warehouse'] == warehouse:
+                item['sales_balance'] = 0
+                data.append(item)
 
     return data
+
 
 
 
