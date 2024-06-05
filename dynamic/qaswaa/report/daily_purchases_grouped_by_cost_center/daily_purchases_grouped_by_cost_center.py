@@ -121,7 +121,7 @@ def get_columns(filters):
 			"width": 200,
 		},
 		{
-			"fieldname": "base_total_allocated_amount",
+			"fieldname": "total_advance",
 			"label": _("Total Allocated Amount"),
 			"fieldtype": "Data",
 			"width": 200,
