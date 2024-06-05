@@ -8,11 +8,13 @@ frappe.query_reports["Compare Latest purchase prices of items"] = {
 			"fieldname": "from_date",
 			"label": __("From Date"),
 			"fieldtype": "Date",
+			"req":1
 		},
 		{
 			"fieldname": "to_date",
 			"label": __("To Date"),
 			"fieldtype": "Date",
+			"req":1
 		},
 		{
 			"fieldname": "purchase_invoice",

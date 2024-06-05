@@ -46,7 +46,7 @@ def get_data(filters):
         ON 
             pi.name = pii.parent
         WHERE
-            {conditions}
+            {conditions} AND (pii.qty - pii.received_qty) != 0
     '''
         
     data = frappe.db.sql(sql, as_dict=True)

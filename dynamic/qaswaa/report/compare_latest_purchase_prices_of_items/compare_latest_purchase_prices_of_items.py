@@ -9,24 +9,25 @@ def execute(filters=None):
 def get_data(filters):
     conditions = "1=1"
     if filters.get("supplier"):
-        conditions += f" AND pi.supplier = '{filters.get('supplier')}'"
+        conditions += f""" AND pi.supplier = '{filters.get("supplier")}'"""
     if filters.get("cost_center"):
-        conditions += f" AND pi.cost_center = '{filters.get('cost_center')}'"
+        conditions += f""" AND pi.cost_center = '{filters.get("cost_center")}'"""
     if filters.get("purchase_invoice"):
-        conditions += f" AND pi.name = '{filters.get('purchase_invoice')}'"        
+        conditions += f""" AND pi.name = '{filters.get("purchase_invoice")}'"""        
     if filters.get("from_date"):
-        conditions += f" AND pi.posting_date >= '{filters.get('from_date')}'"
+        conditions += f""" AND pi.posting_date >= date('{filters.get("from_date")}')"""
     if filters.get("to_date"):
-        conditions += f" AND pi.posting_date <= '{filters.get('to_date')}'"
+        conditions += f""" AND pi.posting_date <= date('{filters.get("to_date")}')"""
     if filters.get("item_code"):
-        conditions += f" AND pii1.item_code = '{filters.get('item_code')}'"
+        conditions += f""" AND pii1.item_code = '{filters.get("item_code")}'"""
     if filters.get("item_group"):
-        conditions += f" AND pii1.item_group = '{filters.get('item_group')}'"    
+        conditions += f""" AND pii1.item_group = '{filters.get("item_group")}'"""    
     if filters.get("warehouse"):
-        conditions += f" AND pii1.warehouse = '{filters.get('warehouse')}'"    
+        conditions += f""" AND pii1.warehouse = '{filters.get("warehouse")}'"""    
 
     sql = f'''
         SELECT
+            pi.name AS purchase_invoice,
             pii1.item_code,
             pii1.item_name,
             (
@@ -114,6 +115,7 @@ def get_data(filters):
         INNER JOIN
             `tabPurchase Invoice Item` pii1 ON pii1.parent = pi.name
         WHERE {conditions}
+        AND pi.posting_date BETWEEN '{filters.get("from_date")}' AND '{filters.get("to_date")}'
     '''
 
     data = frappe.db.sql(sql, as_dict=True)
@@ -122,15 +124,17 @@ def get_data(filters):
 
 
 
+
+
 def get_columns():
     columns = [
-        # {
-        #     "fieldname": "purchase_invoice",
-        #     "label": _("Purchase Invoice"),
-        #     "fieldtype": "Link",
-        #     "options": "Purchase Invoice",
-        #     "width": 300,
-        # },
+        {
+            "fieldname": "purchase_invoice",
+            "label": _("Purchase Invoice"),
+            "fieldtype": "Link",
+            "options": "Purchase Invoice",
+            "width": 300,
+        },
         {
             "fieldname": "item_code",
             "label": _("Item Code"),

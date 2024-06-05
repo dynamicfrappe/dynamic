@@ -35,18 +35,13 @@ frappe.query_reports["Daily purchases for supplier"] = {
 			"fieldtype": "Link",
 			"options" : "Supplier"
 		},
-		// {
-		// 	"fieldname":"sales_person",
-		// 	"label": __("Sales Person"),
-		// 	"fieldtype": "Link",
-		// 	"options": "Sales Person"
-		// },
-		// {
-		// 	"fieldname":"sales_partner",
-		// 	"label": __("Sales Partner"),
-		// 	"fieldtype": "Link",
-		// 	"options": "Sales Partner"
-		// },
+		{
+            "fieldname": "status",
+            "label": __("Status"),
+            "fieldtype": "MultiSelect",
+            "options": "\nDraft\nReturn\nCredit Note Issued\nSubmitted\nPaid\nPartly Paid\nUnpaid\nUnpaid and Discounted\nPartly Paid and Discounted\nOverdue and Discounted\nOverdue\nCancelled\nInternal Transfer"
+        }
+	
 
 	]
 };

@@ -60,6 +60,10 @@ def get_columns():
         }
     ]
 
+
+
+        
+
 def get_date(filters):
     conditions = "1=1"
     data = []
@@ -107,6 +111,6 @@ def get_date(filters):
                 data.append(item)
             elif stock_balance == 0 and item['quotation_warehouse'] == warehouse:
                 item['quotation_balance'] = 0
-                data.append(item)   
+                data.append(item)  
 
     return data

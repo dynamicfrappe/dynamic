@@ -36,10 +36,9 @@ frappe.query_reports["Daily Purchases Grouped by Cost Center"] = {
 			"options": "Supplier"
 		},
 		{
-			"fieldname":"company",
-			"label": __("Company"),
-			"fieldtype": "Link",
-			"options": "Company"
-		},
+            "fieldname":"is_return",
+            "label": __("Is Return"),
+            "fieldtype": "Check",
+        }
 	]
 };
