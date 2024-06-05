@@ -78,6 +78,12 @@ def get_columns(filters):
 			"options": "Sales Invoice",
 			"width": 200,
 		},
+        {
+			"fieldname": "return_agent",
+			"label": _("Return Agent"),
+			"fieldtype": "Data",
+			"width": 200,
+		}, 
 		{
 			"fieldname": "warehouse",
 			"label": _("Warehouse"),
@@ -128,11 +134,5 @@ def get_columns(filters):
 			"fieldtype": "Data",
 			"width": 200,
 		},
-        {
-			"fieldname": "return_agent",
-			"label": _("Return Agent"),
-			"fieldtype": "Data",
-			"width": 200,
-		}, 
 	]
 	return columns

@@ -102,7 +102,7 @@ def get_date(filters):
                                    WHERE pi.docstatus = 1
                                    ORDER BY pi.creation DESC
                                    LIMIT 1)) AS total_difference,
-            ((soi.rate - (SELECT pii.rate 
+            ROUND(((soi.rate - (SELECT pii.rate 
                            FROM `tabPurchase Invoice` pi
                            INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
                            WHERE pi.docstatus = 1
@@ -112,7 +112,7 @@ def get_date(filters):
                                         INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
                                         WHERE pi.docstatus = 1
                                         ORDER BY pi.creation DESC
-                                        LIMIT 1)) * 100 AS difference_percentage
+                                        LIMIT 1)) * 100,2)  AS difference_percentage
         FROM 
             `tabSales Order` so
         INNER JOIN 
@@ -159,7 +159,7 @@ def get_columns():
         },
         {
             "fieldname": "price_list_name",
-            "label": "Price List",
+            "label": "Buying Price List",
             "fieldtype": "Link",
             "options": "Price List",
             "width": 100,

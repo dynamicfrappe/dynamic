@@ -5,13 +5,12 @@ from frappe import _
 from erpnext.stock.utils import get_stock_balance
 
 def execute(filters=None):
-	columns, data = get_columns(), get_date(filters)
-	return columns, data
+    columns, data = get_columns(filters), get_data(filters)
+    return columns, data
 
 
-
-def get_columns():
-    return[
+def get_columns(filters=None):
+    columns = [
         {
             "fieldname": "name",
             "label": _("ID"),
@@ -38,7 +37,7 @@ def get_columns():
             "fieldtype": "Data",
             "width": 50,
         },
-            {
+        {
             "fieldname": "sales_warehouse",
             "label": _("Sales Warehouse"),
             "fieldtype": "Data",
@@ -50,21 +49,52 @@ def get_columns():
             "fieldtype": "Data",
             "width": 100,
         },
-        {
-            "fieldname": "balance_warehouse",
-            "label": _("Balance Warehouse"),
-            "fieldtype": "Data",
-            "width": 150,
-        },
-        {
-            "fieldname": "stock_balance",
-            "label": _("Stock Balance"),
-            "fieldtype": "Data",
-            "width": 100,
-        }
     ]
 
-def get_date(filters):
+    
+    # columns.append({
+    #             "fieldname": f"{balance_warehouse}",
+    #             "label": _(f"Balance Warehouse"),
+    #             "fieldtype": "Data",
+    #             "width": 100,
+    #         })
+
+    return columns
+
+
+
+# def get_data(filters):
+#     orders_with_items = []
+
+#     if filters.get("item_code"):
+#         filters['item_code'] = ["=", filters.get("item_code")]
+
+#     sales_orders = frappe.get_all("Sales Order", filters=filters, fields=["name"])
+
+#     for order in sales_orders:
+#         order_items = frappe.get_all("Sales Order Item",
+#                                      filters={"parent": order.name},
+#                                      fields=["item_code", "item_name", "qty", "warehouse"])
+#         for item in order_items:
+#             actual_qty = frappe.db.sql("""
+#                 SELECT SUM(actual_qty)
+#                 FROM `tabBin`
+#                 WHERE item_code = %s AND warehouse = %s
+#             """, (item.item_code, item.warehouse))[0][0] or 0
+#             orders_with_items.append({
+#                 "name": order.name,
+#                 "item_code": item.item_code,
+#                 "item_name": item.item_name,
+#                 "qty": item.qty,
+#                 "sales_warehouse": item.warehouse,
+#                 "sales_balance": actual_qty,
+#             })
+
+#     return orders_with_items
+
+
+
+def get_data(filters):
     conditions = "1=1"
     data = []
 
@@ -102,12 +132,14 @@ def get_date(filters):
                 item['stock_balance'] = stock_balance
                 item['balance_warehouse'] = warehouse
                 item['sales_balance'] = stock_balance if item['sales_warehouse'] == warehouse else 0
-                data.append(item)
+                
+                data.append({f"balance_{warehouse}": item})
             elif stock_balance == 0 and item['sales_warehouse'] == warehouse:
                 item['sales_balance'] = 0
-                data.append(item)
+                data.append({f"balance_{warehouse}": item})
 
     return data
+
 
 
 
