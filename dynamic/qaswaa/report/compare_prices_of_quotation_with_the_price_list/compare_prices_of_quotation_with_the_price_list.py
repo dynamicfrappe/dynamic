@@ -13,15 +13,15 @@ def get_report_summary(data):
     if not data:
         return None
 
-    total_sales_rate = round(sum([float(row.get("sales_rate") or 0) for  row in data]),2)
+    total_quotation_rate = round(sum([float(row.get("qoutation_rate") or 0) for  row in data]),2)
     total_of_total_cost = round(sum([float(row.get("total_cost") or 0) for  row in data]),2)
     total_difference  = round(sum([float(row.get("total_difference") or 0) for  row in data]),2)
     ratio = calc_ratio(total_of_total_cost, total_difference)
     return[
         {
-            'value' : total_sales_rate,
+            'value' : total_quotation_rate,
             'indicator' : 'Blue',
-            'label' : _('Total Sales Rate'),
+            'label' : _('Total Quotation Rate'),
             'datatype' : 'Currency',
         },
         {

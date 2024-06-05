@@ -2,13 +2,13 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Balances of required quantities in the sales order"] = {
+frappe.query_reports["Balance of Required Quantities in Price Quote"] = {
 	"filters": [
 		{
-			"fieldname": "sales_order",
-			"label": __("Sales Order"),
+			"fieldname": "quotation",
+			"label": __("Quotation"),
 			"fieldtype": "Link",
-			"options": "Sales Order"
+			"options": "Quotation"
 		},
 		{
 			"fieldname": "party_name",

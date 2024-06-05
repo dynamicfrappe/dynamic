@@ -22,17 +22,17 @@ def get_conditions(filters):
     from_date = filters.get("from_date")
     to_date = filters.get("to_date")
     if from_date:
-        conditions += f" and SO.transaction_date >= '{from_date}'"
+        conditions += f" and Q.transaction_date >= '{from_date}'"
     if to_date:
-        conditions += f" and SO.transaction_date <= '{to_date}'" 
-    if filters.get("sales_order"):
-        conditions += f" and SO.name = '{filters.get('sales_order')}' "
+        conditions += f" and Q.transaction_date <= '{to_date}'" 
+    if filters.get("quotation"):
+        conditions += f" and Q.name = '{filters.get('quotation')}' "
     if filters.get("party_name"):
-        conditions += f" and SO.customer = '{filters.get('party_name')}' "
+        conditions += f" and Q.party_name = '{filters.get('party_name')}' "
     if filters.get("cost_center"):
-        conditions += f" and SO.cost_center = '{filters.get('cost_center')}' "
+        conditions += f" and Q.cost_center = '{filters.get('cost_center')}' "
     if filters.get("warehouse"):
-        conditions += f" and SOI.warehouse = '{filters.get('warehouse')}' "
+        conditions += f" and QI.warehouse = '{filters.get('warehouse')}' "
     if filters.get("sales_person"):
         conditions += f" and ST.sales_person = '{filters.get('sales_person')}' "
     return conditions
@@ -43,17 +43,17 @@ def get_relevent_warehouses(filters = None):
     conditions = get_conditions(filters)
     sql = frappe.db.sql(f'''
             SELECT 
-                SOI.item_code
+                QI.item_code
             FROM 
-                `tabSales Order` SO
+                `tabQuotation` Q
             INNER JOIN 
-                `tabSales Order Item` SOI
+                `tabQuotation Item` QI
             ON 
-                SO.name = SOI.parent
+                Q.name = QI.parent
             LEFT JOIN
                 `tabSales Team` ST
             ON 
-                SO.name = ST.parent
+                Q.name = ST.parent
             WHERE
                 {conditions}
         ''', as_dict=True)
@@ -79,29 +79,29 @@ def get_data(relevant_warehouses, filters=None):
         
     sql = f'''
             SELECT
-                SO.name, SOI.item_code , SOI.item_name, SOI.qty, SOI.warehouse
+                Q.name As quotation, QI.item_code , QI.item_name, QI.qty, QI.warehouse
             FROM 
-                `tabSales Order` SO
+                `tabQuotation` Q
             INNER JOIN 
-                `tabSales Order Item` SOI
+                `tabQuotation Item` QI
             ON 
-                SO.name = SOI.parent
+                Q.name = QI.parent
             LEFT JOIN
                 `tabSales Team` ST
             ON 
-                SO.name = ST.parent
+                Q.name = ST.parent
             WHERE
                 {conditions}
             
         '''
-    sales_order_items = frappe.db.sql(sql , as_dict = 1)
+    quotation_items = frappe.db.sql(sql , as_dict = 1)
 
     data = []
 
     # Fetch stock balance for each item and relevant warehouse
-    for item in sales_order_items:
+    for item in quotation_items:
         row = {
-            "name": item.name,
+            "name": item.quotation,
             "item_code": item.item_code,
             "item_name": item.item_name,
             "qty": item.qty,
@@ -125,7 +125,7 @@ def get_columns(relevant_warehouses, filters=None):
             "fieldname": "name",
             "label": _("ID"),
             "fieldtype": "Link",
-            "options": "Sales Order",
+            "options": "Quotation",
             "width": 200,
         },
         {
