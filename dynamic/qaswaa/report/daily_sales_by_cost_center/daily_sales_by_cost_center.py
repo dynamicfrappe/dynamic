@@ -28,12 +28,12 @@ def get_data(filters):
         conditions.append(['sales_partner', '=', filters.get("sales_partner")])
     if filters.get("is_return") and filters.get("is_return") == 1:
         conditions.append(['status', '=', 'Return'])   
-    conditions.append(['docstatus', '!=', 2])        
+    conditions.append(['docstatus', '!=', 2])       
     
     result = []
     sales_invoices = frappe.get_all("Sales Invoice", fields=["posting_date", "name", "set_warehouse", "customer",
                                                              "net_total", "base_total_taxes_and_charges",
-                                                             "base_grand_total", "total_advance", "is_return", "return_against"],
+                                                             "base_grand_total", "total_advance", "is_return", "return_against","outstanding_amount"],
                                     filters=conditions)
 
     for doc in sales_invoices:
@@ -53,7 +53,7 @@ def get_data(filters):
         temp['base_grand_total'] = doc.base_grand_total
         temp['total_advance'] = total_advance
         temp['refund'] = num if num else 0
-        temp['diff'] = float(total_advance) + (float(num or 0))
+        temp['diff'] = doc.outstanding_amount
         temp['return_agent'] = doc.return_against
         
         result.append(temp)
