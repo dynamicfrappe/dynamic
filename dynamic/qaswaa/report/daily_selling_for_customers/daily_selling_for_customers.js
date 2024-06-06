@@ -24,14 +24,14 @@ frappe.query_reports["Daily selling for customers"] = {
 			"reqd": 0,
 		},
 		{
-			"fieldname":"warehouse",
+			"fieldname":"set_warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
 			"options" : "Warehouse"
 		},
 		{
-			"fieldname":"customer",
-			"label": __("Customer"),
+			"fieldname":"customer_name",
+			"label": __("Customer Name"),
 			"fieldtype": "Link",
 			"options" : "Customer"
 		},
@@ -47,6 +47,12 @@ frappe.query_reports["Daily selling for customers"] = {
 			"fieldtype": "Link",
 			"options": "Sales Partner"
 		},
+		{
+            "fieldname": "status",
+            "label": __("Status"),
+            "fieldtype": "MultiSelect",
+            "options": "\nDraft\nReturn\nCredit Note Issued\nSubmitted\nPaid\nPartly Paid\nUnpaid\nUnpaid and Discounted\nPartly Paid and Discounted\nOverdue and Discounted\nOverdue\nCancelled\nInternal Transfer"
+        }
 
 	]
 };

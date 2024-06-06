@@ -53,26 +53,26 @@ def get_data(filters):
     conditions = " 1=1"
     
     if filters.get("customer"):
-        conditions += f" AND sd.customer = '{filters.get('customer')}'"
-    if filters.get("sales_invoice"):
-        conditions += f" AND sd.name = '{filters.get('sales_invoice')}'"
-    if filters.get("warehouse"):
-        conditions += f" AND item.warehouse = '{filters.get('warehouse')}'"
+        conditions += f""" AND sd.customer = '{filters.get("customer")}'"""
+    if filters.get("sales_order"):
+        conditions += f""" AND sd.name = '{filters.get("sales_order")}'"""
+    if filters.get("set_warehouse"):
+        conditions += f""" AND sd.set_warehouse = '{filters.get("set_warehouse")}'"""
     if filters.get("selling_price_list"):
-        conditions += f" AND sd.selling_price_list = '{filters.get('selling_price_list')}'"    
+        conditions += f""" AND sd.selling_price_list = '{filters.get("selling_price_list")}'"""    
     if filters.get("from_date"):
-        conditions += f""" AND sd.posting_date >= date('{filters.get("from_date")}')"""
+        conditions += f""" AND sd.transaction_date >= date('{filters.get("from_date")}')"""
     if filters.get("to_date"):
-        conditions += f""" AND sd.posting_date <= date('{filters.get("to_date")}')"""
+        conditions += f""" AND sd.transaction_date <= date('{filters.get("to_date")}')"""
   
     if filters.get("cost_center"):
-        conditions += f" AND sd.cost_center = '{filters.get('cost_center')}'"
+        conditions += f""" AND sd.cost_center = '{filters.get("cost_center")}'"""
     if filters.get("sales_person"):
-        conditions += f" AND sii_sp.sales_person = '{filters.get('sales_person')}'"
+        conditions += f""" AND sii_sp.sales_person = '{filters.get("sales_person")}'"""
 
     sql = f'''
         SELECT 
-            sd.name AS sales_invoice,
+            sd.name AS sales_order,
             item.item_code,
             item.item_name,
             item.qty,
@@ -134,32 +134,32 @@ def get_data(filters):
             ) AS variance_percentage,
             (
                 SELECT sii.rate
-                FROM `tabSales Invoice` si
-                INNER JOIN `tabSales Invoice Item` sii ON sii.parent = si.name
+                FROM `tabSales Order` si
+                INNER JOIN `tabSales Order Item` sii ON sii.parent = si.name
                 WHERE sii.item_code = item.item_code
                 ORDER BY si.creation DESC
                 LIMIT 0,1
             ) AS last_price_1,
             (
                 SELECT sii.rate
-                FROM `tabSales Invoice` si
-                INNER JOIN `tabSales Invoice Item` sii ON sii.parent = si.name
+                FROM `tabSales Order` si
+                INNER JOIN `tabSales Order Item` sii ON sii.parent = si.name
                 WHERE sii.item_code = item.item_code
                 ORDER BY si.creation DESC
                 LIMIT 1,1
             ) AS last_price_2,
             (
                 SELECT sii.rate
-                FROM `tabSales Invoice` si
-                INNER JOIN `tabSales Invoice Item` sii ON sii.parent = si.name
+                FROM `tabSales Order` si
+                INNER JOIN `tabSales Order Item` sii ON sii.parent = si.name
                 WHERE sii.item_code = item.item_code
                 ORDER BY si.creation DESC
                 LIMIT 2,1
             ) AS last_price_3
         FROM 
-            `tabSales Invoice` sd
+            `tabSales Order` sd
         INNER JOIN
-            `tabSales Invoice Item` item ON item.parent = sd.name
+            `tabSales Order Item` item ON item.parent = sd.name
         LEFT JOIN
             `tabSales Team` sii_sp ON sd.name = sii_sp.parent 
         WHERE {conditions}
@@ -178,10 +178,10 @@ def get_data(filters):
 def get_columns():
     columns = [
         {
-            "fieldname": "sales_invoice",
-            "label": _("Sales Invoice"),
+            "fieldname": "sales_order",
+            "label": _("Sales Order"),
             "fieldtype": "Link",
-            "options": "Sales Invoice",
+            "options": "Sales Order",
             "width": 300,
         },
         {
@@ -235,9 +235,8 @@ def get_columns():
         {
             "fieldname": "variance_percentage",
             "label": _("Variance Percentage"),
-            "fieldtype": "Data",
+            "fieldtype": "Percent",
             "width": 100,
-            "options": "%"
         },
         {
             "fieldname": "last_price_1",
@@ -259,6 +258,7 @@ def get_columns():
         },
     ]
     return columns
+
 
 
 

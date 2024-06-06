@@ -74,16 +74,16 @@ def get_columns(filters):
             "width": 300,
         },
         {
+            "fieldname": "transaction_date",
+            "label": _("Date"),
+            "fieldtype": "Date",
+            "width": 300,
+        },
+        {
             "fieldname": "customer",
             "label": _("Customer"),
             "fieldtype": "Link",
             "options": "Customer",
-            "width": 300,
-        },
-        {
-            "fieldname": "transaction_date",
-            "label": _("Date"),
-            "fieldtype": "Date",
             "width": 300,
         },
         {
@@ -117,14 +117,14 @@ def get_columns(filters):
             "width": 100
         },
         {
-            "fieldname": "available_qty",
-            "label": _("Available Quantity"),
+            "fieldname": "residual_qty",
+            "label": _("Residual Quantity"),
             "fieldtype": "Float",
             "width": 100
         },
         {
-            "fieldname": "residual_qty",
-            "label": _("Residual Quantity"),
+            "fieldname": "available_qty",
+            "label": _("Available Quantity"),
             "fieldtype": "Float",
             "width": 100
         },

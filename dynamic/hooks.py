@@ -161,6 +161,7 @@ doc_events = {
             "dynamic.api.validate_active_domains",
             "dynamic.controllers.sales_invoice.after_submit",
             "dynamic.megaback.controllers.megaback_api.set_volumes",
+            "dynamic.megaback.controllers.megaback_api.set_total_gross_weight",
             
         ],
         "on_cancel": [
@@ -217,6 +218,7 @@ doc_events = {
             "dynamic.controllers.sales_order.validate_sales_order",
             "dynamic.controllers.sales_order.validate_sales_order_for_stock",
             "dynamic.megaback.controllers.megaback_api.set_volumes",
+            "dynamic.megaback.controllers.megaback_api.set_total_gross_weight",
                     ],
         "on_cancel": [
             "dynamic.api.cancel_reservation",
@@ -295,7 +297,10 @@ doc_events = {
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc",
         "before_submit": "dynamic.api.before_submit_quot",
         "before_save": ["dynamic.api.before_save_quotation", ],
-        "validate":"dynamic.megaback.controllers.megaback_api.set_volumes"
+        "validate":[
+            "dynamic.megaback.controllers.megaback_api.set_volumes",
+            "dynamic.megaback.controllers.megaback_api.set_total_gross_weight",
+        ],
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",

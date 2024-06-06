@@ -26,8 +26,7 @@ def get_data(filters):
         conditions += f" AND pii1.warehouse = '{filters.get('warehouse')}'"    
 
     sql = f'''
-        SELECT 
-            pi.name AS purchase_invoice,
+        SELECT
             pii1.item_code,
             pii1.item_name,
             (
@@ -39,6 +38,14 @@ def get_data(filters):
                 LIMIT 0,1
             ) AS last_price_1,
             (
+                SELECT pi_last.posting_date
+                FROM `tabPurchase Invoice` pi_last
+                INNER JOIN `tabPurchase Invoice Item` pii_last ON pii_last.parent = pi_last.name
+                WHERE pii_last.item_code = pii1.item_code
+                ORDER BY pi_last.creation DESC
+                LIMIT 0,1
+            ) AS posting_date_1,
+            (
                 SELECT pii_last.rate
                 FROM `tabPurchase Invoice` pi_last
                 INNER JOIN `tabPurchase Invoice Item` pii_last ON pii_last.parent = pi_last.name
@@ -46,6 +53,14 @@ def get_data(filters):
                 ORDER BY pi_last.creation DESC
                 LIMIT 1,1
             ) AS last_price_2,
+            (
+                SELECT pi_last.posting_date
+                FROM `tabPurchase Invoice` pi_last
+                INNER JOIN `tabPurchase Invoice Item` pii_last ON pii_last.parent = pi_last.name
+                WHERE pii_last.item_code = pii1.item_code
+                ORDER BY pi_last.creation DESC
+                LIMIT 1,1
+            ) AS posting_date_2,
             (
                 SELECT pii_last.rate
                 FROM `tabPurchase Invoice` pi_last
@@ -55,6 +70,14 @@ def get_data(filters):
                 LIMIT 2,1
             ) AS last_price_3,
             (
+                SELECT pi_last.posting_date
+                FROM `tabPurchase Invoice` pi_last
+                INNER JOIN `tabPurchase Invoice Item` pii_last ON pii_last.parent = pi_last.name
+                WHERE pii_last.item_code = pii1.item_code
+                ORDER BY pi_last.creation DESC
+                LIMIT 2,1
+            ) AS posting_date_3,
+            (
                 SELECT pii_last.rate
                 FROM `tabPurchase Invoice` pi_last
                 INNER JOIN `tabPurchase Invoice Item` pii_last ON pii_last.parent = pi_last.name
@@ -63,37 +86,51 @@ def get_data(filters):
                 LIMIT 3,1
             ) AS last_price_4,
             (
+                SELECT pi_last.posting_date
+                FROM `tabPurchase Invoice` pi_last
+                INNER JOIN `tabPurchase Invoice Item` pii_last ON pii_last.parent = pi_last.name
+                WHERE pii_last.item_code = pii1.item_code
+                ORDER BY pi_last.creation DESC
+                LIMIT 3,1
+            ) AS posting_date_4,
+            (
                 SELECT pii_last.rate
                 FROM `tabPurchase Invoice` pi_last
                 INNER JOIN `tabPurchase Invoice Item` pii_last ON pii_last.parent = pi_last.name
                 WHERE pii_last.item_code = pii1.item_code
                 ORDER BY pi_last.creation DESC
                 LIMIT 4,1
-            ) AS last_price_5
+            ) AS last_price_5,
+            (
+                SELECT pi_last.posting_date
+                FROM `tabPurchase Invoice` pi_last
+                INNER JOIN `tabPurchase Invoice Item` pii_last ON pii_last.parent = pi_last.name
+                WHERE pii_last.item_code = pii1.item_code
+                ORDER BY pi_last.creation DESC
+                LIMIT 4,1
+            ) AS posting_date_5
         FROM 
             `tabPurchase Invoice` pi
         INNER JOIN
             `tabPurchase Invoice Item` pii1 ON pii1.parent = pi.name
         WHERE {conditions}
     '''
+
     data = frappe.db.sql(sql, as_dict=True)
 
     return data
 
 
 
-
-
-
 def get_columns():
     columns = [
-        {
-            "fieldname": "purchase_invoice",
-            "label": _("Purchase Invoice"),
-            "fieldtype": "Link",
-            "options": "Purchase Invoice",
-            "width": 300,
-        },
+        # {
+        #     "fieldname": "purchase_invoice",
+        #     "label": _("Purchase Invoice"),
+        #     "fieldtype": "Link",
+        #     "options": "Purchase Invoice",
+        #     "width": 300,
+        # },
         {
             "fieldname": "item_code",
             "label": _("Item Code"),
@@ -113,9 +150,21 @@ def get_columns():
             "width": 100,
         },
         {
+            "fieldname": "posting_date_1",
+            "label": _("Date"),
+            "fieldtype": "Date",
+            "width": 100,
+        },
+        {
             "fieldname": "last_price_2",
             "label": _("Last Price 2"),
             "fieldtype": "Currency",
+            "width": 100,
+        },
+        {
+            "fieldname": "posting_date_2",
+            "label": _("Date"),
+            "fieldtype": "Date",
             "width": 100,
         },
         {
@@ -125,15 +174,33 @@ def get_columns():
             "width": 100,
         },
         {
+            "fieldname": "posting_date_3",
+            "label": _("Date"),
+            "fieldtype": "Date",
+            "width": 100,
+        },
+        {
             "fieldname": "last_price_4",
             "label": _("Last Price 4"),
             "fieldtype": "Currency",
             "width": 100,
         },
         {
+            "fieldname": "posting_date_4",
+            "label": _("Date"),
+            "fieldtype": "Date",
+            "width": 100,
+        },
+        {
             "fieldname": "last_price_5",
             "label": _("Last Price 5"),
             "fieldtype": "Currency",
+            "width": 100,
+        },
+        {
+            "fieldname": "posting_date_5",
+            "label": _("Date"),
+            "fieldtype": "Date",
             "width": 100,
         },
     ]

@@ -7,11 +7,19 @@ data = {
         
         "Item":
         [
+            #Volume
             {
                 "fieldname": "volume",
                 "label": "Volume",
                 "fieldtype": "Data",
                 "insert_after": "item_group",
+            },
+            #Gross Weight
+            {
+                "fieldname": "gross_weight",
+                "label": "Gross Weight",
+                "fieldtype": "Data",
+                "insert_after": "volume", 
             },
         ],
         "Quotation Item":
@@ -37,7 +45,23 @@ data = {
                 "fieldtype": "Float",
                 "insert_after": "volume", 
                 "read_only":1,
-            }
+            },
+            
+            {
+                "fieldname": "gross_weight",
+                "label": "Gross Weight",
+                "fieldtype": "Data",
+                "insert_after": "total_weight",
+                "read_only":1,
+                "fetch_from": "item_code.gross_weight",
+            },
+            {
+                "fieldname": "total_gross_weight",
+                "label": "Total Gross Weight",
+                "fieldtype": "Float",
+                "insert_after": "gross_weight", 
+                "read_only":1, 
+            },
         ],
         "Sales Order Item":
         [
@@ -62,7 +86,23 @@ data = {
                 "fieldtype": "Float",
                 "insert_after": "volume",
                 "read_only":1,
-            }
+            },
+
+            {
+                "fieldname": "gross_weight",
+                "label": "Gross Weight",
+                "fieldtype": "Data",
+                "insert_after": "total_weight",
+                "read_only":1,
+                "fetch_from": "item_code.gross_weight",
+            },
+            {
+                "fieldname": "total_gross_weight",
+                "label": "Total Gross Weight",
+                "fieldtype": "Float",
+                "insert_after": "gross_weight", 
+                "read_only":1, 
+            },
         ],
         "Sales Invoice Item":
         [
@@ -85,9 +125,24 @@ data = {
                 "label": "Total Volume",
                 "fieldtype": "Float",
                 "insert_after": "volume",
+                "read_only":1,   
+            },
+
+            {
+                "fieldname": "gross_weight",
+                "label": "Gross Weight",
+                "fieldtype": "Data",
+                "insert_after": "total_weight",
                 "read_only":1,
-                
-            }
+                "fetch_from": "item_code.gross_weight",
+            },
+            {
+                "fieldname": "total_gross_weight",
+                "label": "Total Gross Weight",
+                "fieldtype": "Float",
+                "insert_after": "gross_weight", 
+                "read_only":1, 
+            },
         ],
         "Delivery Note Item":
         [
