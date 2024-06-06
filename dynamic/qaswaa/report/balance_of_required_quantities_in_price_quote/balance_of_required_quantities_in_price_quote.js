@@ -5,6 +5,16 @@
 frappe.query_reports["Balance of Required Quantities in Price Quote"] = {
 	"filters": [
 		{
+			"fieldname": "from_date",
+			"label": __("From Date"),
+			"fieldtype": "Date",
+		},
+		{
+			"fieldname": "to_date",
+			"label": __("To Date"),
+			"fieldtype": "Date",
+		},
+		{
 			"fieldname": "quotation",
 			"label": __("Quotation"),
 			"fieldtype": "Link",
@@ -27,16 +37,6 @@ frappe.query_reports["Balance of Required Quantities in Price Quote"] = {
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
 			"options": "Warehouse"
-		},
-		{
-			"fieldname": "from_date",
-			"label": __("From Date"),
-			"fieldtype": "Date",
-		},
-		{
-			"fieldname": "to_date",
-			"label": __("To Date"),
-			"fieldtype": "Date",
 		},
 		{
 			"fieldname": "sales_person",

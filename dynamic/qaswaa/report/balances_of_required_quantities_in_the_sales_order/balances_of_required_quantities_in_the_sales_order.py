@@ -1,125 +1,15 @@
-# Copyright (c) 2024, Dynamic and contributors
-# For license information, please see license.txt
 
-# import frappe
+
 import frappe
 from frappe import _
+from erpnext.stock.utils import get_stock_balance
 
 def execute(filters=None):
-
-    relevant_warehouses = get_relevent_warehouses(filters)
-
-    columns = get_columns(relevant_warehouses, filters)
-
-    data = get_data(relevant_warehouses, filters)
-
+    columns, data = get_columns(filters), get_data(filters)
     return columns, data
 
 
-def get_conditions(filters):
-    conditions = " 1=1 "
-    
-    from_date = filters.get("from_date")
-    to_date = filters.get("to_date")
-    if from_date:
-        conditions += f" and SO.transaction_date >= '{from_date}'"
-    if to_date:
-        conditions += f" and SO.transaction_date <= '{to_date}'" 
-    if filters.get("sales_order"):
-        conditions += f" and SO.name = '{filters.get('sales_order')}' "
-    if filters.get("party_name"):
-        conditions += f" and SO.customer = '{filters.get('party_name')}' "
-    if filters.get("cost_center"):
-        conditions += f" and SO.cost_center = '{filters.get('cost_center')}' "
-    if filters.get("warehouse"):
-        conditions += f" and SOI.warehouse = '{filters.get('warehouse')}' "
-    if filters.get("sales_person"):
-        conditions += f" and ST.sales_person = '{filters.get('sales_person')}' "
-    return conditions
-
-
-
-def get_relevent_warehouses(filters = None):
-    conditions = get_conditions(filters)
-    sql = frappe.db.sql(f'''
-            SELECT 
-                SOI.item_code
-            FROM 
-                `tabSales Order` SO
-            INNER JOIN 
-                `tabSales Order Item` SOI
-            ON 
-                SO.name = SOI.parent
-            LEFT JOIN
-                `tabSales Team` ST
-            ON 
-                SO.name = ST.parent
-            WHERE
-                {conditions}
-        ''', as_dict=True)
-
-    item_codes = [item['item_code'] for item in sql]
-    if not item_codes:
-        return []
-
-    format_strings = ','.join(['%s'] * len(item_codes))
-    warehouses = frappe.db.sql(f'''
-        SELECT DISTINCT warehouse
-        FROM `tabBin`
-        WHERE item_code IN ({format_strings})
-        AND warehouse IN (SELECT name FROM `tabWarehouse` WHERE is_group = 0)
-    ''', item_codes, as_dict=True)
-
-    return [w['warehouse'] for w in warehouses]
-    
-
-def get_data(relevant_warehouses, filters=None):
-
-    conditions = get_conditions(filters)
-        
-    sql = f'''
-            SELECT
-                SO.name, SOI.item_code , SOI.item_name, SOI.qty, SOI.warehouse
-            FROM 
-                `tabSales Order` SO
-            INNER JOIN 
-                `tabSales Order Item` SOI
-            ON 
-                SO.name = SOI.parent
-            LEFT JOIN
-                `tabSales Team` ST
-            ON 
-                SO.name = ST.parent
-            WHERE
-                {conditions}
-            
-        '''
-    sales_order_items = frappe.db.sql(sql , as_dict = 1)
-
-    data = []
-
-    # Fetch stock balance for each item and relevant warehouse
-    for item in sales_order_items:
-        row = {
-            "name": item.name,
-            "item_code": item.item_code,
-            "item_name": item.item_name,
-            "qty": item.qty,
-            "warehouse": item.warehouse
-        }
-        balance = frappe.db.get_value("Bin", {"item_code": item.item_code, "warehouse": item.warehouse}, "actual_qty")
-        row["balance"] = balance if balance else 0
-
-        for warehouse in relevant_warehouses:
-            balance = frappe.db.get_value("Bin", {"item_code": item.item_code, "warehouse": warehouse}, "actual_qty")
-            row[frappe.scrub(warehouse)] = balance if balance else 0
-
-        data.append(row)
-
-    return data
-
-
-def get_columns(relevant_warehouses, filters=None):
+def get_columns(filters=None):
     columns = [
         {
             "fieldname": "name",
@@ -145,28 +35,114 @@ def get_columns(relevant_warehouses, filters=None):
             "fieldname": "qty",
             "label": _("Qty"),
             "fieldtype": "Data",
-            "width": 100,
+            "width": 50,
         },
         {
-            "fieldname": "warehouse",
-            "label": _("Warehouse"),
-            "fieldtype": "Link",
-            "options": "Warehouse",
-            "width": 200,
+            "fieldname": "sales_warehouse",
+            "label": _("Sales Warehouse"),
+            "fieldtype": "Data",
+            "width": 150,
         },
         {
-            "fieldname": "balance",
-            "label": _("Balance"),
+            "fieldname": "sales_balance",
+            "label": _("Sales Balance"),
             "fieldtype": "Data",
             "width": 100,
         },
     ]
-    # Add dynamic columns for each relevant warehouse
-    for warehouse in relevant_warehouses:
-        columns.append({
-            "fieldname": frappe.scrub(warehouse),
-            "label": warehouse,
-            "fieldtype": "Float",
-            "width": 100
-        })
+
+    
+    # columns.append({
+    #             "fieldname": f"{balance_warehouse}",
+    #             "label": _(f"Balance Warehouse"),
+    #             "fieldtype": "Data",
+    #             "width": 100,
+    #         })
+
     return columns
+
+
+
+# def get_data(filters):
+#     orders_with_items = []
+
+#     if filters.get("item_code"):
+#         filters['item_code'] = ["=", filters.get("item_code")]
+
+#     sales_orders = frappe.get_all("Sales Order", filters=filters, fields=["name"])
+
+#     for order in sales_orders:
+#         order_items = frappe.get_all("Sales Order Item",
+#                                      filters={"parent": order.name},
+#                                      fields=["item_code", "item_name", "qty", "warehouse"])
+#         for item in order_items:
+#             actual_qty = frappe.db.sql("""
+#                 SELECT SUM(actual_qty)
+#                 FROM `tabBin`
+#                 WHERE item_code = %s AND warehouse = %s
+#             """, (item.item_code, item.warehouse))[0][0] or 0
+#             orders_with_items.append({
+#                 "name": order.name,
+#                 "item_code": item.item_code,
+#                 "item_name": item.item_name,
+#                 "qty": item.qty,
+#                 "sales_warehouse": item.warehouse,
+#                 "sales_balance": actual_qty,
+#             })
+
+#     return orders_with_items
+
+
+
+def get_data(filters):
+    conditions = "1=1"
+    data = []
+
+    if filters.get("sales_order"):
+        conditions += f" and Q.name = '{filters.get('sales_order')}' "
+    if filters.get("customer"):
+        conditions += f" and Q.customer = '{filters.get('customer')}' "
+    
+    if filters.get("cost_center"):
+        conditions += f" and Q.cost_center = '{filters.get('cost_center')}' "   
+    
+    warehouses = frappe.get_all("Warehouse", filters={"disabled": 0}, pluck="name")
+
+    for warehouse in warehouses:
+        if filters.get("warehouse"):
+            conditions += f" and QI.warehouse = '{filters.get('warehouse')}' "
+
+        sql = f'''
+            SELECT
+                Q.name, QI.item_code, QI.item_name, QI.qty, QI.warehouse as sales_warehouse
+            FROM 
+                `tabSales Order` Q
+            INNER JOIN 
+                `tabSales Order Item` QI
+            ON 
+                Q.name = QI.parent
+            WHERE {conditions}    
+        '''
+
+        warehouse_data = frappe.db.sql(sql, as_dict=1)
+
+        for item in warehouse_data:
+            stock_balance = get_stock_balance(item['item_code'], warehouse)
+            if stock_balance > 0:
+                item['stock_balance'] = stock_balance
+                item['balance_warehouse'] = warehouse
+                item['sales_balance'] = stock_balance if item['sales_warehouse'] == warehouse else 0
+                
+                data.append({f"balance_{warehouse}": item})
+            elif stock_balance == 0 and item['sales_warehouse'] == warehouse:
+                item['sales_balance'] = 0
+                data.append({f"balance_{warehouse}": item})
+
+    return data
+
+
+
+
+
+
+

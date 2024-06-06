@@ -1,7 +1,6 @@
 # Copyright (c) 2024, Dynamic and contributors
 # For license information, please see license.txt
 
-# import frappe
 import frappe
 from frappe import _
 
@@ -15,45 +14,42 @@ def execute(filters=None):
 
     return columns, data
 
-
 def get_conditions(filters):
     conditions = " 1=1 "
     
     from_date = filters.get("from_date")
     to_date = filters.get("to_date")
     if from_date:
-        conditions += f" and Q.transaction_date >= '{from_date}'"
+        conditions += f" and SO.transaction_date >= '{from_date}'"
     if to_date:
-        conditions += f" and Q.transaction_date <= '{to_date}'" 
-    if filters.get("quotation"):
-        conditions += f" and Q.name = '{filters.get('quotation')}' "
-    if filters.get("party_name"):
-        conditions += f" and Q.party_name = '{filters.get('party_name')}' "
+        conditions += f" and SO.transaction_date <= '{to_date}'" 
+    if filters.get("sales_order"):
+        conditions += f" and SO.name = '{filters.get('sales_order')}' "
+    if filters.get("customer"):
+        conditions += f" and SO.customer = '{filters.get('customer')}' "
     if filters.get("cost_center"):
-        conditions += f" and Q.cost_center = '{filters.get('cost_center')}' "
+        conditions += f" and SO.cost_center = '{filters.get('cost_center')}' "
     if filters.get("warehouse"):
-        conditions += f" and QI.warehouse = '{filters.get('warehouse')}' "
+        conditions += f" and SOI.warehouse = '{filters.get('warehouse')}' "
     if filters.get("sales_person"):
         conditions += f" and ST.sales_person = '{filters.get('sales_person')}' "
     return conditions
-
-
 
 def get_relevent_warehouses(filters = None):
     conditions = get_conditions(filters)
     sql = frappe.db.sql(f'''
             SELECT 
-                QI.item_code
+                SOI.item_code
             FROM 
-                `tabQuotation` Q
+                `tabSales Order` SO
             INNER JOIN 
-                `tabQuotation Item` QI
+                `tabSales Order Item` SOI
             ON 
-                Q.name = QI.parent
+                SO.name = SOI.parent
             LEFT JOIN
                 `tabSales Team` ST
             ON 
-                Q.name = ST.parent
+                SO.name = ST.parent
             WHERE
                 {conditions}
         ''', as_dict=True)
@@ -71,7 +67,6 @@ def get_relevent_warehouses(filters = None):
     ''', item_codes, as_dict=True)
 
     return [w['warehouse'] for w in warehouses]
-    
 
 def get_data(relevant_warehouses, filters=None):
 
@@ -79,29 +74,29 @@ def get_data(relevant_warehouses, filters=None):
         
     sql = f'''
             SELECT
-                Q.name As quotation, QI.item_code , QI.item_name, QI.qty, QI.warehouse
+                SO.name, SOI.item_code , SOI.item_name, SOI.qty, SOI.warehouse
             FROM 
-                `tabQuotation` Q
+                `tabSales Order` SO
             INNER JOIN 
-                `tabQuotation Item` QI
+                `tabSales Order Item` SOI
             ON 
-                Q.name = QI.parent
+                SO.name = SOI.parent
             LEFT JOIN
                 `tabSales Team` ST
             ON 
-                Q.name = ST.parent
+                SO.name = ST.parent
             WHERE
                 {conditions}
             
         '''
-    quotation_items = frappe.db.sql(sql , as_dict = 1)
+    sales_order_items = frappe.db.sql(sql , as_dict = 1)
 
     data = []
 
     # Fetch stock balance for each item and relevant warehouse
-    for item in quotation_items:
+    for item in sales_order_items:
         row = {
-            "name": item.quotation,
+            "name": item.name,
             "item_code": item.item_code,
             "item_name": item.item_name,
             "qty": item.qty,
@@ -123,9 +118,9 @@ def get_columns(relevant_warehouses, filters=None):
     columns = [
         {
             "fieldname": "name",
-            "label": _("ID"),
+            "label": _("Sales Order ID"),
             "fieldtype": "Link",
-            "options": "Quotation",
+            "options": "Sales Order",
             "width": 200,
         },
         {
@@ -161,12 +156,13 @@ def get_columns(relevant_warehouses, filters=None):
             "width": 100,
         },
     ]
+
     # Add dynamic columns for each relevant warehouse
     for warehouse in relevant_warehouses:
         columns.append({
             "fieldname": frappe.scrub(warehouse),
             "label": warehouse,
             "fieldtype": "Data",
-            "width": 100
+            "width": 150
         })
     return columns

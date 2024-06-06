@@ -2,8 +2,18 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Balances of required quantities in the sales order"] = {
+frappe.query_reports["Balance of required quantities in the sales order"] = {
 	"filters": [
+		{
+			"fieldname": "from_date",
+			"label": __("From Date"),
+			"fieldtype": "Date",
+		},
+		{
+			"fieldname": "to_date",
+			"label": __("To Date"),
+			"fieldtype": "Date",
+		},
 		{
 			"fieldname": "sales_order",
 			"label": __("Sales Order"),
@@ -17,12 +27,6 @@ frappe.query_reports["Balances of required quantities in the sales order"] = {
 			"options": "Customer"
 		},
 		{
-			"fieldname": "item_code",
-			"label": __("Item Code"),
-			"fieldtype": "Link",
-			"options": "Item"
-		},
-		{
 			"fieldname": "cost_center",
 			"label": __("Cost Center"),
 			"fieldtype": "Link",
@@ -33,6 +37,12 @@ frappe.query_reports["Balances of required quantities in the sales order"] = {
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
 			"options": "Warehouse"
+		},
+		{
+			"fieldname": "sales_person",
+			"label": __("Sales Person"),
+			"fieldtype": "Link",
+			"options": "Sales Person"
 		},
 
 	]
