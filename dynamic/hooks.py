@@ -322,6 +322,11 @@ doc_events = {
     "File": {
         "after_insert": "dynamic.master_deals.master_deals_api.deals_after_insert"
     },
+    "Project":{
+        "validate": [
+            "dynamic.skyline.controllers.skyline_api.set_total_amounts",
+        ],
+    }
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
     # }
@@ -468,7 +473,8 @@ domains = {
     "Logistics": "dynamic.domains.logistics",
     "Notebook": "dynamic.domains.notebook",
     "Smart Vision": "dynamic.domains.smart_vision",
-    "Stock Reservation": "dynamic.domains.stock_reservation"
+    "Stock Reservation": "dynamic.domains.stock_reservation",
+    "Skyline": "dynamic.domains.skyline"
 }
 
 # domain Conatin
