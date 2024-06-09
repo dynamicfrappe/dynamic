@@ -33,7 +33,7 @@ def set_total_amounts(self, *args, **kwargs):
         self.diff = self.total_invoice_amount - self.total_paid_amount
 
         total_cost = 0.0
-        for cost in self.revised_contract_budget:
-            if cost.amount:
-                total_cost += float(cost.amount) or 0
+        #for cost in self.revised_contract_budget:
+        #   if cost.amount:
+        #        total_cost += float(cost.amount) or 0
         self.total_rcb = total_cost
