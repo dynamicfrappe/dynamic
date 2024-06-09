@@ -45,7 +45,7 @@ data = {
                 "label": "Invoice amount",
                 "fieldname": "invoice_amounts",
                 "fieldtype": "Table",
-                "options" : "Invoice Amount",
+                "options" : "Contract Amount",
                 "insert_after": "invoice_amounts_sec",
             },
             {
