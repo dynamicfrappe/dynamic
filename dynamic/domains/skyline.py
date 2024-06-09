@@ -96,18 +96,12 @@ data = {
                 "fieldtype": "Currency",
                 "insert_after": "original_budget",
             },
-            {
-                "label": "Revised Contract Budget",
-                "fieldname": "revised_contract_budget",
-                "fieldtype": "Table",
-                "options" : "Revised Contract Budget",
-                "insert_after": "budget_zero",
-            },
+           
             {
                 "label": "Total",
                 "fieldname": "total_rcb",
                 "fieldtype": "Float",
-                "insert_after": "revised_contract_budget",
+                "insert_after": "budget_zero",
             },
             {
                 "label": "Estimated Cost",
