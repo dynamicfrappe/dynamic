@@ -10,7 +10,7 @@ data = {
                 "label": "Revised contract amount",
                 "fieldname": "revised_contract_amount",
                 "fieldtype": "Table",
-                "options" : "Contract Amount",
+                "options" : "Invoice Amount",
                 "insert_after": "project_warehouse",
             },
             {
