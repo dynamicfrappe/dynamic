@@ -10,8 +10,6 @@ from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 
 
 
-
-
 @frappe.whitelist()
 def make_stock_entry(source_name, target_doc=None, skip_item_mapping=False):
 	def set_missing_values(source, target):
