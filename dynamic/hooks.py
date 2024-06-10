@@ -292,6 +292,7 @@ doc_events = {
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
+        "validate":"dynamic.qaswaa.controllers.purchase_order.validate",
         "before_submit": "dynamic.api.before_submit_po",
         "after_inser": "dynamic.api.calculate_orderd_qty",
         "on_submit": "dynamic.api.calculate_orderd_qty",
