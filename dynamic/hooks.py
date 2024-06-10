@@ -286,6 +286,7 @@ doc_events = {
     "Item Price": {"before_save": "dynamic.ifi.api.check_buying_price"},
     "Quotation": {
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc",
+        "validate":"dynamic.qaswaa.controllers.quotation.validate",
         "before_submit": "dynamic.api.before_submit_quot",
         "before_save": "dynamic.api.before_save_quotation",
     },

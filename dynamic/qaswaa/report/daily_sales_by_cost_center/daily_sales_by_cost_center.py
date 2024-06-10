@@ -28,9 +28,8 @@ def get_data(filters):
         conditions.append(['sales_partner', '=', filters.get("sales_partner")])
     if filters.get("is_return") and filters.get("is_return") == 1:
         conditions.append(['status', '=', 'Return'])   
-    conditions.append(['docstatus', '!=', 2])
-    conditions.append(['status', '!=', 'Return'])        
-    
+    conditions.append(['docstatus', '!=', 2])       
+    # conditions.append(['status', '!=', 'Return']) 
     result = []
     sales_invoices = frappe.get_all("Sales Invoice", fields=["posting_date", "name", "set_warehouse", "customer",
                                                              "net_total", "base_total_taxes_and_charges",
