@@ -132,7 +132,7 @@ frappe.ui.form.on("Quotation",{
         })
             }
       },
-      add_item_discount_rate: function(frm) {
+    add_item_discount_rate: function(frm) {
         var item_discount_rate = frm.doc.item_discount_rate;
               frm.doc.items.forEach(function(item) {
                   frappe.model.set_value(item.doctype, item.name, 'discount_percentage', item_discount_rate);
@@ -141,7 +141,7 @@ frappe.ui.form.on("Quotation",{
       },
       
       
-        item_discount_rate: function(frm) {
+    item_discount_rate: function(frm) {
           frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function(r) {
@@ -153,7 +153,7 @@ frappe.ui.form.on("Quotation",{
               }
             }
           });
-        },
+        },  
 })
 
 
@@ -224,31 +224,22 @@ var create_qaswaa_sales_order = function() {
 // }
 
 frappe.ui.form.on("Quotation Item", {
-    item_code: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        if (row.item_code) {
-            frappe.call({
-                method: "dynamic.api.get_active_domains",
-                callback: function (r) {
-                    if (r.message && r.message.length && r.message.includes("Qaswaa")) {
-                        console.log("bgg");
-                        var discount_percentage = frm.doc.items[0].discount_percentage;
-                        var item_discount_rate = frm.doc.item_discount_rate;
-                        console.log(discount_percentage);
-                        
-                        // Iterate through each item and update the discount_percentage
-                        frm.doc.items.forEach(function(item) {
-                            item.discount_percentage = item_discount_rate;
-                        });
-    
-                        console.log(discount_percentage);
-                        frm.refresh_fields("items");
-                    }
-                }
-            });
-        }
-    },
+//     item_code: function(frm, cdt, cdn) {
+//     var child = locals[cdt][cdn];
+//     var parent_discount_rate = frm.doc.item_discount_rate;
 
+//     frappe.call({
+//         method: "dynamic.api.get_active_domains",
+//         callback: function (r) {
+//             if (r.message && r.message.length && r.message.includes("Qaswaa")) {
+//                 console.log("bgg");
+//                 console.log(parent_discount_rate);
+//                 frm.set_value("items", "discount_percentage", parent_discount_rate);
+//                 frm.refresh_fields("items");
+//             }
+//         }
+//     });
+// }
     // item_code:function(frm,cdt,cdn){
     //   let row = locals[cdt][cdn]
     //   if(row.item_code){

@@ -81,7 +81,29 @@ frappe.ui.form.on("Purchase Order", {
 			method: "dynamic.ifi.api.make_purchase_invoice",
 			frm: cur_frm
 		})
-	}
+	},
+  add_item_discount_rate: function(frm) {
+    var item_discount_rate = frm.doc.item_discount_rate;
+          frm.doc.items.forEach(function(item) {
+              frappe.model.set_value(item.doctype, item.name, 'discount_percentage', item_discount_rate);
+          });
+          frm.refresh_field('items');
+  },
+  
+  
+  item_discount_rate: function(frm) {
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function(r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Qaswaa")) {
+              console.log("ass")
+              frm.events.add_item_discount_rate(frm);
+            }
+          }
+        }
+      });
+    }, 
 
 });
 
