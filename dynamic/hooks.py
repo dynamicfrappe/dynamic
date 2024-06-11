@@ -65,6 +65,7 @@ after_migrate = [
     "dynamic.install.after_install",
     "dynamic.dynamic.utils.create_customizations",
     "dynamic.stock_reservation.setup.setup",
+    "dynamic.ram.controllers.setup.create_domain",
 ]
 # Desk Notifications
 # ------------------
@@ -474,7 +475,8 @@ domains = {
     "Notebook": "dynamic.domains.notebook",
     "Smart Vision": "dynamic.domains.smart_vision",
     "Stock Reservation": "dynamic.domains.stock_reservation",
-    "Skyline": "dynamic.domains.skyline"
+    "Skyline": "dynamic.domains.skyline",
+    "Ram": "dynamic.domains.ram"
 }
 
 # domain Conatin
