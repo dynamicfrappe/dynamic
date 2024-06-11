@@ -139,7 +139,7 @@ class PayDocument(Document):
             })
 
         je.multi_currency = 1
-        if not 'Maser2000' in DOMAINS: 
+        if not ['Maser2000' , 'Contracting'] in DOMAINS: 
            je.submit()
         self.journal_entry = je.name
         self.db_set("journal_entry", je.name)
