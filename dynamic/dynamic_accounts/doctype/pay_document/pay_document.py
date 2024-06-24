@@ -133,15 +133,19 @@ class PayDocument(Document):
                 "debit_in_account_currency":  flt(amount_in_account_row_currency),
                 "debit_in_company_currency": flt(account_row.base_amount),
                 "reference_type": self.doctype,
+                "cost_center": self.cost_center,
+                "project": self.project,
                 "user_remark": str(account_row.note or ""),
                 "reference_name": self.name,
                 "party_type": account_row.party_type,
                 "party": account_row.party,
+                "project":account_row.project,
                 "cost_center": account_row.cost_center,
             })
 
         je.multi_currency = 1
-        je.save()
+        je.submit()
+        # je.save()
         # if not ['Maser2000' , 'Contracting'] in DOMAINS: 
         #    je.submit()
 
