@@ -229,7 +229,7 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 			for row in doc.payment_schedule:
 				paid_amount += row.paid_amount
 		# outstanding_amount = (flt(doc.grand_total) - flt(paid_amount))
-		outstanding_amount = flt(doc.grand_total) - (sum(row.advance_amount for row in doc.advancess)) or 0
+		outstanding_amount = flt(doc.grand_total) - (sum(row.advance_amount for row in doc.advances)) or 0 #### edit
 	else:
 		if party_account_currency == doc.company_currency:
 			grand_total = flt(doc.get("base_rounded_total") or doc.base_grand_total)
