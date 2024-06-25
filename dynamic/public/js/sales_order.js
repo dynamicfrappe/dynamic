@@ -75,7 +75,8 @@ frappe.ui.form.on("Sales Order", {
         method: "dynamic.api.get_active_domains",
         callback: function (r) {
           if (r.message && r.message.length) {
-            if (r.message.includes("IFI") || r.message.includes("Real State")) {
+            // if (r.message.includes("IFI") || r.message.includes("Real State")) {
+              if (r.message.includes("IFI")) {
               return frappe.call({
                 method: "dynamic.ifi.api.get_advanced_so_ifi",//get_advanced_so_ifi
                 args:{
