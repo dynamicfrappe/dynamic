@@ -3,18 +3,18 @@ from __future__ import unicode_literals
 data = {
     
     'custom_fields': {
-        'Serial No': [
-            {
-                "fieldname": "serial2",
-                "fieldtype": "Data",
-                "insert_after": "serial_no",
-                "label": "Serial No 2",
-                "unique": 1,
-                "in_global_search": 1,
-                "in_standard_filter": 1,
-                "in_preview": 1,
-            },
-        ],
+        # 'Serial No': [
+        #     {
+        #         "fieldname": "serial2",
+        #         "fieldtype": "Data",
+        #         "insert_after": "serial_no",
+        #         "label": "Serial No 2",
+        #         "unique": 1,
+        #         "in_global_search": 1,
+        #         "in_standard_filter": 1,
+        #         "in_preview": 1,
+        #     },
+        # ],
         'Sales Invoice': [
             {
                 "fieldname": "maintenance_template",
