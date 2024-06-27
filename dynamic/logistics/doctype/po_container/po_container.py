@@ -27,7 +27,7 @@ class POContainer(Document):
 		conditions += ")"
 		sql = f'''
 			SELECT 
-				PO.name as purchase_order, POI.item_code as item , POI.qty , POI.item_name as item_name, POI.uom as uom , , POI.name as row_name 
+				PO.name as purchase_order, POI.item_code as item , POI.qty , POI.item_name as item_name, POI.uom as uom , POI.name as row_name 
 			FROM 
 				`tabPurchase Order` PO
 			INNER JOIN
