@@ -9,7 +9,13 @@
  "field_order": [
   "naming_series",
   "container_number",
+  "status_of_container",
+  "section_break_a59pm",
+  "container_shipping_company",
   "arrived_date",
+  "expected_date_to_arrive",
+  "loading_date",
+  "roll_of_loading",
   "column_break_3",
   "container_status",
   "remaining_date",
@@ -110,12 +116,42 @@
    "fieldname": "survey",
    "fieldtype": "Data",
    "label": "Survey"
+  },
+  {
+   "fieldname": "status_of_container",
+   "fieldtype": "Select",
+   "label": "Status of Container ",
+   "options": "At the supplier\nLoaded to port\nat the harbour\nin the sea\nIn the port of Alexandria"
+  },
+  {
+   "fieldname": "section_break_a59pm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "container_shipping_company",
+   "fieldtype": "Data",
+   "label": "Container Shipping Company"
+  },
+  {
+   "fieldname": "expected_date_to_arrive",
+   "fieldtype": "Date",
+   "label": "Expected Date To Arrive"
+  },
+  {
+   "fieldname": "loading_date",
+   "fieldtype": "Date",
+   "label": "Loading Date"
+  },
+  {
+   "fieldname": "roll_of_loading",
+   "fieldtype": "Date",
+   "label": "Roll of Loading"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-18 11:55:46.114740",
+ "modified": "2024-06-27 11:40:59.072356",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "PO Container",
