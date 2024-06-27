@@ -43,6 +43,7 @@ frappe.ui.form.on('PO Container', {
 								doc: frm.doc,
 								method: "fetch_purchase_order_items",
 								callback: function (r) {
+									refresh_fields("items")
 								},
 							});
 						}
