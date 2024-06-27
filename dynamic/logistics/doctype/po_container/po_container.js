@@ -140,6 +140,8 @@ frappe.ui.form.on("Purchase Order container", {
 								callback: function (r) {
 									row.qty = r.message[0],
 									row.row_name = r.message[1]
+									row.item_name = r.message[2]
+									row.uom = r.message[3]
 									frm.refresh_fields("items")
 								},
 							});

@@ -27,7 +27,7 @@ class POContainer(Document):
 		conditions += ")"
 		sql = f'''
 			SELECT 
-				PO.name as purchase_order, POI.item_code as item , POI.qty , POI.name as row_name , POI.item_name , POI.uom 
+				PO.name as purchase_order, POI.item_code as item , POI.qty , POI.name as row_name , POI.item_name as item_name, POI.uom as uom
 			FROM 
 				`tabPurchase Order` PO
 			INNER JOIN
@@ -75,7 +75,7 @@ class POContainer(Document):
 	def get_items_qty(self , item , purchase_order):
 		sql = f'''
 			SELECT 
-			 	POI.qty , POI.name
+			 	POI.qty , POI.name , POI.item_name , POI.uom
 			FROM 
 				`tabPurchase Order` PO
 			INNER JOIN
@@ -88,7 +88,7 @@ class POContainer(Document):
 				POI.item_code = '{item}'
 			'''
 		data = frappe.db.sql(sql , as_dict = 1)
-		return data[0]["qty"] , data[0]["name"] 
+		return data[0]["qty"] , data[0]["name"] ,  data[0]["item_name"] ,  data[0]["uom"]
 	
 	def before_validate(self):
 		if 'Logistics' in DOMAINS: 
