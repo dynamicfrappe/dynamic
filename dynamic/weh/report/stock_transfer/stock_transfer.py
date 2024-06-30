@@ -21,7 +21,8 @@ def get_data(filters):
 		conditions += " AND `tabStock Entry Detail`.s_warehouse='%s' "%(filters.get("s_warehouse"))
 	if filters.get("item_code"):
 		conditions += " AND `tabStock Entry Detail`.item_code = '%s' "%(filters.get("item_code"))
-
+	if filters.get("parent_group") :
+		conditions += f"""AND `tabItem`.parent_group = '{filters.get("parent_group")}' """
 	sql = f"""
 	SELECT `tabStock Entry`.name
 	,`tabStock Entry`.posting_date
@@ -35,7 +36,9 @@ def get_data(filters):
 	FROM `tabStock Entry`
 	INNER JOIN `tabStock Entry Detail`
 	ON `tabStock Entry`.name=`tabStock Entry Detail`.parent
-	WHERE `tabStock Entry`.stock_entry_type='Material Transfer' AND `tabStock Entry`.docstatus<>2 AND {conditions}
+	INNER JOIN `tabItem` ON `tabStock Entry Detail`.item_code = `tabItem`.item_code
+	WHERE `tabStock Entry`.stock_entry_type='Material Transfer' 
+	AND `tabStock Entry`.docstatus<>2 AND {conditions}
 	"""
 	
 	# print('\n\n\n=***==sql>',sql,'\n\n\n')

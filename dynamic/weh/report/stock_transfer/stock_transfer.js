@@ -30,5 +30,11 @@ frappe.query_reports["Stock Transfer"] = {
 			"fieldtype": "Link",
 			"options": "Item",
 		},
+		{
+			fieldname: "parent_group",
+			label: __("Parent Group"),
+			fieldtype: "Link",
+			options: "Item Group",
+		  },
 	]
 };

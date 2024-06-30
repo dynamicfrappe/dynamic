@@ -39,6 +39,13 @@ frappe.query_reports["Stock Balance Perm"] = {
 			"options": "Item Group"
 		},
 		{
+			"fieldname": "parent_group",
+			"label": __("Parent Group"),
+			"fieldtype": "Link",
+			"width": "80",
+			"options": "Item Group",
+		  },
+		{
 			"fieldname": "item_code",
 			"label": __("Item"),
 			"fieldtype": "Link",

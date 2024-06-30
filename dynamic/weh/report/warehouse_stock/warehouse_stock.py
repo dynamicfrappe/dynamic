@@ -132,7 +132,8 @@ class WarehouseStock(object):
 
 			if self.filters.get("brand") :
 				sql = sql + f"""AND b.brand = '{self.filters.get("brand")}' """
-
+			if self.filters.get("parent_group") :
+				sql = sql + f"""AND b.parent_group = '{self.filters.get("parent_group")}' """
 			# if self.filters.get("from_date") :
 			# 	sql = sql + f"""AND b.creation = '{self.filters.get("from_date")}' """
 			

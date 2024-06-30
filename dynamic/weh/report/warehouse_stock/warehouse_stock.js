@@ -25,6 +25,12 @@ frappe.query_reports["Warehouse Stock"] = {
 			options: "Item Group",
 		  },
 		  {
+			fieldname: "parent_group",
+			label: __("Parent Group"),
+			fieldtype: "Link",
+			options: "Item Group",
+		  },
+		  {
 			fieldname: "brand",
 			label: __("Brand"),
 			fieldtype: "Link",

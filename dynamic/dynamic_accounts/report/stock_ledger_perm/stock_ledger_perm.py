@@ -271,6 +271,10 @@ def get_items(filters):
 	conditions = []
 	if filters.get("item_code"):
 		conditions.append("item.name=%(item_code)s")
+
+	if filters.get("parent_group") :
+				conditions.append(f"""
+				item.parent_group = '{filters.get("parent_group")}' """)
 	else:
 		if filters.get("brand"):
 			conditions.append("item.brand=%(brand)s")

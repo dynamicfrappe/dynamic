@@ -352,10 +352,15 @@ def filter_items_with_no_transactions(iwb_map, float_precision):
 
 
 def get_items(filters):
+
 	"Get items based on item code, item group or brand."
 	conditions = []
 	if filters.get("item_code"):
 		conditions.append("item.name=%(item_code)s")
+
+	if filters.get("parent_group") :
+				conditions.append(f"""
+				item.parent_group = '{filters.get("parent_group")}' """)
 	else:
 		if filters.get("item_group"):
 			conditions.append(get_item_group_condition(filters.get("item_group")))
