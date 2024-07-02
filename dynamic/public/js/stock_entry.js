@@ -362,7 +362,7 @@ frappe.ui.form.on("Stock Entry", {
                 if (r.message.includes("WEH")) {
                   if (frm.doc.docstatus === 1) {
                     if (frm.doc.add_to_transit && frm.doc.purpose=='Material Transfer' && frm.doc.per_transferred < 100) {
-                      frm.remove_custom_button('End Transit')
+                      frm.remove_custom_button(__('End Transit'))
                       frm.add_custom_button('End Transit', function() {
                         frappe.model.open_mapped_doc({
                           method: "dynamic.weh.api.make_stock_in_entry",
