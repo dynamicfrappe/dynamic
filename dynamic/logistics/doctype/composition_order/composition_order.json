@@ -29,6 +29,7 @@
   "section_break_19",
   "engineers",
   "survey",
+  "survey_template",
   "amended_from"
  ],
  "fields": [
@@ -167,14 +168,21 @@
   },
   {
    "fieldname": "survey",
-   "fieldtype": "Data",
-   "label": "Survey"
+   "fieldtype": "Link",
+   "label": "Survey",
+   "options": "Survey"
+  },
+  {
+   "fieldname": "survey_template",
+   "fieldtype": "Table",
+   "label": "Survey Template",
+   "options": "Survey Template"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-18 11:58:00.097331",
+ "modified": "2024-07-03 15:06:04.773571",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Order",

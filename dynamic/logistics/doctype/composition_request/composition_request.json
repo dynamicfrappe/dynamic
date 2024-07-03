@@ -20,7 +20,8 @@
   "phone_number_1",
   "phone_number_2",
   "survey",
-  "column_break_zqqsp",
+  "survey_template",
+  "section_break_uzpll",
   "phone_number_3",
   "link_location",
   "composition_order",
@@ -112,10 +113,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_zqqsp",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "column_break_mtyk5",
    "fieldtype": "Column Break"
   },
@@ -147,14 +144,25 @@
   },
   {
    "fieldname": "survey",
-   "fieldtype": "Data",
-   "label": "Survey"
+   "fieldtype": "Link",
+   "label": "Survey",
+   "options": "Survey"
+  },
+  {
+   "fieldname": "survey_template",
+   "fieldtype": "Table",
+   "label": "Survey Template",
+   "options": "Survey Template"
+  },
+  {
+   "fieldname": "section_break_uzpll",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-18 11:57:33.035168",
+ "modified": "2024-07-03 15:05:17.588958",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Request",

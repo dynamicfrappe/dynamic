@@ -29,9 +29,11 @@
   "engineers",
   "section_break_20",
   "from",
-  "survey",
-  "column_break_21",
+  "column_break_m1xeu",
   "to",
+  "section_break_vurfh",
+  "survey",
+  "survey_template",
   "amended_from"
  ],
  "fields": [
@@ -177,10 +179,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_21",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "section_break_20",
    "fieldtype": "Section Break"
   },
@@ -192,14 +190,29 @@
   },
   {
    "fieldname": "survey",
-   "fieldtype": "Data",
-   "label": "Survey"
+   "fieldtype": "Link",
+   "label": "Survey",
+   "options": "Survey"
+  },
+  {
+   "fieldname": "survey_template",
+   "fieldtype": "Table",
+   "label": "Survey Template",
+   "options": "Survey Template"
+  },
+  {
+   "fieldname": "section_break_vurfh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_m1xeu",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-18 11:59:46.729573",
+ "modified": "2024-07-03 15:08:46.071359",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition",
