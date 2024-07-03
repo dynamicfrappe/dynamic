@@ -23,3 +23,8 @@ class Composition(Document):
 					CO.docstatus = 1
 				""")
 	
+	@frappe.whitelist()
+	def fetch_survey_template(self , survey):
+		survey_doc = frappe.get_doc("Survey" , survey)
+		for row in survey_doc.survey_template:
+			self.append("survey_template" , row)

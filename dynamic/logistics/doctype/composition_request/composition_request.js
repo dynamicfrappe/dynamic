@@ -6,6 +6,21 @@ frappe.ui.form.on('Composition Request', {
 		frm.set_query("sales_order", () => {
 			return { filters: {"docstatus" : 1}};
 		});
+		frm.set_query("survey", () => {
+			return { filters:[["type", "=", "Installatment"]],
+			};
+		});
+	},
+	survey : function(frm){
+		frm.call({
+			doc: frm.doc,
+			method: "fetch_survey_template",
+			args : {survey :frm.doc.survey},
+			callback: function (r) {
+				
+				refresh_fields("survey_template")
+			},
+		});
 	},
 	sales_order: function(frm) {
 		frappe.call({

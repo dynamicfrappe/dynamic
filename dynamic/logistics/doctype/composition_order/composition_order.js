@@ -60,6 +60,21 @@ frappe.ui.form.on('Composition Order', {
 				}
 			}
 		})
+		frm.set_query("survey", () => {
+			return { filters:[["type", "=", "Installatment"]],
+			};
+		});
+	},
+	survey : function(frm){
+		frm.call({
+			doc: frm.doc,
+			method: "fetch_survey_template",
+			args : {survey :frm.doc.survey},
+			callback: function (r) {
+				
+				refresh_fields("survey_template")
+			},
+		});
 	},
 	customer: function(frm) {
 		frappe.call({

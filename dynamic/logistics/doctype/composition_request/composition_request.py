@@ -10,6 +10,12 @@ DOMAINS = frappe.get_active_domains()
 
 class CompositionRequest(Document):
 	@frappe.whitelist()
+	def fetch_survey_template(self , survey):
+		survey_doc = frappe.get_doc("Survey" , survey)
+		for row in survey_doc.survey_template:
+			self.append("survey_template" , row)
+			
+	@frappe.whitelist()
 	def get_items(self):
 		sales_order = frappe.get_doc("Sales Order" , self.sales_order)
 		return sales_order.items

@@ -14,6 +14,21 @@ frappe.ui.form.on('Conservation', {
 				}
 			}
 		})
+		frm.set_query("survey", () => {
+			return { filters:[["type", "=", "Maintenance"]],
+			};
+		});
+	},
+	survey : function(frm){
+		frm.call({
+			doc: frm.doc,
+			method: "fetch_survey_template",
+			args : {survey :frm.doc.survey},
+			callback: function (r) {
+				
+				refresh_fields("survey_template")
+			},
+		});
 	},
 	history_maintenance : function(frm){
 		frappe.call({

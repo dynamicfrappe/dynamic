@@ -312,7 +312,7 @@ data = {
                 "options" : "Cost Center" , 
                 "read_only" : 0,
                 "allow_on_submit":0,
-                "reqd":1
+                # "reqd":0
                 
             },
             

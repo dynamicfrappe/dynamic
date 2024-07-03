@@ -17,6 +17,12 @@ class ConservationRequest(Document):
 		self.create_Conservation_order()
 
 	@frappe.whitelist()
+	def fetch_survey_template(self , survey):
+		survey_doc = frappe.get_doc("Survey" , survey)
+		for row in survey_doc.survey_template:
+			self.append("survey_template" , row)
+			
+	@frappe.whitelist()
 	def get_warranties(self , serial_number):
 		item = frappe.db.get_value('Serial No', serial_number ,["item_code", "warranty_expiry_date"], as_dict=1)
 

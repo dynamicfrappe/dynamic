@@ -2,6 +2,23 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Composition', {
+	refresh : function(frm){
+		frm.set_query("survey", () => {
+			return { filters:[["type", "=", "Installatment"]],
+			};
+		});
+	},
+	survey : function(frm){
+		frm.call({
+			doc: frm.doc,
+			method: "fetch_survey_template",
+			args : {survey :frm.doc.survey},
+			callback: function (r) {
+				
+				refresh_fields("survey_template")
+			},
+		});
+	},
 	sales_order: function(frm) {
 		frappe.call({
 			method: "dynamic.api.get_active_domains",

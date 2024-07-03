@@ -44,6 +44,12 @@ class POContainer(Document):
 	@frappe.whitelist()
 	def change_status(self):
 		self.db_set("status", "Delivered")
+	
+	@frappe.whitelist()
+	def fetch_survey_template(self , survey):
+		survey_doc = frappe.get_doc("Survey" , survey)
+		for row in survey_doc.survey_template:
+			self.append("survey_template" , row)
 
 	@frappe.whitelist()
 	def close_request_item(self):

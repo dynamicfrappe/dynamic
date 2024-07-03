@@ -29,8 +29,23 @@ frappe.ui.form.on('PO Container', {
 					}
 				}
 			}
-		})
+		}),
+		frm.set_query("survey", () => {
+			return { filters:[["type", "=", "Call Center"]],
+			};
+		});
 
+	},
+	survey : function(frm){
+		frm.call({
+			doc: frm.doc,
+			method: "fetch_survey_template",
+			args : {survey :frm.doc.survey},
+			callback: function (r) {
+				
+				refresh_fields("survey_template")
+			},
+		});
 	},
 	fetch_items : function(frm){
 		frappe.call({

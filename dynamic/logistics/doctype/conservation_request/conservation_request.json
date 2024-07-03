@@ -26,6 +26,7 @@
   "customer_comment",
   "history_maintenance",
   "survey",
+  "survey_template",
   "amended_from"
  ],
  "fields": [
@@ -147,14 +148,22 @@
   },
   {
    "fieldname": "survey",
-   "fieldtype": "Data",
-   "label": "Survey"
+   "fieldtype": "Link",
+   "label": "Survey",
+   "options": "Survey"
+  },
+  {
+   "fieldname": "survey_template",
+   "fieldtype": "Table",
+   "label": "Survey Template",
+   "options": "Survey Template",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-21 16:30:12.012128",
+ "modified": "2024-07-03 17:13:04.592010",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",

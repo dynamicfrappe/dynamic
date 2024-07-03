@@ -36,6 +36,7 @@
   "total_cost",
   "engineering_name",
   "survey",
+  "survey_template",
   "amended_from"
  ],
  "fields": [
@@ -236,14 +237,22 @@
   },
   {
    "fieldname": "survey",
-   "fieldtype": "Data",
-   "label": "Survey"
+   "fieldtype": "Link",
+   "label": "Survey",
+   "options": "Survey"
+  },
+  {
+   "fieldname": "survey_template",
+   "fieldtype": "Table",
+   "label": "Survey Template",
+   "options": "Survey Template",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-18 12:02:03.196990",
+ "modified": "2024-07-03 17:13:16.359790",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation",
