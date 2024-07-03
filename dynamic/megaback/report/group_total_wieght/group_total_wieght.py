@@ -6,25 +6,132 @@ from frappe import _
 
 
 
-def get_all_child_groups(group , childes= []) :
+"""
 
+
+
+
+
+"""
+
+class ItemGroupNode :
+
+	"""
+	Create Tree View For item Group 
+	Tree level [ 1   - for parent group root 
+				 1/2 - for level one child node
+				 1/3 -  or level one child node
+				 1/2/1for level tow child 
+				 1/2/1/1 for level Three ]
+	tree look like 
+	        ____1____   1 root node 
+	       |         |
+      _ _ _2 	     3_ _ _  level one child 1/2
+      | 
+      1 level tow child 1/2/1
+      |
+      1 level three child 1/2/1/1
+	"""
+	def __init__(self) :
+		self._parent = None
+		self.level = {}
+		self.left = None 
+		self.right = None
+	def set_parent(self, parent) :
+		"""
+		init root group 
+		"""
+		self._parent = parent
+	def get_parent(self) :
+		return self._parent
+	
+	def set_level_two_childs(self , start_date =False , end_date = False ) :
+		items = self.level.get("2")
+		for group in items :
+			for k , v in group.items():
+				is_group = k.get("is_group")
+				if is_group :
+					#get _childs 
+					childs= self.get_all_child_groups(k.get("item_group"))
+					group["childs" ] =childs
+				#check if group is parent or not 
+
+		pass
+
+	
+	def get_level_keys(self) :
+		#set level 1 as root level  
+		# self.level = 1
+		self.level = [
+					{	"root" :True  ,"item_group":self._parent ,
+						"is_group" :frappe.db.get_value("Item Group" ,self._parent  , "is_group"),
+						"parent" : None ,"Amount" :0  }
+							] 
+		level_two = []
+		leve_group = frappe.get_all("Item Group" ,
+			      				 {"parent_item_group" : self._parent} , "name")
+		for group in leve_group :
+			#self.level = "2" 
+			obj = {"root":False ,"parent" : self._parent,
+	  				"item_group" :group.get('name')  , "Amount" :0 }
+			if frappe.db.get_value("Item Group" ,group.get('name')  , "is_group") :
+				obj["is_group"] =1
+				obj["child"] = self.get_all_child_groups(group.get('name'))
+			else :
+				obj["is_group"] =0
+			self.level.append(obj)
+		# self.level["2"] = level_two
+		print(self.level)
+	
+	def get_all_child_groups(self ,group  ) :
+		childes= []
+
+		def get_childs(): 
+			last_child = False
+			if frappe.db.get_value("Item Group" , group , "is_group") :
+				groups = frappe.get_all("Item Group" , {"parent_item_group" : group} , "name")
+				for gr in groups :
+					if  frappe.db.get_value("Item Group" , gr.get("name") , "is_group") :
+						data =frappe.db.sql(f""" select name from 
+												`tabItem Group` WHERE 
+								parent_item_group  = "{gr.get('name')}"
+								
+								""" ,as_dict=1)
+						for name  in data :
+							childes.append(name.get("name"))
+							a = get_all_child_groups(name.get("name"))
+							childes.append(a)
+					else :
+						childes.append(gr.get("name") )			
+			else :
+				childes.append(group)
+			return childes			
+		return get_childs()
+
+def get_all_child_groups(group  ) :
+	childes= []
 	def get_childs(): 
+		last_child = False
 		if frappe.db.get_value("Item Group" , group , "is_group") :
-		
 			groups = frappe.get_all("Item Group" , {"parent_item_group" : group} , "name")
 			for gr in groups :
 				if  frappe.db.get_value("Item Group" , gr.get("name") , "is_group") :
 					data =frappe.db.sql(f""" select name from 
-							`tabItem Group` WHERE parent_item_group  = '{gr.get("name")}'""" ,as_dict=1)
+											`tabItem Group` WHERE 
+							parent_item_group  = "{gr.get('name')}"
+							
+							""" ,as_dict=1)
 					for name  in data :
 						childes.append(name.get("name"))
-						get_all_child_groups(name.get("name") , childes=childes)
-				else :
-					pass
-		return childes				
+						a = get_all_child_groups(name.get("name"))
+						childes.append(a)
 
-		
-	print(childes)
+				else :
+					childes.append(gr.get("name") )
+				
+		else :
+			childes.append(group)
+		return childes			
 	return get_childs()
 def execute(filters=None):
 	columns, data = get_columns(filters), get_data(filters)
