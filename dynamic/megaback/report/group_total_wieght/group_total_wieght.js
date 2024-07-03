@@ -38,6 +38,7 @@ frappe.query_reports["Group Total Wieght"] = {
 			"fieldtype": "Link",
 			"options" :"Item Group" ,
 			"width": 200,
+			"reqd" : 1 ,
 			get_query: () => {
 		
 				return {
