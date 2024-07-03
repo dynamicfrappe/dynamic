@@ -55,6 +55,7 @@ doctype_list_js = {
     "Customer": "public/js/customer_list.js",
     "Quotation": "public/js/quotation_list.js",
      "Stock Entry": "public/js/stock_entry_list.js",
+     "Delivery Note": "public/js/delivery_note_list.js"
 }
 
 after_install = [
