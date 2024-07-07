@@ -32,6 +32,12 @@ frappe.query_reports["Group Total Wieght"] = {
 			fieldtype: "Link",
 			options:"Item Group"
 		},
+		{
+			fieldname: "sales_order",
+			label: __("Sales Order"),
+			fieldtype: "Link",
+			options:"Sales Order"
+		},
 		{	
 			"label": ("Item Parent  Group"),
 			"fieldname": "parent_group",

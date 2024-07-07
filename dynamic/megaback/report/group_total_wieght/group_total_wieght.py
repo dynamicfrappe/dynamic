@@ -46,6 +46,9 @@ def get_data(filters=None) :
 	condetion = """ 
 					WHERE SO.docstatus=1 
 				"""
+	
+	if filters.get("sales_order") :
+		condetion = condetion + f""" AND SO.name = '{filters.get("sales_order")}' """
 	if filters.get("from_date")  : 
 		condetion = condetion + f""" AND  SO.transaction_date >= date('{filters.get("from_date")}')"""
 	if filters.get("to_date")  : 
