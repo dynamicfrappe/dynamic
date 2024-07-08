@@ -4,7 +4,7 @@
 frappe.ui.form.on('Conservation Request', {
 	refresh :function(frm){
 		frm.set_query("survey", () => {
-			return { filters:[["type", "=", "Maintenance"]],
+			return { filters:[["type", "=", frm.doc.doctype]],
 			};
 		});
 	},

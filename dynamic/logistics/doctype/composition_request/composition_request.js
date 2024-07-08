@@ -7,7 +7,7 @@ frappe.ui.form.on('Composition Request', {
 			return { filters: {"docstatus" : 1}};
 		});
 		frm.set_query("survey", () => {
-			return { filters:[["type", "=", "Installatment"]],
+			return { filters:[["type", "=", frm.doc.doctype]],
 			};
 		});
 	},

@@ -61,7 +61,7 @@ frappe.ui.form.on('Composition Order', {
 			}
 		})
 		frm.set_query("survey", () => {
-			return { filters:[["type", "=", "Installatment"]],
+			return { filters:[["type", "=", frm.doc.doctype]],
 			};
 		});
 	},

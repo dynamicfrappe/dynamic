@@ -4,7 +4,7 @@
 frappe.ui.form.on('Composition', {
 	refresh : function(frm){
 		frm.set_query("survey", () => {
-			return { filters:[["type", "=", "Installatment"]],
+			return { filters:[["type", "=", frm.doc.doctype]],
 			};
 		});
 	},

@@ -14,9 +14,9 @@
  "fields": [
   {
    "fieldname": "type",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "label": "Type",
-   "options": "Maintenance\nInstallatment\nCall Center"
+   "options": "DocType"
   },
   {
    "fieldname": "survey_template",
@@ -33,7 +33,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-07-03 15:01:15.473511",
+ "modified": "2024-07-08 13:54:15.609305",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Survey",

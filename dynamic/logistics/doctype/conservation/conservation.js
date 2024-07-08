@@ -15,7 +15,7 @@ frappe.ui.form.on('Conservation', {
 			}
 		})
 		frm.set_query("survey", () => {
-			return { filters:[["type", "=", "Maintenance"]],
+			return { filters:[["type", "=", frm.doc.doctype]],
 			};
 		});
 	},
