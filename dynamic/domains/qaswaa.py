@@ -107,7 +107,7 @@ data = {
                 "fieldname": "item_discount_rate",
                 "fieldtype": "Float",
                 "insert_after": "discount_amount" ,
-            } 
+            }
           
         ],
         "Selling Settings":

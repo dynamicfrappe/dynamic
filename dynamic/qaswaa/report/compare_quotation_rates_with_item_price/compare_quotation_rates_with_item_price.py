@@ -35,10 +35,15 @@ def get_data(filters):
             qi.qty AS quantity,
             qi.net_rate AS rate,
             qi.base_price_list_rate AS price_of_price_list,
-            (qi.qty * qi.base_price_list_rate) AS total_of_quotation,
+            (qi.qty * qi.base_price_list_rate) AS total_of_price_list,           
+            (qi.qty * qi.net_rate) AS total_of_quotation,
             (qi.net_rate - qi.base_price_list_rate) AS diff,
-            (qi.qty * (qi.net_rate - qi.base_price_list_rate)) AS total_diff,
-            CONCAT(((qi.net_rate - qi.base_price_list_rate) / qi.base_price_list_rate * 100), '%') AS per_diff
+            ((qi.qty * qi.base_price_list_rate) - (qi.qty * qi.net_rate)) AS total_diff,
+            CASE WHEN (qi.qty * qi.base_price_list_rate) != 0
+                 THEN ((qi.qty * qi.net_rate) - (qi.qty * qi.base_price_list_rate)) / (qi.qty * qi.base_price_list_rate)
+                 ELSE 0
+            END AS per_diff            
+                         
         FROM
             `tabQuotation` q
         LEFT JOIN
@@ -49,6 +54,7 @@ def get_data(filters):
     """, as_dict=True)
 
     return data
+
 
 
 
@@ -94,6 +100,12 @@ def get_columns(filters):
 			"fieldtype": "Data",
 			"width": 100,
 		},
+        {
+			"fieldname": "total_of_price_list",
+			"label": _("Total of Price List"),
+			"fieldtype": "Data",
+			"width": 100,
+		},
 		{
 			"fieldname": "total_of_quotation",
 			"label": _("Total of Quotation"),
@@ -115,7 +127,7 @@ def get_columns(filters):
 		{
 			"fieldname": "per_diff",
 			"label": _("Percentage Difference"),
-			"fieldtype": "Data",
+			"fieldtype": "Percent",
 			"width": 100,
 		},
 	]

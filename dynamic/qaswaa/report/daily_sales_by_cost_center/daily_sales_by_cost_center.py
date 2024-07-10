@@ -29,7 +29,7 @@ def get_data(filters):
     if filters.get("is_return") and filters.get("is_return") == 1:
         conditions.append(['status', '=', 'Return'])   
     conditions.append(['docstatus', '!=', 2])       
-    # conditions.append(['status', '!=', 'Return']) 
+    conditions.append(['status', '!=', 'Return']) 
     result = []
     sales_invoices = frappe.get_all("Sales Invoice", fields=["posting_date", "name", "set_warehouse", "customer",
                                                              "net_total", "base_total_taxes_and_charges",
@@ -37,12 +37,20 @@ def get_data(filters):
                                     filters=conditions)
 
     for doc in sales_invoices:
-        num = frappe.db.get_value("Sales Invoice", {"is_return": 1, "return_against": doc.name}, 'base_grand_total') or 0
-        
+        num = frappe.db.sql("""
+            SELECT SUM(base_grand_total)
+            FROM `tabSales Invoice`
+            WHERE is_return = 1 AND return_against = %s
+        """, doc.name)[0][0] or 0
+        num2_values = frappe.db.sql_list("""
+            SELECT name
+            FROM `tabSales Invoice`
+            WHERE is_return = 1 AND return_against = %s
+        """, doc.name)
+        num2 = ', '.join(num2_values) if num2_values else ''
         total_advance = frappe.db.get_value("Payment Entry Reference",
                                              {"reference_name": doc.name, "reference_doctype": "Sales Invoice"},
                                              "allocated_amount") or 0
-        
         temp = {}
         temp['posting_date'] = doc.posting_date
         temp['name'] = doc.name
@@ -54,7 +62,7 @@ def get_data(filters):
         temp['total_advance'] = total_advance
         temp['refund'] = num if num else 0
         temp['diff'] = doc.outstanding_amount
-        temp['return_agent'] = doc.return_against
+        temp['return_agent'] = num2
         
         result.append(temp)
 
