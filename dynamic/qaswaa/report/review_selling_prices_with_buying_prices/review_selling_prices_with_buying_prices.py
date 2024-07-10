@@ -18,7 +18,13 @@ def get_data(filters):
     sql_params = [selling_price_list, buying_price_list]
 
     if filters.get("item_group"):
-        conditions += f" AND i.item_group = '{filters.get('item_group')}'"  
+        conditions += f" AND i.item_group = '{filters.get('item_group')}'"
+
+    if filters.get("percentage_from") is not None:
+        conditions += f" AND ((MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END) - MAX(CASE WHEN ip.buying = 1 THEN ip.price_list_rate END)) / MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END)) * 100 >= {filters.get('percentage_from')}"
+
+    if filters.get("percentage_to") is not None:
+        conditions += f" AND ((MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END) - MAX(CASE WHEN ip.buying = 1 THEN ip.price_list_rate END)) / MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END)) * 100 <= {filters.get('percentage_to')}"
 
     if selling_price_list and buying_price_list:
         sql = '''
@@ -41,9 +47,10 @@ def get_data(filters):
                 `tabItem` i ON ip.item_code = i.item_code
             WHERE
                 ip.price_list IN (%s, %s)
-                AND {conditions}
             GROUP BY
                 ip.item_code, ip.item_name, i.item_group, i.brand
+            HAVING
+                {conditions}
             '''
         sql = sql.format(conditions=conditions)
         items = frappe.db.sql(sql, tuple(sql_params), as_dict=True)
@@ -51,7 +58,6 @@ def get_data(filters):
         return items
     else:
         return []
-
 
 
 
@@ -122,7 +128,7 @@ def get_columns(filters):
         {
             "fieldname": "difference_percentage",
             "label": _("Difference Percentage"),
-            "fieldtype": "Data",
+            "fieldtype": "Percent",
             "width": 150,
         },
 	]

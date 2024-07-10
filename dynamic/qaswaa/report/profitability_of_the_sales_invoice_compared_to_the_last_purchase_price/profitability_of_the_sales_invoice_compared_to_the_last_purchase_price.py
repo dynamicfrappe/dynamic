@@ -10,7 +10,7 @@ def get_report_summary(data):
     if not data:
         return None
 
-    total_rate = round(sum([float(row.get("rate") or 0) for  row in data]),2)
+    total_rate = round(sum([float(row.get("selling_price_per_qty") or 0) for  row in data]),2)
     total_purchase = round(sum([float(row.get("total_purchase") or 0) for  row in data]),2)
     total_variance  = round(sum([float(row.get("total_variance") or 0) for  row in data]),2)
     ratio = calc_ratio(total_purchase, total_variance)
@@ -77,6 +77,7 @@ def get_data(filters):
             item.item_name,
             item.qty,
             item.rate,
+            item.rate * item.qty AS selling_price_per_qty,
             (
                 SELECT pii.rate
                 FROM `tabPurchase Invoice` pi
@@ -205,6 +206,12 @@ def get_columns():
         {
             "fieldname": "rate",
             "label": _("Selling price Rate"),
+            "fieldtype": "Currency",
+            "width": 100
+        },
+        {
+            "fieldname": "selling_price_per_qty",
+            "label": _("Selling Price Per Qty"),
             "fieldtype": "Currency",
             "width": 100
         },
