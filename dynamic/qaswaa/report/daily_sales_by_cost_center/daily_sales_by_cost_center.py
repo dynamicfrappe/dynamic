@@ -11,6 +11,7 @@ def execute(filters=None):
 
 def get_data(filters):
     conditions = []
+	
 
     if filters.get("start_date"):
         conditions.append(['posting_date', '>=', filters.get("start_date")])
@@ -27,9 +28,14 @@ def get_data(filters):
     if filters.get("sales_partner"):
         conditions.append(['sales_partner', '=', filters.get("sales_partner")])
     if filters.get("is_return") and filters.get("is_return") == 1:
-        conditions.append(['status', '=', 'Return'])   
+        conditions.append(['name', 'in', frappe.db.sql_list("""
+            SELECT DISTINCT return_against
+            FROM `tabSales Invoice`
+            WHERE is_return = 1
+        """)])
+ 
     conditions.append(['docstatus', '!=', 2])       
-    conditions.append(['status', '!=', 'Return']) 
+    conditions.append(['status', '!=', 'Return'])
     result = []
     sales_invoices = frappe.get_all("Sales Invoice", fields=["posting_date", "name", "set_warehouse", "customer",
                                                              "net_total", "base_total_taxes_and_charges",
