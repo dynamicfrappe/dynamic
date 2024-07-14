@@ -74,12 +74,8 @@ def get_data(filters):
 			SI.set_warehouse
 		FROM 
 			`tabSales Invoice` SI 
-		INNER JOIN 
-			`tabSales Invoice Item` SII
-		ON 
-			SI.name = SII.parent
 		WHERE 
-			SI.docstatus = 1
+			SI.docstatus = 1 and SI.set_warehouse != ""
 		GROUP BY 
 			SI.set_warehouse  
 		'''
@@ -99,6 +95,7 @@ def get_data(filters):
 		conditions += f" and SII.item_code = '{filters.get('item_code')}'"
 
 	period_list = get_period_list(filters)
+	
 	# frappe.throw(str(period_list))
 
 	for warehouse in warehouses :
@@ -109,7 +106,7 @@ def get_data(filters):
 
 			ss = f'''
 				SELECT 
-					SUM(SI.net_total) as {period.key}
+					DISTINCT SI.name as name
 				FROM 
 					`tabSales Invoice` SI 
 				INNER JOIN 
@@ -123,9 +120,12 @@ def get_data(filters):
 					SI.posting_date >= '{period.from_date}' 
 					and SI.posting_date <= '{period.to_date}'
 				'''
-			data = frappe.db.sql(ss , as_dict = 1)
-			dict[period.key] = data[0][period.key]
-
+			data = frappe.db.sql(ss , as_list = 1)
+			total = 0
+			for r in data:
+				invoice_doc = frappe.get_doc("Sales Invoice", r[0])
+				total += invoice_doc.net_total or 0
+			dict[period.key] = total
 		results.append(dict)
 	for record in results:
           total_sales = sum(value for value in record.values() if isinstance(value, (int, float)))
