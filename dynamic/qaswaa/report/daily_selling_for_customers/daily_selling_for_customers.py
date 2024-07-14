@@ -13,9 +13,8 @@ from frappe.utils import getdate , cint , add_months, get_first_day , add_days
 
 
 def execute(filters=None):
-	columns, data = get_columns(filters), get_data(filters)
-	return columns, data
-
+    columns, data = get_columns(filters), get_data(filters)
+    return columns, data
 
 
 
@@ -123,23 +122,23 @@ def get_data(filters):
                 })
 
         data.extend(customer_data)
-        if customer_data:
-            total_grand_total = sum([invoice.get("grand_total", 0) for invoice in sales_invoices])
-            total_base_total_taxes_and_charges = sum([invoice.get("base_total_taxes_and_charges", 0) for invoice in sales_invoices])
-            total_net_total = sum([invoice.get("net_total", 0) for invoice in sales_invoices])
-            data.append({
-                "customer_name": "",
-                "invoice_name": "",
-                "posting_date": "",
-                "set_warehouse": "",
-                "net_total": total_net_total,
-                "base_total_taxes_and_charges": total_base_total_taxes_and_charges,
-                "grand_total": total_grand_total,
-                "refund_amount": total_refund_amount if total_refund_amount is not None else "",
-                "total_advance_amount": total_advance_amount if total_advance_amount is not None else "",
-                "diff": diff if diff is not None else "",
-            })
-            data.append({})
+    if customer_data:
+        total_grand_total = sum([invoice.get("grand_total", 0) for invoice in sales_invoices])
+        total_base_total_taxes_and_charges = sum([invoice.get("base_total_taxes_and_charges", 0) for invoice in sales_invoices])
+        total_net_total = sum([invoice.get("net_total", 0) for invoice in sales_invoices])
+        data.append({
+            "customer_name": "",
+            "invoice_name": "",
+            "posting_date": "",
+            "set_warehouse": "",
+            "net_total": total_net_total,
+            "base_total_taxes_and_charges": total_base_total_taxes_and_charges,
+            "grand_total": total_grand_total,
+            "refund_amount": total_refund_amount ,
+            "total_advance_amount": total_advance_amount ,
+            "diff": diff ,
+        })
+        data.append({})
 
 
     return data
