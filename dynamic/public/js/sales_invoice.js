@@ -46,6 +46,41 @@ frappe.ui.form.on("Sales Invoice", {
       );
     }
   },
+  // onload(frm) {
+  //   var check_domain = frm.events.domian_valid();  // Assuming domian_valid() is a valid function
+  //   if (check_domain && frm.doc.docstatus == 0) {
+      
+  //     frm.add_custom_button(
+  //       __("view Item Shortage"),  
+  //       function () {
+          
+  //         frappe.call({
+  //           method: "dynamic.api.validate_active_domains_invocie", 
+  //           args: {
+  //             doc: frm.doc.name,  
+  //           },
+  //           callback: function (r) {
+  //             console.log(r.message);  
+  //           },
+  //         });
+  //       },
+  //       "view Item Shortage"  
+  //     );
+  //   } else {
+  //     frappe.call({
+  //       method: "dynamic.api.get_active_domains", 
+  //       callback: function(r) {
+  //         if (r.message && r.message.length) {
+  //           if (r.message.includes("Qaswaa")) {
+  //             console.log("ass");  
+              
+  //           }
+  //         }
+  //       },
+  //     });
+  //   }
+  // },
+  
 
   refresh(frm) {
     frm.events.add_cheque_button(frm);
