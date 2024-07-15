@@ -187,8 +187,11 @@ def create_sales_invoice(source_name):
     sales_invoice = frappe.new_doc("Sales Invoice")
     sales_invoice.customer = conservation.customer
     sales_invoice.update_stock = 1
-    for item in conservation.items :
-        sales_invoice.append("items" , {"item_code" : item.item , "rate" : item.rate})
+
+    all_items = conservation.items + conservation.service_items
+    for item in all_items :
+        temp = frappe.get_doc("Item" , item.item)
+        sales_invoice.append("items" , {"item_code" : item.item , "rate" : item.rate , "description": temp.description , 'item_name': temp.item_name , 'uom': temp.stock_uom , 'qty' :1 , })
     if conservation.service_items :
         selling_settings = frappe.get_single("Selling Settings")
         if not selling_settings.account :
@@ -203,8 +206,10 @@ def create_sales_invoice(source_name):
 def create_stock_entry_from_conservation(source_name):
     conservation = frappe.get_doc('Conservation',source_name)
     stock_entry = frappe.new_doc("Stock Entry")
+    stock_entry.stock_entry_type = "Matrial Issue"
     for item in conservation.items:
-        stock_entry.append("items" , {"item_code" : item.item , "basic_rate" : item.rate})
+        temp = frappe.get_doc("Item" , item.item  )
+        stock_entry.append("items" , {"item_code" : item.item , "basic_rate" : item.rate , 'qty' : 1 , 'uom': temp.stock_uom , 'description': temp.description , 'item_group': temp.item_group , 'item_name': temp.item_name})
     return stock_entry
 
 @frappe.whitelist()

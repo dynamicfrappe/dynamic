@@ -13,8 +13,16 @@ class Conservationorder(Document):
 		item = frappe.db.get_value('Serial No', serial_number ,["item_code", "warranty_expiry_date"], as_dict=1)
 
 		item_code = frappe.get_value(
-               "Item", item.get("item_code"), ["item_name", "description"], as_dict=1)
-		return item.get("item_code") ,item_code.get("item_name") , item_code.get("description") ,item.get("warranty_expiry_date")
+               "Item", item.get("item_code"), ["item_name", "description" , "stock_uom"], as_dict=1)
+		res = {
+				'item_code':item_code.get("item_code"),
+				'item_name':item_code.get("item_name"),
+				'description':item_code.get("description"),
+				'warranty_expiry_date':item.get("warranty_expiry_date"),
+				'item_code':item.get("item_code"),
+				'uom': item_code.get("stock_uom")
+			}
+		return res
 
 	def validate_enginners(self):
 		if self.engineering_name :
@@ -45,7 +53,7 @@ class Conservationorder(Document):
 	def before_validate(self):
 		self.validate_enginners()
 
-	def before_submit(self):
+	def validate(self):
 		self.calculate_total_cost()
 
 	def on_submit(self):
@@ -97,3 +105,4 @@ class Conservationorder(Document):
 		lnk = get_link_to_form(conservation.doctype, conservation.name)
 		frappe.msgprint(_("{} {} was Created").format(
 		conservation.doctype, lnk))
+		self.reference = conservation.name

@@ -27,6 +27,7 @@
   "history_maintenance",
   "survey",
   "survey_template",
+  "reference",
   "amended_from"
  ],
  "fields": [
@@ -80,7 +81,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "customer.customer_primary_address",
    "fieldname": "customer_primary_address",
    "fieldtype": "Link",
    "label": "Customer Primary Address",
@@ -158,12 +158,18 @@
    "label": "Survey Template",
    "options": "Survey Template",
    "read_only": 1
+  },
+  {
+   "fieldname": "reference",
+   "fieldtype": "Link",
+   "label": "Reference",
+   "options": "Conservation order"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-03 17:13:04.592010",
+ "modified": "2024-07-14 18:45:13.491227",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",

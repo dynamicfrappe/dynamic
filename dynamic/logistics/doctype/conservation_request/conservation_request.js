@@ -20,6 +20,16 @@ frappe.ui.form.on('Conservation Request', {
 		});
 	},
 	customer: function(frm) {
+
+		frappe.db.get_value('Address', {'address_title': frm.doc.customer} , ['name'])
+				.then(r => {
+					console.log(r.message.name)
+					frm.set_query("customer_primary_address", () => {
+						return { filters:[["name", "=", r.message.name]],
+						};
+					});
+				})
+
 		frappe.call({
 			method: "dynamic.api.get_active_domains",
 			callback: function (r) {
@@ -66,10 +76,13 @@ frappe.ui.form.on('Maintenance Warranty', {
 							args : {serial_number : row.serial_number},
 							method : "get_warranties" ,
 							callback:function(r){
-								row.item_code = r.message[0]
-								row.name1 = r.message[1]
-								row.description = r.message[2]
-								row.warranty = r.message[3]
+								console.log(r.message)
+								row.item_code = r.message.item_code
+								row.name1 = r.message.item_name
+								row.description = r.message.description
+								row.warranty = r.message.warranty_expiry_date
+								row.item_name = r.message.item_name
+								row.uom = r.message.uom
 
 								frm.refresh_field("warranties")
 							}

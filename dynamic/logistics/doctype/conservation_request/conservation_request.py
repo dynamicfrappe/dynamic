@@ -27,8 +27,16 @@ class ConservationRequest(Document):
 		item = frappe.db.get_value('Serial No', serial_number ,["item_code", "warranty_expiry_date"], as_dict=1)
 
 		item_code = frappe.get_value(
-               "Item", item.get("item_code"), ["item_name", "description"], as_dict=1)
-		return item.get("item_code") ,item_code.get("item_name") , item_code.get("description") ,item.get("warranty_expiry_date")
+               "Item", item.get("item_code"), ["item_name", "description" , "stock_uom"], as_dict=1)
+		res = {
+				'item_code':item_code.get("item_code"),
+				'item_name':item_code.get("item_name"),
+				'description':item_code.get("description"),
+				'warranty_expiry_date':item.get("warranty_expiry_date"),
+				'item_code':item.get("item_code"),
+				'uom': item_code.get("stock_uom")
+			}
+		return res
 
 	def create_Conservation_order(self):
 		conservation_order = frappe.new_doc("Conservation order")
@@ -45,6 +53,7 @@ class ConservationRequest(Document):
 		conservation_order.machines = self.machines
 		conservation_order.customer_comment = self.customer_comment
 		conservation_order.insert()
+		self.reference = conservation_order.name
 
 		lnk = get_link_to_form(conservation_order.doctype, conservation_order.name)
 		frappe.msgprint(_("{} {} was Created").format(
