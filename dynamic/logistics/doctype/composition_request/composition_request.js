@@ -4,8 +4,9 @@
 frappe.ui.form.on('Composition Request', {
 	refresh : function(frm){
 		frm.set_query("sales_order", () => {
-			return { filters: {"docstatus" : 1}};
-		});
+			return { filters: 
+				{"docstatus" : 1 , customer : frm.doc.customer , password : frm.doc.password}};
+			});
 		frm.set_query("survey", () => {
 			return { filters:[["type", "=", frm.doc.doctype]],
 			};

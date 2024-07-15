@@ -71,6 +71,8 @@ class CompositionRequest(Document):
 		composition_order.sales_order = self.sales_order
 		composition_order.status = self.status
 		composition_order.customer = self.customer
+		composition_order.password = self.password
+		composition_order.attachment = self.attachment
 		composition_order.items = self.items
 		composition_order.address = self.address
 		composition_order.phone_number_1 = self.phone_number_1

@@ -10,6 +10,8 @@
   "naming_series",
   "date",
   "sales_order",
+  "attachment",
+  "password",
   "column_break_cemjg",
   "status",
   "customer",
@@ -208,12 +210,23 @@
   {
    "fieldname": "column_break_m1xeu",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  },
+  {
+   "default": "0",
+   "fieldname": "password",
+   "fieldtype": "Check",
+   "label": "Password"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-03 16:53:29.462394",
+ "modified": "2024-07-15 12:33:40.386880",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition",

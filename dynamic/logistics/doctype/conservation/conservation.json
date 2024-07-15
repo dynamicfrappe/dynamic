@@ -13,6 +13,9 @@
   "customer_primary_contact",
   "customer_primary_address",
   "support",
+  "support_reason",
+  "not_support_reason",
+  "not_support",
   "column_break_3",
   "location",
   "type_for_request",
@@ -247,12 +250,31 @@
    "label": "Survey Template",
    "options": "Survey Template",
    "read_only": 1
+  },
+  {
+   "fieldname": "support_reason",
+   "fieldtype": "Data",
+   "label": "Support Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "not_support_reason",
+   "fieldtype": "Data",
+   "label": "Not Support Reason",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "not_support",
+   "fieldtype": "Check",
+   "label": "Not Support",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-03 17:13:16.359790",
+ "modified": "2024-07-15 13:09:37.551843",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation",

@@ -54,11 +54,29 @@ data = {
                 "insert_after": "primary_address",
             },
             {
-                "label": _("Location"),
-                "fieldname": "location",
-                "fieldtype": "Link",
+                "label": _("Support Reason"),
+                "fieldname": "support_reason",
+                "fieldtype": "Data",
                 "insert_after": "support",
-                "options":"Location"
+                "depends_on": "support",
+            },
+            {
+                "fieldtype": "Column Break",
+                "fieldname": "support_column_break",
+            },
+            {
+                "label": _("Not Support"),
+                "fieldname": "not_support",
+                "fieldtype": "Check",
+                "insert_after": "primary_address",
+            },
+            {
+                "label": _("Not Support Reason"),
+                "fieldname": "not_support_reason",
+                "fieldtype": "Data",
+                "insert_after": "primary_address",
+                "depends_on": "not_support",
+
             },
         ],
         'Sales Order Item': [
@@ -66,7 +84,7 @@ data = {
                 "label": "Serial Number",
                 "fieldname": "serial",
                 "fieldtype": "Small Text",
-                "insert_after": "item_code",
+                "insert_after": "add_serial_no",
                 "in_list_view": "1",
                 "columns":1
             },
@@ -74,7 +92,7 @@ data = {
                 "label": "Add Serial No",
                 "fieldname": "add_serial_no",
                 "fieldtype": "Button",
-                "insert_after": "serial_number",
+                "insert_after": "item_code",
                 "columns":1
             }
         ],
@@ -343,6 +361,12 @@ data = {
                 "fieldname": "survey",
                 "fieldtype": "Data",
                 "insert_after": "update_validation_date",
+            },
+            {
+                "label": _("Password"),
+                "fieldname": "password",
+                "fieldtype": "Check",
+                "insert_after": "payment_schedule_section",
             },
             # {
             #     "label": "Advance Payment",

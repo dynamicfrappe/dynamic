@@ -82,6 +82,8 @@ class CompositionOrder(Document):
 		composition.sales_order = self.sales_order
 		composition.status = self.status
 		composition.customer = self.customer
+		composition.password = self.password
+		composition.attachment = self.attachment
 		composition.items = self.items
 		# for item in self.items :
 		# 	composition.append("items" , {"item_code" :item.item_code ,"qty" :item.qty ,

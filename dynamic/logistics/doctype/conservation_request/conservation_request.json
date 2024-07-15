@@ -14,6 +14,9 @@
   "customer_primary_contact",
   "customer_primary_address",
   "support",
+  "support_reason",
+  "not_support",
+  "not_support_reason",
   "column_break_3",
   "location",
   "type_for_request",
@@ -27,7 +30,6 @@
   "history_maintenance",
   "survey",
   "survey_template",
-  "reference",
   "amended_from"
  ],
  "fields": [
@@ -81,6 +83,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "customer.customer_primary_address",
    "fieldname": "customer_primary_address",
    "fieldtype": "Link",
    "label": "Customer Primary Address",
@@ -160,16 +163,32 @@
    "read_only": 1
   },
   {
-   "fieldname": "reference",
-   "fieldtype": "Link",
-   "label": "Reference",
-   "options": "Conservation order"
+   "fetch_from": "customer.support_reason",
+   "fieldname": "support_reason",
+   "fieldtype": "Data",
+   "label": "Support Reason",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "customer.not_support",
+   "fieldname": "not_support",
+   "fieldtype": "Check",
+   "label": "Not Support",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.not_support_reason",
+   "fieldname": "not_support_reason",
+   "fieldtype": "Data",
+   "label": "Not Support Reason",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-14 18:45:13.491227",
+ "modified": "2024-07-15 13:05:13.081564",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",

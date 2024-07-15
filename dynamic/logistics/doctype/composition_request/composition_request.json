@@ -13,6 +13,8 @@
   "column_break_cemjg",
   "status",
   "customer",
+  "password",
+  "attachment",
   "section_break_dzx6c",
   "items",
   "section_break_v7zcq",
@@ -158,12 +160,23 @@
   {
    "fieldname": "section_break_uzpll",
    "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "password",
+   "fieldtype": "Check",
+   "label": "Password"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-03 17:08:44.611533",
+ "modified": "2024-07-15 12:29:37.303180",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Request",

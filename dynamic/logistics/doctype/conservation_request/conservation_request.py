@@ -45,6 +45,9 @@ class ConservationRequest(Document):
 		conservation_order.customer_primary_contact = self.customer_primary_contact
 		conservation_order.customer_primary_address = self.customer_primary_address
 		conservation_order.support = self.support
+		conservation_order.support_reason = self.support_reason
+		conservation_order.not_support = self.not_support
+		conservation_order.not_support_reason = self.not_support_reason
 		conservation_order.location = self.location
 		conservation_order.type_for_request = self.type_for_request
 		conservation_order.name_of_maintenance = self.name_of_maintenance
