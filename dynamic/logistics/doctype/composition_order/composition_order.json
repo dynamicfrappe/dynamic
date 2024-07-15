@@ -122,8 +122,7 @@
    "default": "0",
    "fieldname": "location_is_ready",
    "fieldtype": "Check",
-   "label": "Location Is Ready",
-   "read_only": 1
+   "label": "Location Is Ready"
   },
   {
    "fieldname": "amended_from",
@@ -183,7 +182,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-03 17:08:27.926862",
+ "modified": "2024-07-15 11:22:57.244562",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Order",

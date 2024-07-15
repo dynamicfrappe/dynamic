@@ -64,13 +64,19 @@ data = {
         'Sales Order Item': [
             {
                 "label": "Serial Number",
-                "fieldname": "serial_number",
-                "fieldtype": "Link",
-                "options":"Serial No",
+                "fieldname": "serial",
+                "fieldtype": "Small Text",
                 "insert_after": "item_code",
                 "in_list_view": "1",
                 "columns":1
             },
+            {
+                "label": "Add Serial No",
+                "fieldname": "add_serial_no",
+                "fieldtype": "Button",
+                "insert_after": "serial_number",
+                "columns":1
+            }
         ],
         'Purchase Order Item': [
             {

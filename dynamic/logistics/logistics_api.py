@@ -327,3 +327,24 @@ def validate_sales_order_items(item):
     data = frappe.db.sql(sql , as_dict = 1)
     if data:
         return True
+    
+
+@frappe.whitelist()
+def fetch_serial_numbers(item_code , warehouse , qty):
+    sql = f'''
+        select 
+            name 
+        from
+            `tabSerial No`
+        where
+            warehouse = '{warehouse}'
+            and
+            item_code = '{item_code}'
+            limit {qty}
+        '''
+    serials = frappe.db.sql(sql , as_dict = 1)
+    serial_list = ""
+    for serial in serials :
+        serial_list +=f"{serial.name} \n"
+    
+    return serial_list
