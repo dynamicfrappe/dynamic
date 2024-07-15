@@ -503,6 +503,7 @@ domains = {
 jenv = {
     "methods": [
         "get_taxes_amount:dynamic.api.get_taxes_amount",
+        "get_uom:dynamic.api.get_uom",
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_item_data:dynamic.www.item_data.encode_item_data",
@@ -516,6 +517,7 @@ jenv = {
         "get_party_address:dynamic.api.get_party_address",  # ifi
         "get_customer_total_unpaid_amount:dynamic.api.get_customer_total_unpaid_amount",
         "QRcode_Customer_data:dynamic.master_deals.master_deals_api.QRcode_Customer_data",
+
     ],
     "filters": [],
 }
