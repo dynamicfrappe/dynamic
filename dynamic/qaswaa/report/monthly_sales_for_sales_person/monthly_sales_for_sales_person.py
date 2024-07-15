@@ -107,12 +107,14 @@ def get_data(filters):
 	results = []
 	sales_persones = frappe.db.sql(sql , as_dict= 1)
 	for sales_person in sales_persones :
+		if filters.get("sales_person") and filters.get("sales_person") != sales_person.sales_person:
+			continue
 		dict ={"sales_person" : sales_person.sales_person}
 		for period in period_list :
 
 			ss = f"""
 				SELECT 
-					SUM(si.net_total) as {period.key}
+					distinct si.name as name
 				FROM 
 					`tabSales Invoice Item` as sii
 				INNER JOIN 
@@ -129,9 +131,12 @@ def get_data(filters):
 					and	si.posting_date >= '{period.from_date}' 
 					and si.posting_date <= '{period.to_date}' 
 					{conditions}  """
-			data = frappe.db.sql(ss , as_dict = 1)
-			print(ss)
-			dict[period.key] = data[0][period.key]
+			data = frappe.db.sql(ss , as_list = 1)
+			total = 0
+			for r in data:
+				invoice_doc = frappe.get_doc("Sales Invoice", r[0])
+				total += invoice_doc.net_total or 0
+			dict[period.key] = total
 
 		results.append(dict)
 	for record in results:
