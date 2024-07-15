@@ -7,15 +7,19 @@ def validate(self , event):
 		validate_items(self)
 	if "Qaswaa" in Domains :
 		validate_rate_of_items(self)
+		validate_sales_team(self)
 
+def before_save(self,event):
+	if "Qaswaa" in Domains :
+		items1(self)
 
 def after_submit(self , event):
 	if "Stock Reservation" in Domains:
 		edit_of_reseration(self)
 	
 def after_cancel(self , event):
-    if "Stock Reservation" in Domains :
-        validate_when_cancel(self)
+	if "Stock Reservation" in Domains :
+		validate_when_cancel(self)
 
 	
 	
@@ -50,6 +54,9 @@ def submit_invoice(self):
 	sales_document.grand_total = self.grand_total
 	sales_document.insert(ignore_permissions=True)
 
+def validate_sales_team(self):
+		if not self.sales_team:
+			frappe.throw("Sales Team was mandatory")
 
 def edit_of_reseration(self ):
 	items = self.get("items")
@@ -94,6 +101,10 @@ def validate_when_cancel(self):
 			doc.delivered_qty = qty 
 			doc.save()
 			frappe.db.commit()
+def items1(self):
+	if self.is_return == 1:
+		for item in self.items:
+			item.set_read_only(["item_code", "item_name"], True)		
 	
 
 

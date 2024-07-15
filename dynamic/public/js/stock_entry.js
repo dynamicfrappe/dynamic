@@ -275,19 +275,19 @@ frappe.ui.form.on("Stock Entry", {
       // frm.events.set_property_domain(frm)
       frm.events.set_field_property(frm)
       frm.events.transit_btn(frm)
-      frm.events.read_only_fields(frm)
+      // frm.events.read_only_fields(frm)
     },
-    read_only_fields:function(frm){
-      frm.events.setup_source_warehouse(frm)
-      frappe.call({
-        method: "dynamic.api.get_active_domains",
-        callback: function (r) { 
+    // read_only_fields:function(frm){
+    //   frm.events.setup_source_warehouse(frm)
+    //   frappe.call({
+    //     method: "dynamic.api.get_active_domains",
+    //     callback: function (r) { 
 
-          if (r.message.includes("WEH")) {
-          if (frm.doc.owner != frappe.session.user) {
-            console.log("not Owner")
-            frm.set_read_only() }
-          }
+    //       if (r.message.includes("WEH")) {
+    //       if (frm.doc.owner != frappe.session.user) {
+    //         console.log("not Owner")
+    //         frm.set_read_only() }
+    //       }
       //     if (r.message && r.message.length) {
       //       if (r.message.includes("WEH")) {
       //         frm.events.setup_source_warehouse(frm)

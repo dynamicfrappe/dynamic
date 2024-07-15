@@ -100,7 +100,40 @@ frappe.query_reports["Trial Balance (Dates)"] = {
 			"label": __("Include Default Book Entries"),
 			"fieldtype": "Check",
 			"default": 1
+		},
+		{
+			"fieldname": "account_type",
+			"label": __("Account Type"),
+			"fieldtype": "Select",
+			"options": [
+				"",
+				"Accumulated Depreciation",
+				"Asset Received But Not Billed",
+				"Bank",
+				"Cash",
+				"Chargeable",
+				"Capital Work in Progress",
+				"Cost of Goods Sold",
+				"Depreciation",
+				"Equity",
+				"Expense Account",
+				"Expenses Included In Asset Valuation",
+				"Expenses Included In Valuation",
+				"Fixed Asset",
+				"Income Account",
+				"Payable",
+				"Receivable",
+				"Round Off",
+				"Stock",
+				"Stock Adjustment",
+				"Stock Received But Not Billed",
+				"Service Received But Not Billed",
+				"Tax",
+				"Temporary"
+			],
+			"reqd": 0
 		}
+		
 	],
 	"formatter": erpnext.financial_statements.formatter,
 	"tree": true,

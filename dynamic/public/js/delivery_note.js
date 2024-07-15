@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Delivery Note", {
     refresh:function(frm){
-        frm.events.read_only_fields(frm)
+        // frm.events.read_only_fields(frm)
     },
     domian_valid: function (frm) {
         var tera = false
@@ -45,20 +45,20 @@ frappe.ui.form.on("Delivery Note", {
           }
 
      } ,  
-     read_only_fields:function(frm){
-        frappe.call({
-          method:"dynamic.weh.api.get_roles_hidden_field",
-          args:{
-            "field_empty":"empty_target_delivery_note_role",
-          },
-          callback:function(r) {
-            if(r.message.empty){
-              frm.set_value("set_target_warehouse","")
-            }
-            frm.refresh_fields("set_target_warehouse")
-          }
-         })
-      },
+    //  read_only_fields:function(frm){
+    //     frappe.call({
+    //       method:"dynamic.weh.api.get_roles_hidden_field",
+    //       args:{
+    //         "field_empty":"empty_target_delivery_note_role",
+    //       },
+    //       callback:function(r) {
+    //         if(r.message.empty){
+    //           frm.set_value("set_target_warehouse","")
+    //         }
+    //         frm.refresh_fields("set_target_warehouse")
+    //       }
+    //      })
+    //   },
      item_code_update:function(frm ,cdt , cdn){
         // this function work with domain master Deals only 
         var local = locals[cdt][cdn]

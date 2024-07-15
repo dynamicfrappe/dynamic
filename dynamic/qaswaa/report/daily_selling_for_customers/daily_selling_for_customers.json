@@ -1,5 +1,5 @@
 {
- "add_total_row": 1,
+ "add_total_row": 0,
  "columns": [],
  "creation": "2024-05-13 10:25:27.837477",
  "disable_prepared_report": 0,
@@ -10,7 +10,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "El Qaswaa",
- "modified": "2024-07-14 11:06:10.353260",
+ "modified": "2024-07-14 11:13:40.574052",
  "modified_by": "Administrator",
  "module": "Qaswaa",
  "name": "Daily selling for customers",
