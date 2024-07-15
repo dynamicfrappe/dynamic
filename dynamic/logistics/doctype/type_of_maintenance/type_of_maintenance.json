@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "format: {maintenance}",
  "creation": "2024-01-01 15:16:46.496386",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -14,7 +14,8 @@
   {
    "fieldname": "maintenance",
    "fieldtype": "Data",
-   "label": "Maintenance"
+   "label": "Maintenance",
+   "unique": 1
   },
   {
    "fieldname": "naming_series",
@@ -25,7 +26,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-15 17:36:32.733516",
+ "modified": "2024-07-15 07:56:43.721114",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Type of Maintenance",
