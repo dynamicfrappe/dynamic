@@ -173,7 +173,7 @@ doc_events = {
         "on_submit": "dynamic.api.submit_journal_entry",
     },
     "Sales Order": {
-        "before_submit": ["dynamic.api.before_submit_so" , "dynamic.controllers.sales_order.submit_sales_order"],
+        "before_submit": ["dynamic.api.before_submit_so" ],
         "before_save": [
             "dynamic.api.check_source_item",
         ],

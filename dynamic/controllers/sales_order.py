@@ -33,10 +33,6 @@ def validate_advances_item(self):
 
 
 
-def submit_sales_order(self , event) :
-    if 'Logistics' in Domains :
-        set_serial_number_customer(self)
-
 def validate_qotation(self):
     diable_order_without_quotation = frappe.db.get_single_value("Selling Settings", "diable_order_without_quotation")
     if diable_order_without_quotation == 0 :
@@ -113,13 +109,6 @@ def validate_sales_order_items(self):
             if float(actual_qty  or 0 ) < float(item.qty) :
                 frappe.throw(_(f"Available  item {item.item_code} qty for sales is {actual_qty} and you try to order {item.qty}"))
         items.append(item.item_code)
-def set_serial_number_customer(self):
-    if self.customer :
-        for item in self.items:
-            if item.serial_number:
-                serial_doc = frappe.get_doc("Serial No" , item.serial_number)
-                serial_doc.customer = self.customer
-                serial_doc.save()
 
 def set_vaild_until_date(self):
     self.valid_until = add_days(now() , 7)
