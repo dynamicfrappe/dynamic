@@ -107,7 +107,7 @@ data = {
                 "fieldname": "item_discount_rate",
                 "fieldtype": "Float",
                 "insert_after": "discount_amount" ,
-            } 
+            }
           
         ],
         "Selling Settings":
@@ -175,7 +175,6 @@ data = {
                 "depends_on": "eval:doc.mendatory_fields == true",
             },
         ],
-
         "Item":[
             {
 				"label": "Material",
@@ -227,6 +226,15 @@ data = {
 				"options":"Objective",
 			},
             
+        ],
+        "Purchase Order":[
+            {
+
+                "label": "Item Discount rate",
+                "fieldname": "item_discount_rate",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
+            } 
         ]
 
     },

@@ -40,7 +40,10 @@ def get_data(filters):
         elif filters.get("start_date") and not filters.get("end_date"):
             purchase_invoices_filters["posting_date"] = [">=", filters.get("start_date")]
         elif filters.get("end_date") and not filters.get("start_date"):
-            purchase_invoices_filters["posting_date"] = ["<=", filters.get("end_date")]                
+            purchase_invoices_filters["posting_date"] = ["<=", filters.get("end_date")]
+        if filters.get("status"):
+           status = filters.get("status")
+           purchase_invoices_filters['status'] = ['in', status]                    
         
 
         purchase_invoices = frappe.get_all("Purchase Invoice", filters=purchase_invoices_filters, fields=["name", "posting_date", "net_total", "base_total_taxes_and_charges", "grand_total"])
@@ -64,7 +67,7 @@ def get_data(filters):
                 total_advance += entry.get("allocated_amount")
             total_advance_amount += total_advance
 
-            diff = total_advance + refund_amount
+            diff = grand_total - total_advance + refund_amount
             
             if idx == 0:
                 supplier_data.append({
@@ -105,7 +108,7 @@ def get_data(filters):
                 "grand_total": total_grand_total,
                 "refund_amount": total_refund_amount,
                 "total_advance_amount": total_advance_amount,
-                "diff": total_advance_amount + total_refund_amount
+                "diff": total_grand_total - total_advance_amount + total_refund_amount
             })
 
     return data

@@ -41,6 +41,12 @@ def get_columns():
             "width": 150,
         },
         {
+            "fieldname": "quotation_balance",
+            "label": _("Quotation Balance"),
+            "fieldtype": "Data",
+            "width": 100,
+        },
+        {
             "fieldname": "balance_warehouse",
             "label": _("Balance Warehouse"),
             "fieldtype": "Data",
@@ -53,6 +59,10 @@ def get_columns():
             "width": 100,
         }
     ]
+
+
+
+        
 
 def get_date(filters):
     conditions = "1=1"
@@ -97,6 +107,10 @@ def get_date(filters):
             if stock_balance > 0:
                 item['stock_balance'] = stock_balance
                 item['balance_warehouse'] = warehouse
+                item['quotation_balance'] = stock_balance if item['quotation_warehouse'] == warehouse else 0
                 data.append(item)
+            elif stock_balance == 0 and item['quotation_warehouse'] == warehouse:
+                item['quotation_balance'] = 0
+                data.append(item)  
 
     return data

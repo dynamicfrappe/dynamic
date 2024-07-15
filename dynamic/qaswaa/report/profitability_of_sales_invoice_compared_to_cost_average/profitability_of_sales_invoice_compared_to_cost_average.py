@@ -16,7 +16,7 @@ def get_report_summary(data):
     if not data:
         return None
 
-    total_rate = round(sum([float(row.get("rate") or 0) for  row in data]),2)
+    total_rate = round(sum([float(row.get("selling_price_per_qty") or 0) for  row in data]),2)
     total_cost = round(sum([float(row.get("total_cost") or 0) for  row in data]),2)
     total_variance  = round(sum([float(row.get("total_variance") or 0) for  row in data]),2)
     ratio = calc_ratio(total_cost, total_variance)
@@ -82,6 +82,7 @@ def get_data(filters):
             item.item_name,
             item.qty,
             item.rate,
+            item.qty * item.rate AS selling_price_per_qty,
             bin.valuation_rate AS average_cost,
             item.qty * bin.valuation_rate AS total_cost,
             item.rate - bin.valuation_rate AS variance,
@@ -134,6 +135,12 @@ def get_columns():
         {
             "fieldname": "rate",
             "label": _("Selling price"),
+            "fieldtype": "Currency",
+            "width": 100
+        },
+        {
+            "fieldname": "selling_price_per_qty",
+            "label": _("Selling Price Per Qty"),
             "fieldtype": "Currency",
             "width": 100
         },

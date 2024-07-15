@@ -13,18 +13,18 @@ from frappe.utils import getdate , cint , add_months, get_first_day , add_days
 
 
 def execute(filters=None):
-	columns, data = get_columns(filters), get_data(filters)
-	return columns, data
-
+    columns, data = get_columns(filters), get_data(filters)
+    return columns, data
 
 
 
 def get_data(filters):
     data = []
-    customers = frappe.get_all("Customer", fields=["name"])
+    customers = frappe.get_all("Customer", fields=["name","customer_group","territory"])
 
     for customer_idx, customer in enumerate(customers):
         customer_name = customer.get("name")
+        customer_group = customer.get("customer_group")
         sales_invoices_filters = {
             "customer": customer_name,
             "docstatus": ["!=", 2],
@@ -50,10 +50,13 @@ def get_data(filters):
             sales_invoices_filters["posting_date"] = ["<=", filters.get("end_date")]
         if filters.get("status"):
            status = filters.get("status")
-           sales_invoices_filters['status'] = ['in', status]                   
-        
+           sales_invoices_filters['status'] = ['in', status]
+        if filters.get("customer_group"):
+            sales_invoices_filters['customer_group'] = ["=", filters.get("customer_group")]
+        if filters.get("territory"):
+            sales_invoices_filters['territory'] = ["=", filters.get("territory")]    
 
-        sales_invoices = frappe.get_all("Sales Invoice", filters=sales_invoices_filters, fields=["name", "posting_date", "set_warehouse","net_total", "base_total_taxes_and_charges", "grand_total"])
+        sales_invoices = frappe.get_all("Sales Invoice", filters=sales_invoices_filters, fields=["name", "posting_date", "set_warehouse","net_total", "base_total_taxes_and_charges", "grand_total","outstanding_amount","status"])
         customer_data = []
         total_refund_amount = 0
         total_advance_amount = 0 
@@ -65,6 +68,8 @@ def get_data(filters):
             net_total = invoice.get("net_total")
             base_total_taxes_and_charges = invoice.get("base_total_taxes_and_charges")
             grand_total = invoice.get("grand_total")
+            diff = invoice.get("outstanding_amount")
+            status = invoice.get("status")
 
             
             sales_person = frappe.db.get_value("Sales Team", {"parent": invoice_name, "parenttype": "Sales Invoice", "parentfield": "sales_team"}, "sales_person")
@@ -73,12 +78,16 @@ def get_data(filters):
             total_refund_amount += refund_amount
 
             total_advance = 0
+            mode_of_payment = None
             payment_entries = frappe.get_all("Payment Entry Reference", filters={"reference_name": invoice_name, "reference_doctype": "Sales Invoice"}, fields=["allocated_amount"])
             for entry in payment_entries:
                 total_advance += entry.get("allocated_amount")
             total_advance_amount += total_advance
-
-            diff = total_advance + refund_amount
+            payment_entries = frappe.get_all("Payment Entry Reference", filters={"reference_name": invoice_name, "reference_doctype": "Sales Invoice"}, fields=["parent"])
+            for entry in payment_entries:
+                payment_entry = frappe.get_doc("Payment Entry", entry.get("parent"))
+                mode_of_payment = payment_entry.mode_of_payment if payment_entry.mode_of_payment else None
+            
             
             if idx == 0:
                 customer_data.append({
@@ -87,12 +96,14 @@ def get_data(filters):
                     "posting_date": posting_date,
                     "set_warehouse": warehouse,
                     "net_total": net_total,
+                    "status":status,
                     "base_total_taxes_and_charges": base_total_taxes_and_charges,
                     "grand_total": grand_total,
                     "refund_amount": refund_amount,
                     "total_advance_amount": total_advance,
                     "diff": diff,
-                    "sales_person": sales_person 
+                    "sales_person": sales_person,
+                    "mode_of_payment": mode_of_payment
                 })
             else:
                 customer_data.append({
@@ -100,31 +111,35 @@ def get_data(filters):
                     "posting_date": posting_date,
                     "set_warehouse": warehouse,
                     "net_total": net_total,
+                    "status":status,
                     "base_total_taxes_and_charges": base_total_taxes_and_charges,
                     "grand_total": grand_total,
                     "refund_amount": refund_amount,
                     "total_advance_amount": total_advance,
                     "diff": diff,
-                    "sales_person": sales_person 
+                    "sales_person": sales_person,
+                    "mode_of_payment": mode_of_payment
                 })
 
         data.extend(customer_data)
-        if customer_data:
-            total_grand_total = sum([invoice.get("grand_total") for invoice in sales_invoices])
-            total_base_total_taxes_and_charges = sum([invoice.get("base_total_taxes_and_charges") for invoice in sales_invoices])
-            total_net_total = sum([invoice.get("net_total") for invoice in sales_invoices])
-            data.append({
-                "customer_name": "",
-                "invoice_name": "",
-                "posting_date": "",
-                "set_warehouse": "",
-                "net_total": total_net_total,
-                "base_total_taxes_and_charges": total_base_total_taxes_and_charges,
-                "grand_total": total_grand_total,
-                "refund_amount": total_refund_amount,
-                "total_advance_amount": total_advance_amount,
-                "diff": total_advance_amount + total_refund_amount
-            })
+    if customer_data:
+        total_grand_total = sum([invoice.get("grand_total", 0) for invoice in sales_invoices])
+        total_base_total_taxes_and_charges = sum([invoice.get("base_total_taxes_and_charges", 0) for invoice in sales_invoices])
+        total_net_total = sum([invoice.get("net_total", 0) for invoice in sales_invoices])
+        data.append({
+            "customer_name": "",
+            "invoice_name": "",
+            "posting_date": "",
+            "set_warehouse": "",
+            "net_total": total_net_total,
+            "base_total_taxes_and_charges": total_base_total_taxes_and_charges,
+            "grand_total": total_grand_total,
+            "refund_amount": total_refund_amount ,
+            "total_advance_amount": total_advance_amount ,
+            "diff": diff ,
+        })
+        data.append({})
+
 
     return data
 
@@ -159,9 +174,21 @@ def get_columns(filters):
         },
         {
             "label": "Sales Person", 
-            "fieldname": "sales_person", 
-            "fieldtype": "Link", 
+            "fieldname": "sales_person",
+            "fieldtype": "Link",
             "options": "Sales Person"
+        },
+        {
+            "label":"Status",
+            "fieldname":"status",
+            "fieldtype":"Select",
+            "options":"\nDraft\nReturn\nCredit Note Issued\nSubmitted\nPaid\nPartly Paid\nUnpaid\nUnpaid and Discounted\nPartly Paid and Discounted\nOverdue and Discounted\nOverdue\nCancelled\nInternal Transfer"
+        },
+        {
+            "label": "Mode of Payment", 
+            "fieldname": "mode_of_payment",
+            "fieldtype": "Link",
+            "options": "Mode of Payment"
         },
         {
             "fieldname": "net_total",

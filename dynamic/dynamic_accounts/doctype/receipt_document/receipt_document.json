@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_rename": 1,
  "autoname": "naming_series:",
  "creation": "2022-05-12 15:15:14.534249",
  "doctype": "DocType",
@@ -7,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "company",
+  "journal_entry_series",
   "naming_series",
   "column_break_2",
   "posting_date",
@@ -237,17 +239,22 @@
    "read_only": 1
   },
   {
+   "default": "RECEIPT-VOUCHER-.####",
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
-   "options": "RECEIPT-VOUCHER-.####.-.YY",
-   "reqd": 1
+   "options": "RECEIPT-VOUCHER-.####"
+  },
+  {
+   "fieldname": "journal_entry_series",
+   "fieldtype": "Select",
+   "label": "Journal Entry Series"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-08 10:25:09.471848",
+ "modified": "2024-06-24 16:32:07.478999",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Receipt Document",

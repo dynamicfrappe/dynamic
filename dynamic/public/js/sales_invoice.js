@@ -162,8 +162,8 @@ add_item_discount_rate: function(frm) {
       callback: function(r) {
         if (r.message && r.message.length) {
           if (r.message.includes("Qaswaa")) {
-            console.log("ass")
-            frm.events.add_item_discount_rate(frm);
+            console.log("Catech !!")
+            // frm.events.add_item_discount_rate(frm);
           }
         }
       }
@@ -294,16 +294,12 @@ frappe.ui.form.on("Sales Invoice Item", {
                 console.log("bgg");
                 var item_discount_rate = frm.doc.item_discount_rate;
                 console.log(item_discount_rate);
-                // row.discount_percentage = item_discount_rate
-                frm.set_value("items","discount_percentage",item_discount_rate)
-                console.log("discount_percentage");
+                if (item_discount_rate ){
+                row.discount_percentage = item_discount_rate
+                // frm.set_value("items","discount_percentage",item_discount_rate)
+               
                 frm.refresh_fields("items");
-                // frm.doc.items.forEach(function(row) {
-                //   console.log("gh");
-                //   row.discount_percentage = item_discount_rate
-                //   console.log(row.discount_percentage);
-                //   frm.refresh_field('items');
-                // });
+         }
             }
         }
     }); 

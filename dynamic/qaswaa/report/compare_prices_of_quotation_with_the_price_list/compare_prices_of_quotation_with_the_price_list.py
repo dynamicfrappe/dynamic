@@ -13,15 +13,15 @@ def get_report_summary(data):
     if not data:
         return None
 
-    total_sales_rate = round(sum([float(row.get("sales_rate") or 0) for  row in data]),2)
+    total_quotation_rate = round(sum([float(row.get("qoutation_rate") or 0) for  row in data]),2)
     total_of_total_cost = round(sum([float(row.get("total_cost") or 0) for  row in data]),2)
     total_difference  = round(sum([float(row.get("total_difference") or 0) for  row in data]),2)
     ratio = calc_ratio(total_of_total_cost, total_difference)
     return[
         {
-            'value' : total_sales_rate,
+            'value' : total_quotation_rate,
             'indicator' : 'Blue',
-            'label' : _('Total Sales Rate'),
+            'label' : _('Total Quotation Rate'),
             'datatype' : 'Currency',
         },
         {
@@ -74,41 +74,41 @@ def get_date(filters):
             soi.item_name,
             soi.qty,
             soi.rate AS qoutation_rate,
-            (SELECT pii.rate 
-             FROM `tabPurchase Invoice` pi
-             INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-             WHERE pi.docstatus = 1
-             ORDER BY pi.creation DESC
-             LIMIT 1) AS purchase_rate,
+            (SELECT pii.price_list_rate 
+            FROM `tabPurchase Invoice` pi
+            INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+            WHERE pi.docstatus = 1
+            ORDER BY pi.creation DESC
+            LIMIT 1) AS purchase_rate,
             soi.qty * (SELECT pii.rate 
-                       FROM `tabPurchase Invoice` pi
-                       INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                       WHERE pi.docstatus = 1
-                       ORDER BY pi.creation DESC
-                       LIMIT 1) AS total_cost,
+                    FROM `tabPurchase Invoice` pi
+                    INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                    WHERE pi.docstatus = 1
+                    ORDER BY pi.creation DESC
+                    LIMIT 1) AS total_cost,
             soi.rate - (SELECT pii.rate 
-                         FROM `tabPurchase Invoice` pi
-                         INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                         WHERE pi.docstatus = 1
-                         ORDER BY pi.creation DESC
-                         LIMIT 1) AS difference,
+                        FROM `tabPurchase Invoice` pi
+                        INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                        WHERE pi.docstatus = 1
+                        ORDER BY pi.creation DESC
+                        LIMIT 1) AS difference,
             soi.qty * (soi.rate - (SELECT pii.rate 
-                                   FROM `tabPurchase Invoice` pi
-                                   INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                                   WHERE pi.docstatus = 1
-                                   ORDER BY pi.creation DESC
-                                   LIMIT 1)) AS total_difference,
-            ((soi.rate - (SELECT pii.rate 
-                           FROM `tabPurchase Invoice` pi
-                           INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                           WHERE pi.docstatus = 1
-                           ORDER BY pi.creation DESC
-                           LIMIT 1)) / (SELECT pii.rate 
-                                        FROM `tabPurchase Invoice` pi
-                                        INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                                        WHERE pi.docstatus = 1
-                                        ORDER BY pi.creation DESC
-                                        LIMIT 1)) * 100 AS difference_percentage
+                                FROM `tabPurchase Invoice` pi
+                                INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                                WHERE pi.docstatus = 1
+                                ORDER BY pi.creation DESC
+                                LIMIT 1)) AS total_difference,
+            ROUND(((soi.rate - (SELECT pii.rate 
+                                FROM `tabPurchase Invoice` pi
+                                INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                                WHERE pi.docstatus = 1
+                                ORDER BY pi.creation DESC
+                                LIMIT 1)) / (SELECT pii.rate 
+                                            FROM `tabPurchase Invoice` pi
+                                            INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+                                            WHERE pi.docstatus = 1
+                                            ORDER BY pi.creation DESC
+                                            LIMIT 1)) * 100, 2) AS difference_percentage
         FROM 
             `tabQuotation` so
         INNER JOIN 
@@ -120,6 +120,7 @@ def get_date(filters):
         
     result = frappe.db.sql(sql_query, as_dict=True)
     return result
+
 
 
 

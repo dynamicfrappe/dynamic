@@ -68,6 +68,8 @@ class PayDocument(Document):
     def create_journal_entry(self):
         company_currency = erpnext.get_company_currency(self.company)
         je = frappe.new_doc("Journal Entry")
+        if self.journal_entry_series :
+            je.naming_series = self.journal_entry_series
         je.posting_date = self.posting_date
         je.voucher_type = 'Journal Entry'
         je.company = self.company
@@ -131,16 +133,22 @@ class PayDocument(Document):
                 "debit_in_account_currency":  flt(amount_in_account_row_currency),
                 "debit_in_company_currency": flt(account_row.base_amount),
                 "reference_type": self.doctype,
+                "cost_center": self.cost_center,
+                "project": self.project,
                 "user_remark": str(account_row.note or ""),
                 "reference_name": self.name,
                 "party_type": account_row.party_type,
                 "party": account_row.party,
+                "project":account_row.project,
                 "cost_center": account_row.cost_center,
             })
 
         je.multi_currency = 1
-        if not 'Maser2000' in DOMAINS: 
-           je.submit()
+        je.submit()
+        # je.save()
+        # if not ['Maser2000' , 'Contracting'] in DOMAINS: 
+        #    je.submit()
+
         self.journal_entry = je.name
         self.db_set("journal_entry", je.name)
         lnk = get_link_to_form(je.doctype, je.name)
@@ -161,3 +169,10 @@ class PayDocument(Document):
                 doc = frappe.get_doc("GL Entry", gl)
                 doc.flags.ignore_permissions = True
                 doc.cancel()
+
+@frappe.whitelist()
+def get_field_options():
+    return {
+		"journal_entry_series": frappe.get_meta("Journal Entry").get_options("naming_series"),
+		
+	}

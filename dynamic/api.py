@@ -1917,6 +1917,14 @@ def get_taxes_amount(item_tax_template):
 		amount = amount + tax.tax_rate
 	return amount
 
+@frappe.whitelist()
+def get_uom(item):
+	sub_uom = ["", 0.0]
+	for uom in frappe.get_doc("Item", item).uoms:
+		if uom.conversion_factor != 1.0:
+			sub_uom[0] = uom.uom
+			sub_uom[1] = uom.conversion_factor
+	return sub_uom
 
 @frappe.whitelist()
 def get_customer_branches(customer):

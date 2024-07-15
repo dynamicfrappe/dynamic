@@ -17,6 +17,12 @@ frappe.query_reports["Balances of required quantities in the sales order"] = {
 			"options": "Customer"
 		},
 		{
+			"fieldname": "item_code",
+			"label": __("Item Code"),
+			"fieldtype": "Link",
+			"options": "Item"
+		},
+		{
 			"fieldname": "cost_center",
 			"label": __("Cost Center"),
 			"fieldtype": "Link",

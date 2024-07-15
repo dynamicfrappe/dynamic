@@ -62,6 +62,8 @@ class ReceiptDocument(Document):
     def create_journal_entry(self):
         company_currency = erpnext.get_company_currency(self.company)
         je = frappe.new_doc("Journal Entry")
+        if self.journal_entry_series :
+            je.naming_series = self.journal_entry_series
         je.posting_date = self.posting_date
         je.voucher_type = 'Journal Entry'
         je.company = self.company
@@ -98,6 +100,8 @@ class ReceiptDocument(Document):
             "debit_in_company_currency": flt(self.base_amount),
             "reference_type": self.doctype,
             "reference_name": self.name,
+            "cost_center": self.cost_center,
+            "project": self.project,
             "user_remark": (self.notes or "")
         })
         for account_row in self.accounts:
@@ -131,6 +135,7 @@ class ReceiptDocument(Document):
                 "party_type": account_row.party_type,
                 "party": account_row.party,
                 "cost_center": account_row.cost_center,
+                "project":account_row.project
             })
 
         je.multi_currency = 1
@@ -158,3 +163,9 @@ class ReceiptDocument(Document):
             print("sql ================> ",sql)
             frappe.db.sql(sql)
             frappe.db.commit()
+@frappe.whitelist()
+def get_field_options():
+    return {
+		"journal_entry_series": frappe.get_meta("Journal Entry").get_options("naming_series"),
+		
+	}            
