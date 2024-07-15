@@ -65,6 +65,7 @@ after_migrate = [
     "dynamic.install.after_install",
     "dynamic.dynamic.utils.create_customizations",
     "dynamic.stock_reservation.setup.setup",
+    'dynamic.megaback.controllers.setup.create_domain'
 ]
 # Desk Notifications
 # ------------------
@@ -159,6 +160,8 @@ doc_events = {
             "dynamic.controllers.sales_invoice.validate",
             "dynamic.api.validate_active_domains",
             "dynamic.controllers.sales_invoice.after_submit",
+            "dynamic.megaback.controllers.megaback_api.set_volumes",
+            "dynamic.megaback.controllers.megaback_api.set_total_gross_weight",
             
         ],
         "on_cancel": [
@@ -186,7 +189,8 @@ doc_events = {
             "dynamic.controllers.delivery_note.validate_delivery_note",
             "dynamic.api.validate_delivery_note",
             "dynamic.weh.delevery_note.validate_delevery_note",
-            "dynamic.terra.delivery_note.validate_terra_delievery_not"
+            "dynamic.terra.delivery_note.validate_terra_delievery_not",
+            "dynamic.megaback.controllers.megaback_api.set_volumes"
             # "dynamic.master_deals.master_deals_api.delivery_note_validate_item_qty",
         ],
         "before_save":[
@@ -213,6 +217,8 @@ doc_events = {
             "dynamic.elevana.hooks.add_partener_to_sales_order",
             "dynamic.controllers.sales_order.validate_sales_order",
             "dynamic.controllers.sales_order.validate_sales_order_for_stock",
+            "dynamic.megaback.controllers.megaback_api.set_volumes",
+            "dynamic.megaback.controllers.megaback_api.set_total_gross_weight",
                     ],
         "on_cancel": [
             "dynamic.api.cancel_reservation",
@@ -251,6 +257,7 @@ doc_events = {
         "before_submit": [
             "dynamic.api.check_crean_amount_after_mapped_doc",
         ],
+        "validate":"dynamic.megaback.controllers.megaback_api.set_volumes"
     },
     "Stock Entry": {
         # In This Target check the branches data in cost center
@@ -260,6 +267,7 @@ doc_events = {
             "dynamic.api.validate_stock_entry",  
             "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",
             "dynamic.controllers.stock_entry.validate",
+            "dynamic.megaback.controllers.megaback_api.set_volumes",
 
 
         ],
@@ -281,14 +289,19 @@ doc_events = {
     "Asset Movement": {"on_submit": "dynamic.api.add_cost_center_to_asset"},
     "Supplier Quotation": {
         #  "validate" : "dynamic.terra.api.submit_supplier_quotation",
-        "on_submit": "dynamic.terra.api.submit_supplier_quotation"
+        "on_submit": "dynamic.terra.api.submit_supplier_quotation",
+        "validate":"dynamic.megaback.controllers.megaback_api.set_volumes",
     },
     "Item Price": {"before_save": "dynamic.ifi.api.check_buying_price"},
     "Quotation": {
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc",
         "validate":"dynamic.qaswaa.controllers.quotation.validate",
         "before_submit": "dynamic.api.before_submit_quot",
-        "before_save": "dynamic.api.before_save_quotation",
+        "before_save": ["dynamic.api.before_save_quotation", ],
+        "validate":[
+            "dynamic.megaback.controllers.megaback_api.set_volumes",
+            "dynamic.megaback.controllers.megaback_api.set_total_gross_weight",
+        ],
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
@@ -296,6 +309,7 @@ doc_events = {
         "before_submit": "dynamic.api.before_submit_po",
         "after_inser": "dynamic.api.calculate_orderd_qty",
         "on_submit": "dynamic.api.calculate_orderd_qty",
+        "validate":"dynamic.megaback.controllers.megaback_api.set_volumes"
     },
     # "Appointment" :{
     #     "validate":"dynamic.api.appointment_validate"
@@ -313,6 +327,7 @@ doc_events = {
         "before_save": "dynamic.api.before_save",
         "validate": [
             "dynamic.controllers.purchase_receipt.validate_purchase_receipt",
+            "dynamic.megaback.controllers.megaback_api.set_volumes"
         ],
         # "on_submit": "dynamic.gebco.api.validate_purchase_recipt"
         # "before_submit":
@@ -476,7 +491,7 @@ domains = {
     "Notebook": "dynamic.domains.notebook",
     "Smart Vision": "dynamic.domains.smart_vision",
     "Stock Reservation": "dynamic.domains.stock_reservation",
-    "Skyline": "dynamic.domains.skyline"
+    "Megaback": "dynamic.domains.megaback"
 }
 
 # domain Conatin
