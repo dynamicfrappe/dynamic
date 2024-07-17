@@ -105,7 +105,7 @@ frappe.ui.form.on("Quotation",{
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
               if (r.message && r.message.length) {
-                if (r.message.includes("Real State")) {
+                if (r.message.includes("Dynamic Accounts")) {
                   return frappe.call({
                     method: "dynamic.ifi.api.get_advance_entries_quotation",//get_advanced_so_ifi
                     args:{
