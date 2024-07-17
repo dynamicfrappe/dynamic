@@ -5,6 +5,18 @@ frappe.ui.form.on("Purchase Invoice", {
     // const myTimeout = setTimeout(get_supplier_query, 1000);
 
   },
+  before_submit:function(frm){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+          if (r.message && r.message.length) {
+              if (r.message.includes("WEH")) {
+               frappe.set_route('List', "Purchase Invoice", 'List')
+              }
+          }
+      }
+    })
+  },
   add_cheque_button(frm) {
     if (frm.doc.docstatus == 1) {
       frappe.call({

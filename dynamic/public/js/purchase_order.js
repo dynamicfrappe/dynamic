@@ -6,6 +6,18 @@ frappe.ui.form.on("Purchase Order", {
     cur_frm.page.remove_inner_button(__('Update Items'))
     cur_frm.remove_custom_button("Update Items")
   },
+  before_submit:function(frm){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+          if (r.message && r.message.length) {
+              if (r.message.includes("WEH")) {
+               frappe.set_route('List', "Purchase Order", 'List')
+              }
+          }
+      }
+    })
+  },
   setup:function(frm){
     cur_frm.page.remove_inner_button(__('Update Items'))
     frm.remove_custom_button("Update Items");

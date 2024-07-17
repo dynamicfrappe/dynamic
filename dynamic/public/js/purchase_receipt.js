@@ -19,7 +19,19 @@ frappe.ui.form.on('Purchase Receipt', {
                 }
             }
         })
-	}
+	},
+    before_submit:function(frm){
+        frappe.call({
+          method: "dynamic.api.get_active_domains",
+          callback: function (r) {
+              if (r.message && r.message.length) {
+                  if (r.message.includes("WEH")) {
+                   frappe.set_route('List', "Purchase Receipt", 'List')
+                  }
+              }
+          }
+        })
+      },
 });
 
 
