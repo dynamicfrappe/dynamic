@@ -25,6 +25,28 @@ frappe.ui.form.on("Sales Invoice", {
     });
     return tera;
   },
+  add_item_discount_rate: function(frm) {
+    var item_discount_rate = frm.doc.item_discount_rate;
+          frm.doc.items.forEach(function(item) {
+              frappe.model.set_value(item.doctype, item.name, 'discount_percentage', item_discount_rate);
+          });
+          frm.refresh_field('items');
+  },
+  
+  
+    item_discount_rate: function(frm) {
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function(r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Qaswaa")) {
+              console.log("ass")
+              frm.events.add_item_discount_rate(frm);
+            }
+          }
+        }
+      });
+    },
   // onload(frm) {
   //   var check_domain = frm.events.domian_valid();
   //   // console.log(check_domain)
@@ -73,7 +95,7 @@ frappe.ui.form.on("Sales Invoice", {
               if (r.message && r.message.includes("Qaswaa")) {
                   console.log("baio");
                   if (frm.doc.is_return == 1) {
-                      frm.fields_dict['sales_team'].grid.toggle_enable('sales_person', false);
+                      
                       frm.refresh_field('sales_team');   
                   }
               }

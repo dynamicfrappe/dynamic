@@ -9,6 +9,7 @@ def validate(self , event):
 		validate_rate_of_items(self)
 		warehouse1(self)
 		validate_sales_team(self)
+		item_discount_rate(self)
 		
 		
 
@@ -60,6 +61,14 @@ def submit_invoice(self):
 def validate_sales_team(self):
 		if not self.sales_team:
 			frappe.throw("Sales Team was mandatory")
+
+def item_discount_rate(self):
+        item_discount_rate = self.item_discount_rate
+        for item in self.items:
+            item.discount_percentage = item_discount_rate
+            item.discount_amount = item.price_list_rate * (item_discount_rate / 100)
+            item.rate = item.price_list_rate - item.discount_amount
+            item.amount = item.rate * item.qty
 
 def edit_of_reseration(self ):
 	items = self.get("items")
