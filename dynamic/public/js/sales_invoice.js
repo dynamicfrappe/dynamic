@@ -25,62 +25,71 @@ frappe.ui.form.on("Sales Invoice", {
     });
     return tera;
   },
-  onload(frm) {
-    var check_domain = frm.events.domian_valid();
-    // console.log(check_domain)
-    if (check_domain && frm.doc.docstatus == 0) {
-      frm.add_custom_button(
-        __("view Item Shortage"),
-        function () {
-          frappe.call({
-            method: "dynamic.api.validate_active_domains_invocie",
-            args: {
-              doc: frm.doc.name,
-            },
-            callback: function (r) {
-              console.log(r.message);
-            },
-          });
-        },
-        "view Item Shortage"
-      );
-    }
-  },
   // onload(frm) {
-  //   var check_domain = frm.events.domian_valid();  // Assuming domian_valid() is a valid function
+  //   var check_domain = frm.events.domian_valid();
+  //   // console.log(check_domain)
   //   if (check_domain && frm.doc.docstatus == 0) {
-      
   //     frm.add_custom_button(
-  //       __("view Item Shortage"),  
+  //       __("view Item Shortage"),
   //       function () {
-          
   //         frappe.call({
-  //           method: "dynamic.api.validate_active_domains_invocie", 
+  //           method: "dynamic.api.validate_active_domains_invocie",
   //           args: {
-  //             doc: frm.doc.name,  
+  //             doc: frm.doc.name,
   //           },
   //           callback: function (r) {
-  //             console.log(r.message);  
+  //             console.log(r.message);
   //           },
   //         });
   //       },
-  //       "view Item Shortage"  
+  //       "view Item Shortage"
   //     );
-  //   } else {
-  //     frappe.call({
-  //       method: "dynamic.api.get_active_domains", 
-  //       callback: function(r) {
-  //         if (r.message && r.message.length) {
-  //           if (r.message.includes("Qaswaa")) {
-  //             console.log("ass");  
-              
-  //           }
-  //         }
-  //       },
-  //     });
   //   }
   // },
+  onload(frm) {
+    var check_domain = frm.events.domian_valid();  
+    
+    if (check_domain && frm.doc.docstatus == 0) {
+        
+        frm.add_custom_button(
+            __("view Item Shortage"),  
+            function () {
+                frappe.call({
+                    method: "dynamic.api.validate_active_domains_invocie", 
+                    args: {
+                        doc: frm.doc.name  
+                    },
+                    callback: function (r) {
+                        console.log(r.message);  
+                    }
+                });
+            },
+            "view Item Shortage" 
+        );
+    } else {
+      frappe.call({
+          method: "dynamic.api.get_active_domains", 
+          callback: function(r) {
+              if (r.message && r.message.includes("Qaswaa")) {
+                  console.log("baio");
+                  if (frm.doc.is_return == 1) {
+                      frm.set_df_property("sales_team", "read_only", 1);
+                      frm.fields_dict.sales_team.grid.update_docfield_property("sales_person", "read_only", 1);
+                      frm.fields_dict.sales_team.grid.update_docfield_property("allocated_percentage", "read_only", 1);
+                      frm.refresh_field('sales_team');     
+                  }
+              }
+          }
+      });
+  }
+},
   
+// toggle_read_only_fields(frm) {
+//   if (frm.doc.is_return == 1) {
+//     // frm.set_df_property("sales_team", "read_only", 1);
+//                       frm.fields_dict.sales_team.grid.update_docfield_property("sales_person", "read_only", 1);
+//                       frm.fields_dict.sales_team.grid.update_docfield_property("allocated_percentage", "read_only", 1);}
+//   },
 
   refresh(frm) {
     frm.events.add_cheque_button(frm);
@@ -287,23 +296,40 @@ function get_customer_query(){
 }
 
 
-frappe.ui.form.on("Sales Team", {
-  sales_person:function(frm,cdt,cdn){
-    let row = locals[cdt][cdn]
-    if (row.sales_person && frm.doc.docstatus==1){
-      frm.call({
-        method:"dynamic.api.validate_active_domains",
-        args:{
-          doc:frm.doc
-        },
-        callback:function(r){
-          // console.log('return --------->')
-        }
-      })
-    }
-  }
+// frappe.ui.form.on("Sales Team", {
+//   sales_person:function(frm,cdt,cdn){
+//     let row = locals[cdt][cdn]
+//     if (row.sales_person && frm.doc.docstatus==1){
+//       frm.call({
+//         method:"dynamic.api.validate_active_domains",
+//         args:{
+//           doc:frm.doc
+//         },
+//         callback:function(r){
+//           // console.log('return --------->')
+//         }
+//       })
+//     }
+//   }
 
-})
+// })
+
+frappe.ui.form.on('Sales Team', {
+  refresh: function(frm) {
+      // Iterate over each row in the Sales Team child table
+      $.each(frm.doc.sales_team || [], function(i, row) {
+          // Check if is_return field in the main form is 1
+          if (frm.doc.is_return == 1) {
+              // Set sales_person field in this row to read-only
+              cur_frm.fields_dict.sales_team.grid.grid_rows_by_docname[row.name].fields_dict.sales_person.set_read_only(true);
+          } else {
+              // Set sales_person field in this row to editable
+              cur_frm.fields_dict.sales_team.grid.grid_rows_by_docname[row.name].fields_dict.sales_person.set_read_only(false);
+          }
+      });
+  }
+});
+
 
 
 frappe.ui.form.on("Sales Invoice Item", {

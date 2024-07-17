@@ -277,37 +277,37 @@ frappe.ui.form.on("Stock Entry", {
       frm.events.transit_btn(frm)
       // frm.events.read_only_fields(frm)
     },
-    // read_only_fields:function(frm){
-    //   frm.events.setup_source_warehouse(frm)
-    //   frappe.call({
-    //     method: "dynamic.api.get_active_domains",
-    //     callback: function (r) { 
+    read_only_fields:function(frm){
+      frm.events.setup_source_warehouse(frm)
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) { 
 
-    //       if (r.message.includes("WEH")) {
-    //       if (frm.doc.owner != frappe.session.user) {
-    //         console.log("not Owner")
-    //         frm.set_read_only() }
-    //       }
-      //     if (r.message && r.message.length) {
-      //       if (r.message.includes("WEH")) {
-      //         frm.events.setup_source_warehouse(frm)
-      //         // frappe.call({
-      //         //   method:"dynamic.weh.api.get_roles_hidden_field",
-      //         //   args:{
-      //         //     "field_hide":"stock_entry_read_only",
-      //         //     "field_empty":"empty_source_warehouse_role",
-      //         //   },
-      //         //   callback:function(r) {
-      //         //     frm.set_df_property("from_warehouse", "read_only", r.message.hide);
-      //         //     if(r.message.empty){
-      //         //       frm.set_value("from_warehouse","")
-      //         //     }
-      //         //     frm.refresh_fields("from_warehouse")
-      //         //   }
-      //         //  })
+          if (r.message.includes("WEH")) {
+          if (frm.doc.owner != frappe.session.user) {
+            console.log("not Owner")
+            frm.set_read_only() }
+          }
+          if (r.message && r.message.length) {
+            if (r.message.includes("WEH")) {
+              frm.events.setup_source_warehouse(frm)
+              // frappe.call({
+              //   method:"dynamic.weh.api.get_roles_hidden_field",
+              //   args:{
+              //     "field_hide":"stock_entry_read_only",
+              //     "field_empty":"empty_source_warehouse_role",
+              //   },
+              //   callback:function(r) {
+              //     frm.set_df_property("from_warehouse", "read_only", r.message.hide);
+              //     if(r.message.empty){
+              //       frm.set_value("from_warehouse","")
+              //     }
+              //     frm.refresh_fields("from_warehouse")
+              //   }
+              //  })
                
-      //   }
-      // }
+        }
+      }
       }
     })
       
