@@ -7,11 +7,14 @@ def validate(self , event):
 		validate_items(self)
 	if "Qaswaa" in Domains :
 		validate_rate_of_items(self)
+		warehouse1(self)
 		validate_sales_team(self)
+		
+		
 
-def before_save(self,event):
-	if "Qaswaa" in Domains :
-		items1(self)
+# def before_save(self,event):
+# 	if "Qaswaa" in Domains :
+# 		# items1(self)
 
 def after_submit(self , event):
 	if "Stock Reservation" in Domains:
@@ -101,10 +104,11 @@ def validate_when_cancel(self):
 			doc.delivered_qty = qty 
 			doc.save()
 			frappe.db.commit()
-def items1(self):
-	if self.is_return == 1:
-		for item in self.items:
-			item.set_read_only(["item_code", "item_name"], True)		
+def warehouse1(self):
+	if self.update_stock == 1:
+		if not self.set_warehouse:
+			frappe.throw("Warehouse was mandatory")
+
 	
 
 
