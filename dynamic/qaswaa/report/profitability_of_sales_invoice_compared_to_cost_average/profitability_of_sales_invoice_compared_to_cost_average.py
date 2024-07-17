@@ -74,6 +74,7 @@ def get_data(filters):
         conditions += f" AND so.cost_center = '{filters.get('cost_center')}'"
     if filters.get("sales_person"):
         conditions += f" AND sales_team.sales_person = '{filters.get('sales_person')}'"
+    conditions += " AND so.status NOT IN ('Draft', 'Cancelled')"    
 
     sql = f'''
         SELECT 

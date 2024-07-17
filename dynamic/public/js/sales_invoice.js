@@ -72,24 +72,17 @@ frappe.ui.form.on("Sales Invoice", {
           callback: function(r) {
               if (r.message && r.message.includes("Qaswaa")) {
                   console.log("baio");
-                  // if (frm.doc.is_return == 1) {
-                  //     // frm.set_df_property("sales_team", "read_only", 1);
-                  //     frm.fields_dict.sales_team.grid.update_docfield_property("sales_person", "read_only", 1);
-                  //     frm.fields_dict.sales_team.grid.update_docfield_property("allocated_percentage", "read_only", 1);
-                  //     frm.refresh_field('sales_team');     
-                  // }
+                  if (frm.doc.is_return == 1) {
+                      frm.fields_dict['sales_team'].grid.toggle_enable('sales_person', false);
+                      frm.refresh_field('sales_team');   
+                  }
               }
           }
       });
   }
-},
+}, 
   
-// toggle_read_only_fields(frm) {
-//   if (frm.doc.is_return == 1) {
-//     // frm.set_df_property("sales_team", "read_only", 1);
-//                       frm.fields_dict.sales_team.grid.update_docfield_property("sales_person", "read_only", 1);
-//                       frm.fields_dict.sales_team.grid.update_docfield_property("allocated_percentage", "read_only", 1);}
-//   },
+
 
   refresh(frm) {
     frm.events.add_cheque_button(frm);
@@ -313,22 +306,6 @@ function get_customer_query(){
 //   }
 
 // })
-
-frappe.ui.form.on("Sales Team", {
-  sales_person: function(frm, cdt, cdn) {
-      var child = locals[cdt][cdn];
-      var parent_is_return = frm.doc.is_return;  // Assuming is_return is a field in the parent form
-
-      // Check if is_return is true (1)
-      if (parent_is_return == 1) {
-          // Make sales_person field non-editable
-          frappe.model.set_value(cdt, cdn, "sales_person", child.sales_person, "read_only", 1);
-      } else {
-          // Make sales_person field editable
-          frappe.model.set_value(cdt, cdn, "sales_person", child.sales_person, "read_only", 0);
-      }
-  }
-});
 
 
 
