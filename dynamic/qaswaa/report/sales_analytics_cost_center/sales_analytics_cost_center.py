@@ -68,7 +68,7 @@ def get_data(filters =None):
    for cost in cost_centers :
       center ={"cost_center" : cost.get('cost_center')}
       for month in period_list :
-         fil = frappe.db.sql(f""" SELECT DISTINCT b.name FROM 
+         fil = frappe.db.sql(f""" SELECT DISTINCT b.name ,c.sales_person FROM 
              `tabSales Invoice Item`  a 
               INNER JOIN `tabSales Invoice` b 
               ON a.parent = b.name 
@@ -84,11 +84,13 @@ def get_data(filters =None):
             invoice_doc = frappe.get_doc("Sales Invoice", r['name'])
             total += flt(invoice_doc.net_total or 0)
          center[month.get('key')] = total
+         center["sales_person"] = fil[0]['sales_person'] if fil else None
       data.append(center)
    for record in data:
       total_sales = sum(value for value in record.values() if isinstance(value, (int, float)))
       record['total'] = total_sales
    return data
+
 def get_columns(filters):
     period_list = get_period_list(filters=filters)
     columns = [
@@ -111,7 +113,6 @@ def get_columns(filters):
                 "width": 150,
             }
         )
-
     columns.append(
         {
             "fieldname": "total",
@@ -122,7 +123,17 @@ def get_columns(filters):
         }
     )
 
+    columns.append(
+         {
+            "fieldname": "sales_person",
+            "label": "Sales Person",
+            "fieldtype": "Data",
+            "width": 150,
+        }
+    )
+
     return columns
+
 
 
 def get_period_list(filters):

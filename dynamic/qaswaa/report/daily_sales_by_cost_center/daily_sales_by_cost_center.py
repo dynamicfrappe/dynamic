@@ -33,9 +33,8 @@ def get_data(filters):
             FROM `tabSales Invoice`
             WHERE is_return = 1
         """)])
- 
-    conditions.append(['docstatus', '!=', 2])       
-    conditions.append(['status', '!=', 'Return'])
+          
+    conditions.append(['status', 'not in', ['Draft', 'Cancelled','Return']])
     result = []
     sales_invoices = frappe.get_all("Sales Invoice", fields=["posting_date", "name", "set_warehouse", "customer",
                                                              "net_total", "base_total_taxes_and_charges",
@@ -51,7 +50,7 @@ def get_data(filters):
         num2_values = frappe.db.sql_list("""
             SELECT name
             FROM `tabSales Invoice`
-            WHERE is_return = 1 AND return_against = %s
+            WHERE is_return = 1 AND return_against = %s AND docstatus != 2  AND docstatus != 0
         """, doc.name)
         num2 = ', '.join(num2_values) if num2_values else ''
         total_advance = frappe.db.get_value("Payment Entry Reference",

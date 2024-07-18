@@ -27,7 +27,7 @@ def get_data(filters):
         sales_invoices_filters = {
             "customer": customer_name,
             "docstatus": ["!=", 2],
-            "is_return": 0
+            "is_return": 0,
         }
         
         if filters.get("cost_center"):
@@ -49,9 +49,10 @@ def get_data(filters):
             sales_invoices_filters["posting_date"] = ["<=", filters.get("end_date")]
         if filters.get("status"):
             status = filters.get("status")
-            sales_invoices_filters['status'] = ['in', status]                   
+            sales_invoices_filters['status'] = ['in', status]
+        sales_invoices_filters['status'] = ['not in', ['Draft', 'Cancelled']]                      
         
-        sales_invoices = frappe.get_all("Sales Invoice", filters=sales_invoices_filters, fields=["name", "posting_date", "set_warehouse", "net_total", "base_total_taxes_and_charges", "grand_total", "outstanding_amount"])
+        sales_invoices = frappe.get_all("Sales Invoice", filters=sales_invoices_filters, fields=["name", "posting_date", "set_warehouse", "net_total", "base_total_taxes_and_charges", "grand_total", "outstanding_amount","status"])
         
         customer_data = []
         total_refund_amount = 0
@@ -66,6 +67,7 @@ def get_data(filters):
             posting_date = invoice.get("posting_date")
             warehouse = invoice.get("set_warehouse")
             net_total = invoice.get("net_total")
+            status = invoice.get("status")
             base_total_taxes_and_charges = invoice.get("base_total_taxes_and_charges")
             grand_total = invoice.get("grand_total")
             diff = invoice.get("outstanding_amount")
@@ -80,10 +82,17 @@ def get_data(filters):
             total_grand_total += grand_total
 
             total_advance = 0
+            
+            mode_of_payment = None
             payment_entries = frappe.get_all("Payment Entry Reference", filters={"reference_name": invoice_name, "reference_doctype": "Sales Invoice"}, fields=["allocated_amount"])
             for entry in payment_entries:
                 total_advance += entry.get("allocated_amount")
             total_advance_amount += total_advance
+            payment_entries = frappe.get_all("Payment Entry Reference", filters={"reference_name": invoice_name, "reference_doctype": "Sales Invoice"}, fields=["parent"])
+            for entry in payment_entries:
+                payment_entry = frappe.get_doc("Payment Entry", entry.get("parent"))
+                mode_of_payment = payment_entry.mode_of_payment if payment_entry.mode_of_payment else None
+            
 
             if idx == 0:
                 customer_data.append({
@@ -91,26 +100,30 @@ def get_data(filters):
                     "invoice_name": invoice_name,
                     "posting_date": posting_date,
                     "set_warehouse": warehouse,
+                    "status":status,
                     "net_total": net_total,
                     "base_total_taxes_and_charges": base_total_taxes_and_charges,
                     "grand_total": grand_total,
                     "refund_amount": refund_amount,
                     "total_advance_amount": total_advance,
                     "diff": diff,
-                    "sales_person": sales_person 
+                    "sales_person": sales_person,
+                    "mode_of_payment":mode_of_payment 
                 })
             else:
                 customer_data.append({
                     "invoice_name": invoice_name,
                     "posting_date": posting_date,
                     "set_warehouse": warehouse,
+                    "status":status,
                     "net_total": net_total,
                     "base_total_taxes_and_charges": base_total_taxes_and_charges,
                     "grand_total": grand_total,
                     "refund_amount": refund_amount,
                     "total_advance_amount": total_advance,
                     "diff": diff,
-                    "sales_person": sales_person 
+                    "sales_person": sales_person ,
+                    "mode_of_payment":mode_of_payment
                 })
 
         data.extend(customer_data)
