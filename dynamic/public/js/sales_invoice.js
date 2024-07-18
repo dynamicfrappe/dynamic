@@ -25,27 +25,64 @@ frappe.ui.form.on("Sales Invoice", {
     });
     return tera;
   },
+  // onload(frm) {
+  //   var check_domain = frm.events.domian_valid();
+  //   // console.log(check_domain)
+  //   if (check_domain && frm.doc.docstatus == 0) {
+  //     frm.add_custom_button(
+  //       __("view Item Shortage"),
+  //       function () {
+  //         frappe.call({
+  //           method: "dynamic.api.validate_active_domains_invocie",
+  //           args: {
+  //             doc: frm.doc.name,
+  //           },
+  //           callback: function (r) {
+  //             console.log(r.message);
+  //           },
+  //         });
+  //       },
+  //       "view Item Shortage"
+  //     );
+  //   }
+  // },
   onload(frm) {
-    var check_domain = frm.events.domian_valid();
-    // console.log(check_domain)
+    var check_domain = frm.events.domian_valid();  
+    
     if (check_domain && frm.doc.docstatus == 0) {
-      frm.add_custom_button(
-        __("view Item Shortage"),
-        function () {
-          frappe.call({
-            method: "dynamic.api.validate_active_domains_invocie",
-            args: {
-              doc: frm.doc.name,
+        
+        frm.add_custom_button(
+            __("view Item Shortage"),  
+            function () {
+                frappe.call({
+                    method: "dynamic.api.validate_active_domains_invocie", 
+                    args: {
+                        doc: frm.doc.name  
+                    },
+                    callback: function (r) {
+                        console.log(r.message);  
+                    }
+                });
             },
-            callback: function (r) {
-              console.log(r.message);
-            },
-          });
-        },
-        "view Item Shortage"
-      );
-    }
-  },
+            "view Item Shortage" 
+        );
+    } else {
+      frappe.call({
+          method: "dynamic.api.get_active_domains", 
+          callback: function(r) {
+              if (r.message && r.message.includes("Qaswaa")) {
+                  console.log("baio");
+                  if (frm.doc.is_return == 1) {
+                      
+                      frm.refresh_field('sales_team');   
+                  }
+              }
+          }
+      });
+  }
+}, 
+  
+
 
   refresh(frm) {
     frm.events.add_cheque_button(frm);
@@ -163,7 +200,7 @@ add_item_discount_rate: function(frm) {
         if (r.message && r.message.length) {
           if (r.message.includes("Qaswaa")) {
             console.log("Catech !!")
-            // frm.events.add_item_discount_rate(frm);
+            frm.events.add_item_discount_rate(frm);
           }
         }
       }
@@ -252,23 +289,26 @@ function get_customer_query(){
 }
 
 
-frappe.ui.form.on("Sales Team", {
-  sales_person:function(frm,cdt,cdn){
-    let row = locals[cdt][cdn]
-    if (row.sales_person && frm.doc.docstatus==1){
-      frm.call({
-        method:"dynamic.api.validate_active_domains",
-        args:{
-          doc:frm.doc
-        },
-        callback:function(r){
-          // console.log('return --------->')
-        }
-      })
-    }
-  }
+// frappe.ui.form.on("Sales Team", {
+//   sales_person:function(frm,cdt,cdn){
+//     let row = locals[cdt][cdn]
+//     if (row.sales_person && frm.doc.docstatus==1){
+//       frm.call({
+//         method:"dynamic.api.validate_active_domains",
+//         args:{
+//           doc:frm.doc
+//         },
+//         callback:function(r){
+//           // console.log('return --------->')
+//         }
+//       })
+//     }
+//   }
 
-})
+// })
+
+
+
 
 
 frappe.ui.form.on("Sales Invoice Item", {

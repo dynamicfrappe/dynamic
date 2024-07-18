@@ -161,6 +161,7 @@ doc_events = {
             "dynamic.controllers.sales_invoice.after_submit",
             
         ],
+        # "before_save":"dynamic.controllers.sales_invoice.before_save",
         "on_cancel": [
             "dynamic.api.invoice_on_cancel",
             "dynamic.controllers.sales_invoice.after_cancel",

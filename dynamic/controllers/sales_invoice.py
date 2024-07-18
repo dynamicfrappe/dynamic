@@ -7,15 +7,23 @@ def validate(self , event):
 		validate_items(self)
 	if "Qaswaa" in Domains :
 		validate_rate_of_items(self)
+		warehouse1(self)
+		validate_sales_team(self)
+		item_discount_rate(self)
+		
+		
 
+# def before_save(self,event):
+# 	if "Qaswaa" in Domains :
+# 		# items1(self)
 
 def after_submit(self , event):
 	if "Stock Reservation" in Domains:
 		edit_of_reseration(self)
 	
 def after_cancel(self , event):
-    if "Stock Reservation" in Domains :
-        validate_when_cancel(self)
+	if "Stock Reservation" in Domains :
+		validate_when_cancel(self)
 
 	
 	
@@ -50,6 +58,17 @@ def submit_invoice(self):
 	sales_document.grand_total = self.grand_total
 	sales_document.insert(ignore_permissions=True)
 
+def validate_sales_team(self):
+		if not self.sales_team:
+			frappe.throw("Sales Team was mandatory")
+
+def item_discount_rate(self):
+        item_discount_rate = self.item_discount_rate
+        for item in self.items:
+            item.discount_percentage = item_discount_rate
+            item.discount_amount = item.price_list_rate * (item_discount_rate / 100)
+            item.rate = item.price_list_rate - item.discount_amount
+            item.amount = item.rate * item.qty
 
 def edit_of_reseration(self ):
 	items = self.get("items")
@@ -94,6 +113,11 @@ def validate_when_cancel(self):
 			doc.delivered_qty = qty 
 			doc.save()
 			frappe.db.commit()
+def warehouse1(self):
+	if self.update_stock == 1:
+		if not self.set_warehouse:
+			frappe.throw("Warehouse was mandatory")
+
 	
 
 

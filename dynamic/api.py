@@ -560,13 +560,14 @@ def check_source_item(self, *args, **kwargs):
 	if "IFI" in DOMAINS:
 		# print('\n\n\n-->in reconslation**')
 		update_against_document_in_jv(self)
-	if "Real State" in DOMAINS:
+	if "Dynamic Accounts" in DOMAINS:
 		meta = frappe.get_meta(self.doctype)
 		if meta.has_field("outstanding_amount"):
 			if len(self.get("advancess")):
 				total_advance_paid = sum(
 					adv.advance_amount for adv in self.get("advancess")
 				)
+				self.db_set("advance_paid", total_advance_paid)
 				self.db_set("outstanding_amount", self.grand_total - total_advance_paid)
 
 
@@ -1497,13 +1498,14 @@ def before_submit_quot(doc, *args, **kwargs):
 
 
 def before_save_quotation(doc, *args, **kwargs):
-	if "Real State" in DOMAINS:
+	if "Dynamic Accounts" in DOMAINS:
 		meta = frappe.get_meta(doc.doctype)
 		if meta.has_field("outstanding_amount"):
 			if len(doc.get("advancess")):
 				total_advance_paid = sum(
 					adv.advance_amount for adv in doc.get("advancess")
 				)
+				doc.db_set("advance_paid", total_advance_paid)
 				doc.db_set("outstanding_amount", doc.grand_total - total_advance_paid)
 
 

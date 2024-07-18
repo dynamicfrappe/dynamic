@@ -151,7 +151,7 @@ def get_rootwise_opening_balances(filters, report_type):
 			where lft >= %s and rgt <= %s)""" % (
 			lft,
 			rgt,
-		)
+		)	
 
 	if filters.project:
 		additional_conditions += " and project = %(project)s"
@@ -174,7 +174,6 @@ def get_rootwise_opening_balances(filters, report_type):
 		"finance_book": filters.finance_book,
 		"company_fb": frappe.db.get_value("Company", filters.company, "default_finance_book"),
 	}
-
 	if accounting_dimensions:
 		for dimension in accounting_dimensions:
 			if filters.get(dimension.fieldname):
