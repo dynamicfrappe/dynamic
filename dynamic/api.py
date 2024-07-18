@@ -53,6 +53,7 @@ from dynamic.ifi.api import validate_payemnt_entry
 from frappe.utils import get_host_name
 import pandas as pd
 from dynamic.gebco.api import validate_purchase_recipt
+from erpnext.accounts.utils import get_balance_on
 
 
 
@@ -1920,11 +1921,36 @@ def get_taxes_amount(item_tax_template):
 @frappe.whitelist()
 def get_uom(item):
 	sub_uom = ["", 0.0]
+	stock_uom = frappe.get_doc("Item", item).stock_uom
 	for uom in frappe.get_doc("Item", item).uoms:
-		if uom.conversion_factor != 1.0:
+		if uom.uom != stock_uom:
 			sub_uom[0] = uom.uom
 			sub_uom[1] = uom.conversion_factor
 	return sub_uom
+
+@frappe.whitelist()
+def get_total_discount_and_amount(doc_type, sales_order_name):
+	total = [0.0, 0.0]
+	for item in frappe.get_doc(doc_type, sales_order_name).items:
+		total[1] += (item.discount_amount * item.qty)
+		total[0] += (item.price_list_rate * item.qty)
+		print(total[0])
+	return total
+
+@frappe.whitelist()
+def get_customer_outstanding_balance(customer_name):
+    outstanding_balance = get_balance_on(party_type="Customer", party=customer_name)
+    return outstanding_balance
+
+
+@frappe.whitelist()
+def get_total_discount_and_amount(doc_type, sales_order_name):
+	total = [0.0, 0.0]
+	for item in frappe.get_doc(doc_type, sales_order_name).items:
+		total[1] += (item.discount_amount * item.qty)
+		total[0] += (item.price_list_rate * item.qty)
+		print(total[0])
+	return total
 
 @frappe.whitelist()
 def get_customer_branches(customer):

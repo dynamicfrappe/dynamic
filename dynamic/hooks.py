@@ -295,7 +295,6 @@ doc_events = {
     "Item Price": {"before_save": "dynamic.ifi.api.check_buying_price"},
     "Quotation": {
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc",
-        "validate":"dynamic.qaswaa.controllers.quotation.validate",
         "before_submit": "dynamic.api.before_submit_quot",
         "before_save": ["dynamic.api.before_save_quotation", ],
         "validate":[
@@ -305,7 +304,6 @@ doc_events = {
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
-        "validate":"dynamic.qaswaa.controllers.purchase_order.validate",
         "before_submit": "dynamic.api.before_submit_po",
         "after_inser": "dynamic.api.calculate_orderd_qty",
         "on_submit": "dynamic.api.calculate_orderd_qty",
@@ -339,11 +337,6 @@ doc_events = {
     "File": {
         "after_insert": "dynamic.master_deals.master_deals_api.deals_after_insert"
     },
-    "Project":{
-        "validate": [
-            "dynamic.skyline.controllers.skyline_api.set_total_amounts",
-        ],
-    }
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
     # }
@@ -504,6 +497,8 @@ jenv = {
     "methods": [
         "get_taxes_amount:dynamic.api.get_taxes_amount",
         "get_uom:dynamic.api.get_uom",
+        "get_total_discount_and_amount:dynamic.api.get_total_discount_and_amount",
+        "get_customer_outstanding_balance:dynamic.api.get_customer_outstanding_balance",
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_item_data:dynamic.www.item_data.encode_item_data",
@@ -517,7 +512,6 @@ jenv = {
         "get_party_address:dynamic.api.get_party_address",  # ifi
         "get_customer_total_unpaid_amount:dynamic.api.get_customer_total_unpaid_amount",
         "QRcode_Customer_data:dynamic.master_deals.master_deals_api.QRcode_Customer_data",
-
     ],
     "filters": [],
 }
