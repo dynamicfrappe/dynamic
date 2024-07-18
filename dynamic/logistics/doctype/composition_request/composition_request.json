@@ -168,6 +168,7 @@
    "label": "Password"
   },
   {
+   "depends_on": "eval:doc.password == 1",
    "fieldname": "attachment",
    "fieldtype": "Attach",
    "label": "Attachment"
@@ -176,7 +177,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-15 12:29:37.303180",
+ "modified": "2024-07-16 14:32:35.763711",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition Request",

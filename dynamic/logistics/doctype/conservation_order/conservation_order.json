@@ -20,6 +20,7 @@
   "location",
   "type_for_request",
   "name_of_maintenance",
+  "conservation",
   "number",
   "section_break_9",
   "warranties",
@@ -93,7 +94,7 @@
    "fieldname": "type_for_request",
    "fieldtype": "Select",
    "label": "Type For Request",
-   "options": "Within Warranty\nOut of Warranty\nMaintenance",
+   "options": "Maintenance\nUnder Warranty\nOut of Warranty",
    "read_only": 1
   },
   {
@@ -149,7 +150,7 @@
    "fieldname": "maintenance_type",
    "fieldtype": "Select",
    "label": "Maintenance Type",
-   "options": "Visit\nCall"
+   "options": "Visit\nCall\nTest\nSample"
   },
   {
    "fieldname": "type_of_maintenance",
@@ -230,12 +231,20 @@
    "fieldtype": "Data",
    "label": "Not Support Reason",
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "conservation",
+   "fieldtype": "Link",
+   "label": "Conservation",
+   "options": "Conservation",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-15 13:08:18.128756",
+ "modified": "2024-07-17 16:05:04.605062",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation order",

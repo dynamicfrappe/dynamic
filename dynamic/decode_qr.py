@@ -252,7 +252,7 @@ for row in data_dict :
     total_hex += total_hex_str
     print ("**********************************************")
     print (row["value"])
-    print ("value => " , value)
+    print ("value => " , )
     print ("value_len => " , value_len)
     print ("tagNumber => " , tagNumber)
     print ("total_hex_str => ", total_hex_str)

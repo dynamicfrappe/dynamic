@@ -43,7 +43,7 @@ frappe.ui.form.on('Conservation', {
 		})
 	},
 	add_buttons : function(frm){
-		if (frm.doc.docstatus == 1){
+		if (frm.doc.docstatus == 1 && frm.doc.type_for_request != "Under Warranty"){
 			frm.add_custom_button(__("Sales Invoice"),()=>{
 				frappe.model.open_mapped_doc({
 					method:
@@ -52,7 +52,7 @@ frappe.ui.form.on('Conservation', {
 				  });
 			} , "Create")
 		}
-		if ((frm.doc.docstatus == 1) && (frm.doc.items.length > 0 )){
+		if ((frm.doc.docstatus == 1) && (frm.doc.items.length > 0 ) && ( frm.doc.type_for_request == "Under Warranty")){
 			frm.add_custom_button(__("Stock entry"),()=>{
 				frappe.model.open_mapped_doc({
 					method:

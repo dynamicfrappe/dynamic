@@ -6,17 +6,15 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "item",
-  "rate"
+  "item_code",
+  "item_name",
+  "uom",
+  "description",
+  "serial_number",
+  "rate",
+  "warranty"
  ],
  "fields": [
-  {
-   "fieldname": "item",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Item ",
-   "options": "Item"
-  },
   {
    "fieldname": "rate",
    "fieldtype": "Currency",
@@ -24,12 +22,54 @@
    "label": "Rate",
    "options": "currency",
    "read_only": 1
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name"
+  },
+  {
+   "fetch_from": "item_code.stock_uom",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fetch_from": "item_code.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "fieldname": "serial_number",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Serial Number",
+   "options": "Serial No"
+  },
+  {
+   "fetch_from": "serial_numbe.warranty_expiry_date",
+   "fieldname": "warranty",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Warranty"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item ",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-31 14:57:39.571414",
+ "modified": "2024-07-17 16:35:05.879093",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Planed Item",

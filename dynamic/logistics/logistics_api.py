@@ -350,6 +350,134 @@ def fetch_serial_numbers(item_code , warehouse , qty):
     serials = frappe.db.sql(sql , as_dict = 1)
     serial_list = ""
     for serial in serials :
-        serial_list +=f"{serial.name} \n"
-    
-    return serial_list
+        serial_list +=f"{serial.name}\n"
+
+    return serial_list[:len(serial_list) -1]
+
+
+def check_status():
+    if 'Logistics' in DOMAINS: 
+        check_compostion_request_status()
+        check_compostion_order_status()
+        check_compostion_status()
+
+def check_compostion_request_status():
+    compostion_request_sql = f'''
+                                select 
+                                    s.serial , c.name
+                                from 
+                                    `tabComposition Request` c
+                                inner join
+                                    `tabSales Order Item` s
+                                where
+                                    c.name = s.parent
+                                '''
+    compostion_request = frappe.db.sql(compostion_request_sql , as_dict = 1)
+    for entry in compostion_request :
+        if entry.serial :
+            serial = frappe.get_doc("Serial No" , entry.serial)
+            if serial.status == "Delivered":
+                compostion_request_doc = frappe.get_doc("Composition Request" , entry.name)
+                compostion_request_doc.db_set("status","Delivered")
+
+def check_compostion_order_status():
+    compostion_order_sql = f'''
+                            select 
+                                s.serial , c.name
+                            from 
+                                `tabComposition Order` c
+                            inner join
+                                `tabSales Order Item` s
+                            where
+                                c.name = s.parent
+                            '''
+    compostion_order = frappe.db.sql(compostion_order_sql , as_dict = 1)
+    for entry in compostion_order :
+        if entry.serial :
+            serial = frappe.get_doc("Serial No" , entry.serial)
+            if serial.status == "Delivered":
+                compostion_order_doc = frappe.get_doc("Composition Order" , entry.name)
+                compostion_order_doc.db_set("status","Delivered")
+
+def check_compostion_status():
+    compostion_sql = f'''
+                            select 
+                                s.serial , c.name
+                            from 
+                                `tabComposition` c
+                            inner join
+                                `tabSales Order Item` s
+                            where
+                                c.name = s.parent
+                            '''
+    compostion= frappe.db.sql(compostion_sql , as_dict = 1)
+    for entry in compostion :
+        if entry.serial :
+            serial = frappe.get_doc("Serial No" , entry.serial)
+            if serial.status == "Delivered":
+                compostion_doc = frappe.get_doc("Composition" , entry.name)
+                compostion_doc.db_set("status","Delivered")
+
+
+def change_status():
+    check_conservation_request_status()
+    check_conservation_order_status()
+    check_conservation_status()
+
+	
+def check_conservation_request_status():
+    conservation_request_sql = f'''
+                            select 
+                                m.serial_number , c.name
+                            from 
+                                `tabConservation Request` c
+                            inner join
+                                `tabMaintenance Warranty` m
+                            where
+                                c.name = m.parent
+                            '''
+    conservation_request = frappe.db.sql(conservation_request_sql , as_dict = 1)
+    for entry in conservation_request :
+        if entry.serial_number :
+            serial = frappe.get_doc("Serial No" , entry.serial_number)
+            if serial.maintenance_status == "Under Warranty" or serial.maintenance_status == "Out of Warranty" : 
+                coservation_request_doc = frappe.get_doc("Conservation Request" , entry.name)
+                coservation_request_doc.db_set("type_for_request",serial.maintenance_status)
+
+def check_conservation_order_status():
+    conservation_order_sql = f'''
+                            select 
+                                m.serial_number , c.name
+                            from 
+                                `tabConservation order` c
+                            inner join
+                                `tabMaintenance Warranty` m
+                            where
+                                c.name = m.parent
+                            '''
+    conservation_order = frappe.db.sql(conservation_order_sql , as_dict = 1)
+    for entry in conservation_order :
+        if entry.serial_number :
+            serial = frappe.get_doc("Serial No" , entry.serial_number)
+            if serial.maintenance_status == "Under Warranty" or serial.maintenance_status == "Out of Warranty" : 
+                coservation_order_doc = frappe.get_doc("Conservation order" , entry.name)
+                coservation_order_doc.db_set("type_for_request",serial.maintenance_status)
+
+def check_conservation_status():
+    conservation_sql = f'''
+                        select 
+                            m.serial_number , c.name
+                        from 
+                            `tabConservation` c
+                        inner join
+                            `tabMaintenance Warranty` m
+                        where
+                            c.name = m.parent
+                        '''
+    conservation = frappe.db.sql(conservation_sql , as_dict = 1)
+    for entry in conservation :
+        if entry.serial_number :
+            serial = frappe.get_doc("Serial No" , entry.serial_number)
+            if serial.maintenance_status == "Under Warranty" or serial.maintenance_status == "Out of Warranty" : 
+                coservation_doc = frappe.get_doc("Conservation" , entry.name)
+                coservation_doc.db_set("type_for_request",serial.maintenance_status)

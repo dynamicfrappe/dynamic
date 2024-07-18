@@ -108,4 +108,4 @@ class Conservationorder(Document):
 		lnk = get_link_to_form(conservation.doctype, conservation.name)
 		frappe.msgprint(_("{} {} was Created").format(
 		conservation.doctype, lnk))
-		self.reference = conservation.name
+		self.db_set("conservation",conservation.name)

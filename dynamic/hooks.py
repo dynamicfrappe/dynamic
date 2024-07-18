@@ -173,7 +173,8 @@ doc_events = {
         "on_submit": "dynamic.api.submit_journal_entry",
     },
     "Sales Order": {
-        "before_submit": ["dynamic.api.before_submit_so" ],
+        "before_submit": ["dynamic.api.before_submit_so" ,
+                    "dynamic.controllers.sales_order.before_submit"],
         "before_save": [
             "dynamic.api.check_source_item",
         ],
@@ -286,6 +287,8 @@ doc_events = {
 scheduler_events = {
     "cron": {
         "*/1 * * * *": ["dynamic.logistics.logistics_api.check_data_remaining" ,
+                        "dynamic.logistics.logistics_api.check_status",
+                        "dynamic.logistics.logistics_api.change_status"
                         #  "dynamic.logistics.logistics_api.validate_so" 
                          ],
         "0 */2 * * *": [

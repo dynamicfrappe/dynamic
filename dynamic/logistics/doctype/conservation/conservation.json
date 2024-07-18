@@ -38,7 +38,10 @@
   "transfer_cost",
   "total_cost",
   "engineering_name",
+  "from",
   "survey",
+  "section_break_uuwcd",
+  "to",
   "survey_template",
   "amended_from"
  ],
@@ -97,7 +100,7 @@
    "fieldname": "type_for_request",
    "fieldtype": "Select",
    "label": "Type For Request",
-   "options": "Within Warranty\nOut of Warranty\nMaintenance",
+   "options": "Maintenance\nUnder Warranty\nOut of Warranty",
    "read_only": 1
   },
   {
@@ -269,12 +272,26 @@
    "fieldtype": "Check",
    "label": "Not Support",
    "read_only": 1
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Datetime",
+   "label": "From"
+  },
+  {
+   "fieldname": "section_break_uuwcd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Datetime",
+   "label": "To"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-15 13:09:37.551843",
+ "modified": "2024-07-17 16:13:37.871205",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation",

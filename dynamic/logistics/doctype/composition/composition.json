@@ -62,7 +62,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Pending\nCompleted"
+   "options": "Pending\nDelivered\nCompleted"
   },
   {
    "fieldname": "customer",
@@ -226,7 +226,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-15 12:33:40.386880",
+ "modified": "2024-07-17 12:36:17.977785",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition",

@@ -56,7 +56,7 @@ class ConservationRequest(Document):
 		conservation_order.machines = self.machines
 		conservation_order.customer_comment = self.customer_comment
 		conservation_order.insert()
-		self.reference = conservation_order.name
+		self.db_set("conservation_order",conservation_order.name)
 
 		lnk = get_link_to_form(conservation_order.doctype, conservation_order.name)
 		frappe.msgprint(_("{} {} was Created").format(

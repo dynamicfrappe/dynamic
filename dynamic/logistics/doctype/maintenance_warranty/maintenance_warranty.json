@@ -9,31 +9,11 @@
   "item_code",
   "item_name",
   "uom",
-  "name1",
   "description",
   "serial_number",
   "warranty"
  ],
  "fields": [
-  {
-   "fetch_from": "serial_numbe.item_code",
-   "fetch_if_empty": 1,
-   "fieldname": "item_code",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Item Code",
-   "options": "Item",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "item_code.item_name",
-   "fetch_if_empty": 1,
-   "fieldname": "name1",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Name",
-   "read_only": 1
-  },
   {
    "fetch_from": "item_code.description",
    "fetch_if_empty": 1,
@@ -60,6 +40,7 @@
    "options": "Serial No"
   },
   {
+   "fetch_from": "item_code.item_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
    "label": "Item Name"
@@ -69,12 +50,22 @@
    "fieldtype": "Link",
    "label": "UOM",
    "options": "UOM"
+  },
+  {
+   "fetch_from": "serial_numbe.item_code",
+   "fetch_if_empty": 1,
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-07-15 08:31:27.800369",
+ "modified": "2024-07-17 16:31:43.152608",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Maintenance Warranty",

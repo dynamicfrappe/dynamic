@@ -21,6 +21,7 @@
   "location",
   "type_for_request",
   "name_of_maintenance",
+  "conservation_order",
   "number",
   "section_break_9",
   "warranties",
@@ -43,7 +44,7 @@
    "fieldname": "type_for_request",
    "fieldtype": "Select",
    "label": "Type For Request",
-   "options": "Within Warranty\nOut of Warranty\nMaintenance"
+   "options": "Maintenance\nUnder Warranty\nOut of Warranty"
   },
   {
    "fieldname": "name_of_maintenance",
@@ -183,12 +184,20 @@
    "fieldtype": "Data",
    "label": "Not Support Reason",
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "conservation_order",
+   "fieldtype": "Link",
+   "label": "Conservation order",
+   "options": "Conservation order",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-15 13:05:13.081564",
+ "modified": "2024-07-17 16:00:44.787603",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation Request",

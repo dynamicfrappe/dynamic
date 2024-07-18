@@ -11,12 +11,13 @@ frappe.ui.form.on('Conservation order', {
 						frappe.call({
 							method:"dynamic.logistics.logistics_api.validate_items",
 							callback:function(r){
-								frm.fields_dict["items"].grid.get_field("item").get_query =
+								frm.fields_dict["items"].grid.get_field("item_code").get_query =
 								function (doc, cdt, cdn) {
 									var row = locals[cdt][cdn];
 									return {
 										filters: {
 										'item_group': r.message,
+										'is_stock_item': 1,
 										}
 							
 									}
@@ -117,7 +118,7 @@ frappe.ui.form.on('Maintenance Warranty', {
 	}
 });
 frappe.ui.form.on('Planed Item', {
-	item: function(frm, cdt, cdn) {
+	item_code: function(frm, cdt, cdn) {
 		frappe.call({
 			method: "dynamic.api.get_active_domains",
 			callback: function (r) {
@@ -126,7 +127,7 @@ frappe.ui.form.on('Planed Item', {
 						var row = locals[cdt][cdn];
 						frappe.call({
 							method:"dynamic.logistics.logistics_api.get_item_price",
-							args : {item : row.item},
+							args : {item : row.item_code},
 							callback:function(r){
 								row.rate = r.message
 								frm.refresh_field("items")

@@ -9,6 +9,10 @@ from dynamic.qaswaa.controllers.sales_order_api import validate_item_qty_reserve
 
 Domains=frappe.get_active_domains()
 
+def before_submit(self , event):
+    if 'Logistics' in Domains :
+        set_sales_order_in_serial(self , event)
+
 def validate_sales_order(self , event):
     if "Qaswaa" in Domains :
         validate_item_qty_reserved(self,event)
@@ -112,3 +116,12 @@ def validate_sales_order_items(self):
 
 def set_vaild_until_date(self):
     self.valid_until = add_days(now() , 7)
+
+
+def set_sales_order_in_serial(self , event):
+    for item in self.items:
+        split_list=(item.serial).split("\n")
+        for serial in split_list :
+            serial_no = frappe.get_doc("Serial No" , serial)
+            serial_no.sales_order = self.name
+            serial_no.save()
