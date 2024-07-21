@@ -94,10 +94,10 @@ if "Future" in active_domains:
     StockEntry = FutureStockEntry
 
 
-if "Contracting" in active_domains:
-    from contracting_13.contracting_13.overrides.payment_entry import custom_payment_entry
+# if "Contracting" in active_domains:
+#     from contracting_13.contracting_13.overrides.payment_entry import custom_payment_entry
 
-    PaymentEntry = custom_payment_entry
+#     PaymentEntry = custom_payment_entry
 
 
 

@@ -13,6 +13,15 @@ from dynamic.api import validate_purchase_recipt, check_email_setting_in_stock_s
 
 Domains = frappe.get_active_domains()
 
+
+
+
+def sales_order_submit_comlete_opportunity(doc, *args , **kwargs) :
+	if doc.opportunity : 
+		#update Opportunity status to completed 
+		frappe.db.sql(f"""update `tabOpportunity` 
+		  set status = 'Converted'  where name = '{doc.opportunity}'""")
+		frappe.db.commit()
 def purchase_reciept_before_submit(doc,*args,**kwargs):
     frappe.throw('test')
     if 'Gebco' in Domains:

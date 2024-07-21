@@ -23,7 +23,7 @@ def get_context(context):
     context.item_doc = item_doc
     context.img_link = img_link 
     context.item_price = item_price or 0
-    context.qty = get_item_stock(item_code) or 0
+    context.qty = get_item_stock2(item_code) or 0
     return context
 
 def escape_html_show(text):
@@ -102,8 +102,34 @@ def get_item_stock(item) :
     warehouse  = frappe.db.get_single_value('Stock Settings','warehouse')
     qty=0
     if warehouse:
-        sql = f""" SELECT SUM(actual_qty-reserved_qty) as qty FROM `tabBin` WHERE item_code ='{item}' and warehouse='{warehouse}' """
+        sql = f""" SELECT SUM(actual_qty) as qty FROM `tabBin` WHERE item_code ='{item}' and warehouse='{warehouse}' """
         qty = frappe.db.sql(sql,as_dict=1)
         if qty and len(qty) > 0 :
             qty= qty[0].get("qty")
         return qty
+
+
+def get_item_stock2(item) :
+    warehouse  = frappe.db.get_single_value('Stock Settings','warehouse')
+    sum_of_item = 0
+    if warehouse:
+        sql = f""" 
+        SELECT
+            SUM(rw.reserved_qty ) as qty
+        FROM
+            `tabReservation` r
+        JOIN
+            `tabReservation Warehouse` rw ON r.name = rw.parent
+        WHERE
+            r.status in ('Active' , 'Partial Delivered')
+            AND rw.warehouse = '{warehouse}'
+            AND rw.item = '{item}' ;  """
+        qty = frappe.db.sql(sql,as_dict=1)
+        if qty and len(qty) > 0 :
+            sum_of_item= qty[0].get("qty")
+
+        current_stock = float(get_item_stock(item) or 0) - float(sum_of_item or 0)
+        return current_stock
+
+
+        

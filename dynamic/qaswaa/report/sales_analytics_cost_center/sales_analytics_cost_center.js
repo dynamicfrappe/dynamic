@@ -4,14 +4,14 @@ frappe.query_reports["Sales Analytics Cost Center"] = {
 			fieldname: "period_start_date",
 			label: __("From Date"),
 			fieldtype: "Date",
-			default: frappe.datetime.get_today(),
+			default: frappe.datetime.add_days(frappe.datetime.get_today(),-10),
 			reqd : 1
 		},
 		{
 			fieldname: "period_end_date",
 			label: __("To Date"),
 			fieldtype: "Date",
-			default: frappe.datetime.add_days(frappe.datetime.get_today(),10),
+			default: frappe.datetime.get_today(),
 			reqd : 1
 		},
       {
@@ -49,7 +49,14 @@ frappe.query_reports["Sales Analytics Cost Center"] = {
          fieldtype: "Link",
          options: "Warehouse" ,
          reqd: 0
-      }
+      },
+      {
+			"fieldname": "sales_person",
+            "label": __("Sales Person"),
+            "fieldtype": "Link",
+            "options": "Sales Person",
+            "reqd": 0
+		},
 
    ]
 

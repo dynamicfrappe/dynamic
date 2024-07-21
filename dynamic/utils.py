@@ -52,3 +52,66 @@ def get_components_summary(doc, component_type='earning'):
 		}))
 
 	return result
+
+
+
+@frappe.whitelist()
+def get_reservation_qty( item , warehouse):
+    qty_bin = 0
+    sum_of_item = 0
+    if warehouse:
+        sql_bin = f""" SELECT SUM(actual_qty) as qty FROM `tabBin` WHERE item_code ='{item}' and warehouse='{warehouse}' """
+        qty_bin= frappe.db.sql(sql_bin,as_dict=1)
+        if qty_bin and len(qty_bin) > 0 :
+            qty_bin = qty_bin[0].get("qty")
+
+        sql_reservation = f""" 
+        SELECT
+            SUM(rw.reserved_qty ) as qty
+        FROM
+            `tabReservation` r
+        JOIN
+            `tabReservation Warehouse` rw ON r.name = rw.parent
+        WHERE
+            r.status in ('Active' , 'Partial Delivered')
+            AND rw.warehouse = '{warehouse}'
+            AND rw.item = '{item}' ;  """
+        qty_reservation = frappe.db.sql(sql_reservation,as_dict=1)
+        if qty_reservation and len(qty_reservation) > 0 :
+            sum_of_item = qty_reservation[0].get("qty")
+
+        current_stock = float(qty_bin or 0) - float(sum_of_item or 0)
+        return current_stock  ,sum_of_item
+
+def get_item_stock(item) :
+    warehouse  = frappe.db.get_single_value('Stock Settings','warehouse')
+    qty=0
+    if warehouse:
+        sql = f""" SELECT SUM(actual_qty) as qty FROM `tabBin` WHERE item_code ='{item}' and warehouse='{warehouse}' """
+        qty = frappe.db.sql(sql,as_dict=1)
+        if qty and len(qty) > 0 :
+            qty= qty[0].get("qty")
+        return qty
+
+
+def get_item_stock2(item) :
+    warehouse  = frappe.db.get_single_value('Stock Settings','warehouse')
+    sum_of_item = 0
+    if warehouse:
+        sql = f""" 
+        SELECT
+            SUM(rw.reserved_qty ) as qty
+        FROM
+            `tabReservation` r
+        JOIN
+            `tabReservation Warehouse` rw ON r.name = rw.parent
+        WHERE
+            r.status in ('Active' , 'Partial Delivered')
+            AND rw.warehouse = '{warehouse}'
+            AND rw.item = '{item}' ;  """
+        qty = frappe.db.sql(sql,as_dict=1)
+        if qty and len(qty) > 0 :
+            sum_of_item= qty[0].get("qty")
+
+        current_stock = float(get_item_stock(item) or 0) - float(sum_of_item or 0)
+        return current_stock

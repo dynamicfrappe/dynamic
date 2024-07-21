@@ -1,6 +1,5 @@
 frappe.ui.form.on("Sales Invoice", {
   setup(frm) {
-    frm.set_value("update_stock","1")
     frappe.call({
       method: "dynamic.api.get_active_domains",
       callback: function (r) {
@@ -26,32 +25,69 @@ frappe.ui.form.on("Sales Invoice", {
     });
     return tera;
   },
+  // onload(frm) {
+  //   var check_domain = frm.events.domian_valid();
+  //   // console.log(check_domain)
+  //   if (check_domain && frm.doc.docstatus == 0) {
+  //     frm.add_custom_button(
+  //       __("view Item Shortage"),
+  //       function () {
+  //         frappe.call({
+  //           method: "dynamic.api.validate_active_domains_invocie",
+  //           args: {
+  //             doc: frm.doc.name,
+  //           },
+  //           callback: function (r) {
+  //             console.log(r.message);
+  //           },
+  //         });
+  //       },
+  //       "view Item Shortage"
+  //     );
+  //   }
+  // },
   onload(frm) {
-    var check_domain = frm.events.domian_valid();
-    // console.log(check_domain)
+    var check_domain = frm.events.domian_valid();  
+    
     if (check_domain && frm.doc.docstatus == 0) {
-      frm.add_custom_button(
-        __("view Item Shortage"),
-        function () {
-          frappe.call({
-            method: "dynamic.api.validate_active_domains_invocie",
-            args: {
-              doc: frm.doc.name,
+        
+        frm.add_custom_button(
+            __("view Item Shortage"),  
+            function () {
+                frappe.call({
+                    method: "dynamic.api.validate_active_domains_invocie", 
+                    args: {
+                        doc: frm.doc.name  
+                    },
+                    callback: function (r) {
+                        console.log(r.message);  
+                    }
+                });
             },
-            callback: function (r) {
-              console.log(r.message);
-            },
-          });
-        },
-        "view Item Shortage"
-      );
-    }
-  },
+            "view Item Shortage" 
+        );
+    } else {
+      frappe.call({
+          method: "dynamic.api.get_active_domains", 
+          callback: function(r) {
+              if (r.message && r.message.includes("Qaswaa")) {
+                  console.log("baio");
+                  if (frm.doc.is_return == 1) {
+                      
+                      frm.refresh_field('sales_team');   
+                  }
+              }
+          }
+      });
+  }
+}, 
+  
+
 
   refresh(frm) {
-
     frm.events.add_cheque_button(frm);
     frm.events.set_query(frm)
+    frm.events.upload_data_file(frm)
     // const myTimeout = setTimeout(get_customer_query, 1300);
     var check_domain = frm.events.domian_valid();
     if (check_domain && frm.doc.docstatus == 0) {
@@ -70,9 +106,59 @@ frappe.ui.form.on("Sales Invoice", {
         },
         "view Item Shortage"
       );
+      
     }
     
   },
+  upload_data_file:function(frm){
+    frm.fields_dict["items"].grid.add_custom_button(
+      __("Upload Xlxs Data"),
+      function() {
+          let d = new frappe.ui.Dialog({
+              title: "Enter details",
+              fields: [
+                {
+                  label: "Excel File",
+                  fieldname: "first_name",
+                  fieldtype: "Attach",
+                },
+              ],
+              primary_action_label: "Submit",
+              primary_action(values) {
+                console.log(`values===>${JSON.stringify(values)}`);
+                var f = values.first_name;
+                frappe.call({
+                  method:"dynamic.api.get_data_from_template_file",
+                  args: {
+                    file_url: values.first_name
+                    // file: values.first_name,
+                    // colms:['item_code','qty',]
+                  },
+                  callback: function(r) {
+                    if (r.message) {
+                      console.log(r.message)
+                      frm.clear_table("items");
+                      frm.refresh_fields("items");
+                      r.message.forEach(object => {
+                        var row = frm.add_child("items");
+                        Object.entries(object).forEach(([key, value]) => {
+                          //  console.log(`${key}: ${value}`);
+                          row[key] = value;
+                        });
+                       });
+                      frm.refresh_fields("items");
+                    }
+                  },
+                });
+                d.hide();
+              },
+            });
+            d.show();
+      }).addClass("btn-success");
+      frm.fields_dict["items"].grid.grid_buttons
+      .find(".btn-custom")
+      .removeClass("btn-default")
+},
   brand:function(frm){
     frm.fields_dict.items.grid.get_field("item_code").get_query = function () {
       return {
@@ -97,6 +183,31 @@ frappe.ui.form.on("Sales Invoice", {
         }}
     })
 },
+
+add_item_discount_rate: function(frm) {
+  var item_discount_rate = frm.doc.item_discount_rate;
+        frm.doc.items.forEach(function(item) {
+            frappe.model.set_value(item.doctype, item.name, 'discount_percentage', item_discount_rate);
+        });
+        frm.refresh_field('items');
+},
+
+
+  item_discount_rate: function(frm) {
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function(r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("Qaswaa")) {
+            console.log("Catech !!")
+            frm.events.add_item_discount_rate(frm);
+          }
+        }
+      }
+    });
+  },
+
+
 
   add_cheque_button(frm) {
     if (frm.doc.docstatus == 1) {
@@ -178,52 +289,69 @@ function get_customer_query(){
 }
 
 
-frappe.ui.form.on("Sales Team", {
-  sales_person:function(frm,cdt,cdn){
-    let row = locals[cdt][cdn]
-    if (row.sales_person && frm.doc.docstatus==1){
-      frm.call({
-        method:"dynamic.api.validate_active_domains",
-        args:{
-          doc:frm.doc
-        },
-        callback:function(r){
-          // console.log('return --------->')
-        }
-      })
-    }
-  }
+// frappe.ui.form.on("Sales Team", {
+//   sales_person:function(frm,cdt,cdn){
+//     let row = locals[cdt][cdn]
+//     if (row.sales_person && frm.doc.docstatus==1){
+//       frm.call({
+//         method:"dynamic.api.validate_active_domains",
+//         args:{
+//           doc:frm.doc
+//         },
+//         callback:function(r){
+//           // console.log('return --------->')
+//         }
+//       })
+//     }
+//   }
 
-})
+// })
+
+
+
 
 
 frappe.ui.form.on("Sales Invoice Item", {
+//   items_add: function(frm,cdt,cdn) {
+//     console.log("baio");
+//     frappe.call({
+//         method: "dynamic.api.get_active_domains",
+//         callback: function(r) {
+//             if (r.message && r.message.length && r.message.includes("Qaswaa")) {
+//               frm.events.add_item_discount_rate(frm);
+//             }
+//         }
+//     });
+// },
   item_code:function(frm,cdt,cdn){
     let row = locals[cdt][cdn]
     if(row.item_code){
+     
       frappe.call({
-				'method': 'frappe.client.get_value',
-				'args': {
-					'doctype': 'Item Price',
-					'filters': {
-						'item_code': row.item_code,
-            "selling":1
-					},
-				   'fieldname':'price_list_rate'
-				},
-				'callback': function(res){
-					row.total =  res.message.price_list_rate;
-				}
-			});
-      
-      frm.refresh_fields('items')
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length && r.message.includes("Qaswaa")) {
+                console.log("bgg");
+                var item_discount_rate = frm.doc.item_discount_rate;
+                console.log(item_discount_rate);
+                if (item_discount_rate ){
+                row.discount_percentage = item_discount_rate
+                // frm.set_value("items","discount_percentage",item_discount_rate)
+               
+                frm.refresh_fields("items");
+         }
+            }
+        }
+    }); 
+      frm.refresh_fields('items');
     }
   },
   qty:function(frm,cdt,cdn){
     let row = locals[cdt][cdn]
     row.total = row.base_price_list_rate * row.qty
     frm.refresh_fields('items')
-  }
+  },
+
 })
 
 
@@ -244,13 +372,7 @@ const extend_sales_invoice = erpnext.accounts.SalesInvoiceController.extend({
                 cur_frm.cscript['make_payment_entry'] = create_payment_sales_person //new
                 // cur_frm.page.remove_inner_button('Payment', 'Create')
             }
-            // add button Purchase Invoice
-          // if (!this.frm.is_new() && this.frm.doc.docstatus === 0) {
-          //   this.frm.add_custom_button(__("Purchase Invoice"), () => {
-          //     me.make_purchase_invoice();
-          //   }, __("Create"));
-          // }
-             
+         
           }
         }
       }
@@ -258,131 +380,8 @@ const extend_sales_invoice = erpnext.accounts.SalesInvoiceController.extend({
 
     
   },
+  
 
-  // make_purchase_invoice() {
-	// 	let data = [];
-	// 	const fields = [
-	// 		{
-	// 			label: "Items",
-	// 			fieldtype: "Table",
-	// 			fieldname: "items",
-	// 			cannot_add_rows: true,
-	// 			in_place_edit: true,
-	// 			data: data,
-	// 			get_data: () => {
-	// 				return data;
-	// 			},
-	// 			fields: [
-	// 				{
-	// 					fieldtype: "Data",
-	// 					fieldname: "docname",
-	// 					hidden: true
-	// 				},
-	// 				{
-	// 					fieldtype: "Read Only",
-	// 					fieldname: "item_code",
-	// 					label: __("Item Code"),
-	// 					in_list_view: true
-	// 				},
-	// 				{
-	// 					fieldtype: "Read Only",
-	// 					fieldname: "item_name",
-	// 					label: __("Item Name"),
-	// 					in_list_view: true
-	// 				},
-	// 				{
-	// 					fieldtype: "Float",
-	// 					fieldname: "qty",
-	// 					label: __("Accepted Quantity"),
-	// 					in_list_view: true,
-	// 					read_only: true
-	// 				},
-	// 				{
-	// 					fieldtype: "Float",
-	// 					fieldname: "sample_size",
-	// 					label: __("Sample Size"),
-	// 					reqd: true,
-	// 					in_list_view: true
-	// 				},
-	// 				{
-	// 					fieldtype: "Data",
-	// 					fieldname: "description",
-	// 					label: __("Description"),
-	// 					hidden: true
-	// 				},
-	// 				{
-	// 					fieldtype: "Data",
-	// 					fieldname: "serial_no",
-	// 					label: __("Serial No"),
-	// 					hidden: true
-	// 				},
-	// 				{
-	// 					fieldtype: "Data",
-	// 					fieldname: "batch_no",
-	// 					label: __("Batch No"),
-	// 					hidden: true
-	// 				}
-	// 			]
-	// 		}
-	// 	];
-
-	// 	const me = this;
-	// 	const dialog = new frappe.ui.Dialog({
-	// 		title: __("Select Items for Quality Inspection"),
-	// 		fields: fields,
-	// 		primary_action: function () {
-	// 			const data = dialog.get_values();
-	// 			frappe.call({
-	// 				method: "erpnext.controllers.stock_controller.make_quality_inspections",
-	// 				args: {
-	// 					doctype: me.frm.doc.doctype,
-	// 					docname: me.frm.doc.name,
-	// 					items: data.items
-	// 				},
-	// 				freeze: true,
-	// 				callback: function (r) {
-	// 					if (r.message.length > 0) {
-	// 						if (r.message.length === 1) {
-	// 							frappe.set_route("Form", "Quality Inspection", r.message[0]);
-	// 						} else {
-	// 							frappe.route_options = {
-	// 								"reference_type": me.frm.doc.doctype,
-	// 								"reference_name": me.frm.doc.name
-	// 							};
-	// 							frappe.set_route("List", "Quality Inspection");
-	// 						}
-	// 					}
-	// 					dialog.hide();
-	// 				}
-	// 			});
-	// 		},
-	// 		primary_action_label: __("Create")
-	// 	});
-
-	// 	this.frm.doc.items.forEach(item => {
-	// 		if (!item.quality_inspection) {
-	// 			let dialog_items = dialog.fields_dict.items;
-	// 			dialog_items.df.data.push({
-	// 				"docname": item.name,
-	// 				"item_code": item.item_code,
-	// 				"item_name": item.item_name,
-	// 				"qty": item.qty,
-	// 				"description": item.description,
-	// 				"serial_no": item.serial_no,
-	// 				"batch_no": item.batch_no,
-	// 				"sample_size": item.sample_quantity
-	// 			});
-	// 			dialog_items.grid.refresh();
-	// 		}
-	// 	});
-
-	// 	data = dialog.fields_dict.items.df.data;
-	// 	if (!data.length) {
-	// 		frappe.msgprint(__("All items in this document already have a linked Quality Inspection."));
-	// 	} else {
-	// 		dialog.show();
-	// 	}
-	// },
   
 })
 

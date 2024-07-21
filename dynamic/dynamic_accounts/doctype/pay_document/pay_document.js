@@ -2,6 +2,17 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Pay Document", {
+  onload: function (frm) {
+		frappe.call({
+			method: "dynamic.dynamic_accounts.doctype.pay_document.pay_document.get_field_options",
+			callback: function (r) {
+				$.each(r.message, (key, value) => {
+					set_field_options(key, value);
+				});
+			},
+		});
+	},
+
   refresh: function (frm) {
     if (frm.doc.docstatus > 0) {
       frm.add_custom_button(

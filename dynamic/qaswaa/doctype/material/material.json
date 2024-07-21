@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:name1",
  "creation": "2024-03-19 16:27:19.498923",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -13,7 +14,8 @@
   {
    "fieldname": "name1",
    "fieldtype": "Data",
-   "label": "Name"
+   "label": "Name",
+   "unique": 1
   },
   {
    "fieldname": "name_in_arabic",
@@ -23,7 +25,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-19 16:27:19.498923",
+ "modified": "2024-03-25 14:14:05.151853",
  "modified_by": "Administrator",
  "module": "Qaswaa",
  "name": "Material",

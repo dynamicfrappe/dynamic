@@ -22,25 +22,132 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import (
 try :
 	from erpnext.accounts.doctype.payment_entry.payment_entry import 	split_early_payment_discount_loss ,set_pending_discount_loss
 except :
-	from .utils import split_early_payment_discount_loss ,set_pending_discount_loss
-
+	from dynamic.real_state.utils import split_early_payment_discount_loss ,set_pending_discount_loss
+finally :
+	pass
 from frappe import ValidationError, _, scrub, throw
 from frappe.utils import cint, comma_or, flt, get_link_to_form, getdate, nowdate
 from functools import reduce
 
 
+@frappe.whitelist()
+def get_last_purchase_invoice_for_item(item_code):
+	"""
+	String: item_code 
+
+	"""
+	sql = f"""
+		SELECT
+			pi.name as name,
+			pi.posting_date as posting_date, 
+			pii.rate as rate,
+			pii.item_code as item_code
+		FROM
+			`tabPurchase Invoice` pi
+		JOIN
+			`tabPurchase Invoice Item` pii
+		ON 
+			pi.name = pii.parent
+		WHERE
+			pii.item_code = '{item_code}'
+			AND pi.docstatus = 1
+		"""
+	doc = frappe.db.sql(sql , as_dict= 1)
+	last_date = max( i.get("posting_date") for i in doc)
+
+	invoices_with_last_date = [i for i in doc if i.get('posting_date') == last_date]
+	return invoices_with_last_date[0]['rate']
+
+@frappe.whitelist()
+def get_purcashe_invoice_return(purchase_invoice):
+	sql =  f'''
+		SELECT 
+			p.name as name
+		FROM 
+			`tabPurchase Invoice` p
+		WHERE 
+			p.is_return = 1
+			AND p.return_against = '{purchase_invoice}';
+		'''
+	supplier = frappe.db.sql(sql , as_dict= 1)
+
+	return supplier[0]['name'] if supplier else None
+
+
+@frappe.whitelist()
+def get_last_sales_invoice_for_item(item_code):
+	"""
+	String: item_code 
+
+	"""
+	sql = f"""
+		SELECT
+			si.name as name,
+			si.posting_date as posting_date, 
+			sii.rate as rate,
+			sii.item_code as item_code
+		FROM
+			`tabSales Invoice` si
+		JOIN
+			`tabSales Invoice Item` sii
+		ON 
+			si.name = sii.parent
+		WHERE
+			sii.item_code = '{item_code}'
+			AND si.docstatus = 1
+		"""
+	doc = frappe.db.sql(sql , as_dict= 1)
+	# Sort the list of invoices by posting_date in descending order
+	sorted_invoices = sorted(doc, key=lambda x: x['posting_date'], reverse=True)
+
+	# Get the last three invoices
+	last_three_invoices = sorted_invoices[:3]
+	return last_three_invoices
+
+
+@frappe.whitelist()
+def get_last_purchase_invoice_for_item_with_date(item_code):
+	"""
+	String: item_code 
+
+	"""
+	sql = f"""
+		SELECT
+			pi.name as name,
+			pi.posting_date as posting_date, 
+			pii.rate as rate,
+			pii.item_code as item_code
+		FROM
+			`tabPurchase Invoice` pi
+		JOIN
+			`tabPurchase Invoice Item` pii
+		ON 
+			pi.name = pii.parent
+		WHERE
+			pii.item_code = '{item_code}'
+			AND pi.docstatus = 1
+		"""
+	doc = frappe.db.sql(sql , as_dict= 1)
+	last_date = False
+	last_rate = 0
+	if doc and len(doc) > 0 :
+		last_date = max( i.get("posting_date") for i in doc)
+		if last_date  :
+			invoices_with_last_date = [i for i in doc if i.get('posting_date') == last_date]
+			last_rate = invoices_with_last_date[0]['rate']
+	return last_rate ,last_date
 
 
 
 @frappe.whitelist()
 def get_payment_entry(
-	dt,
-	dn,
-	party_amount=None,
-	bank_account=None,
-	bank_amount=None,
-	reference_date=None,
-):
+			dt,
+			dn,
+			party_amount=None,
+			bank_account=None,
+			bank_amount=None,
+			reference_date=None,
+	):
 	# frappe.throw('in child payment ')
 	reference_doc = None
 	doc = frappe.get_doc(dt, dn)

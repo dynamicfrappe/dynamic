@@ -12,15 +12,41 @@ frappe.query_reports["gift transfers"] = {
 			// "reqd": 1
 		},
 		{
+			"fieldname":"item",
+			"label": __("Item"),
+			"fieldtype": "Link",
+			"options": "Item",
+			// "reqd": 1
+		},
+		{
+			"fieldname":"cost_center",
+			"label": __("Cost Center"),
+			"fieldtype": "Link",
+			"options": "Cost Center",
+			// "reqd": 1
+		},
+		{
 			"fieldname":"from_date",
 			"label": __("From Date"),
 			"fieldtype": "Date",
-			"default" : frappe.datetime.get_today()
+			// "default" : frappe.datetime.get_today()
 		},
 		{
 			"fieldname":"to_date",
 			"label": __("To Date"),
 			"fieldtype": "Date",
+		},
+		{
+			"fieldname":"t_warehouse",
+			"label": __("Target Warehouse"),
+			"fieldtype": "Link",
+			"options": "Warehouse",
+		},
+		{
+			"fieldname":"s_warehouse",
+			"label": __("Source Warehouse"),
+			"fieldtype": "Link",
+			"options": "Warehouse",
 		},
 	]
 };

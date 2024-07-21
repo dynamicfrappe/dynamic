@@ -5,80 +5,99 @@ from frappe import _
 
 def execute(filters=None):
     columns = [
-        _("Customer") + ":Link/Customer:120",
-        _("Transaction") + ":Link/Stock Entry:200",
-        _("Item") + ":Link/Item:250",
-        _("Stock Entry Type") + "::150",
-        _("Total Quantity") + ":Float:120",
-        _("Sales Person") + ":Link/Sales Person:120",
+        ("Customer") + ":Link/Customer:120",
+        ("Transaction") + ":Link/Stock Entry:200",
+        ("Item") + ":Link/Item:200",
+        ("Stock Entry Type") + "::150",
+        ("Total Quantity") + ":Float:100",
+        ("Sales Person") + ":Link/Sales Person:120",
+        ("Cost Center") + ":Link/Cost Center:100",
+        ("Target Warehouse") + ":Link/Warehouse:150",
+        ("Source Warehouse") + ":Link/Warehouse:150",
     ]
     
-    # Initialize filters
     conditions = []
+    where_clause = "WHERE se.docstatus = 1 "
     if filters.get("customer"):
         conditions.append("customer = '{}'".format(filters.get("customer")))
+        where_clause = where_clause + f"""AND se.customer_id = '{filters.get("customer")}'"""
+    if filters.get("cost_center"):
+        conditions.append("se.cost_center = '{}'".format(filters.get("cost_center")))
+        where_clause = where_clause + f"""AND se.cost_center = '{filters.get("cost_center")}'"""
+    if filters.get("item"):
+        conditions.append("sed.item_code = '{}'".format(filters.get("item")))
+        where_clause = where_clause + f"""AND sed.item_code = '{filters.get("item")}'"""
+    if filters.get("t_warehouse"):
+        conditions.append("sed.t_warehouse = '{}'".format(filters.get("t_warehouse")))
+        where_clause = where_clause + f"""AND sed.t_warehouse = '{filters.get("t_warehouse")}'"""
+    if filters.get("s_warehouse"):
+        conditions.append("sed.s_warehouse = '{}'".format(filters.get("s_warehouse")))
+        where_clause = where_clause + f"""AND sed.s_warehouse = '{filters.get("s_warehouse")}'"""
     if filters.get("from_date"):
-        conditions.append("posting_date >= '{}'".format(filters.get("from_date")))
+        conditions.append("se.posting_date >= '{}'".format(filters.get("from_date")))
+        where_clause = where_clause + f"""AND se.posting_date >= '{filters.get("from_date")}'"""
     if filters.get("to_date"):
-        conditions.append("posting_date <= '{}'".format(filters.get("to_date")))
+        conditions.append("se.posting_date <= '{}'".format(filters.get("to_date")))
+        where_clause = where_clause + f"""AND se.posting_date <= '{filters.get("to_date")}'"""
+
+
+    dispensing_simples = frappe.db.get_value("Stock Entry Type" , {"matrial_type":"Dispensing Simples"} , 'name')
+    main_query =  f"""
+        SELECT 
+            se.customer_id AS customer, 
+            se.name AS transaction,
+            sed.item_code AS item, 
+            se.stock_entry_type, 
+            SUM(sed.qty) AS total_quantity, 
+            st.sales_person , 
+            se.cost_center,
+            sed.t_warehouse AS "target_warehouse",
+            sed.s_warehouse AS "source_warehouse"
+        FROM 
+            `tabStock Entry` AS se
+        JOIN
+            `tabStock Entry Detail` AS sed ON se.name = sed.parent
+        LEFT JOIN
+            `tabSales Team` AS st ON se.name = st.parent
+        {where_clause} AND se.stock_entry_type = '{dispensing_simples}'
+        GROUP BY 
+            se.customer_id, 
+            se.stock_entry_type,
+            sed.item_code
+        """
+    gift_transfer_data = frappe.db.sql(main_query, as_dict=True)
+
+    received_simples = frappe.db.get_value("Stock Entry Type" , {"matrial_type":"Received Simples"} , 'name')
+    second_query = f"""
+        SELECT 
+            se.customer_id AS customer, 
+            se.name AS transaction,
+            sed.item_code AS item, 
+            se.stock_entry_type, 
+            SUM(sed.qty) AS total_quantity, 
+            st.sales_person ,
+            se.cost_center , 
+            sed.t_warehouse AS "target_warehouse",
+            sed.s_warehouse AS "source_warehouse"
+        FROM 
+            `tabStock Entry` AS se
+        JOIN
+            `tabStock Entry Detail` AS sed ON se.name = sed.parent
+        LEFT JOIN
+            `tabSales Team` AS st ON se.name = st.parent
+        {where_clause} AND se.stock_entry_type = '{received_simples}'
+        GROUP BY 
+            se.customer_id, 
+            se.stock_entry_type,
+            sed.item_code
+    """
+    get_revieved_data = frappe.db.sql(second_query , as_dict=True)
+
     
-    # Construct the WHERE clause
-    where_clause = " AND ".join(conditions)
-
-    # Query to fetch data for 'gift transfer' and 'gift received' separately
-    gift_transfer_data = frappe.db.sql("""
-        SELECT 
-            se.customer_id, 
-            se.name AS transaction,
-            sed.item_code AS item, 
-            se.stock_entry_type, 
-            SUM(sed.qty) AS total_quantity, 
-            st.sales_person 
-        FROM 
-            `tabStock Entry` AS se
-        JOIN
-            `tabStock Entry Detail` AS sed ON se.name = sed.parent
-        LEFT JOIN
-            `tabSales Team` AS st ON se.name = st.parent
-        WHERE 
-            se.docstatus = 1 
-            AND se.stock_entry_type = 'صرف عينات'
-            AND ({where_clause})
-        GROUP BY 
-            se.customer, 
-            se.stock_entry_type
-    """.format(where_clause=where_clause), as_dict=True)
-
-
-    gift_received_data = frappe.db.sql("""
-        SELECT 
-            se.customer_id, 
-            se.name AS transaction,
-            sed.item_code AS item, 
-            se.stock_entry_type, 
-            SUM(sed.qty) AS total_quantity, 
-            st.sales_person 
-        FROM 
-            `tabStock Entry` AS se
-        JOIN
-            `tabStock Entry Detail` AS sed ON se.name = sed.parent
-        LEFT JOIN
-            `tabSales Team` AS st ON se.name = st.parent
-        WHERE 
-            se.docstatus = 1 
-            AND se.stock_entry_type = 'استلام عينات'
-            AND ({where_clause})
-        GROUP BY 
-            se.customer, 
-            se.stock_entry_type
-    """.format(where_clause=where_clause), as_dict=True)
-    if gift_received_data and gift_transfer_data:
-        result = [{'stock_entry_type':'total' , 'total_quantity': gift_received_data[0]['total_quantity'] - gift_transfer_data[0]['total_quantity']}]
-        data = gift_transfer_data + gift_received_data + result
+    if get_revieved_data and gift_transfer_data:
+        result = [{'stock_entry_type':'total' , 'total_quantity': get_revieved_data[0]['total_quantity'] - gift_transfer_data[0]['total_quantity']}]
+        data = gift_transfer_data + get_revieved_data + result
         return columns, data
-    if not gift_received_data or not gift_transfer_data:
-        data = gift_transfer_data + gift_received_data
+    if not get_revieved_data or not gift_transfer_data:
+        data = gift_transfer_data + get_revieved_data
         return columns, data
-
-
-

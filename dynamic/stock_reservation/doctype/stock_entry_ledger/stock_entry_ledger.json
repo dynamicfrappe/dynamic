@@ -1,0 +1,139 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-24 11:59:45.315029",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sales_order_item_line",
+  "sales_order",
+  "item",
+  "stock_reservation",
+  "warehouse",
+  "transaction",
+  "transaction_doc",
+  "add_value",
+  "remove_value",
+  "unit_of_measure",
+  "factor",
+  "acutal_qty"
+ ],
+ "fields": [
+  {
+   "fieldname": "sales_order_item_line",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Sales Order Item Line",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Sales Order",
+   "options": "Sales Order"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "transaction",
+   "fieldtype": "Link",
+   "in_global_search": 1,
+   "in_standard_filter": 1,
+   "label": "Transaction",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "transaction_doc",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Transaction Doc",
+   "options": "transaction"
+  },
+  {
+   "fieldname": "add_value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Add value"
+  },
+  {
+   "fieldname": "remove_value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Remove value"
+  },
+  {
+   "fieldname": "unit_of_measure",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Unit Of measure",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "stock_reservation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Stock Reservation",
+   "options": "Stock Reservation Entry"
+  },
+  {
+   "default": "1",
+   "fieldname": "factor",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Factor"
+  },
+  {
+   "fieldname": "acutal_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Acutal Quantity"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-24 12:18:42.593558",
+ "modified_by": "Administrator",
+ "module": "Stock Reservation",
+ "name": "Stock Entry Ledger",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

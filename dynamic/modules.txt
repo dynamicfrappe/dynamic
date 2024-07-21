@@ -32,3 +32,5 @@ Logistics
 ICE
 Trecom
 Smart Vision
+Stock Reservation
+Skyline

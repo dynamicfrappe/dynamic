@@ -8,11 +8,11 @@ frappe.query_reports["Compare Prices of Sales Order With Price List"] = {
 			fieldname: "date",
 			label: __("Date"),
 			fieldtype: "Date",
-			default: frappe.datetime.get_today(),
+			// default: frappe.datetime.get_today(),
 			// reqd : 1
 		},
 		{
-			"fieldname": "warehouse",
+			"fieldname": "set_warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
 			"options": "Warehouse"
@@ -40,7 +40,15 @@ frappe.query_reports["Compare Prices of Sales Order With Price List"] = {
 			"fieldname": "price_list",
 			"label": __("Price List"),
 			"fieldtype": "Link",
-			"options": "Price List"
+			"options": "Price List",
+			"get_query": function() {
+				return {
+					"filters": {
+						"selling": 1
+					}
+				};
+			},
 		},
 	]
 };
+

@@ -5,6 +5,7 @@ from frappe import _
 
 data = {
 
+
     'custom_fields': {
         "Sales Order":
         [ 
@@ -13,6 +14,12 @@ data = {
                 "fieldname": "notes",
                 "fieldtype": "Small Text",
                 "insert_after": "to_date" ,
+            },
+            {
+                "label": "Item Discount rate",
+                "fieldname": "item_discount_rate",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
             },
         ],
         "Quotation":
@@ -37,6 +44,26 @@ data = {
                 "fieldtype": "Small Text",
                 "insert_after": "source" ,
             },
+            {
+                "label": "Account Dimension",
+                "fieldname": "account_dimension_section",
+                "fieldtype": "Section Break",
+                "insert_after": "order_type" ,
+            },
+            {
+                "label": "Cost Center",
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "insert_after": "account_dimension_section" ,
+                "options":"Cost Center",
+            },
+            {
+
+                "label": "Item Discount rate",
+                "fieldname": "item_discount_rate",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
+            } 
         
         ],
         "Quotation Item":
@@ -74,6 +101,14 @@ data = {
                 "fieldtype": "Small Text",
                 "insert_after": "to_date" ,
             },
+            {
+
+                "label": "Item Discount rate",
+                "fieldname": "item_discount_rate",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
+            }
+          
         ],
         "Selling Settings":
         [
@@ -92,6 +127,15 @@ data = {
                 "fieldtype": "Check",
                 "insert_after": "purpose" ,
             },
+
+            {
+                "label": "Matrial Type",
+                "fieldname": "matrial_type",
+                "fieldtype": "Select",
+                "insert_after": "mendatory_fields" ,
+                "options":"\nDispensing Simples\nReceived Simples\nDispensing Gift"
+            },
+
         ],
         "Stock Entry":
         [
@@ -112,6 +156,16 @@ data = {
                 "depends_on":"eval:doc.mendatory_fields == true",
                 "mandatory_depends_on":"eval:doc.mendatory_fields == true"
             },
+
+			{
+				"label": "Old Stock Entry",
+				"fieldname": "old_stock_entry",
+				"fieldtype": "Link",
+				"insert_after": "customer_id",
+				"options": "Stock Entry",
+				"hidden": 1,
+			},
+
             {
                 "label": "Sales Team",
                 "fieldname": "sales_team",
@@ -123,48 +177,66 @@ data = {
         ],
         "Item":[
             {
-                "label": "Material",
-                "fieldname": "material",
-                "fieldtype": "Link",
-                "insert_after": "brand" ,
-                "options":"Material",
-            },
-            {
-                "label": "Origin",
-                "fieldname": "origin",
-                "fieldtype": "Link",
-                "insert_after": "material" ,
-                "options":"Origin",
-            },
-            {
-                "label": "Electroic Code",
-                "fieldname": "electroic_code",
-                "fieldtype": "Link",
-                "insert_after": "origin" ,
-                "options":"Electroic Code",
-            },
-            {
-                "label": "Old Code",
-                "fieldname": "old_code",
-                "fieldtype": "Link",
-                "insert_after": "electroic_code" ,
-                "options":"Old Code",
-            },
-            {
-                "label": "Size",
-                "fieldname": "size",
-                "fieldtype": "Link",
-                "insert_after": "old_code" ,
-                "options":"Size",
-            },
-            {
-                "label": "Group Code",
-                "fieldname": "group_code",
-                "fieldtype": "Data",
-                "insert_after": "item_group" ,
-            },
+				"label": "Material",
+				"fieldname": "material",
+				"fieldtype": "Link",
+				"insert_after": "brand" ,
+				"options":"Material",
+			},
+			{
+				"label": "Origin",
+				"fieldname": "origin",
+				"fieldtype": "Link",
+				"insert_after": "material" ,
+				"options":"Origin",
+			},
+			{
+				"label": "Electroic Code",
+				"fieldname": "electroic_code",
+				"fieldtype": "Link",
+				"insert_after": "origin" ,
+				"options":"Electroic Code",
+			},
+ 
+			{
+				"label": "Size",
+				"fieldname": "size_",
+				"fieldtype": "Link",
+				"insert_after": "electroic_code" ,
+				"options":"Size",
+			},
+			{
+				"label": "Group Code",
+				"fieldname": "group_code",
+				"fieldtype": "Data",
+				"insert_after": "size_" ,
+			},
+			{
+				"label": "Group Code 2",
+				"fieldname": "group_code2",
+				"fieldtype": "Data",
+				"insert_after": "group_code" ,
+				"fetch_from": "item_group.group_code"
+			},
+			{
+				"label": "Objective",
+				"fieldname": "objective_",
+				"fieldtype": "Link",
+				"insert_after": "group_code2" ,
+				"options":"Objective",
+			},
             
+        ],
+        "Purchase Order":[
+            {
+
+                "label": "Item Discount rate",
+                "fieldname": "item_discount_rate",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
+            } 
         ]
+
     },
      "properties": [
         {
@@ -176,4 +248,5 @@ data = {
         # "value": "0"
         },
      ]
+
 }

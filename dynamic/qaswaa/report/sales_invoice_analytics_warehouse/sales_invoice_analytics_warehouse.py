@@ -71,26 +71,22 @@ def get_period_list(filters):
 def get_data(filters):
 	sql =  f'''
 		SELECT 
-			SII.warehouse
+			SI.set_warehouse
 		FROM 
 			`tabSales Invoice` SI 
-		INNER JOIN 
-			`tabSales Invoice Item` SII
-		ON 
-			SI.name = SII.parent
 		WHERE 
-			SI.docstatus = 1
+			SI.docstatus = 1 and SI.set_warehouse != ""
 		GROUP BY 
-			SII.warehouse  
+			SI.set_warehouse  
 		'''
 	results = []
 	warehouses = frappe.db.sql(sql , as_dict= 1)
 	conditions = " 1=1"
 	if filters.get("cost_center") :
-		conditions += f" and SII.cost_center = '{filters.get('cost_center')}'"
+		conditions += f" and SI.cost_center = '{filters.get('cost_center')}'"
 	if filters.get("warehouse") :
-		# conditions += f" and SII.warehouse = '{filters.get('warehouse')}'"
-		warehouses = [{"warehouse" : filters.get("warehouse")}]
+		conditions += f" and SI.set_warehouse = '{filters.get('warehouse')}'"
+		warehouses = [{"set_warehouse" : filters.get("warehouse")}]
 	if filters.get("customer") :
 		conditions += f" and SI.customer = '{filters.get('customer')}'"
 	if filters.get("item_group") :
@@ -99,17 +95,18 @@ def get_data(filters):
 		conditions += f" and SII.item_code = '{filters.get('item_code')}'"
 
 	period_list = get_period_list(filters)
+	
 	# frappe.throw(str(period_list))
 
 	for warehouse in warehouses :
-		warehouse = warehouse["warehouse"]
+		warehouse = warehouse["set_warehouse"]
 		dict ={"warehouse" : warehouse}
-		# conditions += f" and SII.cost_center = '{center}'"
+		# conditions += f" and SI.cost_center = '{center}'"
 		for period in period_list :
 
 			ss = f'''
 				SELECT 
-					SUM(SII.amount) as {period.key}
+					DISTINCT SI.name as name
 				FROM 
 					`tabSales Invoice` SI 
 				INNER JOIN 
@@ -119,14 +116,20 @@ def get_data(filters):
 				WHERE
 				    {conditions} and
 					SI.docstatus = 1 and
-					SII.warehouse = '{warehouse}' and 
+					SI.set_warehouse = '{warehouse}' and 
 					SI.posting_date >= '{period.from_date}' 
 					and SI.posting_date <= '{period.to_date}'
 				'''
-			data = frappe.db.sql(ss , as_dict = 1)
-			dict[period.key] = data[0][period.key]
-
+			data = frappe.db.sql(ss , as_list = 1)
+			total = 0
+			for r in data:
+				invoice_doc = frappe.get_doc("Sales Invoice", r[0])
+				total += invoice_doc.net_total or 0
+			dict[period.key] = total
 		results.append(dict)
+	for record in results:
+          total_sales = sum(value for value in record.values() if isinstance(value, (int, float)))
+          record['total'] = total_sales
 	return results
 
 def get_columns(filters):
@@ -150,5 +153,14 @@ def get_columns(filters):
 				"width": 150,
 			}
 		)
+	columns.append(
+			{
+				"fieldname": "total",
+				"label": "Total",
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 100,
+			}
+	)
 
 	return columns

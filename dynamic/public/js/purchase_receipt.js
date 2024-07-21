@@ -19,7 +19,47 @@ frappe.ui.form.on('Purchase Receipt', {
                 }
             }
         })
-	}
+	},
+    item_code_update:function(frm ,cdt , cdn){
+        // this function work with domain master Deals only 
+        var local = locals[cdt][cdn]
+        frappe.call({
+          method: "dynamic.api.get_active_domains",
+          callback: function (r) {
+              if (r.message && r.message.length) {
+                  if (r.message.includes("Master Deals")) {
+                      console.log("Master Deals In Active Domains ")
+                      // call api to get current available qty 
+                      if (frm.doc.set_warehouse || local.warehouse ) {
+                        
+                        var args = {"item" : local.item_code , "s_warehouse" :local.warehouse || frm.doc.set_warehouse ,}
+                        if (!frm.__islocal) {
+                          console.log("Old Document !")
+                          args = {"item" : local.item_code ,
+                                  "s_warehouse" :local.warehouse || frm.doc.set_warehouse ,
+                                  "doc" : frm.doc.name
+                                  }
+                        }
+                        frappe.call({
+                          method :"dynamic.master_deals.master_deals_api.get_current_item_available_qty" ,
+                          "args" :args ,
+                          callback:function(r){
+                            console.log(r)
+                            if (r.message){
+                              local.available_qty = r.message
+                              frm.refresh_field("items")
+                            }  else { 
+                                local.available_qty =0
+                                frm.refresh_field("items")
+                              }
+                          }
+                        })
+                      }
+                  }
+              }
+          }
+      })
+    }
 });
 
 
@@ -31,7 +71,16 @@ frappe.ui.form.on("Purchase Receipt Item", {
             row.price_list_rate = row.stock_uom_rate * row.conversion_factor
         }
         cur_frm.refresh_fields("items")
-    }
+    },
+    item_code:function(frm ,cdt , cdn){
+        frm.events.item_code_update(frm ,cdt , cdn)
+    },
+    warehouse:function(frm ,cdt , cdn){
+        frm.events.item_code_update(frm ,cdt , cdn)
+    },
+    qty:function(frm ,cdt , cdn){
+        frm.events.item_code_update(frm ,cdt , cdn)
+    },
 })
 
 //******* */
@@ -183,3 +232,5 @@ const override_scan_code = erpnext.stock.PurchaseReceiptController.extend({
       cur_frm.cscript,
       new override_scan_code({frm: cur_frm}),
   )
+
+

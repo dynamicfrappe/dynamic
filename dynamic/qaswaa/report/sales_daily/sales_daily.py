@@ -54,7 +54,7 @@ def get_columns():
 			"options": "Sales Invoice",
 			"width": 300,
 		},
-				{
+		{
 			"fieldname": "set_warehouse",
 			"label": _("Warehouse"),
 			"fieldtype": "Link",
