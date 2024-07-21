@@ -233,7 +233,6 @@
    "read_only": 1
   },
   {
-   "allow_on_submit": 1,
    "fieldname": "conservation",
    "fieldtype": "Link",
    "label": "Conservation",
@@ -244,7 +243,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-17 16:05:04.605062",
+ "modified": "2024-07-21 09:12:30.691848",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation order",
