@@ -247,6 +247,39 @@ data = {
         # "property_type": "Check",
         # "value": "0"
         },
+        {
+            "doctype": "Sales Invoice",
+            "doctype_or_field": "DocField",
+            "fieldname": "sales_team",
+            "property": "allow_on_submit",
+            "property_type": "Check",
+            "value": "0",
+        },
+        {
+            "doctype": "Sales Team",
+            "doctype_or_field": "DocField",
+            "fieldname": "sales_person",
+            "property": "allow_on_submit",
+            "property_type": "Check",
+            "value": "0",
+        }, 
+        {
+            "doctype": "Sales Team",
+            "doctype_or_field": "DocField",
+            "fieldname": "allocated_percentage",
+            "property": "allow_on_submit",
+            "property_type": "Check",
+            "value": "0",
+        }, 
+        {
+            "doctype": "Sales Team",
+            "doctype_or_field": "DocField",
+            "fieldname": "incentives",
+            "property": "allow_on_submit",
+            "property_type": "Check",
+            "value": "0",
+        }, 
+        
      ]
 
 }
