@@ -1062,3 +1062,12 @@ def create_terra_scripts():
 
 
 
+def create_terra_test_scripts():
+    try:
+        create_payment_entry_script()
+    except Exception as ex:
+        pass
+    try:
+        create_mode_of_payment_script()
+    except:
+        pass

@@ -477,7 +477,8 @@ domains = {
     "Notebook": "dynamic.domains.notebook",
     "Smart Vision": "dynamic.domains.smart_vision",
     "Stock Reservation": "dynamic.domains.stock_reservation",
-    "Skyline": "dynamic.domains.skyline"
+    "Skyline": "dynamic.domains.skyline",
+    "Payment Deduction": "dynamic.domains.payment_deduction"
 }
 
 # domain Conatin
