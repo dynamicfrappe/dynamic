@@ -58,6 +58,7 @@ class Conservationorder(Document):
 
 	def on_submit(self):
 		self.create_conservation()
+		self.create_event()
 
 	def calculate_total_cost(self):
 		sum = 0
@@ -109,3 +110,17 @@ class Conservationorder(Document):
 		frappe.msgprint(_("{} {} was Created").format(
 		conservation.doctype, lnk))
 		self.db_set("conservation",conservation.name)
+
+	def create_event(self):
+		if self.engineering_name :
+			for entry in self.engineering_name :
+				event = frappe.new_doc("Event")
+				event.subject = self.name
+				event.starts_on = entry.from1
+				event.ends_on = entry.to
+				event.append("event_participants" , 
+				 			{"reference_doctype" : "Employee" , "reference_docname" : entry.employee})
+				event.insert()
+
+
+
