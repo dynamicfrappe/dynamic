@@ -311,7 +311,10 @@ doc_events = {
             "dynamic.api.submit_purchase_recipt",
             "dynamic.api.submit_purchase_recipt_based_on_active_domains",
         ],
-        "before_save": "dynamic.api.before_save",
+        "before_save": [
+            "dynamic.api.before_save",
+            "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_purchase_receipt"
+        ],
         "validate": [
             "dynamic.controllers.purchase_receipt.validate_purchase_receipt",
         ],
