@@ -17,6 +17,15 @@ data = {
                 "insert_after": "last_com_section",
             },
         ],
+        'Asset': [
+            {
+                "label": _("Num of Journal Entries"),
+                "fieldname": "num_journal_entry",
+                "fieldtype": "Int",
+                "insert_after": "schedules",
+            },
+        ]
+
     }
 
 }
