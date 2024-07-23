@@ -63,12 +63,17 @@ def validate_sales_team(self):
 			frappe.throw("Sales Team was mandatory")
 
 def item_discount_rate(self):
-        item_discount_rate = self.item_discount_rate
-        for item in self.items:
-            item.discount_percentage = item_discount_rate
+    item_discount_rate = self.item_discount_rate or 0
+    for item in self.items:
+        item.discount_percentage = item_discount_rate
+        if item_discount_rate is not None:
             item.discount_amount = item.price_list_rate * (item_discount_rate / 100)
-            item.rate = item.price_list_rate - item.discount_amount
-            item.amount = item.rate * item.qty
+        else:
+            item.discount_amount = 0  
+        item.rate = item.price_list_rate - item.discount_amount
+        item.amount = item.rate * item.qty
+
+
 
 def edit_of_reseration(self ):
 	items = self.get("items")

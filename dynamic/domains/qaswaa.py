@@ -278,7 +278,7 @@ data = {
             "property": "allow_on_submit",
             "property_type": "Check",
             "value": "0",
-        }, 
+        },
         
      ]
 

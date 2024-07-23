@@ -74,7 +74,14 @@ def get_data(filters):
 
             sales_person = frappe.db.get_value("Sales Team", {"parent": invoice_name, "parenttype": "Sales Invoice", "parentfield": "sales_team"}, "sales_person")
 
-            refund_amount = frappe.db.get_value("Sales Invoice", {"is_return": 1, "return_against": invoice_name}, 'base_grand_total') or 0
+            refund_amount1 = frappe.db.get_value("Sales Invoice", {"is_return": 1, "return_against": invoice_name}, 'base_grand_total') or 0
+            refund_amount = frappe.db.sql("""
+                SELECT SUM(grand_total)
+                FROM `tabSales Invoice`
+                WHERE is_return = 1 AND return_against = %s
+            """, invoice_name)[0][0] or 0
+
+            
             total_refund_amount += refund_amount
             total_diff += diff
             total_net_total += net_total
