@@ -32,6 +32,16 @@ data = {
                 "fetch_from":"customer.discount_item",
             },
         ],
+           "Quotation":
+        [ 
+            {
+                "label": "Discount Item",
+                "fieldname": "discount_item",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
+                "fetch_from":"party_name.discount_item",
+            },
+        ],
 
     },
     "properties": [

@@ -10,6 +10,9 @@ def validate(self , event):
 		warehouse1(self)
 		validate_sales_team(self)
 		item_discount_rate(self)
+	
+	if "Healthy Corner" in Domains:
+		item_discount_rate2(self)
 		
 		
 
@@ -64,6 +67,17 @@ def validate_sales_team(self):
 
 def item_discount_rate(self):
     item_discount_rate = self.item_discount_rate or 0
+    for item in self.items:
+        item.discount_percentage = item_discount_rate
+        if item_discount_rate is not None:
+            item.discount_amount = item.price_list_rate * (item_discount_rate / 100)
+        else:
+            item.discount_amount = 0  
+        item.rate = item.price_list_rate - item.discount_amount
+        item.amount = item.rate * item.qty
+
+def item_discount_rate2(self):
+    item_discount_rate = self.discount_item or 0
     for item in self.items:
         item.discount_percentage = item_discount_rate
         if item_discount_rate is not None:
