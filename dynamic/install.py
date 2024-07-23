@@ -132,4 +132,9 @@ def create_domain_list():
 		pre.domain = 'Pre Quotation'
 		pre.insert()
 
+	if not frappe.db.exists("Domain", "Healthy Corner"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'Healthy Corner'
+		pre.insert()	
+
 
