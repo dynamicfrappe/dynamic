@@ -317,6 +317,27 @@ data = {
                 "fieldtype": "Float",
                 "insert_after": "total_qty",
                 "read_only":1,
+            },
+            {
+                "fieldname": "driver_sec",
+                "label": "Driver Info",
+                "fieldtype": "Section Break",
+                "insert_after": "dispatch_address",
+                # "collapsible ":1 
+            },
+            {
+                "fieldname": "driver",
+			    "label": "Driver",
+			    "fieldtype": "Link",
+			    "options":"Driver",
+                "insert_after": "driver_sec",
+            },
+            {
+                "fieldname": "driver_name",
+			    "label": "Driver Name",
+			    "fieldtype": "Data",
+                "insert_after": "driver",
+                "fetch_from": "driver.full_name"
             }
         ],
         "Delivery Note": 
