@@ -479,7 +479,8 @@ domains = {
     "Smart Vision": "dynamic.domains.smart_vision",
     "Stock Reservation": "dynamic.domains.stock_reservation",
     "Pre Quotation": "dynamic.domains.pre_quotation",
-    "Skyline": "dynamic.domains.skyline"
+    "Skyline": "dynamic.domains.skyline",
+    "Healthy Corner":"dynamic.domains.healthy_corner"
 }
 
 # domain Conatin
