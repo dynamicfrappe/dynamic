@@ -119,6 +119,7 @@ doctype_js = {
     "Journal Entry": "public/js/journal_entry.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
+    "Asset": "public/js/asset.js"
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 }
@@ -478,7 +479,8 @@ domains = {
     "Smart Vision": "dynamic.domains.smart_vision",
     "Stock Reservation": "dynamic.domains.stock_reservation",
     "Pre Quotation": "dynamic.domains.pre_quotation",
-    "Skyline": "dynamic.domains.skyline"
+    "Skyline": "dynamic.domains.skyline",
+    "Healthy Corner":"dynamic.domains.healthy_corner"
 }
 
 # domain Conatin

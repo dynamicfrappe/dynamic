@@ -56,6 +56,7 @@ def get_data(filters):
         total_advance = frappe.db.get_value("Payment Entry Reference",
                                              {"reference_name": doc.name, "reference_doctype": "Sales Invoice"},
                                              "allocated_amount") or 0
+        
         temp = {}
         temp['posting_date'] = doc.posting_date
         temp['name'] = doc.name
@@ -92,11 +93,11 @@ def get_columns(filters):
 			"width": 200,
 		},
         {
-			"fieldname": "return_agent",
-			"label": _("Return Agent"),
-			"fieldtype": "Data",
-			"width": 200,
-		}, 
+            "fieldname": "return_agent",
+            "label": _("Return Agent"),
+            "fieldtype": "Data",
+            "width": 200,
+        },
 		{
 			"fieldname": "warehouse",
 			"label": _("Warehouse"),
