@@ -358,6 +358,21 @@ frappe.ui.form.on("Sales Invoice Item", {
             }
         }
     }); 
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      async: false,
+      callback: function (r) {
+        if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+          if(row.item_code){
+            console.log("Hi");
+            let discount_item = frm.doc.discount_item
+            row.discount_percentage = discount_item ;
+            console.log("ksjdnbjdsfs");
+            frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+          }
+        }
+      },
+    });
       frm.refresh_fields('items');
     }
   },
