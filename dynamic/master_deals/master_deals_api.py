@@ -243,7 +243,7 @@ def escape_html_demo(text):
 @frappe.whitelist()
 def get_current_item_available_qty( item , s_warehouse ,purpose = None  ,doc=None,factor = None) :
 	"""
-	Allowed documents ['Delivery Note' , 'Stock Entry']
+	Allowed documents ['Delivery Note' , 'Stock Entry' , 'Purchase Receipt']
 	params item        -- item name --string
 			s_warehouse  -- warehouse name -- String  
 			purpose      -- stock entry type should be one off accepted types 
@@ -275,7 +275,7 @@ def get_current_item_available_qty( item , s_warehouse ,purpose = None  ,doc=Non
 
 def get_item_sum_draft_qty(item ,s_warehouse , document_name =None):
 	"""
-   Allowed documents ['Delivery Note' , 'Stock Entry']
+   Allowed documents ['Delivery Note' , 'Stock Entry' , 'Purchase Receipt']
    params item        -- item name --string
           s_warehouse -- warehouse name -- String  
           document    -- current doctype name 
@@ -306,16 +306,30 @@ def get_item_sum_draft_qty(item ,s_warehouse , document_name =None):
 	  a.warehouse = '{s_warehouse}' 
      """
 	
+    #get sum item qty in Purchase Receipt
+	purchase_receipt_sql = f"""
+     SELECT SUM(a.stock_qty) as valid_qty FROM `tabPurchase Receipt Item` a
+     INNER JOIN `tabPurchase Receipt` b 
+     on a.parent = b.name
+	  WHERE b.docstatus=0  AND a.item_code = '{item}'
+     AND 
+	  a.warehouse = '{s_warehouse}' 
+     """
+
 	# if current document saved before remove local item from the submission  
 	if document_name :
 		stock_entry_sql = stock_entry_sql +f"AND b.name NOT IN ('{document_name}')"
 		delivery_note_sql = delivery_note_sql +f"AND b.name NOT IN ('{document_name}')"
+		purchase_receipt_sql = purchase_receipt_sql +f"AND b.name NOT IN ('{document_name}')"
 	stock_entry_data = frappe.db.sql(stock_entry_sql , as_dict=1)
 	delivery_note_data = frappe.db.sql(delivery_note_sql , as_dict=1)
+	purchase_receipt_data = frappe.db.sql(purchase_receipt_sql , as_dict=1)
 	if stock_entry_data and len(stock_entry_data) > 0 :
 				total_draft_qty +=  float( stock_entry_data[0].get("valid_qty") or 0)
 	if delivery_note_data and len(delivery_note_data) > 0 :
 				total_draft_qty +=  float( delivery_note_data[0].get("valid_qty") or 0 )
+	if purchase_receipt_data and len(purchase_receipt_data) > 0 :
+				total_draft_qty +=  float( purchase_receipt_data[0].get("valid_qty") or 0 )
 	return total_draft_qty
 
 def delivery_note_validate_item_qty(doc, *args):
@@ -369,8 +383,18 @@ def get_avail_qty_in_draft_delivery(self, *args):
 										in warehouse {item.warehouse} \n Current Qty = {item.available_qty} 
 .
 																				And required qty {item.stock_qty}"""))
-                                        
 
+@frappe.whitelist()
+def get_avail_qty_in_draft_purchase_receipt(self, *args):
+	if "Master Deals" in DOMAINS:
+		# add stock setting flage
+		if frappe.db.get_single_value("Selling Settings", "check_qty"):
+			for item in self.items :
+				if item.available_qty < item.stock_qty :
+					frappe.throw(_(f""" item {item.item_code} Has Not Enough qty 
+										in warehouse {item.warehouse} \n Current Qty = {item.available_qty} 
+.
+																				And required qty {item.stock_qty}"""))                                       
 
 @frappe.whitelist()
 def get_avail_qty_in_draft_stock_entry(self, *args):
@@ -463,3 +487,28 @@ def get_avail_qty_in_draft_stock_delivry_2(doc, *args):
 						"""
                                 )
                             )
+
+
+@frappe.whitelist()
+def update_price_list(doc ,*args ,**kwags) :
+       print(doc.doctype)
+       for item in doc.items :
+            ## check price and price list and uom 
+            #  item_price = frappe.get_doc("Item Price"  ,{"item_code" : "STO-ITEM-2024-00258" , "uom" :"UI"})
+            if doc.doctype in ["Purchase Invoice"  ,"Purchase Receipt"]:
+                item_price = frappe.get_list("Item Price"  ,{"item_code" : item.item_code , "uom" :item.uom , "price_list" : doc.buying_price_list} , "name")
+
+            if len(item_price) ==0 :
+                    price = frappe.new_doc("Item Price") 
+                    price.item_code = item.item_code 
+                    price.uom = item.uom 
+                    price.price_list = doc.buying_price_list
+                    price.price_list_rate = item.price_list_rate
+                    price.save()
+                    frappe.db.commit()
+                    frappe.msgprint("Item Price created")
+            if len(item_price) > 0  :
+                   for price in item_price :
+                          frappe.db.set_value("Item Price" ,  price.get("name") ,"price_list_rate" , item.price_list_rate)
+                          frappe.msgprint("Item Price updated")
+

@@ -64,7 +64,15 @@ data = {
               
             },
         ],
-
+        'Purchase Receipt Item':[
+            {
+                "label":_("Available Qty"),
+                "fieldname":"available_qty",
+                "fieldtype":"Float",
+                "insert_after":"stock_qty", 
+                "read_only":1
+            }
+        ],
         'Customer':[
             {
                 "label":_("Customer Code"),
