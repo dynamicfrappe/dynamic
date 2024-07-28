@@ -305,7 +305,7 @@ doc_events = {
         ],
         "validate": [
             "dynamic.controllers.purchase_receipt.validate_purchase_receipt",
-            "dynamic.master_deals.master_deals_api.update_price_list"
+            "dynamic.master_deals.master_deals_api.update_price_list",
             "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_purchase_receipt"
 
         ],
