@@ -123,14 +123,14 @@ def get_columns(filters):
         }
     )
 
-    columns.append(
-         {
-            "fieldname": "sales_person",
-            "label": "Sales Person",
-            "fieldtype": "Data",
-            "width": 150,
-        }
-    )
+#     columns.append(
+#          {
+#             "fieldname": "sales_person",
+#             "label": "Sales Person",
+#             "fieldtype": "Data",
+#             "width": 150,
+#         }
+#     )
 
     return columns
 

@@ -70,7 +70,7 @@ def after_install():
 	create_currency_exchange_rate_script()
 	create_sales_invoice_script()
 	create_invoice_custom_field()
-	# create_domain_list()
+	create_domain_list()
 	# try:
 	# 	frappe.db.sql("""delete from tabWorkspace where name in ("HR","Loans","Payroll","Quality","Projects","Support")""")
 	# 	frappe.db.commit()
@@ -126,4 +126,15 @@ def create_domain_list():
 		dm1 = frappe.new_doc("Domain")
 		dm1.domain = 'IFI'
 		dm1.insert()
+	
+	if not frappe.db.exists("Domain", "Pre Quotation"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'Pre Quotation'
+		pre.insert()
+
+	if not frappe.db.exists("Domain", "Healthy Corner"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'Healthy Corner'
+		pre.insert()	
+
 
