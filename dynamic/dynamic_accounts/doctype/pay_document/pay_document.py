@@ -75,7 +75,7 @@ class PayDocument(Document):
         je.company = self.company
         je.cheque_no = self.reference_no
         je.cheque_date = self.reference_date
-        je.remark = f' { self.name } وثيقة دفع ' 
+        je.remark = f' { self.name } وثيقة دفع '
         if 'Maser2000' in DOMAINS:
             je.user_remark = self.notes
             je.cheque_no = self.reference_number
