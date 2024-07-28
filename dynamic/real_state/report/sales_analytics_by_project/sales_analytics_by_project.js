@@ -12,18 +12,18 @@ frappe.query_reports["Sales Analytics by Project"] = {
 			"reqd" :1
 		},
 		{
-			"fieldname":"from_date",
-			"label": __("From Date"),
-			"fieldtype": "Date",
-			"default": frappe.defaults.get_user_default("year_start_date"),
-			"reqd": 1
+			fieldname: "period_start_date",
+			label: __("From Date"),
+			fieldtype: "Date",
+			default: frappe.datetime.add_days(frappe.datetime.get_today(),-20),
+			reqd : 1
 		},
 		{
-			"fieldname":"to_date",
-			"label": __("To Date"),
-			"fieldtype": "Date",
-			"default": frappe.defaults.get_user_default("year_end_date"),
-			"reqd": 1
+			fieldname: "period_end_date",
+			label: __("To Date"),
+			fieldtype: "Date",
+			default: frappe.datetime.get_today(),
+			reqd : 1
 		},
 	]
 };

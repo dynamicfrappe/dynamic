@@ -60,15 +60,24 @@ frappe.ui.form.on('Stock Entry', {
 		})
     },
 	stock_entry_type: function(frm) {
-        frappe.db.get_value("Stock Entry Type", frm.doc.stock_entry_type , "matrial_type")
-        .then(function(r) {
-            let matrial_type = r.message.matrial_type;
-            if (matrial_type == 'Dispensing Gift') {
-				$(".custom-actions .inner-group-button").hide()
-            }else{
-				$(".custom-actions .inner-group-button").show()
+		frappe.call({
+			method: "dynamic.api.get_active_domains",
+			callback: function (r) {
+				if (r.message && r.message.length) {
+					if (r.message.includes("Qaswaa")) {
+						frappe.db.get_value("Stock Entry Type", frm.doc.stock_entry_type , "matrial_type")
+						.then(function(r) {
+							let matrial_type = r.message.matrial_type;
+							if (matrial_type == 'Dispensing Gift') {
+								$(".custom-actions .inner-group-button").hide()
+							}else{
+								$(".custom-actions .inner-group-button").show()
+							}
+						});
+					}
+				}
 			}
-        });
+		})		
     }
 });
 
