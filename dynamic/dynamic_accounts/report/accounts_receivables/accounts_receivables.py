@@ -13,6 +13,10 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 	get_dimension_with_children,
 )
 from erpnext.accounts.utils import get_currency_precision
+import datetime
+from datetime import date
+
+
 
 #  This report gives a summary of all Outstanding Invoices considering the following
 
@@ -103,6 +107,31 @@ class ReceivablePayableReport(object):
 			self.update_voucher_balance(gle)
 
 		self.build_data()
+		self.add_new_filters()
+
+	def add_new_filters(self):
+
+		if self.filters.get("from_date"):
+			from_date = getdate(self.filters.get("from_date"))
+			self.data = [
+            entry for entry in self.data
+            if isinstance(entry['posting_date'], datetime.date) and from_date <= entry['posting_date']
+        	]
+
+		if self.filters.get("to_date"):
+			to_date = getdate(self.filters.get("to_date"))
+			self.data = [
+            entry for entry in self.data
+            if isinstance(entry['posting_date'], datetime.date) and entry['posting_date'] <= to_date
+        ]
+			
+		if self.filters.get("project"):
+			project = self.filters.get("project")
+			self.data = [
+            entry for entry in self.data
+            if entry.get('project') and entry['project'] == project
+        ]
+		return self.data
 
 	def init_voucher_balance(self):
 		# build all keys, since we want to exclude vouchers beyond the report date
@@ -198,6 +227,8 @@ class ReceivablePayableReport(object):
 
 		if gle.cost_center:
 			row.cost_center = str(gle.cost_center)
+		if gle.project:
+			row.project = str(gle.project)
 
 	def update_sub_total_row(self, row, party):
 		total_row = self.total_row_map.get(party)
@@ -699,7 +730,7 @@ class ReceivablePayableReport(object):
 		self.gl_entries = frappe.db.sql(
 			"""
 			select
-				name, posting_date, account, party_type, party, voucher_type, voucher_no, cost_center,
+				name, posting_date, account, party_type, party, voucher_type, voucher_no, cost_center, project ,
 				against_voucher_type, against_voucher, account_currency, {0}, {1} {remarks}
 			from
 				`tabGL Entry`
@@ -921,6 +952,7 @@ class ReceivablePayableReport(object):
 			)
 
 		self.add_column(label=_("Cost Center"), fieldname="cost_center", fieldtype="Data")
+		self.add_column(label=_("Project"), fieldname="project", fieldtype="Data")
 		self.add_column(label=_("Voucher Type"), fieldname="voucher_type", fieldtype="Data")
 		self.add_column(
 			label=_("Voucher No"),
