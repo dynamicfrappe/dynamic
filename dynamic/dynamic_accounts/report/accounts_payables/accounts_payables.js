@@ -38,6 +38,23 @@ frappe.query_reports["Accounts Payables"] = {
 			}
 		},
 		{
+			"fieldname": "from_date",
+			"label": __("From Date"),
+			"fieldtype": "Date",
+			
+		},
+		{
+			"fieldname": "to_date",
+			"label": __("To Date"),
+			"fieldtype": "Date",
+		},
+		{
+			"fieldname": "project",
+			"label": __("Project"),
+			"fieldtype": "Link",
+			"options":"Project"
+		},
+		{
 			"fieldname": "supplier",
 			"label": __("Supplier"),
 			"fieldtype": "Link",
