@@ -563,7 +563,7 @@ def check_source_item(self, *args, **kwargs):
 	if "Dynamic Accounts" in DOMAINS:
 		meta = frappe.get_meta(self.doctype)
 		if meta.has_field("outstanding_amount"):
-			if len(self.get("advancess")):
+			if len(self.get("advances")):
 				total_advance_paid = sum(
 					adv.advance_amount for adv in self.get("advancess")
 				)
