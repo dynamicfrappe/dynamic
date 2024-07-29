@@ -87,7 +87,9 @@ def get_data(filters=None):
             monthly_totals[period_key] = total_advance_amount
         
         # Calculate the total sum of all monthly_totals
-        total_sum = sum(monthly_totals.values())
+        total_sum = 0
+        if monthly_totals:
+            total_sum = sum(monthly_totals.values())
         
         data.append({
             'customer': customer,

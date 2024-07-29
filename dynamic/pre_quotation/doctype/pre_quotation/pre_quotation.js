@@ -8,6 +8,12 @@
 // {% include 'erpnext/selling/sales_common.js' %}
 
 frappe.ui.form.on('Pre Quotation', {
+	onload:function(frm){
+
+	},
+	refresh:function(frm){
+
+	},
 	setup: function(frm) {
 		frm.custom_make_buttons = {
 			'Sales Order': 'Sales Order'
@@ -217,28 +223,27 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 					me.frm.set_value(r.message);
 					me.frm.refresh();
 					me.frm.updating_party_details = false;
-
 				}
 			}
 		})
 	}
 });
 
-cur_frm.script_manager.make(erpnext.selling.QuotationController);
+// // cur_frm.script_manager.make(erpnext.selling.QuotationController);
 
-cur_frm.cscript['Make Sales Order'] = function() {
-	frappe.model.open_mapped_doc({
-		method: "erpnext.selling.doctype.quotation.quotation.make_sales_order",
-		frm: cur_frm
-	})
-}
+// // cur_frm.cscript['Make Sales Order'] = function() {
+// // 	frappe.model.open_mapped_doc({
+// // 		method: "erpnext.selling.doctype.quotation.quotation.make_sales_order",
+// // 		frm: cur_frm
+// // 	})
+// // }
 
-frappe.ui.form.on("Pre Quotation Item", "items_on_form_rendered", "packed_items_on_form_rendered", function(frm, cdt, cdn) {
-	// enable tax_amount field if Actual
-})
+// // frappe.ui.form.on("Pre Quotation Item", "items_on_form_rendered", "packed_items_on_form_rendered", function(frm, cdt, cdn) {
+// // 	// enable tax_amount field if Actual
+// // })
 
-// frappe.ui.form.on("Pre Quotation Item", "stock_balance", function(frm, cdt, cdn) {
-// 	var d = frappe.model.get_doc(cdt, cdn);
-// 	frappe.route_options = {"item_code": d.item_code};
-// 	frappe.set_route("query-report", "Stock Balance");
-// })
+// // frappe.ui.form.on("Pre Quotation Item", "stock_balance", function(frm, cdt, cdn) {
+// // 	var d = frappe.model.get_doc(cdt, cdn);
+// // 	frappe.route_options = {"item_code": d.item_code};
+// // 	frappe.set_route("query-report", "Stock Balance");
+// // })

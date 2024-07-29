@@ -10,7 +10,7 @@ from frappe.utils import flt, getdate, nowdate
 
 # from erpnext.controllers.selling_controller import SellingController
 
-form_grid_templates = {"items": "templates/form_grid/item_grid.html"}
+# form_grid_templates = {"items": "templates/form_grid/item_grid.html"}
 
 class PreQuotation(Document):
 	pass
