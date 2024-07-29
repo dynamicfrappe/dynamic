@@ -189,6 +189,12 @@ frappe.query_reports["Accounts Receivables"] = {
 			"fieldtype": "Date",
 		},
 		{
+			"fieldname": "project",
+			"label": __("Project"),
+			"fieldtype": "Link",
+			"options":"Project"
+		},
+		{
 			"fieldname": "tax_id",
 			"label": __("Tax Id"),
 			"fieldtype": "Data",
