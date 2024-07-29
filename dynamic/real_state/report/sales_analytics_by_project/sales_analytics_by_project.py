@@ -81,15 +81,16 @@ def get_data(filters=None):
                     AND b.transaction_date <= DATE('{to_date}')
                     {conditions}
             """, as_dict=1)
-            
+            print("result" , result)
             total_advance_amount = result[0].get('total_advance_amount', 0) if result else 0
             
             monthly_totals[period_key] = total_advance_amount
         
         # Calculate the total sum of all monthly_totals
         total_sum = 0
-        if monthly_totals:
-            total_sum = sum(monthly_totals.values())
+        print(monthly_totals)
+        # if monthly_totals:
+        #     total_sum = sum(monthly_totals.values())
         
         data.append({
             'customer': customer,
