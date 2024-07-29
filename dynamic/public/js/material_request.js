@@ -1,4 +1,8 @@
 frappe.ui.form.on("Material Request",{
+  onload:function(frm){
+    frm.ignore_doctypes_on_cancel_all = ['Supplier Quotation'];
+  },
+
     refresh(frm){
 
    
