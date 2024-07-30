@@ -45,15 +45,24 @@ data = {
                 "options":"Cost Center",
                 "mandatory_depends_on":"eval:doc.has_deduct==1"
             },
-            # {
-            #     "fieldname":"naming",
-            #     "fieldtype":"Select",
-            #     "label":"Naming Template",
-            #     "insert_after":"type",
-            #     "options":"\nProjects-.YYYY.-\nHeliopolis-.YYYY.-\nNew Cairo-.YYYY.-\nZayed-.YYYY.-\nMohandseen-.YYYY.-\nMain-.YYYY.-"
-            # }
+            {
+                "fieldname":"naming",
+                "fieldtype":"Select",
+                "label":"Naming Template",
+                "insert_after":"type",
+                "options":"\nProjects-.YYYY.-\nHeliopolis-.YYYY.-\nNew Cairo-.YYYY.-\nZayed-.YYYY.-\nMohandseen-.YYYY.-\nMain-.YYYY.-"
+            }
         ],
-    # 'on_setup': 'dynamic.terra.setup.create_terra_test_scripts'
+        "Payment Entry":[
+            {
+                "fieldname":"mode_of_payment_naming",
+                "fieldtype":"Data",
+                "insert_after":"title",
+                "hidden":1,
+                "no_copy":1
+            }
+        ],
+    # 'on_setup': 'dynamic.terra.setup.create_payment_deduction_scripts'
     
     }
 }
