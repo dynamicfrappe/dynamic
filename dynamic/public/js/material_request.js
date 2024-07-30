@@ -1,4 +1,18 @@
 frappe.ui.form.on("Material Request",{
+  onload:function(frm){
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) { 
+        if (r.message && r.message.length) {
+          if (r.message.includes("Terra")) {
+          frm.ignore_doctypes_on_cancel_all = ['Supplier Quotation'];
+
+      }
+    }
+    }
+  })
+  },
+
     refresh(frm){
 
    

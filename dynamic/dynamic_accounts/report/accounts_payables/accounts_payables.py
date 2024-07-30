@@ -1,9 +1,10 @@
-# Copyright (c) 2024, Dynamic and contributors
-# For license information, please see license.txt
 
-# import frappe
+from dynamic.dynamic_accounts.report.accounts_receivables.accounts_receivables import ReceivablePayableReport
 
 
 def execute(filters=None):
-	columns, data = [], []
-	return columns, data
+    args = {
+        "party_type": "Supplier",
+        "naming_by": ["Buying Settings", "supp_master_name"],
+    }
+    return ReceivablePayableReport(filters).run(args)

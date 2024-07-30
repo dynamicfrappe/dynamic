@@ -8,6 +8,12 @@
 // {% include 'erpnext/selling/sales_common.js' %}
 
 frappe.ui.form.on('Pre Quotation', {
+	onload:function(frm){
+
+	},
+	refresh:function(frm){
+
+	},
 	setup: function(frm) {
 		frm.custom_make_buttons = {
 			'Sales Order': 'Sales Order'
@@ -58,13 +64,14 @@ frappe.ui.form.on('Pre Quotation', {
 erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 	onload: function(doc, dt, dn) {
 		var me = this;
-		this._super(doc, dt, dn);
+		// this._super(doc, dt, dn);
 
 	},
 	party_name: function() {
 		var me = this;
 		erpnext.utils.get_party_details(this.frm, null, null, function() {
-			me.apply_price_list();
+			// me.apply_price_list();
+			console.log("HI");
 		});
 
 		if(me.frm.doc.quotation_to=="Lead" && me.frm.doc.party_name) {
@@ -72,7 +79,7 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 		}
 	},
 	refresh: function(doc, dt, dn) {
-		this._super(doc, dt, dn);
+		// this._super(doc, dt, dn);
 		doctype = doc.quotation_to == 'Customer' ? 'Customer':'Lead';
 		frappe.dynamic_link = {doc: this.frm.doc, fieldname: 'party_name', doctype: doctype}
 
@@ -217,28 +224,73 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 					me.frm.set_value(r.message);
 					me.frm.refresh();
 					me.frm.updating_party_details = false;
-
 				}
 			}
 		})
 	}
 });
 
-cur_frm.script_manager.make(erpnext.selling.QuotationController);
+// cur_frm.script_manager.make(erpnext.selling.QuotationController);
 
-cur_frm.cscript['Make Sales Order'] = function() {
-	frappe.model.open_mapped_doc({
-		method: "erpnext.selling.doctype.quotation.quotation.make_sales_order",
-		frm: cur_frm
-	})
+
+// cur_frm.cscript['Make Sales Order'] = function() {
+// 	frappe.model.open_mapped_doc({
+// 		method: "erpnext.selling.doctype.quotation.quotation.make_sales_order",
+// 		frm: cur_frm
+// 	})
+// }
+
+// frappe.ui.form.on("Pre Quotation Item", "items_on_form_rendered", "packed_items_on_form_rendered", function(frm, cdt, cdn) {
+// 	// enable tax_amount field if Actual
+// })
+
+// // frappe.ui.form.on("Pre Quotation Item", "stock_balance", function(frm, cdt, cdn) {
+// // 	var d = frappe.model.get_doc(cdt, cdn);
+// // 	frappe.route_options = {"item_code": d.item_code};
+// // 	frappe.set_route("query-report", "Stock Balance");
+// // })
+frappe.ui.form.on('Pre Quotation', {
+	items :function(frm){
+		let items = frm.doc.items;
+		const totalQty = items.reduce((accumulator, currentValue) => {
+			return accumulator + currentValue.qty;
+		  }, 0);
+		frm.set_value("total_qty" , totalQty);
+		frm.refresh_field("total_qty");
+	}
+})
+frappe.ui.form.on('Pre Quotation Item', {
+	qty :function(frm, cdt, cdn){
+		calc_amount_one_row(frm, cdt, cdn);
+		update_total_qty(frm);
+	},
+	rate :function(frm, cdt, cdn){
+		calc_amount_one_row(frm, cdt, cdn);
+		update_total_amount(frm);
+	},
+})
+function update_total_amount(frm) {
+	let items = frm.doc.items || [];
+	const totalAmount = items.reduce((accumulator, currentValue) => {
+		return accumulator + (currentValue.amount || 0);
+	}, 0);
+	frm.set_value("total", totalAmount);
+	frm.refresh_field("total");
 }
 
-frappe.ui.form.on("Pre Quotation Item", "items_on_form_rendered", "packed_items_on_form_rendered", function(frm, cdt, cdn) {
-	// enable tax_amount field if Actual
-})
+function update_total_qty(frm) {
+	let items = frm.doc.items || [];
+	const totalQty = items.reduce((accumulator, currentValue) => {
+		return accumulator + (currentValue.qty || 0);
+	}, 0);
+	frm.set_value("total_qty", totalQty);
+	frm.refresh_field("total_qty");
+}
 
-// frappe.ui.form.on("Pre Quotation Item", "stock_balance", function(frm, cdt, cdn) {
-// 	var d = frappe.model.get_doc(cdt, cdn);
-// 	frappe.route_options = {"item_code": d.item_code};
-// 	frappe.set_route("query-report", "Stock Balance");
-// })
+function calc_amount_one_row(frm, cdt, cdn){
+	let row = frappe.get_doc(cdt , cdn);
+		let qty = row.qty ;
+		let rate = row.rate ;
+		let amount = qty * rate;
+		frappe.model.set_value(cdt , cdn , 'amount' , amount);
+}
