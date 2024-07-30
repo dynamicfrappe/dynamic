@@ -119,6 +119,7 @@ doctype_js = {
     "Journal Entry": "public/js/journal_entry.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
+    "Asset": "public/js/asset.js"
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 }
@@ -242,7 +243,8 @@ doc_events = {
         "validate": "dynamic.api.onsave_material_request",
         "before_save":[
             "dynamic.controllers.stock_entry.update_target_warehouse"
-        ]
+        ],
+        "on_cancel" :"dynamic.controllers.material_request.on_cancel"
     },
     "Landed Cost Voucher": {
         "validate": "dynamic.dynamic.validation.validate_landed_cost"
@@ -477,7 +479,9 @@ domains = {
     "Notebook": "dynamic.domains.notebook",
     "Smart Vision": "dynamic.domains.smart_vision",
     "Stock Reservation": "dynamic.domains.stock_reservation",
+    "Pre Quotation": "dynamic.domains.pre_quotation",
     "Skyline": "dynamic.domains.skyline",
+    "Healthy Corner":"dynamic.domains.healthy_corner",
     "Payment Deduction": "dynamic.domains.payment_deduction"
 }
 

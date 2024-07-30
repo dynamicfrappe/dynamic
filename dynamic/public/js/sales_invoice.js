@@ -46,8 +46,19 @@ frappe.ui.form.on("Sales Invoice", {
   //     );
   //   }
   // },
+ toggle_read_only_fields(frm) {
+  // frm.set_df_property('items', 'read_only', 1);
+  cur_frm.fields_dict.items.grid.update_docfield_property(
+    "item_code",
+    "read_only",
+    1
+  );
+},
+
+
+
   onload(frm) {
-    var check_domain = frm.events.domian_valid();  
+    var check_domain = frm.events.domian_valid(); 
     
     if (check_domain && frm.doc.docstatus == 0) {
         
@@ -73,14 +84,17 @@ frappe.ui.form.on("Sales Invoice", {
               if (r.message && r.message.includes("Qaswaa")) {
                   console.log("baio");
                   if (frm.doc.is_return == 1) {
-                      
-                      frm.refresh_field('sales_team');   
+                      console.log("ddds");
+                      frm.set_df_property('sales_team', 'read_only', 1);
+                      frm.trigger("toggle_read_only_fields");
+                      frm.refresh_field('sales_team');
+                      frm.refresh_field('items');
                   }
               }
           }
       });
   }
-}, 
+  }, 
   
 
 
@@ -291,18 +305,19 @@ function get_customer_query(){
 
 // frappe.ui.form.on("Sales Team", {
 //   sales_person:function(frm,cdt,cdn){
-//     let row = locals[cdt][cdn]
-//     if (row.sales_person && frm.doc.docstatus==1){
-//       frm.call({
-//         method:"dynamic.api.validate_active_domains",
-//         args:{
-//           doc:frm.doc
-//         },
-//         callback:function(r){
-//           // console.log('return --------->')
-//         }
-//       })
-//     }
+//     frappe.call({
+//       method: "dynamic.api.get_active_domains", 
+//       callback: function(r) {
+//           if (r.message && r.message.includes("Qaswaa")) {
+//               console.log("ee");
+//               if (frm.doc.is_return == 1) {
+//                   console.log("ee");
+//                   frm.set_df_property("sales_person", "read_only", 1);    
+//                   frm.refresh_field('sales_person'); 
+//               }
+//           }
+//       }
+//   });
 //   }
 
 // })
@@ -343,6 +358,21 @@ frappe.ui.form.on("Sales Invoice Item", {
             }
         }
     }); 
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      async: false,
+      callback: function (r) {
+        if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+          if(row.item_code){
+            console.log("Hi");
+            let discount_item = frm.doc.discount_item
+            row.discount_percentage = discount_item ;
+            console.log("ksjdnbjdsfs");
+            frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+          }
+        }
+      },
+    });
       frm.refresh_fields('items');
     }
   },

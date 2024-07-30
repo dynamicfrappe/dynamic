@@ -12,7 +12,8 @@ Domains=frappe.get_active_domains()
 def validate_sales_order(self , event):
     if "Qaswaa" in Domains :
         validate_item_qty_reserved(self,event)
-  
+    if "Healthy Corner" in Domains :
+        item_discount_rate(self)
 
 def validate_sales_order_for_stock(self , event):
     if "Stock Reservation" in Domains:
@@ -53,6 +54,18 @@ def cencel_reservation(self , event):
             })
         doc.status = "Cancelled" 
         doc.db_update()
+
+
+def item_discount_rate(self):
+    item_discount_rate = self.discount_item or 0
+    for item in self.items:
+        item.discount_percentage = item_discount_rate
+        if item_discount_rate is not None:
+            item.discount_amount = item.price_list_rate * (item_discount_rate / 100)
+        else:
+            item.discount_amount = 0  
+        item.rate = item.price_list_rate - item.discount_amount
+        item.amount = item.rate * item.qty
 
 def transfer_items(self , *args, **kwargs):
     items = self.get("items")
