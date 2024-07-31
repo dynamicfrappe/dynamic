@@ -565,7 +565,7 @@ def check_source_item(self, *args, **kwargs):
 		if meta.has_field("outstanding_amount"):
 			if len(self.get("advances")):
 				total_advance_paid = sum(
-					adv.advance_amount for adv in self.get("advancess")
+					adv.advance_amount for adv in self.get("advances")
 				)
 				self.db_set("advance_paid", total_advance_paid)
 				self.db_set("outstanding_amount", self.grand_total - total_advance_paid)
