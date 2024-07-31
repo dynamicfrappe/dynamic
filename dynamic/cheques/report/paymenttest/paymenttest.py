@@ -2,8 +2,8 @@ import frappe
 from frappe import _
 
 def execute(filters=None):
-    data = get_data(filters)
-    columns = get_columns(data)
+    data = get_data()
+    columns = get_columns()
     return columns, data
 
 
@@ -36,8 +36,8 @@ def get_columns(data):
     currencies = set(row['currency'] for row in data)
     columns = [
         {
-            "label": f"Type ({currency})",
-            "fieldname": f"mode_of_payment_type_{currency}",
+            "label": _("Type"),
+            "fieldname": "mode_of_payment_type",
             "fieldtype": "Data",
             "width": 150
         }
