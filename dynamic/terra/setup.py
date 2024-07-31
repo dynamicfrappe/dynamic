@@ -1060,5 +1060,3 @@ def create_terra_scripts():
     # create_workflow_status()
     # create_sales_order_work_flow()
 
-
-

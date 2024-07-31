@@ -127,6 +127,10 @@ def create_domain_list():
 		dm1.domain = 'IFI'
 		dm1.insert()
 	
+	if not frappe.db.exists("Domain", "Payment Deduction"):
+		dm1 = frappe.new_doc("Domain")
+		dm1.domain = 'Payment Deduction'
+		dm1.insert()
 	if not frappe.db.exists("Domain", "Pre Quotation"):
 		pre = frappe.new_doc("Domain")
 		pre.domain = 'Pre Quotation'
@@ -136,5 +140,4 @@ def create_domain_list():
 		pre = frappe.new_doc("Domain")
 		pre.domain = 'Healthy Corner'
 		pre.insert()	
-
 

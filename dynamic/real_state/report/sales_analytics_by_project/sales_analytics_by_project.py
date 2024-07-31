@@ -40,29 +40,36 @@ def get_dates_labels(filters) :
          })
    return period_list
 def get_data(filters=None):
+    conditions = ""
+    
+    # Initialize filter for project if provided
+    project_filter = ""
+    if filters and 'project' in filters and filters['project']:
+        project_filter = f"AND a.project = '{filters['project']}'"
+
     data = []
     
-    # Fetching projects and customers
-    projects = frappe.db.sql("""
+    # Fetching distinct projects and their associated customers
+    projects_query = f"""
         SELECT a.project, a.customer
         FROM `tabSales Order` a
-        WHERE a.docstatus != 2 AND a.project != ""
-        GROUP BY a.project, a.customer
-    """, as_dict=1)
+        WHERE a.docstatus != 2 
+        AND a.project != ""
+        {project_filter}
+        GROUP BY a.project
+    """
+    
+    projects = frappe.db.sql(projects_query, as_dict=1)
 
-    # Building conditions based on filters
-    conditions = ""
-    if filters and filters.get("project"):
-        conditions += f"AND b.project = '{filters.get('project')}' "
-
-    # Get period list from the function
+    # Get the list of periods to analyze
     period_list = get_period_list(filters=filters)
-
+    
     for project in projects:
         project_name = project.get('project')
         customer = project.get('customer')
         
-        monthly_totals = {month.get('key'): 0 for month in period_list}  # Initialize totals
+        # Initialize monthly totals dictionary
+        monthly_totals = {month.get('key'): 0 for month in period_list} 
 
         for month in period_list:
             from_date = month.get('from_date')
@@ -81,26 +88,51 @@ def get_data(filters=None):
                     AND b.transaction_date <= DATE('{to_date}')
                     {conditions}
             """, as_dict=1)
-            
+
+            # Safeguard against None values
             total_advance_amount = result[0].get('total_advance_amount', 0) if result else 0
             
+            # Update the monthly totals
             monthly_totals[period_key] = total_advance_amount
         
-        # Calculate the total sum of all monthly_totals
-        total_sum = sum(monthly_totals.values())
+        # Fetch the item codes from the Sales Order Item child table
+        item_codes_query = f"""
+            SELECT DISTINCT b.item_code
+            FROM `tabSales Order Item` b
+            INNER JOIN `tabSales Order` a ON a.name = b.parent
+            WHERE a.project = '{project_name}'
+        """
         
+        item_codes = frappe.db.sql(item_codes_query, as_dict=1)
+        item_codes_list = [item.get('item_code') for item in item_codes]
+        
+        # Calculate the total sum of all monthly totals
+        total_sum = sum(value for value in monthly_totals.values() if isinstance(value, (int, float)))
+
+        # Append the data for the current project
         data.append({
             'customer': customer,
             'project': project_name,
+            'item_codes': ', '.join(item_codes_list),  # Add item codes to data
             **monthly_totals,
             'total': total_sum  # Add total sum to data
         })
     
     return data
 
+
+
+
 def get_columns(filters):
     period_list = get_period_list(filters=filters)
     columns = [
+        {
+            "label": _("Project"),
+            "fieldname": "project",
+            "fieldtype": "Link",
+            "options": "Project",
+            "width": 200,
+        },
         {
             "label": _("Customer"),
             "fieldname": "customer",
@@ -109,10 +141,9 @@ def get_columns(filters):
             "width": 200,
         },
         {
-            "label": _("Project"),
-            "fieldname": "project",
-            "fieldtype": "Link",
-            "options": "Project",
+            "label": _("Units"),
+            "fieldname": "item_codes",
+            "fieldtype": "Data",
             "width": 200,
         },
     ]

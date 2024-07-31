@@ -481,7 +481,8 @@ domains = {
     "Stock Reservation": "dynamic.domains.stock_reservation",
     "Pre Quotation": "dynamic.domains.pre_quotation",
     "Skyline": "dynamic.domains.skyline",
-    "Healthy Corner":"dynamic.domains.healthy_corner"
+    "Healthy Corner":"dynamic.domains.healthy_corner",
+    "Payment Deduction": "dynamic.domains.payment_deduction"
 }
 
 # domain Conatin
