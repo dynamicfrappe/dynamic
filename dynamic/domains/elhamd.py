@@ -23,6 +23,7 @@ data = {
                 "fieldname": "num_journal_entry",
                 "fieldtype": "Int",
                 "insert_after": "schedules",
+                "allow_on_submit": 1,
             },
         ]
 
