@@ -139,7 +139,7 @@ class PayDocument(Document):
                 "reference_name": self.name,
                 "party_type": account_row.party_type,
                 "party": account_row.party,
-                "project":account_row.project,
+                "project":account_row.get("project"),
                 "cost_center": account_row.cost_center,
             })
 
