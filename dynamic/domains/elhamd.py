@@ -24,6 +24,7 @@ data = {
                 "fieldtype": "Int",
                 "insert_after": "schedules",
                 "allow_on_submit": 1,
+                "read_only":1,
             },
         ]
 
