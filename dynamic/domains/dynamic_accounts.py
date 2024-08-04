@@ -79,7 +79,7 @@ data = {
             {
                 "fieldname": "advance_paid",
                 "fieldtype": "Currency",
-                "insert_after": "in_words",
+                "insert_after": "outstanding_amount",
                 "label": "Advance Paid",
                 'options' : 'party_account_currency',
                 'default' : '0' ,
