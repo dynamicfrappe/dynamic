@@ -67,6 +67,7 @@ data = {
                 "insert_after": "get_advancess",
                 "allow_on_submit":1
             },  
+            
             {
                 "label": _("Outstanding Amount"),
                 "fieldname": "outstanding_amount",
@@ -75,6 +76,29 @@ data = {
                 "allow_on_submit":1,
                 "read_only" : 1
             },  
+            {
+                "fieldname": "advance_paid",
+                "fieldtype": "Currency",
+                "insert_after": "in_words",
+                "label": "Advance Paid",
+                'options' : 'party_account_currency',
+                'default' : '0' ,
+                'hidden' : 0 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
+            {
+                "fieldname": "party_account_currency",
+                "fieldtype": "Link",
+                "insert_after": "advance_paid",
+                "label": "Party Account Currency",
+                'options' : 'Currency',
+                'hidden' : 1 ,
+                'read_only' : 1 ,
+                'no_copy' : 1 ,
+                'allow_on_submit' : 1 ,
+            },
             
          ],
          
