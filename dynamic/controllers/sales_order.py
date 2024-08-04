@@ -120,8 +120,9 @@ def set_vaild_until_date(self):
 
 def set_sales_order_in_serial(self , event):
     for item in self.items:
-        split_list=(item.serial).split("\n")
-        for serial in split_list :
-            serial_no = frappe.get_doc("Serial No" , serial)
-            serial_no.sales_order = self.name
-            serial_no.save()
+        if item.serial :
+            split_list=(item.serial).split("\n")
+            for serial in split_list :
+                serial_no = frappe.get_doc("Serial No" , serial)
+                serial_no.sales_order = self.name
+                serial_no.save()
