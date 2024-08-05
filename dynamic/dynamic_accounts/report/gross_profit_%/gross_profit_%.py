@@ -391,7 +391,8 @@ def get_column_names():
 			"gross_profit": "gross_profit",
 			"gross_profit_percent": "gross_profit_%",
 			"project": "project",
-			"territory": "territory"
+			"territory": "territory",
+			"sales_person": "sales_person"
 		}
 	)
 
