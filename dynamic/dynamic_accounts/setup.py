@@ -33,16 +33,18 @@ def add_properties():
 	except:
 		pass
 	try:
-		doc = frappe.new_doc("Pay and Receipt Type")
-		doc.type = 'Pay'
-		doc.save()
+		if not frappe.db.exists("Pay and Receipt Type", {"type": "Pay"}):    
+			doc = frappe.new_doc("Pay and Receipt Type")
+			doc.type = 'Pay'
+			doc.save()
 	except:
 		pass
 
 	try:
-		doc = frappe.new_doc("Pay and Receipt Type")
-		doc.type = 'Receive'
-		doc.save()
+		if not frappe.db.exists("Pay and Receipt Type", {"type": "Receive"}):  
+			doc = frappe.new_doc("Pay and Receipt Type")
+			doc.type = 'Receive'
+			doc.save()
 	except:
 		pass
 
