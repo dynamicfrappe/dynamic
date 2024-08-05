@@ -245,7 +245,7 @@ doc_events = {
     # },
     "Accounts Settings": {"validate": "dynamic.api.onsave_account_settings"},
     "Lead": {
-        "before_validate":"dynamic.controllers.lead.transfer_lead",
+        "before_validate":"dynamic.controllers.lead.before_validate",
         "before_insert": "dynamic.api.lead_before_insert"
     },
     "Purchase Receipt": {

@@ -9,25 +9,27 @@ Domains=frappe.get_active_domains()
 def before_validate(self, event):
     if 'Logistics' in Domains :
         if self.transfer :
+            set_transfer(self)
             transfer_lead(self)
 
 
 def transfer_lead(self):
-    set_transfer(self)
     token = get_token()
     url = f"{token.get('base_url')}/api/resource/Lead"
+    print(url)
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"token {token.get('token')}"
     }
+    print(f"token {token.get('token')}")
     data = {
         "doctype": self.doctype,
         "lead_name": self.lead_name,
-        "company_name": self.company_name,
         "status": self.status,
         "source": self.source,
         "email_id": self.email_id,
-        "phone": self.phone
+        "phone": self.phone ,
+        "transfer_by" : self.transfer_by
     }
     response = requests.post(url, headers=headers , data=json.dumps(data))
 
@@ -35,7 +37,7 @@ def transfer_lead(self):
     print(response.json())
 
 def set_transfer(self):
-    self.transfer_by = f"Transfer By{self.company_name}"
+    self.transfer_by = f"Transfer By {self.company}"
 
 
 
