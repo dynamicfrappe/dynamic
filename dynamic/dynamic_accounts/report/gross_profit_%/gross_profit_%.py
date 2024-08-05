@@ -392,7 +392,8 @@ def get_column_names():
 			"gross_profit_percent": "gross_profit_%",
 			"project": "project",
 			"territory": "territory",
-			"sales_person": "sales_person"
+			"sales_person": "sales_person",
+			"allocated_amount": "allocated_amount"
 		}
 	)
 
