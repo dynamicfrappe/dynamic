@@ -119,7 +119,13 @@ def execute(filters=None):
 				"gross_profit",
 				"gross_profit_percent",
 			],
-			"project": ["project", "base_amount", "buying_amount", "gross_profit", "gross_profit_percent"],
+			"project": [
+				"project",
+				"base_amount",
+				"buying_amount", 
+				"gross_profit", 
+				"gross_profit_percent"
+			],
 			"territory": [
 				"territory",
 				"base_amount",
@@ -134,34 +140,32 @@ def execute(filters=None):
 
 	if filters.group_by == "Invoice":
 		get_data_when_grouped_by_invoice(columns, gross_profit_data, filters, group_wise_columns, data)
-		total_row = calc_total_row_by_key(filters, data)
-		data.append(total_row)
 
 	else:
 		get_data_when_not_grouped_by_invoice(gross_profit_data, filters, group_wise_columns, data)
+	
+	if data:
 		total_row = calc_total_row_by_key(filters, data)
 		data.append(total_row)
-
-
 	
-
 	return columns, data
 
 def calc_total_row_by_key(filters, data):
 	total_gross_profit = 0.0
 	total_selling_amount = 0.0
 	total_buying_amount = 0.0
+	total_profit_percent = 0
 	for row in data:
 		if (filters.get("group_by") == "Invoice" and row.indent != 0.0) or filters.get("group_by") != "Invoice":
 			total_selling_amount += row["selling_amount"]
 			total_buying_amount += row["buying_amount"]
 			total_gross_profit += row["gross_profit"]
-
+	total_profit_percent = (total_gross_profit/ total_selling_amount  * 100) if total_selling_amount else 0
 	total_row={
 		"selling_amount" : total_selling_amount,
 		"buying_amount" : total_buying_amount,
 		"gross_profit" : total_gross_profit,
-		"gross_profit_%" : total_gross_profit/ total_selling_amount  * 100,
+		"gross_profit_%" : total_profit_percent,
 	}
 	return total_row
 
@@ -387,6 +391,7 @@ def get_column_names():
 			"gross_profit": "gross_profit",
 			"gross_profit_percent": "gross_profit_%",
 			"project": "project",
+			"territory": "territory"
 		}
 	)
 
