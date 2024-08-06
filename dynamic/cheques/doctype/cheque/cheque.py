@@ -58,6 +58,7 @@ class Cheque(Document):
             payment_entry.party_type = self.party_type
             payment_entry.party = self.party
             payment_entry.cheque = self.name
+            payment_entry.is_from_cheque_submission = 1
             payment_entry.cheque_status = self.status
             payment_entry.paid_from = self.account_paid_from
             payment_entry.paid_to = self.account_paid_to

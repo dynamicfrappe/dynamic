@@ -251,6 +251,7 @@ data = {
                 "label": "Cash Mode Of Payment",
                 "options": "Mode of Payment",
                 "allow_on_submit": 1,
+                "hidden" : 1,
             },
             {
                 "fieldname": "first_benefit",
@@ -272,7 +273,8 @@ data = {
                 "insert_after": "cash_mod_of_payment",
                 "label": "Cheque",
                 "options": "Cheque",
-                "read_only": 1
+                "read_only": 1,
+                "hidden" : 1,
             },
             {
                 "fieldname": "cheque_status",
@@ -285,6 +287,7 @@ data = {
                 "in_list_view": 1,
                 "in_filter": 1,
                 "in_standard_filter": 1,
+                "hidden" : 1,
             },
 
             {
@@ -294,7 +297,19 @@ data = {
                 "label": "Endorse Cheque",
                 "depends_on": "cheque",
                 "read_only_depends_on": "eval:doc.cheque_status!='New'",
-                "allow_on_submit": 1
+                "allow_on_submit": 1,
+                "hidden" : 1,
+            },
+            {
+                "fieldname": "is_from_cheque_submission",
+                "fieldtype": "Check",
+                "insert_after": "endorse_cheque",
+                "label": " ",
+                "default": 0,
+                "depends_on": "cheque",
+                "allow_on_submit": 1,
+                "read_only": 1,
+                "hidden" : 1,
             },
             {
                 "fieldname": "endorsed_party_type",
