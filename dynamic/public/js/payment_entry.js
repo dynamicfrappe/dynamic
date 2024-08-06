@@ -158,6 +158,9 @@ frappe.ui.form.on("Payment Entry", {
     if(frm.doc.cheque_status == "Under Collect"){
       frm.set_df_property("cash_mod_of_payment" , "hidden" , 0)
     }
+    else{
+      frm.set_df_property("cash_mod_of_payment" , "hidden" , 1)
+    }
   },
   add_cheque_buttons(frm) {
     if (frm.doc.payment_type == "Pay" && frm.doc.cheque_status == "New") {
