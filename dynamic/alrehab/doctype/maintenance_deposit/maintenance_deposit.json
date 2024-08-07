@@ -20,6 +20,7 @@
   "maintenance_deposit_value",
   "maintenance_deposit_installments_count",
   "section_break_11",
+  "from_due",
   "maintenance_deposit_installments_items",
   "section_break_14",
   "amended_from"
@@ -58,10 +59,10 @@
    "options": "Commercial year"
   },
   {
+   "fetch_from": "year.deposit_shortfall_difference",
    "fieldname": "deposit_shortfall_difference",
-   "fieldtype": "Link",
-   "label": "Deposit shortfall difference",
-   "options": "Item"
+   "fieldtype": "Data",
+   "label": "Deposit shortfall difference"
   },
   {
    "fieldname": "section_break_6",
@@ -116,12 +117,19 @@
    "options": "Maintenance deposit",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "from_due",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From due",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-18 15:30:43.865685",
+ "modified": "2024-08-07 16:59:05.828679",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "Maintenance deposit",
