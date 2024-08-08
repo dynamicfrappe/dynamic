@@ -101,7 +101,7 @@ class ReceiptDocument(Document):
             "reference_type": self.doctype,
             "reference_name": self.name,
             "cost_center": self.cost_center,
-            "project": self.project,
+            # "project": self.project,
             "user_remark": (self.notes or "")
         })
         for account_row in self.accounts:
