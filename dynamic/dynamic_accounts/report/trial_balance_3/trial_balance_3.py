@@ -89,6 +89,13 @@ def get_accounts_with_children(accounts):
             lft, rgt = frappe.db.get_value("Account", d, ["lft", "rgt"])
             children = frappe.get_all("Account", filters={"lft": [">=", lft], "rgt": ["<=", rgt]})
             all_accounts += [c.name for c in children]
+            while d:
+                parent = frappe.db.get_value("Account", d, "parent_account")
+                if parent:
+                    all_accounts.append(parent)
+                    d = parent
+                else:
+                    break
         else:
             frappe.throw(_("Account: {0} does not exist").format(d))
 
@@ -99,19 +106,20 @@ def get_data(filters):
 	if filters.account:
 		account_condition = " and name in ({})".format(", ".join(["%s"] * len(filters.account)))
 
-	accounts = frappe.db.sql(
-		"""select name, account_number, parent_account, account_name, root_type, report_type, lft, rgt
-        from `tabAccount` where company=%s {} order by lft""".format(account_condition),
-        tuple([filters.company] + filters.account) if filters.account else filters.company,
-        as_dict=True,
-    )
+	query = """
+        select name, account_number, parent_account, account_name, root_type, report_type, lft, rgt
+        from `tabAccount`
+        where company=%s {account_condition} order by lft
+    """.format(account_condition=account_condition)
+	params = tuple([filters.company] + filters.account) if filters.account else (filters.company,)
+	accounts = frappe.db.sql(query, params, as_dict=True)
+
 	company_currency = filters.presentation_currency or erpnext.get_company_currency(filters.company)
 
 	if not accounts:
 		return None
 	
 	accounts, accounts_by_name, parent_children_map = filter_accounts(accounts)
-	frappe.msgprint(f"Retrieved Accounts: {accounts}")
 
 	min_lft, max_rgt = frappe.db.sql(
 		"""select min(lft), max(rgt) from `tabAccount`
