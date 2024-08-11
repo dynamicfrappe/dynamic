@@ -1,21 +1,31 @@
 frappe.ui.form.on("Stock Entry", {  
   customer_id:function(frm){
-    let stock_entry_type = frm.doc.stock_entry_type;
-    console.log(stock_entry_type);
-      if (stock_entry_type){
-        let matrial_type = get_data("Stock Entry Type" , stock_entry_type);
-        if (matrial_type.matrial_type === "Received Simples"){
-          frm.set_df_property('old_stock_entry', 'hidden', 0);
-          frm.set_query('old_stock_entry', () => {
-            return {
-                filters: {
-                    customer_id: frm.doc.customer_id , 
-                    stock_entry_type: get_ops()
-                }
-            }
-          })
-        }
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+          if (r.message && r.message.length) {
+              if (r.message.includes("Qaswaa")) {
+                let stock_entry_type = frm.doc.stock_entry_type;
+                console.log(stock_entry_type);
+                  if (stock_entry_type){
+                    let matrial_type = get_data("Stock Entry Type" , stock_entry_type);
+                    if (matrial_type.matrial_type === "Received Simples"){
+                      frm.set_df_property('old_stock_entry', 'hidden', 0);
+                      frm.set_query('old_stock_entry', () => {
+                        return {
+                            filters: {
+                                customer_id: frm.doc.customer_id , 
+                                stock_entry_type: get_ops()
+                            }
+                        }
+                      })
+                    }
+                  }
+              }
+          }
       }
+  })
+
     },
      
     old_stock_entry:function(frm){
