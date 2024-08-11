@@ -11,6 +11,13 @@ def before_validate(self, event):
         if self.transfer :
             set_transfer(self)
             transfer_lead(self)
+        if self.contact_by:
+            if not frappe.db.exists("User Permission", { "user" : self.contact_by,"for_value": self.name}):
+                user_permission = frappe.new_doc("User Permission")
+                user_permission.user = self.contact_by
+                user_permission.allow = self.doctype
+                user_permission.for_value = self.name
+                user_permission.insert()
 
 
 def transfer_lead(self):
