@@ -18,5 +18,15 @@
  "ref_doctype": "GL Entry",
  "report_name": "Trial Balance 3",
  "report_type": "Script Report",
- "roles": []
+ "roles": [
+ {
+    "role": "Administrator"
+ },
+ {
+    "role": "Accounts Manager"
+ },
+ {
+    "role": "Accounts User"
+ }
+]
 }
