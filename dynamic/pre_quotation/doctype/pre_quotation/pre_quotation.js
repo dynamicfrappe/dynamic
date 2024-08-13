@@ -12,7 +12,27 @@ frappe.ui.form.on('Pre Quotation', {
 
 	},
 	refresh:function(frm){
-
+		frm.fields_dict["items"].grid.add_custom_button(
+			__("Export Excel"),
+			function() {
+			  // console.log("frm.items");
+			  frappe.call({
+				method: "dynamic.api.export_data_to_csv_file",
+				args: {
+				  items: frm.doc.items,
+				},
+				callback: function(r) {
+				  if (r.message){
+					  let file = r.message.file 
+					  let file_url = r.message.file_url 
+					  file_url = file_url.replace(/#/g, '%23');
+					  window.open(file_url);
+				  }
+				},
+			  });
+	  
+			}
+		  );
 	},
 	setup: function(frm) {
 		frm.custom_make_buttons = {
