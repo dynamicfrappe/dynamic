@@ -27,6 +27,15 @@ data = {
                 "in_list_view":"1", 
             },
         ],
+        'Lead':[
+            {
+                "label":_("Call Type"),
+                "fieldname":"call_type",
+                "fieldtype":"Select",
+                "insert_after":"contact_by", 
+                "options":"\nFresh Call\nCold Call",
+            },
+        ],
         'Item':[
             {
                 "label":_("Unit Info"),
@@ -164,6 +173,14 @@ data = {
             "doctype_or_field": "DocField",
             "fieldname": "ignore_pricing_rule",
             "property": "hidden",
+            "property_type": "Check",
+            "value": "1",
+        },
+        {
+            "doctype": "Lead",
+            "doctype_or_field": "DocField",
+            "fieldname": "notes",
+            "property": "reqd",
             "property_type": "Check",
             "value": "1",
         },

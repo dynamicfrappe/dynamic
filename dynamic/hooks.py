@@ -292,6 +292,7 @@ doc_events = {
         "validate":"dynamic.qaswaa.controllers.quotation.validate",
         "before_submit": "dynamic.api.before_submit_quot",
         "before_save": "dynamic.api.before_save_quotation",
+        "on_cancel" :"dynamic.api.on_cencel" ,
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",

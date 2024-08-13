@@ -1268,11 +1268,12 @@ def get_advance_entries_quotation(doc_name, include_unallocated=True):
 			order_doctype = "Sales Order"
 		elif self.doctype == "Quotation":
 			party_account = get_party_account("Customer", party=self.party_name, company=self.company)
+			print("party_account = " ,party_account)
 			party_type = "Customer"
 			party = self.party_name
 			amount_field = "credit_in_account_currency"
 			order_field = ""
-			order_doctype = ""
+			order_doctype = "Sales Invoice"
 		else:
 			party_account = self.credit_to
 			party_type = "Supplier"
@@ -1286,10 +1287,12 @@ def get_advance_entries_quotation(doc_name, include_unallocated=True):
 		journal_entries = get_advance_journal_entries(
 			party_type, party, party_account, amount_field, order_doctype, order_list, include_unallocated
 		)
+		print("journal_entries = ",journal_entries)
 
 		payment_entries = get_advance_payment_entries(
 			party_type, party, party_account, order_doctype, order_list, include_unallocated
 		)
+		print("payment_entries = ",payment_entries)
 
 		res = journal_entries + payment_entries
 

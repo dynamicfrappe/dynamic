@@ -1499,6 +1499,10 @@ def before_submit_quot(doc, *args, **kwargs):
 
 
 def before_save_quotation(doc, *args, **kwargs):
+	if "Real State" in DOMAINS:
+		reserve_unit(doc)
+		
+		
 	if "Dynamic Accounts" in DOMAINS:
 		meta = frappe.get_meta(doc.doctype)
 		if meta.has_field("outstanding_amount"):
@@ -1509,6 +1513,30 @@ def before_save_quotation(doc, *args, **kwargs):
 				doc.db_set("advance_paid", total_advance_paid)
 				doc.db_set("outstanding_amount", doc.grand_total - total_advance_paid)
 
+
+
+def on_cencel(self , *args, **kwargs ):
+	if "Real State" in DOMAINS:
+		cencel_reserve_unit(self)
+
+
+@frappe.whitelist()
+def cencel_reserve_unit(self):
+	items = self.get('items')
+	for item in items:
+		item_obj = frappe.get_doc("Item" , item.item_code)
+		item_obj.reserved = 0
+		item_obj.save()
+
+
+@frappe.whitelist()
+def reserve_unit(self):
+	items = self.get('items')
+	for item in items:
+		item_obj = frappe.get_doc("Item" , item.item_code)
+		item_obj.reserved = 1
+		item_obj.save()
+	
 
 @frappe.whitelist()
 def add_crean_in_taxes(doc, *args, **kwargs):
