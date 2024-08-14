@@ -40,7 +40,6 @@ data = {
                 "fieldname": "outstanding_amount",
                 "fieldtype": "Float",
                 "insert_after": "advance_paid",
-                "allow_on_submit":1,
                 "read_only" : 1
             },
              

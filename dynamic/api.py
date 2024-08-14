@@ -570,6 +570,8 @@ def check_source_item(self, *args, **kwargs):
 				)
 				self.db_set("advance_paid", total_advance_paid)
 				self.db_set("outstanding_amount", self.grand_total - total_advance_paid)
+			else:
+				self.db_set("outstanding_amount", self.grand_total)
 
 
 def set_advance_paid(self):
