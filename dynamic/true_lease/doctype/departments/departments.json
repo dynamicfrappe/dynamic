@@ -1,0 +1,43 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:depart_name",
+ "creation": "2024-08-13 12:51:24.603634",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "depart_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "depart_name",
+   "fieldtype": "Data",
+   "unique": 1,
+   "label": "Department Name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-08-13 12:52:41.307913",
+ "modified_by": "Administrator",
+ "module": "True Lease",
+ "name": "Departments",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

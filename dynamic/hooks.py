@@ -65,6 +65,7 @@ after_migrate = [
     "dynamic.install.after_install",
     "dynamic.dynamic.utils.create_customizations",
     "dynamic.stock_reservation.setup.setup",
+    "dynamic.true_lease.controllers.setup.create_domain"
 ]
 # Desk Notifications
 # ------------------
@@ -119,7 +120,8 @@ doctype_js = {
     "Journal Entry": "public/js/journal_entry.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
-    "Asset": "public/js/asset.js"
+    "Asset": "public/js/asset.js",
+    "Actions": "public/js/actions.js"
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 }
@@ -482,7 +484,8 @@ domains = {
     "Pre Quotation": "dynamic.domains.pre_quotation",
     "Skyline": "dynamic.domains.skyline",
     "Healthy Corner":"dynamic.domains.healthy_corner",
-    "Payment Deduction": "dynamic.domains.payment_deduction"
+    "Payment Deduction": "dynamic.domains.payment_deduction",
+    "True lease": "dynamic.domains.truelease"
 }
 
 # domain Conatin
