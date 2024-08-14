@@ -78,21 +78,23 @@ frappe.ui.form.on("Sales Invoice", {
             "view Item Shortage" 
         );
     } else {
-      frappe.call({
-          method: "dynamic.api.get_active_domains", 
-          callback: function(r) {
-              if (r.message && r.message.includes("Qaswaa")) {
-                  console.log("baio");
-                  if (frm.doc.is_return == 1) {
-                      console.log("ddds");
-                      frm.set_df_property('sales_team', 'read_only', 1);
-                      frm.trigger("toggle_read_only_fields");
-                      frm.refresh_field('sales_team');
-                      frm.refresh_field('items');
-                  }
-              }
-          }
-      });
+      // frappe.call({
+      //     method: "dynamic.api.get_active_domains", 
+      //     callback: function(r) {
+      //         if (r.message && r.message.includes("Qaswaa")) {
+      //             console.log("baio");
+      //             if (frm.doc.is_return == 1) {
+      //                 console.log("ddds");
+      //                 frm.set_df_property('sales_team', 'read_only', 1);
+      //                 frm.set_df_property('tax', 'read_only', 1);
+      //                 frm.trigger("toggle_read_only_fields");
+      //                 frm.refresh_field('sales_team');
+      //                 frm.refresh_field('tax');
+      //                 frm.refresh_field('items');
+      //             }
+      //         }
+      //     }
+      // });
   }
   }, 
   
@@ -122,6 +124,25 @@ frappe.ui.form.on("Sales Invoice", {
       );
       
     }
+    frappe.call({
+      method: "dynamic.api.get_active_domains", 
+      callback: function(r) {
+          if (r.message && r.message.includes("Qaswaa")) {
+              if (frm.doc.is_return == 1) {
+                  frm.set_df_property('sales_team', 'read_only', 1);
+                  frm.set_df_property('taxes', 'read_only', 1);
+                  frm.trigger("toggle_read_only_fields");
+
+                  $.each(frm.fields_dict, function(fieldname, field) {
+                    frm.set_df_property(fieldname, 'read_only', 1);
+                  });
+                  frm.set_df_property('set_warehouse', 'read_only', 0);
+                  frm.set_df_property('items', 'read_only', 0);
+                  // cur_frm.set_df_property('items' , 'qty' , 'read_only' , 0);
+              }
+          }
+      }
+  });
     
   },
   upload_data_file:function(frm){
@@ -272,6 +293,19 @@ add_item_discount_rate: function(frm) {
                   item.cost_center = flt(frm.doc.cost_center);
                 });
                 frm.refresh_field("items");
+              }
+              if (r.message.includes("Qaswaa")) {
+                frappe.db.get_value('Cost Center', frm.doc.cost_center, 'is_default')
+                  .then(r => {
+                      if(r.message.is_default == 1){
+                        frm.set_df_property('update_stock', 'read_only', 0);
+                      }else{
+                        frm.set_df_property('update_stock', 'read_only', 1);
+                        frm.set_value('update_stock', 1);
+                        frm.refresh_field('update_stock');
+                      }
+                  })
+                
               }
             }
           }

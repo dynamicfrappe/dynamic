@@ -35,6 +35,12 @@ frappe.query_reports["Review selling prices with buying prices"] = {
 			"options": "Item Group"
 		},
         {
+			"fieldname":"material",
+			"label": __("Material"),
+			"fieldtype": "Link",
+			"options": "Material"
+		},
+        {
             "fieldname": "percentage_from",
             "label": __("From Percentage"),
             "fieldtype": "Percent",

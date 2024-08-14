@@ -58,6 +58,19 @@ data = {
                 "options":"Cost Center",
             },
             {
+                "label": "",
+                "fieldname": "column_break_1100",
+                "fieldtype": "Column Break",
+                "insert_after": "cost_center" ,
+            },
+            {
+                "label": "Warehouse",
+                "fieldname": "warehouse",
+                "fieldtype": "Link",
+                "insert_after": "column_break_1100" ,
+                "options":"Warehouse",
+            },
+            {
 
                 "label": "Item Discount rate",
                 "fieldname": "item_discount_rate",
@@ -235,6 +248,14 @@ data = {
                 "fieldtype": "Float",
                 "insert_after": "discount_amount" ,
             } 
+        ],
+        "Cost Center":[
+            {
+				"label": "is Default",
+				"fieldname": "is_default",
+				"fieldtype": "Check",
+				"insert_after": "enable_distributed_cost_center" ,
+			},
         ]
 
     },
@@ -279,7 +300,46 @@ data = {
             "property_type": "Check",
             "value": "0",
         },
-        
+        {
+            "doctype": "Sales Invoice",
+            "doctype_or_field": "DocField",
+            "fieldname": "update_stock",
+            "property": "read_only",
+            "property_type": "Check",
+            "value": "1",
+        },
+        {
+            "doctype": "Sales Invoice",
+            "doctype_or_field": "DocField",
+            "fieldname": "update_stock",
+            "property": "default",
+            "value": "1",
+        },
+
+        {
+            "doctype": "Purchase Invoice",
+            "doctype_or_field": "DocField",
+            "fieldname": "update_stock",
+            "property": "read_only",
+            "property_type": "Check",
+            "value": "1",
+        },
+        {
+            "doctype": "Purchase Invoice",
+            "doctype_or_field": "DocField",
+            "fieldname": "update_stock",
+            "property": "default",
+            "value": "1",
+        },
+
+        {
+            "doctype": "Purchase Invoice",
+            "doctype_or_field": "DocField",
+            "fieldname": "cost_center",
+            "property": "reqd",
+            "property_type": "default",
+            "value": "1",
+        },
      ]
 
 }

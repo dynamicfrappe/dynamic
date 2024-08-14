@@ -91,6 +91,7 @@ def get_data(filters):
             total_advance = 0
             
             mode_of_payment = None
+            # payment_entries = frappe.db.sql("select ")
             payment_entries = frappe.get_all("Payment Entry Reference", filters={"reference_name": invoice_name, "reference_doctype": "Sales Invoice"}, fields=["allocated_amount"])
             for entry in payment_entries:
                 total_advance += entry.get("allocated_amount")
@@ -99,6 +100,7 @@ def get_data(filters):
             for entry in payment_entries:
                 payment_entry = frappe.get_doc("Payment Entry", entry.get("parent"))
                 mode_of_payment = payment_entry.mode_of_payment if payment_entry.mode_of_payment else None
+            
             
 
             if idx == 0:

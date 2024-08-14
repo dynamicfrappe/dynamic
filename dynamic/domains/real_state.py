@@ -36,6 +36,14 @@ data = {
                 "options":"\nFresh Call\nCold Call",
             },
         ],
+        'Opportunity':[
+            {
+                "label":_("Note"),
+                "fieldname":"note",
+                "fieldtype":"Small Text",
+                "insert_after":"source", 
+            },
+        ],
         'Item':[
             {
                 "label":_("Unit Info"),

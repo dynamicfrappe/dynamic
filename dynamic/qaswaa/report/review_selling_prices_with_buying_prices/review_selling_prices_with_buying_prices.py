@@ -20,6 +20,9 @@ def get_data(filters):
     if filters.get("item_group"):
         conditions += f" AND i.item_group = '{filters.get('item_group')}'"
 
+    if filters.get("material"):
+        conditions += f" AND i.material = '{filters.get('material')}'"
+
     if filters.get("percentage_from") is not None:
         conditions += f" AND ((MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END) - MAX(CASE WHEN ip.buying = 1 THEN ip.price_list_rate END)) / MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END)) * 100 >= {filters.get('percentage_from')}"
 
@@ -33,6 +36,7 @@ def get_data(filters):
                 ip.item_name,
                 i.item_group,
                 i.brand,
+                i.material,
                 MAX(CASE WHEN ip.selling = 1 THEN ip.price_list END) as price_list1,
                 MAX(CASE WHEN ip.buying = 1 THEN ip.price_list END) as price_list2,
                 MAX(CASE WHEN ip.selling = 1 THEN ip.price_list_rate END) as selling_price,
@@ -95,6 +99,13 @@ def get_columns(filters):
 			"label": _("Item Group"),
 			"fieldtype": "Link",
 			"options": "Item Group",
+			"width": 200,
+		},
+        {
+			"fieldname": "material",
+			"label": _("Material"),
+			"fieldtype": "Link",
+			"options": "Material",
 			"width": 200,
 		},
         {

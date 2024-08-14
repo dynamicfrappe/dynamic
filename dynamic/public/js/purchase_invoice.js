@@ -43,6 +43,28 @@ frappe.ui.form.on("Purchase Invoice", {
       },
     });
   },
+  cost_center(frm){
+    if(frm.doc.cost_center){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message.includes("Qaswaa")) {
+            frappe.db.get_value('Cost Center', frm.doc.cost_center, 'is_default')
+              .then(r => {
+                  if(r.message.is_default == 1){
+                    frm.set_df_property('update_stock', 'read_only', 0);
+                  }else{
+                    frm.set_df_property('update_stock', 'read_only', 1);
+                    frm.set_value('update_stock', 1);
+                    frm.refresh_field('update_stock');
+                  }
+              })
+            }
+        }
+      })
+        
+      }
+  }
 });
 
 

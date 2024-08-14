@@ -3,27 +3,39 @@ frappe.ui.form.on("Quotation",{
     //     frm.events.refresh(frm)
     // },
     refresh:function(frm){
-      frm.fields_dict["items"].grid.add_custom_button(
-        __("Export Excel"),
-        function() {
-        // console.log("frm.items");
-        frappe.call({
-          method: "dynamic.api.export_data_to_csv_file",
-          args: {
-          items: frm.doc.items,
-          },
-          callback: function(r) {
-          if (r.message){
-            let file = r.message.file 
-            let file_url = r.message.file_url 
-            file_url = file_url.replace(/#/g, '%23');
-            window.open(file_url);
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Pre Quotation")) {
+              frm.events.upload_data_file(frm)
+              frm.fields_dict["items"].grid.add_custom_button(
+                __("Export Excel"),
+                function() {
+                // console.log("frm.items");
+                frappe.call({
+                  method: "dynamic.api.export_data_to_csv_file",
+                  args: {
+                  items: frm.doc.items,
+                  },
+                  callback: function(r) {
+                  if (r.message){
+                    let file = r.message.file 
+                    let file_url = r.message.file_url 
+                    file_url = file_url.replace(/#/g, '%23');
+                    window.open(file_url);
+                  }
+                  },
+                });
+            
+                }
+              );
+            }
           }
-          },
-        });
-    
         }
-      );
+    })
+
+      
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
@@ -90,6 +102,55 @@ frappe.ui.form.on("Quotation",{
     frm.events.set_query(frm)
 
     },
+    upload_data_file:function(frm){
+      frm.fields_dict["items"].grid.add_custom_button(
+        __("Upload Xlxs Data"),
+        function() {
+            let d = new frappe.ui.Dialog({
+                title: "Enter details",
+                fields: [
+                  {
+                    label: "Excel File",
+                    fieldname: "first_name",
+                    fieldtype: "Attach",
+                  },
+                ],
+                primary_action_label: "Submit",
+                primary_action(values) {
+                  console.log(`values===>${JSON.stringify(values)}`);
+                  var f = values.first_name;
+                  frappe.call({
+                    method:"dynamic.api.get_data_from_template_file",
+                    args: {
+                      file_url: values.first_name
+                      // file: values.first_name,
+                      // colms:['item_code','qty',]
+                    },
+                    callback: function(r) {
+                      if (r.message) {
+                        console.log(r.message)
+                        frm.clear_table("items");
+                        frm.refresh_fields("items");
+                        r.message.forEach(object => {
+                          var row = frm.add_child("items");
+                          Object.entries(object).forEach(([key, value]) => {
+                            //  console.log(`${key}: ${value}`);
+                            row[key] = value;
+                          });
+                         });
+                        frm.refresh_fields("items");
+                      }
+                    },
+                  });
+                  d.hide();
+                },
+              });
+              d.show();
+        }).addClass("btn-success");
+        frm.fields_dict["items"].grid.grid_buttons
+        .find(".btn-custom")
+        .removeClass("btn-default")
+  },
     reject_quotation(frm){
         frm.call({
             method:"dynamic.ifi.doctype.installations_furniture.installations_furniture.reqject_quotation",
