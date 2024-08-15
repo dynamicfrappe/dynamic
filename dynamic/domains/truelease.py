@@ -84,6 +84,16 @@ data = {
 			   "options": "Departments",
 			   "insert_after": "create_by",
          },
+         {
+            "label": "Amended From",
+            "fieldname": "amended_from",
+            "fieldtype": "Link",
+            "insert_after": "create_by",
+            "no_copy": 1,
+            "options": "Actions",
+            "print_hide": 1,
+            "read_only": 1
+         }
       ],
       'Quotation': [
          {
