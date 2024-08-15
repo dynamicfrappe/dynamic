@@ -34,8 +34,7 @@
   {
    "fieldname": "ref_doc",
    "fieldtype": "Data",
-   "label": "Ref.",
-   "read_only": 1
+   "label": "Ref."
   },
   {
    "fieldname": "column_break_2",
