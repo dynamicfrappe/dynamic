@@ -632,7 +632,8 @@ def make_cheque_doc(dt, dn):
         for i in ref_doc.get('payment_schedule'):
             cheque.append('items',{
                 'amount':i.payment_amount,
-                'cheque_date':i.due_date
+                'cheque_date':i.due_date,
+                'ref_doc':i.payment_term
             })
             # row.amount = i.payment_amount
             # row.cheque_date = i.due_date
