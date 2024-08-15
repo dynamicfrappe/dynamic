@@ -32,7 +32,7 @@ def get_conditions(filters):
     if filters.get("cost_center"):
         conditions += f" and Q.cost_center = '{filters.get('cost_center')}' "
     if filters.get("warehouse"):
-        conditions += f" and QI.warehouse = '{filters.get('warehouse')}' "
+        conditions += f" and Q.warehouse = '{filters.get('warehouse')}' "
     if filters.get("sales_person"):
         conditions += f" and ST.sales_person = '{filters.get('sales_person')}' "
     return conditions

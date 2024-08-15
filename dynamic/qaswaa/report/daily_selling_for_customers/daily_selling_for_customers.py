@@ -61,6 +61,9 @@ def get_data(filters):
         total_net_total = 0
         total_base_total_taxes_and_charges = 0
         total_grand_total = 0
+        sales_invoice_refund = ''
+        total_amount_deduction = 0
+        
 
         for idx, invoice in enumerate(sales_invoices):
             invoice_name = invoice.get("name")
@@ -76,13 +79,13 @@ def get_data(filters):
 
             refund_amount1 = frappe.db.get_value("Sales Invoice", {"is_return": 1, "return_against": invoice_name}, 'base_grand_total') or 0
             refund_amount = frappe.db.sql("""
-                SELECT SUM(grand_total)
+                SELECT SUM(grand_total) as grand_total , name as sales_invoice_refund
                 FROM `tabSales Invoice`
                 WHERE is_return = 1 AND return_against = %s
-            """, invoice_name)[0][0] or 0
-
+            """, invoice_name , as_dict=1)[0] or 0
             
-            total_refund_amount += refund_amount
+            total_refund_amount += refund_amount.get('grand_total') or 0
+            sales_invoice_refund = refund_amount.get('sales_invoice_refund')
             total_diff += diff
             total_net_total += net_total
             total_base_total_taxes_and_charges += base_total_taxes_and_charges
@@ -91,18 +94,21 @@ def get_data(filters):
             total_advance = 0
             
             mode_of_payment = None
-            # payment_entries = frappe.db.sql("select ")
             payment_entries = frappe.get_all("Payment Entry Reference", filters={"reference_name": invoice_name, "reference_doctype": "Sales Invoice"}, fields=["allocated_amount"])
             for entry in payment_entries:
                 total_advance += entry.get("allocated_amount")
             total_advance_amount += total_advance
             payment_entries = frappe.get_all("Payment Entry Reference", filters={"reference_name": invoice_name, "reference_doctype": "Sales Invoice"}, fields=["parent"])
+            total_amount_deduction = 0
             for entry in payment_entries:
                 payment_entry = frappe.get_doc("Payment Entry", entry.get("parent"))
                 mode_of_payment = payment_entry.mode_of_payment if payment_entry.mode_of_payment else None
+                deductions = payment_entry.get('deductions')
+                if deductions:
+                    for i in deductions:
+                        total_amount_deduction += i.amount 
+                        print(total_amount_deduction)
             
-            
-
             if idx == 0:
                 customer_data.append({
                     "customer_name": customer_name,
@@ -113,8 +119,10 @@ def get_data(filters):
                     "net_total": net_total,
                     "base_total_taxes_and_charges": base_total_taxes_and_charges,
                     "grand_total": grand_total,
-                    "refund_amount": refund_amount,
+                    "sales_invoice_refund":sales_invoice_refund,
+                    "refund_amount": refund_amount.get('grand_total') or 0,
                     "total_advance_amount": total_advance,
+                    "total_amount_deduction":total_amount_deduction,
                     "diff": diff,
                     "sales_person": sales_person,
                     "mode_of_payment":mode_of_payment 
@@ -128,8 +136,10 @@ def get_data(filters):
                     "net_total": net_total,
                     "base_total_taxes_and_charges": base_total_taxes_and_charges,
                     "grand_total": grand_total,
-                    "refund_amount": refund_amount,
+                    "refund_amount": refund_amount.get('grand_total') or 0,
+                    "sales_invoice_refund":sales_invoice_refund,
                     "total_advance_amount": total_advance,
+                    "total_amount_deduction":total_amount_deduction,
                     "diff": diff,
                     "sales_person": sales_person ,
                     "mode_of_payment":mode_of_payment
@@ -146,7 +156,9 @@ def get_data(filters):
                 "base_total_taxes_and_charges": total_base_total_taxes_and_charges,
                 "grand_total": total_grand_total,
                 "refund_amount": total_refund_amount,
+                "sales_invoice_refund":sales_invoice_refund,
                 "total_advance_amount": total_advance_amount,
+                "total_amount_deduction":total_amount_deduction,
                 "diff": total_diff
             })
     sum_half_net_totals = sum(customer.get("net_total", 0) / 2 for customer in data)
@@ -155,7 +167,7 @@ def get_data(filters):
     total_base_total_taxes_and_charges_all_customers = float(sum_half_base_total_taxes_and_charges)
     sum_half_grand_total = sum(customer.get("grand_total", 0) / 2 for customer in data)
     total_grand_total_all_customers = float(sum_half_grand_total)
-    sum_half_refund_amount = sum(customer.get("refund_amount", 0) / 2 for customer in data)
+    sum_half_refund_amount = sum(customer.get(refund_amount.get('grand_total' , 0) , 0) / 2 for customer in data)
     total_refund_amount_all_customers = float(sum_half_refund_amount)
     sum_half_total_advance_amount = sum(customer.get("total_advance_amount", 0) / 2 for customer in data)
     total_total_advance_amount_all_customers = float(sum_half_total_advance_amount)
@@ -170,7 +182,9 @@ def get_data(filters):
         "base_total_taxes_and_charges": total_base_total_taxes_and_charges_all_customers,
         "grand_total":total_grand_total_all_customers ,
         "refund_amount": total_refund_amount_all_customers,
+        "sales_invoice_refund":sales_invoice_refund,
         "total_advance_amount": total_total_advance_amount_all_customers,
+        "total_amount_deduction":total_amount_deduction,
         "diff": total_diff_all_customers
     })
 
@@ -249,9 +263,22 @@ def get_columns(filters):
             "fieldtype": "Currency"
         },
         {
+            "fieldname": "sales_invoice_refund",
+            "fieldtype": "Link",
+            "options": "Sales Invoice",
+            "label":"Refund Invoice",
+            "width": 200,
+        },
+        {
             "fieldname": "refund_amount",
             "fieldtype": "Currency",
             "label":"Refund",
+            "width": 200,
+        },
+        {
+            "fieldname": "total_amount_deduction",
+            "fieldtype": "Currency",
+            "label":"Deduction Amount",
             "width": 200,
         },
         {
