@@ -72,6 +72,11 @@ def get_data(filters):
         
         result.append(temp)
 
+    if filters.get("value") and filters.get("operation"):
+        if filters.get("operation") == '<':
+            result = [entry for entry in result if 'diff' in entry and entry['diff'] < float(filters.get('value'))]
+        if filters.get("operation") == '>':
+            result = [entry for entry in result if 'diff' in entry and entry['diff'] > float(filters.get('value'))]
     return result
 
 

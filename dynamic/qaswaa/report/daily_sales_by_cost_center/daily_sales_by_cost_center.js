@@ -52,7 +52,19 @@ frappe.query_reports["Daily Sales by cost center"] = {
             "label": __("Is Return"),
             "fieldtype": "Check",
             // "default": 1 // Set default value to 1 to filter for returns
-        }
+        },
+        {
+            "fieldname": "operation",
+            "label": __("Operation"),
+            "fieldtype": "Select",
+            "options": "\n>\n<"
+        },
+		{
+            "fieldname": "value",
+            "label": __("Value"),
+            "fieldtype": "Data",
+            // "options": "\n>\n<"
+        },
     ]
 };
 

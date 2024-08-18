@@ -1,5 +1,5 @@
 
-{% include 'erpnext/selling/sales_common.js' %}
+// {% include 'erpnext/selling/sales_common.js' %}
 
 
 frappe.ui.form.on("Sales Order", {

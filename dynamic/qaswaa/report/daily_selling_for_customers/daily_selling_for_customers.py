@@ -188,6 +188,11 @@ def get_data(filters):
         "diff": total_diff_all_customers
     })
 
+    if filters.get("value") and filters.get("operation"):
+        if filters.get("operation") == '<':
+            data = [entry for entry in data if 'diff' in entry and entry['diff'] < float(filters.get('value'))]
+        if filters.get("operation") == '>':
+            data = [entry for entry in data if 'diff' in entry and entry['diff'] > float(filters.get('value'))]
     return data
 
 
