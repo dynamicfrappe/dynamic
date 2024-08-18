@@ -312,5 +312,21 @@ data = {
         "property_type": "Check",
         "value": 1
         },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "items",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": 0
+        },
+        {
+        "doctype": "Quotation",
+        "doctype_or_field": "DocField",
+        "fieldname": "items",
+        "property": "hidden",
+        "property_type": "Check",
+        "value": 1
+        },
      ]
 }
