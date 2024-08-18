@@ -178,7 +178,6 @@ data = {
             "fieldtype": "Text",
             "insert_after": "terms",
          },
-
       ],
       'User':[
          {
@@ -191,7 +190,7 @@ data = {
       ]
     },
      "properties": [
-         # Lead
+      #  Lead
         {
         "doctype": "Lead",
         "doctype_or_field": "DocField",
@@ -255,14 +254,7 @@ data = {
         "property_type": "Data",
         "value": "field:lead_name"
         },
-        {
-        "doctype": "Lead",
-        "doctype_or_field": "DocType",
-        "property": "autoname",
-        "property_type": "Data",
-        "value": "field:lead_name"
-        },
-      #   Actions
+      #  Actions
         {
         "doctype": "Actions",
         "doctype_or_field": "DocType",
@@ -286,7 +278,7 @@ data = {
         "property_type": "Data",
         "value": "customer.phone_num"
         },
-      #   Action
+      #  Action
         {
         "doctype": "Action",
         "doctype_or_field": "DocField",
@@ -295,7 +287,7 @@ data = {
         "property_type": "Select",
         "value": "Call\nVisit"
         },
-      #   Quotation
+      #  Quotation
         {
         "doctype": "Quotation",
         "doctype_or_field": "DocField",
@@ -320,7 +312,5 @@ data = {
         "property_type": "Check",
         "value": 1
         },
-        
-
      ]
 }
