@@ -172,12 +172,6 @@ data = {
             "fieldtype": "Data",
             "insert_after": "use_of_fund",
          },
-         {
-            "label" :"Lease Proposal Term Sheet" ,
-            "fieldname": "lease_proposal_term_sheet",
-            "fieldtype": "Text",
-            "insert_after": "terms",
-         },
       ],
       'User':[
          {
