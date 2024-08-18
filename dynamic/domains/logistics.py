@@ -121,6 +121,13 @@ data = {
                 "insert_after": "transfer",
                 "read_only" : 1,
             },
+            {
+                "label": _("Sales Person"),
+                "fieldname": "sales_person",
+                "fieldtype": "Link",
+                "insert_after": "email_id",
+                "options":"Sales Person"
+            },
         ],
         'Selling Settings': [
             {
