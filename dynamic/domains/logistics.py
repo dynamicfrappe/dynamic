@@ -107,6 +107,16 @@ data = {
                 "columns":1
             },
         ],
+        'Opportunity': [
+            {
+                "label": "Sales Person",
+                "fieldname": "sales_person",
+                "fieldtype": "Link",
+                'options' : 'Sales Person' ,
+                "insert_after": "contact_date",
+                "in_standard_filter": "1",
+            },
+        ],
         'Lead': [
             {
                 "label": _("Transfer"),
