@@ -123,6 +123,7 @@ def get_date(filters):
         """
 
     result = frappe.db.sql(sql_query, as_dict=True)
+    print(result)
     return result
 
 

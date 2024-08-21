@@ -249,6 +249,15 @@ data = {
                 "insert_after": "discount_amount" ,
             } 
         ],
+        "Purchase Invoice":[
+            {
+
+                "label": "Item Discount rate",
+                "fieldname": "item_discount_rate",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount" ,
+            } 
+        ],
         "Cost Center":[
             {
 				"label": "is Default",
