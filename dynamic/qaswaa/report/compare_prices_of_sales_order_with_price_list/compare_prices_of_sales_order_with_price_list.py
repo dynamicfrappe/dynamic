@@ -59,8 +59,8 @@ def get_date(filters):
         conditions += f""" and so.name = "{filters.get('sales_order')}" """
     if filters.get("date"):
         conditions += f""" and so.transaction_date = date("{filters.get('date')}") """
-    if filters.get("price_list"):
-        conditions += f""" and so.selling_price_list = "{filters.get('price_list')}" """
+    if filters.get("selling_price_list"):
+        conditions += f""" and so.selling_price_list = "{filters.get('selling_price_list')}" """
     if filters.get("sales_person"):
         conditions += f""" and st.sales_person = "{filters.get('sales_person')}" """
     if filters.get("set_warehouse"):
@@ -73,6 +73,7 @@ def get_date(filters):
             soi.item_name,
             soi.qty,
             soi.rate AS sales_rate,
+            so.selling_price_list ,
             (SELECT pii.price_list_rate
              FROM `tabPurchase Invoice` pi
              INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
@@ -81,36 +82,37 @@ def get_date(filters):
              LIMIT 1) AS purchase_rate,
             (SELECT pi.buying_price_list
              FROM `tabPurchase Invoice` pi
-             WHERE pi.docstatus = 1
+             INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
+             WHERE pi.docstatus = 1  AND soi.item_code = pii.item_code
              ORDER BY pi.creation DESC
-             LIMIT 1) AS price_list_name,
+             LIMIT 1) AS buying_price_list,
             soi.qty * (SELECT pii.rate 
                        FROM `tabPurchase Invoice` pi
                        INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                       WHERE pi.docstatus = 1
+                       WHERE pi.docstatus = 1 AND soi.item_code = pii.item_code
                        ORDER BY pi.creation DESC
                        LIMIT 1) AS total_cost,
             soi.rate - (SELECT pii.rate 
                          FROM `tabPurchase Invoice` pi
                          INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                         WHERE pi.docstatus = 1
+                         WHERE pi.docstatus = 1  AND soi.item_code = pii.item_code
                          ORDER BY pi.creation DESC
                          LIMIT 1) AS difference,
             soi.qty * (soi.rate - (SELECT pii.rate 
                                    FROM `tabPurchase Invoice` pi
                                    INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                                   WHERE pi.docstatus = 1
+                                   WHERE pi.docstatus = 1 AND soi.item_code = pii.item_code
                                    ORDER BY pi.creation DESC
                                    LIMIT 1)) AS total_difference,
             ROUND(((soi.rate - (SELECT pii.rate 
                            FROM `tabPurchase Invoice` pi
                            INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                           WHERE pi.docstatus = 1
+                           WHERE pi.docstatus = 1 AND soi.item_code = pii.item_code
                            ORDER BY pi.creation DESC
                            LIMIT 1)) / (SELECT pii.rate 
                                         FROM `tabPurchase Invoice` pi
                                         INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-                                        WHERE pi.docstatus = 1
+                                        WHERE pi.docstatus = 1 AND soi.item_code = pii.item_code
                                         ORDER BY pi.creation DESC
                                         LIMIT 1)) * 100,2)  AS difference_percentage
         FROM 
@@ -123,7 +125,8 @@ def get_date(filters):
         """
 
     result = frappe.db.sql(sql_query, as_dict=True)
-    print(result)
+    if filters.get("buying_price_list"):
+        result = [item for item in result if item['buying_price_list'] == filters.get("buying_price_list")]
     return result
 
 
@@ -159,11 +162,18 @@ def get_columns():
             "width": 50,
         },
         {
-            "fieldname": "price_list_name",
+            "fieldname": "buying_price_list",
             "label": "Buying Price List",
             "fieldtype": "Link",
             "options": "Price List",
-            "width": 100,
+            "width": 200,
+        },
+        {
+            "fieldname": "selling_price_list",
+            "label": "Selling Price List",
+            "fieldtype": "Link",
+            "options": "Price List",
+            "width": 200,
         },
         {
             "fieldname": "sales_rate",
