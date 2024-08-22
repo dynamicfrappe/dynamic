@@ -75,8 +75,8 @@ frappe.ui.form.on("Material Request",{
 
     },
     remove_cst_button_create:function(cur_frm){
-      cur_frm.remove_custom_button(__("Create"))
-      cur_frm.remove_custom_button(__('Create'))
+      cur_frm.remove_custom_button(__("Purchase Order"),__("Create"))
+      cur_frm.remove_custom_button(__('Supplier Quotation'),__("Create"))
 
     },
     make_custom_buttons_2: function(frm) {
