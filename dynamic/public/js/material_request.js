@@ -12,6 +12,7 @@ frappe.ui.form.on("Material Request",{
               if (r.message.includes("WEH")) {
                  frm.events.remove_cst_button(frm)
                  frm.events.read_only_fields(frm)
+                 frm.events.remove_cst_button_create(frm)
           }
         }
         }
@@ -22,8 +23,20 @@ frappe.ui.form.on("Material Request",{
         method: "dynamic.api.get_active_domains",
         callback: function (r) {
             if (r.message && r.message.length) {
+              if (r.message.includes("WEH")) {
+                frappe.set_route('List', "Material Request", 'List')
+              }
+            }
+          }
+      })
+    },
+    after_save:function(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length) {
                 if (r.message.includes("WEH")) {
-                 frappe.set_route('List', "Material Request", 'List')
+                  frm.events.remove_cst_button_create(frm)
                 }
             }
         }
@@ -59,6 +72,12 @@ frappe.ui.form.on("Material Request",{
     remove_cst_button:function(cur_frm){
       cur_frm.remove_custom_button(__("Bill of Materials"),__("Get Items From"))
       cur_frm.remove_custom_button(__('Sales Order'),__("Get Items From"))
+
+    },
+    remove_cst_button_create:function(cur_frm){
+      cur_frm.remove_custom_button(__("Create"))
+      cur_frm.remove_custom_button(__('Create'))
+
     },
     make_custom_buttons_2: function(frm) {
         if (frm.doc.docstatus==1) {
