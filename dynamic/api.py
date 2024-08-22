@@ -1943,6 +1943,21 @@ def get_taxes_amount(item_tax_template):
 		amount = amount + tax.tax_rate
 	return amount
 
+@frappe.whitelist()
+def get_total_discount_and_amount(doc_type, voucher_name):
+	total = [0, 0.0]
+	for item in frappe.get_doc(doc_type, voucher_name).items:
+		total[1] += (item.discount_amount * item.qty)
+		total[0] += 1
+	return total
+
+@frappe.whitelist()
+def get_total_num_and_qty(doc_type, doc_name):
+	total = [0, 0]
+	for item in frappe.get_doc(doc_type, doc_name).items:
+		total[1] += item.qty
+		total[0] += 1
+	return total
 
 @frappe.whitelist()
 def get_customer_branches(customer):
