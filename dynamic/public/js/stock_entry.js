@@ -17,6 +17,18 @@ frappe.ui.form.on("Stock Entry", {
         }
       }
     },
+	after_save:function(frm){
+        frappe.call({
+          method: "dynamic.api.get_active_domains",
+          callback: function (r) {
+              if (r.message && r.message.length) {
+                  if (r.message.includes("WEH")) {
+                   frappe.set_route('List', "Stock Entry", 'List')
+                  }
+              }
+          }
+        })
+      },
      
     old_stock_entry:function(frm){
       let old_stock_entry = frm.doc.old_stock_entry ;
