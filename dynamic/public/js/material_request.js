@@ -12,7 +12,7 @@ frappe.ui.form.on("Material Request",{
               if (r.message.includes("WEH")) {
                  frm.events.remove_cst_button(frm)
                  frm.events.read_only_fields(frm)
-                //  frm.events.remove_cst_button_create(frm)
+                 frm.events.remove_cst_button_create(frm)
           }
         }
         }
@@ -36,7 +36,7 @@ frappe.ui.form.on("Material Request",{
         callback: function (r) {
             if (r.message && r.message.length) {
                 if (r.message.includes("WEH")) {
-                  // frm.events.remove_cst_button_create(frm)
+                  frm.events.remove_cst_button_create(frm)
                 }
             }
         }
@@ -74,19 +74,27 @@ frappe.ui.form.on("Material Request",{
       cur_frm.remove_custom_button(__('Sales Order'),__("Get Items From"))
 
     },
-    remove_cst_button_create:function(cur_frm){
+    remove_cst_button_create:function(frm){
       if (frm.doc.set_warehouse){
-        frappe.db.get_value('Warehouse', frm.doc.set_warehouse , 'users')
-        .then(r => {
-            console.log(r.message.users) // Open
-
-        })
-        cur_frm.remove_custom_button(__("Purchase Order"),__("Create"))
-        cur_frm.remove_custom_button(__('Supplier Quotation'),__("Create"))
-        cur_frm.remove_custom_button(__('Request for Quotation'),__("Create"))
+        frappe.call({
+            method: 'dynamic.controllers.custom_item.get_users_warehouse',
+            args: {
+                warehouse:frm.doc.set_warehouse
+            
+            },
+            callback: function(r) {
+                if (r.message) {
+                    const users = r.message.map(item => item.user);
+                    if (!users.includes(frappe.session.user)) {
+                        console.log("yes");
+                        frm.remove_custom_button(__("Purchase Order"),__("Create"))
+                        frm.remove_custom_button(__('Supplier Quotation'),__("Create"))
+                        frm.remove_custom_button(__('Request for Quotation'),__("Create"))
+                    }
+                }
+            }
+        });
       }
-      
-
     },
     make_custom_buttons_2: function(frm) {
         if (frm.doc.docstatus==1) {
