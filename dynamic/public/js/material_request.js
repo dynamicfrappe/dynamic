@@ -83,9 +83,9 @@ frappe.ui.form.on("Material Request",{
             
             },
             callback: function(r) {
-                if (r.message) {
+                if (r.message || !r.message) {
                     const users = r.message.map(item => item.user);
-                    if (!users.includes(frappe.session.user)) {
+                    if (!users && !users.includes(frappe.session.user)) {
                         console.log("yes");
                         frm.remove_custom_button(__("Purchase Order"),__("Create"))
                         frm.remove_custom_button(__('Supplier Quotation'),__("Create"))
