@@ -83,9 +83,9 @@ frappe.ui.form.on("Material Request",{
             
             },
             callback: function(r) {
-                if (r.message || !r.message) {
+                if (r.message) {
                     const users = r.message.map(item => item.user);
-                    if (!users || !users.includes(frappe.session.user)) {
+                    if (!users.includes(frappe.session.user)) {
                         console.log("yes");
                         frm.remove_custom_button(__("Purchase Order"),__("Create"))
                         frm.remove_custom_button(__('Supplier Quotation'),__("Create"))
@@ -93,6 +93,13 @@ frappe.ui.form.on("Material Request",{
                         frm.remove_custom_button(__('Transfer Material'),__("Create"))
                         frm.remove_custom_button(__('Pick List'),__("Create"))
                     }
+                }else {
+                  console.log("yes");
+                  frm.remove_custom_button(__("Purchase Order"),__("Create"))
+                  frm.remove_custom_button(__('Supplier Quotation'),__("Create"))
+                  frm.remove_custom_button(__('Request for Quotation'),__("Create"))
+                  frm.remove_custom_button(__('Transfer Material'),__("Create"))
+                  frm.remove_custom_button(__('Pick List'),__("Create"))
                 }
             }
         });
