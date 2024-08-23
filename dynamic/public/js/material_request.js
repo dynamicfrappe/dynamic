@@ -12,7 +12,7 @@ frappe.ui.form.on("Material Request",{
               if (r.message.includes("WEH")) {
                  frm.events.remove_cst_button(frm)
                  frm.events.read_only_fields(frm)
-                 frm.events.remove_cst_button_create(frm)
+                //  frm.events.remove_cst_button_create(frm)
           }
         }
         }
@@ -36,7 +36,7 @@ frappe.ui.form.on("Material Request",{
         callback: function (r) {
             if (r.message && r.message.length) {
                 if (r.message.includes("WEH")) {
-                  frm.events.remove_cst_button_create(frm)
+                  // frm.events.remove_cst_button_create(frm)
                 }
             }
         }
