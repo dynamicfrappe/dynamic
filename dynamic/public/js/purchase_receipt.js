@@ -32,6 +32,9 @@ frappe.ui.form.on('Purchase Receipt', {
           }
         })
       },
+      after_save:function(frm){
+        frm.set_df_property('items', 'read_only', 1);
+      }
 });
 
 
