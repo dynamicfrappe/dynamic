@@ -90,6 +90,8 @@ frappe.ui.form.on("Material Request",{
                         frm.remove_custom_button(__("Purchase Order"),__("Create"))
                         frm.remove_custom_button(__('Supplier Quotation'),__("Create"))
                         frm.remove_custom_button(__('Request for Quotation'),__("Create"))
+                        frm.remove_custom_button(__('Transfer Material'),__("Create"))
+                        frm.remove_custom_button(__('Pick List'),__("Create"))
                     }
                 }
             }
