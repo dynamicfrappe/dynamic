@@ -116,3 +116,10 @@ def getseries(key, digits):
 		# no, create it
 		current = 1
 	return ("%0" + str(digits) + "d") % current
+
+
+def get_users_warehouse(warehouse):
+	warehouse_obj = frappe.get_doc("Warehouse" , warehouse)
+	users = warehouse_obj.get("users")
+	if users:
+		return users
