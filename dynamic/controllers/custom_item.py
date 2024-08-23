@@ -117,7 +117,7 @@ def getseries(key, digits):
 		current = 1
 	return ("%0" + str(digits) + "d") % current
 
-
+@frappe.whitelist()
 def get_users_warehouse(warehouse):
 	warehouse_obj = frappe.get_doc("Warehouse" , warehouse)
 	users = warehouse_obj.get("users")
