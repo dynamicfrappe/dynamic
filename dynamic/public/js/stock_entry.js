@@ -22,17 +22,16 @@ frappe.ui.form.on("Stock Entry", {
           method: "dynamic.api.get_active_domains",
           callback: function (r) {
               if (r.message && r.message.length) {
-                  if (r.message.includes("WEH")) {
-                   frappe.set_route('List', "Stock Entry", 'List')
-                   frm.set_df_property('from_warehouse', 'read_only', 1);
-                   frm.set_df_property('to_warehouse', 'read_only', 1);
-                  }
+                	if (r.message.includes("WEH")) {
+                		frappe.set_route('List', "Stock Entry", 'List')
+            			frm.set_df_property('from_warehouse', 'read_only', 1);
+                		frm.set_df_property('to_warehouse', 'read_only', 1);
+                	}
                   
-              }
-          }
+              	}
+          	}
         })
-      },
-     
+    }, 
     old_stock_entry:function(frm){
       let old_stock_entry = frm.doc.old_stock_entry ;
         if(old_stock_entry){

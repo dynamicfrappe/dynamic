@@ -123,3 +123,8 @@ def get_users_warehouse(warehouse):
 	users = warehouse_obj.get("users")
 	if users:
 		return users
+	
+
+@frappe.whitelist()
+def check_docstatus(doc):
+	doc_obj = frappe.get_doc(doc.doctype , doc.name)
