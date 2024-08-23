@@ -75,9 +75,17 @@ frappe.ui.form.on("Material Request",{
 
     },
     remove_cst_button_create:function(cur_frm){
-      cur_frm.remove_custom_button(__("Purchase Order"),__("Create"))
-      cur_frm.remove_custom_button(__('Supplier Quotation'),__("Create"))
-      cur_frm.remove_custom_button(__('Request for Quotation'),__("Create"))
+      if (frm.doc.set_warehouse){
+        frappe.db.get_value('Warehouse', frm.doc.set_warehouse , 'users')
+        .then(r => {
+            console.log(r.message.users) // Open
+
+        })
+        cur_frm.remove_custom_button(__("Purchase Order"),__("Create"))
+        cur_frm.remove_custom_button(__('Supplier Quotation'),__("Create"))
+        cur_frm.remove_custom_button(__('Request for Quotation'),__("Create"))
+      }
+      
 
     },
     make_custom_buttons_2: function(frm) {
