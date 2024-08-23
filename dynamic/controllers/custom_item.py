@@ -127,4 +127,5 @@ def get_users_warehouse(warehouse):
 
 @frappe.whitelist()
 def check_docstatus(doc):
-	doc_obj = frappe.get_doc(doc.doctype , doc.name)
+	doc_obj = frappe.get_doc("Stock Entry" , doc.name)
+	return doc_obj.docstatus
