@@ -28,6 +28,14 @@ def get_data(filters):
 		conditions += " AND `tabDelivery Note`.branch LIKE '%%%s%%' "%(filters.get("branch"))
 	# if filters.get("customer"):
 	# 	conditions += " AND `tabDelivery Note`.customer = '%s' "%(filters.get("customer"))
+	if filters.get("warehouse"):
+		print(filters)
+		warehouse = "', '".join(filters.get("warehouse"))
+		conditions += f" AND `tabDelivery Note`.set_warehouse IN ('{warehouse}')"
+	if filters.get("item_group") :
+		item_group = "', '".join(filters.get("item_group"))
+		conditions += f" AND `tabItem`.item_group IN ('{item_group}')"
+		
 
 	sql = f"""
 	SELECT `tabDelivery Note`.name
@@ -39,12 +47,17 @@ def get_data(filters):
 	,`tabCustomer`.customer_name 
 	,`tabDelivery Note Item`.item_code
 	,`tabDelivery Note Item`.item_name
+	,`tabDelivery Note Item`.incoming_rate
+	,`tabDelivery Note Item`.price_list_rate
+	,`tabItem`.item_group
 	,`tabDelivery Note Item`.qty
+	,`tabDelivery Note Item`.warehouse
 	FROM `tabDelivery Note`
 	INNER JOIN `tabDelivery Note Item` 
 	ON `tabDelivery Note`.name=`tabDelivery Note Item`.parent
 	Inner JOIN `tabCustomer` 
 	ON `tabDelivery Note`.customer=`tabCustomer`.name
+	INNER JOIN `tabItem` ON `tabDelivery Note Item`.item_code = `tabItem`.item_code
 	WHERE  `tabDelivery Note`.docstatus<>2 AND {conditions}
 	"""
 	result = frappe.db.sql(sql,as_dict=1)
@@ -55,7 +68,8 @@ def get_columns(filters):
 		{
 			"label": _("Name"),
 			"fieldname": "name",
-			"fieldtype": "Data",
+			"fieldtype": "Link",
+			"options":"Delivery Note",
 			"width": 150
 		},
 		{
@@ -91,9 +105,35 @@ def get_columns(filters):
 			"width": 150
 		},
 		{
+			"label": _("Service Group"),
+			"fieldname": "item_group",
+			"fieldtype": "Data",
+			"width": 150
+		},
+		{
+			"label": _("Incoming Rate"),
+			"fieldname": "incoming_rate",
+			"fieldtype": "Currency",
+			"width": 150
+		},
+		{
+			"label": _("Price List Rate"),
+			"fieldname": "price_list_rate",
+			"fieldtype": "Currency",
+			"width": 150
+		},
+		
+		{
 			"label": _("QTY"),
 			"fieldname": "qty",
 			"fieldtype": "Float",
+			"width": 150
+		},
+		{
+			"label": _("Warehouse"),
+			"fieldname": "warehouse",
+			"fieldtype": "Link",
+			"options":"Warehouse",
 			"width": 150
 		},
 		{

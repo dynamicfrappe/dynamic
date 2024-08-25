@@ -17,12 +17,20 @@ def get_data(filters):
 		conditions += " AND `tabStock Entry`.posting_date >= '%s' "%(filters.get("from_date"))
 	if filters.get("to_date"):
 		conditions += " AND `tabStock Entry`.posting_date <= '%s' "%(filters.get("to_date"))
-	if filters.get("s_warehouse"):
-		conditions += " AND `tabStock Entry Detail`.s_warehouse='%s' "%(filters.get("s_warehouse"))
+	# if filters.get("from_warehouse"):
+	# 	conditions += " AND `tabStock Entry Detail`.s_warehouse IN'%s' "%(filters.get("from_warehouse"))
+	if filters.get("from_warehouse"):
+		from_warehouses = "', '".join(filters.get("from_warehouse"))
+		conditions += f" AND `tabStock Entry Detail`.s_warehouse IN ('{from_warehouses}')"
+
+	if filters.get("to_warehouse"):
+		to_warehouses = "', '".join(filters.get("to_warehouse"))
+		conditions += f" AND `tabStock Entry Detail`.t_warehouse IN ('{to_warehouses}')"
 	if filters.get("item_code"):
 		conditions += " AND `tabStock Entry Detail`.item_code = '%s' "%(filters.get("item_code"))
-	if filters.get("parent_group") :
-		conditions += f"""AND `tabItem`.parent_group = '{filters.get("parent_group")}' """
+	if filters.get("item_group") :
+		item_group = "', '".join(filters.get("item_group"))
+		conditions += f" AND `tabItem`.item_group IN ('{item_group}')"
 	sql = f"""
 	SELECT `tabStock Entry`.name
 	,`tabStock Entry`.posting_date
@@ -30,6 +38,7 @@ def get_data(filters):
 	,`tabStock Entry Detail`.t_warehouse as to_warehouse
 	,`tabStock Entry Detail`.item_code
 	,`tabStock Entry Detail`.item_name
+	,`tabStock Entry Detail`.item_group
 	,`tabStock Entry Detail`.qty
 	,`tabStock Entry Detail`.basic_rate
 	,`tabStock Entry Detail`.amount
@@ -86,6 +95,13 @@ def get_columns(filters):
 			"label": _("Item Name"),
 			"fieldname": "item_name",
 			"fieldtype": "Data",
+			"width": 150
+		},
+		{
+			"label": _("Item Group"),
+			"fieldname": "item_group",
+			"fieldtype": "Link",
+			"options":"Item Group",
 			"width": 150
 		},
 		{

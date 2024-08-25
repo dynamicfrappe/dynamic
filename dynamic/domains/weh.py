@@ -89,6 +89,16 @@ data = {
             },
            
        ],
+     #   "Purchase Invoice Item" :[
+     #        {
+     #        "fieldname":"brand",
+     #        "fieldtype":"Link",
+     #        "options":"Brand",
+     #        "insert_after":"description",
+     #        "fetch_from":"item_code.brand"
+     #        },
+           
+     #   ],
        "Stock Entry Detail" :[
             {
             "label":"Actual Qty(Target)",
@@ -141,6 +151,14 @@ data = {
         "property": "read_only",
         "property_type": "Check",
         "value": "1"
+        },
+        {
+        "doctype": "Purchase Invoice Item",
+        "doctype_or_field": "DocField",
+        "fieldname": "brand",
+        "property": "fetch_from",
+     #    "property_type": "Check",
+        "value": "item_code.brand"
         },
     ]
 }

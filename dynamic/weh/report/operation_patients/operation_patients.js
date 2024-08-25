@@ -39,5 +39,44 @@ frappe.query_reports["Operation patients"] = {
 			"fieldname":"branch",
 			"fieldtype": "Data",
 		},
+		{
+			label: __("Warehouse"),
+			fieldname: "warehouse",
+			fieldtype: "MultiSelectList",
+			get_data: function(txt) {
+				return frappe.db.get_link_options('Warehouse', txt, {
+				});
+			}
+		},
+		{
+			"fieldname":"parent_item_group",
+			"label": __("Parent Item Group"),
+			"fieldtype": "MultiSelectList",
+			"options": "Item Group",
+			get_data: function(txt){
+				return frappe.db.get_link_options('Item Group', txt, {
+					is_group: 1
+				});
+			}
+		},
+		{
+			"fieldname":"item_group",
+			"label": __("Item Group"),
+			"fieldtype": "MultiSelectList",
+			"options": "Item Group",
+			get_data: function(txt){
+				
+				let parent_item_group = frappe.query_report.get_filter_value('parent_item_group');
+				if (parent_item_group.length == 0) {
+					return frappe.db.get_link_options("Item Group", txt,{
+						"is_group": 0
+					});
+				}else{
+					return frappe.db.get_link_options("Item Group", txt,{
+						"parent_item_group":["IN", parent_item_group]
+					});
+				};
+			}
+		},
 	]
 };
