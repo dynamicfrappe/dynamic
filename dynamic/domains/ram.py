@@ -19,6 +19,24 @@ data = {
         ],
     },
     "properties": [
+        {
+            "doctype": "Pricing Rule",
+            "doctype_or_field": "DocField",
+            "fieldname": "customer",
+            "property": "options",
+            "property_type": "Text",
+            "value": "Customer Table"
+        },
+        {
+            "doctype": "Pricing Rule",
+            "doctype_or_field": "DocField",
+            "fieldname": "customer",
+            "property": "fieldtype",
+            "property_type": "Select",
+            "value": "Table"
+        },
+
+
         # {
         # "name": "item_group_fetch_from",
         # "doc_type": "Target Detail",
