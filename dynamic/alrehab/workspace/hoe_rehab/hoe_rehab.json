@@ -7,7 +7,7 @@
  "disable_user_customization": 0,
  "docstatus": 0,
  "doctype": "Workspace",
- "extends_another_page": 0,
+ "extends_another_page": 1,
  "hide_custom": 0,
  "idx": 0,
  "is_default": 0,
@@ -78,13 +78,14 @@
    "type": "Link"
   }
  ],
- "modified": "2024-02-12 13:03:20.998708",
+ "modified": "2024-08-26 12:02:00.893019",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "Hoe Rehab",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 1,
+ "restrict_to_domain": "Rehab",
  "shortcuts": [
   {
    "doc_view": "List",

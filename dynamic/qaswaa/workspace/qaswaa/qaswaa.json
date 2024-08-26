@@ -6,7 +6,7 @@
  "disable_user_customization": 0,
  "docstatus": 0,
  "doctype": "Workspace",
- "extends_another_page": 0,
+ "extends_another_page": 1,
  "hide_custom": 0,
  "icon": "stock",
  "idx": 0,
@@ -177,7 +177,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-03-03 15:19:30.569913",
+ "modified": "2024-08-26 12:03:13.990047",
  "modified_by": "Administrator",
  "module": "Qaswaa",
  "name": "Qaswaa",

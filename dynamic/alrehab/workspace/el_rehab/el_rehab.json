@@ -7,7 +7,7 @@
  "disable_user_customization": 0,
  "docstatus": 0,
  "doctype": "Workspace",
- "extends_another_page": 0,
+ "extends_another_page": 1,
  "hide_custom": 0,
  "idx": 0,
  "is_default": 0,
@@ -111,13 +111,14 @@
    "type": "Link"
   }
  ],
- "modified": "2024-08-07 15:53:53.942821",
+ "modified": "2024-08-26 12:00:37.690273",
  "modified_by": "Administrator",
  "module": "AlRehab",
  "name": "EL Rehab",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
+ "restrict_to_domain": "Rehab",
  "shortcuts": [
   {
    "doc_view": "",
