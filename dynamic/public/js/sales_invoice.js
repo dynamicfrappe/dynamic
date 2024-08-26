@@ -58,6 +58,22 @@ frappe.ui.form.on("Sales Invoice", {
 
 
   onload(frm) {
+
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+        if (r.message && r.message.length) {
+          if (r.message.includes("Rehab")) {
+
+            recaculate_due_date_and_amount(frm)
+
+            frm.add_custom_button(__('إنشاء قيد'), function() {
+              create_deferred_revenue_entry(frm);
+            });
+          }
+      }}
+    })
+
     var check_domain = frm.events.domian_valid(); 
     
     if (check_domain && frm.doc.docstatus == 0) {
@@ -315,6 +331,47 @@ add_item_discount_rate: function(frm) {
   },
 
 });
+
+function recaculate_due_date_and_amount(frm) {
+  frappe.call({
+    method: "dynamic.api.get_active_domains",
+    callback: function (r) {
+      if (r.message && r.message.length) {
+        if (r.message.includes("Rehab")) {
+            frappe.call({
+              method: "dynamic.alrehab.api.recalculate_due_date_and_amount",
+              args:{
+                doc_name : frm.docname
+              },
+              callback: function(r) {
+              }
+            });        
+            frm.refresh_fields();
+        }
+    }}
+  }) 
+}
+
+function create_deferred_revenue_entry(frm) {
+  frappe.call({
+      method: "dynamic.alrehab.api.create_deferred_revenue_entry",
+      args: {
+          doc_type: frm.doctype,
+          doc_name: frm.docname,
+      },
+      callback: function(r) {
+          if(r.message) {
+              var journal_entry_url = frappe.urllib.get_full_url('/desk/journal-entry/' + r.message.name);
+              frappe.msgprint({
+                  message: __('Deferred Revenue Entry created successfully: <a href="{0}" target="_blank">{1}</a>.' ).replace('{0}', journal_entry_url).replace('{1}', r.message.name),
+              })
+          }
+          else {
+              frappe.msgprint(__('Failed to create Deferred Revenue Entry.'));
+          }
+      }
+  });
+}
 
 function get_customer_query(){
   frappe.call({
