@@ -121,7 +121,8 @@ doctype_js = {
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Asset": "public/js/asset.js",
-    "Actions": "public/js/actions.js"
+    "Actions": "public/js/actions.js",
+    "Subscription": "public/js/subscription.js"
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 }
@@ -428,6 +429,8 @@ override_doctype_dashboards = {
     "Job Card": "dynamic.public.dashboard.job_card.get_data",
     "Opportunity": "dynamic.public.dashboard.opportunity_dashboard.get_data",
     "Customer": "dynamic.public.dashboard.customer_dashboard.get_data",
+    "Subscription": "dynamic.public.dashboard.subscription_dashboard.get_data",
+
 }
 
 # exempt linked doctypes from being automatically cancelled
