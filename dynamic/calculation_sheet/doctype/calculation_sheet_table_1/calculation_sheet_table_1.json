@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-08-27 10:57:44.185696",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "a",
+  "b",
+  "c",
+  "d"
+ ],
+ "fields": [
+  {
+   "fieldname": "a",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Data"
+  },
+  {
+   "fieldname": "b",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "c",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "P.T"
+  },
+  {
+   "fieldname": "d",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "LE"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-08-27 15:36:42.757868",
+ "modified_by": "Administrator",
+ "module": "Calculation Sheet",
+ "name": "Calculation Sheet table 1",
+ "owner": "Administrator",
+ "permissions": [],
+ "restrict_to_domain": "Calculation Sheet",
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
