@@ -65,6 +65,7 @@ data = {
                 "fieldname":"deferred_revenue_amount",
                 "fieldtype":"Currency",
                 "insert_after":"sec_deferred_revenue", 
+                "read_only": 1,
             },
             {
                 "label":_("Penalty"),
