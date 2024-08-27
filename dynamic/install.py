@@ -143,3 +143,8 @@ def create_domain_list():
 		pre.domain = 'Healthy Corner'
 		pre.insert()	
 
+	if not frappe.db.exists("Domain", "Calculation Sheet"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'Calculation Sheet'
+		pre.insert()
+

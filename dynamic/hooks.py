@@ -486,7 +486,8 @@ domains = {
     "Skyline": "dynamic.domains.skyline",
     "Healthy Corner":"dynamic.domains.healthy_corner",
     "Payment Deduction": "dynamic.domains.payment_deduction",
-    "True lease": "dynamic.domains.truelease"
+    "True lease": "dynamic.domains.truelease",
+    "Calculation Sheet":"dynamic.domains.calculation_sheet"
 }
 
 # domain Conatin
