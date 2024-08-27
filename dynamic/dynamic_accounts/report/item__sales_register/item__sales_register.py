@@ -77,7 +77,7 @@ def _execute(
 			"uom": d.uom,
 			"qty": d.qty,
 			"weight_per_unit" :d.weight_per_unit ,
-			"qty_with_weight" : d.qty * d.weight_per_unit
+			"qty_with_weight" : d.qty_with_weight
 		}
 
 		if additional_query_columns:
@@ -473,6 +473,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabSales Invoice`.customer_name, `tabSales Invoice`.customer_group, `tabSales Invoice Item`.so_detail,
 			`tabSales Invoice Item`.conversion_factor,
 			`tabSales Invoice Item`.qty,`tabSales Invoice Item`.weight_per_unit ,
+			 (`tabSales Invoice Item`.weight_per_unit *`tabSales Invoice Item`.qty ) as qty_with_weight ,
 			`tabSales Invoice`.update_stock, `tabSales Invoice Item`.uom, `tabSales Invoice Item`.qty
 			{0}
 		FROM `tabSales Invoice`
@@ -737,7 +738,10 @@ def add_total_row(
 				subtotal_display_field: get_display_value(filters, group_by_field, item),
 				"stock_qty": 0.0,
 				"amount": 0.0,
-				"bold": 1,
+				# "bold": 1,
+				"qty": 0.0,
+				"weight_per_unit" : 0.0,
+				"qty_with_weight" : 0.0,
 				"total_tax": 0.0,
 				"total": 0.0,
 				"percent_gt": 0.0,
@@ -750,13 +754,15 @@ def add_total_row(
 				subtotal_display_field: "Total",
 				"stock_qty": 0.0,
 				"amount": 0.0,
-				"bold": 1,
+				# "bold": 1,
+				"qty": 0.0,
+				"weight_per_unit" : 0.0,
+				"qty_with_weight" : 0.0,
 				"total_tax": 0.0,
 				"total": 0.0,
 				"percent_gt": 0.0,
 			},
 		)
-
 	return data, prev_group_by_value
 
 
@@ -806,6 +812,9 @@ def get_group_by_and_display_fields(filters):
 
 def add_sub_total_row(item, total_row_map, group_by_value, tax_columns):
 	total_row = total_row_map.get(group_by_value)
+	total_row["qty"] += item["qty"]
+	total_row["weight_per_unit"] += item["weight_per_unit"]
+	total_row["qty_with_weight"] += item["qty_with_weight"]
 	total_row["stock_qty"] += item["stock_qty"]
 	total_row["amount"] += item["amount"]
 	total_row["total_tax"] += item["total_tax"]
