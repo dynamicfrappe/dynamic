@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
-from datetime import date
+from datetime import date , datetime
 import datetime
 from frappe.utils import add_to_date
 from frappe.utils import getdate
@@ -93,15 +93,29 @@ class Cheques_report(object):
 			"width": 150
 		},
 		]
-
 		return self.columns
 
 	def get_data(self):
 		self.data = []
 		self.conditions, self.values = self.get_conditions(self.filters)
 		self.data = self.get_data_from_payment_entry(self.conditions,self.values)
+		self.data = self.add_new_filters()
 		return self.data
+	
+	
+	def add_new_filters(self):
+		if self.filters.get('from_date_ref'):
+			self.data  = [
+				item for item in self.data 
+				if item.get('Reference Date') and getdate(self.filters.get('from_date_ref')) <= item.get('Reference Date') 
+			]
+		if self.filters.get('to_date_ref'):
+			self.data  = [
+				item for item in self.data 
+				if item.get('Reference Date') and getdate(self.filters.get('to_date_ref')) >= item.get('Reference Date') 
+			]
 
+		return self.data
 	def get_data_from_payment_entry(self,conditions = '' ,values = ''):
 		query_test_p = """
 		select p.name as `Payment`,p.reference_no as `Cheques NO`,p.party as `Party`,p.party_type as `Party Type`,p.cheque_status as `Cheque Status`, p.paid_amount as `Amount`,p.posting_date as `Transaction Date`,p.reference_date as `Reference Date`,p.drawn_bank as `Bank`,p.drawn_bank_account as `Bank Account` 
