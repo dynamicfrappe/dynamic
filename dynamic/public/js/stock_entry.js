@@ -23,9 +23,10 @@ frappe.ui.form.on("Stock Entry", {
           callback: function (r) {
               if (r.message && r.message.length) {
                 	if (r.message.includes("WEH")) {
-                		frappe.set_route('List', "Stock Entry", 'List')
-                    frm.reload_doc();
-            			frm.set_df_property('from_warehouse', 'read_only', 1);
+                		frappe.set_route('List', "Stock Entry");
+                    location.reload();
+
+            			  frm.set_df_property('from_warehouse', 'read_only', 1);
                 		frm.set_df_property('to_warehouse', 'read_only', 1);
                 	}
                   
