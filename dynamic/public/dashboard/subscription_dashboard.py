@@ -6,7 +6,7 @@ DOMAINS = get_active_domains()
 
 def get_data(data={}):
     if "Rehab" in DOMAINS:
-        data['non_standard_fieldnames'].update({'Journal Entry': "je_ref"})
+        data['non_standard_fieldnames'].update({'Journal Entry': "reference_name"})
         data['transactions'].append(
             {
                 'label': _('Payment'),

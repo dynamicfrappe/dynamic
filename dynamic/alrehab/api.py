@@ -2,25 +2,24 @@ import frappe
 from frappe.utils import today, date_diff, flt
 from datetime import datetime
 from frappe import _
+from erpnext.accounts.doctype.subscription.subscription import get_subscription_updates
+from frappe.utils import getdate
+
 
 # Called on subscription
 @frappe.whitelist()
-def update_sales_invoice_penalty(sales_invoice, penalty_value):
-    
-    invoice = frappe.get_doc("Sales Invoice", sales_invoice)
-    frappe.db.set_value('Sales Invoice', sales_invoice, {'fine_percent': penalty_value})
-    
-    recalculate_due_date_and_amount(invoice.name)
-
-    return {"status": "success!"}
-
-# Called on subscription
-@frappe.whitelist()
-def set_total(sub_id, total):
+def update_sales_invoice_penalty(sub_id):
+    print(sub_id)
     doc = frappe.get_doc("Subscription", sub_id)
-    frappe.db.set_value('Subscription', doc.name, {'deferred_revenue_amount': total})
-    
-# Called on sales invoice refreshing
+    penalty = doc.penalty
+    invoices = doc.invoices
+    if invoices:
+        for i in invoices:
+            # invoice = frappe.get_doc("Sales Invoice", i.invoice)
+            frappe.db.set_value('Sales Invoice', i.invoice, {'fine_percent': penalty})
+            recalculate_due_date_and_amount(i.invoice)
+
+
 @frappe.whitelist()
 def recalculate_due_date_and_amount(doc_name):
     invoice = frappe.get_doc("Sales Invoice", doc_name)
@@ -53,20 +52,14 @@ def create_deferred_revenue_entry(doc_type, doc_name):
 
 
         # je_name = create_journal_entry(company.debit_account, company.credit_account, deferred_revenue_amount, party_type, party)
-
-        je_ref = doc.je_ref
-        print(je_ref)
-        if not je_ref : 
-            je_name = create_journal_entry(company.debit_account, company.credit_account, deferred_revenue_amount, party_type, party)
+        je_submitted = doc.je_submitted
+        if not je_submitted :
+            je_name = create_journal_entry(doc_name, doc_type, company.debit_account, company.credit_account, deferred_revenue_amount, party_type, party)
             frappe.db.set_value(doc_type, doc_name, {'je_ref': je_name})
+            frappe.db.set_value(doc_type, doc_name, {'je_submitted': 1})
         else:
-            journal_entry = frappe.get_doc("Journal Entry", je_ref)
-            if not journal_entry:
-                je_name = create_journal_entry(company.debit_account, company.credit_account, deferred_revenue_amount, party_type, party)
-                frappe.db.set_value(doc_type, doc_name, {'je_ref': je_name})
-            else:
-                frappe.throw(_("Can't create new journal entry! There is Journal Entry already existed: {0}").format(doc.je_ref))
-
+            frappe.throw(_("Can't create new journal entry! There is Journal Entry already existed: {0}").format(doc.je_ref))
+        
 
         return {"name": je_name}
 
@@ -77,24 +70,45 @@ def create_deferred_revenue_entry(doc_type, doc_name):
         frappe.log_error(frappe.get_traceback(), "Error creating Deferred Revenue Entry")
 
 
-def create_journal_entry(debit_account, credit_account, deferred_revenue_amount, party_type, party):
+def create_journal_entry(doc_name, doc_type, debit_account, credit_account, deferred_revenue_amount, party_type, party):
     journal_entry = frappe.new_doc("Journal Entry")
     journal_entry.posting_date = today()
-    journal_entry.voucher_type= 'Deferred Revenue'
+    journal_entry.voucher_type = 'Deferred Revenue'
+    journal_entry.reference_name = doc_name
 
     journal_entry.append("accounts",{
         'account': debit_account,
         'debit_in_account_currency': deferred_revenue_amount,
         'party_type': party_type,
-        'party': party
+        'party': party,
+        'reference_type': doc_type,
+        # 'reference_name': doc_name,
     })
 
     journal_entry.append("accounts",{
         'account': credit_account ,
-        'credit_in_account_currency': deferred_revenue_amount
+        'credit_in_account_currency': deferred_revenue_amount,
+        'reference_type': doc_type,
+        # 'reference_name': doc_name,
     })
 
-    journal_entry.save(ignore_permissions=True)
+    journal_entry.save()
+    journal_entry.submit()
     frappe.db.commit()
 
     return journal_entry.name
+
+@frappe.whitelist()
+def set_total(sub_id):
+    print(sub_id)
+    doc = frappe.get_doc("Subscription", sub_id)
+    invoices = doc.invoices
+    total = 0.0
+    for invoice in invoices:
+        i = frappe.get_doc("Sales Invoice", invoice.invoice)
+        if not i.je_submitted:
+            total += i.deferred_revenue_amount
+    print(sub_id)
+    frappe.db.set_value('Subscription', doc.name, {'deferred_revenue_amount': total})
+    return {"total": total}
+    

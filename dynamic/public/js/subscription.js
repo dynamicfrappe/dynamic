@@ -1,44 +1,15 @@
 
 
 frappe.ui.form.on('Subscription', {
-    setup(frm) {
-        
-    },
-    onload(frm) {
-        frappe.call({
-            method: "dynamic.api.get_active_domains",
-            callback: function (r) {
-              if (r.message && r.message.length) {
-                if (r.message.includes("Rehab")) {
-                    frm.add_custom_button(__('إنشاء قيد'), function() {
-                        create_deferred_revenue_entry(frm);
-                    });
-                    frm.add_custom_button(__('Fetch Invoices'), function() {
-                        fetch_invoices(frm);
-                    });
-                    update_invoice_penalty(frm);
-                    calculateTotal(frm);
-                }
-            }}
-        })
-    },
-    after_save(frm){
-        frappe.call({
-            method: "dynamic.api.get_active_domains",
-            callback: function (r) {
-              if (r.message && r.message.length) {
-                if (r.message.includes("Rehab")) {
-                    frm.add_custom_button(__('إنشاء قيد'), function() {
-                        create_deferred_revenue_entry(frm);
-                    });
-                    frm.add_custom_button(__('Fetch Invoices'), function() {
-                        fetch_invoices(frm);
-                    });
-                    update_invoice_penalty(frm);
-                    calculateTotal(frm);
-                }
-            }}
-        })
+    refresh(frm){
+        frm.events.add_custom_button_fetch_invoices(frm);
+        if(frm.doc.invoices.length != 0){
+            frm.events.update_invoice_penalty(frm);
+            frm.events.calculateTotal(frm);
+            if(frm.doc.deferred_revenue_amount){
+                frm.events.add_custom_button_create_je(frm);
+            }
+        }
     },
 
     before_save: function(frm) {
@@ -54,7 +25,6 @@ frappe.ui.form.on('Subscription', {
                             frm.doc.plans.forEach((plan) => {
                                 frappe.model.set_value(plan.doctype, plan.name, 'qty', r.unit_area);
                             });
-                        frm.refresh_field('plans');
                         }
                      });
                     }
@@ -62,8 +32,62 @@ frappe.ui.form.on('Subscription', {
             }}
         })
     },
+    add_custom_button_fetch_invoices(frm){
+        frappe.call({
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+              if (r.message && r.message.length) {
+                if (r.message.includes("Rehab")) {
+                    frm.add_custom_button(__('Fetch All Invoices'), function() {
+                        fetch_invoices(frm);
+                    });
+                }
+            }}
+        })
+    },
+    add_custom_button_create_je(frm){
+        frappe.call({
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+              if (r.message && r.message.length) {
+                if (r.message.includes("Rehab")) {
+                    frm.add_custom_button(__('إنشاء قيد'), function() {
+                        create_deferred_revenue_entry(frm);
+                    });
+                }
+            }}
+        })
+    },
+    calculateTotal(frm) {
+        frappe.call({
+            method: "dynamic.alrehab.api.set_total",
+            args: {
+                sub_id: frm.docname,
+            },
+            callback: function(r) {
+                if (r.message) {
+                    frm.doc.set_value("deferred_revenue_amount", r.message.total);
+                    frm.doc.refresh()
+                }
+            }
+        });
+    
+    },
+    update_invoice_penalty(frm){
+        frappe.call({
+            method: "dynamic.alrehab.api.update_sales_invoice_penalty",
+            args: {
+                    sub_id: frm.docname
+             },
+            callback: function(r) {
+                console.log(r.message.status)
+            }
+        });
+    }
 });
 
+
+  
 function create_deferred_revenue_entry(frm) {
     frappe.call({
         method: "dynamic.alrehab.api.create_deferred_revenue_entry",
@@ -73,9 +97,8 @@ function create_deferred_revenue_entry(frm) {
         },
         callback: function(r) {
             if(r.message) {
-                var journal_entry_url = frappe.urllib.get_full_url('/desk/journal-entry/' + r.message.name);
                 frappe.msgprint({
-                    message: __('Deferred Revenue Entry created successfully: <a href="{0}" target="_blank">{1}</a>.' ).replace('{0}', journal_entry_url).replace('{1}', r.message.name),
+                    message: __('Deferred Revenue Entry created successfully:{1} ' ).replace('{1}', r.message.name),
                 })
             }
             else {
@@ -85,50 +108,29 @@ function create_deferred_revenue_entry(frm) {
     });
 }
 
-function update_invoice_penalty(frm){
-    $.each(frm.doc.invoices || [], function (i, invoice) {
-        frappe.call({
-            method: "dynamic.alrehab.api.update_sales_invoice_penalty",
-            args: {
-                sales_invoice: invoice.invoice,
-                penalty_value: frm.doc.penalty
-            },
-            callback: function(r) {
-
-            }
-        });
-    });
-}
-
-function calculateTotal(frm) {
-    var total = 0.0;
-    $.each(frm.doc.invoices || [], function (i, invoice) {
-        frappe.db.get_value('Sales Invoice', invoice.invoice , 'deferred_revenue_amount').then(r => {
-            total = total + parseFloat(r.message.deferred_revenue_amount) ;
-
-            frm.set_value('deferred_revenue_amount', total);
-
-            frappe.call({
-                method: "dynamic.alrehab.api.set_total",
-                args: {
-                   sub_id: frm.docname,
-                   total: total
-                },
-                callback: function(r) {
-                }
-            });
-        })
-    });
-
-}
-
 function fetch_invoices(frm) {
     const doc = frm.doc;
 
     async function checkAndFetch() {
+        // Convert the current_invoice_end to YYYYMMDD format
+        const [endYear, endMonth, endDay] = doc.current_invoice_end.split("-");
+        const currentInvoiceEndFormatted = `${endYear}${endMonth.padStart(2, '0')}${endDay.padStart(2, '0')}`;
 
-        if (new Date(doc.current_invoice_end) > new Date()) {
-            return; 
+        // Get today's date in YYYYMMDD format
+        const today = new Date();
+        const todayYear = today.getFullYear();
+        const todayMonth = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const todayDay = String(today.getDate()).padStart(2, '0');
+        const todayFormatted = `${todayYear}${todayMonth}${todayDay}`;
+
+        console.log("Current Invoice End Date (Original):", doc.current_invoice_end);
+        console.log("Formatted Current Invoice End Date (YYYYMMDD):", currentInvoiceEndFormatted);
+        console.log("Today's Date (YYYYMMDD):", todayFormatted);
+
+        // Compare the formatted dates
+        if (currentInvoiceEndFormatted >= todayFormatted) {
+            console.log("Invoice end date is in the future. Stopping the function.");
+            return;
         }
         
         await frappe.call({

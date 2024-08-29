@@ -19,7 +19,7 @@ data = {
                 "options":"Commercial year",
                 "insert_after":"owner_name",  
             },     
-            #Unit area
+            # Unit area
             {
                 "label":_("Unit area"),
                 "fieldname":"unit_area",
@@ -31,7 +31,6 @@ data = {
                 "fieldname":"building_number",
                 "fieldtype":"Data",
                 "insert_after":"unit_area", 
-
             }
 
         ],
@@ -44,14 +43,18 @@ data = {
                 "insert_after":"tax_withholding_category", 
             },
             {
-                "label":_("Journal Entry Reference"),
-                "fieldname":"je_ref",
-                "fieldtype":"Link",
-                "options":"Journal Entry",
-                "insert_after":"against_income_account",
-                "read_only": 1,
-                "hidden": 1,
+                "label":_("Reference Name"),
+                "fieldname":"reference_name",
+                "fieldtype":"Data",
+                "insert_after":"installment_entry", 
             },
+            # {
+            #     "label":_("Subscription Ref"),
+            #     "fieldname":"subscription",
+            #     "fieldtype":"Link",
+            #     "options":"Subscription",
+            #     "insert_after":"sales_invoice", 
+            # }
         ],
         'Subscription':[
             {
@@ -81,8 +84,17 @@ data = {
                 "options":"Journal Entry",
                 "insert_after":"deferred_revenue_amount",
                 "read_only": 1,
-                "hidden": 1,
             },
+            {
+                "label": "JE submitted",
+                "fieldname":"je_submitted",
+                "fieldtype":"Check",
+                "insert_after":"generate_new_invoices_past_due_date", 
+                "read_only": 1,
+                "default" : 0,
+
+            },
+            
         ],
         'Company':[
             {
@@ -122,6 +134,7 @@ data = {
                 "fieldname":"fine_percent",
                 "fieldtype":"Float",
                 "insert_after":"sec_fines",
+                "read_only": 1,
             },
             {
                 "fieldname": "col_break_01",
@@ -132,7 +145,8 @@ data = {
                 "label": "أيام التأخير",
                 "fieldname":"num_of_delay_days",
                 "fieldtype":"Int",
-                "insert_after":"col_break_01", 
+                "insert_after":"col_break_01",
+                "read_only": 1,
             },
             {
                 "fieldname": "col_break_02",
@@ -144,15 +158,24 @@ data = {
                 "fieldname":"deferred_revenue_amount",
                 "fieldtype":"Currency",
                 "insert_after":"col_break_02", 
+                "read_only": 1,
             },
             {
-                "label":_("Journal Entry Reference"),
+                "label": "JE submitted",
+                "fieldname":"je_submitted",
+                "fieldtype":"Check",
+                "insert_after":"is_debit_note", 
+                "read_only": 1,
+                "default" : 0,
+
+            },
+            {
+                "label":_("Journal Entry"),
                 "fieldname":"je_ref",
                 "fieldtype":"Link",
                 "options":"Journal Entry",
                 "insert_after":"against_income_account",
                 "read_only": 1,
-                "hidden": 1,
             },
         ],
         
@@ -176,5 +199,5 @@ data = {
         },
     ],
   
-    # 'on_setup': 'dynamic.teba.setup.setup_teba'
+   'on_setup': 'dynamic.alrehab.setup.install_elrehab'
 }
