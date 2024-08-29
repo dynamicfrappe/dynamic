@@ -178,36 +178,43 @@ frappe.ui.form.on("Stock Entry", {
         "method" : "dynamic.weh.controllers.get_defaulte_source_warehouse",
         callback:function(r) {
           if (r.message) {
-          
-            if(frm.is_new()){
-              frm.set_value("from_warehouse" , r.message[0]) 
-           frm.refresh_field("from_warehouse")
-            } 
-            if(!frm.is_new()){
-              if (! r.message.includes(frm.doc.to_warehouse) ){
-                console.log("Disable Save")
-                frm.disable_save()
-              }
-            }
-            
-           
-           
-           
-          frm.set_query("from_warehouse", function(){
-            console.log(r.message)
-            return {
-              "filters": [
-                  ["Warehouse", "name", "in", r.message],
+            // if(frm.doc.stock_entry_type != "")
+            frappe.db.get_value('Stock Entry Type', frm.doc.stock_entry_type, 'purpose')
+            .then(r => {
+                console.log(r.message.purpose) 
+                if(r.message.purpose != 'Material Issue'){
+                  if(frm.is_new()){
+                    frm.set_value("from_warehouse" , r.message[0]) 
+                    frm.refresh_field("from_warehouse")
+                  } 
+                  if(!frm.is_new()){
+                    if (! r.message.includes(frm.doc.to_warehouse) ){
+                      console.log("Disable Save")
+                      frm.disable_save()
+                    }
+                  }
+                  
+                
+                
+                
+                frm.set_query("from_warehouse", function(){
+                  console.log(r.message)
+                  return {
+                    "filters": [
+                        ["Warehouse", "name", "in", r.message],
+                    
+                    ]
+                }
+                })
+    
+                  if (r.message.length == 1){
+                    frm.set_df_property("from_warehouse", "read_only", 1);
+                    frm.refresh_field("from_warehouse")
+                  }
+                }
+            })
               
-              ]
           }
-          })
-
-         if (r.message.length == 1){
-          frm.set_df_property("from_warehouse", "read_only", 1);
-          frm.refresh_field("from_warehouse")
-         }
-        }
         }
       })
 

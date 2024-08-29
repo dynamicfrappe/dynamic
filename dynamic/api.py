@@ -1175,9 +1175,11 @@ def get_allowed_user_warehouse(doc,warehouse):
 	"""
 	get_allowed_user = frappe.db.sql(get_allowed_user, as_dict=1)
 	if not len(get_allowed_user):
-		frappe.throw(
-			f'User "{frappe.session.user}" Not Allowed To Confirm Transit To Warehouse "{doc.get("to_warehouse")}"'
-		)
+		purpose=frappe.get_value("Stock Entry Type",doc.stock_entry_type,'purpose')
+		if purpose != "Material Issue":
+			frappe.throw(
+				f'User "{frappe.session.user}" Not Allowed To Confirm Transit To Warehouse "{doc.get("to_warehouse")}"'
+			)
 
 
 @frappe.whitelist()
