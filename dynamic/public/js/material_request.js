@@ -79,7 +79,7 @@ frappe.ui.form.on("Material Request",{
         frappe.call({
             method: 'dynamic.controllers.custom_item.get_users_warehouse',
             args: {
-                warehouse:frm.doc.set_warehouse
+                warehouse:frm.doc.set_from_warehouse
             
             },
             callback: function(r) {
