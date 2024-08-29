@@ -64,10 +64,9 @@ frappe.ui.form.on("Sales Invoice", {
       callback: function (r) {
         if (r.message && r.message.length) {
           if (r.message.includes("Rehab")) {
-
-            recaculate_due_date_and_amount(frm)
-
             frm.add_custom_button(__('إنشاء قيد'), function() {
+              recaculate_due_date_and_amount(frm);
+              frm.refresh_fields();
               create_deferred_revenue_entry(frm);
             });
           }
@@ -346,7 +345,7 @@ function recaculate_due_date_and_amount(frm) {
               callback: function(r) {
               }
             });        
-            frm.refresh_fields();
+            
         }
     }}
   }) 
@@ -361,9 +360,8 @@ function create_deferred_revenue_entry(frm) {
       },
       callback: function(r) {
           if(r.message) {
-              var journal_entry_url = frappe.urllib.get_full_url('/desk/journal-entry/' + r.message.name);
               frappe.msgprint({
-                  message: __('Deferred Revenue Entry created successfully: <a href="{0}" target="_blank">{1}</a>.' ).replace('{0}', journal_entry_url).replace('{1}', r.message.name),
+                  message: __('Deferred Revenue Entry created successfully:{1} ' ).replace('{1}', r.message.name),
               })
           }
           else {
