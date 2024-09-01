@@ -27,7 +27,7 @@ frappe.ui.form.on("Stock Entry", {
                     location.reload();
 
             			  frm.set_df_property('from_warehouse', 'read_only', 1);
-                		frm.set_df_property('to_warehouse', 'read_only', 1);
+                		// frm.set_df_property('to_warehouse', 'read_only', 1);
                 	}
                   
               	}
@@ -112,6 +112,17 @@ frappe.ui.form.on("Stock Entry", {
     setup :function(frm){
       frm.events.set_field_property(frm)
       
+      
+    //   frappe.call({
+    //       "method" : "dynamic.contracting.doctype.stock_functions.fetch_contracting_data" ,
+    //       callback :function(r){
+    //         if (r.message){
+
+    //         }
+    //       }
+    //   })
+       
+       
     //   frappe.call({
     //       "method" : "dynamic.contracting.doctype.stock_functions.fetch_contracting_data" ,
     //       callback :function(r){
@@ -122,29 +133,6 @@ frappe.ui.form.on("Stock Entry", {
     //   })
        
     },
-    // transit:function(frm){
-    //   if(frm.doc.stock_entry_type == 'Material Transfer'){
-    //     frappe.call({
-    //       method: "dynamic.api.get_active_domains",
-    //       callback: function (r) {
-    //           if (r.message && r.message.length) {
-    //               if (r.message.includes("WEH")) {
-    //                 frm.set_df_property("add_to_transit", "read_only", 1)
-    //                 if(frm.doc.transit){
-    //                   frm.set_value("add_to_transit", 1)
-    //                 }
-    //                 else{
-    //                   frm.set_value("add_to_transit", 0)
-    //                 }
-                   
-                    
-    //               }
-    //               frm.refresh_field("add_to_transit")
-    //           }
-    //       }
-    //   })
-    //   }
-    // },
     on_submit:function(frm){
       frappe.call({
         method: "dynamic.api.get_active_domains",
@@ -171,6 +159,14 @@ frappe.ui.form.on("Stock Entry", {
             }
         }
     })
+      
+    },
+    set_read_only_to_warehouse(frm){
+      if(!frm.is_new()){
+        console.log("to_warehouse")
+        frm.set_df_property("to_warehouse","read_only" ,1);
+        // frm.refresh_field("to_warehouse")
+      }
       
     },
     setup_source_warehouse(frm){
@@ -303,6 +299,7 @@ frappe.ui.form.on("Stock Entry", {
     },
     read_only_fields:function(frm){
       frm.events.setup_source_warehouse(frm)
+      frm.events.set_read_only_to_warehouse(frm)
       
       frappe.call({
         method: "dynamic.api.get_active_domains",
