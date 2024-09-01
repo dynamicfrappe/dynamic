@@ -332,23 +332,14 @@ add_item_discount_rate: function(frm) {
 });
 
 function recaculate_due_date_and_amount(frm) {
-  frappe.call({
-    method: "dynamic.api.get_active_domains",
-    callback: function (r) {
-      if (r.message && r.message.length) {
-        if (r.message.includes("Rehab")) {
-            frappe.call({
-              method: "dynamic.alrehab.api.recalculate_due_date_and_amount",
-              args:{
-                doc_name : frm.docname
-              },
-              callback: function(r) {
-              }
-            });        
-            
+    frappe.call({
+        method: "dynamic.alrehab.api.recalculate_due_date_and_amount",
+        args:{
+            doc_name : frm.docname
+        },
+        callback: function(r) {
         }
-    }}
-  }) 
+    });        
 }
 
 function create_deferred_revenue_entry(frm) {

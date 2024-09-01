@@ -2,14 +2,25 @@
 
 frappe.ui.form.on('Subscription', {
     refresh(frm){
-        frm.events.add_custom_button_fetch_invoices(frm);
-        if(frm.doc.invoices.length != 0){
-            frm.events.update_invoice_penalty(frm);
-            frm.events.calculateTotal(frm);
-            if(frm.doc.deferred_revenue_amount){
-                frm.events.add_custom_button_create_je(frm);
-            }
-        }
+        frappe.call({
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+              if (r.message && r.message.length) {
+                if (r.message.includes("Rehab")) {
+
+                    frm.events.add_custom_button_fetch_invoices(frm);
+                    
+                    if(frm.doc.invoices.length != 0){
+                        frm.events.update_invoice_penalty(frm);
+                        frm.events.calculateTotal(frm);
+                        if(frm.doc.deferred_revenue_amount){
+                            frm.events.add_custom_button_create_je(frm);
+                        }
+                    }
+                
+                }
+            }}
+        })        
     },
 
     before_save: function(frm) {
@@ -33,30 +44,14 @@ frappe.ui.form.on('Subscription', {
         })
     },
     add_custom_button_fetch_invoices(frm){
-        frappe.call({
-            method: "dynamic.api.get_active_domains",
-            callback: function (r) {
-              if (r.message && r.message.length) {
-                if (r.message.includes("Rehab")) {
-                    frm.add_custom_button(__('Fetch All Invoices'), function() {
-                        fetch_invoices(frm);
-                    });
-                }
-            }}
-        })
+        frm.add_custom_button(__('Fetch All Invoices'), function() {
+            fetch_invoices(frm);
+        });
     },
     add_custom_button_create_je(frm){
-        frappe.call({
-            method: "dynamic.api.get_active_domains",
-            callback: function (r) {
-              if (r.message && r.message.length) {
-                if (r.message.includes("Rehab")) {
-                    frm.add_custom_button(__('إنشاء قيد'), function() {
-                        create_deferred_revenue_entry(frm);
-                    });
-                }
-            }}
-        })
+        frm.add_custom_button(__('إنشاء قيد'), function() {
+            create_deferred_revenue_entry(frm);
+        });
     },
     calculateTotal(frm) {
         frappe.call({
@@ -66,8 +61,6 @@ frappe.ui.form.on('Subscription', {
             },
             callback: function(r) {
                 if (r.message) {
-                    frm.doc.set_value("deferred_revenue_amount", r.message.total);
-                    frm.doc.refresh()
                 }
             }
         });
