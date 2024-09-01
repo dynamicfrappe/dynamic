@@ -1,6 +1,6 @@
 import frappe
 from frappe.utils import today, date_diff, flt
-from datetime import datetime
+from datetime import datetime, date
 from frappe import _
 from erpnext.accounts.doctype.subscription.subscription import get_subscription_updates
 from frappe.utils import getdate
@@ -111,3 +111,10 @@ def set_total(sub_id):
 
     return {"total": total}
     
+
+@frappe.whitelist()
+def get_date(doc_type):
+    doc = frappe.get_doc("Subscription", doc_type)
+    if doc.current_invoice_end > date.today():
+        return True
+    return False
