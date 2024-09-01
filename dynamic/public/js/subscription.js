@@ -102,45 +102,88 @@ function create_deferred_revenue_entry(frm) {
 }
 
 function fetch_invoices(frm) {
-    const doc = frm.doc;
 
     async function checkAndFetch() {
-        // Convert the current_invoice_end to YYYYMMDD format
-        const [endYear, endMonth, endDay] = doc.current_invoice_end.split("-");
-        const currentInvoiceEndFormatted = `${endYear}${endMonth.padStart(2, '0')}${endDay.padStart(2, '0')}`;
-
-        // Get today's date in YYYYMMDD format
-        const today = new Date();
-        const todayYear = today.getFullYear();
-        const todayMonth = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-        const todayDay = String(today.getDate()).padStart(2, '0');
-        const todayFormatted = `${todayYear}${todayMonth}${todayDay}`;
-
-        console.log("Current Invoice End Date (Original):", doc.current_invoice_end);
-        console.log("Formatted Current Invoice End Date (YYYYMMDD):", currentInvoiceEndFormatted);
-        console.log("Today's Date (YYYYMMDD):", todayFormatted);
-
-        // Compare the formatted dates
-        if (currentInvoiceEndFormatted >= todayFormatted) {
-            console.log("Invoice end date is in the future. Stopping the function.");
-            return;
-        }
         
-        await frappe.call({
-            method: "erpnext.accounts.doctype.subscription.subscription.get_subscription_updates",
-            args: { name: doc.name },
-            freeze: true,
-            callback: function (data) {
-                if (!data.exc) {
-                    frm.reload_doc();
-                }
+        const doc = frm.doc;
+
+        const dateResponse = await frappe.call({
+            method: "dynamic.alrehab.api.get_date",
+            args: {
+                doc_type: frm.doc.name
             }
         });
         
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        
-        checkAndFetch();
+        if (dateResponse.message) {
+            return;
+        }
+        else{
+            
+            await frappe.call({
+                method: "erpnext.accounts.doctype.subscription.subscription.get_subscription_updates",
+                args: { name: doc.name },
+                freeze: true,
+                callback: function (data) {
+                    if (!data.exc) {
+                        frm.reload_doc();
+
+                    }
+                }
+            });
+            
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            
+            checkAndFetch();
+        }
     }
     
     checkAndFetch();
 }
+
+// function fetch_invoices(frm) {
+
+//     async function checkAndFetch() {
+        
+//         const doc = frm.doc;
+
+//         try {
+//             const dateResponse = await frappe.call({
+//                 method: "dynamic.alrehab.api.get_date",
+//                 args: {
+//                     doc_type: frm.doc.name
+//                 }
+//             });
+
+//             if (dateResponse.message) {
+//                 console.log('Date Response:', dateResponse.message);
+//             } else {
+//                 console.log('Unexpected Response:', dateResponse.message);
+//                 console.log(555);
+//             }
+
+//             const subscriptionResponse = await frappe.call({
+//                 method: "erpnext.accounts.doctype.subscription.subscription.get_subscription_updates",
+//                 args: { name: doc.name },
+//                 freeze: true
+//             });
+
+//             if (!subscriptionResponse.exc) {
+//                 await frm.reload_doc();
+//             }
+
+//         } catch (error) {
+//             console.error('Error during fetching:', error);
+//         }
+
+//         await new Promise(resolve => setTimeout(resolve, 5000));
+
+//         // Exit condition (example: stop after certain attempts)
+//         if (some_exit_condition) {
+//             return;
+//         }
+
+//         checkAndFetch();
+//     }
+
+//     checkAndFetch();
+// }
