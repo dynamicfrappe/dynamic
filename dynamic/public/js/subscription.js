@@ -83,7 +83,7 @@ frappe.ui.form.on('Subscription', {
   
 function create_deferred_revenue_entry(frm) {
     frappe.call({
-        method: "dynamic.alrehab.api.create_deferred_revenue_entry",
+        method: "dynamic.alrehab.api.create_deferred_revenue_entry_group_of_invoices",
         args: {
             doc_type: frm.doctype,
             doc_name: frm.docname,
@@ -91,7 +91,7 @@ function create_deferred_revenue_entry(frm) {
         callback: function(r) {
             if(r.message) {
                 frappe.msgprint({
-                    message: __('Deferred Revenue Entry created successfully:{1} ' ).replace('{1}', r.message.name),
+                    message: __('Deferred Revenue Entry for each invoice are created successfully.' ),
                 })
             }
             else {

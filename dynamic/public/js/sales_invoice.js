@@ -346,7 +346,6 @@ function create_deferred_revenue_entry(frm) {
   frappe.call({
       method: "dynamic.alrehab.api.create_deferred_revenue_entry",
       args: {
-          doc_type: frm.doctype,
           doc_name: frm.docname,
       },
       callback: function(r) {
