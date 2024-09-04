@@ -51,9 +51,9 @@ def create_deferred_revenue_entry(doc_name):
     try:
         invoice = frappe.get_doc("Sales Invoice", doc_name) 
         # doc.db_set("docstatus", 1, commit=True)
-        company = frappe.get_doc('Company', doc.company)
+        company = frappe.get_doc('Company', invoice.company)
 
-        deferred_revenue_amount = doc.deferred_revenue_amount
+        deferred_revenue_amount = invoice.deferred_revenue_amount
         if deferred_revenue_amount <= 0 :
             frappe.throw(_("Deferred Revenue Amount must be greater than zero."))
 
