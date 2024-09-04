@@ -42,6 +42,7 @@ def set_total(sub_id):
         total += i.deferred_revenue_amount
 
     frappe.db.set_value('Subscription', doc.name, {'deferred_revenue_amount': total})
+    frappe.db.commit()
 
     return {"total": total}
 
