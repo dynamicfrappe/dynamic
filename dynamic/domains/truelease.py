@@ -66,6 +66,20 @@ data = {
             "options" :"Draft\nApproved\nRejected", 
          },
          {
+            "label" :"Status By Department: " ,
+            "fieldname": "status_depart",
+            "fieldtype": "Select",
+            "insert_after": "action_name",
+            "options" :"\nPending\nDone", 
+         },
+         {
+            "label" :"Organization: " ,
+            "fieldname": "org_name",
+            "fieldtype": "Data",
+            "insert_after": "customer",
+            "fetch_from": "customer.company_name"
+         },
+         {
             "fieldname": "attachments_section",
             "fieldtype": "Section Break",
             "insert_after": "created_by",
