@@ -22,7 +22,6 @@ frappe.ui.form.on('Subscription', {
             }}
         })        
     },
-
     before_save: function(frm) {
         frappe.call({
             method: "dynamic.api.get_active_domains",
@@ -139,51 +138,3 @@ function fetch_invoices(frm) {
     
     checkAndFetch();
 }
-
-// function fetch_invoices(frm) {
-
-//     async function checkAndFetch() {
-        
-//         const doc = frm.doc;
-
-//         try {
-//             const dateResponse = await frappe.call({
-//                 method: "dynamic.alrehab.api.get_date",
-//                 args: {
-//                     doc_type: frm.doc.name
-//                 }
-//             });
-
-//             if (dateResponse.message) {
-//                 console.log('Date Response:', dateResponse.message);
-//             } else {
-//                 console.log('Unexpected Response:', dateResponse.message);
-//                 console.log(555);
-//             }
-
-//             const subscriptionResponse = await frappe.call({
-//                 method: "erpnext.accounts.doctype.subscription.subscription.get_subscription_updates",
-//                 args: { name: doc.name },
-//                 freeze: true
-//             });
-
-//             if (!subscriptionResponse.exc) {
-//                 await frm.reload_doc();
-//             }
-
-//         } catch (error) {
-//             console.error('Error during fetching:', error);
-//         }
-
-//         await new Promise(resolve => setTimeout(resolve, 5000));
-
-//         // Exit condition (example: stop after certain attempts)
-//         if (some_exit_condition) {
-//             return;
-//         }
-
-//         checkAndFetch();
-//     }
-
-//     checkAndFetch();
-// }
