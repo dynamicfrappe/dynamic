@@ -62,7 +62,7 @@ frappe.ui.form.on("Lead", {
                             
                             )
                     }
-                    if(r.message.includes("Rehab")) {
+                    if(r.message.includes("True lease")) {
                         frm.add_custom_button(
                             __("Action"),
                             function () {
