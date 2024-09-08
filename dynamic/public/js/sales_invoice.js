@@ -64,6 +64,7 @@ frappe.ui.form.on("Sales Invoice", {
       callback: function (r) {
         if (r.message && r.message.length) {
           if (r.message.includes("Rehab")) {
+            recaculate_due_date_and_amount(frm);
             frm.add_custom_button(__('إنشاء قيد'), function() {
               recaculate_due_date_and_amount(frm);
               frm.refresh_fields();
@@ -71,6 +72,7 @@ frappe.ui.form.on("Sales Invoice", {
             });
           }
       }}
+
     })
 
     var check_domain = frm.events.domian_valid(); 

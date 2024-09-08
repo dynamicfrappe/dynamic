@@ -22,7 +22,7 @@ def update_sales_invoice_penalty(sub_id):
 @frappe.whitelist()
 def recalculate_due_date_and_amount(doc_name):
     invoice = frappe.get_doc("Sales Invoice", doc_name)
-    if invoice.status == "Overdue":
+    if invoice.status != "Paid":
         due_date = invoice.due_date
         days = date_diff(today(), due_date)
                     
@@ -31,6 +31,31 @@ def recalculate_due_date_and_amount(doc_name):
 
         frappe.db.set_value('Sales Invoice', doc_name, {'num_of_delay_days': max(days, 0)})
         frappe.db.set_value('Sales Invoice', doc_name, {'deferred_revenue_amount': total * days * invoice.fine_percent})
+    else :
+        existing_payment = frappe.db.exists({
+            "doctype": "Payment Entry Reference",
+            "reference_doctype": "Sales Invoice",
+            "reference_name": invoice.name 
+        })
+        if existing_payment:
+            payment_entry_reference_name = existing_payment[0][0]
+            payment_entry_reference = frappe.get_doc("Payment Entry Reference", payment_entry_reference_name)
+            payment_entry = payment_entry_reference.parent
+            pe = frappe.get_doc("Payment Entry", payment_entry)
+            print(pe.posting_date)
+            due_date = invoice.due_date
+            print(invoice.due_date)
+
+            days = date_diff(pe.posting_date, due_date)
+                        
+            # calc the total items amount
+            total = sum( item.get('amount', 0) for item in invoice.get('items', []) )
+
+            frappe.db.set_value('Sales Invoice', doc_name, {'num_of_delay_days': max(days, 0)})
+            frappe.db.set_value('Sales Invoice', doc_name, {'deferred_revenue_amount': total * days * invoice.fine_percent})
+        else:
+            frappe.throw(_("No payment entry found for this paid invoice."))
+
 
 @frappe.whitelist()
 def set_total(sub_id):
@@ -69,7 +94,6 @@ def create_deferred_revenue_entry(doc_name):
         journal_entry = frappe.new_doc("Journal Entry")
         journal_entry.posting_date = today()
         journal_entry.voucher_type = 'Deferred Revenue'
-
         journal_entry.append("accounts",{
             'account': company.debit_account,
             'debit_in_account_currency': deferred_revenue_amount,
@@ -84,7 +108,9 @@ def create_deferred_revenue_entry(doc_name):
             
         })
 
+        print("journal entry created")
         journal_entry.save()
+        print("journal entry saved")
         journal_entry.submit()
         frappe.db.commit()
 
