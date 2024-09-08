@@ -11,8 +11,8 @@ def before_validate(self, event):
         if self.transfer :
             set_transfer(self)
             transfer_lead(self)
-        if self.lead_owner:
-            create_user_permission(self)
+        # if self.lead_owner:
+        #     create_user_permission(self)
 
 def create_user_permission(self):
     if not frappe.db.exists("User Permission", { "user" : self.lead_owner,"for_value": self.name}):
