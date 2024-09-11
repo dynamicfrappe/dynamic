@@ -254,6 +254,7 @@ doc_events = {
         "validate": "dynamic.dynamic.validation.validate_landed_cost"
     },
     "Purchase Invoice": {
+        "validate":"dynamic.yt_minds.controllers.purchase_invoice.validate",
         "on_submit": "dynamic.api.submit_purchase_invoice",
         "before_submit": [
             "dynamic.api.check_crean_amount_after_mapped_doc",
@@ -297,6 +298,7 @@ doc_events = {
         "before_submit": "dynamic.api.before_submit_quot",
         "before_save": "dynamic.api.before_save_quotation",
         "on_cancel" :"dynamic.api.on_cencel" ,
+        "validate":"dynamic.yt_minds.controllers.quotation.validate",
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
@@ -304,6 +306,7 @@ doc_events = {
         "before_submit": "dynamic.api.before_submit_po",
         "after_inser": "dynamic.api.calculate_orderd_qty",
         "on_submit": "dynamic.api.calculate_orderd_qty",
+        "validate":"dynamic.yt_minds.controllers.purchase_order.validate",
     },
     # "Appointment" :{
     #     "validate":"dynamic.api.appointment_validate"
@@ -491,7 +494,8 @@ domains = {
     "Healthy Corner":"dynamic.domains.healthy_corner",
     "Payment Deduction": "dynamic.domains.payment_deduction",
     "True lease": "dynamic.domains.truelease",
-    "Calculation Sheet":"dynamic.domains.calculation_sheet"
+    "Calculation Sheet":"dynamic.domains.calculation_sheet",
+    "YT Minds":"dynamic.domains.yt_minds",
 }
 
 # domain Conatin

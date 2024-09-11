@@ -12,6 +12,8 @@ frappe.ui.form.on('Pre Quotation', {
 
 	},
 	refresh:function(frm){
+		frm.trigger("set_label");
+	 	frm.trigger("set_dynamic_field_label");
 		frm.events.upload_data_file(frm)
 		frm.fields_dict["items"].grid.add_custom_button(
 			__("Export Excel"),
@@ -114,12 +116,6 @@ frappe.ui.form.on('Pre Quotation', {
 			};
 		});
 	},
-
-	refresh: function(frm) {
-		frm.trigger("set_label");
-		frm.trigger("set_dynamic_field_label");
-	},
-
 	quotation_to: function(frm) {
 		frm.trigger("set_label");
 		frm.trigger("toggle_reqd_lead_customer");

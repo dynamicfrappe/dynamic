@@ -26,6 +26,7 @@
   "accounts",
   "difference",
   "total",
+  "in_words",
   "accounting_dimensions_section",
   "project",
   "column_break_16",
@@ -249,12 +250,18 @@
    "fieldname": "journal_entry_series",
    "fieldtype": "Select",
    "label": "Journal Entry Series"
+  },
+  {
+   "fieldname": "in_words",
+   "fieldtype": "Data",
+   "label": "In Words",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-24 16:32:07.478999",
+ "modified": "2024-09-11 13:14:35.009413",
  "modified_by": "Administrator",
  "module": "Dynamic Accounts",
  "name": "Receipt Document",

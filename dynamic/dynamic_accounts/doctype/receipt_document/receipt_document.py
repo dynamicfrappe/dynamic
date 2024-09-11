@@ -31,7 +31,7 @@ class ReceiptDocument(Document):
     @frappe.whitelist()
     def set_totals(self):
         self.amount = self.amount or 0
-        self.total = 0
+        total = 0
         self.difference = self.amount
 
         precision = frappe.get_precision("Pay and Receipt Account", "amount")
@@ -41,7 +41,9 @@ class ReceiptDocument(Document):
             item.currency = self.currency
             item.exchange_rate = self.exchange_rate
             item.base_amount = item.amount * self.exchange_rate
-            self.total += item.amount
+            total += item.amount
+        self.total = total
+        self.in_words = (_(frappe.utils.money_in_words(total)))
         self.difference = flt(self.amount - self.total, difference_precision)
 
     def before_insert(self):
