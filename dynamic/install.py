@@ -147,4 +147,9 @@ def create_domain_list():
 		pre = frappe.new_doc("Domain")
 		pre.domain = 'Calculation Sheet'
 		pre.insert()
+	
+	if not frappe.db.exists("Domain", "YT Minds"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'YT Minds'
+		pre.insert()
 
