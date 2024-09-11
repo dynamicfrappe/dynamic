@@ -66,7 +66,7 @@ data = {
             {
                 "label":_("Unit Floor"),
                 "fieldname":"unit_floor",
-                "fieldtype":"Int",
+                "fieldtype":"Data",
                 "insert_after":"unit_area", 
             },
             {
