@@ -74,12 +74,7 @@ def get_date(filters):
             soi.qty,
             soi.rate AS sales_rate,
             so.selling_price_list ,
-            (SELECT pii.price_list_rate
-             FROM `tabPurchase Invoice` pi
-             INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent
-             WHERE pi.docstatus = 1
-             ORDER BY pi.creation DESC
-             LIMIT 1) AS purchase_rate,
+            soi.price_list_rate,
             (SELECT pi.buying_price_list
              FROM `tabPurchase Invoice` pi
              INNER JOIN `tabPurchase Invoice Item` pii ON pi.name = pii.parent

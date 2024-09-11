@@ -79,14 +79,7 @@ def get_data(filters):
             item.qty,
             item.rate,
             item.rate * item.qty AS selling_price_per_qty,
-            (
-                SELECT pii.rate
-                FROM `tabPurchase Invoice` pi
-                INNER JOIN `tabPurchase Invoice Item` pii ON pii.parent = pi.name
-                WHERE pii.item_code = item.item_code
-                ORDER BY pi.creation DESC
-                LIMIT 1
-            ) AS purchase_invoice_rate,
+            sle.incoming_rate AS purchase_invoice_rate,
             item.qty * (
                 SELECT pii.rate
                 FROM `tabPurchase Invoice` pi
@@ -164,6 +157,8 @@ def get_data(filters):
             `tabSales Order Item` item ON item.parent = sd.name
         LEFT JOIN
             `tabSales Team` sii_sp ON sd.name = sii_sp.parent 
+        LEFT JOIN
+            `tabStock Ledger Entry` sle ON sle.item_code = item.name 
         WHERE {conditions}
     '''
     data = frappe.db.sql(sql, as_dict=True)
@@ -189,7 +184,8 @@ def get_columns():
         {
             "fieldname": "item_code",
             "label": _("Item Code"),
-            "fieldtype": "Data",
+            "fieldtype": "Link",
+            "options": "Item",
             "width": 120
         },
         {
