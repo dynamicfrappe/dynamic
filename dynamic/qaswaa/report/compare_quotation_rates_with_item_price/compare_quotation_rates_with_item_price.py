@@ -13,11 +13,11 @@ def get_data(filters):
     conditions = "1=1"
     
     if filters.get("customer"):
-        conditions += f" AND q.customer = '{filters.get('customer')}'"
+        conditions += f" AND q.party_name = '{filters.get('customer')}'"
     if filters.get("quotation"):
         conditions += f" AND q.name = '{filters.get('quotation')}'"
     if filters.get("warehouse"):
-        conditions += f" AND qi.warehouse = '{filters.get('warehouse')}'"
+        conditions += f" AND q.warehouse = '{filters.get('warehouse')}'"
     if filters.get("cost_center"):
         conditions += f" AND q.cost_center = '{filters.get('cost_center')}'"
     if filters.get("selling_price_list"):
@@ -30,6 +30,8 @@ def get_data(filters):
     data = frappe.db.sql(f"""
         SELECT
             q.name AS quotation,
+			q.party_name,
+			q.selling_price_list,
             qi.item_code AS item_code,
             qi.item_name AS item_name,
             qi.qty AS quantity,
@@ -49,8 +51,7 @@ def get_data(filters):
         LEFT JOIN
             `tabQuotation Item` qi ON q.name = qi.parent
         WHERE
-            q.docstatus = 1
-            AND {conditions}
+             {conditions}
     """, as_dict=True)
 
     return data
@@ -66,6 +67,20 @@ def get_columns(filters):
 			"label": _("Quotation"),
 			"fieldtype": "Link",
 			"options": "Quotation",
+			"width": 200,
+		},
+		{
+			"fieldname": "party_name",
+			"label": _("Customer"),
+			"fieldtype": "Link",
+			"options": "Customer",
+			"width": 200,
+		},
+		{
+			"fieldname": "selling_price_list",
+			"label": _("Price List"),
+			"fieldtype": "Link",
+			"options": "Price List",
 			"width": 200,
 		},
 		{
