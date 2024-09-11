@@ -103,11 +103,18 @@ def get_data(filters):
             for entry in payment_entries:
                 payment_entry = frappe.get_doc("Payment Entry", entry.get("parent"))
                 mode_of_payment = payment_entry.mode_of_payment if payment_entry.mode_of_payment else None
-                deductions = payment_entry.get('deductions')
-                if deductions:
-                    for i in deductions:
-                        total_amount_deduction += i.amount 
-                        print(total_amount_deduction)
+                # deductions = payment_entry.get('deductions')
+                # if deductions:
+                #     for i in deductions:
+                #         total_amount_deduction += i.amount 
+                #         print(total_amount_deduction)
+            journal_entries = frappe.get_all('Journal Entry Account', 
+                                     filters={'reference_type': 'Sales Invoice', 'reference_name': invoice_name},
+                                     fields=['parent', 'debit', 'account'])
+            for je in journal_entries:
+                debit = je.get('debit')
+                total_amount_deduction += debit
+                print(total_amount_deduction)
             
             if idx == 0:
                 customer_data.append({
