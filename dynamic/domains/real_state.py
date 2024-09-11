@@ -66,6 +66,12 @@ data = {
             {
                 "label":_("Unit Floor"),
                 "fieldname":"unit_floor",
+                "fieldtype":"Int",
+                "insert_after":"unit_area", 
+            },
+            {
+                "label":_("Unit Floor Text"),
+                "fieldname":"unit_floor_text",
                 "fieldtype":"Data",
                 "insert_after":"unit_area", 
             },
@@ -73,7 +79,7 @@ data = {
                 "label":_("Reserved"),
                 "fieldname":"reserved",
                 "fieldtype":"Check",
-                "insert_after":"unit_floor", 
+                "insert_after":"unit_floor_text", 
                 "read_only":"1", 
             },
             {
