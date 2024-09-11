@@ -73,7 +73,7 @@ data = {
                 "label":_("Unit Floor Text"),
                 "fieldname":"unit_floor_text",
                 "fieldtype":"Data",
-                "insert_after":"unit_area", 
+                "insert_after":"unit_floor", 
             },
             {
                 "label":_("Reserved"),
