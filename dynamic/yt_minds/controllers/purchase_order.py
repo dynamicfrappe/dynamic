@@ -29,5 +29,5 @@ def validate_item_with_selling(self):
                                                  """,as_dict=1)
             if price_of_sales_item:
                 amount = price_of_sales_item[0].get('amount')
-                if item.amount < amount:
+                if item.amount > amount:
                     frappe.throw(_(f"""The Amount of {item.item_code} must be greater than {amount}"""))
