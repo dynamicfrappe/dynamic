@@ -129,6 +129,12 @@ data = {
                 "insert_after":"col_break_02", 
                 "read_only": 1,
             },
+            {
+                "label": "Payment Date",
+                "fieldname":"payment_actual_due_date",
+                "fieldtype":"Date",
+                "insert_after":"due_date", 
+            },
         ],
         
     },
