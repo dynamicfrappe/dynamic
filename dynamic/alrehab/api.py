@@ -23,7 +23,12 @@ def update_sales_invoice_penalty(sub_id):
 def recalculate_due_date_and_amount(doc_name):
     invoice = frappe.get_doc("Sales Invoice", doc_name)
     if invoice.status != "Paid":
-        due_date = invoice.due_date
+        due_date = invoice.payment_actual_due_date
+        if invoice.payment_actual_due_date:
+            due_date = invoice.payment_actual_due_date
+        else:
+            due_date = invoice.due_date
+            
         days = date_diff(today(), due_date)
                     
         # calc the total items amount
