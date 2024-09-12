@@ -108,13 +108,19 @@ def get_data(filters):
                 #     for i in deductions:
                 #         total_amount_deduction += i.amount 
                 #         print(total_amount_deduction)
-            journal_entries = frappe.get_all('Journal Entry Account', 
-                                     filters={'reference_type': 'Sales Invoice', 'reference_name': invoice_name},
-                                     fields=['parent', 'debit', 'account'])
-            for je in journal_entries:
-                debit = je.get('debit')
+           
+            against_si = invoice_name
+            gl_entries = frappe.db.sql(
+                    f"""
+                    select voucher_no
+                    from `tabGL Entry`
+                    where voucher_type = 'Journal Entry' AND against_voucher = '{against_si}' """, as_dict=1 )
+            print(gl_entries)
+            for gl_entry in gl_entries:
+                je = frappe.get_doc("Journal Entry", gl_entry.get('voucher_no'))
+                debit = je.total_debit
+                print(debit)
                 total_amount_deduction += debit
-                print(total_amount_deduction)
             
             if idx == 0:
                 customer_data.append({
