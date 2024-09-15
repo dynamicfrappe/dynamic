@@ -7,17 +7,21 @@ frappe.ui.form.on('Subscription', {
             callback: function (r) {
               if (r.message && r.message.length) {
                 if (r.message.includes("Rehab")) {
+                    if(!frm.is_new()){
+                        if(frm.doc.status !== 'Cancelled'){
+                            frm.add_custom_button(__('Fetch All Invoices'), function() {
+                                fetch_invoices(frm);
+                            });
+                        }
 
-                    frm.events.add_custom_button_fetch_invoices(frm);
-                    
-                    if(frm.doc.invoices.length != 0){
-                        frm.events.update_invoice_penalty(frm);
-                        frm.events.calculateTotal(frm);
-                        if(frm.doc.deferred_revenue_amount){
-                            frm.events.add_custom_button_create_je(frm);
+                        if(frm.doc.invoices.length != 0){
+                            frm.events.update_invoice_penalty(frm);
+                            frm.add_custom_button(__('إنشاء قيد'), function() {
+                                frm.events.calculateTotal(frm);
+                                create_deferred_revenue_entry(frm);
+                            });    
                         }
                     }
-                
                 }
             }}
         })        
@@ -42,16 +46,7 @@ frappe.ui.form.on('Subscription', {
             }}
         })
     },
-    add_custom_button_fetch_invoices(frm){
-        frm.add_custom_button(__('Fetch All Invoices'), function() {
-            fetch_invoices(frm);
-        });
-    },
-    add_custom_button_create_je(frm){
-        frm.add_custom_button(__('إنشاء قيد'), function() {
-            create_deferred_revenue_entry(frm);
-        });
-    },
+    
     calculateTotal(frm) {
         frappe.call({
             method: "dynamic.alrehab.api.set_total",
@@ -101,40 +96,13 @@ function create_deferred_revenue_entry(frm) {
 }
 
 function fetch_invoices(frm) {
-
-    async function checkAndFetch() {
-        
-        const doc = frm.doc;
-
-        const dateResponse = await frappe.call({
-            method: "dynamic.alrehab.api.get_date",
-            args: {
-                doc_type: frm.doc.name
-            }
-        });
-        
-        if (dateResponse.message) {
-            return;
+    frappe.call({
+        method: "dynamic.alrehab.subscription.get_subscription_updates_all_invoices",
+        args: {
+            name: frm.docname
+        },
+        callback: function(r) {
         }
-        else{
-            
-            await frappe.call({
-                method: "erpnext.accounts.doctype.subscription.subscription.get_subscription_updates",
-                args: { name: doc.name },
-                freeze: true,
-                callback: function (data) {
-                    if (!data.exc) {
-                        frm.reload_doc();
-
-                    }
-                }
-            });
-            
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            
-            checkAndFetch();
-        }
-    }
-    
-    checkAndFetch();
+    });
 }
+

@@ -79,7 +79,8 @@ override_doctype_class = {
     "Salary Slip": "dynamic.override_doctype_class.SalarySlip",
     "Sales Invoice": "dynamic.override_doctype_class.SalesInvoice",
     "Customer": "dynamic.teba.doctype.customer.CustomerController",
-    "Stock Entry": "dynamic.override_doctype_class.StockEntry"
+    "Stock Entry": "dynamic.override_doctype_class.StockEntry",
+    "Subscription": "dynamic.override_doctype_class.Subscription"
     # "Lead" : "dynamic.override_doctype_class.Lead"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
