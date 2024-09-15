@@ -765,16 +765,19 @@ def get_subscription_updates(name):
 
 @frappe.whitelist()
 def get_subscription_updates_all_invoices(name):
-    try:
-        subscription = frappe.get_doc("Subscription", name)
-
-        while add_days(getdate(subscription.current_invoice_end), 1) < getdate(subscription.end_date) and getdate(subscription.current_invoice_end) < getdate():
-            subscription.process()
-
-        frappe.msgprint("All invoices fetched successfully.")
+	try:
+		subscription = frappe.get_doc("Subscription", name)
+		print(add_days(getdate(subscription.current_invoice_end), 1))
+		print(getdate(subscription.end_date))
+		print(getdate())
+		while add_days(getdate(subscription.current_invoice_end), 1) < getdate(subscription.end_date) and getdate(subscription.current_invoice_end) < getdate():
+			subscription.process()
+		# To process for the last Invoice if it needed
+		subscription.process()
+		frappe.msgprint("All invoices fetched successfully.")
 		
-    except Exception as e:
-        frappe.log_error(frappe.get_traceback(), "Error fetching all invoices")
-        frappe.throw(f"An error occurred while fetching invoices: {str(e)}")
+	except Exception as e:
+		frappe.log_error(frappe.get_traceback(), "Error fetching all invoices")
+		frappe.throw(f"An error occurred while fetching invoices: {str(e)}")
 
 	
