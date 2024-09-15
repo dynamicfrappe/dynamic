@@ -14,9 +14,10 @@ def update_sales_invoice_penalty(sub_id):
     invoices = doc.invoices
     if invoices:
         for i in invoices:
-            # invoice = frappe.get_doc("Sales Invoice", i.invoice)
-            frappe.db.set_value('Sales Invoice', i.invoice, {'fine_percent': penalty})
-            recalculate_due_date_and_amount(i.invoice)
+            invoice = frappe.get_doc("Sales Invoice", i.invoice)
+            if invoice.fine_percent != penalty:
+                frappe.db.set_value('Sales Invoice', i.invoice, {'fine_percent': penalty})
+                recalculate_due_date_and_amount(i.invoice)
 
 
 @frappe.whitelist()
@@ -33,9 +34,9 @@ def recalculate_due_date_and_amount(doc_name):
                     
         # calc the total items amount
         total = sum( item.get('amount', 0) for item in invoice.get('items', []))
-
-        frappe.db.set_value('Sales Invoice', doc_name, {'num_of_delay_days': max(days, 0)})
-        frappe.db.set_value('Sales Invoice', doc_name, {'deferred_revenue_amount': total * days * invoice.fine_percent})
+        if invoice.num_of_delay_days != max(days, 0):
+            frappe.db.set_value('Sales Invoice', doc_name, {'num_of_delay_days': max(days, 0)})
+            frappe.db.set_value('Sales Invoice', doc_name, {'deferred_revenue_amount': total * days * invoice.fine_percent})
     else :
         existing_payment = frappe.db.exists({
             "doctype": "Payment Entry Reference",
@@ -47,17 +48,15 @@ def recalculate_due_date_and_amount(doc_name):
             payment_entry_reference = frappe.get_doc("Payment Entry Reference", payment_entry_reference_name)
             payment_entry = payment_entry_reference.parent
             pe = frappe.get_doc("Payment Entry", payment_entry)
-            print(pe.posting_date)
             due_date = invoice.due_date
-            print(invoice.due_date)
 
             days = date_diff(pe.posting_date, due_date)
                         
             # calc the total items amount
             total = sum( item.get('amount', 0) for item in invoice.get('items', []) )
-
-            frappe.db.set_value('Sales Invoice', doc_name, {'num_of_delay_days': max(days, 0)})
-            frappe.db.set_value('Sales Invoice', doc_name, {'deferred_revenue_amount': total * days * invoice.fine_percent})
+            if invoice.num_of_delay_days != max(days, 0):
+                frappe.db.set_value('Sales Invoice', doc_name, {'num_of_delay_days': max(days, 0)})
+                frappe.db.set_value('Sales Invoice', doc_name, {'deferred_revenue_amount': total * days * invoice.fine_percent})
         else:
             frappe.throw(_("No payment entry found for this paid invoice."))
 
@@ -70,9 +69,9 @@ def set_total(sub_id):
     for invoice in invoices:
         i = frappe.get_doc("Sales Invoice", invoice.invoice)
         total += i.deferred_revenue_amount
-
-    frappe.db.set_value('Subscription', doc.name, {'deferred_revenue_amount': total})
-    frappe.db.commit()
+    if doc.deferred_revenue_amount != total:
+        frappe.db.set_value('Subscription', doc.name, {'deferred_revenue_amount': total})
+        frappe.db.commit()
 
     return {"total": total}
 
@@ -136,7 +135,6 @@ def create_deferred_revenue_entry_group_of_invoices(doc_type, doc_name):
         for i in doc.invoices:
             invoice = frappe.get_doc("Sales Invoice", i.invoice)
             company = frappe.get_doc('Company', invoice.company)
-            print(invoice.name )
 
             deferred_revenue_amount = invoice.deferred_revenue_amount
             if deferred_revenue_amount <= 0 :

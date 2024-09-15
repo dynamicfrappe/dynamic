@@ -13,7 +13,7 @@ frappe.listview_settings['Subscription'] = {
             }
 
             // Prompt user for confirmation before proceeding
-            frappe.confirm(__('Are you sure you want to fetch invoices for the selected items?'), function() {
+            frappe.confirm(__('Are you sure you want to fetch invoices for the selected subscriptions?'), function() {
                 selected_items.forEach(item => {
                     console.log(item.name)
                     fetch_invoices(item);
@@ -48,38 +48,12 @@ function calc_invoices_fine(item) {
 }
 
 function fetch_invoices(item) {
-
-    async function checkAndFetch() {
-
-        const dateResponse = await frappe.call({
-            method: "dynamic.alrehab.api.get_date",
-            args: {
-                doc_type: item.name
-            }
-        });
-        
-        if (dateResponse.message) {
-            return;
+    frappe.call({
+        method: "dynamic.alrehab.subscription.get_subscription_updates_all_invoices",
+        args: {
+            name: item.name
+        },
+        callback: function(r) {
         }
-        else{
-            
-            await frappe.call({
-                method: "erpnext.accounts.doctype.subscription.subscription.get_subscription_updates",
-                args: { name: item.name },
-                freeze: true,
-                callback: function (data) {
-                    if (!data.exc) {
-                        item.reload_doc();
-
-                    }
-                }
-            });
-            
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            
-            checkAndFetch();
-        }
-    }
-    
-    checkAndFetch();
+    });
 }
