@@ -158,7 +158,7 @@ def get_data(filters):
         LEFT JOIN
             `tabSales Team` sii_sp ON sd.name = sii_sp.parent 
         LEFT JOIN
-            `tabStock Ledger Entry` sle ON sle.item_code = item.name 
+            `tabStock Ledger Entry` sle ON sle.item_code = item.item_code 
         WHERE {conditions}
     '''
     data = frappe.db.sql(sql, as_dict=True)
