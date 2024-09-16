@@ -497,6 +497,7 @@ domains = {
     "True lease": "dynamic.domains.truelease",
     "Calculation Sheet":"dynamic.domains.calculation_sheet",
     "YT Minds":"dynamic.domains.yt_minds",
+    "Top Laser":"dynamic.domains.toplaser",
 }
 
 # domain Conatin
