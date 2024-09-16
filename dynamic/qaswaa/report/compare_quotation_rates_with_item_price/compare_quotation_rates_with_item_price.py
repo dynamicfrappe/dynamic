@@ -51,7 +51,7 @@ def get_data(filters):
         LEFT JOIN
             `tabQuotation Item` qi ON q.name = qi.parent
         WHERE
-             {conditions}
+             {conditions}  AND q.docstatus != '2'
     """, as_dict=True)
 
     return data
