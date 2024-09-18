@@ -15,7 +15,7 @@ data = {
          {
             "label" :"Sales -mm- EGP" ,
             "fieldname": "sales_mm_egp",
-            "fieldtype": "Data",
+            "fieldtype": "Float",
             "insert_after": "sector",
          },
          {
@@ -226,6 +226,14 @@ data = {
         {
         "doctype": "Lead",
         "doctype_or_field": "DocField",
+        "fieldname": "address_type",
+        "property": "hidden",
+        "property_type": "Check",
+        "value": "1"
+        },
+        {
+        "doctype": "Lead",
+        "doctype_or_field": "DocField",
         "fieldname": "more_info",
         "property": "hidden",
         "property_type": "Check",
@@ -285,6 +293,15 @@ data = {
         "property": "fetch_from",
         "property_type": "Data",
         "value": "customer.phone_num"
+        },
+        
+        {
+        "doctype": "Actions",
+        "doctype_or_field": "DocField",
+        "fieldname": "action",
+        "property": "fieldtype",
+        "property_type": "Select",
+        "value": "Data"
         },
       #  Action
         {
