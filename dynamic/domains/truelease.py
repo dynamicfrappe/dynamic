@@ -268,7 +268,7 @@ data = {
         "doctype_or_field": "DocType",
         "property": "autoname",
         "property_type": "Data",
-        "value": "field:lead_name"
+        "value": "field:company_name"
         },
       #  Actions
         {
