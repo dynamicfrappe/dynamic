@@ -81,7 +81,7 @@ def transfer_items(self , *args, **kwargs):
         "s_warehouse": doc.from_warehouse,
         "t_warehouse": doc.to_warehouse,
         "item_code": item.item_code,
-        "qty":item.qty , 
+        "qty":item.transfer_items , 
         "uom": item.uom , 
         "conversion_factor" : item.conversion_factor , 
         "ref_sales_order" : self.name , 
@@ -120,7 +120,7 @@ def get_validation(self , *args, **kwargs):
         items = self.get("items")
         for item in items:
             item_code = item.item_code
-            qty = item.qty
+            qty = item.qty_to_reserve
             # uom = item.uom
             warehouse = item.warehouse
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
@@ -156,8 +156,8 @@ def creation_of_reseration(self , *args , **kargs):
             reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item.item_code, "warehouse":item.warehouse} , fieldname = 'reserved_qty')
             total_qty = float(bin_qty or 0 ) + (reservation_qty if reservation_qty else 0)
             log.available_qty_to_reserve = get_all_qty_reserved(item.item_code , item.warehouse)
-            log.reserved_qty = float(item.qty) * float(item.conversion_factor)
-            log.voucher_qty = item.qty 
+            log.reserved_qty = float(item.qty_to_reserve) * float(item.conversion_factor)
+            log.voucher_qty = item.qty_to_reserve 
             log.company = self.company
             log.status = "Reserved"
             frappe.msgprint("Item Reservation")
@@ -196,7 +196,7 @@ def get_validation(self , *args, **kwargs):
         items = self.get("items")
         for item in items:
             item_code = item.item_code
-            qty = item.qty
+            qty = item.qty_to_reserve
             # uom = item.uom
             warehouse = item.warehouse
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
