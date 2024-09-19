@@ -85,7 +85,8 @@ data = {
                 "label": "Qty to reserve",
                 "fieldname": "qty_to_reserve",
                 "fieldtype": "Int",
-                "insert_after": "ensure_delivery_based_on_produced_serial_no",            
+                "insert_after": "ensure_delivery_based_on_produced_serial_no",
+                "mandatory_depends_on": "eval:parent.reserve_stock==1 ;",
             }
         ],
         "Stock Entry":[
