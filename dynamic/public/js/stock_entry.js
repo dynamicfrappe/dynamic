@@ -175,20 +175,22 @@ frappe.ui.form.on("Stock Entry", {
         callback:function(r) {
           if (r.message) {
             // if(frm.doc.stock_entry_type != "")
-            // frappe.db.get_value('Stock Entry Type', frm.doc.stock_entry_type, 'purpose')
-            // .then(r => {
-            //     console.log(r.message.purpose) 
-            //     if(r.message.purpose != 'Material Issue'){
+            frappe.db.get_value('Stock Entry Type', frm.doc.stock_entry_type, 'purpose')
+            .then(res => {
+                console.log(res.message.purpose) 
+                if(res.message.purpose != 'Material Issue'){
                   if(frm.is_new()){
                     frm.set_value("from_warehouse" , r.message[0]) 
                     frm.refresh_field("from_warehouse")
                   } 
                   if(!frm.is_new()){
+                    console.log("hiiiiiii",frm.doc.to_warehouse);
                     if (! r.message.includes(frm.doc.to_warehouse) ){
                       console.log("Disable Save")
                       frm.disable_save()
                     }
                   }
+                }})
                   
                 
                 

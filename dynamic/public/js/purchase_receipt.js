@@ -20,6 +20,20 @@ frappe.ui.form.on('Purchase Receipt', {
             }
         })
 	},
+    refresh: function(frm) {
+        frappe.call({
+            method: "dynamic.api.get_active_domains",
+            callback: function (r) {
+                if (r.message && r.message.length) {
+                    if (r.message.includes("WEH")) {
+                        console.log("Hagar");
+                        frm.remove_custom_button(__('Purchase Return'),__('Create'));
+                        frm.remove_custom_button(__('Close') , __('Status'))
+                    }
+                }
+            }
+        })
+	},
     before_submit:function(frm){
         frappe.call({
           method: "dynamic.api.get_active_domains",

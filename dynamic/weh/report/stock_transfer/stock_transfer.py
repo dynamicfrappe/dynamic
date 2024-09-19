@@ -41,13 +41,12 @@ def get_data(filters):
 	,`tabStock Entry Detail`.item_group
 	,`tabStock Entry Detail`.qty
 	,`tabStock Entry Detail`.basic_rate
-	,`tabStock Entry Detail`.amount
 	FROM `tabStock Entry`
 	INNER JOIN `tabStock Entry Detail`
 	ON `tabStock Entry`.name=`tabStock Entry Detail`.parent
 	INNER JOIN `tabItem` ON `tabStock Entry Detail`.item_code = `tabItem`.item_code
 	WHERE `tabStock Entry`.stock_entry_type='Material Transfer' 
-	AND `tabStock Entry`.docstatus<>2 AND {conditions}
+	AND `tabStock Entry`.docstatus = 1 AND {conditions}
 	"""
 	
 	# print('\n\n\n=***==sql>',sql,'\n\n\n')
