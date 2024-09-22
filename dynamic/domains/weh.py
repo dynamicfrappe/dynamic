@@ -99,6 +99,16 @@ data = {
      #        },
            
      #   ],
+     "Stock Entry" :[
+            {
+            "label":"To Warehouse",
+            "fieldname":"to__warehouse",
+            "fieldtype":"Link",
+            "options":"Warehouse",
+            "insert_after":"from_warehouse",
+            },
+           
+       ],
        "Stock Entry Detail" :[
             {
             "label":"Actual Qty(Target)",
@@ -160,5 +170,19 @@ data = {
      #    "property_type": "Check",
         "value": "item_code.brand"
         },
+     #    {
+     #    "doctype": "Stock Entry",
+     #    "doctype_or_field": "DocField",
+     #    "fieldname": "section_break_12",
+     #    "property": "label",
+     #    "value": "Warehouses"
+     #    },
+     #    {
+     #    "doctype": "Stock Entry",
+     #    "doctype_or_field": "DocField",
+     #    "fieldname": "section_break_12",
+     #    "property": "collapsible",
+     #    "value": "1"
+     #    },
     ]
 }

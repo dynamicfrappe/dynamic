@@ -93,9 +93,18 @@ frappe.query_reports["Stock Ledger Perm"] = {
 			"label": __("Include UOM"),
 			"fieldtype": "Link",
 			"options": "UOM"
+		},
+		{
+			"fieldname":"show_cancel_ledger",
+			"label": __("Show Cancel Transaction"),
+			"fieldtype": "Check",
 		}
 	],
 	"formatter": function (value, row, column, data, default_formatter) {
+		if (data && data.is_cancelled == 1) {
+			// Return the entire row's value in red
+			return "<span style='color:red'>" + default_formatter(value, row, column, data) + "</span>";
+		}
 		value = default_formatter(value, row, column, data);
 		if (column.fieldname == "out_qty" && data && data.out_qty < 0) {
 			value = "<span style='color:red'>" + value + "</span>";
@@ -103,6 +112,9 @@ frappe.query_reports["Stock Ledger Perm"] = {
 		else if (column.fieldname == "in_qty" && data && data.in_qty > 0) {
 			value = "<span style='color:green'>" + value + "</span>";
 		}
+		// if (column.fieldname == "voucher_no" && data && data.is_cancelled == 1) {
+		// 	value = "<span style='color:red'>" + value + "</span>";
+		// }
 
 		return value;
 	},

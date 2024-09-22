@@ -26,9 +26,30 @@ frappe.ui.form.on('Purchase Receipt', {
             callback: function (r) {
                 if (r.message && r.message.length) {
                     if (r.message.includes("WEH")) {
-                        console.log("Hagar");
-                        frm.remove_custom_button(__('Purchase Return'),__('Create'));
-                        frm.remove_custom_button(__('Close') , __('Status'))
+                        if (!frappe.user_roles.includes("Purchase Master Manager")){
+                            console.log("yes");
+                            
+                            setTimeout(() => {
+                                frm.remove_custom_button(__('Purchase Invoice'),__('Get Items From'));
+                                frm.remove_custom_button(__('Purchase Order'),__('Get Items From'));
+                                frm.remove_custom_button(__('Purchase Return'),__('Create'));
+                            }, 15);
+                        }
+                        
+                        setTimeout(() => {
+                            frm.remove_custom_button(__('Make Stock Entry'),__('Create'));
+                            frm.remove_custom_button(__('Retention Stock Entry'),__('Create'));
+                            frm.remove_custom_button(__('Subscription'),__('Create'));
+
+                            frm.remove_custom_button(__('Accounting Ledger'),__('View'));
+                            frm.remove_custom_button(__('Asset'),__('View'));
+                            frm.remove_custom_button(__('Asset Movement'),__('View'));
+                        }, 15);
+                        
+
+                        if (frm.doc.owner != frappe.session.user){
+                            frm.set_df_property('items', 'read_only', 1);
+                        }
                     }
                 }
             }
@@ -47,7 +68,7 @@ frappe.ui.form.on('Purchase Receipt', {
         })
       },
       after_save:function(frm){
-        frm.set_df_property('items', 'read_only', 1);
+        
       }
 });
 

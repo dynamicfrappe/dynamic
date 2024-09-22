@@ -51,6 +51,9 @@ def execute(filters=None):
 
 		if sle.serial_no:
 			update_available_serial_nos(available_serial_nos, sle)
+		
+		if sle.is_cancelled == 1:
+			sle.style = 'color: red;' 
 
 		data.append(sle)
 
@@ -85,6 +88,7 @@ def update_available_serial_nos(available_serial_nos, sle):
 
 def get_columns():
 	columns = [
+		# {"label": _("Cancel"), "fieldname": "is_cancelled", "fieldtype": "Float", "width": 150},
 		{"label": _("Date"), "fieldname": "date", "fieldtype": "Datetime", "width": 150},
 		{
 			"label": _("Item"),
@@ -229,7 +233,11 @@ def get_stock_ledger_entries(filters, items):
 		item_conditions_sql = "and sle.item_code in ({})".format(
 			", ".join(frappe.db.escape(i) for i in items)
 		)
-
+	is_cancelled = ""
+	if filters.get("show_cancel_ledger") == 1:
+		is_cancelled = "1+1"
+	else:
+		is_cancelled = "is_cancelled = 0"
 	sl_entries = frappe.db.sql(
 		"""
 		SELECT
@@ -247,18 +255,19 @@ def get_stock_ledger_entries(filters, items):
 			serial_no,
 			company,
 			project,
-			stock_value_difference
+			stock_value_difference ,
+			is_cancelled
 		FROM
 			`tabStock Ledger Entry` sle
 		WHERE
 			company = %(company)s
-				AND is_cancelled = 0 AND posting_date BETWEEN %(from_date)s AND %(to_date)s
+				AND {is_cancelled} AND posting_date BETWEEN %(from_date)s AND %(to_date)s
 				{sle_conditions}
 				{item_conditions_sql}
 		ORDER BY
 			posting_date asc, posting_time asc, creation asc
 		""".format(
-			sle_conditions=get_sle_conditions(filters), item_conditions_sql=item_conditions_sql
+			sle_conditions=get_sle_conditions(filters), item_conditions_sql=item_conditions_sql , is_cancelled = is_cancelled
 		),
 		filters,
 		as_dict=1,

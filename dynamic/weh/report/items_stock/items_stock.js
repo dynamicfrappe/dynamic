@@ -30,6 +30,24 @@ frappe.query_reports["Items Stock"] = {
 				"fieldtype": "Link",
 				"options": "Item",
 			},
+			{
+				"fieldname":"brand",
+				"label": __("Category"),
+				"fieldtype": "Link",
+				"options": "Brand",
+			},
+			{
+				"fieldname":"parent_group",
+				"label": __("Parent Group"),
+				"fieldtype": "Link",
+				"options": "Item Group",
+			},
+			{
+				"fieldname":"item_group",
+				"label": __("Item Group"),
+				"fieldtype": "Link",
+				"options": "Item Group",
+			},
 			
 	]
 };

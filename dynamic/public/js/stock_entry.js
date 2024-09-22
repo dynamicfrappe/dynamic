@@ -17,23 +17,91 @@ frappe.ui.form.on("Stock Entry", {
         }
       }
     },
+  refresh: function(frm){
+    
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      callback: function (r) {
+          if (r.message && r.message.length) {
+              if (r.message.includes("WEH")) {
+                setTimeout(() =>{
+                  
+                  if (frm.doc.owner != frappe.session.user){
+                    frm.set_df_property('from_warehouse', 'read_only', 1);
+                    frm.set_df_property('to__warehouse', 'read_only', 1);
+                    }
+                  // if(!frm.is_new()){
+                  // // frm.page.clear_primary_action();
+                  // }
+                },20)
+
+                if(frm.is_new()){
+                  if (frm.doc.to_warehouse && !frm.doc.to__warehouse){
+                    frm.set_value("to__warehouse" , frm.doc.to_warehouse);
+                    frm.refresh_field("to__warehouse");
+                  }
+                  if (frm.doc.to__warehouse && !frm.doc.to_warehouse){
+                    frm.set_value("to_warehouse" , frm.doc.to__warehouse);
+                    frm.refresh_field("to_warehouse");
+                  }
+                }
+                  
+              }
+            }
+        }
+    })
+  },
 	after_save:function(frm){
         frappe.call({
           method: "dynamic.api.get_active_domains",
           callback: function (r) {
               if (r.message && r.message.length) {
                 	if (r.message.includes("WEH")) {
-                		frappe.set_route('List', "Stock Entry");
-                    location.reload();
+                    frm.set_df_property('to__warehouse', 'read_only', 1);
+                    // setTimeout(() =>{
+                    //   frappe.set_route('List', "Stock Entry");
+                    // },20)
+                		
+                    // location.reload();
 
-            			  frm.set_df_property('from_warehouse', 'read_only', 1);
-                		// frm.set_df_property('to_warehouse', 'read_only', 1);
+            			  frm.set_df_property('from_warehouse', 'read_only', 1);                    
                 	}
-                  
               	}
           	}
         })
-    }, 
+    },
+    to__warehouse:function(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length) {
+                if (r.message.includes("WEH")) {
+                  if (frm.doc.to__warehouse){
+                    frm.set_value("to_warehouse",frm.doc.to__warehouse);
+                    frm.refresh_field("to_warehouse");
+                  }
+                }
+                
+              }
+          }
+      })
+    },
+    to_warehouse:function(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length) {
+                if (r.message.includes("WEH")) {
+                  if (frm.doc.to_warehouse){
+                    frm.set_value("to__warehouse",frm.doc.to__warehouse);
+                    frm.refresh_field("to__warehouse");
+                  }
+                }
+                
+              }
+          }
+      })
+    },
     old_stock_entry:function(frm){
       let old_stock_entry = frm.doc.old_stock_entry ;
         if(old_stock_entry){
@@ -179,7 +247,7 @@ frappe.ui.form.on("Stock Entry", {
             .then(res => {
                 console.log(res.message.purpose) 
                 if(res.message.purpose != 'Material Issue'){
-                  if(frm.is_new()){
+                  if(frm.is_new() && !frm.doc.from_warehouse){
                     frm.set_value("from_warehouse" , r.message[0]) 
                     frm.refresh_field("from_warehouse")
                   } 
@@ -188,6 +256,7 @@ frappe.ui.form.on("Stock Entry", {
                     if (! r.message.includes(frm.doc.to_warehouse) ){
                       console.log("Disable Save")
                       frm.disable_save()
+                      
                     }
                   }
                 }})

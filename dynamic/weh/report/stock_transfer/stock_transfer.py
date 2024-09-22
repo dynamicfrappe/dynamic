@@ -109,18 +109,18 @@ def get_columns(filters):
 			"fieldtype": "Float",
 			"width": 150
 		},
-		{
-			"label": _("Price"),
-			"fieldname": "basic_rate",
-			"fieldtype": "Currency",
-			"width": 150
-		},
-		{
-			"label": _("Total Amount"),
-			"fieldname": "amount",
-			"fieldtype": "Currency",
-			"width": 150
-		},
+		# {
+		# 	"label": _("Price"),
+		# 	"fieldname": "basic_rate",
+		# 	"fieldtype": "Currency",
+		# 	"width": 150
+		# },
+		# {
+		# 	"label": _("Total Amount"),
+		# 	"fieldname": "amount",
+		# 	"fieldtype": "Currency",
+		# 	"width": 150
+		# },
 		
 		
 		
