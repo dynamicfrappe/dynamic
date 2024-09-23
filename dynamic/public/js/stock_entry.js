@@ -267,8 +267,8 @@ frappe.ui.form.on("Stock Entry", {
      
     },
     refresh:function(frm){
+      console.log("refresh");
       
-     
       // frm.custom_transaction_controller = new erpnext.CustomTransactionController(frm);
       frm.events.trea_setup(frm)
       frm.events.set_property(frm)
@@ -316,6 +316,23 @@ frappe.ui.form.on("Stock Entry", {
       frm.events.filter_stock_entry_transfer(frm)
       // frm.events.set_property_domain(frm)
       frm.events.set_field_property(frm)
+      frm.events.make_transit_reqd(frm)
+    },
+    make_transit_reqd(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+            if (r.message && r.message.length) {
+                if (r.message.includes("Terra")) {
+                  if (frm.doc.stock_entry_type == "Material Transfer"){
+                    frm.set_value("add_to_transit",1);
+                    // frm.set_df_property("add_to_transit",'reqd',1)
+                  }
+                }
+            }
+        }
+    })
+
     },
     filter_stock_entry_transfer(frm){
       frappe.call({
