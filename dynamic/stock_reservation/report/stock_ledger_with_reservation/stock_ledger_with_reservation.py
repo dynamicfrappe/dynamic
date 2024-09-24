@@ -58,7 +58,7 @@ def execute(filters=None):
 			update_available_serial_nos(available_serial_nos, sle)
 
 
-		x = get_reserved_qty(sle.item_code)
+		x = get_reserved_qty(sle.item_code, sle.warehouse)
 		sle.update({"reserved_qty": x, "net_balance": ( sle["qty_after_transaction"]-x)})
 
 		data.append(sle)
@@ -418,9 +418,15 @@ def get_item_group_condition(item_group):
 
 	return ""
 
-def get_reserved_qty(item):
-	print(item)
-	entries = frappe.db.get_list("Stock Reservation Entry", filters= [{'item_code' : item}], fields=['name'])
+def get_reserved_qty(item, warehouse):
+	
+	entries = frappe.db.sql("""
+		SELECT name 
+		FROM `tabStock Reservation Entry` 
+		WHERE item_code = %(item)s AND warehouse = %(warehouse)s
+	""", {'item': item, 'warehouse': warehouse}, as_dict=True)
+
+	# entries = frappe.db.get_list("Stock Reservation Entry", filters= [{'item_code' : item, 'warehouse' : warehouse}], fields=['name'])
 	total = 0
 	for entry in entries:
 		doc = frappe.get_doc("Stock Reservation Entry", entry.get('name'))
