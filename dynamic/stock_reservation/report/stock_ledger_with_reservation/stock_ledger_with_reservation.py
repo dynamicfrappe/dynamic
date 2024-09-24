@@ -423,7 +423,7 @@ def get_reserved_qty(item, warehouse):
 	entries = frappe.db.sql("""
 		SELECT name 
 		FROM `tabStock Reservation Entry` 
-		WHERE item_code = %(item)s AND warehouse = %(warehouse)s
+		WHERE docstatus != 2 And item_code = %(item)s AND warehouse = %(warehouse)s
 	""", {'item': item, 'warehouse': warehouse}, as_dict=True)
 
 	# entries = frappe.db.get_list("Stock Reservation Entry", filters= [{'item_code' : item, 'warehouse' : warehouse}], fields=['name'])
