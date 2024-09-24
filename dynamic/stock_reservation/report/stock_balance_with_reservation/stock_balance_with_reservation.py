@@ -71,7 +71,7 @@ def execute(filters=None):
 			report_data.update(item_map[item])
 			report_data.update(qty_dict)
 
-			x = get_reserved_qty(item)
+			x = get_reserved_qty(item, warehouse)
 			report_data.update({"reserved_qty": x, "net_balance": (report_data["bal_qty"] - x)  })
 			if include_uom:
 				conversion_factors.setdefault(item, item_map[item].conversion_factor)
@@ -489,8 +489,15 @@ def get_variant_values_for(items):
 
 	return attribute_map
 
-def get_reserved_qty(item):
-	entries = frappe.db.get_list("Stock Reservation Entry", filters= [{'item_code' : item}], fields=['name'])
+def get_reserved_qty(item, warehouse):
+
+	entries = frappe.db.sql("""
+		SELECT name 
+		FROM `tabStock Reservation Entry` 
+		WHERE item_code = %(item)s AND warehouse = %(warehouse)s
+	""", {'item': item, 'warehouse': warehouse}, as_dict=True)
+	
+	# entries = frappe.db.get_list("Stock Reservation Entry", filters= [{'item_code' : item, 'warehouse': warehouse}], fields=['name'])
 	total = 0
 	for entry in entries:
 		doc = frappe.get_doc("Stock Reservation Entry", entry.get('name'))
