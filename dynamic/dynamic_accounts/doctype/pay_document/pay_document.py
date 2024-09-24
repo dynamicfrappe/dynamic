@@ -137,7 +137,7 @@ class PayDocument(Document):
                 "reference_type": self.doctype,
                 "cost_center": self.cost_center,
                 "project": self.project,
-                "is_tax":account_row.is_tax,
+                # "is_tax":account_row.is_tax,
                 "user_remark": str(account_row.note or ""),
                 "reference_name": self.name,
                 "party_type": account_row.party_type,
