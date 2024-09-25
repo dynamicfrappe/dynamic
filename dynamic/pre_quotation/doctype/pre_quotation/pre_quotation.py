@@ -14,3 +14,11 @@ from frappe.utils import flt, getdate, nowdate
 
 class PreQuotation(Document):
 	pass
+
+
+
+
+@frappe.whitelist()
+def get_taxes_and_charges(doc):
+	obj = frappe.get_doc("Sales Taxes and Charges Template" , doc)
+	return obj.get("taxes")
