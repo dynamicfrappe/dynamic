@@ -75,8 +75,12 @@ def _execute(
 			"item_code": d.item_code,
 			"item_name": item_record.item_name if item_record else d.item_name,
 			"item_group": item_record.item_group if item_record else d.item_group,
+			"discount_amount" : d.discount_amount,
+			"discount_account" : d.discount_account,
 			"description": d.description,
 			"invoice": d.parent,
+			"base_discount_amount": d.base_discount_amount,
+			"additional_discount_account": d.additional_discount_account,
 			"posting_date": d.posting_date,
 			"customer": d.customer,
 			"customer_name": customer_record.customer_name,
@@ -189,6 +193,9 @@ def get_columns(additional_table_columns, filters):
 				},
 				{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 120},
 				{"label": _("Description"), "fieldname": "description", "fieldtype": "Data", "width": 150},
+				{"label": _("Discount Account"), "fieldname": "discount_account", "fieldtype": "Link", "options": "Account", "width": 150},
+				{"label": _("Discount Amount"), "fieldname": "discount_amount", "fieldtype": "Currency", "options": "currency","width": 150},
+
 				#
 			]
 		)
@@ -224,13 +231,27 @@ def get_columns(additional_table_columns, filters):
 			"width": 100,
 		},
 			
-			{
-				"label": _("Invoice"),
-				"fieldname": "invoice",
-				"fieldtype": "Link",
-				"options": "Sales Invoice",
-				"width": 120,
-			},
+		{
+			"label": _("Invoice"),
+			"fieldname": "invoice",
+			"fieldtype": "Link",
+			"options": "Sales Invoice",
+			"width": 120,
+		},
+		{
+			"label": _("Discount Account"),
+			"fieldname": "additional_discount_account",
+			"fieldtype": "Link",
+			"options": "Account",
+			"width": 120,
+		},		
+		{
+			"label": _("Additional Discount Amount"),
+			"fieldname": "base_discount_amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		},
 			
 		]
 	)
@@ -476,11 +497,13 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabSales Invoice Item`.name, `tabSales Invoice Item`.parent,
 			`tabSales Invoice`.posting_date, `tabSales Invoice`.debit_to,
 			`tabSales Invoice`.unrealized_profit_loss_account,
-			`tabSales Invoice`.is_internal_customer,
+			`tabSales Invoice`.is_internal_customer,`tabSales Invoice`.additional_discount_account,
+			`tabSales Invoice`.base_discount_amount,
 			`tabSales Invoice`.project, `tabSales Invoice`.customer, `tabSales Invoice`.remarks,
 			`tabSales Invoice`.territory, `tabSales Invoice`.company, `tabSales Invoice`.base_net_total,
 			`tabSales Invoice Item`.item_code, `tabSales Invoice Item`.description,
 			`tabSales Invoice Item`.`item_name`, `tabSales Invoice Item`.`item_group`,
+			`tabSales Invoice Item`.`discount_account` , `tabSales Invoice Item`.`discount_amount` ,
 			`tabSales Invoice Item`.sales_order, `tabSales Invoice Item`.delivery_note,
 			`tabSales Invoice Item`.income_account, `tabSales Invoice Item`.cost_center,
 			`tabSales Invoice Item`.stock_qty, `tabSales Invoice Item`.stock_uom,
