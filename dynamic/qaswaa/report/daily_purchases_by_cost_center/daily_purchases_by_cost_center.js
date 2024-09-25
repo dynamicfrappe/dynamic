@@ -2,51 +2,43 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Purchases Analytics Customer"] = {
+frappe.query_reports["Daily Purchases by Cost Center"] = {
 	"filters": [
 		{
 			"fieldname":"period_start_date",
 			"label": __("Start Date"),
 			"fieldtype": "Date",
-			"default": frappe.datetime.add_months(frappe.datetime.get_today(), -1)
+			"reqd": 0,
 		},
 		{
 			"fieldname":"period_end_date",
 			"label": __("End Date"),
 			"fieldtype": "Date",
-			"default": frappe.datetime.get_today()
+			"reqd": 0,
 		},
-
 		{
 			"fieldname":"cost_center",
 			"label": __("Cost Center"),
 			"fieldtype": "Link",
-			"options" : "Cost Center",
+			"options": "Cost Center",
+			"reqd" :0
 		},
 		{
 			"fieldname":"warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
-			"options" : "Warehouse",
+			"options": "Warehouse"
 		},
 		{
 			"fieldname":"supplier",
 			"label": __("Supplier"),
 			"fieldtype": "Link",
-			"options" : "Supplier",
+			"options": "Supplier"
 		},
 		{
-			"fieldname":"item_group",
-			"label": __("Item Group"),
-			"fieldtype": "Link",
-			"options" : "Item Group",
-		},
-		{
-			"fieldname":"item_code",
-			"label": __("Item"),
-			"fieldtype": "Link",
-			"options" : "Item",
-		}
-
+            "fieldname":"is_return",
+            "label": __("Is Return"),
+            "fieldtype": "Check",
+        }
 	]
 };
