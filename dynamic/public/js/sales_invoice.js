@@ -417,11 +417,14 @@ frappe.ui.form.on("Sales Invoice Item", {
         method: "dynamic.api.get_active_domains",
         callback: function(r) {
             if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
-              
+
+
+              let count = 0 ;
               for (let i of frm.doc.items){
                 console.log(i.total_item_price);
+                count = count + i.total_item_price ;
               }
-              frm.set_value("total_price" ,totalQty );
+              frm.set_value("total_price" ,count );
               frm.refresh_field("total_price");
 
 
