@@ -296,25 +296,6 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 	}
 });
 
-// cur_frm.script_manager.make(erpnext.selling.QuotationController);
-
-
-// cur_frm.cscript['Make Sales Order'] = function() {
-// 	frappe.model.open_mapped_doc({
-// 		method: "erpnext.selling.doctype.quotation.quotation.make_sales_order",
-// 		frm: cur_frm
-// 	})
-// }
-
-// frappe.ui.form.on("Pre Quotation Item", "items_on_form_rendered", "packed_items_on_form_rendered", function(frm, cdt, cdn) {
-// 	// enable tax_amount field if Actual
-// })
-
-// // frappe.ui.form.on("Pre Quotation Item", "stock_balance", function(frm, cdt, cdn) {
-// // 	var d = frappe.model.get_doc(cdt, cdn);
-// // 	frappe.route_options = {"item_code": d.item_code};
-// // 	frappe.set_route("query-report", "Stock Balance");
-// // })
 frappe.ui.form.on('Pre Quotation', {
 	items :function(frm){
 		let items = frm.doc.items;
@@ -323,6 +304,30 @@ frappe.ui.form.on('Pre Quotation', {
 		  }, 0);
 		frm.set_value("total_qty" , totalQty);
 		frm.refresh_field("total_qty");
+	},
+	taxes_and_charges: function(frm){
+		if (frm.doc.taxes_and_charges){
+			frappe.call({
+				method:"dynamic.pre_quotation.doctype.pre_quotation.pre_quotation.get_taxes_and_charges",
+				args: {
+				  doc: frm.doc.taxes_and_charges
+				},
+				callback: function(r) {
+					if (r.message) {
+						frm.clear_table("taxes");
+						frm.refresh_fields("taxes");
+						r.message.forEach(object => {
+							var row = frm.add_child("taxes");
+							Object.entries(object).forEach(([key, value]) => {
+								console.log(`${key}: ${value}`);
+								row[key] = value;
+							});
+						});
+						frm.refresh_fields("taxes");
+					}
+				},
+			});
+		}
 	}
 })
 frappe.ui.form.on('Pre Quotation Item', {

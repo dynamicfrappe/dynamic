@@ -81,7 +81,7 @@ def get_data(filters):
 		if row['supplier'] != previous_supplier:
 			data.append({
 				"supplier": row['supplier'],
-				"indent": 0
+				"indent": 0,
 				"group": 1 
 			})
 			previous_supplier = row['supplier']
