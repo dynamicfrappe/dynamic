@@ -53,9 +53,24 @@ frappe.ui.form.on("Sales Invoice", {
     "read_only",
     1
   );
+  
 },
 
+get_update_btn:function(frm){
 
+  frappe.call({
+    method: "dynamic.alrehab.api.get_updates",
+    args:{
+        "name": frm.docname,
+    }, 
+    callback: function (r) {
+        if (r.message && r.message.length) {
+            console.log("lllllllllllll")
+        }
+    }
+})
+
+},
 
   onload(frm) {
 
@@ -64,9 +79,7 @@ frappe.ui.form.on("Sales Invoice", {
       callback: function (r) {
         if (r.message && r.message.length) {
           if (r.message.includes("Rehab")) {
-            recaculate_due_date_and_amount(frm);
             frm.add_custom_button(__('إنشاء قيد'), function() {
-              recaculate_due_date_and_amount(frm);
               frm.refresh_fields();
               create_deferred_revenue_entry(frm);
             });
@@ -333,16 +346,6 @@ add_item_discount_rate: function(frm) {
 
 });
 
-function recaculate_due_date_and_amount(frm) {
-    frappe.call({
-        method: "dynamic.alrehab.api.recalculate_due_date_and_amount",
-        args:{
-            doc_name : frm.docname
-        },
-        callback: function(r) {
-        }
-    });        
-}
 
 function create_deferred_revenue_entry(frm) {
   frappe.call({
