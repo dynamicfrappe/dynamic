@@ -421,8 +421,11 @@ frappe.ui.form.on("Sales Invoice Item", {
 
               let count = 0 ;
               for (let i of frm.doc.items){
-                console.log(i.total_item_price);
-                count = count + i.total_item_price ;
+                if (i.total_item_price){
+                  console.log(i.total_item_price);
+                  count = count + i.total_item_price ;
+                }
+                
               }
               frm.set_value("total_price" ,count );
               frm.refresh_field("total_price");
