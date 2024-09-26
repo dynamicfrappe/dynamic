@@ -458,10 +458,6 @@ frappe.ui.form.on("Sales Invoice Item", {
       frm.refresh_fields('items');
     }
   },
-  // items_add:function(frm,cdt,cdn){
-  //   let items = frm.doc.items ;
-
-  // },
   qty:function(frm,cdt,cdn){
     let row = locals[cdt][cdn]
     row.total = row.base_price_list_rate * row.qty
@@ -475,7 +471,10 @@ frappe.ui.form.on("Sales Invoice Item", {
       callback: function (r) {
         if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
           console.log("Hi");
-          frappe.model.set_value(cdt , cdn , 'total_item_price' , parseFloat(row.base_price_list_rate)*parseFloat(row.stock_qty));
+          let base_price_list_rate = row.base_price_list_rate ;
+          let stock_qty = row.stock_qty ;
+          let temp = parseFloat(base_price_list_rate) * parseFloat(stock_qty)
+          frappe.model.set_value(cdt , cdn , 'total_item_price' , temp);
           
         }
       },
