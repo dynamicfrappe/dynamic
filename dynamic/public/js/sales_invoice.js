@@ -470,11 +470,13 @@ frappe.ui.form.on("Sales Invoice Item", {
       async: false,
       callback: function (r) {
         if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
-          console.log("Hi");
-          let base_price_list_rate = row.base_price_list_rate ;
-          let stock_qty = row.stock_qty ;
-          let temp = parseFloat(base_price_list_rate) * parseFloat(stock_qty)
-          frappe.model.set_value(cdt , cdn , 'total_item_price' , temp);
+          if (row.qty){
+            console.log("Hi");
+            let base_price_list_rate = row.base_price_list_rate ;
+            let stock_qty = row.stock_qty ;
+            let temp = parseFloat(base_price_list_rate) * parseFloat(stock_qty)
+            frappe.model.set_value(cdt , cdn , 'total_item_price' , temp);
+          }
           
         }
       },
