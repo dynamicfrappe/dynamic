@@ -448,12 +448,9 @@ frappe.ui.form.on("Sales Invoice Item", {
       callback: function (r) {
         if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
           if(row.item_code){
-            console.log("Hi");
             let discount_item = frm.doc.discount_item
             row.discount_percentage = discount_item ;
-            console.log("ksjdnbjdsfs");
             frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
-            frappe.model.set_value(cdt , cdn , 'total_item_price' , parseFloat(row.base_price_list_rate)*parseFloat(row.stock_qty));
           }
         }
       },
@@ -469,7 +466,7 @@ frappe.ui.form.on("Sales Invoice Item", {
     let row = locals[cdt][cdn]
     row.total = row.base_price_list_rate * row.qty
     frm.refresh_fields('items')
-    
+
     frappe.call({
       method: "dynamic.api.get_active_domains",
       async: false,
