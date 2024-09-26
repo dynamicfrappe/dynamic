@@ -15,7 +15,7 @@ def validate(self , event):
 		item_discount_rate2(self)
 		calculate_total(self)
 		set_discount(self)
-		calculate_all_total(self)
+		# calculate_all_total(self)
 		
 		
 
