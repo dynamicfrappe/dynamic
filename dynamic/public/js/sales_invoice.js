@@ -469,6 +469,19 @@ frappe.ui.form.on("Sales Invoice Item", {
     let row = locals[cdt][cdn]
     row.total = row.base_price_list_rate * row.qty
     frm.refresh_fields('items')
+    
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      async: false,
+      callback: function (r) {
+        if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+          console.log("Hi");
+          frappe.model.set_value(cdt , cdn , 'total_item_price' , parseFloat(row.base_price_list_rate)*parseFloat(row.stock_qty));
+          
+        }
+      },
+    });
+
   },
 
 })
