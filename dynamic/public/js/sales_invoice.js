@@ -411,17 +411,22 @@ function get_customer_query(){
 
 
 frappe.ui.form.on("Sales Invoice Item", {
-//   items_add: function(frm,cdt,cdn) {
-//     console.log("baio");
-//     frappe.call({
-//         method: "dynamic.api.get_active_domains",
-//         callback: function(r) {
-//             if (r.message && r.message.length && r.message.includes("Qaswaa")) {
-//               frm.events.add_item_discount_rate(frm);
-//             }
-//         }
-//     });
-// },
+  items_add: function(frm,cdt,cdn) {
+    console.log("baio");
+    frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function(r) {
+            if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+              // frm.events.add_item_discount_rate(frm);
+              const totalQty = frm.doc.items.reduce((sum, item) => sum + item.total_item_price, 0);
+              console.log(totalQty);
+              frm.set_value("total_price" ,totalQty );
+              frm.refresh_field("total_price");
+
+            }
+        }
+    });
+},
   item_code:function(frm,cdt,cdn){
     let row = locals[cdt][cdn]
     if(row.item_code){
