@@ -466,6 +466,8 @@ frappe.ui.form.on("Sales Invoice Item", {
     let row = locals[cdt][cdn]
     row.total = row.base_price_list_rate * row.qty
     frm.refresh_fields('items')
+    
+    console.log("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
 
     frappe.call({
       method: "dynamic.api.get_active_domains",
