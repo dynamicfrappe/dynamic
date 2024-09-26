@@ -472,7 +472,7 @@ frappe.ui.form.on("Sales Invoice Item", {
         if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
           if (row.qty){
             console.log("Hi");
-            let base_price_list_rate = row.base_price_list_rate ;
+            let base_price_list_rate = row.qty * parseFloat(row.conversion_factor)  ;
             let stock_qty = row.stock_qty ;
             let temp = parseFloat(base_price_list_rate) * parseFloat(stock_qty)
             frappe.model.set_value(cdt , cdn , 'total_item_price' , temp);
