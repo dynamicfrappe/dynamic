@@ -453,6 +453,7 @@ frappe.ui.form.on("Sales Invoice Item", {
             row.discount_percentage = discount_item ;
             console.log("ksjdnbjdsfs");
             frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+            frappe.model.set_value(cdt , cdn , 'total_item_price' , parseFloat(row.base_price_list_rate)*parseFloat(row.stock_qty));
           }
         }
       },
@@ -460,6 +461,10 @@ frappe.ui.form.on("Sales Invoice Item", {
       frm.refresh_fields('items');
     }
   },
+  // items_add:function(frm,cdt,cdn){
+  //   let items = frm.doc.items ;
+
+  // },
   qty:function(frm,cdt,cdn){
     let row = locals[cdt][cdn]
     row.total = row.base_price_list_rate * row.qty
