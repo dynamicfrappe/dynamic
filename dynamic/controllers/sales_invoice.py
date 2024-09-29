@@ -13,9 +13,9 @@ def validate(self , event):
 	
 	if "Healthy Corner" in Domains:
 		item_discount_rate2(self)
-		calculate_total(self)
+		calculate_total_before_discount(self)
 		set_discount(self)
-		calculate_all_total(self)
+		calculate_total_after_discount(self)
 		
 		
 
@@ -89,7 +89,7 @@ def item_discount_rate2(self):
             item.discount_amount = 0  
         item.rate = item.price_list_rate - item.discount_amount
         item.amount = item.rate * item.qty
-def calculate_total(self):
+def calculate_total_before_discount(self):
 	total_price = 0
 	for item in self.items:
 		total_price+=item.price_list_rate 
@@ -105,7 +105,7 @@ def set_discount(self):
 		if discount["customer_discount"]:
 			self.discount = discount["customer_discount"]
 
-def calculate_all_total(self):
+def calculate_total_after_discount(self):
 	if self.discount :
 		self.all_total = (float(self.total_price) * float(self.discount) ) /100
 	else:

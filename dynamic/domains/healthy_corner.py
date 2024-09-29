@@ -32,10 +32,16 @@ data = {
                 "fetch_from":"customer.discount_item",
             },
             {
-                "label": "Total Price",
+                "fieldname": "cutomer_section_break",
+                "fieldtype": "Section Break",
+                "insert_after": "total_billing_hours",
+                "label": "Customer Discount",
+            },
+            {
+                "label": "Total Before Discount",
                 "fieldname": "total_price",
                 "fieldtype": "Currency",
-                "insert_after": "total_billing_amount" ,
+                "insert_after": "cutomer_section_break" ,
                 "options": "currency",
                 "read_only": 1
 
@@ -49,7 +55,7 @@ data = {
 
             },                          
             {
-                "label": "All Total",
+                "label": "Total After Discount",
                 "fieldname": "all_total",
                 "fieldtype": "Currency",
                 "insert_after": "total_discount_amount" ,
