@@ -9,6 +9,47 @@ Domains=frappe.get_active_domains()
 
 
 @frappe.whitelist()
+def get_updates_for_report(name):
+
+    invoice = frappe.get_doc("Sales Invoice", name)
+    subscription = frappe.db.sql(f"""
+        SELECT s.name as name
+        FROM `tabSubscription` as s
+        Inner join `tabSubscription Invoice` as si
+        on s.name = si.parent
+        WHERE  si.invoice = '{invoice.name}'
+    """, as_dict=True )
+
+    penalty = 0
+    if not subscription:
+        return
+        
+    doc = frappe.get_doc("Subscription", subscription[0]['name'])
+    penalty = doc.penalty
+    frappe.db.set_value('Sales Invoice', name, {'fine_percent': penalty})
+    frappe.db.commit()
+
+    existing_journal_entry = frappe.db.exists({
+            "doctype": "Journal Entry Account",
+            "reference_type": "Sales Invoice",
+            "reference_name": invoice.name 
+        })
+
+    if not existing_journal_entry:
+
+        if invoice.payment_actual_due_date:
+            due_date = invoice.payment_actual_due_date
+        else:
+            due_date = invoice.due_date
+                        
+        days = date_diff(today(), due_date)
+                                
+        total = sum( item.get('amount', 0) for item in invoice.get('items', []))
+        frappe.db.set_value('Sales Invoice', invoice.name, {'num_of_delay_days': max(days, 0)})
+        frappe.db.set_value('Sales Invoice', invoice.name, {'deferred_revenue_amount': total * days * penalty})
+        frappe.db.commit()
+
+@frappe.whitelist()
 def get_updates(name):
 
     invoice = frappe.get_doc("Sales Invoice", name)
@@ -49,6 +90,7 @@ def get_updates(name):
         frappe.db.set_value('Sales Invoice', invoice.name, {'num_of_delay_days': max(days, 0)})
         frappe.db.set_value('Sales Invoice', invoice.name, {'deferred_revenue_amount': total * days * penalty})
         frappe.db.commit()
+        frappe.msgprint("تم التحديث.")
 
     else :
         frappe.msgprint("تم انشاء قيد مسبقا بأخر التحديثات.")
