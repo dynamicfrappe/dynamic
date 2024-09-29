@@ -95,13 +95,11 @@ def execute(filters=None):
 
     result = frappe.db.sql(query, as_dict=1)
     
-    # Organize data into a hierarchical structure with subscription level
     previous_customer = None
     previous_subscription = None
     previous_invoice = None
     
     for row in result:
-        # Add a new row for the customer group if it's a new customer
         if row['customer'] != previous_customer:
             data.append({
                 "customer": row['customer'],
@@ -113,7 +111,6 @@ def execute(filters=None):
             previous_subscription = None
             previous_invoice = None
         
-        # Add a new row for the subscription group if it's a new subscription
         if row['subscription'] != previous_subscription:
             data.append({
                 "subscription": row['subscription'],
@@ -125,15 +122,29 @@ def execute(filters=None):
             previous_subscription = row['subscription']
             previous_invoice = None
         
-        # Add a new row for the invoice group if it's a new invoice
         if row['invoice_name'] != previous_invoice:
-            get_updates_for_report(row['invoice_name'])
-            # i = frappe.get_doc("Sales Invoice", row['invoice_name'] )
-            # items = i.items
-            # total_amount = sum( item.amount for item in items)
-            # penalty =  get_penalty(row['invoice_name'])
-            # days = get_days(row['invoice_name'])
-            # fine =  penalty * days * total_amount
+            # get_updates_for_report(row['invoice_name'])
+            i = frappe.get_doc("Sales Invoice", row['invoice_name'] )
+            if i.docstatus != 2:
+                existing_journal_entry = frappe.db.exists({
+                    "doctype": "Journal Entry Account",
+                    "reference_type": "Sales Invoice",
+                    "reference_name": row['invoice_name']
+                })
+
+                if not existing_journal_entry:
+                    dueDate = i.due_date
+                    if i.payment_actual_due_date:
+                        dueDate = i.payment_actual_due_date
+                
+                    row['num_of_delay_days'] = date_diff(today(), dueDate)
+
+                    items = i.items
+                    total_amount = sum( item.amount for item in items)
+                    row['fine_percent'] =  get_penalty(row['invoice_name'])
+                    
+                    row['deferred_revenue_amount'] =  row['fine_percent'] * row['num_of_delay_days'] * total_amount
+
             data.append({
                 "invoice_name": row['invoice_name'],
                 "posting_date": row['posting_date'],
@@ -161,24 +172,6 @@ def execute(filters=None):
     return columns, data
 
 
-def get_days(invoice):
-    invoice = frappe.get_doc("Sales Invoice", invoice)
-    days = 0
-    print(invoice.docstatus)
-    if invoice.docstatus == 0:
-
-            due_date = invoice.payment_actual_due_date
-            
-            if invoice.payment_actual_due_date:
-                due_date = invoice.payment_actual_due_date
-            else:
-                due_date = invoice.due_date
-                
-            days = date_diff(today(), due_date)
-    else:
-        days = invoice.num_of_delay_days
-
-    return days
 
 
 def get_penalty(invoice):
