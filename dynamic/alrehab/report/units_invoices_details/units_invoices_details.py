@@ -50,6 +50,7 @@ def execute(filters=None):
 
     query = f"""
         SELECT
+            invoice.docstatus,
             invoice.customer,
             customer.unit_area,
             sub.name AS subscription,
@@ -124,12 +125,13 @@ def execute(filters=None):
         
         if row['invoice_name'] != previous_invoice:
             # get_updates_for_report(row['invoice_name'])
-            i = frappe.get_doc("Sales Invoice", row['invoice_name'] )
-            if i.docstatus != 2:
+            if row['docstatus'] != 2:
                 if not row['journal_entry'] : 
-                    dueDate = i.due_date
-                    if i.payment_actual_due_date:
-                        dueDate = i.payment_actual_due_date
+                    
+                    dueDate = frappe.db.get_value("Sales Invoice", row['invoice_name'], due_date)
+                    payment_actual_due_date = frappe.db.get_value("Sales Invoice", row['invoice_name'], payment_actual_due_date)
+                    if payment_actual_due_date:
+                        dueDate = payment_actual_due_date
                     row['num_of_delay_days'] = date_diff(today(), dueDate)
 
                     if not row['fine_percent']:
