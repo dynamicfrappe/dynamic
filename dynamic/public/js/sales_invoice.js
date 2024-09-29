@@ -471,7 +471,6 @@ frappe.ui.form.on("Sales Invoice Item", {
     }
   },
   qty:function(frm,cdt,cdn){
-    let row = locals[cdt][cdn]
     row.total = row.base_price_list_rate * row.qty
     frm.refresh_fields('items')
 
@@ -485,6 +484,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 
 
 function total_price_before_discount (frm , cdt , cdn){
+  let row = locals[cdt][cdn]
   frappe.call({
     method: "dynamic.api.get_active_domains",
     async: false,
@@ -522,7 +522,7 @@ function total_price_before_discount (frm , cdt , cdn){
 
 
 function get_discount_item_from_customer(frm , cdt , cdn){
-  let row = locals[cdt][cdn]
+  let row = locals[cdt][cdn];
     frappe.call({
         method: "dynamic.api.get_active_domains",
         callback: function(r) {
