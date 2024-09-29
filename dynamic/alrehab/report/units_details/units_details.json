@@ -1,0 +1,48 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2024-09-29 15:23:50.662566",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "Healthy Tasty",
+ "modified": "2024-09-29 15:23:50.662566",
+ "modified_by": "Administrator",
+ "module": "AlRehab",
+ "name": "Units Details",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Customer",
+ "report_name": "Units Details",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Stock Manager"
+  },
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Sales Master Manager"
+  },
+  {
+   "role": "Employee Self Service"
+  }
+ ]
+}
