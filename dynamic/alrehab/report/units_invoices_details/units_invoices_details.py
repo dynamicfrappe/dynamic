@@ -126,23 +126,17 @@ def execute(filters=None):
             # get_updates_for_report(row['invoice_name'])
             i = frappe.get_doc("Sales Invoice", row['invoice_name'] )
             if i.docstatus != 2:
-                existing_journal_entry = frappe.db.exists({
-                    "doctype": "Journal Entry Account",
-                    "reference_type": "Sales Invoice",
-                    "reference_name": row['invoice_name']
-                })
-
-                if not existing_journal_entry:
+                if not row['journal_entry'] : 
                     dueDate = i.due_date
                     if i.payment_actual_due_date:
                         dueDate = i.payment_actual_due_date
-                
                     row['num_of_delay_days'] = date_diff(today(), dueDate)
 
+                    if not row['fine_percent']:
+                        row['fine_percent'] =  get_penalty(row['invoice_name'])
+
                     items = i.items
-                    total_amount = sum( item.amount for item in items)
-                    row['fine_percent'] =  get_penalty(row['invoice_name'])
-                    
+                    total_amount = sum( item.amount for item in items) 
                     row['deferred_revenue_amount'] =  row['fine_percent'] * row['num_of_delay_days'] * total_amount
 
             data.append({
