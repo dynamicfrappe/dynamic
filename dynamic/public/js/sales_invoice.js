@@ -412,13 +412,12 @@ function get_customer_query(){
 
 frappe.ui.form.on("Sales Invoice Item", {
   items_add: function(frm,cdt,cdn) {
-    get_discount_item_from_customer(frm , cdt , cdn);
+
 },
   item_code:function(frm,cdt,cdn){
     let row = locals[cdt][cdn]
     if(row.item_code){
 
-      get_discount_item_from_customer(frm , cdt , cdn)
      
       frappe.call({
         method: "dynamic.api.get_active_domains",
@@ -442,10 +441,6 @@ frappe.ui.form.on("Sales Invoice Item", {
     }
   },
   qty:function(frm,cdt,cdn){
-    let row = locals[cdt][cdn];
-    let total = row.base_price_list_rate * row.qty
-
-    frappe.model.set_value(cdt , cdn , 'total' , total);
 
     total_price_before_discount (frm , cdt , cdn) ;
 
@@ -537,6 +532,7 @@ function get_discount_item_from_customer(frm , cdt , cdn){
                   .then(r => {
                       let discount_item = r.message.discount_item ;
                       console.log(discount_item);
+                      frappe.model.set_value(cdt , cdn , 'margin_type' , "Percentage");
                       frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
                   })
               }
