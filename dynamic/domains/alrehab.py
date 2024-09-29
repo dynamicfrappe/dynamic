@@ -135,6 +135,13 @@ data = {
                 "fieldtype":"Date",
                 "insert_after":"due_date", 
             },
+            {
+                "label": "Get Updates",
+                "fieldname":"get_update_btn",
+                "fieldtype":"Button",
+                "insert_after":"deferred_revenue_amount", 
+                "allow_on_submit":1
+            },
         ],
         
     },

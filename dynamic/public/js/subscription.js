@@ -15,7 +15,6 @@ frappe.ui.form.on('Subscription', {
                         }
 
                         if(frm.doc.invoices.length != 0){
-                            frm.events.update_invoice_penalty(frm);
                             frm.add_custom_button(__('إنشاء قيد'), function() {
                                 frm.events.calculateTotal(frm);
                                 create_deferred_revenue_entry(frm);

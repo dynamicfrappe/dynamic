@@ -53,9 +53,24 @@ frappe.ui.form.on("Sales Invoice", {
     "read_only",
     1
   );
+  
 },
 
+get_update_btn:function(frm){
 
+  frappe.call({
+    method: "dynamic.alrehab.api.get_updates",
+    args:{
+        "name": frm.docname,
+    }, 
+    callback: function (r) {
+        if (r.message && r.message.length) {
+            console.log("lllllllllllll")
+        }
+    }
+})
+
+},
 
   onload(frm) {
 
@@ -64,9 +79,7 @@ frappe.ui.form.on("Sales Invoice", {
       callback: function (r) {
         if (r.message && r.message.length) {
           if (r.message.includes("Rehab")) {
-            recaculate_due_date_and_amount(frm);
             frm.add_custom_button(__('إنشاء قيد'), function() {
-              recaculate_due_date_and_amount(frm);
               frm.refresh_fields();
               create_deferred_revenue_entry(frm);
             });
@@ -333,16 +346,6 @@ add_item_discount_rate: function(frm) {
 
 });
 
-function recaculate_due_date_and_amount(frm) {
-    frappe.call({
-        method: "dynamic.alrehab.api.recalculate_due_date_and_amount",
-        args:{
-            doc_name : frm.docname
-        },
-        callback: function(r) {
-        }
-    });        
-}
 
 function create_deferred_revenue_entry(frm) {
   frappe.call({
@@ -408,17 +411,21 @@ function get_customer_query(){
 
 
 frappe.ui.form.on("Sales Invoice Item", {
-//   items_add: function(frm,cdt,cdn) {
-//     console.log("baio");
-//     frappe.call({
-//         method: "dynamic.api.get_active_domains",
-//         callback: function(r) {
-//             if (r.message && r.message.length && r.message.includes("Qaswaa")) {
-//               frm.events.add_item_discount_rate(frm);
-//             }
-//         }
-//     });
-// },
+  items_add: function(frm,cdt,cdn) {
+    console.log("baio");
+    frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function(r) {
+            if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+
+
+              
+
+
+            }
+        }
+    });
+},
   item_code:function(frm,cdt,cdn){
     let row = locals[cdt][cdn]
     if(row.item_code){
@@ -445,10 +452,8 @@ frappe.ui.form.on("Sales Invoice Item", {
       callback: function (r) {
         if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
           if(row.item_code){
-            console.log("Hi");
             let discount_item = frm.doc.discount_item
             row.discount_percentage = discount_item ;
-            console.log("ksjdnbjdsfs");
             frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
           }
         }
@@ -461,6 +466,47 @@ frappe.ui.form.on("Sales Invoice Item", {
     let row = locals[cdt][cdn]
     row.total = row.base_price_list_rate * row.qty
     frm.refresh_fields('items')
+    
+    console.log("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
+
+    frappe.call({
+      method: "dynamic.api.get_active_domains",
+      async: false,
+      callback: function (r) {
+        if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+
+
+          let count = 0 ;
+              for (let i of frm.doc.items){
+                if (i.total_item_price){
+                  console.log(i.total_item_price);
+                  count = count + i.total_item_price ;
+                }
+                
+              }
+
+
+          if (row.qty){
+            let stock_qty = row.qty * parseFloat(row.conversion_factor)  ;
+            let base_price_list_rate = row.base_price_list_rate ;
+            let temp = parseFloat(base_price_list_rate) * parseFloat(stock_qty)
+            frappe.model.set_value(cdt , cdn , 'total_item_price' , temp);
+            console.log(temp + count);
+
+
+            
+              frm.set_value("total_price" ,count + temp );
+              frm.refresh_field("total_price");
+
+
+
+
+          }
+          
+        }
+      },
+    });
+
   },
 
 })
