@@ -421,6 +421,7 @@ frappe.ui.form.on("Sales Invoice Item", {
                 frappe.db.get_value('Customer', frm.doc.customer, 'discount_item')
                   .then(r => {
                       let discount_item = r.message.discount_item ;
+                      console.log(discount_item);
                       frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
                   })
               }
