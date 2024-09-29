@@ -417,6 +417,8 @@ frappe.ui.form.on("Sales Invoice Item", {
   item_code:function(frm,cdt,cdn){
     let row = locals[cdt][cdn]
     if(row.item_code){
+
+      get_discount_item_from_customer(frm , cdt , cdn)
      
       frappe.call({
         method: "dynamic.api.get_active_domains",
@@ -436,7 +438,7 @@ frappe.ui.form.on("Sales Invoice Item", {
     }); 
 
     get_discount_item_from_customer(frm , cdt , cdn);
-
+      let row = locals[cdt][cdn];
           if(row.item_code){
 
 
