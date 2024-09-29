@@ -12,9 +12,10 @@ def validate(self , event):
 		item_discount_rate(self)
 	
 	if "Healthy Corner" in Domains:
-		item_discount_rate2(self)
-		calculate_total_before_discount(self)
-		set_discount(self)
+		pass
+		# item_discount_rate2(self)
+		# calculate_total_before_discount(self)
+		# set_discount(self)
 		# calculate_total_after_discount(self)
 		
 		
