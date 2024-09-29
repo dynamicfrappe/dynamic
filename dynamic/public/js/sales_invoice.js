@@ -412,16 +412,18 @@ function get_customer_query(){
 
 frappe.ui.form.on("Sales Invoice Item", {
   items_add: function(frm,cdt,cdn) {
-    console.log("baio");
+    let row = locals[cdt][cdn]
     frappe.call({
         method: "dynamic.api.get_active_domains",
         callback: function(r) {
             if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
-
-
-              
-
-
+              if(frm.doc.customer){
+                frappe.db.get_value('Customer', frm.doc.customer, 'discount_item')
+                  .then(r => {
+                      let discount_item = r.message.discount_item ;
+                      frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+                  })
+              }
             }
         }
     });
@@ -454,7 +456,7 @@ frappe.ui.form.on("Sales Invoice Item", {
           if(row.item_code){
             let discount_item = frm.doc.discount_item
             row.discount_percentage = discount_item ;
-            frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+            // frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
           }
         }
       },
