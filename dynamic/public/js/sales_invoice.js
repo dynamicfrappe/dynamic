@@ -456,13 +456,39 @@ frappe.ui.form.on("Sales Invoice Item", {
         if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
           if(row.item_code){
             if(frm.doc.customer){
-              frappe.db.get_value('Customer', frm.doc.customer, 'discount_item')
-                .then(r => {
-                    let discount_item = r.message.discount_item ;
-                    console.log(discount_item);
-                    frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
-                })
-            }
+                frappe.db.get_value('Customer', frm.doc.customer, 'discount_item')
+                  .then(r => {
+                      let discount_item = r.message.discount_item ;
+                      console.log(discount_item);
+                      frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+                  })
+              }
+
+
+              let count = 0 ;
+              for (let i of frm.doc.items){
+                if (i.total_item_price){
+                  console.log(i.total_item_price);
+                  count = count + i.total_item_price ;
+                }
+                
+              }
+
+
+              if (row.qty){
+                let stock_qty = row.qty * parseFloat(row.conversion_factor)  ;
+                let base_price_list_rate = row.base_price_list_rate ;
+                let temp = parseFloat(base_price_list_rate) * parseFloat(stock_qty)
+                frappe.model.set_value(cdt , cdn , 'total_item_price' , temp);
+                console.log(temp + count);
+
+
+                
+                  frm.set_value("total_price" ,count + temp );
+                  frm.refresh_field("total_price");
+              }
+          
+
           }
         }
       },
