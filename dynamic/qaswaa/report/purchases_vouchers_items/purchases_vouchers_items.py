@@ -33,7 +33,7 @@ def get_data(filters=None):
         SELECT 
             i.item_code,
             i.item_name,
-            po.posting_date,
+            po.transaction_date,
             po.name as purchase_order,
             po.cost_center,
             po.set_warehouse as warehouse,
@@ -79,14 +79,17 @@ def get_data(filters=None):
     
     if filters.get("date_from"):
         conditions1.append("(pi.posting_date >= %(date_from)s)")
-        conditions2.append("(po.posting_date >= %(date_from)s)")
+        conditions2.append("(po.transaction_date >= %(date_from)s)")
     
     if filters.get("date_to"):
         conditions1.append("(pi.posting_date <= %(date_to)s)")
-        conditions2.append("(po.posting_date <= %(date_to)s)")
+        conditions2.append("(po.transaction_date <= %(date_to)s)")
 
-    if conditions:
-        query1 += " AND " + " AND ".join(conditions)
+    if conditions1:
+        query1 += " AND " + " AND ".join(conditions1)
+
+    if conditions2:
+        query2 += " AND " + " AND ".join(conditions2)
 
     data1 = frappe.db.sql(query1, filters, as_dict=True)
     data2 = frappe.db.sql(query2, filters, as_dict=True)
@@ -116,14 +119,14 @@ def get_columns():
             "width": 100
         },
         {
-            "label": "Invoice",
+            "label": "Purchase Invoice",
             "fieldname": "purchase_invoice",
             "fieldtype": "Link",
             "options": "Purchase Invoice",
             "width": 150
         },
         {
-            "label": "Invoice",
+            "label": "Purchase Order",
             "fieldname": "purchase_order",
             "fieldtype": "Link",
             "options": "Purchase Order",
