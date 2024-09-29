@@ -443,7 +443,7 @@ frappe.ui.form.on("Sales Invoice Item", {
   },
   qty:function(frm,cdt,cdn){
     let row = locals[cdt][cdn];
-    total = row.base_price_list_rate * row.qty
+    let total = row.base_price_list_rate * row.qty
 
     frappe.model.set_value(cdt , cdn , 'total' , total);
 
