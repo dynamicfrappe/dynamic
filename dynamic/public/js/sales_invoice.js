@@ -436,9 +436,10 @@ frappe.ui.form.on("Sales Invoice Item", {
 				}
 		}); 
 
-		get_discount_item_from_customer(frm , cdt , cdn);
+		
 			
 		}
+		get_discount_item_from_customer(frm , cdt , cdn);
 	},
 	qty:function(frm,cdt,cdn){
 		frappe.call({
@@ -499,10 +500,11 @@ function get_discount_item_from_customer(frm , cdt , cdn){
 							if(frm.doc.customer){
 								frappe.db.get_value('Customer', frm.doc.customer, 'discount_item')
 									.then(r => {
-											let discount_item = r.message.discount_item ;
-											console.log(discount_item);
-											frappe.model.set_value(cdt , cdn , 'margin_type' , "Percentage");
-											frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+										let discount_item = r.message.discount_item ;
+										console.log(discount_item);
+										frappe.model.set_value(cdt , cdn , 'margin_type' , "Percentage");
+										frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+										console.log("Updated")
 									})
 							}
 						}
