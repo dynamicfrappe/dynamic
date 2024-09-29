@@ -6,6 +6,7 @@ from frappe import _
 from frappe.utils import today, date_diff, flt
 from datetime import datetime, date
 from frappe.utils import getdate
+from dynamic.alrehab.api import get_updates_for_report
 
 def execute(filters=None):
     columns, data = [], []
@@ -30,7 +31,7 @@ def execute(filters=None):
         {"label": _("Journal Entry Date"), "fieldname": "journal_entry_date", "fieldtype": "Date", "width": 100},
     ]
 
-    filters_conditions = []
+    filters_conditions = [" 1 = 1 "]
     if filters.get("customer"):
         filters_conditions.append(f"invoice.customer = '{filters.get('customer')}'")
     if filters.get("sales_invoice"):
@@ -39,9 +40,7 @@ def execute(filters=None):
         filters_conditions.append(f"item.item_name = '{filters.get('subscription_plan')}'")
     
     filter_condition = " AND ".join(filters_conditions)
-    if filter_condition:
-        filter_condition = " AND " + filter_condition
-    else:
+    if not filter_condition:
         filter_condition = ""
 
 # invoice.fine_percent,
@@ -63,6 +62,9 @@ def execute(filters=None):
             invoice.due_date,
             invoice.status,
             invoice.total,
+            invoice.fine_percent,
+            invoice.num_of_delay_days,
+            invoice.deferred_revenue_amount,
             je.name AS journal_entry,
             je.posting_date AS journal_entry_date
         FROM
@@ -86,7 +88,6 @@ def execute(filters=None):
                 LIMIT 1
             )
         WHERE
-            invoice.docstatus = 0
             {filter_condition}
         ORDER BY
             invoice.customer, sub.name, invoice.name, item.item_name
@@ -126,22 +127,23 @@ def execute(filters=None):
         
         # Add a new row for the invoice group if it's a new invoice
         if row['invoice_name'] != previous_invoice:
-            i = frappe.get_doc("Sales Invoice", row['invoice_name'] )
-            items = i.items
-            total_amount = sum( item.amount for item in items)
-            penalty =  get_penalty(row['invoice_name'])
-            days = get_days(row['invoice_name'])
-            fine =  penalty * days * total_amount
+            get_updates_for_report(row['invoice_name'])
+            # i = frappe.get_doc("Sales Invoice", row['invoice_name'] )
+            # items = i.items
+            # total_amount = sum( item.amount for item in items)
+            # penalty =  get_penalty(row['invoice_name'])
+            # days = get_days(row['invoice_name'])
+            # fine =  penalty * days * total_amount
             data.append({
                 "invoice_name": row['invoice_name'],
                 "posting_date": row['posting_date'],
                 "due_date": row['due_date'],
                 "status": row['status'],
                 "total": row['total'],
-                "fine_percent": penalty,
-                "num_of_delay_days": days,
-                "deferred_revenue_amount": fine ,
-                "total_with_fine": row['total'] + fine ,
+                "fine_percent": row['fine_percent'],
+                "num_of_delay_days": row['num_of_delay_days'],
+                "deferred_revenue_amount": row['deferred_revenue_amount'] ,
+                "total_with_fine": row['total'] + row['deferred_revenue_amount'] ,
                 "journal_entry": row['journal_entry'],
                 "journal_entry_date": row['journal_entry_date'],
                 "indent": 2,
