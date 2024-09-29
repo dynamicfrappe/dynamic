@@ -4,12 +4,12 @@
 import frappe
 
 def get_data(filters=None):
-    query = """
+    query1 = """
         SELECT 
             i.item_code,
             i.item_name,
             pi.posting_date,
-            pi.name as invoice,
+            pi.name as purchase_invoice,
             pi.cost_center,
             pi.set_warehouse as warehouse,
             s.name AS supplier,
@@ -29,34 +29,70 @@ def get_data(filters=None):
             pi.docstatus = 1
     """
 
-    conditions = []
+    query2 = """
+        SELECT 
+            i.item_code,
+            i.item_name,
+            po.posting_date,
+            po.name as purchase_order,
+            po.cost_center,
+            po.set_warehouse as warehouse,
+            s.name AS supplier,
+            po_item.qty AS qty,
+            po_item.rate AS net_rate,
+            (po_item.qty * po_item.rate) AS total,
+            po.status
+        FROM 
+            `tabPurchase Order` po
+        JOIN 
+            `tabPurchase Order Item` po_item ON po.name = po_item.parent
+        JOIN 
+            `tabItem` i ON po_item.item_code = i.item_code
+        JOIN 
+            `tabSupplier` s ON po.supplier = s.name
+        WHERE 
+            po.docstatus = 1
+    """
+
+    conditions1 = []
+    conditions2 = []
 
     if filters.get("item_code"):
-        conditions.append("i.item_code = %(item_code)s")
+        conditions1.append("i.item_code = %(item_code)s")
+        conditions2.append("i.item_code = %(item_code)s")
     
     if filters.get("supplier"):
-        conditions.append("s.name = %(supplier)s")
+        conditions1.append("s.name = %(supplier)s")
+        conditions2.append("s.name = %(supplier)s")
     
     if filters.get("item_group"):
-        conditions.append("i.item_group = %(item_group)s")
+        conditions1.append("i.item_group = %(item_group)s")
+        conditions2.append("i.item_group = %(item_group)s")
     
     if filters.get("cost_center"):
-        conditions.append("pi.cost_center = %(cost_center)s")
+        conditions1.append("pi.cost_center = %(cost_center)s")
+        conditions2.append("po.cost_center = %(cost_center)s")
     
     if filters.get("warehouse"):
-        conditions.append("pi.set_warehouse = %(warehouse)s")
+        conditions1.append("pi.set_warehouse = %(warehouse)s")
+        conditions2.append("po.set_warehouse = %(warehouse)s")
     
     if filters.get("date_from"):
-        conditions.append("(pi.posting_date >= %(date_from)s)")
+        conditions1.append("(pi.posting_date >= %(date_from)s)")
+        conditions2.append("(po.posting_date >= %(date_from)s)")
     
     if filters.get("date_to"):
-        conditions.append("(pi.posting_date <= %(date_to)s)")
+        conditions1.append("(pi.posting_date <= %(date_to)s)")
+        conditions2.append("(po.posting_date <= %(date_to)s)")
 
     if conditions:
-        query += " AND " + " AND ".join(conditions)
+        query1 += " AND " + " AND ".join(conditions)
 
-    data = frappe.db.sql(query, filters, as_dict=True)
-    return data
+    data1 = frappe.db.sql(query1, filters, as_dict=True)
+    data2 = frappe.db.sql(query2, filters, as_dict=True)
+
+    return data1 + data2
+
 
 def get_columns():
     return [
@@ -81,9 +117,16 @@ def get_columns():
         },
         {
             "label": "Invoice",
-            "fieldname": "invoice",
+            "fieldname": "purchase_invoice",
             "fieldtype": "Link",
             "options": "Purchase Invoice",
+            "width": 150
+        },
+        {
+            "label": "Invoice",
+            "fieldname": "purchase_order",
+            "fieldtype": "Link",
+            "options": "Purchase Order",
             "width": 150
         },
         {
