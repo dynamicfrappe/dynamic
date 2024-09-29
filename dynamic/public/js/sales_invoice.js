@@ -438,7 +438,27 @@ frappe.ui.form.on("Sales Invoice Item", {
     }); 
 
     get_discount_item_from_customer(frm , cdt , cdn);
-      let row = locals[cdt][cdn];
+      
+    }
+  },
+  qty:function(frm,cdt,cdn){
+    let row = locals[cdt][cdn];
+    total = row.base_price_list_rate * row.qty
+
+    frappe.model.set_value(cdt , cdn , 'total' , total);
+
+    total_price_before_discount (frm , cdt , cdn) ;
+
+    set_all_price_before_discount(frm , cdt , cdn)
+    
+    
+
+  },
+
+})
+
+function set_all_price_before_discount(frm , cdt , cdn){
+  let row = locals[cdt][cdn];
           if(row.item_code){
 
 
@@ -467,23 +487,7 @@ frappe.ui.form.on("Sales Invoice Item", {
           
 
           }
-      frm.refresh_fields('items');
-    }
-  },
-  qty:function(frm,cdt,cdn){
-    let row = locals[cdt][cdn];
-    row.total = row.base_price_list_rate * row.qty
-    frm.refresh_fields('items')
-
-    total_price_before_discount (frm , cdt , cdn) ;
-    
-    
-
-  },
-
-})
-
-
+}
 function total_price_before_discount (frm , cdt , cdn){
   let row = locals[cdt][cdn]
   frappe.call({
