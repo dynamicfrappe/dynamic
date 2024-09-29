@@ -455,9 +455,14 @@ frappe.ui.form.on("Sales Invoice Item", {
       callback: function (r) {
         if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
           if(row.item_code){
-            let discount_item = frm.doc.discount_item
-            row.discount_percentage = discount_item ;
-            // frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+            if(frm.doc.customer){
+              frappe.db.get_value('Customer', frm.doc.customer, 'discount_item')
+                .then(r => {
+                    let discount_item = r.message.discount_item ;
+                    console.log(discount_item);
+                    frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
+                })
+            }
           }
         }
       },
