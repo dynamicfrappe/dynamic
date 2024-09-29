@@ -128,8 +128,8 @@ def execute(filters=None):
             if row['docstatus'] != 2:
                 if not row['journal_entry'] : 
                     
-                    dueDate = frappe.db.get_value("Sales Invoice", row['invoice_name'], due_date)
-                    payment_actual_due_date = frappe.db.get_value("Sales Invoice", row['invoice_name'], payment_actual_due_date)
+                    dueDate = frappe.db.get_value("Sales Invoice", row['invoice_name'], 'due_date')
+                    payment_actual_due_date = frappe.db.get_value("Sales Invoice", row['invoice_name'], "payment_actual_due_date")
                     if payment_actual_due_date:
                         dueDate = payment_actual_due_date
                     row['num_of_delay_days'] = date_diff(today(), dueDate)
@@ -137,9 +137,7 @@ def execute(filters=None):
                     if not row['fine_percent']:
                         row['fine_percent'] =  get_penalty(row['invoice_name'])
 
-                    items = i.items
-                    total_amount = sum( item.amount for item in items) 
-                    row['deferred_revenue_amount'] =  row['fine_percent'] * row['num_of_delay_days'] * total_amount
+                    row['deferred_revenue_amount'] =  row['fine_percent'] * row['num_of_delay_days'] * row['total']
 
             data.append({
                 "invoice_name": row['invoice_name'],
