@@ -343,6 +343,20 @@ add_item_discount_rate: function(frm) {
 	}
 		
 	},
+	set_discount:function(frm){
+		frappe.call({
+			method: "dynamic.api.get_active_domains",
+			callback: function (r) {
+				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+					frm.doc.items.forEach(item => {
+						if (item.qty) {
+							item.discount_percentage = frm.doc.discount_item ; 
+						}
+					});			
+				}
+			}
+		}); 
+	}
 
 });
 
@@ -412,7 +426,18 @@ function get_customer_query(){
 
 frappe.ui.form.on("Sales Invoice Item", {
 	items_add: function(frm,cdt,cdn) {
+		frappe.call({
+			method: "dynamic.api.get_active_domains",
+			callback: function (r) {
+				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
 
+					// get_discount_item_from_customer(frm , cdt , cdn);
+					total_before_discount(frm);
+					total_discount(frm);					
+				}
+			}
+		}); 
+		
 },
 	item_code:function(frm,cdt,cdn){
 		let row = locals[cdt][cdn]
@@ -439,7 +464,20 @@ frappe.ui.form.on("Sales Invoice Item", {
 		
 			
 		}
-		get_discount_item_from_customer(frm , cdt , cdn);
+		frappe.call({
+			method: "dynamic.api.get_active_domains",
+			callback: function (r) {
+				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+					
+					total_before_discount(frm);
+					total_discount(frm);
+					
+					setTimeout(() => {
+						get_discount_item_from_customer(frm , cdt , cdn);
+					  }, "1000");
+				}
+			}
+		}); 
 	},
 	qty:function(frm,cdt,cdn){
 		frappe.call({
@@ -449,10 +487,35 @@ frappe.ui.form.on("Sales Invoice Item", {
 					set_all_price_before_discount(frm, cdt, cdn)
 					.then(() => {
 						total_before_discount(frm);
+						total_discount(frm);
 					});
 				}
 			}
 		});
+	},
+	rate:function(frm , cdt , cdn){
+		frappe.call({
+			method: "dynamic.api.get_active_domains",
+			callback: function (r) {
+				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+					total_before_discount(frm);
+					total_discount(frm);
+				}
+			}
+		}); 
+	},
+	item_remove:function(frm,cdt,cdn){
+		frappe.call({
+			method: "dynamic.api.get_active_domains",
+			callback: function (r) {
+				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+					total_before_discount(frm);
+					total_discount(frm);
+					console.log("removed");
+								
+				}
+			}
+		}); 
 	},
 
 })
@@ -491,26 +554,49 @@ function total_before_discount(frm) {
     frm.refresh_field("total_price");
 }
 
-function get_discount_item_from_customer(frm , cdt , cdn){
-	let row = locals[cdt][cdn];
-		frappe.call({
-				method: "dynamic.api.get_active_domains",
-				callback: function(r) {
-						if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
-							if(frm.doc.customer){
-								frappe.db.get_value('Customer', frm.doc.customer, 'discount_item')
-									.then(r => {
-										let discount_item = r.message.discount_item ;
-										console.log(discount_item);
-										frappe.model.set_value(cdt , cdn , 'margin_type' , "Percentage");
-										frappe.model.set_value(cdt , cdn , 'discount_percentage' , discount_item);
-										console.log("Updated")
-									})
-							}
-						}
-				}
-		});
-} 
+function total_discount(frm) {
+    let total_discount = 0;
+
+    frm.doc.items.forEach(item => {
+        if (item.discount_amount) {
+            total_discount += parseFloat(item.qty) * parseFloat(item.conversion_factor) * parseFloat(item.discount_amount);
+        }
+    });
+
+    frm.set_value("discount", total_discount);
+    frm.refresh_field("discount");
+}
+
+function get_discount_item_from_customer(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+
+    frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function(r) {
+            if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
+                if (frm.doc.customer) {
+                    frappe.db.get_value('Customer', frm.doc.customer, 'discount_item')
+                        .then(r => {
+                            let discount_item = parseFloat(r.message.discount_item || 0);
+                            console.log(discount_item);
+
+                            
+							row.discount_percentage = discount_item;
+
+							row.discount_amount =  discount_item;
+
+							row.amount = flt(row.rate) * flt(row.qty) - discount_item;
+
+                            frm.refresh_field("items");
+							console.log("GSDFS");
+							
+							console.log("Updated:", row);
+                        });
+                }
+            }
+        }
+    });
+}
 
 
 
