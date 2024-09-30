@@ -151,6 +151,9 @@ doctype_js = {
 # print("doctype_js ===========> " , doctype_js.get("Payment Entry"))
 
 doc_events = {
+    "Batch":{
+        "before_insert":"dynamic.controllers.batch.befor_naming",
+    },
     "Payment Entry": {
         "on_submit": "dynamic.api.submit_payment",
     },
