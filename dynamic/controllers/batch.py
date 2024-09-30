@@ -11,4 +11,4 @@ def befor_naming (self , method):
 
 
 def change_batch_name(self):
-    self.batch = self.batch + self.item
+    self.batch_id = self.batch_id + self.item
