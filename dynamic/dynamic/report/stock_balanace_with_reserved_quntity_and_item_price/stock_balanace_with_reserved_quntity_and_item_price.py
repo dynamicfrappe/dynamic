@@ -100,7 +100,8 @@ def execute(filters=None):
 
 	data = get_item_price_and_total_reservation(data)
 	for row in data :
-		row["bal_rev"] = float(row["item_price"]) or 0 * float(row["bal_qty"]) or 0
+		row["bal_rev"] = (float(row["item_price"]) if row["item_price"] is not None else 0) * (float(row["bal_qty"]) if row["bal_qty"] is not None else 0)
+
 
 
 	# temp = [{
