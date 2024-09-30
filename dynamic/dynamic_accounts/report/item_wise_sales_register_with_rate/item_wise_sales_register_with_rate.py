@@ -81,6 +81,8 @@ def _execute(
 			"invoice": d.parent,
 			"base_discount_amount": d.base_discount_amount,
 			"additional_discount_account": d.additional_discount_account,
+			"total_discount" : d.total_discount , 
+			"gross_profit" : d.gross_profit ,
 			"posting_date": d.posting_date,
 			"customer": d.customer,
 			"customer_name": customer_record.customer_name,
@@ -174,7 +176,6 @@ def _execute(
 		add_sub_total_row(total_row, total_row_map, "total_row", tax_columns)
 		data.append(total_row_map.get("total_row"))
 		skip_total_row = 1
-
 	return columns, data, None, None, None, skip_total_row
 
 
@@ -245,13 +246,7 @@ def get_columns(additional_table_columns, filters):
 			"options": "Account",
 			"width": 120,
 		},		
-		{
-			"label": _("Additional Discount Amount"),
-			"fieldname": "base_discount_amount",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 120,
-		},
+
 			
 		]
 	)
@@ -364,15 +359,46 @@ def get_columns(additional_table_columns, filters):
 			"options": "currency",
 			"width": 100,
 		},
-		{
-			"label": _("Total"),
-			"fieldname": "total",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
+		# {
+		# 	"label": _("Total"),
+		# 	"fieldname": "total",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 100,
+		# },
+
 		]
 	)
+	if filters.get("group_by") != ("Item"):
+		columns.extend(
+			[
+				{"label": _("Discount Amount"), "fieldname": "discount_amount", "fieldtype": "Currency", "options": "currency","width": 150},
+			]
+		)
+	columns.extend(
+			[
+		{
+			"label": _("Additional Discount Amount"),
+			"fieldname": "base_discount_amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		},
+		{
+			"label": _("Total Discount"),
+			"fieldname": "total_discount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		},
+		{
+			"label": _("Gross Profit"),
+			"fieldname": "gross_profit",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		},			]
+		)
 	if additional_table_columns:
 		columns += additional_table_columns
 
@@ -497,8 +523,10 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabSales Invoice Item`.name, `tabSales Invoice Item`.parent,
 			`tabSales Invoice`.posting_date, `tabSales Invoice`.debit_to,
 			`tabSales Invoice`.unrealized_profit_loss_account,
-			`tabSales Invoice`.is_internal_customer,`tabSales Invoice`.additional_discount_account,
-			`tabSales Invoice`.base_discount_amount,
+			`tabSales Invoice`.is_internal_customer,
+			`tabSales Invoice`.additional_discount_account,
+    		COALESCE(`tabSales Invoice`.base_discount_amount, 0) as base_discount_amount,
+    		(COALESCE(`tabSales Invoice`.base_discount_amount, 0) + COALESCE(`tabSales Invoice Item`.`discount_amount`, 0)) as total_discount ,
 			`tabSales Invoice`.project, `tabSales Invoice`.customer, `tabSales Invoice`.remarks,
 			`tabSales Invoice`.territory, `tabSales Invoice`.company, `tabSales Invoice`.base_net_total,
 			`tabSales Invoice Item`.item_code, `tabSales Invoice Item`.description,
@@ -507,7 +535,10 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabSales Invoice Item`.sales_order, `tabSales Invoice Item`.delivery_note,
 			`tabSales Invoice Item`.income_account, `tabSales Invoice Item`.cost_center,
 			`tabSales Invoice Item`.stock_qty, `tabSales Invoice Item`.stock_uom,
-			`tabSales Invoice Item`.base_net_rate, `tabSales Invoice Item`.base_net_amount,
+			`tabSales Invoice Item`.base_net_rate, 
+			COALESCE(`tabSales Invoice Item`.base_net_amount, 0) as base_net_amount ,
+			COALESCE(`tabSales Invoice Item`.base_net_amount, 0) + 
+			(COALESCE(`tabSales Invoice`.base_discount_amount, 0) + COALESCE(`tabSales Invoice Item`.`discount_amount`, 0)) as gross_profit ,
 			`tabSales Invoice`.customer_name, `tabSales Invoice`.customer_group, `tabSales Invoice Item`.so_detail,
 			`tabSales Invoice`.update_stock, `tabSales Invoice Item`.uom, `tabSales Invoice Item`.qty {0}
 			,`tabSales Invoice Item`.incoming_rate
@@ -519,7 +550,8 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 		),
 		filters,
 		as_dict=1,
-	)  # nosec
+	) 
+	 # nosec
 
 
 def get_delivery_notes_against_sales_order(item_list):
