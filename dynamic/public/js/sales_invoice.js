@@ -511,7 +511,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 			callback: function (r) {
 				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
 					total_before_discount(frm);
-					total_discount(frm);
+					// total_discount(frm);
 					console.log("removed");
 								
 				}
@@ -552,7 +552,9 @@ function total_before_discount(frm) {
     });
 
     frm.set_value("total_price", total_price);
+	frm.set_value("discount" , parseFloat(frm.doc.total) - total_price)
     frm.refresh_field("total_price");
+	frm.refresh_field("discount");
 }
 
 function total_discount(frm) {
