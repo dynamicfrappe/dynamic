@@ -17,6 +17,15 @@ def get_data(filters=None):
 
     if filters and filters.get("supplier"):
         conditions.append(['supplier', '=', filters.get("supplier")])
+	if filters and filters.get("supplier_name"):
+        conditions.append(['supplier_name', '=', filters.get("supplier_name")])
+	if filters and filters.get("supplier_group"):
+        suppliers_in_group = frappe.get_all("Supplier", filters={"supplier_group": filters.get("supplier_group")}, fields=["name"])
+        supplier_names = [supplier.name for supplier in suppliers_in_group]
+        if supplier_names:
+            conditions.append(['supplier', 'in', supplier_names])
+        else:
+            return []
     if filters and filters.get("set_warehouse"):
         conditions.append(['set_warehouse', '=', filters.get("set_warehouse")])
     if filters and filters.get("cost_center"):
@@ -27,9 +36,11 @@ def get_data(filters=None):
         conditions.append(('posting_date', '<=', filters.get("period_end_date")))
     if filters and filters.get("is_return") and filters.get("is_return") == 1:
         conditions.append(['status', '=', 'Return'])
+	if filters and filters.get("status"):
+        conditions.append(['status', '=', filters.get("status") ])
     conditions.append(['docstatus', '!=', 2])
 
-    purchases_invoices = frappe.get_all("Purchase Invoice", fields=["posting_date", "name", "set_warehouse", "supplier",
+    purchases_invoices = frappe.get_all("Purchase Invoice", fields=["posting_date", "name", "set_warehouse", "supplier", "status",
                                                                     "net_total", "base_total_taxes_and_charges",
                                                                     "base_grand_total", "total_advance", "is_return", "return_against",
                                                                     "outstanding_amount"],
