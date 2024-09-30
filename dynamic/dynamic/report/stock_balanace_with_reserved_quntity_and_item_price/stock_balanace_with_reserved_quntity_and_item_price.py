@@ -174,7 +174,7 @@ def get_columns(filters):
 		{
 			"label": _("Item Price"),
 			"fieldname": "item_price",
-			"fieldtype": "Data",
+			"fieldtype": "Float",
 			"options": "Item Price",
 			"width": 100,
 		},
