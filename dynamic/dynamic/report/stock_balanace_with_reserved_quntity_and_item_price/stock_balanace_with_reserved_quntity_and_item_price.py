@@ -100,7 +100,7 @@ def execute(filters=None):
 
 	data = get_item_price_and_total_reservation(data)
 	for row in data :
-		row["bal_rev"] = row["item_price"] * row["bal_qty"]
+		row["bal_rev"] = float(row["item_price"]) or 0 * float(row["bal_qty"]) or 0
 
 
 	# temp = [{
