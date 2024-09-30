@@ -440,6 +440,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 		
 },
 	item_code:function(frm,cdt,cdn){
+		console.log("Catshed ")
 		let row = locals[cdt][cdn]
 		if(row.item_code){
 
@@ -582,13 +583,12 @@ function get_discount_item_from_customer(frm, cdt, cdn) {
 
                             
 							row.discount_percentage = discount_item;
+							
+							row.rate =  row.price_list_rate -( (discount_item / 100) * row.price_list_rate) ;
 
-							row.discount_amount =  discount_item;
-
-							row.amount = flt(row.rate) * flt(row.qty) - discount_item;
 
                             frm.refresh_field("items");
-							console.log("GSDFS");
+							
 							
 							console.log("Updated:", row);
                         });
