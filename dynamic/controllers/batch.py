@@ -11,4 +11,4 @@ def befor_naming (self , method):
 
 
 def change_batch_name(self):
-    self.batch_id = self.batch_id + self.item
+    self.batch_id = f"""{self.batch_id} - {self.item}"""
