@@ -12,10 +12,22 @@ frappe.query_reports["Items Purchasing Rates"] = {
             "reqd": 0
         },
         {
+            "fieldname": "item_name",
+            "label": __("Item_name"),
+            "fieldtype": "Data",
+            "reqd": 0
+        },
+        {
             "fieldname": "supplier",
             "label": __("Supplier"),
             "fieldtype": "Link",
             "options": "Supplier",
+            "reqd": 0
+        },
+        {
+            "fieldname": "supplier_name",
+            "label": __("supplier_name"),
+            "fieldtype": "Data",
             "reqd": 0
         },
         {

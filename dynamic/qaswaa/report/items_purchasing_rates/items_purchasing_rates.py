@@ -5,7 +5,27 @@ import frappe
 
 def get_data(filters=None):
 
-    query = """
+    conditions = " 1=1 "
+
+    if filters.get("item"):
+        conditions += f""" AND pi.item_code = '{filters.get("item")}'"""
+    
+    if filters.get("item_name"):
+        conditions += f""" AND pi.item_name = '{filters.get("item_name")}'"""
+    
+    if filters.get("supplier_name"):
+        conditions += f""" AND s.supplier_name = '{filters.get("supplier_name")}'"""
+    
+    if filters.get("supplier"):
+        conditions += f""" AND p.supplier = '{filters.get("supplier")}'"""
+    
+    if filters.get("date_from"):
+        conditions += f""" AND p.posting_date >= '{filters.get("date_from")}'"""
+    
+    if filters.get("date_to"):
+        conditions += f""" AND p.posting_date <= '{filters.get("date_to")}'"""
+
+    query = f"""
         SELECT 
             i.item_code,
             i.item_name,
@@ -29,27 +49,10 @@ def get_data(filters=None):
                 FROM `tabPurchase Invoice` 
                 WHERE name = p.name
             )
+            AND {conditions}
         GROUP BY 
             i.item_code
     """
-
-    conditions = []
-
-    if filters.get("item"):
-        conditions.append("pi.item_code = %(item)s")
-    
-    if filters.get("supplier"):
-        conditions.append("pi.supplier = %(supplier)s")
-    
-    if filters.get("date_from"):
-        conditions.append("p.posting_date >= %(date_from)s")
-    
-    if filters.get("date_to"):
-        conditions.append("p.posting_date <= %(date_to)s")
-
-    if conditions:
-        query += " AND " + " AND ".join(conditions)
-
     # Execute the query with filters
     data = frappe.db.sql(query, filters, as_dict=True)
     return data
