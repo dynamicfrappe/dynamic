@@ -48,14 +48,14 @@ def _execute(
 		supplier_record = supplier_details.get(d.supplier)
 		item_record = item_details.get(d.item_code)
 
-		purchase_reciept = None
-		if d.purchase_reciept:
-			purchase_reciept = d.purchase_reciept
-		# elif d.po_detail:
-		# 	purchase_reciept = ", ".join(so_dn_map.get(d.po_detail, []))
+		# purchase_reciept = None
+		# if d.purchase_reciept:
+		# 	purchase_reciept = d.purchase_reciept
+		# # elif d.po_detail:
+		# # 	purchase_reciept = ", ".join(so_dn_map.get(d.po_detail, []))
 
-		if not purchase_reciept and d.update_stock:
-			purchase_reciept = d.parent
+		# if not purchase_reciept and d.update_stock:
+		# 	purchase_reciept = d.parent
 		
 		# purchase_reciept_name = so_dn_map.get(d.po_detail)
 
@@ -72,7 +72,6 @@ def _execute(
 			"description": d.description,
 			"invoice": d.parent,
 			"base_discount_amount": d.base_discount_amount,
-			"additional_discount_account": d.additional_discount_account,
 			"total_discount" : d.total_discount , 
 			"gross_profit" : d.gross_profit ,
 			"posting_date": d.posting_date,
@@ -99,7 +98,7 @@ def _execute(
 				"project": d.project,
 				"company": d.company,
 				"purchase_order": d.purchase_order,
-				"purchase_receipt": d.purchase_receipt,
+				# "purchase_receipt": d.purchase_receipt,
 				"expense_account": d.unrealized_profit_loss_account
 				if d.is_internal_supplier == 1
 				else d.expense_account,
@@ -111,8 +110,10 @@ def _execute(
 
 		if d.stock_uom != d.uom and d.stock_qty:
 			row.update({"rate": (d.base_net_rate * d.qty) / d.stock_qty, "amount": d.base_net_amount})
+			row.update({"price_list_rate": (d.price_list_rate * d.qty) / d.stock_qty })
 		else:
 			row.update({"rate": d.base_net_rate, "amount": d.base_net_amount})
+			row.update({"price_list_rate": d.price_list_rate, "amount": d.base_net_amount})
 		 
 		row['profit_rate'] = row.get('rate',0) - row.get('incoming_rate',0)
 		row['total_profit'] = (row.get('rate',0) - row.get('incoming_rate',0)) * (row.get('qty') or row.get('stock_qty') )
@@ -189,8 +190,7 @@ def get_columns(additional_table_columns, filters):
 				{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 120},
 				{"label": _("Description"), "fieldname": "description", "fieldtype": "Data", "width": 150},
 				{"label": _("Discount Account"), "fieldname": "discount_account", "fieldtype": "Link", "options": "Account", "width": 150},
-				{"label": _("Discount Amount"), "fieldname": "discount_amount", "fieldtype": "Currency", "options": "currency","width": 150},
-
+			
 				#
 			]
 		)
@@ -218,13 +218,13 @@ def get_columns(additional_table_columns, filters):
 			"options": "Purchase Order",
 			"width": 100,
 		},
-		{
-			"label": _("Purchase Receipt"),
-			"fieldname": "purchase_receipt",
-			"fieldtype": "Link",
-			"options": "Purchase Receipt",
-			"width": 100,
-		},
+		# {
+		# 	"label": _("Purchase Receipt"),
+		# 	"fieldname": "purchase_receipt",
+		# 	"fieldtype": "Link",
+		# 	"options": "Purchase Receipt",
+		# 	"width": 100,
+		# },
 			
 		{
 			"label": _("Invoice"),
@@ -232,14 +232,7 @@ def get_columns(additional_table_columns, filters):
 			"fieldtype": "Link",
 			"options": "Purchase Invoice",
 			"width": 120,
-		},
-		{
-			"label": _("Discount Account"),
-			"fieldname": "additional_discount_account",
-			"fieldtype": "Link",
-			"options": "Account",
-			"width": 120,
-		},		
+		},	
 
 			
 		]
@@ -313,6 +306,13 @@ def get_columns(additional_table_columns, filters):
 			"width": 100,
 		},
 		{
+			"label": _("Rate before Discount"),
+			"fieldname": "price_list_rate",
+			"fieldtype": "Float",
+			"options": "currency",
+			"width": 100,
+		},
+		{
 			"label": _("Total Purchase"),
 			"fieldname": "amount",
 			"fieldtype": "Currency",
@@ -354,7 +354,7 @@ def get_columns(additional_table_columns, filters):
 	if filters.get("group_by") != ("Item"):
 		columns.extend(
 			[
-				{"label": _("Discount Amount"), "fieldname": "discount_amount", "fieldtype": "Currency", "options": "currency","width": 150},
+				{"label": _("Item Discount Amount"), "fieldname": "discount_amount", "fieldtype": "Currency", "options": "currency","width": 150},
 			]
 		)
 	columns.extend(
@@ -462,21 +462,21 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabPurchase Invoice`.posting_date, `tabPurchase Invoice`.credit_to,
 			`tabPurchase Invoice`.unrealized_profit_loss_account,
 			`tabPurchase Invoice`.is_internal_supplier,
-			`tabPurchase Invoice`.additional_discount_account,
-    		COALESCE(`tabPurchase Invoice`.base_discount_amount, 0) as base_discount_amount,
-    		(COALESCE(`tabPurchase Invoice`.base_discount_amount, 0) + COALESCE(`tabPurchase Invoice Item`.`discount_amount`, 0)) as total_discount ,
+    		COALESCE(`tabPurchase Invoice`.discount_amount, 0) as base_discount_amount,
+    		(COALESCE(`tabPurchase Invoice`.discount_amount, 0) + COALESCE(`tabPurchase Invoice Item`.`discount_amount`, 0)) as total_discount ,
 			`tabPurchase Invoice`.project, `tabPurchase Invoice`.supplier, `tabPurchase Invoice`.remarks,
 			`tabPurchase Invoice`.company, `tabPurchase Invoice`.base_net_total,
 			`tabPurchase Invoice Item`.item_code, `tabPurchase Invoice Item`.description,
 			`tabPurchase Invoice Item`.`item_name`, `tabPurchase Invoice Item`.`item_group`,
 			`tabPurchase Invoice Item`.`discount_account` , `tabPurchase Invoice Item`.`discount_amount` ,
-			`tabPurchase Invoice Item`.purchase_order, `tabPurchase Invoice Item`.purchase_receipt,
+			`tabPurchase Invoice Item`.purchase_order, 
 			`tabPurchase Invoice Item`.expense_account, `tabPurchase Invoice Item`.cost_center,
 			`tabPurchase Invoice Item`.stock_qty, `tabPurchase Invoice Item`.stock_uom,
 			`tabPurchase Invoice Item`.base_net_rate, 
+			`tabPurchase Invoice Item`.price_list_rate, 
 			COALESCE(`tabPurchase Invoice Item`.base_net_amount, 0) as base_net_amount ,
 			COALESCE(`tabPurchase Invoice Item`.base_net_amount, 0) + 
-			(COALESCE(`tabPurchase Invoice`.base_discount_amount, 0) + COALESCE(`tabPurchase Invoice Item`.`discount_amount`, 0)) as gross_profit ,
+			(COALESCE(`tabPurchase Invoice`.discount_amount, 0) + COALESCE(`tabPurchase Invoice Item`.`discount_amount`, 0)) as gross_profit ,
 			`tabPurchase Invoice`.supplier_name, `tabSupplier`.supplier_group, `tabPurchase Invoice Item`.po_detail,
 			`tabPurchase Invoice`.update_stock, `tabPurchase Invoice Item`.uom, `tabPurchase Invoice Item`.qty {0}
 			
@@ -492,29 +492,29 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 	 # nosec
 
 
-def get_purchase_reciepts_against_purchase_order(item_list):
-	print("8888888888")
-	so_dn_map = frappe._dict()
-	so_item_rows = list(set([d.po_detail for d in item_list]))
-	if so_item_rows:
-		purchase_receipts = frappe.db.sql(
-			"""
-			select parent ,incoming_rate
-			from `tabPurchase Receipt Item` 
-			where docstatus=1
-			group by parent
-		"""
-			% (", ".join(["%s"] * len(so_item_rows))),
-			tuple(so_item_rows),
-			as_dict=1,
-		)
+# def get_purchase_reciepts_against_purchase_order(item_list):
+# 	print("8888888888")
+# 	so_dn_map = frappe._dict()
+# 	so_item_rows = list(set([d.po_detail for d in item_list]))
+# 	if so_item_rows:
+# 		purchase_receipts = frappe.db.sql(
+# 			"""
+# 			select parent ,incoming_rate
+# 			from `tabPurchase Receipt Item` 
+# 			where docstatus=1
+# 			group by parent
+# 		"""
+# 			% (", ".join(["%s"] * len(so_item_rows))),
+# 			tuple(so_item_rows),
+# 			as_dict=1,
+# 		)
 
-		for pr in purchase_receipts:
-			# so_dn_map.setdefault(pr.po_detail, []).append(pr.parent)
-			so_dn_map.setdefault(pr.parent, []).append(pr.incoming_rate)
+# 		for pr in purchase_receipts:
+# 			# so_dn_map.setdefault(pr.po_detail, []).append(pr.parent)
+# 			so_dn_map.setdefault(pr.parent, []).append(pr.incoming_rate)
 
-	# return so_dn_map
-	return {}
+# 	# return so_dn_map
+# 	return {}
 
 
 
