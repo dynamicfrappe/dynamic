@@ -25,6 +25,12 @@ data = {
         "Sales Invoice":
         [ 
             {
+                "label": "Set Discount",
+                "fieldname": "set_discount",
+                "fieldtype": "Button",
+                "insert_after": "update_stock" ,
+            },
+            {
                 "label": "Discount Item",
                 "fieldname": "discount_item",
                 "fieldtype": "Float",
@@ -59,6 +65,17 @@ data = {
                 "fieldname": "all_total",
                 "fieldtype": "Currency",
                 "insert_after": "total_discount_amount" ,
+                "options": "currency",
+                "read_only": 1
+            },
+        ],
+            "Sales Invoice Item":
+        [
+            {
+                "label": "Total Item Price",
+                "fieldname": "total_item_price",
+                "fieldtype": "Currency",
+                "insert_after": "base_price_list_rate" ,
                 "options": "currency",
                 "read_only": 1
             },

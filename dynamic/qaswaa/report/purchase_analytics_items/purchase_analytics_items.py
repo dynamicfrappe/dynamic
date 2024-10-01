@@ -66,20 +66,7 @@ def get_period_list(filters):
     return period_list
 
 def get_data(filters):
-    sql = f'''
-        SELECT 
-			distinct PII.item_code , PII.item_name
-        FROM 
-            `tabPurchase Invoice` PI 
-        INNER JOIN 
-            `tabPurchase Invoice Item` PII
-        ON 
-            PI.name = PII.parent
-        WHERE 
-            PI.docstatus = 1
-        '''
-    results = []
-    items = frappe.db.sql(sql, as_dict=1)
+
     conditions = "1=1"
     if filters.get("cost_center"):
         conditions += f" AND PI.cost_center = '{filters.get('cost_center')}'"
@@ -92,6 +79,22 @@ def get_data(filters):
         conditions += f" AND PII.item_group = '{filters.get('item_group')}'"
     if filters.get("item_code"):
         conditions += f" AND PII.item_code = '{filters.get('item_code')}'"
+
+    sql = f'''
+        SELECT 
+			distinct PII.item_code , PII.item_name
+        FROM 
+            `tabPurchase Invoice` PI 
+        INNER JOIN 
+            `tabPurchase Invoice Item` PII
+        ON 
+            PI.name = PII.parent
+        WHERE 
+            {conditions} AND PI.docstatus = 1
+        '''
+    results = []
+    items = frappe.db.sql(sql, as_dict=1)
+
 
     period_list = get_period_list(filters)
 
