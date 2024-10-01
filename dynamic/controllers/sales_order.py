@@ -124,8 +124,9 @@ def get_validation(self , *args, **kwargs):
             # uom = item.uom
             warehouse = item.warehouse
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
-            reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'available_qty_to_reserve')
-            total_qty = float(bin_qty or 0 ) + float(reservation_qty if reservation_qty else 0)
+            # reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'available_qty_to_reserve')
+            reservation_qty = get_all_qty_reserved(item.item_code , item.warehouse)
+            total_qty = float(bin_qty or 0 ) - float(reservation_qty if reservation_qty else 0)
             if qty > total_qty:
                 wanted_qty = float(qty) - float(total_qty)
                 msg = f"""
@@ -188,6 +189,7 @@ def get_all_qty_reserved (item_code, warehouse):
         AND `warehouse` = %s
     """, (item_code, warehouse), as_dict=1)
     qty_reserved = item_reserved[0]['reserved_qty']
+    return qty_reserved
 
 
 
@@ -201,7 +203,7 @@ def get_validation(self , *args, **kwargs):
             warehouse = item.warehouse
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
             reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'reserved_qty')
-            total_qty = float(bin_qty or 0) + float(reservation_qty or 0)
+            total_qty = float(bin_qty or 0) - float(reservation_qty or 0)
             if qty > total_qty:
                 wanted_qty = float(qty) - float(total_qty)
                 msg = f"""
