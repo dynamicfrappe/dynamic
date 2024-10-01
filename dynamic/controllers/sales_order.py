@@ -120,7 +120,7 @@ def get_validation(self , *args, **kwargs):
         items = self.get("items")
         for item in items:
             item_code = item.item_code
-            qty = item.qty_to_reserve
+            qty = item.qty_to_reserve or 0
             # uom = item.uom
             warehouse = item.warehouse
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
