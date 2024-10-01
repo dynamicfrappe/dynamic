@@ -45,7 +45,7 @@ def _execute(
 	item_details = get_item_details()
 
 	for d in item_list:
-		customer_record = supplier_details.get(d.supplier)
+		supplier_record = supplier_details.get(d.supplier)
 		item_record = item_details.get(d.item_code)
 
 		purchase_reciept = None
@@ -76,9 +76,9 @@ def _execute(
 			"total_discount" : d.total_discount , 
 			"gross_profit" : d.gross_profit ,
 			"posting_date": d.posting_date,
-			"customer": d.customer,
-			"customer_name": customer_record.customer_name,
-			"customer_group": customer_record.customer_group,
+			"supplier": d.supplier,
+			"supplier_name": supplier_record.supplier_name,
+			"supplier_group": supplier_record.supplier_group,
 			"incoming_rate": purchase_reciept_incoming_rate,
 			"total_cost": purchase_reciept_incoming_rate * d.qty,
 		}
@@ -98,10 +98,10 @@ def _execute(
 				"mode_of_payment":mode_of_payment,
 				"project": d.project,
 				"company": d.company,
-				"sales_order": d.sales_order,
-				"delivery_note": d.delivery_note,
+				"purchase_order": d.purchase_order,
+				"purchase_receipt": d.purchase_receipt,
 				"expense_account": d.unrealized_profit_loss_account
-				if d.is_internal_customer == 1
+				if d.is_internal_supplier == 1
 				else d.expense_account,
 				"cost_center": d.cost_center,
 				"stock_qty": d.stock_qty,
@@ -215,7 +215,7 @@ def get_columns(additional_table_columns, filters):
 			"label": _("Purchase Order"),
 			"fieldname": "purchase_order",
 			"fieldtype": "Link",
-			"options": "Sales Order",
+			"options": "Purchase Order",
 			"width": 100,
 		},
 		{
@@ -245,7 +245,7 @@ def get_columns(additional_table_columns, filters):
 		]
 	)
 
-	if filters.get("group_by") not in ("Customer", "Customer Group"):
+	if filters.get("group_by") not in ("Supplier", "Supplier Group"):
 		columns.extend(
 			[
 				{
@@ -398,7 +398,7 @@ def get_conditions(filters, additional_conditions=None):
 
 	for opts in (
 		("company", " and company=%(company)s"),
-		("supplier", " and `tabPurchase Invoice`.customer = %(customer)s"),
+		("supplier", " and `tabPurchase Invoice`.supplier = %(supplier)s"),
 		("item_code", " and `tabPurchase Invoice Item`.item_code = %(item_code)s"),
 		("from_date", " and `tabPurchase Invoice`.posting_date>=%(from_date)s"),
 		("to_date", " and `tabPurchase Invoice`.posting_date<=%(to_date)s"),
@@ -422,6 +422,9 @@ def get_conditions(filters, additional_conditions=None):
 
 	if filters.get("item_group"):
 		conditions += """and ifnull(`tabPurchase Invoice Item`.item_group, '') = %(item_group)s"""
+	
+	if filters.get("item_code"):
+		conditions += """and ifnull(`tabPurchase Invoice Item`.item_code, '') = %(item_code)s"""
 
 	if not filters.get("group_by"):
 		conditions += (
@@ -536,8 +539,8 @@ def get_tax_accounts(
 	item_list,
 	columns,
 	company_currency,
-	doctype="Sales Invoice",
-	tax_doctype="Sales Taxes and Charges",
+	doctype="Purchase Invoice",
+	tax_doctype="Purchase Taxes and Charges",
 ):
 	import json
 
