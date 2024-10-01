@@ -81,7 +81,7 @@ def transfer_items(self , *args, **kwargs):
         "s_warehouse": doc.from_warehouse,
         "t_warehouse": doc.to_warehouse,
         "item_code": item.item_code,
-        "qty":item.transfer_items , 
+        "qty":item.qty_to_reserve , 
         "uom": item.uom , 
         "conversion_factor" : item.conversion_factor , 
         "ref_sales_order" : self.name , 
@@ -120,12 +120,12 @@ def get_validation(self , *args, **kwargs):
         items = self.get("items")
         for item in items:
             item_code = item.item_code
-            qty = item.qty_to_reserve or 0
+            qty = float(item.qty_to_reserve or 0)
             # uom = item.uom
             warehouse = item.warehouse
             bin_qty = frappe.db.get_value("Bin" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'actual_qty')
             reservation_qty = frappe.db.get_value("Stock Reservation Entry" , filters={"item_code":item_code, "warehouse":warehouse} , fieldname = 'reserved_qty')
-            total_qty = int(bin_qty or 0 ) + int(reservation_qty if reservation_qty else 0)
+            total_qty = float(bin_qty or 0 ) + float(reservation_qty if reservation_qty else 0)
             if qty > total_qty:
                 wanted_qty = float(qty) - float(total_qty)
                 msg = f"""
