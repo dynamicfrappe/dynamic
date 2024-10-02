@@ -56,6 +56,7 @@ def execute(filters=None):
             sub.name AS subscription,
             sub.start_date,
             sub.end_date,
+            sub.penalty as fine_percent,
             item.item_name,
             item.amount,
             invoice.name AS invoice_name,
@@ -63,22 +64,22 @@ def execute(filters=None):
             invoice.due_date,
             invoice.status,
             invoice.total,
-            invoice.fine_percent,
             invoice.num_of_delay_days,
             invoice.deferred_revenue_amount,
+            (invoice.deferred_revenue_amount + invoice.total) AS total_with_fine,
             je.name AS journal_entry,
             je.posting_date AS journal_entry_date
         FROM
             `tabSales Invoice` AS invoice
-        LEFT JOIN
+        Inner JOIN
             `tabSales Invoice Item` AS item ON item.parent = invoice.name
-        LEFT JOIN
+        Inner JOIN
             `tabCustomer` AS customer ON customer.name = invoice.customer
-        LEFT JOIN
+        Inner JOIN
             `tabSubscription Invoice` AS sub_si ON sub_si.invoice = invoice.name
-        LEFT JOIN
+        Inner JOIN
             `tabSubscription` AS sub ON sub.name = sub_si.parent
-        LEFT JOIN
+        Left JOIN
             `tabJournal Entry` AS je ON je.name = (
                 SELECT
                     jea.parent
@@ -89,79 +90,22 @@ def execute(filters=None):
                 LIMIT 1
             )
         WHERE
-            {filter_condition}
-        ORDER BY
-            invoice.customer, sub.name, invoice.name, item.item_name
+            {filter_condition} AND invoice.docstatus != 2
     """
 
     result = frappe.db.sql(query, as_dict=1)
     
-    previous_customer = None
-    previous_subscription = None
-    previous_invoice = None
-    
     for row in result:
-        if row['customer'] != previous_customer:
-            data.append({
-                "customer": row['customer'],
-                "unit_area": row['unit_area'],
-                "indent": 0,   
-                "group": 1  
-            })
-            previous_customer = row['customer']
-            previous_subscription = None
-            previous_invoice = None
-        
-        if row['subscription'] != previous_subscription:
-            data.append({
-                "subscription": row['subscription'],
-                "start_date": row['start_date'],
-                "end_date": row['end_date'],
-                "indent": 1,  
-                "group": 1  
-            })
-            previous_subscription = row['subscription']
-            previous_invoice = None
-        
-        if row['invoice_name'] != previous_invoice:
-            # get_updates_for_report(row['invoice_name'])
-            if row['docstatus'] != 2:
-                if not row['journal_entry'] : 
-                    
-                    dueDate = frappe.db.get_value("Sales Invoice", row['invoice_name'], 'due_date')
-                    payment_actual_due_date = frappe.db.get_value("Sales Invoice", row['invoice_name'], "payment_actual_due_date")
-                    if payment_actual_due_date:
-                        dueDate = payment_actual_due_date
-                    row['num_of_delay_days'] = date_diff(today(), dueDate)
+        if row['docstatus'] != 2 and not row['journal_entry']:   
+            dueDate = frappe.db.get_value("Sales Invoice", row['invoice_name'], 'due_date')
+            payment_actual_due_date = frappe.db.get_value("Sales Invoice", row['invoice_name'], "payment_actual_due_date")
+            if payment_actual_due_date:
+                dueDate = payment_actual_due_date
+            row['num_of_delay_days'] = date_diff(today(), dueDate)
+            row['deferred_revenue_amount'] =  (row['fine_percent'] or 0) * (row['num_of_delay_days']  or 0) * ( row['total'] or 0)
+            row['total_with_fine'] = row['deferred_revenue_amount'] + row['total']
 
-                    if not row['fine_percent']:
-                        row['fine_percent'] =  get_penalty(row['invoice_name'])
-
-                    row['deferred_revenue_amount'] =  row['fine_percent'] * row['num_of_delay_days'] * row['total']
-
-            data.append({
-                "invoice_name": row['invoice_name'],
-                "posting_date": row['posting_date'],
-                "due_date": row['due_date'],
-                "status": row['status'],
-                "total": row['total'],
-                "fine_percent": row['fine_percent'],
-                "num_of_delay_days": row['num_of_delay_days'],
-                "deferred_revenue_amount": row['deferred_revenue_amount'] ,
-                "total_with_fine": row['total'] + row['deferred_revenue_amount'] ,
-                "journal_entry": row['journal_entry'],
-                "journal_entry_date": row['journal_entry_date'],
-                "indent": 2,
-                "group": 1  
-            })
-            previous_invoice = row['invoice_name']
-        
-        # Add the subscription plan details under the invoice
-        data.append({
-            "item_name": row['item_name'],
-            "total": row['amount'],
-            "indent": 3    
-        })
+    data = result  
 
     return columns, data
 
