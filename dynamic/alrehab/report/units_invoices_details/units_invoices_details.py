@@ -23,12 +23,12 @@ def execute(filters=None):
         {"label": _("Subscription Plan"), "fieldname": "item_name", "fieldtype": "Link", "options": "Item", "width": 150},
         {"label": _("Amount"), "fieldname": "total", "fieldtype": "Currency", "width": 120},
         {"label": _("Status"), "fieldname": "status", "fieldtype": "Data", "width": 100},
-        {"label": _("Invoice Fine %"), "fieldname": "fine_percent", "fieldtype": "Float", "width": 120},
+        {"label": _("Penalty %"), "fieldname": "fine_percent", "fieldtype": "Float", "width": 120},
         {"label": _("Delay Days"), "fieldname": "num_of_delay_days", "fieldtype": "Int", "width": 120},
-        {"label": _("Invoice Fine Amount"), "fieldname": "deferred_revenue_amount", "fieldtype": "Currency", "width": 120},
-        {"label": _("Invoice Total Amount after Fine"), "fieldname": "total_with_fine", "fieldtype": "Currency", "width": 120},
-        {"label": _("Journal Entry"), "fieldname": "journal_entry", "fieldtype": "Link", "options": "Journal Entry", "width": 150},
-        {"label": _("Journal Entry Date"), "fieldname": "journal_entry_date", "fieldtype": "Date", "width": 100},
+        {"label": _("Penalty Amount"), "fieldname": "deferred_revenue_amount", "fieldtype": "Currency", "width": 120},
+        {"label": _("Total Amount after penalty"), "fieldname": "total_with_fine", "fieldtype": "Currency", "width": 120},
+        {"label": _("Penalty Journal"), "fieldname": "journal_entry", "fieldtype": "Link", "options": "Journal Entry", "width": 150},
+        {"label": _("Penalty Journal Date"), "fieldname": "journal_entry_date", "fieldtype": "Date", "width": 100},
     ]
 
     filters_conditions = [" 1 = 1 "]
