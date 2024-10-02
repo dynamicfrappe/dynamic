@@ -81,7 +81,7 @@ def _execute(
 			"invoice": d.parent,
 			"base_discount_amount": d.base_discount_amount,
 			"additional_discount_account": d.additional_discount_account,
-			"total_discount" : d.total_discount , 
+			"total_discount" : d.total_discount * d.qty, 
 			"gross_profit" : d.gross_profit ,
 			"posting_date": d.posting_date,
 			"customer": d.customer,
