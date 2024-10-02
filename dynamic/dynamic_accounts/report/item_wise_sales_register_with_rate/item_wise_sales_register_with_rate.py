@@ -82,7 +82,7 @@ def _execute(
 			"base_discount_amount": d.base_discount_amount,
 			"additional_discount_account": d.additional_discount_account,
 			"total_discount" : d.total_discount * d.qty, 
-			"gross_profit" : d.gross_profit ,
+			"gross_profit" : (d.base_net_amount + (d.total_discount * d.qty)) ,
 			"posting_date": d.posting_date,
 			"customer": d.customer,
 			"customer_name": customer_record.customer_name,
@@ -537,8 +537,8 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabSales Invoice Item`.stock_qty, `tabSales Invoice Item`.stock_uom,
 			`tabSales Invoice Item`.base_net_rate, 
 			COALESCE(`tabSales Invoice Item`.base_net_amount, 0) as base_net_amount ,
-			COALESCE(`tabSales Invoice Item`.base_net_amount, 0) + 
-			(COALESCE(`tabSales Invoice`.base_discount_amount, 0) + COALESCE(`tabSales Invoice Item`.`discount_amount`, 0)) as gross_profit ,
+			(`tabSales Invoice Item`.base_net_amount + 
+			(`tabSales Invoice`.base_discount_amount + `tabSales Invoice Item`.`discount_amount`)) as gross_profit ,
 			`tabSales Invoice`.customer_name, `tabSales Invoice`.customer_group, `tabSales Invoice Item`.so_detail,
 			`tabSales Invoice`.update_stock, `tabSales Invoice Item`.uom, `tabSales Invoice Item`.qty {0}
 			,`tabSales Invoice Item`.incoming_rate
