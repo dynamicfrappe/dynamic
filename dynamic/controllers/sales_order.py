@@ -126,7 +126,7 @@ def creation_of_reseration(self , *args , **kargs):
             log.company = self.company
             log.status = "Reserved"
             frappe.msgprint("Item Reservation")
-            log.insert()
+            log.insert(ignore_permissions=True)
             frappe.db.commit()
                 
 
