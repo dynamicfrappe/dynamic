@@ -53,7 +53,7 @@ def cencel_reservation(self , event):
             "voucher_detail_no" : item.name
             })
         doc.status = "Cancelled" 
-        doc.db_update()
+        doc.save(ignore_permissions=True)
 
 
 def item_discount_rate(self):
