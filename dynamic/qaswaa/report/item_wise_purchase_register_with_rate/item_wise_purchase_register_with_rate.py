@@ -71,6 +71,7 @@ def _execute(
 			"discount_account" : d.discount_account,
 			"description": d.description,
 			"invoice": d.parent,
+			"status":d.status,
 			"base_discount_amount": d.base_discount_amount,
 			"total_discount" : d.total_discount , 
 			"gross_profit" : d.gross_profit ,
@@ -189,7 +190,7 @@ def get_columns(additional_table_columns, filters):
 				},
 				{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 120},
 				{"label": _("Description"), "fieldname": "description", "fieldtype": "Data", "width": 150},
-				{"label": _("Discount Account"), "fieldname": "discount_account", "fieldtype": "Link", "options": "Account", "width": 150},
+				# {"label": _("Discount Account"), "fieldname": "discount_account", "fieldtype": "Link", "options": "Account", "width": 150},
 			
 				#
 			]
@@ -232,6 +233,12 @@ def get_columns(additional_table_columns, filters):
 			"fieldtype": "Link",
 			"options": "Purchase Invoice",
 			"width": 120,
+		},
+		{
+			"label": _("Status"),
+			"fieldname": "status",
+			"fieldtype": "Data",
+			"width": 120,
 		},	
 
 			
@@ -268,12 +275,12 @@ def get_columns(additional_table_columns, filters):
 	
 	columns.extend(
 		[
-			{
-			"label": _("Mode Of Payment"),
-			"fieldname": "mode_of_payment",
-			"fieldtype": "Data",
-			"width": 120,
-		},
+		# 	{
+		# 	"label": _("Mode Of Payment"),
+		# 	"fieldname": "mode_of_payment",
+		# 	"fieldtype": "Data",
+		# 	"width": 120,
+		# },
 		{
 			"label": _("Project"),
 			"fieldname": "project",
@@ -296,8 +303,8 @@ def get_columns(additional_table_columns, filters):
 			"options": "UOM",
 			"width": 100,
 		},
-		 {"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
-		 {"label": _("Total Cost"), "fieldname": "total_cost", "fieldtype": "Float", "width": 120},
+		#  {"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
+		#  {"label": _("Total Cost"), "fieldname": "total_cost", "fieldtype": "Float", "width": 120},
 		 {
 			"label": _("Purchase Rate"),
 			"fieldname": "rate",
@@ -319,20 +326,20 @@ def get_columns(additional_table_columns, filters):
 			"options": "currency",
 			"width": 100,
 		},
-		{
-			"label": _("Profit Rate"),
-			"fieldname": "profit_rate",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"label": _("Total Profit"),
-			"fieldname": "total_profit",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
+		# {
+		# 	"label": _("Profit Rate"),
+		# 	"fieldname": "profit_rate",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 100,
+		# },
+		# {
+		# 	"label": _("Total Profit"),
+		# 	"fieldname": "total_profit",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 100,
+		# },
 		{
 			"label": _("Total Tax"),
 			"fieldname": "total_tax",
@@ -373,13 +380,14 @@ def get_columns(additional_table_columns, filters):
 			"options": "currency",
 			"width": 120,
 		},
-		{
-			"label": _("Gross Profit"),
-			"fieldname": "gross_profit",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 120,
-		},			]
+		# {
+		# 	"label": _("Gross Profit"),
+		# 	"fieldname": "gross_profit",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 120,
+		# },			
+		]
 		)
 	if additional_table_columns:
 		columns += additional_table_columns
@@ -464,7 +472,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabPurchase Invoice`.is_internal_supplier,
     		COALESCE(`tabPurchase Invoice`.discount_amount, 0) as base_discount_amount,
     		(COALESCE(`tabPurchase Invoice`.discount_amount, 0) + COALESCE(`tabPurchase Invoice Item`.`discount_amount`, 0)) as total_discount ,
-			`tabPurchase Invoice`.project, `tabPurchase Invoice`.supplier, `tabPurchase Invoice`.remarks,
+			`tabPurchase Invoice`.project, `tabPurchase Invoice`.supplier, `tabPurchase Invoice`.remarks,`tabPurchase Invoice`.status,
 			`tabPurchase Invoice`.company, `tabPurchase Invoice`.base_net_total,
 			`tabPurchase Invoice Item`.item_code, `tabPurchase Invoice Item`.description,
 			`tabPurchase Invoice Item`.`item_name`, `tabPurchase Invoice Item`.`item_group`,

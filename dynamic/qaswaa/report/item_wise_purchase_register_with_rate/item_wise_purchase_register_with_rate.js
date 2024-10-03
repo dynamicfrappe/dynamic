@@ -61,11 +61,11 @@ frappe.query_reports["Item-Wise Purchase Register-With-Rate"] = {
 			"fieldtype": "Link",
 			"options": "Item"
 		},
-		{
-			"label": __("Group By"),
-			"fieldname": "group_by",
-			"fieldtype": "Select",
-			"options": ["", "Supplier", "Item Group", "Item", "Invoice"]
-		}
+		// {
+		// 	"label": __("Group By"),
+		// 	"fieldname": "group_by",
+		// 	"fieldtype": "Select",
+		// 	"options": ["", "Supplier", "Item Group", "Item", "Invoice"]
+		// }
 	],
 };
