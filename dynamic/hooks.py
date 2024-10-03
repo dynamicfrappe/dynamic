@@ -494,7 +494,7 @@ domains = {
     "Notebook": "dynamic.domains.notebook",
     "Smart Vision": "dynamic.domains.smart_vision",
     "Stock Reservation": "dynamic.domains.stock_reservation",
-    "Ram": "dynamic.domains.ram"
+    "Ram": "dynamic.domains.ram" , 
     "Pre Quotation": "dynamic.domains.pre_quotation",
     "Skyline": "dynamic.domains.skyline",
     "Healthy Corner":"dynamic.domains.healthy_corner",
