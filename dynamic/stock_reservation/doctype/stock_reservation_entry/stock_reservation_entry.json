@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "item_code",
+  "item_name",
   "warehouse",
   "has_serial_no",
   "has_batch_no",
@@ -44,6 +45,13 @@
    "options": "Item",
    "read_only": 1
   },
+  {
+    "fieldname": "item_name",
+    "fieldtype": "Data",
+    "label": "Item Name",
+    "fetch_from": "item_code.item_name",
+    "read_only": 1
+   },
   {
    "fieldname": "warehouse",
    "fieldtype": "Link",

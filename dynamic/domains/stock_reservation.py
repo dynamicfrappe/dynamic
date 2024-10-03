@@ -71,7 +71,6 @@ data = {
                 "description": "If checked, Stock will be reserved on <b>Submit</b>" , 
                 "allow_on_submit": 1
             },
-
             {
                 "label": "Reserved for warehouse",
                 "fieldname": "reserve_for_warehouse",
@@ -80,6 +79,15 @@ data = {
                 "read_only": 1 ,
                 "options":"Warehouse"
             },
+        ],
+        "Sales Order Item":[
+            {
+                "label": "Qty to reserve",
+                "fieldname": "qty_to_reserve",
+                "fieldtype": "Float",
+                "insert_after": "ensure_delivery_based_on_produced_serial_no",
+                "mandatory_depends_on": "eval:parent.reserve_stock==1 ;",
+            }
         ],
         "Stock Entry":[
             {

@@ -79,7 +79,8 @@ def update_reservation_qty(reserv_date):
 def get_avail_bin_qty(item_code,warehouse,in_qty):
     actual_qty = (get_stock_availability(item_code,warehouse)[0] or 0)
     if actual_qty + in_qty  > 1:
-        frappe.throw(_(f"Item Has QTY : {actual_qty} Cant't Be More Than 1 ."))
+        pass
+        # frappe.throw(_(f"Item Has QTY : {actual_qty} Cant't Be More Than 1 ."))
        
 # # for sales order --> get avail qty - reserved qty
 # def validate_avail_qty(voucher_type,voucher_no,item_code,warehouse,out_qty):

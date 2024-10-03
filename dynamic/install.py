@@ -66,11 +66,13 @@ def create_sales_invoice_script():
 		pass
 def after_install():
 	print("+dynamic")
+	print("Dynamic Business Solutions")
+	print("Dynamic Business Solutions")
 
 	create_currency_exchange_rate_script()
 	create_sales_invoice_script()
 	create_invoice_custom_field()
-	# create_domain_list()
+	create_domain_list()
 	# try:
 	# 	frappe.db.sql("""delete from tabWorkspace where name in ("HR","Loans","Payroll","Quality","Projects","Support")""")
 	# 	frappe.db.commit()
@@ -126,4 +128,32 @@ def create_domain_list():
 		dm1 = frappe.new_doc("Domain")
 		dm1.domain = 'IFI'
 		dm1.insert()
+	
+	if not frappe.db.exists("Domain", "Payment Deduction"):
+		dm1 = frappe.new_doc("Domain")
+		dm1.domain = 'Payment Deduction'
+		dm1.insert()
+	if not frappe.db.exists("Domain", "Pre Quotation"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'Pre Quotation'
+		pre.insert()
 
+	if not frappe.db.exists("Domain", "Healthy Corner"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'Healthy Corner'
+		pre.insert()	
+
+	if not frappe.db.exists("Domain", "Calculation Sheet"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'Calculation Sheet'
+		pre.insert()
+	
+	if not frappe.db.exists("Domain", "YT Minds"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'YT Minds'
+		pre.insert()
+
+	if not frappe.db.exists("Domain", "Top Laser"):
+		pre = frappe.new_doc("Domain")
+		pre.domain = 'Top Laser'
+		pre.insert()

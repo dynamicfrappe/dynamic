@@ -4,6 +4,21 @@ frappe.ui.form.on('Delivery Note', {
             frm.events.check_url(frm);
             console.log("hehehee");
     } ,
+	onload: function(frm) {
+		frappe.call({
+			method: "dynamic.api.get_active_domains", 
+			callback: function(r) {
+				if (r.message && r.message.includes("Qaswaa")) {
+					console.log("baio");
+					if (frm.doc.is_return == 1) {
+						console.log("ddds");
+						frm.set_df_property('sales_team', 'read_only', 1);
+						frm.refresh_field('sales_team'); 
+					}
+				}
+			}
+		});
+	},
        check_url: function (frm) {
         
             frappe.call({

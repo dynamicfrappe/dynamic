@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Purchases Analytics Customer"] = {
+frappe.query_reports["Purchase Analytics Supplier"] = {
 	"filters": [
 		{
 			"fieldname":"period_start_date",

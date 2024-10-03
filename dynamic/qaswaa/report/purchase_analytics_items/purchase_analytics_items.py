@@ -1,4 +1,4 @@
-# Copyright (c) 2023, Dynamic and contributors
+# Copyright (c) 2024, Dynamic and contributors
 # For license information, please see license.txt
 
 import frappe
@@ -11,11 +11,9 @@ from dynamic.future.financial_statements import (
 )
 from frappe.utils import getdate, cint, add_months, get_first_day, add_days
 
-
 def execute(filters=None):
     columns, data = get_columns(filters), get_data(filters)
     return columns, data
-
 
 def get_period_list(filters):
     period_start_date = filters.get("period_start_date")
@@ -41,14 +39,11 @@ def get_period_list(filters):
 
         start_date = to_date
 
-        # Subtract one day from to_date, as it may be first day in next fiscal year or month
         to_date = add_days(to_date, -1)
 
         if to_date <= year_end_date:
-            # the normal case
             period.to_date = to_date
         else:
-            # if a fiscal year ends before a 12 month period
             period.to_date = year_end_date
 
         period_list.append(period)
@@ -70,59 +65,60 @@ def get_period_list(filters):
 
     return period_list
 
-
 def get_data(filters):
-    sql = f'''
-        SELECT 
-            SI.supplier 
-        FROM 
-            `tabPurchase Invoice` SI 
-        INNER JOIN 
-            `tabPurchase Invoice Item` SII
-        ON 
-            SI.name = SII.parent
-        WHERE 
-            SI.docstatus = 1
-        GROUP BY 
-            SI.supplier  
-        '''
-    results = []
-    suppliers = frappe.db.sql(sql, as_dict=1)
+
     conditions = "1=1"
     if filters.get("cost_center"):
-        conditions += f" AND SI.cost_center = '{filters.get('cost_center')}'"
+        conditions += f" AND PI.cost_center = '{filters.get('cost_center')}'"
     if filters.get("warehouse"):
-        conditions += f" AND SI.set_warehouse = '{filters.get('warehouse')}'"
+        conditions += f" AND PI.set_warehouse = '{filters.get('warehouse')}'"
     if filters.get("supplier"):
         suppliers = [{"supplier": filters.get("supplier")}]
-        conditions += f" AND SI.supplier = '{filters.get('supplier')}'"
+        conditions += f" AND PI.supplier = '{filters.get('supplier')}'"
     if filters.get("item_group"):
-        conditions += f" AND SII.item_group = '{filters.get('item_group')}'"
+        conditions += f" AND PII.item_group = '{filters.get('item_group')}'"
     if filters.get("item_code"):
-        conditions += f" AND SII.item_code = '{filters.get('item_code')}'"
+        conditions += f" AND PII.item_code = '{filters.get('item_code')}'"
+
+    sql = f'''
+        SELECT 
+			distinct PII.item_code , PII.item_name
+        FROM 
+            `tabPurchase Invoice` PI 
+        INNER JOIN 
+            `tabPurchase Invoice Item` PII
+        ON 
+            PI.name = PII.parent
+        WHERE 
+            {conditions} AND PI.docstatus = 1
+        '''
+    results = []
+    items = frappe.db.sql(sql, as_dict=1)
+
 
     period_list = get_period_list(filters)
 
-    for supplier in suppliers:
-        supplier = supplier["supplier"]
-        dict_result = {"supplier": supplier}
-
+    for item in items:
+        item_code = item["item_code"]
+        dict_result = {}
+        dict_result["item_code"] = item["item_code"]
+        dict_result["item_name"] = item["item_name"]
         for period in period_list:
             ss = f'''
                 SELECT 
-                    SUM(SI.net_total) as {period.key}
+                    SUM(PII.net_amount) as {period.key}
                 FROM 
-                    `tabPurchase Invoice` SI 
+                    `tabPurchase Invoice` PI 
                 INNER JOIN 
-                    `tabPurchase Invoice Item` SII
+                    `tabPurchase Invoice Item` PII
                 ON 
-                    SI.name = SII.parent
+                    PI.name = PII.parent
                 WHERE
                     {conditions} AND
-                    SI.docstatus = 1 AND
-                    SI.supplier = '{supplier}' AND 
-                    SI.posting_date >= '{period.from_date}' AND 
-                    SI.posting_date <= '{period.to_date}'
+                    PI.docstatus = 1 AND
+                    PII.item_code = '{item_code}' AND 
+                    PI.posting_date >= '{period.from_date}' AND 
+                    PI.posting_date <= '{period.to_date}'
                 '''
             data = frappe.db.sql(ss, as_dict=1)
             dict_result[period.key] = data[0][period.key]
@@ -130,8 +126,8 @@ def get_data(filters):
         results.append(dict_result)
 
     for record in results:
-        total_sales = sum(value for value in record.values() if isinstance(value, (int, float)))
-        record['total'] = total_sales
+        total_purchases = sum(value for value in record.values() if isinstance(value, (int, float)))
+        record['total'] = total_purchases
 
     return results
 
@@ -140,10 +136,16 @@ def get_columns(filters):
     period_list = get_period_list(filters)
     columns = [
         {
-            "fieldname": "supplier",
-            "label": _("Supplier"),
+            "fieldname": "item_code",
+            "label": _("Item"),
             "fieldtype": "Link",
-            "options": "Supplier",
+            "options": "Item",
+            "width": 300,
+        },
+		{
+            "fieldname": "item_name",
+            "label": _("Item Name"),
+            "fieldtype": "Data",
             "width": 300,
         },
     ]

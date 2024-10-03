@@ -11,6 +11,7 @@ def execute(filters=None):
 
 def get_data(filters):
     conditions = []
+	
 
     if filters.get("start_date"):
         conditions.append(['posting_date', '>=', filters.get("start_date")])
@@ -27,10 +28,13 @@ def get_data(filters):
     if filters.get("sales_partner"):
         conditions.append(['sales_partner', '=', filters.get("sales_partner")])
     if filters.get("is_return") and filters.get("is_return") == 1:
-        conditions.append(['status', '=', 'Return'])   
-    conditions.append(['docstatus', '!=', 2])
-    conditions.append(['status', '!=', 'Return'])        
-    
+        conditions.append(['name', 'in', frappe.db.sql_list("""
+            SELECT DISTINCT return_against
+            FROM `tabSales Invoice`
+            WHERE is_return = 1
+        """)])
+          
+    conditions.append(['status', 'not in', ['Draft', 'Cancelled','Return']])
     result = []
     sales_invoices = frappe.get_all("Sales Invoice", fields=["posting_date", "name", "set_warehouse", "customer",
                                                              "net_total", "base_total_taxes_and_charges",
@@ -38,8 +42,17 @@ def get_data(filters):
                                     filters=conditions)
 
     for doc in sales_invoices:
-        num = frappe.db.get_value("Sales Invoice", {"is_return": 1, "return_against": doc.name}, 'base_grand_total') or 0
-        
+        num = frappe.db.sql("""
+            SELECT SUM(base_grand_total)
+            FROM `tabSales Invoice`
+            WHERE is_return = 1 AND return_against = %s
+        """, doc.name)[0][0] or 0
+        num2_values = frappe.db.sql_list("""
+            SELECT name
+            FROM `tabSales Invoice`
+            WHERE is_return = 1 AND return_against = %s AND docstatus != 2  AND docstatus != 0
+        """, doc.name)
+        num2 = ', '.join(num2_values) if num2_values else ''
         total_advance = frappe.db.get_value("Payment Entry Reference",
                                              {"reference_name": doc.name, "reference_doctype": "Sales Invoice"},
                                              "allocated_amount") or 0
@@ -55,10 +68,15 @@ def get_data(filters):
         temp['total_advance'] = total_advance
         temp['refund'] = num if num else 0
         temp['diff'] = doc.outstanding_amount
-        temp['return_agent'] = doc.return_against
+        temp['return_agent'] = num2
         
         result.append(temp)
 
+    if filters.get("value") and filters.get("operation"):
+        if filters.get("operation") == '<':
+            result = [entry for entry in result if 'diff' in entry and entry['diff'] < float(filters.get('value'))]
+        if filters.get("operation") == '>':
+            result = [entry for entry in result if 'diff' in entry and entry['diff'] > float(filters.get('value'))]
     return result
 
 
@@ -80,11 +98,11 @@ def get_columns(filters):
 			"width": 200,
 		},
         {
-			"fieldname": "return_agent",
-			"label": _("Return Agent"),
-			"fieldtype": "Data",
-			"width": 200,
-		}, 
+            "fieldname": "return_agent",
+            "label": _("Return Agent"),
+            "fieldtype": "Data",
+            "width": 200,
+        },
 		{
 			"fieldname": "warehouse",
 			"label": _("Warehouse"),

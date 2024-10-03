@@ -10,7 +10,7 @@ def get_report_summary(data):
     if not data:
         return None
 
-    total_rate = round(sum([float(row.get("rate") or 0) for  row in data]),2)
+    total_rate = round(sum([float(row.get("selling_price_per_qty") or 0) for  row in data]),2)
     total_purchase = round(sum([float(row.get("total_purchase") or 0) for  row in data]),2)
     total_variance  = round(sum([float(row.get("total_variance") or 0) for  row in data]),2)
     ratio = calc_ratio(total_purchase, total_variance)
@@ -69,6 +69,7 @@ def get_data(filters):
         conditions += f" AND sd.cost_center = '{filters.get('cost_center')}'"
     if filters.get("sales_person"):
         conditions += f" AND sii_sp.sales_person = '{filters.get('sales_person')}'"
+    conditions += " AND sd.status NOT IN ('Draft', 'Cancelled')"    
 
     sql = f'''
         SELECT 
@@ -77,14 +78,8 @@ def get_data(filters):
             item.item_name,
             item.qty,
             item.rate,
-            (
-                SELECT pii.rate
-                FROM `tabPurchase Invoice` pi
-                INNER JOIN `tabPurchase Invoice Item` pii ON pii.parent = pi.name
-                WHERE pii.item_code = item.item_code
-                ORDER BY pi.creation DESC
-                LIMIT 1
-            ) AS purchase_invoice_rate,
+            item.rate * item.qty AS selling_price_per_qty,
+            sle.incoming_rate AS purchase_invoice_rate,
             item.qty * (
                 SELECT pii.rate
                 FROM `tabPurchase Invoice` pi
@@ -162,6 +157,8 @@ def get_data(filters):
             `tabSales Invoice Item` item ON item.parent = sd.name
         LEFT JOIN
             `tabSales Team` sii_sp ON sd.name = sii_sp.parent 
+        LEFT JOIN
+            `tabStock Ledger Entry` sle ON sle.item_code = item.item_code 
         WHERE {conditions}
     '''
     data = frappe.db.sql(sql, as_dict=True)
@@ -205,6 +202,12 @@ def get_columns():
         {
             "fieldname": "rate",
             "label": _("Selling price Rate"),
+            "fieldtype": "Currency",
+            "width": 100
+        },
+        {
+            "fieldname": "selling_price_per_qty",
+            "label": _("Selling Price Per Qty"),
             "fieldtype": "Currency",
             "width": 100
         },

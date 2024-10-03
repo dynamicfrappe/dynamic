@@ -99,6 +99,9 @@ def execute(filters=None):
 
 
 	data = get_item_price_and_total_reservation(data)
+	for row in data :
+		row["bal_rev"] = (float(row["item_price"]) if row["item_price"] is not None else 0) * (float(row["bal_qty"]) if row["bal_qty"] is not None else 0)
+
 
 
 	# temp = [{
@@ -156,6 +159,13 @@ def get_columns(filters):
 		},
 		{"label": _("Item Name"), "fieldname": "item_name", "width": 150},
 		{
+			"label": _("Brand"),
+			"fieldname": "brand",
+			"fieldtype": "Link",
+			"options": "Brand",
+			"width": 100,
+		},
+		{
 			"label": _("Item Group"),
 			"fieldname": "item_group",
 			"fieldtype": "Link",
@@ -165,7 +175,7 @@ def get_columns(filters):
 		{
 			"label": _("Item Price"),
 			"fieldname": "item_price",
-			"fieldtype": "Data",
+			"fieldtype": "Float",
 			"options": "Item Price",
 			"width": 100,
 		},
@@ -177,41 +187,13 @@ def get_columns(filters):
 			"width": 100,
 		},
 		{
-			"label": _("Total Reserved Qty"),
-			"fieldname": "total_reservation_qty",
-			"fieldtype": "Data",
-			"options": "Total Reserved Qty",
-			"width": 100,
-		},
-		{
-			"label": _("Available Qty "),
-			"fieldname": "available_qty",
-			"fieldtype": "Data",
-			"width": 100,
-		},
-		
-		{
 			"label": _("Stock UOM"),
 			"fieldname": "stock_uom",
 			"fieldtype": "Link",
 			"options": "UOM",
 			"width": 90,
 		},
-		{
-			"label": _("Balance Qty"),
-			"fieldname": "bal_qty",
-			"fieldtype": "Float",
-			"width": 100,
-			"convertible": "qty",
-		},
-		{
-			"label": _("Balance Value"),
-			"fieldname": "bal_val",
-			"fieldtype": "Currency",
-			"width": 100,
-			"options": "currency",
-		},
-		{
+				{
 			"label": _("Opening Qty"),
 			"fieldname": "opening_qty",
 			"fieldtype": "Float",
@@ -241,6 +223,41 @@ def get_columns(filters):
 			"convertible": "qty",
 		},
 		{"label": _("Out Value"), "fieldname": "out_val", "fieldtype": "Float", "width": 80},
+		{
+			"label": _("Available Qty "),
+			"fieldname": "available_qty",
+			"fieldtype": "Data",
+			"width": 100,
+		},
+		{
+			"label": _("Total Reserved Qty"),
+			"fieldname": "total_reservation_qty",
+			"fieldtype": "Data",
+			"options": "Total Reserved Qty",
+			"width": 100,
+		},
+
+		{
+			"label": _("Balance Qty"),
+			"fieldname": "bal_qty",
+			"fieldtype": "Float",
+			"width": 100,
+			"convertible": "qty",
+		},
+		{
+			"label": _("Balance Revenue"),
+			"fieldname": "bal_rev",
+			"fieldtype": "Float",
+			"width": 100,
+			"convertible": "qty",
+		},
+		{
+			"label": _("Balance Value"),
+			"fieldname": "bal_val",
+			"fieldtype": "Currency",
+			"width": 100,
+			"options": "currency",
+		},
 		{
 			"label": _("Valuation Rate"),
 			"fieldname": "val_rate",

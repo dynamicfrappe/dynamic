@@ -560,14 +560,18 @@ def check_source_item(self, *args, **kwargs):
 	if "IFI" in DOMAINS:
 		# print('\n\n\n-->in reconslation**')
 		update_against_document_in_jv(self)
-	if "Real State" in DOMAINS:
+	if "Dynamic Accounts" in DOMAINS:
 		meta = frappe.get_meta(self.doctype)
 		if meta.has_field("outstanding_amount"):
-			if len(self.get("advancess")):
+			advances = self.get("advancess") or []
+			if advances:
 				total_advance_paid = sum(
 					adv.advance_amount for adv in self.get("advancess")
 				)
+				self.db_set("advance_paid", total_advance_paid)
 				self.db_set("outstanding_amount", self.grand_total - total_advance_paid)
+			else:
+				self.db_set("outstanding_amount", self.grand_total)
 
 
 def set_advance_paid(self):
@@ -1498,14 +1502,43 @@ def before_submit_quot(doc, *args, **kwargs):
 
 def before_save_quotation(doc, *args, **kwargs):
 	if "Real State" in DOMAINS:
+		reserve_unit(doc)
+		
+		
+	if "Dynamic Accounts" in DOMAINS:
 		meta = frappe.get_meta(doc.doctype)
 		if meta.has_field("outstanding_amount"):
 			if len(doc.get("advancess")):
 				total_advance_paid = sum(
 					adv.advance_amount for adv in doc.get("advancess")
 				)
+				doc.db_set("advance_paid", total_advance_paid)
 				doc.db_set("outstanding_amount", doc.grand_total - total_advance_paid)
 
+
+
+def on_cencel(self , *args, **kwargs ):
+	if "Real State" in DOMAINS:
+		cencel_reserve_unit(self)
+
+
+@frappe.whitelist()
+def cencel_reserve_unit(self):
+	items = self.get('items')
+	for item in items:
+		item_obj = frappe.get_doc("Item" , item.item_code)
+		item_obj.reserved = 0
+		item_obj.save()
+
+
+@frappe.whitelist()
+def reserve_unit(self):
+	items = self.get('items')
+	for item in items:
+		item_obj = frappe.get_doc("Item" , item.item_code)
+		item_obj.reserved = 1
+		item_obj.save()
+	
 
 @frappe.whitelist()
 def add_crean_in_taxes(doc, *args, **kwargs):
@@ -1910,6 +1943,21 @@ def get_taxes_amount(item_tax_template):
 		amount = amount + tax.tax_rate
 	return amount
 
+@frappe.whitelist()
+def get_total_discount_and_amount(doc_type, voucher_name):
+	total = [0, 0.0]
+	for item in frappe.get_doc(doc_type, voucher_name).items:
+		total[1] += (item.discount_amount * item.qty)
+		total[0] += 1
+	return total
+
+@frappe.whitelist()
+def get_total_num_and_qty(doc_type, doc_name):
+	total = [0, 0]
+	for item in frappe.get_doc(doc_type, doc_name).items:
+		total[1] += item.qty
+		total[0] += 1
+	return total
 
 @frappe.whitelist()
 def get_customer_branches(customer):

@@ -1,0 +1,136 @@
+{
+ "cards_label": "",
+ "category": "Modules",
+ "charts": [],
+ "creation": "2024-08-06 09:17:40.910841",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 1,
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "EL Rehab",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0627\u0644\u063a\u0631\u0627\u0645\u0627\u062a",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0642\u0627\u0644\u0628 \u0627\u0644\u063a\u0631\u0627\u0645\u0627\u062a ",
+   "link_to": "Financial penalty template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u062a\u0635\u0645\u064a\u0645 \u0627\u0644\u0627\u0642\u0633\u0627\u0637",
+   "link_to": "installment Entry Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0627\u0644\u062d\u0631\u0643\u0627\u062a",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0627\u0644\u0639\u0642\u0648\u062f",
+   "link_to": "Rehab Contract",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0627\u0639\u062f\u0627\u062f\u0627\u062a \u062f\u0641\u0639\u0627\u062a \u0627\u0644\u0635\u064a\u0627\u0646\u0629 ",
+   "link_to": "Maintenance deposit Setting",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u062f\u0641\u0639\u0627\u062a \u0627\u0644\u0635\u064a\u0627\u0646\u0629 ",
+   "link_to": "Maintenance deposit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0648\u062f\u0627\u0626\u0639 \u0627\u0644\u0635\u064a\u0627\u0646\u0629 ",
+   "link_to": "Maintenance deposit Calculation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u0627\u0642\u0633\u0627\u0637 ",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u062f\u0641\u0639\u0627\u062a \u0627\u0644\u0627\u0642\u0633\u0627\u0637",
+   "link_to": "Installment Payments",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0642\u0633\u0637 X",
+   "link_to": "Journal installment",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2024-08-26 12:00:37.690273",
+ "modified_by": "Administrator",
+ "module": "AlRehab",
+ "name": "EL Rehab",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "restrict_to_domain": "Rehab",
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "\u0627\u0644\u0645\u0627\u0644\u0643",
+   "link_to": "Owner",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "\u0645\u0627\u0644\u0643 \u0627\u0644\u0648\u062d\u062f\u0629 ",
+   "link_to": "Customer",
+   "type": "DocType"
+  }
+ ]
+}

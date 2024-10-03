@@ -62,6 +62,23 @@ frappe.ui.form.on("Lead", {
                             
                             )
                     }
+                    if(r.message.includes("True lease")) {
+                        frm.add_custom_button(
+                            __("Action"),
+                            function () {
+                                frappe.model.open_mapped_doc({
+                                    method:
+                                        "dynamic.terra.api.create_action_doc",
+                                    frm: frm,
+                                    args: {
+                                        doctype: frm.doc.doctype,
+                                    }
+                                });
+
+                            },
+                            __("Create")
+                        );
+                    }
                     if (r.message.includes("Terra") || r.message.includes("Elevana") || r.message.includes("CRM Advance")) {
                         frm.add_custom_button(
                             __("Action"),

@@ -3,6 +3,7 @@ from frappe import _
 from frappe.utils import  getdate
 from frappe.utils import add_days, add_months, cint, cstr, flt, formatdate, get_first_day, getdate
 from dynamic.future.financial_statements import validate_dates 
+from frappe.utils import flt
 
 import math
 import re
@@ -42,7 +43,7 @@ def get_data(filters =None):
    cost_centers = frappe.db.sql(""" 
    SELECT  a.cost_center  as cost_center  
    FROM `tabSales Invoice` a 
-   WHERE a.docstatus != 2 
+   WHERE a.docstatus != 2 and a.cost_center != ""
    GROUP BY cost_center
    """,as_dict=1)
 
@@ -60,26 +61,36 @@ def get_data(filters =None):
         
    if filters.get("item_group") :
         condetions = condetions + f""" a.item_group = '{filters.get("item_group")}' AND"""  
+   if filters.get("sales_person") :
+        condetions += f""" c.sales_person = '{filters.get('sales_person')}' AND"""
 
    period_list = get_period_list(filters=filters)
    for cost in cost_centers :
       center ={"cost_center" : cost.get('cost_center')}
       for month in period_list :
-         fil = frappe.db.sql(f""" SELECT  SUM(net_total) as {month.get('key')} FROM 
+         fil = frappe.db.sql(f""" SELECT DISTINCT b.name ,c.sales_person FROM 
              `tabSales Invoice Item`  a 
               INNER JOIN `tabSales Invoice` b 
               ON a.parent = b.name 
+              INNER JOIN `tabSales Team` c
+              ON c.parent = b.name
               WHERE 
               b.docstatus != 2 and
               b.cost_center = '{cost.get('cost_center')}' AND {condetions}
-              b.posting_date > date('{month.get('from_date')}') AND b.posting_date < date('{month.get('to_date')}')
+              b.posting_date >= date('{month.get('from_date')}') AND b.posting_date <= date('{month.get('to_date')}')
               """ ,as_dict=1)
-         center[month.get('key')] = float (fil[0].get(month.get('key'))  or 0 )
+         total = 0
+         for r in fil:
+            invoice_doc = frappe.get_doc("Sales Invoice", r['name'])
+            total += flt(invoice_doc.net_total or 0)
+         center[month.get('key')] = total
+         center["sales_person"] = fil[0]['sales_person'] if fil else None
       data.append(center)
-      for record in data:
-          total_sales = sum(value for value in record.values() if isinstance(value, (int, float)))
-          record['total'] = total_sales
+   for record in data:
+      total_sales = sum(value for value in record.values() if isinstance(value, (int, float)))
+      record['total'] = total_sales
    return data
+
 def get_columns(filters):
     period_list = get_period_list(filters=filters)
     columns = [
@@ -102,7 +113,6 @@ def get_columns(filters):
                 "width": 150,
             }
         )
-
     columns.append(
         {
             "fieldname": "total",
@@ -113,7 +123,17 @@ def get_columns(filters):
         }
     )
 
+#     columns.append(
+#          {
+#             "fieldname": "sales_person",
+#             "label": "Sales Person",
+#             "fieldtype": "Data",
+#             "width": 150,
+#         }
+#     )
+
     return columns
+
 
 
 def get_period_list(filters):

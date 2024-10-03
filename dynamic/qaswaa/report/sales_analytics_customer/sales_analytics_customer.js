@@ -53,6 +53,13 @@ frappe.query_reports["Sales Analytics Customer"] = {
 			"fieldtype": "Link",
 			"options" : "Item",
 			// "reqd": 1,
-		}
+		},
+		{
+			"fieldname": "sales_person",
+            "label": __("Sales Person"),
+            "fieldtype": "Link",
+            "options": "Sales Person",
+            "reqd": 0
+		},
 	]
 };

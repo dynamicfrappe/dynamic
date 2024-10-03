@@ -124,6 +124,13 @@ def validate_item_code(doc, *args, **kwargs):
 #             doc.db_set("barcode_second", doc.barcodes[0].get("barcode"))
 #             doc.db_set("item_barcode_second", doc.barcodes[0].get("barcode"))
 
+@frappe.whitelist()
+def after_insert_journal_entry(doc, *args, **kwargs):
+    doc_asset = frappe.get_doc("Asset", doc)
+    cnt = sum(1 for schedule in doc_asset.schedules if schedule.journal_entry)
+    doc_asset.num_journal_entry = cnt
+    doc_asset.save(ignore_permissions=True)
+    return cnt
 
 @frappe.whitelist()
 def after_insert_variant_item(doc, *args, **kwargs):

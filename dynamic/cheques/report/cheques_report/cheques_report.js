@@ -30,12 +30,22 @@ frappe.query_reports["Cheques Report"] = {
     },
     {
       fieldname: "from_date",
-      label: __("From Date"),
+      label: __("From Transaction Date"),
       fieldtype: "Date",
     },
     {
       fieldname: "to_date",
-      label: __("To Date"),
+      label: __("To Transaction Date"),
+      fieldtype: "Date",
+    },
+    {
+      fieldname: "from_date_ref",
+      label: __("From Due Date"),
+      fieldtype: "Date",
+    },
+    {
+      fieldname: "to_date_ref",
+      label: __("To Due Date"),
       fieldtype: "Date",
     },
     {

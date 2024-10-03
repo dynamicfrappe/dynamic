@@ -32,7 +32,7 @@ def get_conditions(filters):
     if filters.get("cost_center"):
         conditions += f" and Q.cost_center = '{filters.get('cost_center')}' "
     if filters.get("warehouse"):
-        conditions += f" and QI.warehouse = '{filters.get('warehouse')}' "
+        conditions += f" and Q.warehouse = '{filters.get('warehouse')}' "
     if filters.get("sales_person"):
         conditions += f" and ST.sales_person = '{filters.get('sales_person')}' "
     return conditions
@@ -79,7 +79,7 @@ def get_data(relevant_warehouses, filters=None):
         
     sql = f'''
             SELECT
-                Q.name As quotation, QI.item_code , QI.item_name, QI.qty, QI.warehouse
+                Q.name As quotation, QI.item_code , QI.item_name, QI.qty, Q.warehouse , Q.cost_center
             FROM 
                 `tabQuotation` Q
             INNER JOIN 
@@ -105,7 +105,8 @@ def get_data(relevant_warehouses, filters=None):
             "item_code": item.item_code,
             "item_name": item.item_name,
             "qty": item.qty,
-            "warehouse": item.warehouse
+            "warehouse": item.warehouse,
+            'cost_center':item.cost_center
         }
         balance = frappe.db.get_value("Bin", {"item_code": item.item_code, "warehouse": item.warehouse}, "actual_qty")
         row["balance"] = balance if balance else 0
@@ -152,6 +153,13 @@ def get_columns(relevant_warehouses, filters=None):
             "label": _("Warehouse"),
             "fieldtype": "Link",
             "options": "Warehouse",
+            "width": 200,
+        },
+        {
+            "fieldname": "cost_center",
+            "label": _("Cost Center"),
+            "fieldtype": "Link",
+            "options": "Cost Center",
             "width": 200,
         },
         {

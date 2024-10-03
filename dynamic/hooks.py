@@ -54,6 +54,7 @@ doctype_calendar_js = {
 doctype_list_js = {
     "Customer": "public/js/customer_list.js",
     "Quotation": "public/js/quotation_list.js",
+    "Subscription": "public/js/subscription_list.js",
 }
 
 after_install = [
@@ -66,6 +67,7 @@ after_migrate = [
     "dynamic.dynamic.utils.create_customizations",
     "dynamic.stock_reservation.setup.setup",
     "dynamic.ram.controllers.setup.create_domain",
+    "dynamic.true_lease.controllers.setup.create_domain"
 ]
 # Desk Notifications
 # ------------------
@@ -78,7 +80,8 @@ override_doctype_class = {
     "Salary Slip": "dynamic.override_doctype_class.SalarySlip",
     "Sales Invoice": "dynamic.override_doctype_class.SalesInvoice",
     "Customer": "dynamic.teba.doctype.customer.CustomerController",
-    "Stock Entry": "dynamic.override_doctype_class.StockEntry"
+    "Stock Entry": "dynamic.override_doctype_class.StockEntry",
+    "Subscription": "dynamic.override_doctype_class.Subscription"
     # "Lead" : "dynamic.override_doctype_class.Lead"
     # "Delivery Note": "dynamic.gebco.doctype.sales_invocie.deleivery_note.DeliveryNote"
     # "Sales Order": "dynamic.terra.sales_order"
@@ -120,6 +123,9 @@ doctype_js = {
     "Journal Entry": "public/js/journal_entry.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Payment Terms Template": "public/js/payment_terms_template.js",
+    "Asset": "public/js/asset.js",
+    "Actions": "public/js/actions.js",
+    "Subscription": "public/js/subscription.js"
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 }
@@ -146,6 +152,9 @@ doctype_js = {
 # print("doctype_js ===========> " , doctype_js.get("Payment Entry"))
 
 doc_events = {
+    "Batch":{
+        "before_insert":"dynamic.controllers.batch.befor_naming",
+    },
     "Payment Entry": {
         "on_submit": "dynamic.api.submit_payment",
     },
@@ -162,6 +171,7 @@ doc_events = {
             "dynamic.controllers.sales_invoice.after_submit",
             
         ],
+        # "before_save":"dynamic.controllers.sales_invoice.before_save",
         "on_cancel": [
             "dynamic.api.invoice_on_cancel",
             "dynamic.controllers.sales_invoice.after_cancel",
@@ -242,12 +252,14 @@ doc_events = {
         "validate": "dynamic.api.onsave_material_request",
         "before_save":[
             "dynamic.controllers.stock_entry.update_target_warehouse"
-        ]
+        ],
+        "on_cancel" :"dynamic.controllers.material_request.on_cancel"
     },
     "Landed Cost Voucher": {
         "validate": "dynamic.dynamic.validation.validate_landed_cost"
     },
     "Purchase Invoice": {
+        "validate":"dynamic.yt_minds.controllers.purchase_invoice.validate",
         "on_submit": "dynamic.api.submit_purchase_invoice",
         "before_submit": [
             "dynamic.api.check_crean_amount_after_mapped_doc",
@@ -287,14 +299,19 @@ doc_events = {
     "Item Price": {"before_save": "dynamic.ifi.api.check_buying_price"},
     "Quotation": {
         # "after_insert":"dynamic.ifi.api.quotation_send_email_cc",
+        "validate":"dynamic.qaswaa.controllers.quotation.validate",
         "before_submit": "dynamic.api.before_submit_quot",
         "before_save": "dynamic.api.before_save_quotation",
+        "on_cancel" :"dynamic.api.on_cencel" ,
+        "validate":"dynamic.yt_minds.controllers.quotation.validate",
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
+        "validate":"dynamic.qaswaa.controllers.purchase_order.validate",
         "before_submit": "dynamic.api.before_submit_po",
         "after_inser": "dynamic.api.calculate_orderd_qty",
         "on_submit": "dynamic.api.calculate_orderd_qty",
+        "validate":"dynamic.yt_minds.controllers.purchase_order.validate",
     },
     # "Appointment" :{
     #     "validate":"dynamic.api.appointment_validate"
@@ -421,6 +438,8 @@ override_doctype_dashboards = {
     "Job Card": "dynamic.public.dashboard.job_card.get_data",
     "Opportunity": "dynamic.public.dashboard.opportunity_dashboard.get_data",
     "Customer": "dynamic.public.dashboard.customer_dashboard.get_data",
+    "Subscription": "dynamic.public.dashboard.subscription_dashboard.get_data",
+
 }
 
 # exempt linked doctypes from being automatically cancelled
@@ -475,8 +494,15 @@ domains = {
     "Notebook": "dynamic.domains.notebook",
     "Smart Vision": "dynamic.domains.smart_vision",
     "Stock Reservation": "dynamic.domains.stock_reservation",
-    "Skyline": "dynamic.domains.skyline",
     "Ram": "dynamic.domains.ram"
+    "Pre Quotation": "dynamic.domains.pre_quotation",
+    "Skyline": "dynamic.domains.skyline",
+    "Healthy Corner":"dynamic.domains.healthy_corner",
+    "Payment Deduction": "dynamic.domains.payment_deduction",
+    "True lease": "dynamic.domains.truelease",
+    "Calculation Sheet":"dynamic.domains.calculation_sheet",
+    "YT Minds":"dynamic.domains.yt_minds",
+    "Top Laser":"dynamic.domains.toplaser",
 }
 
 # domain Conatin
@@ -491,6 +517,8 @@ jenv = {
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_item_data:dynamic.www.item_data.encode_item_data",
+        "get_total_discount_and_amount:dynamic.api.get_total_discount_and_amount",
+        "get_total_num_and_qty:dynamic.api.get_total_num_and_qty",
         # "test_encode_item_data:dynamic.www.item_data.test_encode_item_data",
         "encode_invoice_data:dynamic.api.encode_invoice_data",
         "get_company_address:frappe.contacts.doctype.address.address.get_company_address",

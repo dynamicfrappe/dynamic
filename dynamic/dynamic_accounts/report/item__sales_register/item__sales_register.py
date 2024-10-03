@@ -76,6 +76,8 @@ def _execute(
 			"customer_group": customer_record.customer_group,
 			"uom": d.uom,
 			"qty": d.qty,
+			"weight_per_unit" :d.weight_per_unit ,
+			"qty_with_weight" : d.qty * d.weight_per_unit 
 		}
 
 		if additional_query_columns:
@@ -355,6 +357,18 @@ def get_columns(additional_table_columns, filters):
 			"fieldtype": "Flaot",
 			"width": 100,
 		},
+		{
+			"label": _("Weight PUniter Unit"),
+			"fieldname": "weight_per_unit",
+			"fieldtype": "Flaot",
+			"width": 100,
+		},
+		{
+			"label": _("QTY With Weight"),
+			"fieldname": "qty_with_weight",
+			"fieldtype": "Flaot",
+			"width": 100,
+		},
 	    {
 			"label": _("Discount Amount"),
 			"fieldname": "discount_amount",
@@ -458,7 +472,7 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 			`tabSales Invoice Item`.base_net_rate, `tabSales Invoice Item`.base_net_amount,
 			`tabSales Invoice`.customer_name, `tabSales Invoice`.customer_group, `tabSales Invoice Item`.so_detail,
 			`tabSales Invoice Item`.conversion_factor,
-			`tabSales Invoice Item`.qty,
+			`tabSales Invoice Item`.qty, `tabSales Invoice Item`.weight_per_unit,
 			`tabSales Invoice`.update_stock, `tabSales Invoice Item`.uom, `tabSales Invoice Item`.qty
 			{0}
 		FROM `tabSales Invoice`

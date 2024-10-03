@@ -10,40 +10,22 @@ def execute(filters=None):
 	return columns, data
 def get_data(filters):
     conditions = " 1=1"
-    sql_join = ""
     if filters.get("customer"):
-        conditions += f" AND sd.customer = '{filters.get('customer')}'"
+        conditions += f""" AND sd.customer = '{filters.get("customer")}'"""
     if filters.get("driver"):
-        conditions += f" AND sd.driver = '{filters.get('driver')}'"        
+        conditions += f""" AND sd.driver = '{filters.get("driver")}'"""
     if filters.get("cost_center"):
-        sql_join += """
-            INNER JOIN `tabSales Invoice` si_cc ON sd.invoice_name = si_cc.name
-            INNER JOIN `tabSales Invoice Item` sii_cc ON si_cc.name = sii_cc.parent
-        """
-        conditions += f" AND sii_cc.cost_center = '{filters.get('cost_center')}'"
+        conditions += f""" AND si.cost_center = '{filters.get("cost_center")}'"""
     if filters.get("warehouse"):
-        sql_join += """
-            INNER JOIN `tabSales Invoice` si_wh ON sd.invoice_name = si_wh.name
-            INNER JOIN `tabSales Invoice Item` sii_wh ON si_wh.name = sii_wh.parent
-        """
-        conditions += f" AND sii_wh.warehouse = '{filters.get('warehouse')}'"
+        conditions += f""" AND sii.warehouse = '{filters.get("warehouse")}'"""
     if filters.get("sales_person"):
-        sql_join += """
-            INNER JOIN `tabSales Invoice` si_sp ON sd.invoice_name = si_sp.name
-            INNER JOIN `tabSales Team` sii_sp ON si_sp.name = sii_sp.parent
-        """
-        conditions += f" AND sii_sp.sales_person = '{filters.get('sales_person')}'"
+        conditions += f""" AND st.sales_person = '{filters.get("sales_person")}'"""
     if filters.get("sales_partner"):
-        sql_join += """
-            INNER JOIN `tabSales Invoice` si_partner ON sd.invoice_name = si_partner.name
-        """
-        conditions += f" AND si_partner.sales_partner = '{filters.get('sales_partner')}'"
-
+        conditions += f""" AND si.sales_partner = '{filters.get("sales_partner")}'"""
     if filters.get("from_date"):
-        conditions += f" AND sd.posting_date >= '{filters.get('from_date')}'"
+        conditions += f""" AND sd.posting_date >= date('{filters.get("from_date")}')"""
     if filters.get("to_date"):
-        conditions += f" AND sd.posting_date <= '{filters.get('to_date')}'"
-
+        conditions += f""" AND sd.posting_date <= date('{filters.get("to_date")}')"""        
     sql = f'''
         SELECT 
             sd.posting_date , sd.invoice_name , sd.customer , sd.grand_total ,
@@ -52,18 +34,18 @@ def get_data(filters):
             sd.driver , sd.delivered
         FROM 
             `tabSales Document States` sd
-        {sql_join}
+        LEFT JOIN
+            `tabSales Invoice` si ON sd.invoice_name = si.name
+        LEFT JOIN
+            `tabSales Invoice Item` sii ON si.name = sii.parent
+        LEFT JOIN
+            `tabSales Team` st ON si.name = st.parent    
         WHERE 
-            {conditions}
+            {conditions} AND si.docstatus != '2'
         '''
     data = frappe.db.sql(sql, as_dict=1)
 
     return data
-
-
-    
-
-
 
 def get_columns():
 	columns = [

@@ -31,7 +31,10 @@ def get_result_as_list(data, filters,oppening_balance=None):
 
 		balance = get_balance(d, balance, 'debit', 'credit')
 		d['balance'] = balance
-
+	# data.insert(len(data),row)
+	sql = f'select sum(total_debit) as debit_sum , sum(total_credit) as credit_sum from `tabJournal Entry` where voucher_type = "Opening Entry" '
+	sum = frappe.db.sql(sql , as_dict =1 )
+	row = {"balance":0.0,"voucher_type":"Opening" , "debit" : sum[0]["debit_sum"] , "credit" : sum[0]["credit_sum"]}
 	data.insert(0,row)
 	return data
 
@@ -49,7 +52,7 @@ def get_data(filters=None):
 	
 	date_qyery = f"""  AND posting_date between date('{filters.from_date }')  AND  date('{filters.to_date }') """
 
-	base_query = f"""SELECT name as gl_entry , posting_date ,account , debit ,credit ,0 as balance  ,voucher_type 
+	base_query = f"""SELECT name as gl_entry , posting_date ,account , debit ,credit ,0 as balance  ,voucher_type , voucher_no
 				FROM `tabGL Entry`  
 				 WHERE account in {accounts} 
 	   """ 
@@ -57,9 +60,9 @@ def get_data(filters=None):
 	data = frappe.db.sql(sql_qery ,as_dict=1)
 
 	if filters.get("mode_of_payment") :
-		oppening_balance = base_query + f"""  AND posting_date < '{filters.from_date }' """ + "ORDER BY posting_date"
-		oppening_balance = frappe.db.sql(oppening_balance ,as_dict=1)
-
+		sql = base_query + f"""  AND posting_date < '{filters.from_date }' """ + "ORDER BY posting_date"
+		oppening_balance = frappe.db.sql(sql ,as_dict=1)
+	# return frappe.throw(str(data))
 	return (get_result_as_list(data , filters,oppening_balance) )
 
 def get_columns(filters=None) :

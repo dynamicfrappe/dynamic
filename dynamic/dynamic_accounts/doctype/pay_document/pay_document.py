@@ -36,7 +36,7 @@ class PayDocument(Document):
     @frappe.whitelist()
     def set_totals(self):
         self.amount = self.amount or 0
-        self.total = 0
+        total = 0
         self.difference = self.amount
 
         precision = frappe.get_precision("Pay and Receipt Account", "amount")
@@ -46,7 +46,9 @@ class PayDocument(Document):
             item.currency = self.currency
             item.exchange_rate = self.exchange_rate
             item.base_amount = item.amount * self.exchange_rate
-            self.total += item.amount
+            total += item.amount
+        self.total = total
+        self.in_words = (_(frappe.utils.money_in_words(total)))
         self.difference = flt(self.amount - self.total , difference_precision)
 
     def before_insert(self):
@@ -68,12 +70,14 @@ class PayDocument(Document):
     def create_journal_entry(self):
         company_currency = erpnext.get_company_currency(self.company)
         je = frappe.new_doc("Journal Entry")
+        if self.journal_entry_series :
+            je.naming_series = self.journal_entry_series
         je.posting_date = self.posting_date
         je.voucher_type = 'Journal Entry'
         je.company = self.company
         je.cheque_no = self.reference_no
         je.cheque_date = self.reference_date
-        je.remark = f' { self.name } وثيقة دفع ' 
+        je.remark = f' { self.name } وثيقة دفع '
         if 'Maser2000' in DOMAINS:
             je.user_remark = self.notes
             je.cheque_no = self.reference_number
@@ -131,16 +135,23 @@ class PayDocument(Document):
                 "debit_in_account_currency":  flt(amount_in_account_row_currency),
                 "debit_in_company_currency": flt(account_row.base_amount),
                 "reference_type": self.doctype,
+                "cost_center": self.cost_center,
+                "project": self.project,
+                # "is_tax":account_row.is_tax,
                 "user_remark": str(account_row.note or ""),
                 "reference_name": self.name,
                 "party_type": account_row.party_type,
                 "party": account_row.party,
+                "project":account_row.get("project"),
                 "cost_center": account_row.cost_center,
             })
 
         je.multi_currency = 1
-        if not 'Maser2000' in DOMAINS: 
-           je.submit()
+        je.submit()
+        # je.save()
+        # if not ['Maser2000' , 'Contracting'] in DOMAINS: 
+        #    je.submit()
+
         self.journal_entry = je.name
         self.db_set("journal_entry", je.name)
         lnk = get_link_to_form(je.doctype, je.name)
@@ -161,3 +172,10 @@ class PayDocument(Document):
                 doc = frappe.get_doc("GL Entry", gl)
                 doc.flags.ignore_permissions = True
                 doc.cancel()
+
+@frappe.whitelist()
+def get_field_options():
+    return {
+		"journal_entry_series": frappe.get_meta("Journal Entry").get_options("naming_series"),
+		
+	}

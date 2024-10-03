@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-08-27 11:01:54.764585",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_number",
+  "quantity",
+  "description",
+  "supplier",
+  "list_price",
+  "currency",
+  "discount",
+  "additional_discound",
+  "shipping_cost",
+  "customs",
+  "additional_cost",
+  "unit_selling_price"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Number"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Quantity "
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "list_price",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "List Price"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "discount",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Discount"
+  },
+  {
+   "fieldname": "additional_discound",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Additional Discound"
+  },
+  {
+   "fieldname": "shipping_cost",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Shipping Cost"
+  },
+  {
+   "fieldname": "customs",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Customs"
+  },
+  {
+   "fieldname": "additional_cost",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Additional Cost"
+  },
+  {
+   "fieldname": "unit_selling_price",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Unit Selling Price"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-08-27 14:39:50.043344",
+ "modified_by": "Administrator",
+ "module": "Calculation Sheet",
+ "name": "Calculation Sheet table 2",
+ "owner": "Administrator",
+ "permissions": [],
+ "restrict_to_domain": "Calculation Sheet",
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

@@ -7,15 +7,30 @@ def validate(self , event):
 		validate_items(self)
 	if "Qaswaa" in Domains :
 		validate_rate_of_items(self)
+		warehouse1(self)
+		validate_sales_team(self)
+		item_discount_rate(self)
+	
+	if "Healthy Corner" in Domains:
+		pass
+		# item_discount_rate2(self)
+		# calculate_total_before_discount(self)
+		# set_discount(self)
+		# calculate_total_after_discount(self)
+		
+		
 
+# def before_save(self,event):
+# 	if "Qaswaa" in Domains :
+# 		# items1(self)
 
 def after_submit(self , event):
 	if "Stock Reservation" in Domains:
 		edit_of_reseration(self)
 	
 def after_cancel(self , event):
-    if "Stock Reservation" in Domains :
-        validate_when_cancel(self)
+	if "Stock Reservation" in Domains :
+		validate_when_cancel(self)
 
 	
 	
@@ -50,6 +65,55 @@ def submit_invoice(self):
 	sales_document.grand_total = self.grand_total
 	sales_document.insert(ignore_permissions=True)
 
+def validate_sales_team(self):
+		if not self.sales_team:
+			frappe.throw("Sales Team was mandatory")
+
+def item_discount_rate(self):
+    item_discount_rate = self.item_discount_rate or 0
+    for item in self.items:
+        item.discount_percentage = item_discount_rate
+        if item_discount_rate is not None:
+            item.discount_amount = item.price_list_rate * (item_discount_rate / 100)
+        else:
+            item.discount_amount = 0  
+        item.rate = item.price_list_rate - item.discount_amount
+        item.amount = item.rate * item.qty
+
+def item_discount_rate2(self):
+    item_discount_rate = self.discount_item or 0
+    for item in self.items:
+        item.discount_percentage = item_discount_rate
+        if item_discount_rate is not None:
+            item.discount_amount = item.price_list_rate * (item_discount_rate / 100)
+        else:
+            item.discount_amount = 0  
+        item.rate = item.price_list_rate - item.discount_amount
+        item.amount = item.rate * item.qty
+def calculate_total_before_discount(self):
+	total_price = 0
+	# for item in self.items:
+	# 	total_price+=item.price_list_rate 
+
+	total_price = float(self.total or 0) * (100+float(self.discount or 0))/100
+	self.total_price = total_price 
+	self.all_total = (self.total or 0) - total_price
+
+def set_discount(self):
+	if self.customer:
+		discount =frappe.db.get_value(
+				"Customer",
+				{"name": self.customer},
+				["customer_discount"],
+				as_dict=1,)
+		if discount["customer_discount"]:
+			self.discount = discount["customer_discount"]
+
+def calculate_total_after_discount(self):
+	if self.discount :
+		self.all_total = (float(self.total_price) * float(self.discount) ) /100
+	else:
+		self.all_total = float(self.total_price) 
 
 def edit_of_reseration(self ):
 	items = self.get("items")
@@ -94,6 +158,11 @@ def validate_when_cancel(self):
 			doc.delivered_qty = qty 
 			doc.save()
 			frappe.db.commit()
+def warehouse1(self):
+	if self.update_stock == 1:
+		if not self.set_warehouse:
+			frappe.throw("Warehouse was mandatory")
+
 	
 
 

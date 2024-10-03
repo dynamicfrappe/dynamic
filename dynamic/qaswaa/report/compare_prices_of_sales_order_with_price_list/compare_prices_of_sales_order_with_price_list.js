@@ -37,14 +37,27 @@ frappe.query_reports["Compare Prices of Sales Order With Price List"] = {
 			"options": "Sales Order"
 		},
 		{
-			"fieldname": "price_list",
-			"label": __("Price List"),
+			"fieldname": "selling_price_list",
+			"label": __("Selling Price List"),
 			"fieldtype": "Link",
 			"options": "Price List",
 			"get_query": function() {
 				return {
 					"filters": {
 						"selling": 1
+					}
+				};
+			},
+		},
+		{
+			"fieldname": "buying_price_list",
+			"label": __("Buying Price List"),
+			"fieldtype": "Link",
+			"options": "Price List",
+			"get_query": function() {
+				return {
+					"filters": {
+						"buying": 1
 					}
 				};
 			},

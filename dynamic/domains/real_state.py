@@ -27,6 +27,23 @@ data = {
                 "in_list_view":"1", 
             },
         ],
+        'Lead':[
+            {
+                "label":_("Call Type"),
+                "fieldname":"call_type",
+                "fieldtype":"Select",
+                "insert_after":"contact_by", 
+                "options":"\nFresh Call\nCold Call",
+            },
+        ],
+        'Opportunity':[
+            {
+                "label":_("Note"),
+                "fieldname":"note",
+                "fieldtype":"Small Text",
+                "insert_after":"source", 
+            },
+        ],
         'Item':[
             {
                 "label":_("Unit Info"),
@@ -53,10 +70,16 @@ data = {
                 "insert_after":"unit_area", 
             },
             {
+                "label":_("Unit Floor Text"),
+                "fieldname":"unit_floor_text",
+                "fieldtype":"Data",
+                "insert_after":"unit_floor", 
+            },
+            {
                 "label":_("Reserved"),
                 "fieldname":"reserved",
                 "fieldtype":"Check",
-                "insert_after":"unit_floor", 
+                "insert_after":"unit_floor_text", 
                 "read_only":"1", 
             },
             {
@@ -66,71 +89,71 @@ data = {
                 "insert_after":"reserved", 
             },
         ],
-
-        'Sales Order':[
-            {
-                "label": "Advance Payment",
-                "fieldname": "advance_paymentss",
-                "fieldtype": "Section Break",
-                "insert_after": "payment_schedule"
-            },
-            {
-                "label": "Get Advances Receivedd",
-                "fieldname": "get_advancess",
-                "fieldtype": "Button",
-                "insert_after": "advance_paymentss",
-                "allow_on_submit":1
-            },
-            {
-                "label": "Advances",
-                "fieldname": "advancess",
-                "fieldtype": "Table",
-                "options":"Sales Invoice Advance",
-                "insert_after": "get_advancess",
-                "allow_on_submit":1
-            },
-            {
-                "label": _("Outstanding Amount"),
-                "fieldname": "outstanding_amount",
-                "fieldtype": "Float",
-                "insert_after": "advance_paid",
-                "allow_on_submit":1,
-                "read_only" : 1
-            },
+        # This commented because we trnasfer fields to Dynamic Account Domain
+        # 'Sales Order':[
+        #     {
+        #         "label": "Advance Payment",
+        #         "fieldname": "advance_paymentss",
+        #         "fieldtype": "Section Break",
+        #         "insert_after": "payment_schedule"
+        #     },
+        #     {
+        #         "label": "Get Advances Receivedd",
+        #         "fieldname": "get_advancess",
+        #         "fieldtype": "Button",
+        #         "insert_after": "advance_paymentss",
+        #         "allow_on_submit":1
+        #     },
+        #     {
+        #         "label": "Advances",
+        #         "fieldname": "advancess",
+        #         "fieldtype": "Table",
+        #         "options":"Sales Invoice Advance",
+        #         "insert_after": "get_advancess",
+        #         "allow_on_submit":1
+        #     },
+        #     {
+        #         "label": _("Outstanding Amount"),
+        #         "fieldname": "outstanding_amount",
+        #         "fieldtype": "Float",
+        #         "insert_after": "advance_paid",
+        #         "allow_on_submit":1,
+        #         "read_only" : 1
+        #     },
              
-         ],
-         'Quotation':[
-            {
-                "label": "Advance Payment",
-                "fieldname": "advance_paymentss",
-                "fieldtype": "Section Break",
-                "insert_after": "payment_schedule"
-            },
-            {
-                "label": "Get Advances Receivedd",
-                "fieldname": "get_advancess",
-                "fieldtype": "Button",
-                "insert_after": "advance_paymentss",
-                "allow_on_submit":1
-            },
-            {
-                "label": "Advances",
-                "fieldname": "advancess",
-                "fieldtype": "Table",
-                "options":"Sales Invoice Advance",
-                "insert_after": "get_advancess",
-                "allow_on_submit":1
-            },  
-            {
-                "label": _("Outstanding Amount"),
-                "fieldname": "outstanding_amount",
-                "fieldtype": "Float",
-                "insert_after": "in_words",
-                "allow_on_submit":1,
-                "read_only" : 1
-            },  
+        #  ],
+        #  'Quotation':[
+        #     {
+        #         "label": "Advance Payment",
+        #         "fieldname": "advance_paymentss",
+        #         "fieldtype": "Section Break",
+        #         "insert_after": "payment_schedule"
+        #     },
+        #     {
+        #         "label": "Get Advances Receivedd",
+        #         "fieldname": "get_advancess",
+        #         "fieldtype": "Button",
+        #         "insert_after": "advance_paymentss",
+        #         "allow_on_submit":1
+        #     },
+        #     {
+        #         "label": "Advances",
+        #         "fieldname": "advancess",
+        #         "fieldtype": "Table",
+        #         "options":"Sales Invoice Advance",
+        #         "insert_after": "get_advancess",
+        #         "allow_on_submit":1
+        #     },  
+        #     {
+        #         "label": _("Outstanding Amount"),
+        #         "fieldname": "outstanding_amount",
+        #         "fieldtype": "Float",
+        #         "insert_after": "in_words",
+        #         "allow_on_submit":1,
+        #         "read_only" : 1
+        #     },  
             
-         ],
+        #  ],
         
         
     },
@@ -164,6 +187,14 @@ data = {
             "doctype_or_field": "DocField",
             "fieldname": "ignore_pricing_rule",
             "property": "hidden",
+            "property_type": "Check",
+            "value": "1",
+        },
+        {
+            "doctype": "Lead",
+            "doctype_or_field": "DocField",
+            "fieldname": "notes",
+            "property": "reqd",
             "property_type": "Check",
             "value": "1",
         },

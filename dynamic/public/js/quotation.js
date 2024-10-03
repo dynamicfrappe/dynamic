@@ -3,6 +3,39 @@ frappe.ui.form.on("Quotation",{
     //     frm.events.refresh(frm)
     // },
     refresh:function(frm){
+      frappe.call({
+        method: "dynamic.api.get_active_domains",
+        callback: function (r) {
+          if (r.message && r.message.length) {
+            if (r.message.includes("Pre Quotation")) {
+              frm.events.upload_data_file(frm)
+              frm.fields_dict["items"].grid.add_custom_button(
+                __("Export Excel"),
+                function() {
+                // console.log("frm.items");
+                frappe.call({
+                  method: "dynamic.api.export_data_to_csv_file",
+                  args: {
+                  items: frm.doc.items,
+                  },
+                  callback: function(r) {
+                  if (r.message){
+                    let file = r.message.file 
+                    let file_url = r.message.file_url 
+                    file_url = file_url.replace(/#/g, '%23');
+                    window.open(file_url);
+                  }
+                  },
+                });
+            
+                }
+              );
+            }
+          }
+        }
+    })
+
+      
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
@@ -69,6 +102,55 @@ frappe.ui.form.on("Quotation",{
     frm.events.set_query(frm)
 
     },
+    upload_data_file:function(frm){
+      frm.fields_dict["items"].grid.add_custom_button(
+        __("Upload Xlxs Data"),
+        function() {
+            let d = new frappe.ui.Dialog({
+                title: "Enter details",
+                fields: [
+                  {
+                    label: "Excel File",
+                    fieldname: "first_name",
+                    fieldtype: "Attach",
+                  },
+                ],
+                primary_action_label: "Submit",
+                primary_action(values) {
+                  console.log(`values===>${JSON.stringify(values)}`);
+                  var f = values.first_name;
+                  frappe.call({
+                    method:"dynamic.api.get_data_from_template_file",
+                    args: {
+                      file_url: values.first_name
+                      // file: values.first_name,
+                      // colms:['item_code','qty',]
+                    },
+                    callback: function(r) {
+                      if (r.message) {
+                        console.log(r.message)
+                        frm.clear_table("items");
+                        frm.refresh_fields("items");
+                        r.message.forEach(object => {
+                          var row = frm.add_child("items");
+                          Object.entries(object).forEach(([key, value]) => {
+                            //  console.log(`${key}: ${value}`);
+                            row[key] = value;
+                          });
+                         });
+                        frm.refresh_fields("items");
+                      }
+                    },
+                  });
+                  d.hide();
+                },
+              });
+              d.show();
+        }).addClass("btn-success");
+        frm.fields_dict["items"].grid.grid_buttons
+        .find(".btn-custom")
+        .removeClass("btn-default")
+  },
     reject_quotation(frm){
         frm.call({
             method:"dynamic.ifi.doctype.installations_furniture.installations_furniture.reqject_quotation",
@@ -105,16 +187,20 @@ frappe.ui.form.on("Quotation",{
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
               if (r.message && r.message.length) {
-                if (r.message.includes("Real State")) {
+                if (r.message.includes("Dynamic Accounts")) {
+                  console.log("Hi");
                   return frappe.call({
                     method: "dynamic.ifi.api.get_advance_entries_quotation",//get_advanced_so_ifi
                     args:{
                         doc_name: frm.doc.name,
                     },
                     callback: function(r, rt) {
+                      console.log(r.message);
                       frm.clear_table("advancess");
+                      let total = 0 ;
                       r.message.forEach(row => {
-                        // console.log(row)
+                        console.log("Hi");
+                        console.log(row);
                         let child = frm.add_child("advancess");
                         child.reference_type = row.reference_type,
                         child.reference_name = row.reference_name,
@@ -123,8 +209,14 @@ frappe.ui.form.on("Quotation",{
                         child.advance_amount = flt(row.amount),
                         child.allocated_amount = row.allocated_amount,
                         child.ref_exchange_rate = flt(row.exchange_rate)
+                        total += parseFloat(row.amount);
                       });
                       refresh_field("advancess");
+                      frm.set_value("advance_paid" , total);
+                      frm.refresh_field("advance_paid");
+                      let base_grand_total = parseFloat(frm.doc.grand_total);
+                      frm.set_value("outstanding_amount" , base_grand_total - total);
+                      frm.refresh_field("base_grand_total");
                     }
                   })
                 }
@@ -132,7 +224,7 @@ frappe.ui.form.on("Quotation",{
         })
             }
       },
-      add_item_discount_rate: function(frm) {
+    add_item_discount_rate: function(frm) {
         var item_discount_rate = frm.doc.item_discount_rate;
               frm.doc.items.forEach(function(item) {
                   frappe.model.set_value(item.doctype, item.name, 'discount_percentage', item_discount_rate);
@@ -141,7 +233,7 @@ frappe.ui.form.on("Quotation",{
       },
       
       
-        item_discount_rate: function(frm) {
+    item_discount_rate: function(frm) {
           frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function(r) {
@@ -153,7 +245,7 @@ frappe.ui.form.on("Quotation",{
               }
             }
           });
-        },
+        },  
 })
 
 
@@ -224,31 +316,22 @@ var create_qaswaa_sales_order = function() {
 // }
 
 frappe.ui.form.on("Quotation Item", {
-    item_code: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        if (row.item_code) {
-            frappe.call({
-                method: "dynamic.api.get_active_domains",
-                callback: function (r) {
-                    if (r.message && r.message.length && r.message.includes("Qaswaa")) {
-                        console.log("bgg");
-                        var discount_percentage = frm.doc.items[0].discount_percentage;
-                        var item_discount_rate = frm.doc.item_discount_rate;
-                        console.log(discount_percentage);
-                        
-                        // Iterate through each item and update the discount_percentage
-                        frm.doc.items.forEach(function(item) {
-                            item.discount_percentage = item_discount_rate;
-                        });
-    
-                        console.log(discount_percentage);
-                        frm.refresh_fields("items");
-                    }
-                }
-            });
-        }
-    },
+//     item_code: function(frm, cdt, cdn) {
+//     var child = locals[cdt][cdn];
+//     var parent_discount_rate = frm.doc.item_discount_rate;
 
+//     frappe.call({
+//         method: "dynamic.api.get_active_domains",
+//         callback: function (r) {
+//             if (r.message && r.message.length && r.message.includes("Qaswaa")) {
+//                 console.log("bgg");
+//                 console.log(parent_discount_rate);
+//                 frm.set_value("items", "discount_percentage", parent_discount_rate);
+//                 frm.refresh_fields("items");
+//             }
+//         }
+//     });
+// }
     // item_code:function(frm,cdt,cdn){
     //   let row = locals[cdt][cdn]
     //   if(row.item_code){

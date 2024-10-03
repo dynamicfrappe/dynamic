@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "cheque_no",
+  "ref_doc",
   "column_break_2",
   "cheque_date",
   "section_break_4",
@@ -29,6 +30,12 @@
    "in_list_view": 1,
    "label": "No.",
    "reqd": 1
+  },
+  {
+   "fieldname": "ref_doc",
+   "fieldtype": "Data",
+   "label": "Ref."
+   
   },
   {
    "fieldname": "column_break_2",

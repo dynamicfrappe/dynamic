@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:name_of_sheet",
+ "creation": "2024-08-27 11:03:06.047513",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "name_of_sheet",
+  "table_1",
+  "section_break_irtlz",
+  "equation_of_total_cost",
+  "total_cost",
+  "column_break_vufwy",
+  "equation_of_shipping_cost",
+  "shipping_cost",
+  "column_break_yc3sk",
+  "equation_of_total_selling",
+  "total_selling",
+  "column_break_sw9il",
+  "equation_of_gross_margin",
+  "gross_margin",
+  "column_break_hazyi",
+  "equation_of_mark_up",
+  "mark_up",
+  "section_break_vqedc",
+  "table_gw1fd",
+  "total_unit_selling_price"
+ ],
+ "fields": [
+  {
+   "fieldname": "name_of_sheet",
+   "fieldtype": "Data",
+   "label": "Name of Sheet",
+   "unique": 1
+  },
+  {
+   "fieldname": "table_1",
+   "fieldtype": "Table",
+   "options": "Calculation Sheet table 1"
+  },
+  {
+   "fieldname": "section_break_irtlz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "equation_of_total_cost",
+   "fieldtype": "Data",
+   "label": "Equation of total cost"
+  },
+  {
+   "fieldname": "equation_of_shipping_cost",
+   "fieldtype": "Data",
+   "label": "Equation of shipping cost"
+  },
+  {
+   "fieldname": "equation_of_total_selling",
+   "fieldtype": "Data",
+   "label": "Equation of total selling"
+  },
+  {
+   "fieldname": "equation_of_gross_margin",
+   "fieldtype": "Data",
+   "label": "Equation of Gross Margin"
+  },
+  {
+   "fieldname": "column_break_vufwy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_yc3sk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_sw9il",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_hazyi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_cost",
+   "fieldtype": "Float",
+   "label": "Total Cost"
+  },
+  {
+   "fieldname": "shipping_cost",
+   "fieldtype": "Float",
+   "label": "Shipping Cost"
+  },
+  {
+   "fieldname": "total_selling",
+   "fieldtype": "Float",
+   "label": "Total Selling"
+  },
+  {
+   "fieldname": "gross_margin",
+   "fieldtype": "Float",
+   "label": "Gross Margin"
+  },
+  {
+   "fieldname": "equation_of_mark_up",
+   "fieldtype": "Data",
+   "label": "Equation of Mark up"
+  },
+  {
+   "fieldname": "mark_up",
+   "fieldtype": "Float",
+   "label": "Mark Up"
+  },
+  {
+   "fieldname": "section_break_vqedc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_gw1fd",
+   "fieldtype": "Table",
+   "options": "Calculation Sheet table 2"
+  },
+  {
+   "fieldname": "total_unit_selling_price",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Total Unit Selling Price"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-08-27 15:36:22.861769",
+ "modified_by": "Administrator",
+ "module": "Calculation Sheet",
+ "name": "Calculation Sheet",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

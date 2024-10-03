@@ -5,6 +5,8 @@ DOMAINS = get_active_domains()
 
 
 def get_data(data={}):
+    
+
     if "Cheques" in DOMAINS:
         data['non_standard_fieldnames'].update({'Cheque': "reference_name"})
         data['transactions'].append(
@@ -13,4 +15,7 @@ def get_data(data={}):
                 'items': ['Cheque']
             }
         )
+    if "Rehab" in DOMAINS:
+        data['non_standard_fieldnames'].update({'Journal Entry': "reference_name"})
+        
     return data

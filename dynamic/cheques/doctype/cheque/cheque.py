@@ -58,6 +58,7 @@ class Cheque(Document):
             payment_entry.party_type = self.party_type
             payment_entry.party = self.party
             payment_entry.cheque = self.name
+            payment_entry.is_from_cheque_submission = 1
             payment_entry.cheque_status = self.status
             payment_entry.paid_from = self.account_paid_from
             payment_entry.paid_to = self.account_paid_to
@@ -626,11 +627,19 @@ def make_cheque_doc(dt, dn):
     cheque.payment_type = payment_type
     cheque.party_type = "Supplier" if payment_type == "Pay" else "Customer"
     cheque.party = ref_doc.supplier if payment_type == "Pay" else ref_doc.customer
-    row = cheque.append('items')
-    if hasattr(ref_doc, 'outstanding_amount'):
-        row.amount = ref_doc.outstanding_amount
-    else:
-        row.amount = ref_doc.base_rounded_total or ref_doc.base_grand_total
+    # row = cheque.append('items')
+    if hasattr(ref_doc, 'payment_schedule'):
+        for i in ref_doc.get('payment_schedule'):
+            cheque.append('items',{
+                'amount':i.payment_amount,
+                'cheque_date':i.due_date,
+                'ref_doc':i.payment_term,
+            })
+            # row.amount = i.payment_amount
+            # row.cheque_date = i.due_date
+    #     row.amount = ref_doc.outstanding_amount
+    # else:
+    #     row.amount = ref_doc.base_rounded_total or ref_doc.base_grand_total
     return cheque
 
 
