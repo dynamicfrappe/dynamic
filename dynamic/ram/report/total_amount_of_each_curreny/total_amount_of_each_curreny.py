@@ -11,31 +11,28 @@ def execute(filters=None):
 
 def get_data(filters):
 	conditions = ' and 1=1'
-	# if filters.get("currency"):
-	# 	conditions += f' and a.account_currency = "{filters.get('currency')}"'
-	# if filters.get("account_type"):
-	# 	conditions += f' and a.account_type = "{filters.get('account_type')}"'
+	if filters.get("currency"):
+		conditions += f' and account.account_currency = "{filters.get("currency")}" '
+	if filters.get("account_type"):
+		conditions += f' and account.account_type = "{filters.get("account_type")}" '
 
-	sql = f'''
-			select 
-				a.account_currency , a.account_type , p.paid_to , sum(p.paid_amount) as sum , p.mode_of_payment
-			from 
-				`tabAccount` a
-			inner join 
-				`tabPayment Entry` p
-			where 
-				p.paid_to = a.name
-				and
-				(a.account_type ="Bank" or a.account_type =  "Cash")
-				and
-				a.account_currency =  p.paid_to_account_currency
-				and 
-				p.status = 'Submitted'
-				{conditions}
-			group by 
-				a.account_currency , a.account_type
-		'''
-	data = frappe.db.sql(sql , as_dict = 1)
+	sql_query = f'''
+        SELECT 
+            account.name AS account_name,
+            account.parent_account AS parent_account,
+            account.account_type AS account_type,
+            account.is_group AS is_group,
+			account.account_currency , 
+            (SELECT SUM(gle.credit - gle.debit)  FROM `tabGL Entry` gle WHERE gle.account = account.name) AS balance
+        FROM 
+            `tabAccount` account
+        WHERE
+             account.account_type IN ('Cash', 'Bank')
+			 {conditions}
+        ORDER BY 
+            account.lft ASC;
+    '''
+	data = frappe.db.sql(sql_query, as_dict=True)
 	return data 
 
 def get_column():
@@ -45,7 +42,14 @@ def get_column():
                 "fieldname": "account_currency",
                 "fieldtype": "Link",
                 "options": "Currency",
-                "width": 180,
+                "width": 160,
+            },
+			{
+                "label": _("Account"),
+                "fieldname": "account_name",
+                "fieldtype": "Link",
+                "options": "Account",
+                "width": 200,
             },
             {
                 "label": _("Account Type"),
@@ -54,16 +58,16 @@ def get_column():
                 "width": 180,
             },
             {
-                "label": _("Paid Amount"),
-                "fieldname": "sum",
+                "label": _("Balance"),
+                "fieldname": "balance",
                 "fieldtype": "Float",
                 "width": 180,
             },
-			{
-                "label": _("Mode of Payment"),
-                "fieldname": "mode_of_payment",
-                "fieldtype": "Link",
-                "options": "Mode of Payment",
-                "width": 180,
-            },
+			# {
+            #     "label": _("Mode of Payment"),
+            #     "fieldname": "mode_of_payment",
+            #     "fieldtype": "Link",
+            #     "options": "Mode of Payment",
+            #     "width": 180,
+            # },
 			]

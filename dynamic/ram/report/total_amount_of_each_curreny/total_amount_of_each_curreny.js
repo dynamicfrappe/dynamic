@@ -10,18 +10,18 @@ frappe.query_reports["Total Amount of Each Curreny"] = {
 			"fieldtype": "Link",
 			"options": "Currency" ,
 		},
-		{
-			"fieldname":"sales_invoice",
-			"label": __("Sales Invoice"),
-			"fieldtype": "Link",
-			"options":"Sales Invoice",
-		},
 		// {
-		// 	"fieldname": "account_type",
-		// 	"label": __("Account Type"),
-		// 	"fieldtype": "Select",
-		// 	"options": "bank\ncash" ,
+		// 	"fieldname":"sales_invoice",
+		// 	"label": __("Sales Invoice"),
+		// 	"fieldtype": "Link",
+		// 	"options":"Sales Invoice",
 		// },
+		{
+			"fieldname": "account_type",
+			"label": __("Account Type"),
+			"fieldtype": "Select",
+			"options": "\nbank\ncash" ,
+		},
 
 	]
 };
