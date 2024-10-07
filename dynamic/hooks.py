@@ -56,6 +56,7 @@ doctype_list_js = {
     "Quotation": "public/js/quotation_list.js",
     "Subscription": "public/js/subscription_list.js",
     "Actions": "public/js/actions_list.js",
+    "Lead": "public/js/lead_list.js",
 }
 
 after_install = [
