@@ -15,37 +15,36 @@ frappe.listview_settings['Subscription'] = {
             // Prompt user for confirmation before proceeding
             frappe.confirm(__('Are you sure you want to fetch invoices for the selected subscriptions?'), function() {
                 selected_items.forEach(item => {
-                    console.log(item.name)
                     fetch_invoices(item);
-                    calc_invoices_fine(item);
+                    // calc_invoices_fine(item);
                 });
             });
         });
     }
 };
 
-function calc_invoices_fine(item) {
-    frappe.call({
-        method: "dynamic.alrehab.api.update_sales_invoice_penalty",
-        args: {
-                sub_id: item.name
-         },
-        callback: function(r) {
-            console.log(r.message.status)
-        }
-    });
+// function calc_invoices_fine(item) {
+//     frappe.call({
+//         method: "dynamic.alrehab.api.update_sales_invoice_penalty",
+//         args: {
+//                 sub_id: item.name
+//          },
+//         callback: function(r) {
+//             console.log(r.message.status)
+//         }
+//     });
     
-    frappe.call({
-        method: "dynamic.alrehab.api.set_total",
-        args: {
-            sub_id: item.name,
-        },
-        callback: function(r) {
-            if (r.message) {
-            }
-        }
-    });
-}
+//     frappe.call({
+//         method: "dynamic.alrehab.api.set_total",
+//         args: {
+//             sub_id: item.name,
+//         },
+//         callback: function(r) {
+//             if (r.message) {
+//             }
+//         }
+//     });
+// }
 
 function fetch_invoices(item) {
     frappe.call({

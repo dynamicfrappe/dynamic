@@ -1,5 +1,8 @@
 
 import frappe
+import json
+from frappe.desk.form.assign_to import add
+
 
 @frappe.whitelist()
 def get_users_by_departments(departments):
@@ -38,8 +41,33 @@ def assign_users(docname, selected_users):
         if emails:
             frappe.db.set_value("Actions", docname, "_assign", frappe.as_json(emails))
             frappe.db.commit()
+            for user in emails:
+                assign_action_to_user(docname, user)
+            
             return {"status": "success", "message": "Document assigned to selected users."}
         else:
             return {"status": "error", "message": "No users selected."}
     
     return {"status": "error", "message": "No users provided."}
+
+def assign_action_to_user(doc_name, employee_email):
+    if not frappe.db.exists("User", employee_email):
+        frappe.throw(f"User {employee_email} does not exist.")
+    args = {
+        'assign_to': [employee_email], 
+        'doctype': "Actions",  
+        'name': doc_name,  
+        'description': 'Please address this Action'  
+    }
+    add(args)
+
+
+@frappe.whitelist()
+def approve_actions(name):
+    frappe.db.set_value("Actions", name, "status", "Approved")
+    frappe.db.commit()
+
+@frappe.whitelist()
+def reject_actions(name):
+    frappe.db.set_value("Actions", name, "status", "Rejected")
+    frappe.db.commit()
