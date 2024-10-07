@@ -544,13 +544,15 @@ function set_all_price_before_discount(frm, cdt, cdn) {
 
 function total_before_discount(frm) {
     let total_price = 0;
+	let total = 0;
 
     frm.doc.items.forEach(item => {
         if (item.total_item_price) {
             total_price += item.total_item_price;
+			total += item.amount
         }
     });
-	let temp = parseFloat(frm.doc.total) - parseFloat(total_price)
+	let temp = parseFloat(total) - parseFloat(total_price)
 	console.log("temp ======>",temp);
     frm.set_value("total_price", total_price);
 	frm.set_value("discount" , temp)
