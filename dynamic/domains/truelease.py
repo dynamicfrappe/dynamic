@@ -35,6 +35,13 @@ data = {
             "fieldname": "government",
             "fieldtype": "Data",
             "insert_after": "phone_no",
+         },
+         {
+            "label" :"Client Profile Status" ,
+            "fieldname": "cp_status",
+            "fieldtype": "Select",
+            "insert_after": "status",
+            "options": "\nApproved\nRejected"
          }
       ],
       'Actions': [

@@ -71,3 +71,14 @@ def approve_actions(name):
 def reject_actions(name):
     frappe.db.set_value("Actions", name, "status", "Rejected")
     frappe.db.commit()
+
+
+@frappe.whitelist()
+def approve_leads(name):
+    frappe.db.set_value("Lead", name, "cp_status", "Approved")
+    frappe.db.commit()
+
+@frappe.whitelist()
+def reject_leads(name):
+    frappe.db.set_value("Lead", name, "cp_status", "Rejected")
+    frappe.db.commit()
