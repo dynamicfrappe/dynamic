@@ -433,7 +433,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 
 					// get_discount_item_from_customer(frm , cdt , cdn);
 					total_before_discount(frm);
-					total_discount(frm);					
+					// total_discount(frm);					
 				}
 			}
 		}); 
@@ -471,7 +471,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
 					
 					total_before_discount(frm);
-					total_discount(frm);
+					// total_discount(frm);
 					
 					setTimeout(() => {
 						get_discount_item_from_customer(frm , cdt , cdn);
@@ -488,7 +488,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 					set_all_price_before_discount(frm, cdt, cdn)
 					.then(() => {
 						total_before_discount(frm);
-						total_discount(frm);
+						// total_discount(frm);
 					});
 				}
 			}
@@ -500,7 +500,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 			callback: function (r) {
 				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
 					total_before_discount(frm);
-					total_discount(frm);
+					// total_discount(frm);
 				}
 			}
 		}); 
@@ -544,15 +544,18 @@ function set_all_price_before_discount(frm, cdt, cdn) {
 
 function total_before_discount(frm) {
     let total_price = 0;
+	let total = 0;
 
     frm.doc.items.forEach(item => {
         if (item.total_item_price) {
             total_price += item.total_item_price;
+			total += item.amount
         }
     });
-
+	let temp = parseFloat(total) - parseFloat(total_price)
+	console.log("temp ======>",temp);
     frm.set_value("total_price", total_price);
-	frm.set_value("discount" , parseFloat(frm.doc.total) - total_price)
+	frm.set_value("discount" , temp)
     frm.refresh_field("total_price");
 	frm.refresh_field("discount");
 }
