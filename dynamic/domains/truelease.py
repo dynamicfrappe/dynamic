@@ -270,6 +270,23 @@ data = {
         "property_type": "Data",
         "value": "field:company_name"
         },
+        {
+        "doctype": "Lead",
+        "doctype_or_field": "DocField",
+        "fieldname": "status",
+        "property": "default",
+        "property_type": "Small Text",
+        "value": "Open"
+        },
+        {
+        "doctype": "Lead",
+        "doctype_or_field": "DocField",
+        "fieldname": "status",
+        "property": "options",
+        "property_type": "Select",
+        "value": "Open\nOpportunity\nClose"
+        },
+        
       #  Actions
         {
         "doctype": "Actions",
