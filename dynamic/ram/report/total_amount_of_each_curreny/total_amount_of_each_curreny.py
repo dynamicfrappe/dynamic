@@ -23,7 +23,8 @@ def get_data(filters):
             account.account_type AS account_type,
             account.is_group AS is_group,
 			account.account_currency , 
-            (SELECT SUM(gle.credit - gle.debit)  FROM `tabGL Entry` gle WHERE gle.account = account.name) AS balance
+            (SELECT SUM( gle.debit - gle.credit)  FROM `tabGL Entry` gle WHERE gle.account = account.name) AS balance,
+			(SELECT SUM( gle.debit_in_account_currency - gle.debit_in_account_currency)  FROM `tabGL Entry` gle WHERE gle.account = account.name) AS balance_in_currency
         FROM 
             `tabAccount` account
         WHERE
@@ -60,6 +61,12 @@ def get_column():
             {
                 "label": _("Balance"),
                 "fieldname": "balance",
+                "fieldtype": "Float",
+                "width": 180,
+            },
+            {
+                "label": _("Currency Balance"),
+                "fieldname": "balance_in_currency",
                 "fieldtype": "Float",
                 "width": 180,
             },

@@ -100,9 +100,10 @@ if "Rehab" in active_domains:
     Subscription = ElrehabSubscription
 
 if "Contracting" in active_domains:
-    from contracting_13.contracting_13.overrides.payment_entry import custom_payment_entry
+    pass
+    # from contracting_13.contracting_13.overrides.payment_entry import custom_payment_entry
 
-    PaymentEntry = custom_payment_entry
+    # PaymentEntry = custom_payment_entry
 
 
 
