@@ -26,7 +26,7 @@ def get_data(filters):
             (SELECT SUM( gle.debit - gle.credit)  FROM `tabGL Entry` gle WHERE gle.account = account.name) AS balance,
 			(SELECT SUM( gle.debit_in_account_currency - gle.credit_in_account_currency)  FROM `tabGL Entry` gle WHERE gle.account = account.name) AS balance_in_currency
         FROM
-            `tabAccou nt` account
+            `tabAccount` account
         WHERE
              account.account_type IN ('Cash', 'Bank')
 			 {conditions}
