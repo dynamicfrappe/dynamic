@@ -433,7 +433,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 
 					// get_discount_item_from_customer(frm , cdt , cdn);
 					total_before_discount(frm);
-					total_discount(frm);					
+					// total_discount(frm);					
 				}
 			}
 		}); 
@@ -471,7 +471,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
 					
 					total_before_discount(frm);
-					total_discount(frm);
+					// total_discount(frm);
 					
 					setTimeout(() => {
 						get_discount_item_from_customer(frm , cdt , cdn);
@@ -488,7 +488,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 					set_all_price_before_discount(frm, cdt, cdn)
 					.then(() => {
 						total_before_discount(frm);
-						total_discount(frm);
+						// total_discount(frm);
 					});
 				}
 			}
@@ -500,7 +500,7 @@ frappe.ui.form.on("Sales Invoice Item", {
 			callback: function (r) {
 				if (r.message && r.message.length && r.message.includes("Healthy Corner")) {
 					total_before_discount(frm);
-					total_discount(frm);
+					// total_discount(frm);
 				}
 			}
 		}); 
