@@ -550,9 +550,10 @@ function total_before_discount(frm) {
             total_price += item.total_item_price;
         }
     });
-
+	let temp = parseFloat(frm.doc.total) - parseFloat(total_price)
+	console.log("temp ======>",temp);
     frm.set_value("total_price", total_price);
-	frm.set_value("discount" , parseFloat(frm.doc.total) - total_price)
+	frm.set_value("discount" , temp)
     frm.refresh_field("total_price");
 	frm.refresh_field("discount");
 }
