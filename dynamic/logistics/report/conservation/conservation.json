@@ -9,7 +9,8 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2024-01-16 13:15:43.400979",
+ "json": "{}",
+ "modified": "2024-10-09 17:52:10.105715",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation",
@@ -17,7 +18,7 @@
  "prepared_report": 0,
  "ref_doctype": "Conservation",
  "report_name": "Conservation",
- "report_type": "Script Report",
+ "report_type": "Report Builder",
  "roles": [
   {
    "role": "System Manager"

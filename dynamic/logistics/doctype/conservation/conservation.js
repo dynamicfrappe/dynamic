@@ -36,7 +36,8 @@ frappe.ui.form.on('Conservation', {
 			callback: function (r) {
 				if (r.message && r.message.length) {
 					if (r.message.includes("Logistics")) {
-						frappe.set_route("query-report", "Conservation");
+						frappe.set_route('conservation' ,'view', 'report', 'Conservation');
+
 					}
 				}
 			}
