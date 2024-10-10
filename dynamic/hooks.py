@@ -248,6 +248,9 @@ doc_events = {
         "before_validate":"dynamic.controllers.lead.before_validate",
         "before_insert": "dynamic.api.lead_before_insert"
     },
+    "Contact": {
+        "before_validate":"dynamic.controllers.contact.before_validate",
+    },
     "Purchase Receipt": {
         "on_submit": [
             "dynamic.api.submit_purchase_recipt",

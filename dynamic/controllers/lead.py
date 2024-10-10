@@ -8,7 +8,6 @@ Domains=frappe.get_active_domains()
 @frappe.whitelist(allow_guest = True)
 def before_validate(self, event):
     if 'Logistics' in Domains :
-        filter_with_numbers(self)
         if self.transfer :
             set_transfer(self)
             transfer_lead(self)
@@ -48,27 +47,6 @@ def transfer_lead(self):
 
 def set_transfer(self):
     self.transfer_by = f"Transfer By {self.company}"
-
-def filter_with_numbers(self):
-    if self.mobile_no :
-        sql = f'''
-            SELECT 
-                p.phone
-            FROM 
-                `tabDynamic Link` d
-            INNER JOIN 
-                `tabContact` c
-                ON d.parent = c.name
-            INNER JOIN 
-                `tabContact Phone` p
-                ON p.parent = c.name
-            WHERE 
-                d.link_name = '{self.name}'
-
-                '''
-        numbers = frappe.db.sql(sql , as_dict = 1)
-        if numbers:
-           self.mobile = " ".join(str(number.phone) for number in numbers)
 
 
 
