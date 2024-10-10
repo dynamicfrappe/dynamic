@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+import json
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils.data import  get_link_to_form 
@@ -121,3 +122,63 @@ class CompositionOrder(Document):
 		lnk = get_link_to_form(composition.doctype, composition.name)
 		frappe.msgprint(_("{} {} was Created").format(
 		composition.doctype, lnk))
+
+# @frappe.whitelist()
+# def get_engineer_events(start, end, filters=None):
+#     events = []
+    
+#     # Fetch Conservation Orders within the date range
+#     conservation_orders = frappe.get_all('Composition Order', filters={
+#         "date": ["between", (start, end)]
+#     }
+# 	)
+    
+#     # Loop through each Conservation Order
+#     for order in conservation_orders:
+#         doc = frappe.get_doc('Composition Order', order.name)
+        
+#         # Loop through child table entries (Engineers)
+#         for engineer in doc.engineers:
+#             # Create an event for each engineer's start and end date
+#             events.append({
+#                 "start": engineer.from1,
+#                 "end": engineer.to,
+#                 "title": doc.name + " - " + engineer.employee,
+#                 "id": doc.name
+#             })
+    
+#     return events
+
+
+@frappe.whitelist()
+def get_events(start, end, filters=None):
+	"""Returns events for Gantt / Calendar view rendering.
+	frappe
+	:param start: Start date-time.
+	:param end: End date-time.
+	:param filters: Filters (JSON).
+	"""
+	from frappe.desk.calendar import get_event_conditions
+	filters = json.loads(filters)
+	conditions = get_event_conditions("Composition Order", filters)
+
+	data = frappe.db.sql("""
+		select
+			`tabComposition Order`.name as name,
+			`tabEngineering Name`.from1 as start,
+			`tabEngineering Name`.to as end
+		from
+			`tabComposition Order` 
+		inner join 
+			`tabEngineering Name`
+			on
+		    `tabComposition Order`.name = `tabEngineering Name`.parent
+			where
+			(`tabEngineering Name`.from1 between %(start)s and %(end)s)
+			{conditions}
+		""".format(conditions=conditions),
+		{"start": start, "end": end},
+		as_dict=True,
+		update={"allDay": 0},
+	)
+	return data

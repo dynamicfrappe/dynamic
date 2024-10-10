@@ -38,13 +38,15 @@ app_include_js = [
     "/assets/js/dynamic.min.js",
 ]
 
-
 # include js in doctype views
 # doctype_js = {"Payment Entry": "public/js/payment_entry.js"}
 #
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 doctype_calendar_js = {
-    "Appointment": "public/js/appointment_calendar.js"
+    "Appointment": "public/js/appointment_calendar.js",
+    "Actions": "public/js/actions_calender.js",
+    "Composition Order": "public/js/composition_order_calender.js",
+    "Conservation order": "public/js/conservation_order_calender.js",
     # "doctype" : "public/js/appointment.js"
 }
 

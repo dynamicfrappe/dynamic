@@ -1,6 +1,6 @@
 # Copyright (c) 2023, Dynamic and contributors
 # For license information, please see license.txt
-
+import json
 import frappe
 from frappe.model.document import Document
 from frappe.utils.data import  get_link_to_form 
@@ -123,4 +123,35 @@ class Conservationorder(Document):
 				event.insert()
 
 
+@frappe.whitelist()
+def get_events(start, end, filters=None):
+	"""Returns events for Gantt / Calendar view rendering.
+	frappe
+	:param start: Start date-time.
+	:param end: End date-time.
+	:param filters: Filters (JSON).
+	"""
+	from frappe.desk.calendar import get_event_conditions
+	filters = json.loads(filters)
+	conditions = get_event_conditions("Conservation order", filters)
 
+	data = frappe.db.sql("""
+		select
+			`tabConservation order`.name as name,
+			`tabEngineering Name`.from1 as start,
+			`tabEngineering Name`.to as end
+		from
+			`tabConservation order` 
+		inner join 
+			`tabEngineering Name`
+			on
+		    `tabConservation order`.name = `tabEngineering Name`.parent
+			where
+			(`tabEngineering Name`.from1 between %(start)s and %(end)s)
+			{conditions}
+		""".format(conditions=conditions),
+		{"start": start, "end": end},
+		as_dict=True,
+		update={"allDay": 0},
+	)
+	return data
