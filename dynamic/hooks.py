@@ -320,8 +320,11 @@ doc_events = {
     # },
     "Accounts Settings": {"validate": "dynamic.api.onsave_account_settings"},
     "Lead": {
-        # "validate":"dynamic.ifi.api.lead_contact_by_email"
-        "before_insert": "dynamic.api.lead_before_insert"
+        # "validate":"dynamic.ifi.api.lead_contact_by_email"/
+        "before_insert": "dynamic.api.lead_before_insert",
+        "validate": "dynamic.api.validate_lead" ,
+        "on_update": "dynamic.api.on_update" ,
+
     },
     "Purchase Receipt": {
         "on_submit": [

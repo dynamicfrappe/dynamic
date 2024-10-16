@@ -4,6 +4,7 @@ from dynamic.dynamic_accounts.print_format.invoice_tax.invoice_tax import (
 	get_invoice_tax_data,
 )
 import os
+import ast
 
 import frappe
 from erpnext.accounts.party import get_party_account
@@ -2247,5 +2248,34 @@ def read_content(content, extension, as_dict=True):
 
 
 
+@frappe.whitelist()
+def validate_lead(doc, *args, **kwargs):
+	if "True lease" in DOMAINS:
+		if get_assigns(doc):
+			for assign in get_assigns(doc) :
+				if not frappe.db.exists("User Permission", { "user" : assign , "for_value": doc.name}):
+					user_permission = frappe.new_doc("User Permission")
+					user_permission.user = assign
+					user_permission.allow = doc.doctype
+					user_permission.for_value = doc.name
+					user_permission.insert()
 
+@frappe.whitelist()
+def on_update(doc, *args, **kwargs):
+	if "True lease" in DOMAINS:
+		if get_assigns(doc):
+			for assign in get_assigns(doc) :
+				notif_doc = frappe.new_doc('Notification Log')
+				notif_doc.subject = f"{doc.doctype} {doc.name} modified by {doc.modified_by}"
+				notif_doc.for_user = assign
+				notif_doc.type = "Alert"
+				notif_doc.document_type = doc.doctype
+				notif_doc.document_name = doc.name
+				notif_doc.from_user = frappe.session.user
+				notif_doc.insert(ignore_permissions=True)
 
+def get_assigns(doc):
+	assign_data = frappe.db.get_value("Lead", doc.name, "_assign")
+	if assign_data :
+		assign_data = ast.literal_eval(assign_data)
+		return assign_data
