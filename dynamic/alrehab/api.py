@@ -88,7 +88,7 @@ def get_updates(name):
                                 
         total = sum( item.get('amount', 0) for item in invoice.get('items', []))
         frappe.db.set_value('Sales Invoice', invoice.name, {'num_of_delay_days': max(days, 0)})
-        frappe.db.set_value('Sales Invoice', invoice.name, {'deferred_revenue_amount': total * days * penalty})
+        frappe.db.set_value('Sales Invoice', invoice.name, {'deferred_revenue_amount': total * max(days, 0) * penalty})
         frappe.db.commit()
         frappe.msgprint("تم التحديث.")
 
