@@ -101,7 +101,7 @@ def execute(filters=None):
             payment_actual_due_date = frappe.db.get_value("Sales Invoice", row['invoice_name'], "payment_actual_due_date")
             if payment_actual_due_date:
                 dueDate = payment_actual_due_date
-            days = date_diff(today(), due_date)
+            days = date_diff(today(), dueDate)
             row['num_of_delay_days'] = max(days, 0)
             row['deferred_revenue_amount'] =  (row['fine_percent'] or 0) * (row['num_of_delay_days']  or 0) * ( row['total'] or 0)
             row['total_with_fine'] = row['deferred_revenue_amount'] + row['total']
