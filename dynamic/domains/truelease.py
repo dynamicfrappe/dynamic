@@ -35,6 +35,13 @@ data = {
             "fieldname": "government",
             "fieldtype": "Data",
             "insert_after": "phone_no",
+         },
+         {
+            "label" :"Client Profile Status" ,
+            "fieldname": "cp_status",
+            "fieldtype": "Select",
+            "insert_after": "status",
+            "options": "\nApproved\nRejected"
          }
       ],
       'Actions': [
@@ -270,6 +277,23 @@ data = {
         "property_type": "Data",
         "value": "field:company_name"
         },
+        {
+        "doctype": "Lead",
+        "doctype_or_field": "DocField",
+        "fieldname": "status",
+        "property": "default",
+        "property_type": "Small Text",
+        "value": "Open"
+        },
+        {
+        "doctype": "Lead",
+        "doctype_or_field": "DocField",
+        "fieldname": "status",
+        "property": "options",
+        "property_type": "Select",
+        "value": "Open\nOpportunity\nClose"
+        },
+        
       #  Actions
         {
         "doctype": "Actions",

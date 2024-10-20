@@ -1,6 +1,7 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
+# Copyright (c) 2024, Dynamic and contributors
+# For license information, please see license.txt
 
+# import frappe
 
 from operator import itemgetter
 
@@ -561,3 +562,4 @@ def get_variant_values_for(items):
 		attribute_map[attr["parent"]].update({attr["attribute"]: attr["attribute_value"]})
 
 	return attribute_map
+

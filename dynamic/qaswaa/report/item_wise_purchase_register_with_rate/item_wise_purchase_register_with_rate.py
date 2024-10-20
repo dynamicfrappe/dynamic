@@ -1,5 +1,5 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
+# Copyright (c) 2024, Dynamic and contributors
+# For license information, please see license.txt
 
 
 import frappe
@@ -8,12 +8,7 @@ from frappe.model.meta import get_field_precision
 from frappe.utils import cstr, flt
 from frappe.utils.xlsxutils import handle_html
 
-# from erpnext.accounts.report.sales_register.sales_register import get_mode_of_payments
-from erpnext.selling.report.item_wise_sales_history.item_wise_sales_history import (
-	get_customer_details,
-	get_item_details,
-)
-
+from erpnext.selling.report.item_wise_sales_history.item_wise_sales_history import	get_item_details
 
 def execute(filters=None):
 	return _execute(filters)
@@ -36,7 +31,7 @@ def _execute(
 		itemised_tax, tax_columns = get_tax_accounts(item_list, columns, company_currency)
 
 	mode_of_payments = get_mode_of_payments(set(d.parent for d in item_list))
-	so_dn_map = get_delivery_notes_against_sales_order(item_list)
+	# so_dn_map = get_purchase_reciepts_against_purchase_order(item_list)
 	# frappe.errprint(f"so_dn_map-->{so_dn_map}")
 	data = []
 	total_row_map = {}
@@ -44,32 +39,29 @@ def _execute(
 	prev_group_by_value = ""
 
 	if filters.get("group_by"):
-		grand_total = get_grand_total(filters, "Sales Invoice")
+		grand_total = get_grand_total(filters, "Purchase Invoice")
 
-	customer_details = get_customer_details()
+	supplier_details = get_supplier_details()
 	item_details = get_item_details()
 
 	for d in item_list:
-		# frappe.errprint(f"d-->{d}")
-		customer_record = customer_details.get(d.customer)
+		supplier_record = supplier_details.get(d.supplier)
 		item_record = item_details.get(d.item_code)
 
-		delivery_note = None
-		if d.delivery_note:
-			delivery_note = d.delivery_note
-		elif d.so_detail:
-			delivery_note = ", ".join(so_dn_map.get(d.so_detail, []))
+		# purchase_reciept = None
+		# if d.purchase_reciept:
+		# 	purchase_reciept = d.purchase_reciept
+		# # elif d.po_detail:
+		# # 	purchase_reciept = ", ".join(so_dn_map.get(d.po_detail, []))
 
-		if not delivery_note and d.update_stock:
-			delivery_note = d.parent
+		# if not purchase_reciept and d.update_stock:
+		# 	purchase_reciept = d.parent
 		
-		delivery_note_name = so_dn_map.get(d.so_detail)
-		# frappe.errprint(f"--so_detail -->{delivery_note_name}")
-		# frappe.errprint(f"--so_detail -->{d}")
-		delivery_note_incoming_rate = 0
-		if delivery_note_name:
-			delivery_note_incoming_rate = so_dn_map.get(delivery_note_name[0])[0]
-			# frappe.errprint(f"--delivery_note_incoming_rate -->{delivery_note_incoming_rate}")
+		# purchase_reciept_name = so_dn_map.get(d.po_detail)
+
+		purchase_reciept_incoming_rate = 0
+		# if purchase_reciept_name:
+		# 	purchase_reciept_incoming_rate = so_dn_map.get(purchase_reciept_name[0])[0]
 		
 		row = {
 			"item_code": d.item_code,
@@ -79,16 +71,16 @@ def _execute(
 			"discount_account" : d.discount_account,
 			"description": d.description,
 			"invoice": d.parent,
+			"status":d.status,
 			"base_discount_amount": d.base_discount_amount,
-			"additional_discount_account": d.additional_discount_account,
-			"total_discount" : d.total_discount * d.qty, 
-			"gross_profit" : (d.base_net_amount + (d.total_discount * d.qty)) ,
+			"total_discount" : d.total_discount , 
+			"gross_profit" : d.gross_profit ,
 			"posting_date": d.posting_date,
-			"customer": d.customer,
-			"customer_name": customer_record.customer_name,
-			"customer_group": customer_record.customer_group,
-			"incoming_rate": d.incoming_rate or  delivery_note_incoming_rate,
-			"total_cost": d.incoming_rate * d.qty,
+			"supplier": d.supplier,
+			"supplier_name": supplier_record.supplier_name,
+			"supplier_group": supplier_record.supplier_group,
+			"incoming_rate": purchase_reciept_incoming_rate,
+			"total_cost": purchase_reciept_incoming_rate * d.qty,
 		}
 
 		if additional_query_columns:
@@ -102,16 +94,15 @@ def _execute(
 			mode_of_payment = ", ".join(mode_of_payments.get(d.parent, []))
 		row.update(
 			{
-				"debit_to": d.debit_to,
+				"credit_to": d.credit_to,
 				"mode_of_payment":mode_of_payment,
-				"territory": d.territory,
 				"project": d.project,
 				"company": d.company,
-				"sales_order": d.sales_order,
-				"delivery_note": d.delivery_note,
-				"income_account": d.unrealized_profit_loss_account
-				if d.is_internal_customer == 1
-				else d.income_account,
+				"purchase_order": d.purchase_order,
+				# "purchase_receipt": d.purchase_receipt,
+				"expense_account": d.unrealized_profit_loss_account
+				if d.is_internal_supplier == 1
+				else d.expense_account,
 				"cost_center": d.cost_center,
 				"stock_qty": d.stock_qty,
 				"stock_uom": d.stock_uom,
@@ -120,8 +111,10 @@ def _execute(
 
 		if d.stock_uom != d.uom and d.stock_qty:
 			row.update({"rate": (d.base_net_rate * d.qty) / d.stock_qty, "amount": d.base_net_amount})
+			row.update({"price_list_rate": (d.price_list_rate * d.qty) / d.stock_qty })
 		else:
 			row.update({"rate": d.base_net_rate, "amount": d.base_net_amount})
+			row.update({"price_list_rate": d.price_list_rate, "amount": d.base_net_amount})
 		 
 		row['profit_rate'] = row.get('rate',0) - row.get('incoming_rate',0)
 		row['total_profit'] = (row.get('rate',0) - row.get('incoming_rate',0)) * (row.get('qty') or row.get('stock_qty') )
@@ -179,6 +172,9 @@ def _execute(
 	return columns, data, None, None, None, skip_total_row
 
 
+
+
+
 def get_columns(additional_table_columns, filters):
 	columns = []
 
@@ -194,9 +190,8 @@ def get_columns(additional_table_columns, filters):
 				},
 				{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 120},
 				{"label": _("Description"), "fieldname": "description", "fieldtype": "Data", "width": 150},
-				{"label": _("Discount Account"), "fieldname": "discount_account", "fieldtype": "Link", "options": "Account", "width": 150},
-				{"label": _("Discount Amount"), "fieldname": "discount_amount", "fieldtype": "Currency", "options": "currency","width": 150},
-
+				# {"label": _("Discount Account"), "fieldname": "discount_account", "fieldtype": "Link", "options": "Account", "width": 150},
+			
 				#
 			]
 		)
@@ -218,82 +213,75 @@ def get_columns(additional_table_columns, filters):
 	columns.extend(
 		[
 			{
-			"label": _("Sales Order"),
-			"fieldname": "sales_order",
+			"label": _("Purchase Order"),
+			"fieldname": "purchase_order",
 			"fieldtype": "Link",
-			"options": "Sales Order",
+			"options": "Purchase Order",
 			"width": 100,
 		},
-		{
-			"label": _("Delivery Note"),
-			"fieldname": "delivery_note",
-			"fieldtype": "Link",
-			"options": "Delivery Note",
-			"width": 100,
-		},
+		# {
+		# 	"label": _("Purchase Receipt"),
+		# 	"fieldname": "purchase_receipt",
+		# 	"fieldtype": "Link",
+		# 	"options": "Purchase Receipt",
+		# 	"width": 100,
+		# },
 			
 		{
 			"label": _("Invoice"),
 			"fieldname": "invoice",
 			"fieldtype": "Link",
-			"options": "Sales Invoice",
+			"options": "Purchase Invoice",
 			"width": 120,
 		},
 		{
-			"label": _("Discount Account"),
-			"fieldname": "additional_discount_account",
-			"fieldtype": "Link",
-			"options": "Account",
+			"label": _("Status"),
+			"fieldname": "status",
+			"fieldtype": "Data",
 			"width": 120,
-		},		
+		},	
 
 			
 		]
 	)
 
-	if filters.get("group_by") not in ("Customer", "Customer Group"):
+	if filters.get("group_by") not in ("Supplier", "Supplier Group"):
 		columns.extend(
 			[
 				{
-					"label": _("Customer"),
-					"fieldname": "customer",
+					"label": _("Supplier"),
+					"fieldname": "supplier",
 					"fieldtype": "Link",
-					"options": "Customer",
+					"options": "Supplier",
 					"width": 120,
 				},
-				{"label": _("Customer Name"), "fieldname": "customer_name", "fieldtype": "Data", "width": 120},
+				{"label": _("Supplier Name"), "fieldname": "supplier_name", "fieldtype": "Data", "width": 120},
 			]
 		)
 
-	if filters.get("group_by") != "Customer":
-		columns.extend(
-			[
-				{
-					"label": _("Customer Group"),
-					"fieldname": "customer_group",
-					"fieldtype": "Link",
-					"options": "Customer Group",
-					"width": 120,
-				}
-			]
-		)
+	# if filters.get("group_by") != "Supplier":
+	# 	columns.extend(
+	# 		[
+	# 			{
+	# 				"label": _("Supplier Group"),
+	# 				"fieldname": "supplier_group",
+	# 				"fieldtype": "Link",
+	# 				"options": "Supplier Group",
+	# 				"width": 120,
+	# 			}
+	# 		]
+	# 	)
 
 	
 	columns.extend(
 		[
-			{
-			"label": _("Mode Of Payment"),
-			"fieldname": "mode_of_payment",
-			"fieldtype": "Data",
-			"width": 120,
-		},
+		# 	{
+		# 	"label": _("Mode Of Payment"),
+		# 	"fieldname": "mode_of_payment",
+		# 	"fieldtype": "Data",
+		# 	"width": 120,
+		# },
 		{
-			"label": _("Territory"),
-			"fieldname": "territory",
-			"fieldtype": "Link",
-			"options": "Territory",
-			"width": 80,
-		},{
 			"label": _("Project"),
 			"fieldname": "project",
 			"fieldtype": "Link",
@@ -315,36 +303,43 @@ def get_columns(additional_table_columns, filters):
 			"options": "UOM",
 			"width": 100,
 		},
-		 {"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
-		 {"label": _("Total Cost"), "fieldname": "total_cost", "fieldtype": "Float", "width": 120},
+		#  {"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
+		#  {"label": _("Total Cost"), "fieldname": "total_cost", "fieldtype": "Float", "width": 120},
 		 {
-			"label": _("Sales Rate"),
+			"label": _("Purchase Rate"),
 			"fieldname": "rate",
 			"fieldtype": "Float",
 			"options": "currency",
 			"width": 100,
 		},
 		{
-			"label": _("Total Sale"),
+			"label": _("Rate before Discount"),
+			"fieldname": "price_list_rate",
+			"fieldtype": "Float",
+			"options": "currency",
+			"width": 100,
+		},
+		{
+			"label": _("Total Purchase"),
 			"fieldname": "amount",
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 100,
 		},
-		{
-			"label": _("Profit Rate"),
-			"fieldname": "profit_rate",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
-		{
-			"label": _("Total Profit"),
-			"fieldname": "total_profit",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 100,
-		},
+		# {
+		# 	"label": _("Profit Rate"),
+		# 	"fieldname": "profit_rate",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 100,
+		# },
+		# {
+		# 	"label": _("Total Profit"),
+		# 	"fieldname": "total_profit",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 100,
+		# },
 		{
 			"label": _("Total Tax"),
 			"fieldname": "total_tax",
@@ -359,20 +354,14 @@ def get_columns(additional_table_columns, filters):
 			"options": "currency",
 			"width": 100,
 		},
-		# {
-		# 	"label": _("Total"),
-		# 	"fieldname": "total",
-		# 	"fieldtype": "Currency",
-		# 	"options": "currency",
-		# 	"width": 100,
-		# },
+		
 
 		]
 	)
 	if filters.get("group_by") != ("Item"):
 		columns.extend(
 			[
-				{"label": _("Discount Amount"), "fieldname": "discount_amount", "fieldtype": "Currency", "options": "currency","width": 150},
+				{"label": _("Item Discount Amount"), "fieldname": "discount_amount", "fieldtype": "Currency", "options": "currency","width": 150},
 			]
 		)
 	columns.extend(
@@ -391,64 +380,18 @@ def get_columns(additional_table_columns, filters):
 			"options": "currency",
 			"width": 120,
 		},
-		{
-			"label": _("Gross Profit"),
-			"fieldname": "gross_profit",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 120,
-		},			]
+		# {
+		# 	"label": _("Gross Profit"),
+		# 	"fieldname": "gross_profit",
+		# 	"fieldtype": "Currency",
+		# 	"options": "currency",
+		# 	"width": 120,
+		# },			
+		]
 		)
 	if additional_table_columns:
 		columns += additional_table_columns
 
-	# columns += [
-	# 	{
-	# 		"label": _("Receivable Account"),
-	# 		"fieldname": "debit_to",
-	# 		"fieldtype": "Link",
-	# 		"options": "Account",
-	# 		"width": 80,
-	# 	},
-		
-	# ]
-
-	# if filters.get("group_by") != "Territory":
-	# 	columns.extend(
-	# 		[
-	# 			{
-	# 				"label": _("Territory"),
-	# 				"fieldname": "territory",
-	# 				"fieldtype": "Link",
-	# 				"options": "Territory",
-	# 				"width": 80,
-	# 			}
-	# 		]
-	# 	)
-
-	# columns += [
-		
-	# 	{
-	# 		"label": _("Company"),
-	# 		"fieldname": "company",
-	# 		"fieldtype": "Link",
-	# 		"options": "Company",
-	# 		"width": 80,
-	# 	},
-		
-		
-	# 	{
-	# 		"label": _("Income Account"),
-	# 		"fieldname": "income_account",
-	# 		"fieldtype": "Link",
-	# 		"options": "Account",
-	# 		"width": 100,
-	# 	},
-		
-		
-		
-		
-	# ]
 
 	if filters.get("group_by"):
 		columns.append(
@@ -463,10 +406,10 @@ def get_conditions(filters, additional_conditions=None):
 
 	for opts in (
 		("company", " and company=%(company)s"),
-		("customer", " and `tabSales Invoice`.customer = %(customer)s"),
-		("item_code", " and `tabSales Invoice Item`.item_code = %(item_code)s"),
-		("from_date", " and `tabSales Invoice`.posting_date>=%(from_date)s"),
-		("to_date", " and `tabSales Invoice`.posting_date<=%(to_date)s"),
+		("supplier", " and `tabPurchase Invoice`.supplier = %(supplier)s"),
+		("item_code", " and `tabPurchase Invoice Item`.item_code = %(item_code)s"),
+		("from_date", " and `tabPurchase Invoice`.posting_date>=%(from_date)s"),
+		("to_date", " and `tabPurchase Invoice`.posting_date<=%(to_date)s"),
 	):
 		if filters.get(opts[0]):
 			conditions += opts[1]
@@ -475,25 +418,28 @@ def get_conditions(filters, additional_conditions=None):
 		conditions += additional_conditions
 
 	if filters.get("mode_of_payment"):
-		conditions += """ and exists(select name from `tabSales Invoice Payment`
-			where parent=`tabSales Invoice`.name
-				and ifnull(`tabSales Invoice Payment`.mode_of_payment, '') = %(mode_of_payment)s)"""
+		conditions += """ and exists(select name from `tabPurchase Invoice Payment`
+			where parent=`tabPurchase Invoice`.name
+				and ifnull(`tabPurchase Invoice Payment`.mode_of_payment, '') = %(mode_of_payment)s)"""
 
 	if filters.get("warehouse"):
-		conditions += """and ifnull(`tabSales Invoice Item`.warehouse, '') = %(warehouse)s"""
+		conditions += """and ifnull(`tabPurchase Invoice Item`.warehouse, '') = %(warehouse)s"""
 
 	if filters.get("brand"):
-		conditions += """and ifnull(`tabSales Invoice Item`.brand, '') = %(brand)s"""
+		conditions += """and ifnull(`tabPurchase Invoice Item`.brand, '') = %(brand)s"""
 
 	if filters.get("item_group"):
-		conditions += """and ifnull(`tabSales Invoice Item`.item_group, '') = %(item_group)s"""
+		conditions += """and ifnull(`tabPurchase Invoice Item`.item_group, '') = %(item_group)s"""
+	
+	if filters.get("item_code"):
+		conditions += """and ifnull(`tabPurchase Invoice Item`.item_code, '') = %(item_code)s"""
 
 	if not filters.get("group_by"):
 		conditions += (
-			"ORDER BY `tabSales Invoice`.posting_date desc, `tabSales Invoice Item`.item_group desc"
+			"ORDER BY `tabPurchase Invoice`.posting_date desc, `tabPurchase Invoice Item`.item_group desc"
 		)
 	else:
-		conditions += get_group_by_conditions(filters, "Sales Invoice")
+		conditions += get_group_by_conditions(filters, "Purchase Invoice")
 
 	return conditions
 
@@ -505,7 +451,7 @@ def get_group_by_conditions(filters, doctype):
 		return "ORDER BY `tab{0} Item`.`item_code`".format(doctype)
 	elif filters.get("group_by") == "Item Group":
 		return "ORDER BY `tab{0} Item`.{1}".format(doctype, frappe.scrub(filters.get("group_by")))
-	elif filters.get("group_by") in ("Customer", "Customer Group", "Territory", "Supplier"):
+	elif filters.get("group_by") in ("Supplier", "Supplier Group"):
 		return "ORDER BY `tab{0}`.{1}".format(doctype, frappe.scrub(filters.get("group_by")))
 
 
@@ -520,31 +466,31 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 	return frappe.db.sql(
 		"""
 		select
-			`tabSales Invoice Item`.name, `tabSales Invoice Item`.parent,
-			`tabSales Invoice`.posting_date, `tabSales Invoice`.debit_to,
-			`tabSales Invoice`.unrealized_profit_loss_account,
-			`tabSales Invoice`.is_internal_customer,
-			`tabSales Invoice`.additional_discount_account,
-    		COALESCE(`tabSales Invoice`.base_discount_amount, 0) as base_discount_amount,
-    		(COALESCE(`tabSales Invoice`.base_discount_amount, 0) + COALESCE(`tabSales Invoice Item`.`discount_amount`, 0)) as total_discount ,
-			`tabSales Invoice`.project, `tabSales Invoice`.customer, `tabSales Invoice`.remarks,
-			`tabSales Invoice`.territory, `tabSales Invoice`.company, `tabSales Invoice`.base_net_total,
-			`tabSales Invoice Item`.item_code, `tabSales Invoice Item`.description,
-			`tabSales Invoice Item`.`item_name`, `tabSales Invoice Item`.`item_group`,
-			`tabSales Invoice Item`.`discount_account` , `tabSales Invoice Item`.`discount_amount` ,
-			`tabSales Invoice Item`.sales_order, `tabSales Invoice Item`.delivery_note,
-			`tabSales Invoice Item`.income_account, `tabSales Invoice Item`.cost_center,
-			`tabSales Invoice Item`.stock_qty, `tabSales Invoice Item`.stock_uom,
-			`tabSales Invoice Item`.base_net_rate, 
-			COALESCE(`tabSales Invoice Item`.base_net_amount, 0) as base_net_amount ,
-			(`tabSales Invoice Item`.base_net_amount + 
-			(`tabSales Invoice`.base_discount_amount + `tabSales Invoice Item`.`discount_amount`)) as gross_profit ,
-			`tabSales Invoice`.customer_name, `tabSales Invoice`.customer_group, `tabSales Invoice Item`.so_detail,
-			`tabSales Invoice`.update_stock, `tabSales Invoice Item`.uom, `tabSales Invoice Item`.qty {0}
-			,`tabSales Invoice Item`.incoming_rate
-		from `tabSales Invoice`, `tabSales Invoice Item`
-		where `tabSales Invoice`.name = `tabSales Invoice Item`.parent
-			and `tabSales Invoice`.docstatus = 1 {1}
+			`tabPurchase Invoice Item`.name, `tabPurchase Invoice Item`.parent,
+			`tabPurchase Invoice`.posting_date, `tabPurchase Invoice`.credit_to,
+			`tabPurchase Invoice`.unrealized_profit_loss_account,
+			`tabPurchase Invoice`.is_internal_supplier,
+    		COALESCE(`tabPurchase Invoice`.discount_amount, 0) as base_discount_amount,
+    		(COALESCE(`tabPurchase Invoice`.discount_amount, 0) + COALESCE(`tabPurchase Invoice Item`.`discount_amount`, 0)) as total_discount ,
+			`tabPurchase Invoice`.project, `tabPurchase Invoice`.supplier, `tabPurchase Invoice`.remarks,`tabPurchase Invoice`.status,
+			`tabPurchase Invoice`.company, `tabPurchase Invoice`.base_net_total,
+			`tabPurchase Invoice Item`.item_code, `tabPurchase Invoice Item`.description,
+			`tabPurchase Invoice Item`.`item_name`, `tabPurchase Invoice Item`.`item_group`,
+			`tabPurchase Invoice Item`.`discount_account` , `tabPurchase Invoice Item`.`discount_amount` ,
+			`tabPurchase Invoice Item`.purchase_order, 
+			`tabPurchase Invoice Item`.expense_account, `tabPurchase Invoice Item`.cost_center,
+			`tabPurchase Invoice Item`.stock_qty, `tabPurchase Invoice Item`.stock_uom,
+			`tabPurchase Invoice Item`.base_net_rate, 
+			`tabPurchase Invoice Item`.price_list_rate, 
+			COALESCE(`tabPurchase Invoice Item`.base_net_amount, 0) as base_net_amount ,
+			COALESCE(`tabPurchase Invoice Item`.base_net_amount, 0) + 
+			(COALESCE(`tabPurchase Invoice`.discount_amount, 0) + COALESCE(`tabPurchase Invoice Item`.`discount_amount`, 0)) as gross_profit ,
+			`tabPurchase Invoice`.supplier_name, `tabSupplier`.supplier_group, `tabPurchase Invoice Item`.po_detail,
+			`tabPurchase Invoice`.update_stock, `tabPurchase Invoice Item`.uom, `tabPurchase Invoice Item`.qty {0}
+			
+		from `tabPurchase Invoice`, `tabPurchase Invoice Item`, `tabSupplier`
+		where `tabPurchase Invoice`.name = `tabPurchase Invoice Item`.parent AND `tabPurchase Invoice`.supplier = `tabSupplier`.name
+			and `tabPurchase Invoice`.docstatus = 1 {1}
 		""".format(
 			additional_query_columns or "", conditions
 		),
@@ -554,28 +500,30 @@ def get_items(filters, additional_query_columns, additional_conditions=None):
 	 # nosec
 
 
-def get_delivery_notes_against_sales_order(item_list):
-	so_dn_map = frappe._dict()
-	so_item_rows = list(set([d.so_detail for d in item_list]))
-	# frappe.errprint(f'so_item_rows--->{so_item_rows}')
-	if so_item_rows:
-		delivery_notes = frappe.db.sql(
-			"""
-			select parent, so_detail,incoming_rate
-			from `tabDelivery Note Item`
-			where docstatus=1 and so_detail in (%s)
-			group by so_detail, parent
-		"""
-			% (", ".join(["%s"] * len(so_item_rows))),
-			tuple(so_item_rows),
-			as_dict=1,
-		)
+# def get_purchase_reciepts_against_purchase_order(item_list):
+# 	print("8888888888")
+# 	so_dn_map = frappe._dict()
+# 	so_item_rows = list(set([d.po_detail for d in item_list]))
+# 	if so_item_rows:
+# 		purchase_receipts = frappe.db.sql(
+# 			"""
+# 			select parent ,incoming_rate
+# 			from `tabPurchase Receipt Item` 
+# 			where docstatus=1
+# 			group by parent
+# 		"""
+# 			% (", ".join(["%s"] * len(so_item_rows))),
+# 			tuple(so_item_rows),
+# 			as_dict=1,
+# 		)
 
-		for dn in delivery_notes:
-			so_dn_map.setdefault(dn.so_detail, []).append(dn.parent)
-			so_dn_map.setdefault(dn.parent, []).append(dn.incoming_rate)
+# 		for pr in purchase_receipts:
+# 			# so_dn_map.setdefault(pr.po_detail, []).append(pr.parent)
+# 			so_dn_map.setdefault(pr.parent, []).append(pr.incoming_rate)
 
-	return so_dn_map
+# 	# return so_dn_map
+# 	return {}
+
 
 
 def get_grand_total(filters, doctype):
@@ -599,8 +547,8 @@ def get_tax_accounts(
 	item_list,
 	columns,
 	company_currency,
-	doctype="Sales Invoice",
-	tax_doctype="Sales Taxes and Charges",
+	doctype="Purchase Invoice",
+	tax_doctype="Purchase Taxes and Charges",
 ):
 	import json
 
@@ -667,7 +615,6 @@ def get_tax_accounts(
 	) in tax_details:
 		description = handle_html(description)
 		if description not in tax_columns and tax_amount:
-			# as description is text editor earlier and markup can break the column convention in reports
 			tax_columns.append(description)
 
 		if item_wise_tax_detail:
@@ -722,38 +669,6 @@ def get_tax_accounts(
 				)
 
 	tax_columns.sort()
-	# for desc in tax_columns:
-	# 	columns.append(
-	# 		{
-	# 			"label": _(desc + " Rate"),
-	# 			"fieldname": frappe.scrub(desc + " Rate"),
-	# 			"fieldtype": "Float",
-	# 			"width": 100,
-	# 		}
-	# 	)
-
-	# 	columns.append(
-	# 		{
-	# 			"label": _(desc + " Amount"),
-	# 			"fieldname": frappe.scrub(desc + " Amount"),
-	# 			"fieldtype": "Currency",
-	# 			"options": "currency",
-	# 			"width": 100,
-	# 		}
-	# 	)
-
-	# columns += [
-		
-		
-		
-	# 	{
-	# 		"fieldname": "currency",
-	# 		"label": _("Currency"),
-	# 		"fieldtype": "Currency",
-	# 		"width": 80,
-	# 		"hidden": 1,
-	# 	},
-	# ]
 
 	return itemised_tax, tax_columns
 
@@ -863,21 +778,20 @@ def add_sub_total_row(item, total_row_map, group_by_value, tax_columns):
 		total_row.setdefault(frappe.scrub(tax + " Amount"), 0.0)
 		total_row[frappe.scrub(tax + " Amount")] += flt(item[frappe.scrub(tax + " Amount")])
 
+def get_supplier_details():
+	details = frappe.get_all("Supplier", fields=["name", "supplier_name", "supplier_group"])
+	supplier_details = {}
+	for d in details:
+		supplier_details.setdefault(
+			d.name, frappe._dict({"supplier_name": d.supplier_name, "supplier_group": d.supplier_group})
+		)
+	return supplier_details
 
 
 def get_mode_of_payments(invoice_list):
-	# mode_of_payments = {}
 	mode_of_payments_2 = {}
-
 	
 	if invoice_list:
-		# inv_mop = frappe.db.sql(
-		# 	"""select parent, mode_of_payment
-		# 	from `tabSales Invoice Payment` where parent in (%s) group by parent, mode_of_payment"""
-		# 	% ", ".join(["%s"] * len(invoice_list)),
-		# 	tuple(invoice_list),
-		# 	as_dict=1,
-		# )
 		inv_mod = frappe.db.sql(
 			"""select `tabPayment Entry`.name, `tabPayment Entry`.mode_of_payment
 			,`tabPayment Entry Reference`.reference_name as parent
@@ -891,10 +805,7 @@ def get_mode_of_payments(invoice_list):
 			tuple(invoice_list),
 			as_dict=1,
 		)
-		# frappe.errprint(f'--inv_mod-<>{inv_mod}')
 		for d in inv_mod:
 			mode_of_payments_2.setdefault(d.parent, []).append(d.mode_of_payment)
-		# for d in inv_mop:
-		# 	mode_of_payments.setdefault(d.parent, []).append(d.mode_of_payment)
-		# frappe.errprint(f'--mode_of_payments_2-<>{mode_of_payments_2}')
+
 	return mode_of_payments_2

@@ -325,7 +325,9 @@ frappe.ui.form.on("Stock Entry", {
             if (r.message && r.message.length) {
                 if (r.message.includes("Terra")) {
                   if (frm.doc.stock_entry_type == "Material Transfer"){
+                    
                     frm.set_value("add_to_transit",1);
+                   frm.set_df_property("add_to_transit", "read_only", 1);
                     // frm.set_df_property("add_to_transit",'reqd',1)
                   }
                 }

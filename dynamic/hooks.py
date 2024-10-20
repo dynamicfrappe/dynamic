@@ -55,6 +55,8 @@ doctype_list_js = {
     "Customer": "public/js/customer_list.js",
     "Quotation": "public/js/quotation_list.js",
     "Subscription": "public/js/subscription_list.js",
+    "Actions": "public/js/actions_list.js",
+    "Lead": "public/js/lead_list.js",
 }
 
 after_install = [
@@ -66,6 +68,7 @@ after_migrate = [
     "dynamic.install.after_install",
     "dynamic.dynamic.utils.create_customizations",
     "dynamic.stock_reservation.setup.setup",
+    "dynamic.ram.controllers.setup.create_domain",
     "dynamic.true_lease.controllers.setup.create_domain"
 ]
 # Desk Notifications
@@ -151,6 +154,9 @@ doctype_js = {
 # print("doctype_js ===========> " , doctype_js.get("Payment Entry"))
 
 doc_events = {
+    "Batch":{
+        "before_insert":"dynamic.controllers.batch.befor_naming",
+    },
     "Payment Entry": {
         "on_submit": "dynamic.api.submit_payment",
     },
@@ -314,8 +320,11 @@ doc_events = {
     # },
     "Accounts Settings": {"validate": "dynamic.api.onsave_account_settings"},
     "Lead": {
-        # "validate":"dynamic.ifi.api.lead_contact_by_email"
-        "before_insert": "dynamic.api.lead_before_insert"
+        # "validate":"dynamic.ifi.api.lead_contact_by_email"/
+        "before_insert": "dynamic.api.lead_before_insert",
+        "validate": "dynamic.api.validate_lead" ,
+        "on_update": "dynamic.api.on_update" ,
+
     },
     "Purchase Receipt": {
         "on_submit": [
@@ -490,6 +499,7 @@ domains = {
     "Notebook": "dynamic.domains.notebook",
     "Smart Vision": "dynamic.domains.smart_vision",
     "Stock Reservation": "dynamic.domains.stock_reservation",
+    "Ram": "dynamic.domains.ram" , 
     "Pre Quotation": "dynamic.domains.pre_quotation",
     "Skyline": "dynamic.domains.skyline",
     "Healthy Corner":"dynamic.domains.healthy_corner",
