@@ -99,6 +99,21 @@ frappe.ui.form.on("Lead", {
                             __("Create")
                         )    
                         if (frm.doc.docstatus == 0){
+                            frm.add_custom_button(
+                                __("Actions"),
+                                function () {
+                                    frappe.model.open_mapped_doc({
+                                        method:
+                                            "dynamic.logistics.logistics_api.create_lead",
+                                        frm: frm,
+                                        args: {
+                                            doctype: frm.doc.doctype,
+                                            
+                                        }
+                                    });
+                                },
+                                __("Create")
+                            ) 
                             frm.add_custom_button(__("Contact"), function () {
                                 let d = new frappe.ui.Dialog({
                                     title: 'Enter details',

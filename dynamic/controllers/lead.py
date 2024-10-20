@@ -11,8 +11,6 @@ def before_validate(self, event):
         if self.transfer :
             set_transfer(self)
             transfer_lead(self)
-        # if self.lead_owner:
-        #     create_user_permission(self)
 
 def create_user_permission(self):
     if not frappe.db.exists("User Permission", { "user" : self.lead_owner,"for_value": self.name}):
@@ -25,12 +23,10 @@ def create_user_permission(self):
 def transfer_lead(self):
     token = get_token()
     url = f"{token.get('base_url')}/api/resource/Lead"
-    print(url)
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"token {token.get('token')}"
     }
-    print(f"token {token.get('token')}")
     data = {
         "doctype": self.doctype,
         "lead_name": self.lead_name,
@@ -42,7 +38,6 @@ def transfer_lead(self):
     }
     response = requests.post(url, headers=headers , data=json.dumps(data))
 
-    print("*"*40)
     print(response.json())
 
 def set_transfer(self):

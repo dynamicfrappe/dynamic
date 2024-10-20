@@ -294,6 +294,19 @@ def create_stock_entry(source_name):
     return stock_entry
 
 @frappe.whitelist()
+def create_lead(source_name):
+    lead = frappe.get_doc('Lead',source_name)
+    actions = frappe.new_doc("Actions")
+    actions.type = "Indoor"
+    actions.status = "Watting For Customer" 
+    actions.from1 = now()
+    actions.to = frappe.utils.add_to_date(now(), minutes=10)
+    actions.document_type = lead.doctype
+    actions.document_name = lead.name
+    actions.sales_person = lead.sales_person
+    return actions
+
+@frappe.whitelist()
 def create_contact(name , type , contact):
     sql = f'''
         SELECT 

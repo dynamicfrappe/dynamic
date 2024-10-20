@@ -117,6 +117,16 @@ data = {
                 "in_standard_filter": "1",
             },
         ],
+        'Contact':[
+            {
+                "label": _("Numbers"),
+                "fieldname": "numbers",
+                "fieldtype": "Table",
+                'options' : 'Number' ,
+                "insert_after": "phone_nos",
+                "read_only" : 1,
+            }
+        ],
         'Lead': [
             {
                 "label": _("Transfer"),
