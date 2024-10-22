@@ -8,7 +8,7 @@ Domains=frappe.get_active_domains()
 @frappe.whitelist(allow_guest = True)
 def before_validate(self, event):
     if 'Logistics' in Domains :
-        validate_numbers(self)
+        # validate_numbers(self)
         get_numbers(self)
         filter_with_numbers(self)
         set_numbers(self)
@@ -37,19 +37,6 @@ def set_numbers(self):
 def validate_numbers(self):
     list = []
     for number in self.phone_nos :
-        sql = f'''
-                select 
-                    p.phone 
-                from 
-                    `tabContact` c
-                inner join 
-                    `tabContact Phone` p
-                on 
-                    c.name = p.parent
-                where 
-                    p.phone = '{number.phone}'
-                '''
-        data = frappe.db.sql(sql , as_dict = 1)
-        if (number.phone in list) or (data):
+        if number.phone in list :
             frappe.throw("This number has been added in Contact Numbers")
         list.append(number.phone)
