@@ -6,14 +6,14 @@ frappe.query_reports["Actions Report"] = {
 	// asd
 	"filters": [
 		{
-			fieldname: "from_date",
-			label: __("From Date"),
-			fieldtype: "Date"
+			fieldname: "from",
+			label: __("From"),
+			fieldtype: "Datetime"
 		},
 		{
-			fieldname: "to_date",
-			label: __("To Date"),
-			fieldtype: "Date"
+			fieldname: "to",
+			label: __("To"),
+			fieldtype: "Datetime"
 		},
 		{
 			fieldname: "type",

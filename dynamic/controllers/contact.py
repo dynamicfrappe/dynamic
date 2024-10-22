@@ -37,6 +37,19 @@ def set_numbers(self):
 def validate_numbers(self):
     list = []
     for number in self.phone_nos :
-        if number.phone in list :
+        sql = f'''
+                select 
+                    p.phone 
+                from 
+                    `tabContact` c
+                inner join 
+                    `tabContact Phone` p
+                on 
+                    c.name = p.parent
+                where 
+                    p.phone = '{number.phone}'
+                '''
+        data = frappe.db.sql(sql , as_dict = 1)
+        if (number.phone in list) or (data):
             frappe.throw("This number has been added in Contact Numbers")
         list.append(number.phone)

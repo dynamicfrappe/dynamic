@@ -13,10 +13,10 @@ def execute(filters=None):
 
 def get_data(filters):
 	conditions = " where 1=1 "
-	if filters.get("from_date"):
-		conditions += " and date >= '%s'"%filters.get("from_date")
-	if filters.get("to_date"):
-		conditions += " and date <= '%s'"%filters.get("to_date")
+	if filters.get("from"):
+		conditions += " and from1 >= '%s'"%filters.get("from")
+	if filters.get("to"):
+		conditions += " and `to` <= '%s'"%filters.get("to")
 	if filters.get("type"):
 		conditions += " and type = '%s'"%filters.get("type")
 	if filters.get("actions"):
@@ -30,8 +30,8 @@ def get_data(filters):
 		conditions += " and phone_no = '%s'"%filters.get("phone_no")
 
 	sql = f"""
-	select *,`tabAction`.type as action_type from `tabActions` ,`tabAction`
-		{conditions} AND `tabActions`.action=`tabAction`.name
+	select * from `tabActions`
+		{conditions} 
 	"""
 	result = frappe.db.sql(sql,as_dict=1)
 	return result
@@ -62,16 +62,18 @@ def get_columns():
             "fieldtype": "Data",
             "width": 150
         },
-		{
-            "label": _("Customer Type"),
-            "fieldname": "customer_type",
-            "fieldtype": "Data",
+        {
+            "label": _("Document Type"),
+            "fieldname": "document_type",
+            "fieldtype": "Link",
+            "options": "DocType", 
             "width": 150
         },
-		{
-            "label": _("Customer"),
-            "fieldname": "customer",
-            "fieldtype": "Data",
+        {
+            "label": _("Document Name"),
+            "fieldname": "document_name",
+            "fieldtype": "Dynamic Link",
+            "options": "document_type", 
             "width": 150
         },
 		{
@@ -94,15 +96,15 @@ def get_columns():
             "width": 150
         },
 	    {
-            "label": _("Date"),
+            "label": _("From"),
             "fieldname": "date",
-            "fieldtype": "Date",
+            "fieldtype": "Datetime",
             "width": 150
         },
 	    {
-            "label": _("Time"),
-            "fieldname": "time",
-            "fieldtype": "Time",
+            "label": _("To"),
+            "fieldname": "to",
+            "fieldtype": "Datetime",
             "width": 150
         },
 	{
