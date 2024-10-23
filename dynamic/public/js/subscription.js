@@ -1,6 +1,11 @@
 
 
-frappe.ui.form.on('Subscription', {
+frappe.ui.form.on('Subscription', {     
+        /**
+         * If the domain is "Rehab" :
+            * It will add a button to the form to fetch all invoices if the status of the subscription is not 'Cancelled',
+            * It will add a button to create a deferred revenue entry and update the invoice penalty if the subscription has invoices, 
+         */
     refresh(frm){
         frappe.call({
             method: "dynamic.api.get_active_domains",
@@ -25,7 +30,9 @@ frappe.ui.form.on('Subscription', {
             }}
         })        
     },
-    before_save: function(frm) {
+    // before_save:fetch unit area and set it on qty field
+    before_save: function(frm) 
+    {
         frappe.call({
             method: "dynamic.api.get_active_domains",
             callback: function (r) {
@@ -78,13 +85,14 @@ function create_deferred_revenue_entry(frm) {
     frappe.call({
         method: "dynamic.alrehab.api.create_deferred_revenue_entry_group_of_invoices",
         args: {
-            doc_type: frm.doctype,
-            doc_name: frm.docname,
+            // doc_type: frm.doctype,
+            // doc_name: frm.docname,
+            invoices: frm.doc.invoices
         },
         callback: function(r) {
             if(r.message) {
                 frappe.msgprint({
-                    message: __('Deferred Revenue Entry for each invoice are created successfully.' ),
+                    message: __('Deferred Revenue Entry for each invoice is created successfully.' ),
                 })
             }
             else {

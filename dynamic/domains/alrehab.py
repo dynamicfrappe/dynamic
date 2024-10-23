@@ -103,7 +103,7 @@ data = {
                 "fieldname":"fine_percent",
                 "fieldtype":"Float",
                 "insert_after":"sec_fines",
-                "read_only": 1,
+                "default": 0.00,
             },
             {
                 "fieldname": "col_break_01",

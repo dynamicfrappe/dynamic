@@ -57,6 +57,7 @@ doctype_list_js = {
     "Subscription": "public/js/subscription_list.js",
     "Actions": "public/js/actions_list.js",
     "Lead": "public/js/lead_list.js",
+    "Sales Invoice" : "public/js/sales_invoice_list.js"
 }
 
 after_install = [
