@@ -6,7 +6,6 @@ from frappe import _
 from frappe.utils import today, date_diff, flt
 from datetime import datetime, date
 from frappe.utils import getdate
-from dynamic.alrehab.api import get_updates_for_report
 
 def execute(filters=None):
     columns, data = [], []
@@ -42,12 +41,7 @@ def execute(filters=None):
     filter_condition = " AND ".join(filters_conditions)
     if not filter_condition:
         filter_condition = ""
-
-# invoice.fine_percent,
-            # invoice.num_of_delay_days,
-            # invoice.deferred_revenue_amount,
-            # (invoice.deferred_revenue_amount + invoice.total) as total_with_fine,
-
+    # query invoices either conected to subscription or not
     query = f"""
         SELECT
             invoice.docstatus,
@@ -75,9 +69,9 @@ def execute(filters=None):
             `tabSales Invoice Item` AS item ON item.parent = invoice.name
         Inner JOIN
             `tabCustomer` AS customer ON customer.name = invoice.customer
-        Inner JOIN
+        Left JOIN
             `tabSubscription Invoice` AS sub_si ON sub_si.invoice = invoice.name
-        Inner JOIN
+        Left JOIN
             `tabSubscription` AS sub ON sub.name = sub_si.parent
         Left JOIN
             `tabJournal Entry` AS je ON je.name = (
@@ -103,28 +97,10 @@ def execute(filters=None):
                 dueDate = payment_actual_due_date
             days = date_diff(today(), dueDate)
             row['num_of_delay_days'] = max(days, 0)
-            row['deferred_revenue_amount'] =  (row['fine_percent'] or 0) * (row['num_of_delay_days']  or 0) * ( row['total'] or 0)
+            penalty = row['fine_percent'] or frappe.db.get_value("Sales Invoice", row['invoice_name'], 'fine_percent') or 0
+            row['fine_percent'] = row['fine_percent'] or frappe.db.get_value("Sales Invoice", row['invoice_name'], 'fine_percent') or 0
+            row['deferred_revenue_amount'] =  penalty * (row['num_of_delay_days']  or 0) * ( row['total'] or 0)
             row['total_with_fine'] = row['deferred_revenue_amount'] + row['total']
-
+            
     data = result  
-
     return columns, data
-
-
-
-
-def get_penalty(invoice):
-    penalty = 0
-    subscription = frappe.db.sql(f"""
-            SELECT s.name as name
-            FROM `tabSubscription` as s
-            Inner join `tabSubscription Invoice` as si
-            on s.name = si.parent
-            WHERE  si.invoice = '{invoice}'
-        """, as_dict=True )
-    if subscription:
-        doc = frappe.get_doc("Subscription", subscription[0]['name'])
-
-        penalty = doc.penalty
-
-    return penalty
