@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-10-24 17:17:26.247326",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "customer_ref",
+  "subject",
+  "attention",
+  "amended_from",
+  "section_break_bj3id",
+  "technical_offer",
+  "section_break_5p48r",
+  "general",
+  "section_break_nkxyc",
+  "commercial_offer_terms_and_condintions"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "customer_ref",
+   "fieldtype": "Data",
+   "label": "Customer Ref"
+  },
+  {
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "label": "Subject"
+  },
+  {
+   "fieldname": "attention",
+   "fieldtype": "Data",
+   "label": "Attention"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Techincal Offer",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_bj3id",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "technical_offer",
+   "fieldtype": "Table",
+   "label": "Technical Offer",
+   "options": "Commercial Offer Table"
+  },
+  {
+   "fieldname": "section_break_5p48r",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "general",
+   "fieldtype": "Text Editor",
+   "label": "General"
+  },
+  {
+   "fieldname": "section_break_nkxyc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "commercial_offer_terms_and_condintions",
+   "fieldtype": "Table",
+   "label": "Commercial Offer Terms and Condintions",
+   "options": "Commercial Offer Terms and Condintions"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-10-24 17:24:23.616998",
+ "modified_by": "Administrator",
+ "module": "Trecom",
+ "name": "Techincal Offer",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

@@ -509,6 +509,7 @@ domains = {
     "Calculation Sheet":"dynamic.domains.calculation_sheet",
     "YT Minds":"dynamic.domains.yt_minds",
     "Top Laser":"dynamic.domains.toplaser",
+    "Trecom":"dynamic.domains.trecom",
 }
 
 # domain Conatin

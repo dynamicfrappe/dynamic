@@ -1,0 +1,228 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-10-24 15:59:18.838630",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "project",
+  "project_name",
+  "client_po_number",
+  "po_issuing_date",
+  "contact_html",
+  "sales_engineer",
+  "amended_from",
+  "presales_engineer",
+  "project_manager",
+  "server_folder",
+  "po_details_section",
+  "currency",
+  "vat",
+  "po_ack_date",
+  "payment_terms",
+  "sales_gm",
+  "column_break_qfo3u",
+  "handover_date",
+  "delivery_duration",
+  "type_of_lg_guarantee_submitted",
+  "hand_over_gm",
+  "section_break_i7hqn",
+  "currency_rate",
+  "po_official_docs_section",
+  "project_po",
+  "section_break_mwbs8",
+  "po_scope",
+  "section_break_xymrt",
+  "note_and_informationn"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fetch_from": "project.project_name",
+   "fieldname": "project_name",
+   "fieldtype": "Data",
+   "label": "Project Name"
+  },
+  {
+   "fieldname": "client_po_number",
+   "fieldtype": "Data",
+   "label": "Client PO Number"
+  },
+  {
+   "fieldname": "po_issuing_date",
+   "fieldtype": "Date",
+   "label": "PO Issuing Date"
+  },
+  {
+   "fetch_from": "customer.contact_html",
+   "fieldname": "contact_html",
+   "fieldtype": "HTML",
+   "label": "Contact HTML"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Handover Form",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_engineer",
+   "fieldtype": "Data",
+   "label": "Sales Engineer"
+  },
+  {
+   "fieldname": "presales_engineer",
+   "fieldtype": "Data",
+   "label": "Presales Engineer"
+  },
+  {
+   "fieldname": "project_manager",
+   "fieldtype": "Data",
+   "label": "Project Manager"
+  },
+  {
+   "fieldname": "server_folder",
+   "fieldtype": "Data",
+   "label": "Server Folder"
+  },
+  {
+   "fieldname": "po_details_section",
+   "fieldtype": "Section Break",
+   "label": "PO Details"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "vat",
+   "fieldtype": "Link",
+   "label": "VAT",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "po_ack_date",
+   "fieldtype": "Date",
+   "label": "PO Ack Date"
+  },
+  {
+   "fieldname": "payment_terms",
+   "fieldtype": "Table",
+   "label": "Payment Terms",
+   "options": "Handover Payment Terms"
+  },
+  {
+   "fieldname": "column_break_qfo3u",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "handover_date",
+   "fieldtype": "Date",
+   "label": "Handover Date"
+  },
+  {
+   "description": "Duration by Days",
+   "fieldname": "delivery_duration",
+   "fieldtype": "Float",
+   "label": "Delivery Duration"
+  },
+  {
+   "fieldname": "type_of_lg_guarantee_submitted",
+   "fieldtype": "Table",
+   "label": "Type of LG Guarantee Submitted",
+   "options": "Type of LG Guarantee Submitted"
+  },
+  {
+   "fieldname": "sales_gm",
+   "fieldtype": "Percent",
+   "label": "Sales GM"
+  },
+  {
+   "fieldname": "hand_over_gm",
+   "fieldtype": "Currency",
+   "label": "Hand Over GM"
+  },
+  {
+   "fieldname": "section_break_i7hqn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "currency_rate",
+   "fieldtype": "Table",
+   "label": "Currency Rate",
+   "options": "Currency Rate Handover"
+  },
+  {
+   "fieldname": "po_official_docs_section",
+   "fieldtype": "Section Break",
+   "label": "PO Official Docs"
+  },
+  {
+   "fieldname": "project_po",
+   "fieldtype": "Table",
+   "label": "Project PO",
+   "options": "Project PO Handover"
+  },
+  {
+   "fieldname": "section_break_mwbs8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "po_scope",
+   "fieldtype": "Table",
+   "label": "PO Scope",
+   "options": "PO Scope Handover"
+  },
+  {
+   "fieldname": "section_break_xymrt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "note_and_informationn",
+   "fieldtype": "Small Text",
+   "label": "Note and Informationn"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-10-24 16:35:48.341861",
+ "modified_by": "Administrator",
+ "module": "Trecom",
+ "name": "Handover Form",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
