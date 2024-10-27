@@ -18,7 +18,11 @@ from erpnext.selling.report.item_wise_sales_history.item_wise_sales_history impo
 def execute(filters=None):
 	return _execute(filters)
 
-
+def get_valuation_rate(item_code):
+	valuation_rate = 0.0
+	if frappe.db.get_value("Item" , item_code ,"is_stock_item") :
+		valuation_rate = frappe.db.get_value("Item" , item_code ,"valuation_rate") 
+	return valuation_rate
 def _execute(
 	filters=None,
 	additional_table_columns=None,
@@ -89,6 +93,7 @@ def _execute(
 			"customer_group": customer_record.customer_group,
 			"incoming_rate": d.incoming_rate or  delivery_note_incoming_rate,
 			"total_cost": d.incoming_rate * d.qty,
+			"valuation_rate" : get_valuation_rate(d.item_code)
 		}
 
 		if additional_query_columns:
@@ -317,6 +322,7 @@ def get_columns(additional_table_columns, filters):
 		},
 		 {"label": _("Cost Rate"), "fieldname": "incoming_rate", "fieldtype": "Float", "width": 120},
 		 {"label": _("Total Cost"), "fieldname": "total_cost", "fieldtype": "Float", "width": 120},
+		 {"label": _("Valuation Rate"), "fieldname": "valuation_rate", "fieldtype": "Float", "width": 80},
 		 {
 			"label": _("Sales Rate"),
 			"fieldname": "rate",
