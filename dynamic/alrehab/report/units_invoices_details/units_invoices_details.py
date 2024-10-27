@@ -95,7 +95,7 @@ def execute(filters=None):
 
 	# Fetch all Subscription Invoices in one query
 	subscription_invoices = frappe.db.sql("""
-		SELECT si.invoice, si.parent AS subscription, s.start_date, s.end_date
+		SELECT si.invoice, si.parent AS subscription, s.start_date, s.end_date, s.penalty
 		FROM `tabSubscription Invoice` AS si
 		Inner JOIN `tabSubscription` AS s ON s.name = si.parent
 		WHERE si.invoice IN %s
@@ -121,6 +121,7 @@ def execute(filters=None):
 			row['subscription'] = sub_si['subscription']
 			row['start_date'] = sub_si['start_date']
 			row['end_date'] = sub_si['end_date']
+			row['fine_percent'] = sub_si['penalty']
    
 		# Assign journal entry data if available
 		je = journal_entry_data.get(row['invoice_name'])
