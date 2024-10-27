@@ -8,6 +8,6 @@ frappe.views.calendar["Actions"] = {
     
     // progress: "progress",
   },
-  get_events_method: "frappe.desk.calendar.get_events",
+  get_events_method: "dynamic.terra.doctype.actions.actions.get_events",
 
 };
