@@ -70,6 +70,7 @@ def execute(filters=None):
 			invoice.customer,
 			invoice.posting_date,
 			invoice.due_date,
+			invoice.payment_actual_due_date,
 			invoice.total,
 			invoice.num_of_delay_days,
 			invoice.fine_percent,
@@ -127,14 +128,11 @@ def execute(filters=None):
 			row['journal_entry'] = je['journal_entry']
 			row['journal_entry_date'] = je['posting_date']
    
-			payment_actual_due_date = frappe.db.get_value("Sales Invoice", row['invoice_name'], "payment_actual_due_date")
-			if payment_actual_due_date:
-				row['due_date'] = payment_actual_due_date
+			if row['payment_actual_due_date']:
+				row['due_date'] = row['payment_actual_due_date']
 			days = date_diff(today(), row['due_date'])
 			row['num_of_delay_days'] = max(days, 0)
-			penalty = row['fine_percent'] or frappe.db.get_value("Sales Invoice", row['invoice_name'], 'fine_percent') or 0
-			row['fine_percent'] = row['fine_percent'] or frappe.db.get_value("Sales Invoice", row['invoice_name'], 'fine_percent') or 0
-			row['deferred_revenue_amount'] =  penalty * (row['num_of_delay_days']  or 0) * ( row['total'] or 0)
+			row['deferred_revenue_amount'] =  row['fine_percent'] * (row['num_of_delay_days']  or 0) * ( row['total'] or 0)
 			row['total_with_fine'] = row['deferred_revenue_amount'] + row['total']
 			
 	data = result  
