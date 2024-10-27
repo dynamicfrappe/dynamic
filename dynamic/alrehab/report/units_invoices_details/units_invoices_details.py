@@ -102,7 +102,17 @@ def execute(filters=None):
 
 	# Map subscription data by invoice name for quick access
 	subscription_data = {si['invoice']: si for si in subscription_invoices}
+	
 
+	# Fetch all Journal Entries and their posting dates, mapping them by invoice name
+	journal_entries = frappe.db.sql("""
+		SELECT jea.reference_name AS invoice_name, jea.parent AS journal_entry, je.posting_date
+		FROM `tabJournal Entry Account` AS jea
+		JOIN `tabJournal Entry` AS je ON je.name = jea.parent
+		WHERE jea.reference_type = 'Sales Invoice' AND jea.reference_name IN %s
+	""", (invoice_names,), as_dict=1)
+
+	journal_entry_data = {je['invoice_name']: je for je in journal_entries}
 
 	for row in result:
 		sub_si = subscription_data.get(row['invoice_name'])
@@ -111,15 +121,16 @@ def execute(filters=None):
 			row['start_date'] = sub_si['start_date']
 			row['end_date'] = sub_si['end_date']
    
-		je_existing =  frappe.db.get_value("Journal Entry Account", {"reference_type": "Sales Invoice", "reference_name": row['invoice_name']}, 'parent')
-		if je_existing:
-			row['journal_entry'] = je_existing
-			row['journal_entry_date'] = frappe.db.get_value("Journal Entry", je_existing, 'posting_date')
-			dueDate = frappe.db.get_value("Sales Invoice", row['invoice_name'], 'due_date')
+		# Assign journal entry data if available
+		je = journal_entry_data.get(row['invoice_name'])
+		if je:
+			row['journal_entry'] = je['journal_entry']
+			row['journal_entry_date'] = je['posting_date']
+   
 			payment_actual_due_date = frappe.db.get_value("Sales Invoice", row['invoice_name'], "payment_actual_due_date")
 			if payment_actual_due_date:
-				dueDate = payment_actual_due_date
-			days = date_diff(today(), dueDate)
+				row['due_date'] = payment_actual_due_date
+			days = date_diff(today(), row['due_date'])
 			row['num_of_delay_days'] = max(days, 0)
 			penalty = row['fine_percent'] or frappe.db.get_value("Sales Invoice", row['invoice_name'], 'fine_percent') or 0
 			row['fine_percent'] = row['fine_percent'] or frappe.db.get_value("Sales Invoice", row['invoice_name'], 'fine_percent') or 0
