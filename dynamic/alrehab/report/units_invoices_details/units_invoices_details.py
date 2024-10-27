@@ -97,7 +97,7 @@ def execute(filters=None):
 	subscription_invoices = frappe.db.sql("""
 		SELECT si.invoice, si.parent AS subscription, s.start_date, s.end_date
 		FROM `tabSubscription Invoice` AS si
-		JOIN `tabSubscription` AS s ON s.name = si.parent
+		Inner JOIN `tabSubscription` AS s ON s.name = si.parent
 		WHERE si.invoice IN %s
 	""", (invoice_names,), as_dict=1)
 
@@ -109,7 +109,7 @@ def execute(filters=None):
 	journal_entries = frappe.db.sql("""
 		SELECT jea.reference_name AS invoice_name, jea.parent AS journal_entry, je.posting_date
 		FROM `tabJournal Entry Account` AS jea
-		JOIN `tabJournal Entry` AS je ON je.name = jea.parent
+		Inner JOIN `tabJournal Entry` AS je ON je.name = jea.parent
 		WHERE jea.reference_type = 'Sales Invoice' AND jea.reference_name IN %s
 	""", (invoice_names,), as_dict=1)
 
