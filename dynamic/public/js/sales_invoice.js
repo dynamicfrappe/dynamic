@@ -588,8 +588,10 @@ function get_discount_item_from_customer(frm, cdt, cdn) {
 
                             
 							row.discount_percentage = discount_item;
+							let discount_amount = (discount_item / 100) * row.price_list_rate;
+							row.discount_amount = discount_amount
 							
-							row.rate =  row.price_list_rate -( (discount_item / 100) * row.price_list_rate) ;
+							row.rate =  row.price_list_rate - discount_amount ;
 
 
                             frm.refresh_field("items");
