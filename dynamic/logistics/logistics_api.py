@@ -294,7 +294,7 @@ def create_stock_entry(source_name):
     return stock_entry
 
 @frappe.whitelist()
-def create_lead(source_name):
+def create_lead_from_actions(source_name):
     lead = frappe.get_doc('Lead',source_name)
     actions = frappe.new_doc("Actions")
     actions.type = "Indoor"
@@ -305,6 +305,32 @@ def create_lead(source_name):
     actions.document_name = lead.name
     actions.sales_person = lead.sales_person
     return actions
+
+
+@frappe.whitelist()
+def create_lead_from_oppertunity(source_name):
+    doc = frappe.get_doc("Opportunity", source_name)
+    actions = frappe.new_doc("Actions")
+    actions.type = "Indoor"
+    actions.status = "Waiting For Customer"
+    actions.from1 = now()
+    actions.to = frappe.utils.add_to_date(now(), minutes=10)
+    actions.document_type = doc.opportunity_from
+    actions.document_name = doc.party_name
+    return actions
+
+@frappe.whitelist()
+def create_lead_from_customer(source_name):
+    doc = frappe.get_doc("Customer", source_name)
+    actions = frappe.new_doc("Actions")
+    actions.type = "Indoor"
+    actions.status = "Waiting For Customer"
+    actions.from1 = now()
+    actions.to = frappe.utils.add_to_date(now(), minutes=10)
+    actions.document_type = doc.doctype
+    actions.document_name = doc.name
+    return actions
+
 
 @frappe.whitelist()
 def create_contact(name , type , contact):

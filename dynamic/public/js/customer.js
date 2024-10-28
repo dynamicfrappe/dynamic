@@ -63,6 +63,20 @@ frappe.ui.form.on("Customer", {
                     if (r.message.includes("Logistics")) {
                         if (frm.doc.docstatus == 0){
                             frm.add_custom_button(
+                                __("Actions"),
+                                function () {
+                                    frappe.model.open_mapped_doc({
+                                        method:
+                                            "dynamic.logistics.logistics_api.create_lead_from_customer",
+                                        frm: frm,
+                                        args: {
+                                            doctype: frm.doc,
+                                        }
+                                    });
+                                },
+                                __("Create")
+                            ) 
+                            frm.add_custom_button(
                                 __("Request Editing Item"),
                                 function () {
                                     frappe.model.open_mapped_doc({

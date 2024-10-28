@@ -104,11 +104,10 @@ frappe.ui.form.on("Lead", {
                                 function () {
                                     frappe.model.open_mapped_doc({
                                         method:
-                                            "dynamic.logistics.logistics_api.create_lead",
+                                            "dynamic.logistics.logistics_api.create_lead_from_actions",
                                         frm: frm,
                                         args: {
-                                            doctype: frm.doc.doctype,
-                                            
+                                            doctype: frm.doc,
                                         }
                                     });
                                 },
