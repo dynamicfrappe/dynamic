@@ -1945,19 +1945,15 @@ def get_taxes_amount(item_tax_template):
 	return amount
 
 @frappe.whitelist()
-def get_total_discount_and_amount(doc_type, voucher_name):
-	total = [0, 0.0]
-	for item in frappe.get_doc(doc_type, voucher_name).items:
-		total[1] += (item.discount_amount * item.qty)
-		total[0] += 1
-	return total
+def get_day_name(date_str):
+    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+    return date_obj.strftime("%A")
 
 @frappe.whitelist()
-def get_total_num_and_qty(doc_type, doc_name):
-	total = [0, 0]
+def get_total_qty(doc_type, doc_name):
+	total = 0
 	for item in frappe.get_doc(doc_type, doc_name).items:
-		total[1] += item.qty
-		total[0] += 1
+		total += item.qty
 	return total
 
 @frappe.whitelist()
