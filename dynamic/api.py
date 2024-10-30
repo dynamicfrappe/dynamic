@@ -2283,8 +2283,7 @@ def customer_on_update(doc, *args, **kwargs):
 		if pricing_rule:
 			pricing_rule_discount = frappe.db.get_value("Pricing Rule", pricing_rule, "discount_percentage")
 			if doc.discount_item != pricing_rule_discount:
-				pricing_rule.discount_percentage = doc.discount_item
-				pricing_rule.save()
+				frappe.db.set_value("Pricing Rule", pricing_rule, "discount_percentage", doc.discount_item)
 				frappe.db.commit()
 				return
 		brands = frappe.get_all(
