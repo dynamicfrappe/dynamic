@@ -350,6 +350,9 @@ doc_events = {
         "validate": [
             "dynamic.skyline.controllers.skyline_api.set_total_amounts",
         ],
+    },
+    "Customer" : {
+        "on_update" : "dynamic.api.customer_on_update",
     }
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"

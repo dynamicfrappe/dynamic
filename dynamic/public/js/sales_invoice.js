@@ -473,9 +473,9 @@ frappe.ui.form.on("Sales Invoice Item", {
 					total_before_discount(frm);
 					// total_discount(frm);
 					
-					setTimeout(() => {
-						get_discount_item_from_customer(frm , cdt , cdn);
-					  }, "1000");
+					// setTimeout(() => {
+					// 	get_discount_item_from_customer(frm , cdt , cdn);
+					//   }, "2000");
 				}
 			}
 		}); 
@@ -583,20 +583,17 @@ function get_discount_item_from_customer(frm, cdt, cdn) {
                 if (frm.doc.customer) {
                     frappe.db.get_value('Customer', frm.doc.customer, 'discount_item')
                         .then(r => {
-                            let discount_item = parseFloat(r.message.discount_item || 0);
-                            console.log(discount_item);
 
-                            
+                            let discount_item = parseFloat(r.message.discount_item || 0);
 							row.discount_percentage = discount_item;
+							console.log(discount_item)
+
 							let discount_amount = (discount_item / 100) * row.price_list_rate;
 							row.discount_amount = discount_amount
-							
+
 							row.rate =  row.price_list_rate - discount_amount ;
 
-
                             frm.refresh_field("items");
-							
-							
 							console.log("Updated:", row);
                         });
                 }
