@@ -2285,24 +2285,25 @@ def customer_on_update(doc, *args, **kwargs):
 			if doc.discount_item != pricing_rule_discount:
 				frappe.db.set_value("Pricing Rule", pricing_rule, "discount_percentage", doc.discount_item)
 				frappe.db.commit()
-				return
-		brands = frappe.get_all(
-			"Brand",
-			fields=["name as brand"],
-		)
-	
-		pricing_rule_doc = frappe.new_doc("Pricing Rule")
-		pricing_rule_doc.title = doc.name
-		pricing_rule_doc.apply_on = "Item Group"
-		pricing_rule_doc.append('item_groups', {"item_group": "All Item Groups"})
-		pricing_rule_doc.price_or_product_discount = "Price"
-		pricing_rule_doc.selling = 1
-		pricing_rule_doc.applicable_for = "Customer"
-		pricing_rule_doc.customer = doc.name
-		pricing_rule_doc.rate_or_discount = "Discount Percentage"
-		pricing_rule_doc.discount_percentage = doc.discount_item
-		pricing_rule_doc.insert(ignore_permissions=True)
-		pricing_rule_doc.save()
-		frappe.db.commit()
+			return
+		else:
+			brands = frappe.get_all(
+				"Brand",
+				fields=["name as brand"],
+			)
+		
+			pricing_rule_doc = frappe.new_doc("Pricing Rule")
+			pricing_rule_doc.title = doc.name
+			pricing_rule_doc.apply_on = "Item Group"
+			pricing_rule_doc.append('item_groups', {"item_group": "All Item Groups"})
+			pricing_rule_doc.price_or_product_discount = "Price"
+			pricing_rule_doc.selling = 1
+			pricing_rule_doc.applicable_for = "Customer"
+			pricing_rule_doc.customer = doc.name
+			pricing_rule_doc.rate_or_discount = "Discount Percentage"
+			pricing_rule_doc.discount_percentage = doc.discount_item
+			pricing_rule_doc.insert(ignore_permissions=True)
+			pricing_rule_doc.save()
+			frappe.db.commit()
 		return
 			
