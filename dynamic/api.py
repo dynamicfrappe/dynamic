@@ -1946,8 +1946,8 @@ def get_taxes_amount(item_tax_template):
 
 @frappe.whitelist()
 def get_day_name(date_str):
-    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
-    return date_obj.strftime("%A")
+	date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+	return date_obj.strftime("%A")
 
 @frappe.whitelist()
 def get_total_qty(doc_type, doc_name):
@@ -2275,3 +2275,35 @@ def get_assigns(doc):
 	if assign_data :
 		assign_data = ast.literal_eval(assign_data)
 		return assign_data
+
+@frappe.whitelist()
+def customer_on_update(doc, *args, **kwargs):
+	if "Healthy Corner" in DOMAINS:
+		pricing_rule = frappe.db.exists("Pricing Rule", {"customer": doc.name})
+		if pricing_rule:
+			pricing_rule_discount = frappe.db.get_value("Pricing Rule", pricing_rule, "discount_percentage")
+			if doc.discount_item != pricing_rule_discount:
+				pricing_rule.discount_percentage = doc.discount_item
+				pricing_rule.save()
+				frappe.db.commit()
+				return
+		brands = frappe.get_all(
+			"Brand",
+			fields=["name as brand"],
+		)
+	
+		pricing_rule_doc = frappe.new_doc("Pricing Rule")
+		pricing_rule_doc.title = doc.name
+		pricing_rule_doc.apply_on = "Item Group"
+		pricing_rule_doc.append('item_groups', {"item_group": "All Item Groups"})
+		pricing_rule_doc.price_or_product_discount = "Price"
+		pricing_rule_doc.selling = 1
+		pricing_rule_doc.applicable_for = "Customer"
+		pricing_rule_doc.customer = doc.name
+		pricing_rule_doc.rate_or_discount = "Discount Percentage"
+		pricing_rule_doc.discount_percentage = doc.discount_item
+		pricing_rule_doc.insert(ignore_permissions=True)
+		pricing_rule_doc.save()
+		frappe.db.commit()
+		return
+			
