@@ -21,8 +21,8 @@ def get_data(filters):
 		conditions += " and type = '%s'"%filters.get("type")
 	if filters.get("actions"):
 		conditions += " and action = '%s'"%filters.get("actions")
-	# if filters.get("customer_type"):
-	# 	conditions += " and customer_type = '%s'"%filters.get("customer_type")
+	if filters.get("document_type"):
+		conditions += " and document_type = '%s'"%filters.get("document_type")
 	if filters.get("branch"):
 		conditions += ' and branch = "%s"'%filters.get("branch")
 	

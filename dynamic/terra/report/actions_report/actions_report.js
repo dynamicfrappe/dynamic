@@ -16,6 +16,12 @@ frappe.query_reports["Actions Report"] = {
 			fieldtype: "Datetime"
 		},
 		{
+            label: __("Document Type"),
+            fieldname: "document_type",
+            fieldtype: "Link",
+            options: "DocType", 
+        },
+		{
 			fieldname: "type",
 			label: __("Type"),
 			fieldtype: "Select",

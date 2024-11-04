@@ -20,6 +20,48 @@ def check_data_remaining():
                     container.status = "Overdue"
                 container.save()
 
+def check_payment_amount():
+    if 'Logistics' in DOMAINS: 
+        po = frappe.db.get_list(
+                    "Purchase Order",
+                    filters={
+                        "status":["!=" ,"Cancelled"],
+                    },
+                    pluck = "name")
+        if po :
+            for name in po :
+                sql = f'''
+                        select 
+                            name , payment_amount 
+                        from 
+                            `tabPayment Schedule`
+                        where 
+                            parent = '{name}'
+                            and
+                            paid = 0 '''
+                payments = frappe.db.sql(sql , as_dict = 1)
+                for payment in payments :
+                    sql = f'''
+                            select
+                                p.name 
+                            from
+                                `tabPayment Entry` p
+                            inner join
+                                `tabPayment Entry Reference` r
+                            on 
+                                p.name = r.parent
+                            where
+                                r.reference_name = '{name}'
+                                and 
+                                p.paid_amount = {payment['payment_amount']}
+                                and
+                                p.docstatus = 1
+                            '''
+                    paid = frappe.db.sql(sql , as_dict =1)
+                    if paid :
+                        frappe.db.set_value("Payment Schedule", payment['name'], "paid", 1)
+                        frappe.db.commit()
+                        
 def validate_so():
     sql1 = f'''
         SELECT 

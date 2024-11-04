@@ -164,6 +164,22 @@ data = {
                 'hidden' : 1 ,
             },
         ],
+        'Payment Schedule': [
+            {
+                "label": _("Attachment"),
+                "fieldname": "attachment",
+                "fieldtype": "Attach",
+                "insert_after": "base_payment_amount",
+            },
+            {
+                "label": _("Paid"),
+                "fieldname": "paid",
+                "fieldtype": "Check",
+                "insert_after": "attachment",
+                "read_only" : 1 ,
+                "allow_on_submit":1,      
+            },
+        ],
         'Selling Settings': [
             {
                 "fieldname": "quotation_settings",

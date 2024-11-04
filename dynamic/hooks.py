@@ -294,8 +294,8 @@ scheduler_events = {
     "cron": {
         "*/1 * * * *": ["dynamic.logistics.logistics_api.check_data_remaining" ,
                         "dynamic.logistics.logistics_api.check_status",
-                        "dynamic.logistics.logistics_api.change_status"
-                        #  "dynamic.logistics.logistics_api.validate_so" 
+                        "dynamic.logistics.logistics_api.change_status" ,
+                        "dynamic.logistics.logistics_api.check_payment_amount" 
                          ],
         "0 */2 * * *": [
             "dynamic.gebco.doctype.maintenance_contract.maintenance_contract.update_contract_status",

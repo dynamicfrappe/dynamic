@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 
 class Actions(Document):
-	pass
+    pass
 @frappe.whitelist()
 def get_events(start, end, filters=None):
     """Returns events for Gantt / Calendar view rendering.

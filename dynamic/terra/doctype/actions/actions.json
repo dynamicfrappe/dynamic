@@ -127,8 +127,7 @@
    "fieldname": "to",
    "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "To",
-   "reqd": 1
+   "label": "To"
   },
   {
    "fieldname": "sales_person",
@@ -163,7 +162,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-17 15:56:03.555274",
+ "modified": "2024-11-04 10:03:15.684306",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Actions",
