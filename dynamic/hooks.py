@@ -323,7 +323,7 @@ doc_events = {
     "Lead": {
         # "validate":"dynamic.ifi.api.lead_contact_by_email"/
         "before_insert": "dynamic.api.lead_before_insert",
-        "validate": "dynamic.api.validate_lead" ,
+        # "validate": "dynamic.api.validate_lead" ,
         "on_update": "dynamic.api.on_update" ,
 
     },
