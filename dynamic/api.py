@@ -2307,3 +2307,8 @@ def customer_on_update(doc, *args, **kwargs):
 			frappe.db.commit()
 		return
 			
+
+@frappe.whitelist()
+def pricing_rule_on_trash(doc, *args, **kwargs):
+	if "Healthy Corner" in DOMAINS:
+		frappe.throw(_("Deleting Pricing Rule is not allowed."))
