@@ -353,7 +353,10 @@ doc_events = {
     },
     "Customer" : {
         "on_update" : "dynamic.api.customer_on_update",
-    }
+    },
+	"Pricing Rule":{
+		"on_trash" : "dynamic.api.pricing_rule_on_trash",
+	},
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
     # }
