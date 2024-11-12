@@ -19,7 +19,7 @@ def stock_ledger_entry_before_insert(stock_leger_entry_doc,*args,**kwargs):
             # get_avail_bin_qty(item_code,warehouse,out_qty)
             check_voucher_type(voucher_type,voucher_no,item_code,warehouse)
     if 'Real State' in DOMAINS:
-        if stock_leger_entry_doc.actual_qty > 0:
+        if stock_leger_entry_doc.actual_qty and stock_leger_entry_doc.actual_qty > 0.0:
             item_code = stock_leger_entry_doc.get('item_code')
             warehouse = stock_leger_entry_doc.get('warehouse')
             get_avail_bin_qty(item_code,warehouse,stock_leger_entry_doc.actual_qty)
