@@ -226,7 +226,7 @@ doc_events = {
         "validate": [
             "dynamic.elevana.hooks.add_partener_to_sales_order",
             "dynamic.controllers.sales_order.validate_sales_order",
-            # "dynamic.controllers.sales_order.validate_sales_order_for_stock",
+            "dynamic.controllers.sales_order.validate_sales_order_for_stock",
                     ],
         "on_cancel": [
             "dynamic.api.cancel_reservation",
