@@ -16,10 +16,8 @@ def validate_sales_order(self , event):
         item_discount_rate(self)
 
 def validate_sales_order_for_stock(self , event):
-    if "Stock Reservation" in Domains:
+    if "Stock Reservation" in Domains :
         get_validation(self,event)
-
-    
         if frappe.db.get_single_value("Stock Settings" , "auto_reserve_stock_in_warehouse"):
             reserve_in_warehouse(self , event)
 
@@ -141,21 +139,22 @@ def convertor( item_code , uom ):
 
 
 def get_validation(self , *args, **kwargs):
-    if frappe.db.get_single_value("Stock Settings" , "allow_partial_reservation"):
-        if not self.reserve_stock:
-            return True
-        items = self.get("items")
-        for item in items:
-            item_code = item.item_code
-            qty = float(item.qty_to_reserve or 0)
-            warehouse = item.warehouse
-            total_qty = get_all_qty_reserved (item_code, warehouse)
-            if qty > total_qty:
-                wanted_qty = float(qty) - float(total_qty)
-                msg = f"""
-                    Item Name {bold(item.item_code)} Need Qty {bold(wanted_qty)}<br>
-                    """
-                frappe.throw(msg)
+	if "Stock Reservation" in Domains :
+		if frappe.db.get_single_value("Stock Settings" , "allow_partial_reservation"):
+			if not self.reserve_stock:
+				return True
+			items = self.get("items")
+			for item in items:
+				item_code = item.item_code
+				qty = float(item.qty_to_reserve or 0)
+				warehouse = item.warehouse
+				total_qty = get_all_qty_reserved (item_code, warehouse)
+				if qty > total_qty:
+					wanted_qty = float(qty) - float(total_qty)
+					msg = f"""
+						Item Name {bold(item.item_code)} Need Qty {bold(wanted_qty)}<br>
+						"""
+					frappe.throw(msg)
 
 
 
