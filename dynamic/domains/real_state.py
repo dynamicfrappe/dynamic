@@ -52,6 +52,24 @@ data = {
                 "insert_after":"image", 
             },
             {
+                "label":_("Idoor Price"),
+                "fieldname":"indoor_price",
+                "fieldtype":"Currency",
+                "insert_after":"standard_rate", 
+            },
+            {
+                "label":_("Outdoor Price"),
+                "fieldname":"outdoor_price",
+                "fieldtype":"Currency",
+                "insert_after":"indoor_price", 
+            },
+            {
+                "label":_("Total Price"),
+                "fieldname":"total_price",
+                "fieldtype":"Currency",
+                "insert_after":"indoor_price", 
+            },
+            {
                 "label":_("Unit No"),
                 "fieldname":"unit_no",
                 "fieldtype":"Int",
@@ -88,6 +106,50 @@ data = {
                 "fieldtype":"Small Text",
                 "insert_after":"reserved", 
             },
+            {
+                "label":_("Unit Area Details"),
+                "fieldname":"unit_area_section",
+                "fieldtype":"Section Break",
+                "insert_after":"unit_details", 
+                "collapsible": 1,
+            },
+            {
+                "label":_("Building Number"),
+                "fieldname":"building_number",
+                "fieldtype":"Int",
+                "insert_after":"unit_area_section", 
+            },
+            {
+                "label":_("Vaild To"),
+                "fieldname":"vaild_to",
+                "fieldtype":"Date",
+                "insert_after":"building_number", 
+            }, 
+            {
+                "label":_("Status"),
+                "fieldname":"status",
+                "fieldtype":"Select",
+                "options" : "\nReserved\nAvailable To Sell",
+                "insert_after":"vaild_to", 
+            },    
+            {
+                "fieldname": "colum_break_install_vaild_to",
+                "fieldtype": "Column Break",
+                "insert_after": "stalus",
+                "label": "",
+            },
+            {
+                "label":_("Area Indoor"),
+                "fieldname":"area_indoor",
+                "fieldtype":"Float",
+                "insert_after":"colum_break_install_vaild_to", 
+            },
+            {
+                "label":_("Area Outdoor"),
+                "fieldname":"area_outdoor",
+                "fieldtype":"Float",
+                "insert_after":"area_indoor", 
+            },
         ],
         'Quotation':[
            {
@@ -118,6 +180,18 @@ data = {
                 "options":"Sales Team", 
                 "insert_after":"section_break_sales", 
             },
+            {
+                "label":_("Maintenance Payment"),
+                "fieldname":"maintenance_payment",
+                "fieldtype":"Float",
+                "insert_after":"total_taxes_and_charges", 
+            },
+            {
+                "label":_("Warehouse Amount"),
+                "fieldname":"warehouse_amount",
+                "fieldtype":"Float",
+                "insert_after":"maintenance_payment", 
+            },
         ],
         'Sales Order':[
             {
@@ -133,6 +207,22 @@ data = {
                 "fieldtype":"Table",
                 "options":"Sales Team", 
                 "insert_after":"section_break_table", 
+            },
+        ],
+        'Quotation Item':[
+            {
+                "label":_("Area Indoor"),
+                "fieldname":"area_indoor",
+                "fieldtype":"Float",
+                "insert_after":"item_code", 
+                "fetch_from": "item_code.area_indoor",
+            },
+            {
+                "label":_("Area Outdoor"),
+                "fieldname":"area_outdoor",
+                "fieldtype":"Float",
+                "insert_after":"area_indoor", 
+                "fetch_from": "item_code.area_outdoor",
             },
         ]
         # This commented because we trnasfer fields to Dynamic Account Domain

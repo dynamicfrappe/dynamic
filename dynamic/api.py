@@ -3,6 +3,7 @@ from warnings import filters
 from dynamic.dynamic_accounts.print_format.invoice_tax.invoice_tax import (
 	get_invoice_tax_data,
 )
+from frappe.utils import now , today
 import os
 import ast
 
@@ -1529,16 +1530,19 @@ def cencel_reserve_unit(self):
 	for item in items:
 		item_obj = frappe.get_doc("Item" , item.item_code)
 		item_obj.reserved = 0
+		item_obj.status = "Available To Sell"
 		item_obj.save()
 
 
 @frappe.whitelist()
 def reserve_unit(self):
-	items = self.get('items')
-	for item in items:
-		item_obj = frappe.get_doc("Item" , item.item_code)
-		item_obj.reserved = 1
-		item_obj.save()
+	if self.get('valid_till') >= today() :
+		items = self.get('items')
+		for item in items:
+			item_obj = frappe.get_doc("Item" , item.item_code)
+			item_obj.reserved = 1
+			item_obj.status = "Reserved"
+			item_obj.save()
 	
 
 @frappe.whitelist()
