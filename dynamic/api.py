@@ -1506,7 +1506,6 @@ def before_save_quotation(doc, *args, **kwargs):
 	if "Real State" in DOMAINS:
 		reserve_unit(doc)
 		
-		
 	if "Dynamic Accounts" in DOMAINS:
 		meta = frappe.get_meta(doc.doctype)
 		if meta.has_field("outstanding_amount"):
@@ -1541,6 +1540,7 @@ def reserve_unit(self):
 		for item in items:
 			item_obj = frappe.get_doc("Item" , item.item_code)
 			item_obj.reserved = 1
+			item_obj.vaild_to = self.get('valid_till')
 			item_obj.status = "Reserved"
 			item_obj.save()
 	

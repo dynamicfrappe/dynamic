@@ -131,6 +131,7 @@ data = {
                 "fieldtype":"Select",
                 "options" : "\nReserved\nAvailable To Sell",
                 "insert_after":"vaild_to", 
+                "read_only" : 1
             },    
             {
                 "fieldname": "colum_break_install_vaild_to",

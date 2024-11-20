@@ -11,7 +11,6 @@ def check_data_remaining():
                         "status": "Ordered",
                     },
                     pluck = "name")
-        print(containers)
         for container in containers :
             container = frappe.get_doc("PO Container" , container)
             if not container.remaining_date :
