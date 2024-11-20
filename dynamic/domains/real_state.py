@@ -67,7 +67,7 @@ data = {
                 "label":_("Total Price"),
                 "fieldname":"total_price",
                 "fieldtype":"Currency",
-                "insert_after":"indoor_price", 
+                "insert_after":"outdoor_price", 
             },
             {
                 "label":_("Unit No"),
