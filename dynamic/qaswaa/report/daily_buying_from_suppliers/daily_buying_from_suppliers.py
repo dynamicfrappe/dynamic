@@ -53,6 +53,7 @@ def get_data(filters):
         total_refund_amount = 0
         total_advance_amount = 0
         total_diff = 0
+        temp = 0
         total_net_total = 0
         total_base_total_taxes_and_charges = 0
         total_grand_total = 0
@@ -165,7 +166,14 @@ def get_data(filters):
                 "total_amount_deduction":total_amount_deduction,
                 "diff": total_diff
             })
-    sum_half_net_totals = sum(supplier.get("net_total", 0) / 2 for Supplier in data)
+    # sum_half_net_totals = sum(supplier.get("net_total", 0) / 2 for Supplier in data)
+    # sum_half_net_totals = next((row for row in data if row.get("supplier") == 'Totals Per Supplier' ))
+    sum_half_net_totals = sum(
+        supplier.get("net_total", 0)
+        for supplier in data 
+        if supplier.get("supplier_name") == "Totals Per Supplier"
+    )
+
     total_net_total_all_suppliers = float(sum_half_net_totals)
 
     sum_half_base_total_taxes_and_charges = sum(supplier.get("base_total_taxes_and_charges", 0) / 2 for supplier in data)
@@ -203,6 +211,7 @@ def get_data(filters):
             data = [entry for entry in data if 'diff' in entry and entry['diff'] < float(filters.get('value'))]
         if filters.get("operation") == '>':
             data = [entry for entry in data if 'diff' in entry and entry['diff'] > float(filters.get('value'))]
+    print ("data =" ,data)
     return data
 
 
