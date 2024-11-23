@@ -77,10 +77,10 @@ def execute(filters=None):
 	if response.status_code == 200:
 		res = json.loads(response.text)
 
-		data = data + res.get("message").get("result")
+		data =  res.get("message").get("result") +data
 		# res_chart = chart + res.get("message").get("chart")
-		report_summary = report_summary + res.get("message").get("report_summary")
-		columns = columns + res.get("message").get("columns")
+		report_summary = res.get("message").get("report_summary") + report_summary
+		columns = res.get("message").get("columns") + columns
 		# res_message = res.get("message").get("message")
 
 	return columns, data, message, chart, report_summary
