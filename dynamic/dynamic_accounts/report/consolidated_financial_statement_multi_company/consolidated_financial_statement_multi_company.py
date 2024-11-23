@@ -45,7 +45,9 @@ from collections import defaultdict
 
 def execute(filters=None):
 	columns, data, message, chart = [], [], [], []
+
 	response = integrate_report(filters)
+	
 	filters["company"] = frappe.defaults.get_user_default("Company")
 	 
 	if not filters.get("company"):
@@ -77,13 +79,97 @@ def execute(filters=None):
 	if response.status_code == 200:
 		res = json.loads(response.text)
 
-		data =  res.get("message").get("result") +data
-		# res_chart = chart + res.get("message").get("chart")
-		report_summary = res.get("message").get("report_summary") + report_summary
-		columns = res.get("message").get("columns") + columns
-		# res_message = res.get("message").get("message")
+		res_data = res.get("message").get("result")
+		data = merge_data(data, res_data)
 
-	return columns, data, message, chart, report_summary
+		res_chart = res.get("message").get("chart")
+
+		res_report_summary = res.get("message").get("report_summary") 
+		report_summary+=res_report_summary
+
+		res_columns = res.get("message").get("columns")
+		columns += res_columns
+
+
+		# data = [
+		# 	{
+		# 		'account_name': '2105003 - جاري السمان للتصميمات الهندسية',
+		# 		'account': '2105003 - جاري السمان للتصميمات الهندسية - SF',
+		# 	  	'parent_account': '2105 - اطراف ذات علاقة - SF', 
+		# 	  	'indent': 3.0, 
+		# 		'year_start_date': None,
+		# 		'root_type': 'Liability', 
+		# 		'year_end_date': '2024-12-31', 
+		# 		'currency': 'SAR',
+		# 		'company_wise_opening_bal': {}, 
+		# 		'opening_balance': -0.0, 
+		# 		'Samman Factory': -688558.18, 
+		# 		'has_value': True, 
+		# 	  	'total': -688558.18
+		# 	}]
+		# data2 = [
+		# 	{
+		# 		'account_name': '2105003 - جاري السمان للتصميمات الهندسية',
+		# 		'account': '2105003 - جاري السمان للتصميمات الهندسية - SF',
+		# 	  	'parent_account': '2105 - اطراف ذات علاقة - SF', 
+		# 	  	'indent': 3.0, 
+		# 		'year_start_date': None,
+		# 		'root_type': 'Liability', 
+		# 		'year_end_date': '2024-12-31', 
+		# 		'currency': 'SAR',
+		# 		'company_wise_opening_bal': {}, 
+		# 		'opening_balance': -0.0, 
+		# 		'Samman MEP': -688558.18, 
+		# 		'has_value': True, 
+		# 	  	'total': -688558.18
+		# 	}
+		# ]
+
+		# result = [
+		# 	{
+		# 		'account_name': '2105003 - جاري السمان للتصميمات الهندسية',
+		# 		'account': '2105003 - جاري السمان للتصميمات الهندسية - SF',
+		# 	  	'parent_account': '2105 - اطراف ذات علاقة - SF', 
+		# 	  	'indent': 3.0, 
+		# 		'year_start_date': None,
+		# 		'root_type': 'Liability', 
+		# 		'year_end_date': '2024-12-31', 
+		# 		'currency': 'SAR',
+		# 		'company_wise_opening_bal': {}, 
+		# 		'opening_balance': -0.0, 
+		# 		'Samman Factory': -688558.18,
+		# 		'Samman MEP': -688558.18, 
+		# 		'has_value': True, 
+		# 	  	'total': -688558.18
+		# 	}
+		# ]
+
+
+
+	return columns ,data, message, chart , report_summary
+
+def merge_data(data1, data2):
+    merged_data = {}
+
+    for entry in data1 + data2:
+        account_key = entry.get('account_name') 
+
+        if account_key not in merged_data:
+            merged_data[account_key] = entry.copy()
+        else:
+            for key, value in entry.items():
+                if key in ['account', 'account_name', 'parent_account', 'indent', 
+                           'year_start_date', 'year_end_date', 'root_type', 
+                           'currency', 'opening_balance', 'has_value', 'total']:
+                    continue
+                
+                merged_data[account_key][key] = value
+
+    return list(merged_data.values())
+
+
+
+
 
 def integrate_report(filters):
 	filters['company']= "Samman Factory"
@@ -353,7 +439,7 @@ def get_columns(companies, filters):
 				"label": f"{company} ({currency})",
 				"fieldtype": "Currency",
 				"options": "currency",
-				"width": 150,
+				"width": 200,
 				"apply_currency_formatter": apply_currency_formatter,
 				"company_name": company,
 			}
