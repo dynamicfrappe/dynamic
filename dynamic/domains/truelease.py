@@ -40,9 +40,9 @@ data = {
             "label" :"Client Profile Status" ,
             "fieldname": "cp_status",
             "fieldtype": "Select",
-            "insert_after": "status",
-            "options": "\nApproved\nRejected"
-         }
+            "insert_after": "dealing_banks",
+            "options": "\nApproved\nDefailr"
+         },
       ],
       'Actions': [
          {
@@ -202,6 +202,70 @@ data = {
             "options": "Departments",
             "insert_after": "username",
          }
+      ],
+      'Customer':[
+         {
+            "label" :"Sector" ,
+            "fieldname": "sector",
+            "fieldtype": "Link",
+            "options": "Industry Type",
+            "insert_after": "customer_group",
+         },
+         {
+            "label" :"Contract Section" ,
+            "fieldname": "contract_section",
+            "fieldtype": "Section Break",
+            "insert_after": "is_internal_customer",
+            "collapsible": 1,
+         },
+         {
+            "label" :"Contract Number" ,
+            "fieldname": "contract_number",
+            "fieldtype": "Float",
+            "insert_after": "contract_section",
+         },
+         {
+            "label" :"Contract Sign Date" ,
+            "fieldname": "contract_sign_date",
+            "fieldtype": "Date",
+            "insert_after": "contract_number",
+         },        
+         {
+            "label" :"Contract Start Date" ,
+            "fieldname": "contract_start_date",
+            "fieldtype": "Date",
+            "insert_after": "contract_sign_date",
+         }, 
+         {
+            "label" :"Contract End Date" ,
+            "fieldname": "contract_end_date",
+            "fieldtype": "Date",
+            "insert_after": "contract_start_date",
+         }, 
+         {
+            "fieldname": "cbreak_contract",
+            "fieldtype": "Column Break",
+            "insert_after": "contract_end_date",
+         },
+         {
+            "label" :"Installment Amount" ,
+            "fieldname": "installment_amount",
+            "fieldtype": "Float",
+            "insert_after": "cbreak_contract",
+         }, 
+         {
+            "label" :"Bank Name" ,
+            "fieldname": "bank_name",
+            "fieldtype": "Data",
+            "insert_after": "installment_amount",
+         },
+         {
+            "label" :"Installment Type" ,
+            "fieldname": "installment_type",
+            "fieldtype": "Select",
+            "insert_after": "bank_name",
+            "options" : "Monthly\nQuraterly\nHalf Yearly\nYearly"
+         },  
       ]
     },
      "properties": [
@@ -377,5 +441,31 @@ data = {
         "property_type": "Check",
         "value": 1
         },
-     ]
+     ],
+      "properties": [
+        {
+        "doctype": "Customer",
+        "doctype_or_field": "DocField",
+        "fieldname": "customer_name",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1",
+        },
+         {
+        "doctype": "Customer",
+        "doctype_or_field": "DocField",
+        "fieldname": "account_manager",
+        "property": "read_only",
+        "property_type": "Check",
+        "value": "1",
+        },
+         {
+        "doctype": "Customer",
+        "doctype_or_field": "DocField",
+        "fieldname": "customer_type",
+        "property": "hidden",
+        "property_type": "Check",
+        "value": "1",
+        }
+    ],
 }
