@@ -162,3 +162,8 @@ def create_domain_list():
 		pre = frappe.new_doc("Domain")
 		pre.domain = 'Trecom'
 		pre.insert()
+	
+	if not frappe.db.exists("Domain", "Item Integration"):
+		doc = frappe.new_doc("Domain")
+		doc.domain = 'Item Integration'
+		doc.insert()
