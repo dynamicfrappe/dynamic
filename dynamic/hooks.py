@@ -185,6 +185,7 @@ doc_events = {
     "Item": {
         "autoname": [
             "dynamic.api.autoname",
+            "dynamic.qaswaa.controllers.item.after_insert",
         ],
         "validate": [
             "dynamic.dynamic.validation.validate_item_code",
@@ -192,7 +193,7 @@ doc_events = {
         # "before_insert": "dynamic.dynamic.validation.before_insert_item",
         "after_insert": [
             "dynamic.dynamic.validation.after_insert_variant_item",
-            "dynamic.qaswaa.controllers.item.after_insert",
+            
         ]
     },
     "Delivery Note": {
