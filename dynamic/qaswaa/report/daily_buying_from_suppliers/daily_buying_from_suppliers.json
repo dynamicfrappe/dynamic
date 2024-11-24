@@ -1,5 +1,5 @@
 {
- "add_total_row": 1,
+ "add_total_row": 0,
  "columns": [],
  "creation": "2024-09-25 00:10:16.537895",
  "disable_prepared_report": 0,
@@ -9,8 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "letter_head": "Sadeem",
- "modified": "2024-09-25 00:10:16.537895",
+ "modified": "2024-11-21 19:22:49.841489",
  "modified_by": "Administrator",
  "module": "Qaswaa",
  "name": "Daily Buying from Suppliers",

@@ -183,12 +183,18 @@ doc_events = {
         # "before_cancel" : "dynamic.api.before_cancel_invoice",
     },
     "Item": {
-        "autoname": "dynamic.api.autoname",
+        "autoname": [
+            "dynamic.api.autoname",
+            "dynamic.qaswaa.controllers.item.after_insert",
+        ],
         "validate": [
             "dynamic.dynamic.validation.validate_item_code",
         ],
         # "before_insert": "dynamic.dynamic.validation.before_insert_item",
-        "after_insert": "dynamic.dynamic.validation.after_insert_variant_item",
+        "after_insert": [
+            "dynamic.dynamic.validation.after_insert_variant_item",
+            
+        ]
     },
     "Delivery Note": {
         "on_submit": [
@@ -518,6 +524,7 @@ domains = {
     "YT Minds":"dynamic.domains.yt_minds",
     "Top Laser":"dynamic.domains.toplaser",
     "Trecom":"dynamic.domains.trecom",
+    "Item Integration":"dynamic.domains.item_integration",
 }
 
 # domain Conatin
