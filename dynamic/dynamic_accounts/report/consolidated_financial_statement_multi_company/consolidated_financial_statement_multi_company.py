@@ -173,7 +173,7 @@ def merge_data(data1, data2):
 
 def integrate_report(filters):
 	filters['company']= "Samman Factory"
-	url = "http://58.220.84.24:82/api/method/frappe.desk.query_report.run"
+	url = "http://158.220.84.24:82/api/method/frappe.desk.query_report.run"
 	payload = {
 		"report_name":"Consolidated Financial Statement",
 		"filters":filters
