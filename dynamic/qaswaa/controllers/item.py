@@ -45,6 +45,8 @@ def after_insert(self):
                 response = requests.post(url, headers=headers, data=payload)
                 if response.status_code == 200:
                     frappe.msgprint("Item Created")
+                else:
+                    frappe.msgpritn(_("Item Group didn't exists"))
             except requests.exceptions.RequestException as e:
                 frappe.log_error(f"Item integration failed: {str(e)}", "Item Integration Error")
                 frappe.msgprint("Failed to create item in Integration System. Check error logs.")
