@@ -46,6 +46,23 @@ frappe.ui.form.on("Customer", {
                         
                         )
                 }
+                if(r.message.includes("True lease")) {
+                    if(frm.doc.lead_name){
+                        frappe.call({
+                            method: "dynamic.true_lease.api.fetch_account_manager",
+                            args :  {
+                                lead_name : frm.doc.lead_name , 
+                            },
+                            callback: function (r) {
+                                if (r.message){
+                                    frm.set_value('account_manager',r.message[0])
+                                    frm.set_value('sector',r.message[1])
+                                }
+                            },
+                          });
+
+                    }
+                }
                 if (r.message && r.message.length) {
                     if (r.message.includes("Terra") || r.message.includes("Elevana") || r.message.includes("CRM Advance")) {
                         frm.add_custom_button(

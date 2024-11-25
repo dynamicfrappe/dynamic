@@ -82,3 +82,10 @@ def approve_leads(name):
 def reject_leads(name):
     frappe.db.set_value("Lead", name, "cp_status", "Rejected")
     frappe.db.commit()
+
+
+@frappe.whitelist()
+def fetch_account_manager(lead_name):
+    lead_obj = frappe.db.get_value("Lead", lead_name, ["lead_owner" , "sector"] , as_dict = 1)
+    if lead_obj["lead_owner"] or lead_obj["sector"]:
+        return lead_obj["lead_owner"] , lead_obj["sector"]
