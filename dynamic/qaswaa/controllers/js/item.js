@@ -5,6 +5,7 @@ frappe.ui.form.on('Item', {
             callback: function (r) {
                 if (r.message && r.message.length) {
                     if (r.message.includes("Item Integration")) {
+                        console.log("helloo");
                         frm.events.transfer_item(frm);
                     }
                 }
@@ -16,11 +17,15 @@ frappe.ui.form.on('Item', {
         console.log("hehehee");
 },
 transfer_item(frm){
-    frm.add_custom_button(__('Transfer Item'), () => {
+    frm.add_custom_button(__('Send Item'), () => {
+        console.log("Item Sent");
+        console.log(frm.doc);
+        
+        
         frappe.call({
             method: "dynamic.qaswaa.controllers.item.after_insert",
             args:{
-                self:frm,
+                self:frm.doc,
             },
             callback: function (r) {
                 console.log(r.message);
