@@ -6,7 +6,7 @@ import json
 
 DOMAINS = frappe.get_active_domains()
 
-def after_insert(self, method):
+def after_insert(self):
     if "Item Integration" in DOMAINS: 
         stock_settings = frappe.get_single("Stock Settings") 
         if stock_settings.enable_item_itegration:
