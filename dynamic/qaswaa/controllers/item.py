@@ -16,7 +16,6 @@ def after_insert(self, method):
                 frappe.throw("Item integration URL or Token is not configured in Stock Settings.")
             
             if frappe.db.exists("Item",{
-                "item_code":self.item_code,
                 "item_name": self.item_name,
                 "item_group": self.item_group,
                 "stock_uom": self.stock_uom,
