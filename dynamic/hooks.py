@@ -308,7 +308,8 @@ doc_events = {
     "Asset Movement": {"on_submit": "dynamic.api.add_cost_center_to_asset"},
     "Supplier Quotation": {
         #  "validate" : "dynamic.terra.api.submit_supplier_quotation",
-        "on_submit": "dynamic.terra.api.submit_supplier_quotation"
+        "on_submit": "dynamic.terra.api.submit_supplier_quotation",
+        "validate" : "dynamic.skyline.controllers.skyline_api.validation_purchase",
     },
     "Item Price": {"before_save": "dynamic.ifi.api.check_buying_price"},
     "Quotation": {
