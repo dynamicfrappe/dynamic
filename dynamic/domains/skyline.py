@@ -4,6 +4,55 @@ from frappe import _
 
 data = {
     'custom_fields': {
+        # "Supplier Quotation Item":[
+        #     {
+        #         "label": _("Budget"),
+        #         "fieldname": "Budget",
+        #         "fieldtype": "Float",
+        #         "insert_after": "discount_amount",
+        #     },
+        # ],
+        # "Request for Quotation Item":[
+        #     {
+        #         "label": _("Budget"),
+        #         "fieldname": "Budget",
+        #         "fieldtype": "Float",
+        #         "insert_after": "stock_qty",
+        #     },
+        # ],
+        # "Buying Settings":[
+        #     {
+        #         "label": _("Fast Purchase Rate"),
+        #         "fieldname": "fast_purchase_rate",
+        #         "fieldtype": "Float",
+        #         "insert_after": "role_to_override_stop_action",
+        #     },
+        # ],
+        # "Request for Quotation":[
+        #     {
+        #         "label": _("Fast Purchase"),
+        #         "fieldname": "fast_purchase",
+        #         "fieldtype": "Check",
+        #         "insert_after": "status",
+        #     },
+        # ],
+        # "Supplier Quotation":[
+        #     {
+        #         "label": _("Fast Purchase"),
+        #         "fieldname": "fast_purchase",
+        #         "fieldtype": "Check",
+        #         "insert_after": "supplier",
+        #     },
+        # ],
+        # "Material Request":[
+        #     {
+        #         "label": _("Fast Purchase"),
+        #         "fieldname": "fast_purchase",
+        #         "fieldtype": "Check",
+        #         "insert_after": "status",
+        #         "default":1
+        #     },
+        # ],
         "Project": 
         [
             {
