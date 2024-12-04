@@ -6,6 +6,12 @@ frappe.ui.form.on("Quotation",{
       frappe.call({
         method: "dynamic.api.get_active_domains",
         callback: function (r) {
+          if (r.message.includes("Real State")) {
+              if(frm.doc.docstatus == 1){
+                cur_frm.add_custom_button(__('Payment Entry'),
+                cur_frm.cscript['Make Payment Entry'], __('Create'));
+              }
+          }
           if (r.message && r.message.length) {
             if (r.message.includes("Pre Quotation")) {
               frm.events.upload_data_file(frm)

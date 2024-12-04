@@ -225,6 +225,13 @@ data = {
                 "insert_after":"area_indoor", 
                 "fetch_from": "item_code.area_outdoor",
             },
+            {
+                "label":_("Total Price"),
+                "fieldname":"total_price",
+                "fieldtype":"Float",
+                "insert_after":"area_outdoor", 
+                "fetch_from": "item_code.total_price",
+            },
         ]
         # This commented because we trnasfer fields to Dynamic Account Domain
         # 'Sales Order':[
@@ -258,38 +265,6 @@ data = {
         #         "read_only" : 1
         #     },
              
-        #  ],
-        #  'Quotation':[
-        #     {
-        #         "label": "Advance Payment",
-        #         "fieldname": "advance_paymentss",
-        #         "fieldtype": "Section Break",
-        #         "insert_after": "payment_schedule"
-        #     },
-        #     {
-        #         "label": "Get Advances Receivedd",
-        #         "fieldname": "get_advancess",
-        #         "fieldtype": "Button",
-        #         "insert_after": "advance_paymentss",
-        #         "allow_on_submit":1
-        #     },
-        #     {
-        #         "label": "Advances",
-        #         "fieldname": "advancess",
-        #         "fieldtype": "Table",
-        #         "options":"Sales Invoice Advance",
-        #         "insert_after": "get_advancess",
-        #         "allow_on_submit":1
-        #     },  
-        #     {
-        #         "label": _("Outstanding Amount"),
-        #         "fieldname": "outstanding_amount",
-        #         "fieldtype": "Float",
-        #         "insert_after": "in_words",
-        #         "allow_on_submit":1,
-        #         "read_only" : 1
-        #     },  
-            
         #  ],
         
         
