@@ -185,10 +185,11 @@ doc_events = {
     "Item": {
         "autoname": [
             "dynamic.api.autoname",
-            "dynamic.qaswaa.controllers.item.after_insert",
+            
         ],
         "validate": [
             "dynamic.dynamic.validation.validate_item_code",
+            # "dynamic.qaswaa.controllers.item.after_insert",
         ],
         # "before_insert": "dynamic.dynamic.validation.before_insert_item",
         "after_insert": [
@@ -256,9 +257,13 @@ doc_events = {
         ],
     },
     "Material Request": {
-        "on_submit": ["dynamic.api.validate_material_request",
-                     ],
-        "validate": "dynamic.api.onsave_material_request",
+        "on_submit": [
+            "dynamic.api.validate_material_request",
+            ],
+        "validate": [
+            "dynamic.api.onsave_material_request",
+            # "dynamic.skyline.controllers.skyline_api.validate_fast_purchase",
+            ],
         "before_save":[
             "dynamic.controllers.stock_entry.update_target_warehouse"
         ],
@@ -303,7 +308,8 @@ doc_events = {
     "Asset Movement": {"on_submit": "dynamic.api.add_cost_center_to_asset"},
     "Supplier Quotation": {
         #  "validate" : "dynamic.terra.api.submit_supplier_quotation",
-        "on_submit": "dynamic.terra.api.submit_supplier_quotation"
+        "on_submit": "dynamic.terra.api.submit_supplier_quotation",
+        "validate" : "dynamic.skyline.controllers.skyline_api.validation_purchase",
     },
     "Item Price": {"before_save": "dynamic.ifi.api.check_buying_price"},
     "Quotation": {

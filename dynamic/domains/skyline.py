@@ -4,6 +4,72 @@ from frappe import _
 
 data = {
     'custom_fields': {
+        "Supplier Quotation Item":
+        [
+            {
+                "label": _("Budget"),
+                "fieldname": "Budget",
+                "fieldtype": "Float",
+                "insert_after": "discount_amount",
+            },
+        ],
+        "Request for Quotation Item":
+        [
+            {
+                "label": _("Budget"),
+                "fieldname": "Budget",
+                "fieldtype": "Float",
+                "insert_after": "stock_qty",
+            },
+        ],
+        "Buying Settings":
+        [
+            {
+                "label": _("Fast Purchase Rate"),
+                "fieldname": "fast_purchase_rate",
+                "fieldtype": "Float",
+                "insert_after": "role_to_override_stop_action",
+            },
+        ],
+        "Request for Quotation":
+        [
+            {
+                "label": _("Fast Purchase"),
+                "fieldname": "fast_purchase",
+                "fieldtype": "Check",
+                "insert_after": "status",
+            },
+        ],
+        "Supplier Quotation":
+        [
+            {
+                "label": _("Fast Purchase"),
+                "fieldname": "fast_purchase",
+                "fieldtype": "Check",
+                "insert_after": "supplier",
+            },
+            {
+                "label": _("First Approver"),
+                "fieldname": "first_approve",
+                "fieldtype": "Check",
+                "insert_after": "items",
+            },
+            {
+                "label": _("Second Approver"),
+                "fieldname": "sec_approve",
+                "fieldtype": "Check",
+                "insert_after": "first_approve",
+            },
+        ],
+        "Material Request":[
+            {
+                "label": _("Fast Purchase"),
+                "fieldname": "fast_purchase",
+                "fieldtype": "Check",
+                "insert_after": "status",
+                "default":"1"
+            },
+        ],
         "Project": 
         [
             {
@@ -33,7 +99,6 @@ data = {
                 "insert_after": "contract_amounts",
                 "read_only": "1",
             },
-            ##########
             {
                 "label": "Invoice and Paid amount",
                 "fieldname": "invoice_amounts_sec",
@@ -76,7 +141,6 @@ data = {
                 "insert_after": "total_paid_amount",
                 "read_only": "1",
             },
-            #################
             {
                 "label": "Cost",
                 "fieldname": "cost_sec",

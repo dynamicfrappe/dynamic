@@ -3,6 +3,29 @@ from frappe import _
 
 DOMAINS = frappe.get_active_domains()
 
+@frappe.whitelist()
+def validation_purchase(self , *args , **kwargs):
+    validate_fast_purchase(self)
+    validate_with_budget(self)
+
+
+
+def validate_with_budget(self):
+    if "Skyline" in DOMAINS:
+        items = self.get("items")
+        if items and self.first_approve == 0 and self.sec_approve ==0:
+            for item in items:
+                if item.rate > item.Budget:
+                    frappe.throw(_("Item rate Cannot be greater than budget"))
+
+def validate_fast_purchase(self):
+    if "Skyline" in DOMAINS:
+        fast_purchase_rate = frappe.get_doc("Buying Settings").fast_purchase_rate
+        if fast_purchase_rate > 0:
+            if self.fast_purchase:
+                if self.grand_total > fast_purchase_rate:
+                    frappe.throw(_("Supplier Quotation Cannot be greater than fast purchase"))
+
 def set_total_amounts(self, *args, **kwargs):
     pass
     if "Skyline" in DOMAINS:

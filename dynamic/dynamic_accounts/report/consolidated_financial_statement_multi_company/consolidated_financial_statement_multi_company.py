@@ -173,7 +173,7 @@ def merge_data(data1, data2):
 
 def integrate_report(filters):
 	filters['company']= "Samman Factory"
-	url = "http://localhost/api/method/frappe.desk.query_report.run"
+	url = "http://158.220.84.24:82/api/method/frappe.desk.query_report.run"
 	payload = {
 		"report_name":"Consolidated Financial Statement",
 		"filters":filters
@@ -181,7 +181,7 @@ def integrate_report(filters):
 	payload = json.dumps(payload)
 
 	headers = {
-		'Authorization': 'token 4973ec8d86d1e6e:e645c95580978fe',
+		'Authorization': 'token e4208efff1289c1:b3eac10e73d7e0a',
 		'Content-Type': 'application/json',
 		}
 	response = requests.request("GET", url, headers=headers, data=payload)
