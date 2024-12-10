@@ -205,6 +205,50 @@ data = {
       ],
       'Customer':[
          {
+            "label" :"Insurance Type" ,
+            "fieldname": "insurance_type",
+            "fieldtype": "Select",
+            "insert_after": "contract_type",
+            "options" : "Asset Insurance\nCredit Default"
+         },  
+         {
+            "label" :"Contract Type" ,
+            "fieldname": "contract_type",
+            "fieldtype": "Select",
+            "insert_after": "installment_type",
+            "options" : "With Recourse\nWithout Recourse"
+         },  
+         {
+            "label" :"Insurance Start Date" ,
+            "fieldname": "insurance_start_date",
+            "fieldtype": "Date",
+            "insert_after": "insurance_type",
+         },
+         {
+            "label" :"Insurance End Date" ,
+            "fieldname": "insurance_end_date",
+            "fieldtype": "Date",
+            "insert_after": "insurance_start_date",
+         },
+         {
+            "label" :"License Type" ,
+            "fieldname": "license_type",
+            "fieldtype": "Text",
+            "insert_after": "contract_end_date",
+         },
+         {
+            "label" :"License Start Date" ,
+            "fieldname": "license_start_date",
+            "fieldtype": "Date",
+            "insert_after": "license_type",
+         }, 
+         {
+            "label" :"License End Date" ,
+            "fieldname": "license_end_date",
+            "fieldtype": "Date",
+            "insert_after": "license_start_date",
+         },               
+         {
             "label" :"Sector" ,
             "fieldname": "sector",
             "fieldtype": "Link",
