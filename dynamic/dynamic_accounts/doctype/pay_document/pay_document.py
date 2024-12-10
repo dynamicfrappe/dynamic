@@ -65,6 +65,8 @@ class PayDocument(Document):
 
 
     def on_cancel(self):
+        self.ignore_linked_doctypes = ("Journal Entry")
+        # self.ignore_linked_doctypes = ("GL Entry")
         self.cancel_journal_entry()
 
     def create_journal_entry(self):
@@ -163,6 +165,7 @@ class PayDocument(Document):
             if (je.docstatus == 1):
                 je.cancel()
             self.db_set("journal_entry", '')
+            frappe.db.commit()
             gl_entries = frappe.get_all("GL Entry", filters={
                 "against_voucher_type": self.doctype,
                 "against_voucher": self.name

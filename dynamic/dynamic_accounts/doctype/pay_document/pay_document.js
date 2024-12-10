@@ -3,6 +3,8 @@
 
 frappe.ui.form.on("Pay Document", {
   onload: function (frm) {
+    frm.ignore_doctypes_on_cancel_all = ['Journal Entry'];
+    // frm.ignore_doctypes_on_cancel_all = ['GL Entry'];
 		frappe.call({
 			method: "dynamic.dynamic_accounts.doctype.pay_document.pay_document.get_field_options",
 			callback: function (r) {
