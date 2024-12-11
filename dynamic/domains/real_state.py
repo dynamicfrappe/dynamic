@@ -161,6 +161,12 @@ data = {
                 "collapsible": 1,
             },
             {
+                "label":_("Project"),
+                "fieldname":"project",
+                "fieldtype":"Data",
+                "insert_after":"order_type", 
+            },
+            {
                 "label":_("Proker"),
                 "fieldname":"proker",
                 "fieldtype":"Table",
