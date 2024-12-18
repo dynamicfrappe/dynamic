@@ -84,7 +84,6 @@ data = {
             "fieldname": "org_name",
             "fieldtype": "Data",
             "insert_after": "customer",
-            "fetch_from": "customer.company_name"
          },
          {
             "fieldname": "attachments_section",
@@ -418,15 +417,6 @@ data = {
         "property_type": "Select",
         "value": "Call\nVisit"
         },
-        {
-        "doctype": "Actions",
-        "doctype_or_field": "DocField",
-        "fieldname": "phone_no",
-        "property": "fetch_from",
-        "property_type": "Data",
-        "value": "customer.phone_num"
-        },
-        
         {
         "doctype": "Actions",
         "doctype_or_field": "DocField",
