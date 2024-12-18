@@ -420,6 +420,14 @@ data = {
         {
         "doctype": "Actions",
         "doctype_or_field": "DocField",
+        "fieldname": "phone_no",
+        "property": "fetch_from",
+        "property_type": "Data"
+        },
+        
+        {
+        "doctype": "Actions",
+        "doctype_or_field": "DocField",
         "fieldname": "action",
         "property": "fieldtype",
         "property_type": "Select",
