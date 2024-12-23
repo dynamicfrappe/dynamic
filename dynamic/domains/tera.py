@@ -918,10 +918,16 @@ data = {
                 "read_only":0,
             
             },
-
+            {
+                "fieldname": "check_for_approval",
+                "fieldtype": "Check",
+                "insert_after": "stock_entry_type",
+                "label": "Check For Approval",
+                "depends_on": "eval:doc.stock_entry_type == 'Repack'",
+                "mandatory_depends_on": "eval:doc.stock_entry_type == 'Repack'",
+            }
           ],
         
-
         "Stock Entry Detail":[
             {
                 "fieldname": "sub_uom",
