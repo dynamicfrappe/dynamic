@@ -26,7 +26,7 @@ data = {
          },
          {
             "label": "Phone no",
-            "fieldname": "phone_no",
+            "fieldname": "phone_no1",
             "fieldtype": "Data",
             "insert_after": "email_id",
          },
@@ -47,9 +47,15 @@ data = {
 	  'Opportunity':[
 		{
 			"label": "Phone no",
-			"fieldname": "phone_no",
+			"fieldname": "phone_no1",
 			"fieldtype": "Data",
-			"insert_after": "source",
+			"insert_after": "customer_name"
+		},
+		{
+			"label": "test",
+			"fieldname": "wwwwww",
+			"fieldtype": "Data",
+			"insert_after": "test"
 		}
 	  ],
       'Actions': [
