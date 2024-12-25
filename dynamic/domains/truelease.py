@@ -24,9 +24,9 @@ data = {
             "fieldtype": "Data",
             "insert_after": "sales_mm_egp",
          },
-         {
+		 {
             "label": "Phone no",
-            "fieldname": "phone_no1",
+            "fieldname": "phone_no",
             "fieldtype": "Data",
             "insert_after": "email_id",
          },
@@ -47,7 +47,7 @@ data = {
 	  'Opportunity':[
 		{
 			"label": "Phone no",
-			"fieldname": "phone_no1",
+			"fieldname": "phone_no",
 			"fieldtype": "Data",
 			"insert_after": "customer_name"
 		},
