@@ -24,17 +24,17 @@ data = {
             "fieldtype": "Data",
             "insert_after": "sales_mm_egp",
          },
-		 {
-            "label": "Phone no",
-            "fieldname": "phone_no",
-            "fieldtype": "Data",
-            "insert_after": "email_id",
-         },
+		#  {
+        #     "label": "Phone no",
+        #     "fieldname": "phone_no",
+        #     "fieldtype": "Data",
+        #     "insert_after": "email_id",
+        #  },
          {
             "label" :"Government" ,
             "fieldname": "government",
             "fieldtype": "Data",
-            "insert_after": "phone_no",
+            "insert_after": "email_id",
          },
          {
             "label" :"Client Profile Status" ,
@@ -45,18 +45,7 @@ data = {
          },
       ],
 	  'Opportunity':[
-		{
-			"label": "Phone no",
-			"fieldname": "phone_no",
-			"fieldtype": "Data",
-			"insert_after": "customer_name"
-		},
-		{
-			"label": "test",
-			"fieldname": "wwwwww",
-			"fieldtype": "Data",
-			"insert_after": "test"
-		}
+		
 	  ],
       'Actions': [
          {
