@@ -26,7 +26,7 @@ data = {
          },
          {
             "label": "Phone no",
-            "fieldname": "phone_num",
+            "fieldname": "phone_no",
             "fieldtype": "Data",
             "insert_after": "email_id",
          },
@@ -44,6 +44,14 @@ data = {
             "options": "\nApproved\nDefailr"
          },
       ],
+	  'Opportunity':[
+		{
+			"label": "Phone no",
+			"fieldname": "phone_no",
+			"fieldtype": "Data",
+			"insert_after": "source",
+		}
+	  ],
       'Actions': [
          {
             "label" :"Sub Actions" ,
@@ -416,15 +424,7 @@ data = {
         "property": "options",
         "property_type": "Select",
         "value": "Call\nVisit"
-        },
-        {
-        "doctype": "Actions",
-        "doctype_or_field": "DocField",
-        "fieldname": "phone_no",
-        "property": "fetch_from",
-        "property_type": "Data"
-        },
-        
+        },   
         {
         "doctype": "Actions",
         "doctype_or_field": "DocField",
