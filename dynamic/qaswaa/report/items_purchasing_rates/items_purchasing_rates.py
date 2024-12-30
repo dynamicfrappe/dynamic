@@ -40,6 +40,7 @@ def get_data(filters=None):
                 `tabPurchase Invoice` p ON pi.parent = p.name
             WHERE 
                 pi.docstatus = 1
+                AND p.status != 'Return'""
                 AND {conditions}
         ),
         last_three_rates AS (
