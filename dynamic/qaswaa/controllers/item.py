@@ -30,6 +30,7 @@ def after_insert(self):
 
             try:
                 response = requests.get(url, headers=headers, params=params)
+                print(response.text)
                 if response.status_code == 200:
                     if not json.loads(response.text).get("data"):
                         item_group = frappe.get_value("Item Group",self.get("item_group"),['name','parent_item_group'],as_dict=True)
@@ -61,6 +62,7 @@ def after_insert(self):
                 "filters": json.dumps([["Item", "item_name", "=", self.get("item_name")]])  
                 }
             try:
+                url = f"""{stock_settings.url_item_integration}Item"""
                 response = requests.get(url, headers=headers, params=params)
                 if response.status_code == 200:
                     if json.loads(response.text).get("data"):
@@ -77,6 +79,8 @@ def after_insert(self):
 
             payload = json.dumps({
                 "doctype": "Item",
+                "name": self.get("name"),
+                "item_code": self.get("item_code"),
                 "item_name": self.get("item_name"),
                 "item_group": self.get("item_group"),
                 "stock_uom": self.get("stock_uom"),

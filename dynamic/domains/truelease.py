@@ -267,7 +267,7 @@ data = {
          {
             "label" :"Contract Number" ,
             "fieldname": "contract_number",
-            "fieldtype": "Float",
+            "fieldtype": "Int",
             "insert_after": "contract_section",
          },
          {
@@ -503,6 +503,14 @@ data = {
         "property": "hidden",
         "property_type": "Check",
         "value": "1",
-        }
+        },
+		{
+        "doctype": "Customer",
+        "doctype_or_field": "DocField",
+        "fieldname": "customer_group",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "0",
+        },
     ],
 }

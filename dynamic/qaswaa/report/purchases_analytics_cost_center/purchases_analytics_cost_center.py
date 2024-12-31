@@ -51,8 +51,8 @@ def get_data(filters=None):
     data = []
     conditions = []
 
-    if filters.get("item"):
-        conditions.append(f"a.item_code = '{filters.get('item')}'")
+    if filters.get("item_code"):
+        conditions.append(f"a.item_code = '{filters.get('item_code')}'")
     if filters.get("supplier"):
         conditions.append(f"b.supplier = '{filters.get('supplier')}'")
     if filters.get("cost_center"):
