@@ -145,6 +145,7 @@ class PayDocument(Document):
                 "party_type": account_row.party_type,
                 "party": account_row.party,
                 "project":account_row.get("project"),
+                "is_tax" : account_row.is_tax,
                 "cost_center": account_row.cost_center,
             })
 
