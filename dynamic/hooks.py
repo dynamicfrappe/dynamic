@@ -249,7 +249,8 @@ doc_events = {
     "Accounts Settings": {"validate": "dynamic.api.onsave_account_settings"},
     "Lead": {
         "before_validate":"dynamic.controllers.lead.before_validate",
-        "before_insert": "dynamic.api.lead_before_insert"
+        "before_insert": "dynamic.api.lead_before_insert",
+        "on_update" : "dynamic.controllers.lead.on_update"
     },
     "Contact": {
         "before_validate":"dynamic.controllers.contact.before_validate",
@@ -359,6 +360,7 @@ override_whitelisted_methods = {
 
 override_doctype_dashboards = {
     "Sales Invoice": "dynamic.public.dashboard.sales_invoice_dashboard.get_data",
+    "Lead": "dynamic.public.dashboard.lead_dashboard.get_data",
     "Sales Order": "dynamic.public.dashboard.sales_order_dashboard.get_data",
     "Purchase Invoice": "dynamic.public.dashboard.purchase_invoice_dashboard.get_data",
     "Purchase Order": "dynamic.public.dashboard.purchase_order_dashboard.get_data",

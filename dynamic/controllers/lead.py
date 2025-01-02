@@ -12,6 +12,21 @@ def before_validate(self, event):
             set_transfer(self)
             transfer_lead(self)
 
+
+def on_update(self, event):
+    if 'Logistics' in Domains :
+        send_notification(self)
+
+def send_notification(doc):
+	notif_doc = frappe.new_doc('Notification Log')
+	notif_doc.subject = f"{doc.doctype} {doc.name} modified by {doc.modified_by}"
+	notif_doc.for_user = doc.lead_owner
+	notif_doc.type = "Alert"
+	notif_doc.document_type = doc.doctype
+	notif_doc.document_name = doc.name
+	notif_doc.from_user = frappe.session.user
+	notif_doc.insert(ignore_permissions=True)
+
 def create_user_permission(self):
     if not frappe.db.exists("User Permission", { "user" : self.lead_owner,"for_value": self.name}):
         user_permission = frappe.new_doc("User Permission")

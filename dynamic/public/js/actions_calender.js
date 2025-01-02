@@ -1,7 +1,7 @@
 frappe.views.calendar["Actions"] = {
   field_map: {
-    start: "date",
-    end: "date",
+    start: "start",
+    end: "end",
     id: "name",
     title: "name",
     allDay: "allDay",
