@@ -124,7 +124,9 @@ def _execute(
 			row.update({"rate": d.base_net_rate, "amount": d.base_net_amount})
 		 
 		row['profit_rate'] = row.get('rate',0) - row.get('incoming_rate',0)
-		row['total_profit'] = (row.get('rate',0) - row.get('incoming_rate',0)) * (row.get('qty') or row.get('stock_qty') )
+		# row['total_profit'] = abs((row.get('rate',0) - row.get('incoming_rate',0)) * (row.get('qty') or row.get('stock_qty') ))
+		row['total_profit'] = (row.get('amount',0) -row.get('total_cost',0))
+
 
 		total_tax = 0
 		total_other_charges = 0
