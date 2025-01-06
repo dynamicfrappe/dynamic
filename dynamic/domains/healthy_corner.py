@@ -90,6 +90,14 @@ data = {
                 "fetch_from":"party_name.discount_item",
             },
         ],
+		"Payment Entry":[
+			{
+				"label": "In Words",
+				"fieldname": "in_words",
+				"fieldtype": "Data",
+				"insert_after": "paid_amount",
+			},
+		]
 
     },
     "properties": [
