@@ -887,6 +887,8 @@ def validate_paymentrntry(doc, *args, **kwargs):
     if "IFI" in DOMAINS:
         validate_payemnt_entry(doc)
 
+    if "Healthy Corner" in DOMAINS:
+        doc.in_words = frappe.utils.money_in_words(doc.paid_amount)
 
 @frappe.whitelist()
 def update_paymentrntry(doc, *args, **kwargs):
