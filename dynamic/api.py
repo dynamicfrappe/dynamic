@@ -937,8 +937,9 @@ def submit_stock_entry(doc ,*args,**kwargs) :
             
        
         #validate user access 
-        if user not in user_list :
-            frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
+        if entry_type in target_types or entry_type in recive_types :
+            if user not in user_list :
+                frappe.throw(f"you can Not Complete this action for Branch  { access_group}")
     if 'stock_transfer' in DOMAINS:
         check_stock_entry_transit(doc ,*args,**kwargs)
     if  'WEH' in DOMAINS:
