@@ -39,7 +39,8 @@
   "references_section",
   "journal_entry",
   "column_break_27",
-  "amended_from"
+  "amended_from",
+  "is_tax"
  ],
  "fields": [
   {
@@ -238,6 +239,13 @@
    "options": "Pay Document",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+	"fieldname": "is_tax",
+	"fieldtype": "Select",
+	"label": "Is Tax",
+	"options": "Taxble\nNon Taxble",
+	"translatable": 1
   },
   {
    "default": "PAY-VOUCHER-.####",
