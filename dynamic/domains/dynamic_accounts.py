@@ -106,7 +106,7 @@ data = {
 				"fieldname": "is_tax",
 				"fieldtype": "Select",
 				"insert_after": "cost_center",
-				"options": "Taxble\nNon Taxble",
+				"options": "ضريبي\nغير ضريبي",
 				"transalatable": 1
 			},
 			
