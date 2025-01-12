@@ -135,6 +135,25 @@ data = {
                 "insert_after": "organization_lead",
             },
             {
+                "label":_("Spare Parts"),
+                "fieldname":"spare_parts",
+                "fieldtype":"Section Break",
+                "insert_after":"title", 
+            },
+            {
+                "label": _("Spare Parts Category"),
+                "fieldname": "spare_parts_category",
+                "fieldtype": "Link",
+                "insert_after": "spare_parts",
+                "options":"Item Group"
+            },
+            {
+                "label": _("Spare Parts Notes"),
+                "fieldname": "spare_parts_notes",
+                "fieldtype": "Text Editor",
+                "insert_after": "spare_parts_category",
+            },
+            {
                 "label": _("Transfer By"),
                 "fieldname": "transfer_by",
                 "fieldtype": "Data",
