@@ -244,7 +244,7 @@
 	"fieldname": "is_tax",
 	"fieldtype": "Select",
 	"label": "Is Tax",
-	"options": "ضريبي\nغير ضريبي",
+	"options": "\nضريبي\nغير ضريبي",
 	"translatable": 1
   },
   {

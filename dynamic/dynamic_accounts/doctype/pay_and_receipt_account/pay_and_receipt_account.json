@@ -108,9 +108,8 @@
 	"fieldname": "is_tax",
 	"fieldtype": "Select",
 	"label": "Is Tax",
-	"options": "ضريبي\nغير ضريبي",
-	"translatable": 1,
-	"fetch_from": "is_tax"
+	"options": "\nضريبي\nغير ضريبي",
+	"translatable": 1
   }
  ],
  "index_web_pages_for_search": 1,
