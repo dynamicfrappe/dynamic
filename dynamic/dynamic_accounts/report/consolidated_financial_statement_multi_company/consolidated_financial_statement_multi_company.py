@@ -89,83 +89,39 @@ def execute(filters=None):
 
 		res_columns = res.get("message").get("columns")
 		columns += res_columns
-
-
-		# data = [
-		# 	{
-		# 		'account_name': '2105003 - جاري السمان للتصميمات الهندسية',
-		# 		'account': '2105003 - جاري السمان للتصميمات الهندسية - SF',
-		# 	  	'parent_account': '2105 - اطراف ذات علاقة - SF', 
-		# 	  	'indent': 3.0, 
-		# 		'year_start_date': None,
-		# 		'root_type': 'Liability', 
-		# 		'year_end_date': '2024-12-31', 
-		# 		'currency': 'SAR',
-		# 		'company_wise_opening_bal': {}, 
-		# 		'opening_balance': -0.0, 
-		# 		'Samman Factory': -688558.18, 
-		# 		'has_value': True, 
-		# 	  	'total': -688558.18
-		# 	}]
-		# data2 = [
-		# 	{
-		# 		'account_name': '2105003 - جاري السمان للتصميمات الهندسية',
-		# 		'account': '2105003 - جاري السمان للتصميمات الهندسية - SF',
-		# 	  	'parent_account': '2105 - اطراف ذات علاقة - SF', 
-		# 	  	'indent': 3.0, 
-		# 		'year_start_date': None,
-		# 		'root_type': 'Liability', 
-		# 		'year_end_date': '2024-12-31', 
-		# 		'currency': 'SAR',
-		# 		'company_wise_opening_bal': {}, 
-		# 		'opening_balance': -0.0, 
-		# 		'Samman MEP': -688558.18, 
-		# 		'has_value': True, 
-		# 	  	'total': -688558.18
-		# 	}
-		# ]
-
-		# result = [
-		# 	{
-		# 		'account_name': '2105003 - جاري السمان للتصميمات الهندسية',
-		# 		'account': '2105003 - جاري السمان للتصميمات الهندسية - SF',
-		# 	  	'parent_account': '2105 - اطراف ذات علاقة - SF', 
-		# 	  	'indent': 3.0, 
-		# 		'year_start_date': None,
-		# 		'root_type': 'Liability', 
-		# 		'year_end_date': '2024-12-31', 
-		# 		'currency': 'SAR',
-		# 		'company_wise_opening_bal': {}, 
-		# 		'opening_balance': -0.0, 
-		# 		'Samman Factory': -688558.18,
-		# 		'Samman MEP': -688558.18, 
-		# 		'has_value': True, 
-		# 	  	'total': -688558.18
-		# 	}
-		# ]
-
-
+		columns.append(
+			{
+				"fieldname": "final_total",
+				"label": _("Final Total"),
+				"fieldtype": "Currency",
+				"width": 150,
+			},
+		)
 
 	return columns ,data, message, chart , report_summary
 
 def merge_data(data1, data2):
-    merged_data = {}
+	merged_data = {}
 
-    for entry in data1 + data2:
-        account_key = entry.get('account_name') 
+	for entry in data1 + data2:
+		account_key = entry.get('account_name') 
 
-        if account_key not in merged_data:
-            merged_data[account_key] = entry.copy()
-        else:
-            for key, value in entry.items():
-                if key in ['account', 'account_name', 'parent_account', 'indent', 
-                           'year_start_date', 'year_end_date', 'root_type', 
-                           'currency', 'opening_balance', 'has_value', 'total']:
-                    continue
-                
-                merged_data[account_key][key] = value
+		if account_key not in merged_data:
+			merged_data[account_key] = entry.copy()
+		else:
+			for key, value in entry.items():
+				if key in ['account', 'account_name', 'parent_account', 'indent', 
+						   'year_start_date', 'year_end_date', 'root_type', 
+						   'currency', 'opening_balance', 'has_value', 'total']:
+					continue
+				
+				merged_data[account_key][key] = value
+	for entry in merged_data.values():
+		samman_factory = entry.get('Samman Factory', 0) or 0
+		samman_mep = entry.get('Samman MEP', 0) or 0
+		entry['final_total'] = samman_factory + samman_mep
 
-    return list(merged_data.values())
+	return list(merged_data.values())
 
 
 
