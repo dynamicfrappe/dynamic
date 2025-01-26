@@ -469,6 +469,14 @@ data = {
 		"property_type": "Select",
 		"value": "Data"
 		},
+		{
+		"doctype": "Actions",
+		"doctype_or_field": "DocField",
+		"fieldname": "action",
+		"property": "options",
+		"property_type": "Select",
+		"value": ""
+		},
 		#>>>>>>>>>>>>>>>>>>>>>>> Action
 		{
 		"doctype": "Action",
