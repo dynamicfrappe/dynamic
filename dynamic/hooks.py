@@ -545,7 +545,7 @@ jenv = {
         "get_components_summary:dynamic.utils.get_components_summary",
         "get_invoice_tax_data:dynamic.utils.get_invoice_tax_data",
         "encode_item_data:dynamic.www.item_data.encode_item_data",
-        "day_name:dynamic.api.get_day_name",
+        # "day_name:dynamic.api.get_day_name",
         "get_total_qty:dynamic.api.get_total_qty",
         # "test_encode_item_data:dynamic.www.item_data.test_encode_item_data",
         "encode_invoice_data:dynamic.api.encode_invoice_data",
