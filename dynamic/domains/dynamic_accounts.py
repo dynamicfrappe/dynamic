@@ -100,6 +100,17 @@ data = {
             },
             
          ],
+		 "Journal Entry Account":[
+			{
+				"label": _("Is Tax"),
+				"fieldname": "is_tax",
+				"fieldtype": "Select",
+				"insert_after": "cost_center",
+				"options": "\nضريبي\nغير ضريبي",
+				"transalatable": 1
+			},
+			
+		 ]
          
     },
     "properties": [{

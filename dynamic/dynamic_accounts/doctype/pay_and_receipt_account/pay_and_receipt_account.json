@@ -11,6 +11,7 @@
   "party",
   "amount",
   "cost_center",
+  "is_tax",
   "project",
   "column_break_3",
   "currency",
@@ -102,6 +103,13 @@
    "fieldtype": "Link",
    "label": "Project",
    "options": "Project"
+  },
+  {
+	"fieldname": "is_tax",
+	"fieldtype": "Select",
+	"label": "Is Tax",
+	"options": "\nضريبي\nغير ضريبي",
+	"translatable": 1
   }
  ],
  "index_web_pages_for_search": 1,

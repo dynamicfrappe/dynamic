@@ -96,6 +96,7 @@ data = {
 				"fieldname": "in_words",
 				"fieldtype": "Data",
 				"insert_after": "paid_amount",
+				"read_only": 1
 			},
 		]
 
