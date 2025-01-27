@@ -132,7 +132,7 @@ def edit_of_reseration(self ):
 				})
 			qty = (doc.delivered_qty if doc.delivered_qty else 0 ) + item.stock_qty 
 			doc.delivered_qty = qty 
-			doc.save()
+			doc.save(ignore_permissions=True)
 			frappe.db.commit()
 			print("Updated")
 		else:
