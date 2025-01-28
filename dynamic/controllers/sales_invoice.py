@@ -156,7 +156,7 @@ def validate_when_cancel(self):
 			})
 			qty = (doc.delivered_qty if doc.delivered_qty else 0 ) - item.stock_qty 
 			doc.delivered_qty = qty 
-			doc.save()
+			doc.save(ignore_permissions=True)
 			frappe.db.commit()
 def warehouse1(self):
 	if self.update_stock == 1:
