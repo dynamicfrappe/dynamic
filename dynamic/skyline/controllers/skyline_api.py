@@ -15,7 +15,7 @@ def validate_with_budget(self):
         items = self.get("items")
         if items and self.first_approve == 0 and self.sec_approve ==0:
             for item in items:
-                if item.rate > item.Budget:
+                if item.rate > item.budget:
                     frappe.throw(_("Item rate Cannot be greater than budget"))
 
 def validate_fast_purchase(self):
