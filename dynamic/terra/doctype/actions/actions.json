@@ -142,8 +142,7 @@
    "fieldname": "from1",
    "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "From",
-   "reqd": 1
+   "label": "From"
   },
   {
    "allow_in_quick_entry": 1,
@@ -170,13 +169,12 @@
   {
    "fieldname": "end",
    "fieldtype": "Date",
-   "label": "End",
-   "reqd": 1
+   "label": "End"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-09 12:21:20.513590",
+ "modified": "2025-01-12 14:33:37.561801",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Actions",
