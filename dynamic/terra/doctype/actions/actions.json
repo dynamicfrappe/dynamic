@@ -122,7 +122,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nWatting For Customer\nOn Hold\nCompleted"
+   "options": "\nWatting For Customer\nOn Hold\nCompleted\nOpen\nClosed"
   },
   {
    "allow_in_quick_entry": 1,
@@ -176,7 +176,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-02 14:14:40.495396",
+ "modified": "2025-02-09 12:21:20.513590",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Actions",

@@ -3,9 +3,33 @@
 import json
 import frappe
 from frappe.model.document import Document
+Domains=frappe.get_active_domains()
 
 class Actions(Document):
     pass
+    def validate(self):
+        if 'Logistics' in Domains :
+            self.send_notification()
+
+    def send_notification(doc):
+        notif_doc = frappe.new_doc('Notification Log')
+        notif_doc.subject = f"{doc.doctype} {doc.name} modified by {doc.modified_by}"
+        notif_doc.for_user = doc.create_by
+        notif_doc.type = "Alert"
+        notif_doc.document_type = doc.doctype
+        notif_doc.document_name = doc.name
+        notif_doc.from_user = frappe.session.user
+        notif_doc.insert(ignore_permissions=True)
+        
+    # def check_permision(self):
+    #     if not frappe.db.exists("User Permission", { "user" : self.lead_owner,"for_value": self.name}):
+    #         user_permission = frappe.new_doc("User Permission")
+    #         user_permission.user = self.lead_owner
+    #         user_permission.allow = self.doctype
+    #         user_permission.for_value = self.name
+    #         user_permission.insert()
+
+
 @frappe.whitelist()
 def get_events(start, end, filters=None):
     from erpnext.controllers.queries import get_match_cond
@@ -18,12 +42,12 @@ def get_events(start, end, filters=None):
         """
         SELECT
             `tabActions`.name AS name,
-            `tabActions`.`start` AS start,
-            `tabActions`.`end` AS end
+            `tabActions`.`from1` AS start,
+            `tabActions`.`to` AS end
         FROM
             `tabActions`
         WHERE
-            (`tabActions`.`start` BETWEEN %(start)s AND %(end)s)
+            (`tabActions`.`from1` BETWEEN %(start)s AND %(end)s)
             {conditions}
         """.format(conditions=conditions),
         {"start": start, "end": end},
