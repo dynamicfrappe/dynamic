@@ -532,6 +532,23 @@ class SalesOrder(SellingController):
 		self.validate_drop_ship()
 		self.validate_supplier_after_submit()
 		self.validate_delivery_date()
+		self.change_warehouse_reservation()
+
+	def change_warehouse_reservation(self):
+		if getattr(self, 'new_warehouse_reservation') and self.new_warehouse_reservation:
+
+			reservation = frappe.get_list("Reservation",{"sales_order":self.name},['name'])
+			for res in reservation:
+
+				doc = frappe.get_doc("Reservation",res.get("name"))
+				doc.warehouse_source = self.new_warehouse_reservation
+				warehouse = doc.get("warehouse")
+				for i in warehouse:
+					i.warehouse = self.new_warehouse_reservation
+				doc.save(ignore_permissions=True)
+				frappe.db.commit()
+
+
 
 	def validate_supplier_after_submit(self):
 		"""Check that supplier is the same after submit if PO is already made"""

@@ -206,7 +206,15 @@ data = {
         ],
         
         "Sales Order":[
-             {
+            {
+                "fieldname": "new_warehouse_reservation",
+                "fieldtype": "Link",
+                "options":"Warehouse",
+                "insert_after": "set_warehouse",
+                "label": "New Warehouse Reservation",
+                "allow_on_submit":1,
+            },
+            {
                 "fieldname": "invoice_payment",
                 "fieldtype": "Float",
                 "insert_after": "advance_paid",
