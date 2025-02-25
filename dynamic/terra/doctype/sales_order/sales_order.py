@@ -543,8 +543,11 @@ class SalesOrder(SellingController):
 				doc = frappe.get_doc("Reservation",res.get("name"))
 				doc.warehouse_source = self.new_warehouse_reservation
 				warehouse = doc.get("warehouse")
-				for i in warehouse:
-					i.warehouse = self.new_warehouse_reservation
+				if warehouse:
+					for i in warehouse:
+						i.warehouse = self.new_warehouse_reservation
+				else:
+					doc.append("warehouse",{"warehouse":self.new_warehouse_reservation})
 				doc.save(ignore_permissions=True)
 				frappe.db.commit()
 
