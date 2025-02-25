@@ -546,8 +546,12 @@ class SalesOrder(SellingController):
 				if warehouse:
 					for i in warehouse:
 						i.warehouse = self.new_warehouse_reservation
-				else:
-					doc.append("warehouse",{"warehouse":self.new_warehouse_reservation})
+				# else:
+				# 	for i in self.items:
+				# 		doc.append("warehouse",
+				# 		{
+				# 			"warehouse":self.new_warehouse_reservation,
+				# 		})
 				doc.save(ignore_permissions=True)
 				frappe.db.commit()
 
