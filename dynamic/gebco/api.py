@@ -166,8 +166,9 @@ def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
     #1-qty deliverd from delivery note
     if not doc.is_return:
         for row in doc.items:
-            reserv_data = frappe.db.get_value('Sales Order Item',{"reservation":reserv_data['reservation']},['reservation','item_purchase_order','item_warehouse'],as_dict=1)
+            
             reserv_doc = frappe.get_doc('Reservation',reserv_data['reservation'])
+            reserv_data = frappe.db.get_value('Sales Order Item',{"reservation":reserv_doc.name},['reservation','item_purchase_order','item_warehouse'],as_dict=1)
             item = frappe.get_doc('Reservation Warehouse',reserv_doc.warehouse[0].name)
             if(item.reserved_qty < row.qty):
                 frappe.throw(f'Not Enough Reservation qty for item {row.item_code} for reservation {reserv_data["reservation"]} avail reserved qty {item.reserved_qty}')
