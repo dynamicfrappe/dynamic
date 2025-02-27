@@ -164,6 +164,7 @@ def check_so_approval(doc):
 
 def minus_delivery_qty_from_reservation(doc,*args,**kwargs):
     #1-qty deliverd from delivery note
+    reserv_doc = None
     if not doc.is_return:
         for row in doc.items:
             
