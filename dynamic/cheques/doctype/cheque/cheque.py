@@ -551,7 +551,6 @@ cheque_status = [
     "Paid"
 ]
 
-
 @frappe.whitelist()
 def make_cheque_doc(dt, dn):
     ref_doc = frappe.get_doc(dt, dn)
@@ -567,16 +566,19 @@ def make_cheque_doc(dt, dn):
     cheque.payment_type = payment_type
     cheque.party_type = "Supplier" if payment_type == "Pay" else "Customer"
     cheque.party = ref_doc.supplier if payment_type == "Pay" else ref_doc.customer
-    row = cheque.append('items')
-    if hasattr(ref_doc, 'outstanding_amount'):
-        row.amount = ref_doc.outstanding_amount
-    else:
-        row.amount = ref_doc.base_rounded_total or ref_doc.base_grand_total
-    # if 'Logistics' in DOMAINS :
-    #     for payment in ref_doc.payment_schedule :
-    #         cheque.append("items" , 
-    #                       {"cheque_date" : payment.due_date , "amount" : payment.payment_amount ,
-    #                        "password" :payment.description })
+    # row = cheque.append('items')
+    if hasattr(ref_doc, 'payment_schedule'):
+        for i in ref_doc.get('payment_schedule'):
+            cheque.append('items',{
+                'amount':i.payment_amount,
+                'cheque_date':i.due_date,
+                'ref_doc':i.payment_term,
+            })
+            # row.amount = i.payment_amount
+            # row.cheque_date = i.due_date
+    #     row.amount = ref_doc.outstanding_amount
+    # else:
+    #     row.amount = ref_doc.base_rounded_total or ref_doc.base_grand_total
     return cheque
 
 
