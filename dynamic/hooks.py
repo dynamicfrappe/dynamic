@@ -369,6 +369,11 @@ doc_events = {
 	"Pricing Rule":{
 		"on_trash" : "dynamic.api.pricing_rule_on_trash",
 	},
+     "Work Order":{
+        "validate": [
+            "dynamic.controllers.work_order.validate",
+        ],
+    },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
     # }
@@ -531,6 +536,7 @@ domains = {
     "Top Laser":"dynamic.domains.toplaser",
     "Trecom":"dynamic.domains.trecom",
     "Item Integration":"dynamic.domains.item_integration",
+    "Al wefak": "dynamic.domains.alwefak",
 }
 
 # domain Conatin
