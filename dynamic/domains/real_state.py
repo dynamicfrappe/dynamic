@@ -216,6 +216,26 @@ data = {
                 "insert_after":"section_break_table", 
             },
         ],
+        'Sales Order Item':[
+            {
+                "label":_("Total Price"),
+                "fieldname":"total_price",
+                "fieldtype":"Float",
+                "insert_after":"item_code", 
+                "fetch_from": "item_code.total_price",
+                "in_list_view":1,
+            },
+        ],
+        'Sales Invoice Item':[
+            {
+                "label":_("Total Price"),
+                "fieldname":"total_price",
+                "fieldtype":"Float",
+                "insert_after":"item", 
+                "fetch_from": "item_code.total_price",
+                "in_list_view":1,
+            },
+        ],
         'Quotation Item':[
             {
                 "label":_("Area Indoor"),
@@ -284,6 +304,7 @@ data = {
             "property_type": "Text",
             "value": "Month(s) after the end of the invoice month",
         },
+        
         # {
         #     "doctype": "Quotation",
         #     "doctype_or_field": "DocField",
