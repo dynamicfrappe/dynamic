@@ -374,6 +374,18 @@ def create_lead_from_customer(source_name):
     return actions
 
 
+
+@frappe.whitelist()
+def create_conservation_request(source_name, doctype='Conservation Request'):
+    customer = frappe.get_doc('Customer', source_name)
+    conservation_request = frappe.new_doc(doctype)
+    conservation_request.customer = customer.name  
+
+    return conservation_request 
+
+
+
+
 @frappe.whitelist()
 def create_contact(name , type , contact):
     sql = f'''

@@ -21,6 +21,8 @@
   "type_for_request",
   "name_of_maintenance",
   "number",
+  "conservation_status",
+  "closing_reson",
   "section_break_9",
   "warranties",
   "machines",
@@ -286,12 +288,23 @@
    "fieldname": "to",
    "fieldtype": "Datetime",
    "label": "To"
+  },
+  {
+   "fieldname": "conservation_status",
+   "fieldtype": "Select",
+   "label": "Conservation Status",
+   "options": "Open\nIN progress\nSending\nClosed"
+  },
+  {
+   "fieldname": "closing_reson",
+   "fieldtype": "Text",
+   "label": "Closing Reson"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-17 16:13:37.871205",
+ "modified": "2025-03-18 16:15:58.134062",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation",

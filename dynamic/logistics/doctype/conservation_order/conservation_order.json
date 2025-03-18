@@ -12,6 +12,7 @@
   "customer_name",
   "customer_primary_contact",
   "customer_primary_address",
+  "visit_evolution",
   "support",
   "support_reason",
   "not_support",
@@ -238,12 +239,18 @@
    "label": "Conservation",
    "options": "Conservation",
    "read_only": 1
+  },
+  {
+   "fieldname": "visit_evolution",
+   "fieldtype": "Link",
+   "label": "Visit Evolution",
+   "options": "Survey"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-21 09:12:30.691848",
+ "modified": "2025-03-18 16:15:05.908070",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Conservation order",

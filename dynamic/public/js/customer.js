@@ -91,6 +91,20 @@ frappe.ui.form.on("Customer", {
                                 },
                                 __("Create")
                             )
+                            frm.add_custom_button(
+                                __("Conservation Request"),
+                                function () {
+                                    frappe.model.open_mapped_doc({
+                                        method:
+                                            "dynamic.logistics.logistics_api.create_conservation_request",
+                                        frm: frm,
+                                        args: {
+                                            doctype: frm.doc,
+                                        }
+                                    });
+                                },
+                                __("Create")
+                            ) 
                         }
                       
                     }
