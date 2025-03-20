@@ -67,8 +67,7 @@
   {
    "fieldname": "arrived_date",
    "fieldtype": "Date",
-   "label": "Arrived Date",
-   "reqd": 1
+   "label": "Expected Date To Arrive"
   },
   {
    "fieldname": "column_break_3",
@@ -123,7 +122,7 @@
    "fieldname": "status_of_container",
    "fieldtype": "Select",
    "label": "Status of Container ",
-   "options": "At the supplier\nLoaded to port\nat the harbour\nin the sea\nIn the port of Alexandria"
+   "options": "At the supplier\nLoaded to port\nat the harbour\nin the sea\nPort OF Dischange\nOn The Way\nRecived"
   },
   {
    "fieldname": "section_break_a59pm",
@@ -160,7 +159,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-03 16:48:41.041354",
+ "modified": "2025-03-20 13:56:21.434481",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "PO Container",
