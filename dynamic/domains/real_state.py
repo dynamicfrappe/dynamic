@@ -258,7 +258,16 @@ data = {
                 "insert_after":"area_outdoor", 
                 "fetch_from": "item_code.total_price",
             },
-        ]
+        ],
+        'Journal Entry':[
+            {
+                "label":_("Payment type"),
+                "fieldname":"payment_type",
+                "fieldtype":"Select",
+                "insert_after":"posting_date",
+                "options":"\nAdvance payment\nPremium\nMaintenance Payment",
+            },
+        ],    
         # This commented because we trnasfer fields to Dynamic Account Domain
         # 'Sales Order':[
         #     {
