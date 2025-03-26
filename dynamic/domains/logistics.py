@@ -410,9 +410,15 @@ data = {
                 "allow_on_submit":0,
                 # "reqd":0
                 
+            },    
+        ],
+        "Item": [
+            {
+                "label": _("CBM"),
+                "fieldname": "cbm",
+                "fieldtype": "Data",
+                "insert_after": "column_break0",
             },
-            
-            
         ],
          "Sales Order":[
             {

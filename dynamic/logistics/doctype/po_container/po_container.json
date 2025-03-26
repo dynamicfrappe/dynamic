@@ -10,6 +10,10 @@
   "naming_series",
   "container_number",
   "status_of_container",
+  "type_of_ship",
+  "column_break_apu3s",
+  "saber_cost",
+  "container_type",
   "section_break_a59pm",
   "container_shipping_company",
   "arrived_date",
@@ -23,6 +27,10 @@
   "section_break_6",
   "description",
   "shipping_company",
+  "customes",
+  "recipet_fees",
+  "cargo_x_cost",
+  "invoice_certification",
   "purchase_order_containers",
   "fetch_items",
   "items",
@@ -154,12 +162,58 @@
    "label": "Survey Template",
    "options": "Survey Template",
    "read_only": 1
+  },
+  {
+   "fieldname": "type_of_ship",
+   "fieldtype": "Select",
+   "label": "Type Of Ship",
+   "options": "Air Freight\nSea Freight"
+  },
+  {
+   "fieldname": "column_break_apu3s",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.type_of_ship=='Sea Freight'",
+   "fieldname": "saber_cost",
+   "fieldtype": "Currency",
+   "label": "Saber Cost"
+  },
+  {
+   "depends_on": "eval:doc.type_of_ship=='Sea Freight'",
+   "fieldname": "container_type",
+   "fieldtype": "Data",
+   "label": "Container Type"
+  },
+  {
+   "depends_on": "eval:doc.type_of_ship=='Air Freight'",
+   "fieldname": "customes",
+   "fieldtype": "Currency",
+   "label": "Customes"
+  },
+  {
+   "depends_on": "eval:doc.type_of_ship=='Air Freight'",
+   "fieldname": "recipet_fees",
+   "fieldtype": "Currency",
+   "label": "Recipet Fees"
+  },
+  {
+   "depends_on": "eval:doc.type_of_ship=='Sea Freight'",
+   "fieldname": "cargo_x_cost",
+   "fieldtype": "Currency",
+   "label": "Cargo X Cost"
+  },
+  {
+   "depends_on": "eval:doc.type_of_ship=='Sea Freight'",
+   "fieldname": "invoice_certification",
+   "fieldtype": "Currency",
+   "label": "Invoice Certification"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-20 13:56:21.434481",
+ "modified": "2025-03-26 10:23:21.447389",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "PO Container",

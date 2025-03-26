@@ -14,6 +14,7 @@
   "password",
   "column_break_cemjg",
   "status",
+  "visit_evolution",
   "customer",
   "section_break_dzx6c",
   "items",
@@ -221,12 +222,17 @@
    "fieldname": "password",
    "fieldtype": "Check",
    "label": "Password"
+  },
+  {
+   "fieldname": "visit_evolution",
+   "fieldtype": "Data",
+   "label": "Visit Evolution"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-17 12:36:17.977785",
+ "modified": "2025-03-26 13:24:07.607228",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Composition",
