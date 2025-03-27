@@ -174,12 +174,12 @@ def check_composition_request_with_order(name):
                 CO.docstatus = 1
             """)
     
-@frappe.whitelist()            
-def validate_items():
-    selling_settings = frappe.get_single("Selling Settings")
-    if not selling_settings.item_group :
-        frappe.throw(_("Please set <b>item group</b> in selling settings"))
-    return selling_settings.item_group 
+# @frappe.whitelist()            
+# def validate_items():
+#     selling_settings = frappe.get_single("Selling Settings")
+#     if not selling_settings.item_group :
+#         frappe.throw(_("Please set <b>item group</b> in selling settings"))
+#     return selling_settings.item_group 
 
 @frappe.whitelist()            
 def get_maintenance_item(doc , name):
@@ -195,12 +195,12 @@ def get_maintenance_item(doc , name):
     # return frappe.throw(str(conservation_requestes))
 
 
-@frappe.whitelist()            
-def validate_engineering_name():
-    selling_settings = frappe.get_single("Selling Settings")
-    if not selling_settings.department :
-        frappe.throw(_("Please set <b>department</b> in selling settings"))
-    return selling_settings.department 
+# @frappe.whitelist()            
+# def validate_engineering_name():
+#     selling_settings = frappe.get_single("Selling Settings")
+#     if not selling_settings.department :
+#         frappe.throw(_("Please set <b>department</b> in selling settings"))
+#     return selling_settings.department 
 
 @frappe.whitelist()            
 def get_item_price(item):

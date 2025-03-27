@@ -40,22 +40,17 @@ frappe.ui.form.on('Composition Order', {
 							callback: function (r) {
 							},			 
 						})
-						frappe.call({
-							method:"dynamic.logistics.logistics_api.validate_engineering_name",
-							callback:function(r){
-								frm.fields_dict["engineers"].grid.get_field("employee").get_query =
-								function (doc, cdt, cdn) {
-									var row = locals[cdt][cdn];
-									return {
-										filters: {
-										'department': r.message,
-										}
-							
+							frm.fields_dict["engineers"].grid.get_field("employee").get_query =
+							function (doc, cdt, cdn) {
+								var row = locals[cdt][cdn];
+								return {
+									filters: {
+									'department': "Maintainance - TL",
 									}
-								};
-							}
-						})
-	
+						
+								}
+							};
+
 					}
 				}
 			}

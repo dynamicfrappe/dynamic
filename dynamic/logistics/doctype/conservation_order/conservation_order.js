@@ -8,22 +8,18 @@ frappe.ui.form.on('Conservation order', {
 			callback: function (r) {
 				if (r.message && r.message.length) {
 					if (r.message.includes("Logistics")) {
-						frappe.call({
-							method:"dynamic.logistics.logistics_api.validate_items",
-							callback:function(r){
-								frm.fields_dict["items"].grid.get_field("item_code").get_query =
-								function (doc, cdt, cdn) {
-									var row = locals[cdt][cdn];
-									return {
-										filters: {
-										'item_group': r.message,
-										'is_stock_item': 1,
-										}
-							
+							frm.fields_dict["items"].grid.get_field("item_code").get_query =
+							function (doc, cdt, cdn) {
+								var row = locals[cdt][cdn];
+								return {
+									filters: {
+									'is_stock_item': 1,
 									}
-								};
-							}
-						})
+						
+								}
+							};
+							
+						
 						frm.fields_dict["service_items"].grid.get_field("item").get_query =
 						  function (doc, cdt, cdn) {
 							  var row = locals[cdt][cdn];
@@ -34,21 +30,16 @@ frappe.ui.form.on('Conservation order', {
 					  
 							  }
 						};
-						frappe.call({
-							method:"dynamic.logistics.logistics_api.validate_engineering_name",
-							callback:function(r){
-								frm.fields_dict["engineering_name"].grid.get_field("employee").get_query =
-								function (doc, cdt, cdn) {
-									var row = locals[cdt][cdn];
-									return {
-										filters: {
-										'department': r.message,
-										}
-							
-									}
-								};
+						frm.fields_dict["engineering_name"].grid.get_field("employee").get_query =
+						function (doc, cdt, cdn) {
+							var row = locals[cdt][cdn];
+							return {
+								filters: {
+								'department': "Maintainance - TL",
+								}
+					
 							}
-						})
+						};
 					}
 				}
 			}
