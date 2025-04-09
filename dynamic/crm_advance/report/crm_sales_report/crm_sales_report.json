@@ -23,16 +23,8 @@
    "role": "Sales User"
   },
   {
-   "role": "Sales User"
-  },
   {
    "role": "Sales Manager"
-  },
-  {
-   "role": "Sales Manager"
-  },
-  {
-   "role": "System Manager"
   },
   {
    "role": "System Manager"
@@ -41,16 +33,7 @@
    "role": "CRM User"
   },
   {
-   "role": "CRM User"
-  },
-  {
    "role": "stock for sales"
-  },
-  {
-   "role": "stock for sales"
-  },
-  {
-   "role": "Marketing CRM"
   },
   {
    "role": "Marketing CRM"
@@ -59,13 +42,8 @@
    "role": "Sales coordinator"
   },
   {
-   "role": "Sales coordinator"
-  },
-  {
    "role": "SpareParts sales user"
   },
-  {
-   "role": "SpareParts sales user"
-  }
+
  ]
 }
