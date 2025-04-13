@@ -22,7 +22,7 @@
   {
    "role": "Sales User"
   },
-  {
+
   {
    "role": "Sales Manager"
   },
@@ -43,7 +43,6 @@
   },
   {
    "role": "SpareParts sales user"
-  },
-
+  }
  ]
 }
