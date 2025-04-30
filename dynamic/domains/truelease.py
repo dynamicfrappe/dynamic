@@ -350,6 +350,110 @@ data = {
                 "insert_after": "license_end_date",
             },
         ],
+        "Contract": [
+            # Contract
+            {
+                "label": "Contract Number",
+                "fieldname": "contract_number",
+                "fieldtype": "Int",
+                "insert_after": "party_type",
+            },
+            {
+                "label": "Contract Type",
+                "fieldname": "contract_type",
+                "fieldtype": "Select",
+                "insert_after": "contract_number",
+                "options": "With Recourse\nWithout Recourse",
+            },
+            # License
+            {
+                "label": "",
+                "fieldname": "license_section",
+                "fieldtype": "Section Break",
+                "insert_after": "end_date",
+                "collapsible": 0,
+            },
+            {
+                "label": "License Start Date",
+                "fieldname": "license_start_date",
+                "fieldtype": "Date",
+                "insert_after": "license_section",
+            },
+            {
+                "label": "License End Date",
+                "fieldname": "license_end_date",
+                "fieldtype": "Date",
+                "insert_after": "license_start_date",
+            },
+            {
+                "label": "License Type",
+                "fieldname": "license_type",
+                "fieldtype": "Text",
+                "insert_after": "license_end_date",
+            },
+            {
+                "fieldname": "cbreak_contract",
+                "fieldtype": "Column Break",
+                "insert_after": "license_type",
+            },
+            {
+                "label": "Contract Sign Date",
+                "fieldname": "contract_sign_date",
+                "fieldtype": "Date",
+                "insert_after": "sb_terms",
+            },
+            {
+                "fieldname": "sign_date_clmn",
+                "fieldtype": "Column Break",
+                "insert_after": "contract_sign_date",
+            },
+            # Installment
+            {
+                "label": "Installment Amount",
+                "fieldname": "installment_amount",
+                "fieldtype": "Float",
+                "insert_after": "cbreak_contract",
+            },
+            {
+                "label": "Bank Name",
+                "fieldname": "bank_name",
+                "fieldtype": "Data",
+                "insert_after": "installment_type",
+            },
+            {
+                "label": "Installment Type",
+                "fieldname": "installment_type",
+                "fieldtype": "Select",
+                "insert_after": "installment_amount",
+                "options": "Monthly\nQuraterly\nHalf Yearly\nYearly",
+            },
+            # Insurance
+            {
+                "label": "",
+                "fieldname": "insurance_section",
+                "fieldtype": "Column Break",
+                "insert_after": "bank_name",
+            },
+            {
+                "label": "Insurance Type",
+                "fieldname": "insurance_type",
+                "fieldtype": "Select",
+                "insert_after": "insurance_section",
+                "options": "Asset Insurance\nCredit Default",
+            },
+            {
+                "label": "Insurance Start Date",
+                "fieldname": "insurance_start_date",
+                "fieldtype": "Date",
+                "insert_after": "insurance_type",
+            },
+            {
+                "label": "Insurance End Date",
+                "fieldname": "insurance_end_date",
+                "fieldtype": "Date",
+                "insert_after": "insurance_start_date",
+            },
+        ],
     },
     "properties": [
         # >>>>>>>>>>>>>>>>>>>>>>> Lead
@@ -554,6 +658,48 @@ data = {
             "property": "reqd",
             "property_type": "Check",
             "value": "0",
+        },
+        # >>>>>>>>>>>>>>>>>>>>>>> Contract
+        {
+            "doctype": "Contract",
+            "doctype_or_field": "DocField",
+            "fieldname": "is_signed",
+            "property": "insert_after",
+            "property_type": "Select",
+            "value": "party_user",
+        },
+        # Contract Period
+        {
+            "doctype": "Contract",
+            "doctype_or_field": "DocField",
+            "fieldname": "start_date",
+            "property": "insert_after",
+            "property_type": "Select",
+            "value": "sign_date_clmn",
+        },
+        {
+            "doctype": "Contract",
+            "doctype_or_field": "DocField",
+            "fieldname": "start_date",
+            "property": "label",
+            "property_type": "Data",
+            "value": "Contract Start Date",
+        },
+        {
+            "doctype": "Contract",
+            "doctype_or_field": "DocField",
+            "fieldname": "end_date",
+            "property": "label",
+            "property_type": "Data",
+            "value": "Contract End Date",
+        },
+        {
+            "doctype": "Contract",
+            "doctype_or_field": "DocField",
+            "fieldname": "contract_terms",
+            "property": "reqd",
+            "property_type": "Check",
+            "value": 0,
         },
     ],
 }
