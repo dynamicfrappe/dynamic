@@ -1059,3 +1059,15 @@ frappe.ui.form.on("Sales Order Item", {
     frm.refresh_fields('items')
   }
 })
+frappe.ui.form.on('Sales Order', {
+  onload: function(frm) {
+      frm.fields_dict['payment_schedule'].grid.get_field('payment_term').get_query = function(doc, cdt, cdn) {
+          return {
+              filters: {
+                  is_usable: 1
+              }
+          };
+      };
+  }
+});
+

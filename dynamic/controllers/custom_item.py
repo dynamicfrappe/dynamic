@@ -116,3 +116,47 @@ def getseries(key, digits):
 		# no, create it
 		current = 1
 	return ("%0" + str(digits) + "d") % current
+
+
+
+
+            
+
+from frappe.utils import getdate
+def update_payment_term_status():
+    if "Captain" not in frappe.get_active_domains():
+        return
+    today = getdate()
+    terms = frappe.get_all("Payment Term", fields=["name", "disable_on"])
+    for term in terms:
+        disable_on = getdate(term.disable_on) if term.disable_on else None
+        if disable_on and disable_on <= today:
+            is_usable = 0
+        else:
+            is_usable = 1
+        frappe.db.set_value("Payment Term", term.name, "is_usable", is_usable)
+        frappe.db.commit()
+
+
+
+from frappe.model.document import Document
+def update_payment_term_status_in_quotation(quotation):
+    if "Captain" not in frappe.get_active_domains():
+        return
+    payment_terms = quotation.get("payment_terms")
+    for term in payment_terms:
+        is_usable = frappe.db.get_value("Payment Term", term.payment_term, "is_usable")
+        if is_usable == 0:
+            frappe.throw(f"Payment Term {term.payment_term} is not usable.")
+            
+
+
+
+
+
+def before_save(doc, method):
+    for item in doc.items:
+        if item.item_code:  
+            item_doc = frappe.get_doc("Item", item.item_code)
+            item.unit_floor = item_doc.unit_floor
+            item.unit_area1 = item_doc.unit_area

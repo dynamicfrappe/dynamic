@@ -111,7 +111,8 @@ doctype_js = {
     "Lead": "public/js/lead.js",
     "Supplier": "public/js/supplier.js",
     "Customer": "public/js/customer.js",
-    "Quotation": "public/js/quotation.js",
+    "Quotation":"public/js/quotation.js",
+    "Sales Order":"public/js/sales_order.js",
     "Opportunity": "public/js/opportunity.js",
     "Material Request": "public/js/material_request.js",
     "Work Order": "public/js/work_order.js",
@@ -128,7 +129,9 @@ doctype_js = {
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Asset": "public/js/asset.js",
     "Actions": "public/js/actions.js",
-    "Subscription": "public/js/subscription.js"
+    "Subscription": "public/js/subscription.js",
+    "Promotional Scheme": "public/js/promotional_scheme.js"
+    
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 }
@@ -234,6 +237,7 @@ doc_events = {
             "dynamic.elevana.hooks.add_partener_to_sales_order",
             "dynamic.controllers.sales_order.validate_sales_order",
             "dynamic.controllers.sales_order.validate_sales_order_for_stock",
+            "dynamic.controllers.custom_item.update_payment_term_status_in_quotation"
                     ],
         "on_cancel": [
             "dynamic.api.cancel_reservation",
@@ -371,7 +375,8 @@ doc_events = {
 	},
      "Work Order":{
         "validate": [
-            "dynamic.controllers.work_order.validate",
+            "dynamic.controllers.work_order.validate"
+            ,
         ],
     },
     # "Batch":{
@@ -383,6 +388,14 @@ doc_events = {
     # "Installations Furniture": {
     #     "before_submit": "dynamic.ifi.api.check_child_table_qty",
     #  },
+    "promotional scheme":{
+
+    },
+    "Quotation":{
+        "validate": [
+            "dynamic.controllers.custom_item.update_payment_term_status_in_quotation"
+        ],
+    },
 }
 
 
@@ -424,6 +437,7 @@ scheduler_events = {
         "dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
         "dynamic.master_deals.master_deals_api.alert_cheque_date",
         "dynamic.real_state.rs_api.setup_payment_term_notify",
+        "dynamic.controllers.custom_item.update_payment_term_status"
         #"dynamic.controllers.opportunity.close_ended_opportunity"
         # "dynamic.alrehab.doctype.installment_entry.installment_entry.get_installment_entry_to_update_status",
     ],
@@ -537,6 +551,7 @@ domains = {
     "Trecom":"dynamic.domains.trecom",
     "Item Integration":"dynamic.domains.item_integration",
     "Al wefak": "dynamic.domains.alwefak",
+    "Captain":"dynamic.domains.captain"
 }
 
 # domain Conatin

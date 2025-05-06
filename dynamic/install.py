@@ -124,6 +124,11 @@ def install_uom():
 				# print (str(e))
 
 def create_domain_list():
+	if not frappe.db.exists("Domain", "Captain"):
+		dm1 = frappe.new_doc("Domain")
+		dm1.domain = 'Captain'
+		dm1.insert()
+
 	if not frappe.db.exists("Domain", "IFI"):
 		dm1 = frappe.new_doc("Domain")
 		dm1.domain = 'IFI'
