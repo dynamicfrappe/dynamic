@@ -32,6 +32,16 @@ data = {
                 "fieldtype": "Data",
                 "insert_after":"unit_area",
             },        
+            ],
+            'Quotation':[
+                {
+                "label":_("Maintenance Payment Percent"),
+                "fieldname":"maintenance_payment_percent",
+                "fieldtype":"Percent",
+                "insert_after":"maintenance_payment", 
+                "default": 0,
+                "precision": 2,
+            },
             ]
     },
     "properties": [

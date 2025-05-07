@@ -118,10 +118,6 @@ def getseries(key, digits):
 	return ("%0" + str(digits) + "d") % current
 
 
-
-
-            
-
 from frappe.utils import getdate
 def update_payment_term_status():
     if "Captain" not in frappe.get_active_domains():
@@ -138,25 +134,35 @@ def update_payment_term_status():
         frappe.db.commit()
 
 
+# def update_payment_term_status_in_quotation(doc, method):
+#     if "Captain" not in frappe.get_active_domains():
+#         return
 
-from frappe.model.document import Document
-def update_payment_term_status_in_quotation(quotation):
-    if "Captain" not in frappe.get_active_domains():
-        return
-    payment_terms = quotation.get("payment_terms")
-    for term in payment_terms:
-        is_usable = frappe.db.get_value("Payment Term", term.payment_term, "is_usable")
-        if is_usable == 0:
-            frappe.throw(f"Payment Term {term.payment_term} is not usable.")
-            
+#     payment_terms = doc.get("payment_terms")
+#     for term in payment_terms:
+#         is_usable = frappe.db.get_value("Payment Term", term.payment_term, "is_usable")
+#         if is_usable == 0:
+#             frappe.throw(f"Payment Term {term.payment_term} is not usable.")
 
+from frappe.utils import flt
 
-
-
+from frappe.utils import flt
 
 def before_save(doc, method):
-    for item in doc.items:
-        if item.item_code:  
-            item_doc = frappe.get_doc("Item", item.item_code)
-            item.unit_floor = item_doc.unit_floor
-            item.unit_area1 = item_doc.unit_area
+    if "Captain" not in frappe.get_active_domains():
+        return
+    total_amount = sum(flt(i.amount) for i in doc.items)
+    maintenance_percent = flt(doc.maintenance_payment_percent)
+    maintenance_payment = flt(doc.maintenance_payment)
+    # if maintenance_percent > 0 and maintenance_payment > 0:
+    #     frappe.throw("You can use either Maintenance Payment or Maintenance Payment Percent, not both.")
+    if maintenance_percent:
+        doc.maintenance_payment = total_amount * maintenance_percent / 100
+    elif maintenance_payment:
+        doc.maintenance_payment_percent = (maintenance_payment / total_amount) * 100
+    if doc.maintenance_payment:
+        doc.grand_total += doc.maintenance_payment
+
+
+
+

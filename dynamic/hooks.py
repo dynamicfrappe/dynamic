@@ -296,7 +296,7 @@ doc_events = {
         ],
         "before_save":[
             #  "dynamic.master_deals.master_deals_api.get_avail_qty_in_draft_stock_entry",
-             "dynamic.controllers.stock_entry.before_save_stock_entry"
+            "dynamic.controllers.stock_entry.before_save_stock_entry"
         ],
         "on_submit": "dynamic.api.submit_stock_entry",
     },
@@ -321,8 +321,12 @@ doc_events = {
         "validate":"dynamic.qaswaa.controllers.quotation.validate",
         "before_submit": "dynamic.api.before_submit_quot",
         "before_save": "dynamic.api.before_save_quotation",
+                        
         "on_cancel" :"dynamic.api.on_cencel" ,
-        "validate":"dynamic.yt_minds.controllers.quotation.validate",
+        "validate":["dynamic.yt_minds.controllers.quotation.validate",
+                    "dynamic.controllers.custom_item.before_save"
+                        ],
+        
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
@@ -390,11 +394,6 @@ doc_events = {
     #  },
     "promotional scheme":{
 
-    },
-    "Quotation":{
-        "validate": [
-            "dynamic.controllers.custom_item.update_payment_term_status_in_quotation"
-        ],
     },
 }
 
