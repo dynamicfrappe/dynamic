@@ -374,6 +374,9 @@ doc_events = {
             "dynamic.controllers.work_order.validate",
         ],
     },
+     "PO Container":{
+        "before_save":"dynamic.logistics.logistics_api.check_data_remaining_before_save"
+    },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
     # }
