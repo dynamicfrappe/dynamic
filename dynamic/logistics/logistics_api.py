@@ -13,12 +13,18 @@ def check_data_remaining():
                     pluck = "name")
         for container in containers :
             container = frappe.get_doc("PO Container" , container)
-            if not container.remaining_date :
-                differance = date_diff( container.arrived_date ,now() )
-                container.remaining_date = f'{differance}' + " days"
-                if differance < 0 :
-                    container.status = "Overdue"
-                container.save()
+            differance = date_diff( container.arrived_date ,now() )
+            container.remaining_date = f'{differance}' + " days"
+            if differance < 0 :
+                container.status = "Overdue"
+            container.save()
+            
+def check_data_remaining_before_save(doc, method):
+    if 'Logistics' in DOMAINS: 
+        differance = date_diff( doc.arrived_date ,now() )
+        doc.remaining_date = f'{differance}' + " days"
+        if differance < 0 :
+            doc.status = "Overdue"
 
 def check_payment_amount():
     if 'Logistics' in DOMAINS: 

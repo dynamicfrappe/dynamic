@@ -243,6 +243,9 @@ doc_events = {
         "after_inser": "dynamic.api.calculate_orderd_qty",
         "on_submit": "dynamic.api.calculate_orderd_qty",
     },
+    "PO Container":{
+        "before_save":"dynamic.logistics.logistics_api.check_data_remaining_before_save"
+    },
     # "Appointment" :{
     #     "validate":"dynamic.api.appointment_validate"
     # },
