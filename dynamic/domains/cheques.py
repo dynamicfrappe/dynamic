@@ -15,6 +15,24 @@ cheque_status = [
 ]
 data = {
     'custom_fields': {
+        "Purchase Order Item": [
+            {
+                "fieldname": "purchase_order",
+                "fieldtype": "Link",
+                "insert_after": "item_tax_template",
+                "label": "purchase order",
+                "options": "Purchase Invoice",
+            },
+        ],
+        "Purchase Receipt Item": [
+            {
+                "fieldname": "purchase_receipt",
+                "fieldtype": "Link",
+                "insert_after": "item_tax_template",
+                "label": "purchase order",
+                "options": "Purchase Invoice",
+            },
+        ],
         'Company': [
             {
                 "fieldname": "cheques_section",
@@ -497,8 +515,9 @@ data = {
                 "read_only": 1,
                 "allow_on_submit": 1,
             },
+            
+        ],
 
-        ]
     },
     "properties": [{
         # "doctype":"Journal Entry Account",
