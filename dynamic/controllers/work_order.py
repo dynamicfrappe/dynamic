@@ -13,7 +13,7 @@ def validate(self ,event):
 
 
 
-def valid_qty(self):#noha
+def valid_qty(self):
 	operations = self.get('operations')
 	workorder_qty = self.get('qty')
 	for operation in operations: 
@@ -22,6 +22,6 @@ def valid_qty(self):#noha
 		if workstation_doc:
 			min_qty =float(workstation_doc.min_qty or 0)
 
-		if min_qty>workorder_qty  &  min_qty > 0:
+		if (min_qty > workorder_qty)  &  (min_qty > 0):
 				frappe.msgprint(_(f"Work order Quantity is less than quantity in workstation :{operation.workstation} minimum quantity is {min_qty}"))
 								
