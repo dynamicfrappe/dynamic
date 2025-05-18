@@ -15,24 +15,6 @@ cheque_status = [
 ]
 data = {
     'custom_fields': {
-        'Purchase Order Item': [
-            {
-                "fieldname": "purchase_order",
-                "fieldtype": "Link",
-                "insert_after": "item_tax_template",
-                "options": "Purchase Invoice",
-                "label": "Purchase Invoice",
-            },
-        ],
-        'Purchase Receipt Item': [
-            {
-                "fieldname": "purchase_order",
-                "fieldtype": "Link",
-                "insert_after": "item_tax_template",
-                "options": "Purchase Invoice",
-                "label": "Purchase Invoice",
-            },
-        ],
         'Company': [
             {
                 "fieldname": "cheques_section",
