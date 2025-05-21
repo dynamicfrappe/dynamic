@@ -374,3 +374,15 @@ cur_frm.cscript['Make Payment Entry'] = function() {
         frm: cur_frm,
       });
 }
+
+frappe.ui.form.on('Quotation', {
+  onload: function(frm) {
+      frm.fields_dict['payment_schedule'].grid.get_field('payment_term').get_query = function(doc, cdt, cdn) {
+          return {
+              filters: {
+                  is_usable: 1
+              }
+          };
+      };
+  }
+});
