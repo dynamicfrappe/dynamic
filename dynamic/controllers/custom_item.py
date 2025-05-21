@@ -6,6 +6,7 @@ import json
 from frappe.model.naming import make_autoname,set_name_by_naming_series,determine_consecutive_week_number,NAMING_SERIES_PART_TYPES
 import datetime
 import re
+from frappe.utils import flt
 
 from six import string_types
 
@@ -116,3 +117,39 @@ def getseries(key, digits):
 		# no, create it
 		current = 1
 	return ("%0" + str(digits) + "d") % current
+
+
+from frappe.utils import getdate, nowdate
+def update_payment_term_status():
+    if "captain" not in frappe.get_active_domains():
+        return
+    today = getdate(nowdate()) 
+    terms = frappe.get_all("Payment Term", fields=["name", "disable_on"])
+    for term in terms:
+        disable_on = getdate(term.disable_on) if term.disable_on else None
+        if disable_on and disable_on <= today:
+            is_usable = 0
+        else:
+            is_usable = 1
+        frappe.db.set_value("Payment Term", term.name, "is_usable", is_usable)
+        print(f"Updated {term.name} to is_usable = {is_usable}")
+    frappe.db.commit()
+    
+    
+
+def before_save(doc, method):
+    if "captain" not in frappe.get_active_domains():
+        return
+    total_amount = sum(flt(i.amount) for i in doc.items)
+    maintenance_percent = flt(doc.maintenance_payment_percent)
+    maintenance_payment = flt(doc.maintenance_payment)
+    # if maintenance_percent > 0 and maintenance_payment > 0:
+    #     frappe.throw("You can use either Maintenance Payment or Maintenance Payment Percent, not both.")
+    if maintenance_percent:
+        doc.maintenance_payment = total_amount * maintenance_percent / 100
+    elif maintenance_payment:
+        doc.maintenance_payment_percent = (maintenance_payment / total_amount) * 100
+    if doc.maintenance_payment:
+        doc.grand_total += (doc.maintenance_payment +doc.warehouse_amount)
+
+

@@ -111,7 +111,8 @@ doctype_js = {
     "Lead": "public/js/lead.js",
     "Supplier": "public/js/supplier.js",
     "Customer": "public/js/customer.js",
-    "Quotation": "public/js/quotation.js",
+    "Quotation":"public/js/quotation.js",
+    "Sales Order":"public/js/sales_order.js",
     "Opportunity": "public/js/opportunity.js",
     "Material Request": "public/js/material_request.js",
     "Work Order": "public/js/work_order.js",
@@ -128,7 +129,8 @@ doctype_js = {
     "Payment Terms Template": "public/js/payment_terms_template.js",
     "Asset": "public/js/asset.js",
     "Actions": "public/js/actions.js",
-    "Subscription": "public/js/subscription.js"
+    "Subscription": "public/js/subscription.js",
+    "Promotional Scheme": "public/js/promotional_scheme.js"
     # "Project RS":"public/js/custom_project_rs.js",
     # "Assign To":"public/sidebar/assign_to.js",    Journal Entry
 }
@@ -318,7 +320,8 @@ doc_events = {
         "before_submit": "dynamic.api.before_submit_quot",
         "before_save": "dynamic.api.before_save_quotation",
         "on_cancel" :"dynamic.api.on_cencel" ,
-        "validate":"dynamic.yt_minds.controllers.quotation.validate",
+        "validate":["dynamic.yt_minds.controllers.quotation.validate",
+                    "dynamic.controllers.custom_item.before_save",]
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
@@ -427,6 +430,7 @@ scheduler_events = {
         "dynamic.dynamic.doctype.sales_person_commetion.sales_person_commetion.update_month_previous_logs",
         "dynamic.master_deals.master_deals_api.alert_cheque_date",
         "dynamic.real_state.rs_api.setup_payment_term_notify",
+        "dynamic.controllers.custom_item.update_payment_term_status",
         #"dynamic.controllers.opportunity.close_ended_opportunity"
         # "dynamic.alrehab.doctype.installment_entry.installment_entry.get_installment_entry_to_update_status",
     ],
@@ -540,6 +544,7 @@ domains = {
     "Trecom":"dynamic.domains.trecom",
     "Item Integration":"dynamic.domains.item_integration",
     "Al wefak": "dynamic.domains.alwefak",
+    "captain":"dynamic.domains.captin"
 }
 
 # domain Conatin
