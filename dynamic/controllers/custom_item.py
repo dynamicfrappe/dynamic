@@ -17,106 +17,106 @@ from frappe.utils import cint, cstr, now_datetime
 
 @frappe.whitelist()
 def show_next_name(doc):
-	# pass
-	item_naming_by = frappe.db.get_single_value('Stock Settings','item_naming_by')
-	nex_name = ''
-	if item_naming_by == "Naming Series":
-		doc = json.loads(doc)
-		nex_name = make_autoname(doc.get('naming_series'), "", doc)
-	return {'new_name':nex_name}
-	
+    # pass
+    item_naming_by = frappe.db.get_single_value('Stock Settings','item_naming_by')
+    nex_name = ''
+    if item_naming_by == "Naming Series":
+        doc = json.loads(doc)
+        nex_name = make_autoname(doc.get('naming_series'), "", doc)
+    return {'new_name':nex_name}
+    
 
 def make_autoname(key="", doctype="", doc=""):
-	"""
-	     Creates an autoname from the given key:
+    """
+         Creates an autoname from the given key:
 
-	     **Autoname rules:**
+         **Autoname rules:**
 
-	              * The key is separated by '.'
-	              * '####' represents a series. The string before this part becomes the prefix:
-	                     Example: ABC.#### creates a series ABC0001, ABC0002 etc
-	              * 'MM' represents the current month
-	              * 'YY' and 'YYYY' represent the current year
+                  * The key is separated by '.'
+                  * '####' represents a series. The string before this part becomes the prefix:
+                         Example: ABC.#### creates a series ABC0001, ABC0002 etc
+                  * 'MM' represents the current month
+                  * 'YY' and 'YYYY' represent the current year
 
 
-	*Example:*
+    *Example:*
 
-	              * DE/./.YY./.MM./.##### will create a series like
-	                DE/09/01/0001 where 09 is the year, 01 is the month and 0001 is the series
-	"""
-	if key == "hash":
-		return frappe.generate_hash(doctype, 10)
+                  * DE/./.YY./.MM./.##### will create a series like
+                    DE/09/01/0001 where 09 is the year, 01 is the month and 0001 is the series
+    """
+    if key == "hash":
+        return frappe.generate_hash(doctype, 10)
 
-	if "#" not in key:
-		key = key + ".#####"
-	elif "." not in key:
-		error_message = _("Invalid naming series (. missing)")
-		if doctype:
-			error_message = _("Invalid naming series (. missing) for {0}").format(doctype)
+    if "#" not in key:
+        key = key + ".#####"
+    elif "." not in key:
+        error_message = _("Invalid naming series (. missing)")
+        if doctype:
+            error_message = _("Invalid naming series (. missing) for {0}").format(doctype)
 
-		frappe.throw(error_message)
+        frappe.throw(error_message)
 
-	parts = key.split(".")
-	n = parse_naming_series(parts, doctype, doc)
-	return n
+    parts = key.split(".")
+    n = parse_naming_series(parts, doctype, doc)
+    return n
 
 def parse_naming_series(parts, doctype="", doc=""):
-	n = ""
-	if isinstance(parts, str):
-		parts = parts.split(".")
-	series_set = False
-	today = now_datetime()
-	for e in parts:
-		if not e:
-			continue
+    n = ""
+    if isinstance(parts, str):
+        parts = parts.split(".")
+    series_set = False
+    today = now_datetime()
+    for e in parts:
+        if not e:
+            continue
 
-		part = ""
-		if e.startswith("#"):
-			if not series_set:
-				digits = len(e)
-				part = getseries(n, digits)
-				series_set = True
-		elif e == "YY":
-			part = today.strftime("%y")
-		elif e == "MM":
-			part = today.strftime("%m")
-		elif e == "DD":
-			part = today.strftime("%d")
-		elif e == "YYYY":
-			part = today.strftime("%Y")
-		elif e == "WW":
-			part = determine_consecutive_week_number(today)
-		elif e == "timestamp":
-			part = str(today)
-		elif e == "FY":
-			part = frappe.defaults.get_user_default("fiscal_year")
-		elif e.startswith("{") and doc:
-			e = e.replace("{", "").replace("}", "")
-			part = doc.get(e)
-		elif doc and doc.get(e):
-			part = doc.get(e)
-		else:
-			part = e
+        part = ""
+        if e.startswith("#"):
+            if not series_set:
+                digits = len(e)
+                part = getseries(n, digits)
+                series_set = True
+        elif e == "YY":
+            part = today.strftime("%y")
+        elif e == "MM":
+            part = today.strftime("%m")
+        elif e == "DD":
+            part = today.strftime("%d")
+        elif e == "YYYY":
+            part = today.strftime("%Y")
+        elif e == "WW":
+            part = determine_consecutive_week_number(today)
+        elif e == "timestamp":
+            part = str(today)
+        elif e == "FY":
+            part = frappe.defaults.get_user_default("fiscal_year")
+        elif e.startswith("{") and doc:
+            e = e.replace("{", "").replace("}", "")
+            part = doc.get(e)
+        elif doc and doc.get(e):
+            part = doc.get(e)
+        else:
+            part = e
 
-		if isinstance(part, str):
-			n += part
-		elif isinstance(part, NAMING_SERIES_PART_TYPES):
-			n += cstr(part).strip()
-	
-	return n
+        if isinstance(part, str):
+            n += part
+        elif isinstance(part, NAMING_SERIES_PART_TYPES):
+            n += cstr(part).strip()
+    
+    return n
 
 def getseries(key, digits):
-	# series created ?
-	sql ="SELECT `current` FROM `tabSeries` WHERE `name`='%s' "%key
+    # series created ?
+    sql ="SELECT `current` FROM `tabSeries` WHERE `name`='%s' "%key
 
-	current = frappe.db.sql(sql)
-	
-	if current and current[0][0] is not None:
-		current = current[0][0] +1
-	else:
-		# no, create it
-		current = 1
-	return ("%0" + str(digits) + "d") % current
+    current = frappe.db.sql(sql)
+    
+    if current and current[0][0] is not None:
+        current = current[0][0] +1
+    else:
+        # no, create it
+        current = 1
+    return ("%0" + str(digits) + "d") % current
 
 
 from frappe.utils import getdate, nowdate
@@ -149,7 +149,38 @@ def before_save(doc, method):
         doc.maintenance_payment = total_amount * maintenance_percent / 100
     elif maintenance_payment:
         doc.maintenance_payment_percent = (maintenance_payment / total_amount) * 100
-    if doc.maintenance_payment:
+    if doc.maintenance_payment and not doc.warehouse_amount:
+        doc.grand_total += (doc.maintenance_payment)
+    elif doc.maintenance_payment and doc.warehouse_amount:
         doc.grand_total += (doc.maintenance_payment +doc.warehouse_amount)
+
+def update_total_amount_in_item(self, method):
+    frappe.msgprint("omk")
+    item_code = self.item_code
+    if not frappe.db.exists("Item", item_code):
+        return
+    rat = frappe.db.get_value("Item Price", {"item_code": item_code, "selling": 1}, "price_list_rate")
+    if rat != self.total_price:
+        item_price = frappe.get_all(
+            "Item Price",
+            fields=["name"],
+            filters={"item_code": item_code, "selling": 1}
+        )
+        if item_price:
+            frappe.db.set_value(
+                "Item Price",
+                item_price[0].name,
+                "price_list_rate",
+                self.total_price
+            )
+        else:
+            frappe.get_doc({
+                "doctype": "Item Price",
+                "item_code": item_code,
+                "price_list": "Standard Selling",  
+                "price_list_rate": self.total_price,
+                "selling": 1
+            }).insert()
+
 
 

@@ -191,13 +191,15 @@ doc_events = {
         ],
         "validate": [
             "dynamic.dynamic.validation.validate_item_code",
+            
             # "dynamic.qaswaa.controllers.item.after_insert",
         ],
         # "before_insert": "dynamic.dynamic.validation.before_insert_item",
         "after_insert": [
             "dynamic.dynamic.validation.after_insert_variant_item",
             
-        ]
+        ],
+        "on_update ":"dynamic.controllers.custom_item.update_total_amount_in_item"
     },
     "Delivery Note": {
         "on_submit": [
