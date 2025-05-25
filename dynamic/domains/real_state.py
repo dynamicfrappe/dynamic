@@ -45,17 +45,16 @@ data = {
             },
         ],
         'Item':[
-            {
-                "label":_("Unit Info"),
-                "fieldname":"unit_info",
-                "fieldtype":"Section Break",
-                "insert_after":"image", 
+                {
+                "fieldname":"column_break00",
+                "fieldtype":"Column Break",
+                "insert_after":"status", 
             },
             {
-                "label":_("Idoor Price"),
+                "label":_("Indoor Price"),
                 "fieldname":"indoor_price",
                 "fieldtype":"Currency",
-                "insert_after":"standard_rate", 
+                "insert_after":"column_break00", 
             },
             {
                 "label":_("Outdoor Price"),
@@ -68,6 +67,24 @@ data = {
                 "fieldname":"total_price",
                 "fieldtype":"Currency",
                 "insert_after":"outdoor_price", 
+            },
+            {
+                "label":_("Floor number"),
+                "fieldname":"floor_number",
+                "fieldtype":"Data",
+                "insert_after":"total_price", 
+            },
+            {
+                "label":_("BUA"),
+                "fieldname":"bau",
+                "fieldtype":"Data",
+                "insert_after":"floor_number", 
+            },
+            {
+                "label":_("Unit Info"),
+                "fieldname":"unit_info",
+                "fieldtype":"Section Break",
+                "insert_after":"image", 
             },
             {
                 "label":_("Unit No"),
@@ -110,7 +127,7 @@ data = {
                 "label":_("Unit Area Details"),
                 "fieldname":"unit_area_section",
                 "fieldtype":"Section Break",
-                "insert_after":"unit_details", 
+                "insert_after":"plate_area", 
                 "collapsible": 1,
             },
             {
@@ -131,25 +148,44 @@ data = {
                 "fieldtype":"Select",
                 "options" : "\nReserved\nAvailable To Sell",
                 "insert_after":"vaild_to", 
-                "read_only" : 1
-            },    
+            },
+            {
+                "label":_("Unit type"),
+                "fieldname":"unit_type",
+                "fieldtype":"Select",
+                "options" : "\nDupliex\nAppartment\nVilla\nTwin house\nTown house",
+                "insert_after":"vaild_to", 
+            },
+            {
+                "label":_("Unit finishing type"),
+                "fieldname":"unit_finishing_type",
+                "fieldtype":"Select",
+                "options" : "\nطوب احمر\nنص تشطيب\nمحارة\nتشطيب كامل",
+                "insert_after":"unit_type", 
+            },      
             {
                 "fieldname": "colum_break_install_vaild_to",
                 "fieldtype": "Column Break",
-                "insert_after": "stalus",
+                "insert_after": "unit_details",
                 "label": "",
             },
             {
-                "label":_("Area Indoor"),
+                "label":_("Indoor area"),
                 "fieldname":"area_indoor",
                 "fieldtype":"Float",
                 "insert_after":"colum_break_install_vaild_to", 
             },
             {
-                "label":_("Area Outdoor"),
+                "label":_(" Outdoor area"),
                 "fieldname":"area_outdoor",
                 "fieldtype":"Float",
                 "insert_after":"area_indoor", 
+            },
+            {
+                "label":_("Plate area"),
+                "fieldname":"plate_area",
+                "fieldtype":"Float",
+                "insert_after":"area_outdoor", 
             },
         ],
         'Quotation':[
@@ -299,19 +335,28 @@ data = {
         #         "allow_on_submit":1,
         #         "read_only" : 1
         #     },
-             
+        
         #  ],
         
         
     },
-      "properties": [
-         {
+    "properties": [
+        {
             "doctype": "Payment Terms Template Detail",
             "doctype_or_field": "DocField",
             "fieldname": "due_date_based_on",
             "property": "default",
             "property_type": "Text",
-            "value": "Month(s) after the end of the invoice month",
+            
+        },
+        {
+            "doctype": "Property Setter",
+            "doctype_or_field": "DocField",
+            "doc_type": "Customer",
+            "field_name": "pan",
+            "property": "length",
+            "property_type": "Int",
+            "value": "14"
         },
         
         # {

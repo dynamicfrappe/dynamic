@@ -1,5 +1,3 @@
- 
-
 
 import frappe 
 import json
@@ -7,13 +5,13 @@ from frappe.model.naming import make_autoname,set_name_by_naming_series,determin
 import datetime
 import re
 from frappe.utils import flt
-
 from six import string_types
-
 import frappe
 from frappe import _
 from frappe.model import log_types
 from frappe.utils import cint, cstr, now_datetime
+from frappe.utils import getdate, nowdate
+
 
 @frappe.whitelist()
 def show_next_name(doc):
@@ -28,13 +26,13 @@ def show_next_name(doc):
 
 def make_autoname(key="", doctype="", doc=""):
     """
-         Creates an autoname from the given key:
+        Creates an autoname from the given key:
 
          **Autoname rules:**
 
                   * The key is separated by '.'
                   * '####' represents a series. The string before this part becomes the prefix:
-                         Example: ABC.#### creates a series ABC0001, ABC0002 etc
+                        Example: ABC.#### creates a series ABC0001, ABC0002 etc
                   * 'MM' represents the current month
                   * 'YY' and 'YYYY' represent the current year
 
@@ -119,7 +117,6 @@ def getseries(key, digits):
     return ("%0" + str(digits) + "d") % current
 
 
-from frappe.utils import getdate, nowdate
 def update_payment_term_status():
     if "captain" not in frappe.get_active_domains():
         return
@@ -154,13 +151,17 @@ def before_save(doc, method):
     elif doc.maintenance_payment and doc.warehouse_amount:
         doc.grand_total += (doc.maintenance_payment +doc.warehouse_amount)
 
+
+
+
 def update_total_amount_in_item(self, method):
-    frappe.msgprint("omk")
+    if "Real State" not in frappe.get_active_domains():
+        return
     item_code = self.item_code
     if not frappe.db.exists("Item", item_code):
         return
-    rat = frappe.db.get_value("Item Price", {"item_code": item_code, "selling": 1}, "price_list_rate")
-    if rat != self.total_price:
+    current_price = frappe.db.get_value("Item Price", {"item_code": item_code, "selling": 1}, "price_list_rate")
+    if current_price != self.total_price:
         item_price = frappe.get_all(
             "Item Price",
             fields=["name"],
@@ -174,13 +175,27 @@ def update_total_amount_in_item(self, method):
                 self.total_price
             )
         else:
-            frappe.get_doc({
-                "doctype": "Item Price",
-                "item_code": item_code,
-                "price_list": "Standard Selling",  
-                "price_list_rate": self.total_price,
-                "selling": 1
-            }).insert()
+                frappe.get_doc({
+                    "doctype": "Item Price",
+                    "item_code": item_code,
+                    "price_list": "Standard Selling",  
+                    "price_list_rate": self.total_price,
+                    "selling": 1
+                }).insert()
 
-
-
+def update_th_staues_of_the_items():
+    from datetime import datetime
+    if "Real State" not in frappe.get_active_domains():
+        return
+    today = datetime.today().date()
+    items = frappe.get_all(
+        "Item",
+        fields=["name", "vaild_to", "disabled", "status"],
+        filters={"vaild_to": today}
+    )
+    for item in items:
+        item_doc = frappe.get_doc("Item", item.name)
+        item_doc.disabled = 1
+        item_doc.status = "Reserved"
+        item_doc.save()
+    frappe.db.commit()
