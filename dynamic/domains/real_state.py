@@ -105,16 +105,10 @@ data = {
                 "insert_after":"unit_area", 
             },
             {
-                "label":_("Unit Floor Text"),
-                "fieldname":"unit_floor_text",
-                "fieldtype":"Data",
-                "insert_after":"unit_floor", 
-            },
-            {
                 "label":_("Reserved"),
                 "fieldname":"reserved",
                 "fieldtype":"Check",
-                "insert_after":"unit_floor_text", 
+                "insert_after":"unit_floor", 
                 "read_only":"1", 
             },
             {
@@ -146,7 +140,7 @@ data = {
                 "label":_("Status"),
                 "fieldname":"status",
                 "fieldtype":"Select",
-                "options" : "\nReserved\nAvailable To Sell",
+                "options" : "\nReserved\nAvailable To Sell\nOn hold",
                 "insert_after":"vaild_to", 
             },
             {

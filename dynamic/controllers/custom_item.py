@@ -196,6 +196,47 @@ def update_th_staues_of_the_items():
     for item in items:
         item_doc = frappe.get_doc("Item", item.name)
         item_doc.disabled = 1
-        item_doc.status = "Reserved"
+        item_doc.status = "On hold"
         item_doc.save()
     frappe.db.commit()
+    items = frappe.get_all(
+        "Item",
+        fields=["name", "vaild_to", "disabled", "status"],
+        filters={"vaild_to": [">", today]}
+    )
+    for item in items:
+        item_doc = frappe.get_doc("Item", item.name)
+        item_doc.disabled = 0
+        item_doc.status = "Available To Sell"
+        item_doc.save()
+    frappe.db.commit()
+
+
+from frappe.utils import get_datetime, now_datetime, to_timedelta
+from datetime import timedelta
+def delete_ended_qutation():
+    if "Real State" not in frappe.get_active_domains():
+        return
+    settings = frappe.get_single("Real Estate Sittings")
+    duration_str = settings.end_date 
+    try:
+        end_duration = to_timedelta(duration_str)
+    except Exception as e:
+        frappe.log_error(f"Invalid duration in end_date: {duration_str}", "Quotation Auto Cancel Error")
+        return
+    quotations = frappe.get_list(
+        "Quotation",
+        filters={"status": "Open"},
+        fields=["name", "transaction_date", "creation"]
+    )
+    for q in quotations:
+        transaction_date = get_datetime(q.transaction_date)
+        expiry_datetime = transaction_date + end_duration
+        if now_datetime() > expiry_datetime:
+            doc = frappe.get_doc("Quotation", q.name)
+            if doc.docstatus == 1:
+                doc.cancel()
+                print(f"Cancelled Quotation {q.name} at {now_datetime()} (expired after {end_duration})")
+    print(quotations)
+    print("End Days from settings:", duration_str)
+

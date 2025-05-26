@@ -434,7 +434,8 @@ scheduler_events = {
         "dynamic.master_deals.master_deals_api.alert_cheque_date",
         "dynamic.real_state.rs_api.setup_payment_term_notify",
         "dynamic.controllers.custom_item.update_payment_term_status",
-        "dynamic.controllers.custom_item.update_th_staues_of_the_items"
+        "dynamic.controllers.custom_item.update_th_staues_of_the_items",
+        "dynamic.controllers.custom_item.delete_ended_qutation"
         #"dynamic.controllers.opportunity.close_ended_opportunity"
         # "dynamic.alrehab.doctype.installment_entry.installment_entry.get_installment_entry_to_update_status",
     ],
@@ -548,7 +549,7 @@ domains = {
     "Trecom":"dynamic.domains.trecom",
     "Item Integration":"dynamic.domains.item_integration",
     "Al wefak": "dynamic.domains.alwefak",
-    "captain":"dynamic.domains.captin"
+    "captain":"dynamic.domains.captin",
 }
 
 # domain Conatin
