@@ -7,7 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "alert_payemnt_term_days",
-  "role_to_alert"
+  "role_to_alert",
+  "end_date"
  ],
  "fields": [
   {
@@ -20,12 +21,17 @@
    "fieldname": "alert_payemnt_term_days",
    "fieldtype": "Data",
    "label": "Alert Payemnt Term Days"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Duration",
+   "label": "End Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-21 10:51:41.739950",
+ "modified": "2025-05-26 09:26:56.190852",
  "modified_by": "Administrator",
  "module": "Real State",
  "name": "Real Estate Sittings",

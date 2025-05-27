@@ -191,13 +191,16 @@ doc_events = {
         ],
         "validate": [
             "dynamic.dynamic.validation.validate_item_code",
+            
+            
             # "dynamic.qaswaa.controllers.item.after_insert",
         ],
         # "before_insert": "dynamic.dynamic.validation.before_insert_item",
         "after_insert": [
             "dynamic.dynamic.validation.after_insert_variant_item",
             
-        ]
+        ],
+        "on_update":"dynamic.controllers.custom_item.update_total_amount_in_item"
     },
     "Delivery Note": {
         "on_submit": [
@@ -431,6 +434,8 @@ scheduler_events = {
         "dynamic.master_deals.master_deals_api.alert_cheque_date",
         "dynamic.real_state.rs_api.setup_payment_term_notify",
         "dynamic.controllers.custom_item.update_payment_term_status",
+        "dynamic.controllers.custom_item.update_th_staues_of_the_items",
+        "dynamic.controllers.custom_item.delete_ended_qutation"
         #"dynamic.controllers.opportunity.close_ended_opportunity"
         # "dynamic.alrehab.doctype.installment_entry.installment_entry.get_installment_entry_to_update_status",
     ],
@@ -544,7 +549,7 @@ domains = {
     "Trecom":"dynamic.domains.trecom",
     "Item Integration":"dynamic.domains.item_integration",
     "Al wefak": "dynamic.domains.alwefak",
-    "captain":"dynamic.domains.captin"
+    "captain":"dynamic.domains.captin",
 }
 
 # domain Conatin
