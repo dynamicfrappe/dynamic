@@ -324,7 +324,8 @@ doc_events = {
         "before_save": "dynamic.api.before_save_quotation",
         "on_cancel" :"dynamic.api.on_cencel" ,
         "validate":["dynamic.yt_minds.controllers.quotation.validate",
-                    "dynamic.controllers.custom_item.before_save",]
+                    "dynamic.controllers.custom_item.before_save",],
+        "after_insert":"dynamic.controllers.custom_item.before_save_total_grand"
     },
     "Purchase Order": {
         # "validate":"dynamic.ifi.api.send_mail_supplier_ifi_po",
