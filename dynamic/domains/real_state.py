@@ -46,7 +46,7 @@ data = {
         ],
         'Item':[
                 {
-                "fieldname":"column_break00",
+                "fieldname":"column_break0000",
                 "fieldtype":"Column Break",
                 "insert_after":"status", 
             },
@@ -54,7 +54,7 @@ data = {
                 "label":_("Indoor Price"),
                 "fieldname":"indoor_price",
                 "fieldtype":"Currency",
-                "insert_after":"column_break00", 
+                "insert_after":"column_break0000", 
             },
             {
                 "label":_("Outdoor Price"),

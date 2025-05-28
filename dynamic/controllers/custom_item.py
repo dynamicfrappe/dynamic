@@ -240,3 +240,23 @@ def delete_ended_qutation():
     print(quotations)
     print("End Days from settings:", duration_str)
 
+
+
+
+def before_save_total_grand(doc, method):
+    frappe.msgprint("om")
+    if doc.grand_total:
+        schedules = frappe.get_all(
+            "Payment Schedule",
+            filters={"parent": doc.name}, 
+            fields=["name"]
+        )
+        for schedule in schedules:
+            frappe.db.set_value(
+                "Payment Schedule",
+                schedule.name,
+                "payment_amount",
+                doc.grand_total
+            )
+
+
