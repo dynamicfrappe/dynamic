@@ -578,7 +578,7 @@ data = {
                 "label": "Total Advance",
                 'default' : '0' ,
                 'hidden' : 0 ,
-                'read_only' : 1 ,
+                '' : 1 ,
                 'no_copy' : 1 ,
                 'allow_on_submit' : 1 ,
             },
@@ -625,6 +625,40 @@ data = {
             "property_type": "Check",
             "value": "0",
         },
+        {
+        "doctype":"Conservation",
+        "doctype_or_field":"DocField",
+        "fieldname":"conservation_status",
+        "property":"options",
+        "property_type":"Text",
+        "value": "\nOpen\nIN progress\nClosed\nUpdate conservation status\nMaintenance\nMoney delivered\nReport delivered"
+        },
+        {
+            "doctype": "Payment Entry",
+            "doctype_or_field": "DocField",
+            "fieldname": "reference_no",
+            "property": "reqd",
+            "property_type": "Check",
+            "value": "0"
+        },
+            {
+            "doctype": "Payment Entry",
+            "doctype_or_field": "DocField",
+            "fieldname": "reference_date",
+            "property": "reqd",
+            "property_type": "Check",
+            "value": "0"
+        },
+        {
+            "doctype": "Conservation",
+            "doctype_or_field": "DocField",
+            "fieldname": "type_for_request",
+            "property": "read_only",
+            "property_type": "Check",
+            "value": "0"
+        },
     ],
 
 }
+
+
