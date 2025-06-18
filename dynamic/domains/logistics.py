@@ -625,6 +625,21 @@ data = {
             "property_type": "Check",
             "value": "0",
         },
+        {
+        "doctype":"Conservation",
+        "doctype_or_field":"DocField",
+        "fieldname":"conservation_status",
+        "property":"options",
+        "property_type":"Text",
+        "value": "\nOpen\nIn progress\nClosed\nMaintainrd\nMoney delivered\nReport delivered"
+        },
+        {
+        "doctype": "Conservation Request",
+        "doctype_or_field": "DocField",
+        "fieldname": "type_for_request",
+        "property": "reqd",
+        "property_type": "Check",
+        "value": "0"
+        },
     ],
-
 }
