@@ -110,7 +110,14 @@ data = {
 				"transalatable": 1
 			},
 			
-		 ]
+		 ],
+        "Item":[
+        {
+        "fieldname": "tax_code",
+        "label": "Tax Code",
+        "fieldtype": "Data",
+        "insert_after": "item_group" 
+        }]
          
     },
     "properties": [{
