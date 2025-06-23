@@ -14,17 +14,17 @@ def get_data(data={}):
             }
         )
         
-    if "Dynamic Accounts" in DOMAINS:
-        data["non_standard_fieldnames"].update({"Purchase Receipt": "purchase_invoice"})
-        # data["non_standard_fieldnames"].update({"Purchase Order": "purchase_order"})
+    # if "Dynamic Accounts" in DOMAINS:
+    #     data["non_standard_fieldnames"].update({"Purchase Receipt": "purchase_invoice"})
+    #     data["non_standard_fieldnames"].update({"Purchase Order": "purchase_order"})
 
-        if "internal_links" in data:
-            data["internal_and_external_links"] = data["internal_links"].copy()
+    #     if "internal_links" in data:
+    #         data["internal_and_external_links"] = data["internal_links"].copy()
 
-            if "Purchase Receipt" in data["internal_links"]:
-                del data["internal_links"]["Purchase Receipt"]
+    #         if "Purchase Receipt" in data["internal_links"]:
+    #             del data["internal_links"]["Purchase Receipt"]
 
-            if "Purchase Order" in data["internal_links"]:
-                del data["internal_links"]["Purchase Order"]
+    #         if "Purchase Order" in data["internal_links"]:
+    #             del data["internal_links"]["Purchase Order"]
                 
     return data
