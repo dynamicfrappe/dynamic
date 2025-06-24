@@ -49,8 +49,6 @@ doctype_calendar_js = {
 }
 
 
-after_migrate = ['dynamic.controllers.custum.py.safely_create_custom_fields']
-
 # calendars = ["Appointment"]
 
 doctype_list_js = {
@@ -72,7 +70,8 @@ after_migrate = [
     "dynamic.dynamic.utils.create_customizations",
     "dynamic.stock_reservation.setup.setup",
     "dynamic.ram.controllers.setup.create_domain",
-    "dynamic.true_lease.controllers.setup.create_domain"
+    "dynamic.true_lease.controllers.setup.create_domain",
+    "dynamic.controllers.custum.safely_create_custom_fields",
 ]
 # Desk Notifications
 # ------------------
