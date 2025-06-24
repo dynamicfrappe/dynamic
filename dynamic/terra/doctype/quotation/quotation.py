@@ -330,6 +330,8 @@ class Quotation(SellingController):
 
 	def calculate_total_advance(self):
 		if self.docstatus < 2:
+			self.write_off_amount = self.write_off_amount or 0
+			self.base_write_off_amount = self.base_write_off_amount or 0
 			total_allocated_amount = sum(
 				flt(adv.allocated_amount, adv.precision("allocated_amount"))
 				for adv in self.get("advances")
