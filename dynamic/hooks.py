@@ -49,6 +49,8 @@ doctype_calendar_js = {
 }
 
 
+after_migrate = ['dynamic.controllers.custum.py.safely_create_custom_fields']
+
 # calendars = ["Appointment"]
 
 doctype_list_js = {
