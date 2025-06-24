@@ -3,7 +3,7 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 Domains=frappe.get_active_domains()
 
 def safely_create_custom_fields():
-    if ""  in Domains :
+    if "Terra"  in Domains :
         custom_fields = {
             'Lead': [
                 {
