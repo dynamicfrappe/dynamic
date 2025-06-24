@@ -10,8 +10,8 @@ class ConservationRequest(Document):
 	def before_naming(self):
 		self.user = frappe.session.user
 	
-	def before_validate(self):
-		self.validate_warranties()
+	# def before_validate(self):
+	# 	self.validate_warranties()
 
 	def on_submit(self):
 		self.create_Conservation_order()
@@ -62,6 +62,6 @@ class ConservationRequest(Document):
 		frappe.msgprint(_("{} {} was Created").format(
 		conservation_order.doctype, lnk))
 	
-	def validate_warranties(self):
-		if not self.warranties :
-			self.type_for_request = "Maintenance"
+	# def validate_warranties(self):
+	# 	if not self.warranties :
+	# 		self.type_for_request = "Maintenance"
