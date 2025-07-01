@@ -385,6 +385,9 @@ doc_events = {
      "PO Container":{
         "before_save":"dynamic.logistics.logistics_api.check_data_remaining_before_save"
     },
+    "Actions":{
+        "before_save":"dynamic.terra.doctype.actions.actions.send_emails"
+    },
     # "Batch":{
     #     "before_save": "dynamic.api.disable_batch_if_qty_zero"
     # }

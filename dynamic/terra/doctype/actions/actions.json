@@ -1,28 +1,31 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{customer}-{DD}-{MM}-{YY}-{####}",
+ "autoname": "format:{customer}-{start}-{end}-{####}",
  "creation": "2022-06-22 17:07:17.828615",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "type",
+  "status",
   "column_break_2",
   "action",
   "action_name",
   "section_break_4",
-  "date",
-  "time",
+  "from1",
+  "to",
   "source",
   "local_source",
   "description",
   "column_break_6",
-  "customer_type",
-  "customer",
+  "document_type",
+  "document_name",
   "phone_no",
   "branch",
-  "create_by"
+  "create_by",
+  "sales_person",
+  "email"
  ],
  "fields": [
   {
@@ -63,22 +66,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "allow_in_quick_entry": 1,
-   "fieldname": "customer_type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Customer Type",
-   "options": "Lead\nOpportunity\nCustomer",
-   "reqd": 1
-  },
-  {
-   "fieldname": "customer",
-   "fieldtype": "Dynamic Link",
-   "label": "Customer",
-   "options": "customer_type"
-  },
-  {
    "fetch_from": "customer.phone_no",
    "fieldname": "phone_no",
    "fieldtype": "Data",
@@ -106,22 +93,6 @@
   },
   {
    "allow_in_quick_entry": 1,
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Date",
-   "reqd": 1
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "fieldname": "time",
-   "fieldtype": "Time",
-   "in_list_view": 1,
-   "label": "Time",
-   "reqd": 1
-  },
-  {
-   "allow_in_quick_entry": 1,
    "fieldname": "source",
    "fieldtype": "Link",
    "in_preview": 1,
@@ -145,13 +116,61 @@
    "fieldtype": "Data",
    "label": "Action Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nOpen\nClosed"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "from1",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "From"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "to",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "To"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "document_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Document Type",
+   "options": "Lead\nOpportunity\nCustomer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "document_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Document Name",
+   "options": "document_type"
+  },
+  {
+   "fieldname": "sales_person",
+   "fieldtype": "Link",
+   "label": "Sales Person",
+   "options": "Sales Person"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Link",
+   "label": "Email",
+   "options": "User"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-07 10:02:33.661858",
+ "modified": "2025-07-01 11:05:59.817823",
  "modified_by": "Administrator",
- "module": "Terra",
+ "module": "terra",
  "name": "Actions",
  "owner": "Administrator",
  "permissions": [
