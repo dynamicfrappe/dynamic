@@ -13,10 +13,8 @@
   "action",
   "action_name",
   "section_break_4",
-  "from1",
   "start",
   "end",
-  "to",
   "source",
   "local_source",
   "description",
@@ -122,27 +120,13 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nWatting For Customer\nOn Hold\nCompleted\nOpen\nClosed"
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "fieldname": "to",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "To"
+   "options": "\nOpen\nClosed"
   },
   {
    "fieldname": "sales_person",
    "fieldtype": "Link",
    "label": "Sales Person",
    "options": "Sales Person"
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "fieldname": "from1",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "From"
   },
   {
    "allow_in_quick_entry": 1,
@@ -174,7 +158,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-12 14:33:37.561801",
+ "modified": "2025-07-02 13:45:18.997674",
  "modified_by": "Administrator",
  "module": "terra",
  "name": "Actions",
