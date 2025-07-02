@@ -56,4 +56,29 @@ def get_events(start, end, filters=None):
     )
     
     return data
+@frappe.whitelist()
+def get_emails(name):
+    sales_person = frappe.get_value("Actions", name, "sales_person")
+    if not sales_person:
+        frappe.throw("no sales person selected ")
+    actions = frappe.get_list("Actions", filters={"name": name}, fields=["sales_person"])
+    emails = []
+    for action in actions:
+        employees = frappe.get_list("Employee", filters={"name": action.sales_person}, fields=["user_id"])
+        for emp in employees:
+            emails.append(emp.user_id)
+    for email in emails:
+        frappe.get_doc({
+            "doctype": "Notification Log",
+            "subject": f"New actions has been added: {name}",
+            "for_user": email,
+            "type": "Alert",
+            "document_type": "Actions",
+            "document_name": name
+        }).insert(ignore_permissions=True)
+
+    return emails
+
+
+
 
